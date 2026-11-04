@@ -21,9 +21,9 @@
 
 
 // Matched
-int SkillSlotToAnimIndex_80031870(int a0)
+int SkillSlotToAnimIndex_80031870(int slot)
 {
-    switch (a0)
+    switch (slot)
     {
     case 0:
         return 3;

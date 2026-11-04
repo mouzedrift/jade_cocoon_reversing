@@ -59,14 +59,14 @@ extern UnitSkill* sub_800A2BA0(int a0);
 
 #if 0
 // Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_80014390 / sub_8001449C. Tried: two-arg calls (t, t & 0xFF), int/unsigned t, t used in all three branches; permuter 1500: nothing
-UnitSkill* GetUnitSkills_80031B30(int a0)
+UnitSkill* GetUnitSkills_80031B30(int unit)
 {
     UnitSkill* r = 0;
-    unsigned int v = a0 & 0xFF;
+    unsigned int v = unit & 0xFF;
     unsigned int t;
     if (v >= 8)
     {
-        t = a0 - 8;
+        t = unit - 8;
         r = sub_800A11A0(t & 0xFF);
     }
     else if (v >= 4)
@@ -75,13 +75,13 @@ UnitSkill* GetUnitSkills_80031B30(int a0)
         int bit = 1 << v;
         if (flags & bit)
         {
-            t = a0 - 4;
+            t = unit - 4;
             r = sub_800A2BA0(t & 0xFF);
         }
     }
     else if (v != 0)
     {
-        t = a0 - 1;
+        t = unit - 1;
         r = sub_800107F8(3, t & 0xFF)->slot;
     }
     return r;
@@ -94,7 +94,7 @@ int MenuIndexToSkillSlot_80031BDC(int a0)
     return a0;
 }
 // Matched
-int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl)
+int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int scaleX, int scaleY, short* offset, int anchorFlags)
 {
     int d;
     int w;
@@ -105,19 +105,19 @@ int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, 
     short hi;
     unsigned short flags;
 
-    flags = fl;
-    if (sx < 0)
+    flags = anchorFlags;
+    if (scaleX < 0)
     {
-        sx = -sx;
-        flags = fl ^ 0x100;
+        scaleX = -scaleX;
+        flags = anchorFlags ^ 0x100;
     }
-    if (sy < 0)
+    if (scaleY < 0)
     {
-        sy = -sy;
+        scaleY = -scaleY;
         flags ^= 0x200;
     }
-    w = (p->u3 - p->u0 >= 0 ? p->u3 - p->u0 : p->u0 - p->u3) * sx / 256;
-    h = (p->v3 - p->v0 >= 0 ? p->v3 - p->v0 : p->v0 - p->v3) * sy / 256;
+    w = (p->u3 - p->u0 >= 0 ? p->u3 - p->u0 : p->u0 - p->u3) * scaleX / 256;
+    h = (p->v3 - p->v0 >= 0 ? p->v3 - p->v0 : p->v0 - p->v3) * scaleY / 256;
     if (w > 0x200)
     {
         w = 0x200;
@@ -156,10 +156,10 @@ int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, 
         y0 = y - h / 2;
         break;
     }
-    if (off)
+    if (offset)
     {
-        x0 += off[0] * sx / 256;
-        y0 += off[1] * sy / 256;
+        x0 += offset[0] * scaleX / 256;
+        y0 += offset[1] * scaleY / 256;
     }
     if ((flags & 0x300) == 0x300)
     {
@@ -675,16 +675,16 @@ int GetEquipmentId_8003356C(UnitStatus* p, unsigned int idx)
 }
 extern void ApplyEquipmentModifiers_80033754(unsigned char* a, UnitStatus* b);
 // Matched
-void CalcEffectiveStatus_800335D0(UnitStatus* pSrc, UnitStatus* m)
+void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* dst)
 {
-    int r;
-    MemCopy_800403E8(m, pSrc, sizeof(UnitStatus));
-    r = CalcEquippedStats_80033624(m->stats_2C, m);
-    if (r)
+    int level;
+    MemCopy_800403E8(dst, src, sizeof(UnitStatus));
+    level = CalcEquippedStats_80033624(dst->stats_2C, dst);
+    if (level)
     {
-        m->level_44 = r;
+        dst->level_44 = level;
     }
-    ApplyEquipmentModifiers_80033754(m->field_20, m);
+    ApplyEquipmentModifiers_80033754(dst->field_20, dst);
 }
 // Matched
 int CalcEquippedStats_80033624(unsigned char* arg0, UnitStatus* arg1)
@@ -797,13 +797,13 @@ void GetElementLevels_80033864(Minion* m, unsigned char* out)
 // Matched
 unsigned char GetDominantSpecies_800338B0(Minion* m)
 {
-    unsigned char a[8];
-    unsigned char b[16];
-    GetTopSpecies_800338DC(m->species_4C, a, b);
-    return a[0];
+    unsigned char ids[8];
+    unsigned char ratios[16];
+    GetTopSpecies_800338DC(m->species_4C, ids, ratios);
+    return ids[0];
 }
 // Matched
-int GetTopSpecies_800338DC(unsigned char* src, unsigned char* ids, int* counts)
+int GetTopSpecies_800338DC(unsigned char* history, unsigned char* ids, int* ratios)
 {
     unsigned char hist[0xD3];
     int i;
@@ -820,11 +820,11 @@ int GetTopSpecies_800338DC(unsigned char* src, unsigned char* ids, int* counts)
     for (i = 0; i < 3; i++)
     {
         ids[i] = 0xD3;
-        counts[i] = 0;
+        ratios[i] = 0;
     }
     for (i = 0; i < 0x30; i++)
     {
-        hist[src[i]]++;
+        hist[history[i]]++;
     }
     for (i = 0xFF; i >= 0; i--)
     {
@@ -844,7 +844,7 @@ int GetTopSpecies_800338DC(unsigned char* src, unsigned char* ids, int* counts)
                         res = k;
                     }
                 }
-                counts[k] = i;
+                ratios[k] = i;
                 k++;
                 hist[j] = 0;
             }
@@ -859,13 +859,13 @@ int GetTopSpecies_800338DC(unsigned char* src, unsigned char* ids, int* counts)
         }
     }
 done:
-    sum = counts[0] + counts[1] + counts[2];
-    counts[0] <<= 12;
-    counts[1] <<= 12;
-    counts[2] <<= 12;
-    counts[0] /= sum;
-    counts[1] /= sum;
-    counts[2] /= sum;
+    sum = ratios[0] + ratios[1] + ratios[2];
+    ratios[0] <<= 12;
+    ratios[1] <<= 12;
+    ratios[2] <<= 12;
+    ratios[0] /= sum;
+    ratios[1] /= sum;
+    ratios[2] /= sum;
     return res;
 }
 // Matched
@@ -918,12 +918,12 @@ extern int GetItemFlags_8001CE70(int a);
 // Matched
 int CheckItemUsable_80033AFC(struct_minion_ref* p)
 {
-    int a = sub_800AD288(p->field_0 + p->field_2, 0);
-    if (sub_800AD2C8(p->field_0 + p->field_2, 0) <= 0)
+    int item = sub_800AD288(p->cursor_0 + p->scroll_2, 0);
+    if (sub_800AD2C8(p->cursor_0 + p->scroll_2, 0) <= 0)
     {
         return 1;
     }
-    if (a == 0x29 && p->field_A == 1)
+    if (item == 0x29 && p->field_A == 1)
     {
         if (sub_80034140())
         {
@@ -931,20 +931,20 @@ int CheckItemUsable_80033AFC(struct_minion_ref* p)
         }
         return 3;
     }
-    if (!(GetItemFlags_8001CE70(a) & 1) && !(GetItemFlags_8001CE70(a) & 2))
+    if (!(GetItemFlags_8001CE70(item) & 1) && !(GetItemFlags_8001CE70(item) & 2))
     {
         return 2;
     }
     if (p->field_A == 0)
     {
-        if (!(GetItemFlags_8001CE70(a) & 2))
+        if (!(GetItemFlags_8001CE70(item) & 2))
         {
             return 4;
         }
     }
     else if (p->field_A == 1)
     {
-        if (!(GetItemFlags_8001CE70(a) & 1))
+        if (!(GetItemFlags_8001CE70(item) & 1))
         {
             return 3;
         }
@@ -956,15 +956,15 @@ extern int GetSkillMpCost_80031A04(void* p, int idx);
 // Matched
 int CheckMagicCastable_80033C08(struct_minion_ref* p)
 {
-    Minion* q = p->field_C_minion;
-    UnitStatus* r = &q->status_84;
-    int idx = FindNthMagicBit_8001AEC0(&q->magicBits_F4, p->field_0 + p->field_2);
-    int v = GetMagicMpCost_8001AC58(idx);
+    Minion* minion = p->minion_C;
+    UnitStatus* status = &minion->status_84;
+    int idx = FindNthMagicBit_8001AEC0(&minion->magicBits_F4, p->cursor_0 + p->scroll_2);
+    int cost = GetMagicMpCost_8001AC58(idx);
     if (idx >= 0x1E)
     {
         return 6;
     }
-    if (r->mp_C >= v)
+    if (status->mp_C >= cost)
     {
         return 0;
     }
@@ -977,14 +977,14 @@ int CheckMagicCastable_80033C08(struct_minion_ref* p)
 // Matched
 int CheckSkillUsable_80033C98(struct_minion_ref* p)
 {
-    int a;
-    short idx = p->field_0;
-    a = GetSkillMpCost_80031A04(&p->field_C_minion->skills_DE, idx);
-    if (!IsSkillLearned_80031954(&p->field_C_minion->skills_DE, idx))
+    int cost;
+    short idx = p->cursor_0;
+    cost = GetSkillMpCost_80031A04(&p->minion_C->skills_DE, idx);
+    if (!IsSkillLearned_80031954(&p->minion_C->skills_DE, idx))
     {
         return 7;
     }
-    if (p->field_C_minion->status_84.mp_C < a)
+    if (p->minion_C->status_84.mp_C < cost)
     {
         if (p->field_A == 0)
         {
@@ -996,21 +996,21 @@ int CheckSkillUsable_80033C98(struct_minion_ref* p)
 // Matched
 int CheckMagicHasEffect_80033D20(struct_minion_ref* p)
 {
-    Minion* m = p->field_C_minion;
-    UnitStatus* q = &m->status_84;
-    int r = FindNthMagicBit_8001AEC0(&m->magicBits_F4, p->field_0 + p->field_2);
-    if (magicData_8007C438[r].field_0 & 0x40)
+    Minion* minion = p->minion_C;
+    UnitStatus* status = &minion->status_84;
+    int magic = FindNthMagicBit_8001AEC0(&minion->magicBits_F4, p->cursor_0 + p->scroll_2);
+    if (magicData_8007C438[magic].field_0 & 0x40)
     {
-        switch (magicData_8007C438[r].field_7)
+        switch (magicData_8007C438[magic].field_7)
         {
         case 0:
-            if (q->hp_8 == q->maxHp_A)
+            if (status->hp_8 == status->maxHp_A)
             {
                 return 3;
             }
             break;
         case 1:
-            if (r != 0x10 && !(m->status_84.status_0 & 0x7FB))
+            if (magic != 0x10 && !(minion->status_84.status_0 & 0x7FB))
             {
                 return 3;
             }
@@ -1033,8 +1033,8 @@ typedef struct
 // Matched
 int CheckItemOnTarget_80033DF4(ItemUse_DF4* p)
 {
-    UnitStatus* t;
-    int full = 0;
+    UnitStatus* target;
+    int noEffect = 0;
     if (GetItemFlags_8001CE70(p->item) & 0x80)
     {
         return 0;
@@ -1051,8 +1051,8 @@ int CheckItemOnTarget_80033DF4(ItemUse_DF4* p)
     {
         return 1;
     }
-    t = sub_80014390(p->target & 0xFF);
-    if (p->item != 13 && (t->status_0 & 0x400))
+    target = sub_80014390(p->target & 0xFF);
+    if (p->item != 13 && (target->status_0 & 0x400))
     {
         return 4;
     }
@@ -1061,76 +1061,76 @@ int CheckItemOnTarget_80033DF4(ItemUse_DF4* p)
     case 0:
     case 1:
     case 2:
-        if (t->hp_8 == t->maxHp_A)
+        if (target->hp_8 == target->maxHp_A)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 3:
-        if (t->maxHp_A == 999)
+        if (target->maxHp_A == 999)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 4:
-        if (t->stats_2C[0] >= 99)
+        if (target->stats_2C[0] >= 99)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 5:
-        if (t->stats_2C[4] >= 99)
+        if (target->stats_2C[4] >= 99)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 6:
-        if (t->stats_2C[1] >= 99)
+        if (target->stats_2C[1] >= 99)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 7:
-        if (t->stats_2C[2] >= 99)
+        if (target->stats_2C[2] >= 99)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 8:
-        if (t->stats_2C[3] >= 99)
+        if (target->stats_2C[3] >= 99)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 9:
     case 10:
     case 11:
     case 12:
-        if (t->hp_8 == t->maxHp_A && t->mp_C == t->maxMp_E)
+        if (target->hp_8 == target->maxHp_A && target->mp_C == target->maxMp_E)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 13:
-        if (!(t->status_0 & 0x7FB) && t->hp_8 == t->maxHp_A && t->mp_C == t->maxMp_E)
+        if (!(target->status_0 & 0x7FB) && target->hp_8 == target->maxHp_A && target->mp_C == target->maxMp_E)
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 14:
-        if (!(t->status_0 & 1))
+        if (!(target->status_0 & 1))
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     case 15:
-        if (!(t->status_0 & 0x3F8))
+        if (!(target->status_0 & 0x3F8))
         {
-            full = 1;
+            noEffect = 1;
         }
         break;
     }
-    if (full == 1)
+    if (noEffect == 1)
     {
         return 3;
     }

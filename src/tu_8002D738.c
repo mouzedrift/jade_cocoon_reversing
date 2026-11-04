@@ -30,17 +30,17 @@ const char aApprentice_800743B4[] = "\202`\202\220\202\220\202\222\202\205\202\2
 const CVECTOR familyTreeLineColor_800743CC = { 128, 128, 128 };
 
 // Matched
-int IsTargetListed_8002D738(int a0, int a1, int a2)
+int IsTargetListed_8002D738(int idx, int self, int mode)
 {
-    if (a2 == 0 || a2 == 2)
+    if (mode == 0 || mode == 2)
     {
         return 1;
     }
-    if (a2 == 3 && a0 + 1 != a1)
+    if (mode == 3 && idx + 1 != self)
     {
         return 1;
     }
-    if (a2 == 1 && a0 + 1 == a1)
+    if (mode == 1 && idx + 1 == self)
     {
         return 1;
     }

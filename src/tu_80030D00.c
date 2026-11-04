@@ -280,9 +280,9 @@ void SfxKeyOff_80031574(short a, short b)
     SsUtKeyOff(a, *(short*)s, b, 0, 0x3c);
 }
 // Matched
-void SetBattleMusic_800315D8(int a0)
+void SetBattleMusic_800315D8(int music)
 {
-    battleMusic_80091CFC = a0;
+    battleMusic_80091CFC = music;
 }
 // Matched
 int GetBattleMusic_800315E4(void)
@@ -332,21 +332,21 @@ extern int SkillSlotToAnimIndex_80031870(int a0);
 extern UnitSkill* GetUnitSkills_80031B30(int a0);
 extern void sub_80018430(short v);
 // Matched
-int GetSkillEffect_800316EC(unsigned int a0, int a1)
+int GetSkillEffect_800316EC(unsigned int slot, int actorMask)
 {
     int r;
-    int k;
-    UnitSkill* base;
-    r = SkillSlotToAnimIndex_80031870(a0) + 0x26;
-    base = GetUnitSkills_80031B30(LowestSetBit_80014358(a1) & 0xFF);
-    base += a0;
-    k = base->id_1;
+    int abilityId;
+    UnitSkill* skill;
+    r = SkillSlotToAnimIndex_80031870(slot) + 0x26;
+    skill = GetUnitSkills_80031B30(LowestSetBit_80014358(actorMask) & 0xFF);
+    skill += slot;
+    abilityId = skill->id_1;
     sub_80018430(-1);
-    if (a0 >= 4)
+    if (slot >= 4)
     {
         r = 0x1E;
     }
-    switch (k)
+    switch (abilityId)
     {
     case 2:
         sub_80018430(2);
@@ -405,8 +405,8 @@ int GetSkillEffect_800316EC(unsigned int a0, int a1)
     case 35:
     case 36:
     case 37:
-        r = k + 0x1D;
-        sub_80018430(k - 0x22);
+        r = abilityId + 0x1D;
+        sub_80018430(abilityId - 0x22);
         break;
     case 33:
         r = 0x19;

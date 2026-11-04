@@ -32,24 +32,24 @@ extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
 extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
 int GetAbilityIcon_8002D1A4(int a, short b);
 // Matched
-void DrawAbilityList_8002CE28(struct_minion_ref* a0, unsigned short* a1)
+void DrawAbilityList_8002CE28(struct_minion_ref* menu, unsigned short* origin)
 {
     struct_A5A4 s;
     unsigned short pos[2];
-    short saved;
+    short cursor;
     short w;
     short i;
-    int v20;
-    int v19;
-    MenuItem_1C** e;
-    MenuItem_1C** e2;
+    int name;
+    int bonusName;
+    MenuItem_1C** row;
+    MenuItem_1C** row2;
     int y;
-    saved = a0->field_0;
+    cursor = menu->cursor_0;
     w = 8;
-    if (a1)
+    if (origin)
     {
-        pos[0] = a1[0];
-        pos[1] = a1[1];
+        pos[0] = origin[0];
+        pos[1] = origin[1];
     }
     else
     {
@@ -58,35 +58,35 @@ void DrawAbilityList_8002CE28(struct_minion_ref* a0, unsigned short* a1)
     }
     for (i = 0; i < 5; i++)
     {
-        v20 = abilityNames_800834E4[0];
-        v19 = abilityBonusNames_80083580[0];
-        if (a0->field_C_minion->skills_DE.slot[i].flags_0 & 1)
+        name = abilityNames_800834E4[0];
+        bonusName = abilityBonusNames_80083580[0];
+        if (menu->minion_C->skills_DE.slot[i].flags_0 & 1)
         {
-            if (a0->field_C_minion->skills_DE.slot[i].id_1)
+            if (menu->minion_C->skills_DE.slot[i].id_1)
             {
-                v20 = abilityNames_800834E4[a0->field_C_minion->skills_DE.slot[i].id_1];
+                name = abilityNames_800834E4[menu->minion_C->skills_DE.slot[i].id_1];
             }
-            if (a0->field_C_minion->skills_DE.slot[i].bonus_2)
+            if (menu->minion_C->skills_DE.slot[i].bonus_2)
             {
-                v19 = abilityBonusNames_80083580[a0->field_C_minion->skills_DE.slot[i].bonus_2];
+                bonusName = abilityBonusNames_80083580[menu->minion_C->skills_DE.slot[i].bonus_2];
             }
 
-            e = &abilityListRows_80082D98[i];
-            (*e)[0].flags &= ~2;
-            (*e)[1].flags &= ~2;
-            (*e)[2].flags &= ~2;
-            a0->field_0 = i;
-            if ((short)CheckSkillUsable_80033C98(a0))
+            row = &abilityListRows_80082D98[i];
+            (*row)[0].flags &= ~2;
+            (*row)[1].flags &= ~2;
+            (*row)[2].flags &= ~2;
+            menu->cursor_0 = i;
+            if ((short)CheckSkillUsable_80033C98(menu))
             {
-                (*e)[0].flags |= 2;
-                (*e)[1].flags |= 2;
-                (*e)[2].flags |= 2;
+                (*row)[0].flags |= 2;
+                (*row)[1].flags |= 2;
+                (*row)[2].flags |= 2;
             }
             else
             {
-                (*e)[0].flags &= ~2;
-                (*e)[1].flags &= ~2;
-                (*e)[2].flags &= ~2;
+                (*row)[0].flags &= ~2;
+                (*row)[1].flags &= ~2;
+                (*row)[2].flags &= ~2;
             }
         }
         else
@@ -95,35 +95,35 @@ void DrawAbilityList_8002CE28(struct_minion_ref* a0, unsigned short* a1)
             abilityListRows_80082D98[i][1].flags |= 2;
             abilityListRows_80082D98[i][2].flags |= 2;
         }
-        y = GetAbilityIcon_8002D1A4(GetAbilityAction_800318C8(a0->field_C_minion->skills_DE.slot[i].id_1)->c8, i);
-        e2 = &abilityListRows_80082D98[i];
-        (*e2)[0].f4 = y;
-        (*e2)[1].f4 = v20;
-        (*e2)[2].f4 = v19;
-        (*e2)[0].sprts_8 = &uiTiySprts_8008D620;
-        (*e2)[0].tpages_C = &uiTiyTPages_8008D3F4;
-        (*e2)[0].x = pos[0];
+        y = GetAbilityIcon_8002D1A4(GetAbilityAction_800318C8(menu->minion_C->skills_DE.slot[i].id_1)->c8, i);
+        row2 = &abilityListRows_80082D98[i];
+        (*row2)[0].f4 = y;
+        (*row2)[1].f4 = name;
+        (*row2)[2].f4 = bonusName;
+        (*row2)[0].sprts_8 = &uiTiySprts_8008D620;
+        (*row2)[0].tpages_C = &uiTiyTPages_8008D3F4;
+        (*row2)[0].x = pos[0];
         y = i * 22;
-        (*e2)[0].y = pos[1] + y;
-        (*e2)[1].x = pos[0] + 0x26;
-        (*e2)[1].y = pos[1] + y;
-        (*e2)[2].x = pos[0] + 0x83;
-        (*e2)[2].y = pos[1] + y;
+        (*row2)[0].y = pos[1] + y;
+        (*row2)[1].x = pos[0] + 0x26;
+        (*row2)[1].y = pos[1] + y;
+        (*row2)[2].x = pos[0] + 0x83;
+        (*row2)[2].y = pos[1] + y;
     }
-    s.field_0 = a0->field_4;
+    s.field_0 = menu->field_4;
     s.field_4 = frameCount_8008D3FC;
     s.field_8 = w;
-    s.field_C = saved;
+    s.field_C = cursor;
     s.field_10 = abilityListRows_80082D98;
-    s.field_14 = a0->field_6;
+    s.field_14 = menu->ot_6;
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
 }
 // Matched
-int GetAbilityIcon_8002D1A4(int a, short b)
+int GetAbilityIcon_8002D1A4(int type, short slot)
 {
     int r = 0;
-    switch ((short)a)
+    switch ((short)type)
     {
     case 0:
         break;
@@ -140,12 +140,12 @@ int GetAbilityIcon_8002D1A4(int a, short b)
         r = 3;
         break;
     }
-    a = r;
-    if (a >= 4)
+    type = r;
+    if (type >= 4)
     {
-        return abilityIconsNoType_800827F0[b];
+        return abilityIconsNoType_800827F0[slot];
     }
-    return abilityIconsByType_8008280C[b][a];
+    return abilityIconsByType_8008280C[slot][type];
 }
 typedef struct
 {
@@ -164,7 +164,7 @@ typedef struct
 extern int CheckItemOnTarget_80033DF4(short* p);
 extern int sub_80034068(short* p);
 // Matched
-int DrawTargetSelectMenu_8002D250(short* p, int mode, int sel, int ot)
+int DrawTargetSelectMenu_8002D250(short* p, int mode, int cursor, int ot)
 {
     MenuItem_D250 list0[4] = {
         {8, 4, 0, 0, 0, 0x2E, 0x98, 0x3C, 0xC, 2, 2},
@@ -188,18 +188,18 @@ int DrawTargetSelectMenu_8002D250(short* p, int mode, int sel, int ot)
     MenuItem_D250* subs[3] = {0};
     int k = 0;
     struct_A5A4 s = {2, 0, 8, 0, 0, 0};
-    int n;
-    int cur;
+    int minionCount;
+    int allMask;
     int i;
     int r;
-    int v;
-    UnitStatus* q;
+    int state;
+    UnitStatus* status;
     int y;
     MenuItem_D250* m;
-    n = CountMinions_80010548(3);
-    cur = GetAllMinionsTargetMask_8002D780();
+    minionCount = CountMinions_80010548(3);
+    allMask = GetAllMinionsTargetMask_8002D780();
     s.field_4 = GetTime30Hz_8002C64C();
-    s.field_C = sel;
+    s.field_C = cursor;
     s.field_10 = (MenuItem_1C**)lists;
     s.field_14 = ot;
     subs[0] = list1;
@@ -207,19 +207,19 @@ int DrawTargetSelectMenu_8002D250(short* p, int mode, int sel, int ot)
     subs[2] = list3;
     if (mode == 0 || mode == 3)
     {
-        q = sub_80014390(0);
+        status = sub_80014390(0);
         lists[k] = list0;
-        lists[k][0].text = (int)q->name_10;
+        lists[k][0].text = (int)status->name_10;
         p[2] = 0;
         if (mode == 0)
         {
-            v = CheckItemOnTarget_80033DF4(p);
+            state = CheckItemOnTarget_80033DF4(p);
         }
         else
         {
-            v = 0;
+            state = 0;
         }
-        if (v == 0 || v == 1)
+        if (state == 0 || state == 1)
         {
             lists[k][0].flags &= ~2;
             lists[k][1].flags &= ~2;
@@ -234,35 +234,35 @@ int DrawTargetSelectMenu_8002D250(short* p, int mode, int sel, int ot)
         k++;
     }
     y = 0;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < minionCount; i++)
     {
         r = IsTargetListed_8002D738(i, p[1], mode);
         if (r == 1)
         {
             p[2] = i + 1;
-            q = sub_80014390(((unsigned char*)p)[4]);
-            v = 0;
+            status = sub_80014390(((unsigned char*)p)[4]);
+            state = 0;
             m = subs[i];
             lists[k] = m;
-            m->text = (int)q->name_10;
+            m->text = (int)status->name_10;
 
             lists[k]->y = 0xA6 + y * 13;
             if (mode == 0)
             {
-                v = CheckItemOnTarget_80033DF4(p);
+                state = CheckItemOnTarget_80033DF4(p);
             }
             else if (mode == 1)
             {
-                v = sub_80034068(p);
+                state = sub_80034068(p);
             }
             else if ((unsigned int)(mode - 2) < 2)
             {
-                if (HasStatusFlag_80033548(q, 0x400))
+                if (HasStatusFlag_80033548(status, 0x400))
                 {
-                    v = 4;
+                    state = 4;
                 }
             }
-            if (v == 0 || v == 2)
+            if (state == 0 || state == 2)
             {
                 lists[k]->flags &= ~2;
             }
@@ -279,25 +279,25 @@ int DrawTargetSelectMenu_8002D250(short* p, int mode, int sel, int ot)
     switch (mode)
     {
     case 0:
-        if (sel < 0)
+        if (cursor < 0)
         {
-            return cur | 1;
+            return allMask | 1;
         }
-        return sel;
+        return cursor;
     case 1:
         return p[1];
     case 2:
-        return sel + 1;
+        return cursor + 1;
     case 3:
-        if (sel < 0)
+        if (cursor < 0)
         {
-            return (cur | 1) & ~(1 << p[1]);
+            return (allMask | 1) & ~(1 << p[1]);
         }
-        if (sel < p[1])
+        if (cursor < p[1])
         {
-            return sel;
+            return cursor;
         }
-        return sel + 1;
+        return cursor + 1;
     }
     return 0;
 }

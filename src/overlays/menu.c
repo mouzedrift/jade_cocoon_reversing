@@ -1605,13 +1605,13 @@ void sub_800BE4A0(MenuCtx* c)
             m = GetMinion_80010598(3, c->arr_2A[1]);
             if (m)
             {
-                r.field_0 = c->arr_2A[7];
-                r.field_2 = c->arr_46[2];
+                r.cursor_0 = c->arr_2A[7];
+                r.scroll_2 = c->arr_46[2];
                 r.field_4 = s;
-                r.field_6 = 14;
+                r.ot_6 = 14;
                 r.field_8 = 0;
                 r.field_A = 1;
-                r.field_C_minion = m;
+                r.minion_C = m;
                 DrawMagicList_8002CAC8(&r, 0);
             }
             break;
@@ -1642,13 +1642,13 @@ void sub_800BE4A0(MenuCtx* c)
             if (m)
             {
                 struct_minion_ref r;
-                r.field_0 = c->arr_2A[10];
-                r.field_2 = 0;
+                r.cursor_0 = c->arr_2A[10];
+                r.scroll_2 = 0;
                 r.field_4 = s;
-                r.field_6 = 14;
+                r.ot_6 = 14;
                 r.field_8 = 0;
                 r.field_A = 1;
-                r.field_C_minion = m;
+                r.minion_C = m;
                 DrawAbilityList_8002CE28(&r, 0);
             }
             {
@@ -1692,13 +1692,13 @@ void sub_800BE4A0(MenuCtx* c)
             {
                 s = 4;
             }
-            r.field_0 = c->arr_2A[3];
-            r.field_2 = c->arr_46[0];
+            r.cursor_0 = c->arr_2A[3];
+            r.scroll_2 = c->arr_46[0];
             r.field_4 = s;
-            r.field_6 = 14;
+            r.ot_6 = 14;
             r.field_8 = 0;
             r.field_A = 1;
-            r.field_C_minion = 0;
+            r.minion_C = 0;
             DrawItemList_8002C728(&r);
             break;
         }

@@ -2107,26 +2107,26 @@ void sub_800BC380(ShopUnit3Shop* u)
                     {
                         p28.x = 0x5C;
                         p28.y = 0x5E;
-                        r30.field_0 = u->field_48;
-                        r30.field_2 = u->field_4A;
+                        r30.cursor_0 = u->field_48;
+                        r30.scroll_2 = u->field_4A;
                         r30.field_4 = 2;
-                        r30.field_6 = 0xE;
+                        r30.ot_6 = 0xE;
                         r30.field_8 = 0;
                         r30.field_A = 1;
-                        r30.field_C_minion = u->field_54;
+                        r30.minion_C = u->field_54;
                         DrawAbilityList_8002CE28(&r30, &p28);
                     }
                     else if (u->field_24 & 0x80)
                     {
                         p40.x = 0x7E;
                         p40.y = 0x6D;
-                        r48.field_0 = u->field_48;
-                        r48.field_2 = u->field_4A;
+                        r48.cursor_0 = u->field_48;
+                        r48.scroll_2 = u->field_4A;
                         r48.field_4 = 2;
-                        r48.field_6 = 0xE;
+                        r48.ot_6 = 0xE;
                         r48.field_8 = 0;
                         r48.field_A = 1;
-                        r48.field_C_minion = u->field_54;
+                        r48.minion_C = u->field_54;
                         DrawMagicList_8002CAC8(&r48, &p40);
                     }
                     else if (u->field_24 & 0x100)
@@ -2254,13 +2254,13 @@ void sub_800BC380(ShopUnit3Shop* u)
         if (i == 6)
         {
             struct_minion_ref r40;
-            r40.field_0 = u->a5E[8];
-            r40.field_2 = u->a72[2];
+            r40.cursor_0 = u->a5E[8];
+            r40.scroll_2 = u->a72[2];
             r40.field_4 = 2;
-            r40.field_6 = 0xE;
+            r40.ot_6 = 0xE;
             r40.field_8 = 0;
             r40.field_A = 1;
-            r40.field_C_minion = 0;
+            r40.minion_C = 0;
             DrawPersonList_800BED48(&r40);
         }
         if (u->field_C == 8)

@@ -24,9 +24,9 @@ ActionData* GetAbilityAction_800318C8(int idx)
     return &abilityActions_80083594[idx];
 }
 // Matched
-int sub_800318E4(unsigned int idx, int nth)
+int sub_800318E4(unsigned int idx, int partySlot)
 {
-    Minion* m = GetMinion_80010598(3, nth - 1);
+    Minion* m = GetMinion_80010598(3, partySlot - 1);
     if (m && IsSkillLearned_80031954(&m->skills_DE, idx))
     {
         if (idx < 0xff)
@@ -53,19 +53,19 @@ void SsUtVibrateOff(void)
 {
 }
 // Matched
-int IsSkillLearned_80031954(void* pv, int idx)
+int IsSkillLearned_80031954(void* skills, int slot)
 {
-    unsigned char* q = (unsigned char*)pv + idx * 4;
-    return *q & 1;
+    unsigned char* skill = (unsigned char*)skills + slot * 4;
+    return *skill & 1;
 }
 // Matched
-int CountLearnedSkills_80031968(void* p)
+int CountLearnedSkills_80031968(void* skills)
 {
     int n;
     int i = 0;
     for (n = i; i < 0xff; i++)
     {
-        if (IsSkillLearned_80031954(p, i))
+        if (IsSkillLearned_80031954(skills, i))
         {
             n++;
         }
@@ -85,14 +85,14 @@ int GetAbilityBonusName_800319E8(int idx)
     return abilityBonusNames_80083580[idx];
 }
 // Matched
-int GetSkillMpCost_80031A04(unsigned char* p, int idx)
+int GetSkillMpCost_80031A04(unsigned char* skills, int slot)
 {
-    int r;
-    p += idx * 4;
-    r = 0;
-    if (p[0] != 0)
+    int cost;
+    skills += slot * 4;
+    cost = 0;
+    if (skills[0] != 0)
     {
-        switch (p[1])
+        switch (skills[1])
         {
         case 2:
         case 3:
@@ -103,27 +103,27 @@ int GetSkillMpCost_80031A04(unsigned char* p, int idx)
         case 8:
         case 9:
         case 10:
-            r += 10;
+            cost += 10;
             break;
         case 14:
         case 15:
-            r += 5;
+            cost += 5;
             break;
         case 13:
-            r += 35;
+            cost += 35;
             break;
         case 12:
-            r += 15;
+            cost += 15;
             break;
         }
-        switch (p[2])
+        switch (skills[2])
         {
         case 2:
         case 3:
         case 4:
-            r += 10;
+            cost += 10;
             break;
         }
     }
-    return r;
+    return cost;
 }

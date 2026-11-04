@@ -4184,8 +4184,8 @@ int sub_800C7530()
     short idx;
     int* p;
     idx = GetMenuCursorIndex_8003DA54(dword_800C9E44);
-    q.field_0 = dword_800C9E44->cursor_8;
-    q.field_2 = dword_800C9E44->scroll_A;
+    q.cursor_0 = dword_800C9E44->cursor_8;
+    q.scroll_2 = dword_800C9E44->scroll_A;
     q.field_A = 0;
     dword_800C9E7C = 0;
     switch (dword_800C9E50)
@@ -4217,7 +4217,7 @@ int sub_800C7530()
             return 1;
         }
     case 2:
-        q.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
+        q.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
         switch (CheckSkillUsable_80033C98(&q))
         {
         case 0:
@@ -4235,7 +4235,7 @@ int sub_800C7530()
             return 0;
         }
     case 3:
-        q.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
+        q.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
         switch (CheckMagicCastable_80033C08(&q))
         {
         case 0:
@@ -4603,42 +4603,42 @@ void BattleMenuDraw_800C7DA8()
     {
         struct_minion_ref w;
         w.field_4 = 2;
-        w.field_6 = 0xF;
+        w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.field_C_minion = 0;
+        w.minion_C = 0;
         w.field_A = 0;
-        w.field_0 = dword_800C9308->cursor_8;
-        w.field_2 = dword_800C9308->scroll_A;
+        w.cursor_0 = dword_800C9308->cursor_8;
+        w.scroll_2 = dword_800C9308->scroll_A;
         DrawItemList_8002C728(&w);
     }
     if (!(dword_800C968C[dword_800C9E50][k] & 0x40) && !(flags & 4))
     {
         struct_minion_ref w;
         w.field_4 = 2;
-        w.field_6 = 0xF;
+        w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.field_0 = dword_800C92E4->cursor_8;
-        w.field_2 = dword_800C92E4->scroll_A;
-        w.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
+        w.cursor_0 = dword_800C92E4->cursor_8;
+        w.scroll_2 = dword_800C92E4->scroll_A;
+        w.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
         w.field_A = 0;
         DrawAbilityList_8002CE28(&w, 0);
-        dword_800C9182 = -GetSkillMpCost_80031A04(&w.field_C_minion->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
+        dword_800C9182 = -GetSkillMpCost_80031A04(&w.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
     }
     if (!(dword_800C968C[dword_800C9E50][k] & 0x80) && !(flags & 8))
     {
         struct_minion_ref w;
         short sz[2];
         w.field_4 = 2;
-        w.field_6 = 0xF;
+        w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.field_0 = dword_800C92F0->cursor_8;
-        w.field_2 = dword_800C92F0->scroll_A;
-        w.field_C_minion = GetMinion_80010598(3, dword_800C9C7C - 1);
+        w.cursor_0 = dword_800C92F0->cursor_8;
+        w.scroll_2 = dword_800C92F0->scroll_A;
+        w.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
         sz[0] = 0x60;
         w.field_A = 0;
         sz[1] = 0x45;
         DrawMagicList_8002CAC8(&w, sz);
-        dword_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&w.field_C_minion->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
+        dword_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&w.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
     }
     DrawButtonHelpBar_8002B004(dword_800C9674[dword_800C9E50], 0, 0xF);
 }

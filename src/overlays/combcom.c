@@ -442,14 +442,14 @@ void sub_800CBEA4()
         CombComPos2 p;
         p = name_800CB680;
         r.field_4 = 2;
-        r.field_6 = 0xF;
+        r.ot_6 = 0xF;
         r.field_8 = -1;
-        r.field_0 = dword_800CD298[4];
-        r.field_2 = dword_800CD298[5];
-        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.cursor_0 = dword_800CD298[4];
+        r.scroll_2 = dword_800CD298[5];
+        r.minion_C = sub_800A11D8(byte_800CD839);
         r.field_A = 0;
         DrawAbilityList_8002CE28(&r, p.xy[byte_800CD839]);
-        word_800A82D2 = -GetSkillMpCost_80031A04(&r.field_C_minion->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298)));
+        word_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298)));
     }
     if (!(name_800CD820[byte_800CD83A][k] & 0x80))
     {
@@ -457,14 +457,14 @@ void sub_800CBEA4()
         CombComPos2 p;
         p = name_800CB688;
         r.field_4 = 2;
-        r.field_6 = 0xF;
+        r.ot_6 = 0xF;
         r.field_8 = -1;
-        r.field_0 = dword_800CD2A4[4];
-        r.field_2 = dword_800CD2A4[5];
-        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.cursor_0 = dword_800CD2A4[4];
+        r.scroll_2 = dword_800CD2A4[5];
+        r.minion_C = sub_800A11D8(byte_800CD839);
         r.field_A = 0;
         DrawMagicList_8002CAC8(&r, p.xy[byte_800CD839]);
-        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.field_C_minion->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4)));
+        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4)));
     }
     if (byte_800CD83A == 5)
     {
@@ -679,9 +679,9 @@ int sub_800CCA94()
     short b[4];
     int idx = GetMenuCursorIndex_8003DA54(dword_800CD854);
     int* p;
-    a.field_0 = dword_800CD854[4];
+    a.cursor_0 = dword_800CD854[4];
     dword_800CD84C = 0;
-    a.field_2 = dword_800CD854[5];
+    a.scroll_2 = dword_800CD854[5];
     a.field_A = 0;
     b[3] = 0;
     b[0] = dword_800CD840->arg_4;
@@ -698,7 +698,7 @@ int sub_800CCA94()
         dword_800CD84C = *p;
         return 0;
     case 1:
-        a.field_C_minion = sub_800A11D8(byte_800CD839);
+        a.minion_C = sub_800A11D8(byte_800CD839);
         switch (CheckSkillUsable_80033C98(&a))
         {
         case 0:
@@ -716,7 +716,7 @@ int sub_800CCA94()
         }
         break;
     case 2:
-        a.field_C_minion = sub_800A11D8(byte_800CD839);
+        a.minion_C = sub_800A11D8(byte_800CD839);
         switch (CheckMagicCastable_80033C08(&a))
         {
         case 0:
