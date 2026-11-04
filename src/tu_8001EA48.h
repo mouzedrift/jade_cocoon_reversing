@@ -695,5 +695,7 @@ int sub_8002407C(FtgPrimHeader *a0, FtgSrcPolyG4 *a1, FtgObject *a2, int a3);
 int sub_80024394(FtgPrimHeader *a0, FtgSrcPolyFT4 *a1, FtgObject *a2, int a3);
 int sub_800246A0(FtgPrimHeader *a0, FtgSrcPolyGT4 *a1, FtgObject *a2, int a3);
 
+void InitOverlayLoaderTask_80020CB8();
+
 #endif
 

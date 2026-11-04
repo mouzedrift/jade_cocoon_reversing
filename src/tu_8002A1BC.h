@@ -8,4 +8,6 @@ extern const char aYes_80074190[];
 extern const char aNo_80074198[];
 extern const int dword_800741A0;
 
+void InitReverbTask_8002A1BC();
+
 #endif

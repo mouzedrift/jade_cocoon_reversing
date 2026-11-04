@@ -19,6 +19,13 @@
 #include "tu_80010B90.h"
 #include "tu_8001EA48.h"
 #include "tu_80010228.h"
+#include "cd.h"
+#include "effect.h"
+#include "event.h"
+#include "main.h"
+#include "tu_8002A1BC.h"
+#include "tu_80034068.h"
+#include "tu_80036528.h"
 
 const char dword_80071B78[] = "\202\313\202\336\202\301\202\304\202\242\202\351"; // ねむっている
 const char asc_80071B88[] = "\203}\203q\202\265\202\304\202\242\202\351"; // マヒしている
@@ -1171,9 +1178,55 @@ Data001File Data001Files_80075AA0[1108] = {{{0u, 2u, 35u, 0u}, 367, 751616},
                                            {{85u, 56u, 57u, 0u}, 5977, 13962272},
                                            {{86u, 88u, 22u, 0u}, 1035, 2417760},
                                            {{87u, 18u, 1u, 0u}, 21750, 50808000}};
-INCLUDE_DATA(Data001Files_80075AA0_tail);
-INCLUDE_DATA(dword_80079140);
-INCLUDE_DATA(dword_80079210);
+int dword_80078E90[10] = {
+    0xA0A0F, 0xA0A0F, 0xA0A0F, 0xA0A0F, 0xAF3F3F, 0xAF3F3F, 0xAF3F3F, 0xAF3F3F,
+    0xC8C8C8, 0xA280A,
+};
+EventDesc eventDescs_80078EB8[27] = {
+    {
+        1,
+        5,
+        44,
+        (void *)&fileRequestTask_8008B544,
+        (EventEntryFn)InitFileRequestTask_8003C128,
+        (EventEntryFn)AssertFileRequestQueueEmpty_8003C684,
+    },
+    { 5, 0x8000, 8, (void *)&fileRequestTasks_8008D488 },
+    { 1, 1, 4, 0, (EventEntryFn)InitReverbTask_8002A1BC },
+    { 1, 5, 64, &soundTask_8008D4A4, (EventEntryFn)InitSoundTask_8002FF10, (EventEntryFn)FreeSoundTask_8003006C },
+    { 1, 1, 16, &overlayLoaderTask_8008D4C0, (EventEntryFn)InitOverlayLoaderTask_80020CB8 },
+    { 1, 5, 12, &xaTask_8008B560, (EventEntryFn)XaInitTask_80043054, (EventEntryFn)XaStop_800430B0 },
+    { 1, 1, 8, &dword_8008D628, (EventEntryFn)sub_8001A41C },
+    { 1, 5, 0x21C, &cameraTask_8008D4A0, (EventEntryFn)InitCameraTask_800368F8, (EventEntryFn)nullsub_5 },
+    { 1, 0x8000, 124, (void *)&dword_8008D62C },
+    { 1, 0x8000, 0x2A8, (void *)&messageWindowTask_8008D640 },
+    { 2, 1, 6, (void *)&vibrationTasks_8008D4B8, (EventEntryFn)InitPadVibration_800364E4 },
+    { 1, 0x8000, 72, (void *)((char *)&dword_8008D480 + 4) },
+    { 1, 0x8000, 72, (void *)&dword_8008B4B8 },
+    { 1, 0x8000, 124, (void *)&dword_8008D480, sub_800B7650 },
+    { 1, 0x8000, 72, (void *)&dword_8008D4C4 },
+    { 3, 0x8000, 196, (void *)&dword_8008B4AC },
+    { 8, 0x8000, 80, (void *)&dword_8008D778 },
+    { 1, 0x8000, 8, (void *)((char *)&dword_8008B4AC + 4) },
+    { 1, 0x8000, 8, &screenFlashTasks_8008D61C },
+    { 2, 0x8000, 8, &modelTasks_8008D618 },
+    { 1, 1, 8, (void *)((char *)&dword_8008D468 + 8), (EventEntryFn)nullsub_2 },
+    {
+        1,
+        5,
+        80,
+        &effectTask_8008D3F8,
+        (EventEntryFn)InitEffectTask_80014618,
+        (EventEntryFn)FreeEffectTask_800148A0,
+    },
+    { 1, 0x8000, 80, (void *)&dword_8008D5F8 },
+    { 20, 0x8000, 176, &effectObjects_8008B4A8 },
+    { 150, 0x8000, 72, &dword_8008D60C },
+    { 1, 0x8000, 20, (void *)&dword_8008D614 },
+    { 1, 0x8000, 4, (void *)&dword_8008B4C0 },
+};
+unsigned char dword_80079140[208] = { 0, 0, 0, 0, 0, 0, 70, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 11, 0, 3, 0, 3, 2, 3, 0, 11, 0, 4, 0, 4, 3, 4, 0, 11, 0, 5, 0, 5, 4, 5, 0, 11, 0, 3, 0, 6, 2, 6, 0, 11, 0, 4, 0, 7, 6, 7, 0, 11, 0, 5, 0, 8, 7, 8, 0, 11, 0, 3, 0, 9, 2, 9, 0, 11, 0, 4, 0, 10, 9, 10, 0, 11, 0, 5, 0, 11, 10, 11, 0, 11, 0, 3, 0, 12, 2, 12, 0, 11, 0, 4, 0, 13, 12, 13, 0, 11, 0, 3, 0, 14, 2, 14, 0, 11, 0, 4, 0, 15, 14, 15, 0, 11, 0, 2, 0, 16, 0, 16, 0, 11, 0, 3, 0, 17, 16, 17, 0, 11, 0, 4, 0, 18, 17, 18, 0, 11, 0, 5, 0, 19, 18, 19, 0, 11, 0, 3, 0, 20, 16, 20, 0, 11, 0, 4, 0, 21, 20, 21, 0, 11, 0, 5, 0, 22, 21, 22, 0, 11, 0, 3, 0, 23, 16, 23, 0, 11, 0, 4, 0, 24, 23, 24, 0, 11, 0, 255, 255, 255, 255, 255, 255, 255, 255 };
+unsigned char dword_80079210[272] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 0, 0, 3, 0, 3, 2, 3, 0, 0, 0, 4, 0, 4, 3, 4, 0, 0, 0, 5, 0, 5, 4, 5, 0, 0, 0, 3, 0, 6, 2, 6, 0, 0, 0, 4, 0, 7, 6, 7, 0, 0, 0, 5, 0, 8, 7, 8, 0, 0, 0, 3, 0, 9, 2, 9, 0, 0, 0, 4, 0, 10, 9, 10, 0, 0, 0, 5, 0, 11, 10, 11, 0, 0, 0, 3, 0, 12, 2, 12, 0, 0, 0, 4, 0, 13, 12, 13, 0, 0, 0, 3, 0, 14, 2, 14, 0, 0, 0, 4, 0, 15, 14, 15, 0, 0, 0, 2, 0, 16, 0, 16, 0, 0, 0, 3, 0, 17, 16, 17, 0, 0, 0, 4, 0, 18, 17, 18, 0, 0, 0, 5, 0, 19, 18, 19, 0, 0, 0, 3, 0, 20, 16, 20, 0, 0, 0, 4, 0, 21, 20, 21, 0, 0, 0, 5, 0, 22, 21, 22, 0, 0, 0, 3, 0, 23, 16, 23, 0, 0, 0, 4, 0, 24, 23, 24, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 64, 0, 0, 0, 128, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 4 };
 
 // Matched
 int ModelTaskLoad_80010B90(ModelTaskState* p)

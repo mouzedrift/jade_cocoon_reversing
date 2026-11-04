@@ -1,6 +1,8 @@
 #ifndef TU_80010B90_H
 #define TU_80010B90_H
 
+#include "event.h" // EventDesc
+
 /* the buffer of the task dword_8008D464 (dword_8008D464->entry.buffer) */
 typedef struct
 {
@@ -50,5 +52,12 @@ extern const char asc_80071ED0[];
 extern const char asc_80071EF0[];
 extern const int dword_80071F00;
 extern const int dword_80071F04;
+
+// the event lists of the game's tasks (CreateEventList_800435B4)
+extern EventDesc eventDescs_80078EB8[];
+
+extern int dword_80078E90[10];
+
+void sub_800B7650();
 
 #endif

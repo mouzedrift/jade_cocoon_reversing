@@ -440,15 +440,6 @@ unsigned int XaNoRequestPending_800435A4(void)
 {
     return xaRequestPending_80096118 >> 31;
 }
-typedef struct
-{
-    unsigned int count;
-    unsigned int flags;
-    int size;
-    EventNode** out;
-    EventEntryFn cb_8;
-    EventEntryFn cb_C;
-} EventDesc;
 #if 0
 // Not matched: only next/next2 get swapped registers ($s6/$s7, 7 words). Also tried: declaration orders, static inline node-init helper, next2 = next + 1 / n + 2 / next2++ forms, head->next = head + 1, separate count-loop vars, int i, idx = 0 outside the for; permuter 1000: nothing
 EventNode* CreateEventList_800435B4(EventDesc** list)

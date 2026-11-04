@@ -12,4 +12,6 @@ extern const char dword_800747E8[];
 extern const char dword_80074800[];
 extern const int dword_80074818;
 
+void InitPadVibration_800364E4();
+
 #endif

@@ -24,4 +24,17 @@ extern MATRIX dword_80087134;
 
 extern int dword_8009611C;
 
+/* how CreateEventList_800435B4 makes an event list (eventDescs_80078EB8) */
+typedef struct
+{
+    unsigned int count;
+    unsigned int flags;
+    int size;
+    EventNode** out;
+    EventEntryFn cb_8;
+    EventEntryFn cb_C;
+} EventDesc;
+
+void XaInitTask_80043054();
+
 #endif

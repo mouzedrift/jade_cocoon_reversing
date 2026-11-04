@@ -6,4 +6,6 @@ extern const int dword_800748DC;
 
 extern int dword_80086544;
 
+void InitFileRequestTask_8003C128();
+
 #endif

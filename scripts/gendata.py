@@ -1227,6 +1227,11 @@ def main(argv):
         if owner not in parsed:
             parsed[owner] = Types(parse_preproc(os.path.join(REPO, "build_psyq", owner + ".preproc"))) if owner != tu else types
         node = parsed[owner].funcnodes.get(name, fnode)
+        # without the parameters: their types may be the TU's own (and the cast in the initialiser names the type)
+        if node is not None:
+            import copy
+            node = copy.deepcopy(node)
+            node.args = None
         text = ("%s;" % decl_text(named(node, name), name)) if node is not None else "void %s();" % name
         protos.setdefault(owner, []).append(text)
         if owner != tu:

@@ -11,4 +11,7 @@ extern int dword_800795E4;
 extern int dword_800795E8;
 extern int dword_800795EC;
 
+void FreeEffectTask_800148A0();
+void InitEffectTask_80014618();
+
 #endif
