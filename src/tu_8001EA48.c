@@ -2054,7 +2054,9 @@ void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
 #endif
 INCLUDE_ASM(sub_80022B84);
 #if 0
-// Not matched: first loop swaps the j/k registers and fills the first beqz delay slot; second loop has the j++/n++ increments in the other order
+// Not matched (2 words): the second loop has the j++ / n++ increments in the other order (j++, n++ in the for header
+// or in the body fixes them but then swaps the sprite pointer increments). A j of its own for the second loop fixed the
+// first loop's j/k registers
 void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h)
 {
     int j;
@@ -2092,6 +2094,7 @@ void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h
     }
     if (b->count)
     {
+        int j;
         j = 0;
         a0->tpage_4C = b->groups->tpage;
         a0->clut_4E = b->groups->clut;
