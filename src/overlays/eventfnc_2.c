@@ -114,9 +114,9 @@ int (*eventFuncs_800BCDBC[157])() = {
     EvCmdSetCallArgs_800BA6D0, EvCmdCallUntilDone_800BA714, EvCmdCallSelect_800BA7A4, (int (*)())EvCmdSetChapter_800BA82C,
     sub_800BA880, EvCmdSetMapVar_800BA8AC, EvCmdChangeMap_800BA930, EvCmdChangeMapToPoint_800BA9E4,
     EvCmdNop_800B89A8, EvCmdPreloadArea_800BAA6C, EvCmdUsePreloadedArea_800BAAC0, EvCmdSetReturnPoint_800BAB14,
-    (int (*)())sub_800BAB5C, EvCmdOpenShop_800BABB0, EvCmdCameraLookAtPoint_800BAC60, EvCmdCameraLookAtActor_800BACE0,
+    (int (*)())EvCmdOpenMapSelect_800BAB5C, EvCmdOpenShop_800BABB0, EvCmdCameraLookAtPoint_800BAC60, EvCmdCameraLookAtActor_800BACE0,
     EvCmdCameraClearLookAt_800BAD3C, EvCmdWaitCameraBlend_800BAD88, EvCmdSetViewRect_800BADF8, EvCmdSetCameraZoom_800BAEBC,
-    EvCmdSetCameraTarget_800BAF08, EvCmdSetMapMesh_800BAF68, EvCmdWaitTalk_800BAFAC, sub_800BB180,
-    EvCmdWaitActorInRegion_800BB214, (int (*)())EvCmdBattle_800BB27C, sub_800BB45C, EvCmdFadeSound_800BB4A4,
+    EvCmdSetCameraTarget_800BAF08, EvCmdSetMapMesh_800BAF68, EvCmdWaitTalk_800BAFAC, EvCmdSetIdleAnim_800BB180,
+    EvCmdWaitActorInRegion_800BB214, (int (*)())EvCmdBattle_800BB27C, EvCmdIfBattleResult_800BB45C, EvCmdFadeSound_800BB4A4,
     EvCmdPadVibration_800BB7D8,
 };

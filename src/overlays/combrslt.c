@@ -69,8 +69,8 @@ void VersusResultFadeOut_800A41E4(CombRsltTask* task, int arg)
     }
 }
 
-extern unsigned char byte_800A3A98[];
-extern unsigned char byte_800A3A90[];
+extern unsigned char sideResult_800A3A98[];
+extern unsigned char sideWins_800A3A90[];
 extern void DrawScorePair_800A444C();
 extern void DrawResultMinion_800A4554();
 
@@ -80,7 +80,7 @@ void DrawPlayerResult_800A4240(int player)
     short pos[2];
     int j;
     int u;
-    int result = byte_800A3A98[player];
+    int result = sideResult_800A3A98[player];
     switch (result)
     {
     case 0:
@@ -102,10 +102,10 @@ void DrawPlayerResult_800A4240(int player)
     DrawMenuItemWithWindow_8002ADB4(resultItems_800A4870[player], &box, 0xF, GetTime30Hz_8002C64C());
     pos[0] = scoreWindows_800A48B0[player][8];
     pos[1] = scoreWindows_800A48B0[player][9];
-    DrawScorePair_800A444C(pos, 0xF, byte_800A3A90[player ^ 1], byte_800A3A90[player]);
+    DrawScorePair_800A444C(pos, 0xF, sideWins_800A3A90[player ^ 1], sideWins_800A3A90[player]);
     DrawMenuItemWithWindow_8002ADB4(scoreWindows_800A48B0[player], &box, 0xF, GetTime30Hz_8002C64C());
     j = 0;
-    u = byte_800A3A98[player];
+    u = sideResult_800A3A98[player];
     if (u < 3 && u != 0)
         box.c_2 = 0;
     for (j = 0; j < 3; j++)
@@ -162,9 +162,9 @@ void DrawScorePair_800A444C(unsigned short* p, int ot, int b, int c)
     }
 }
 
-extern char byte_800A3AA0[];
+extern Minion teams_800A3AA0[2][3]; // COMBAT's teams
 
-extern int sub_800A1958();
+extern int IsMinionFainted_800A1958();
 extern int IsMinionSlotEmpty_800A1934();
 extern void DrawMinionNameLevel_800A1844();
 extern void DrawHpGauge_8002F078();
@@ -180,9 +180,9 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
     CombRsltPos r2;
     CombRsltPos r3[2];
     CombRsltPos* q;
-    char* e;
+    Minion* e;
     int on;
-    if (sub_800A1958(byte_800A3AA0 + player * 744 + slot * 248))
+    if (IsMinionFainted_800A1958(&teams_800A3AA0[player][slot]))
     {
         a.flags_0 |= 2;
         on = 1;
@@ -192,7 +192,7 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
         on = 0;
         a.flags_0 &= ~2;
     }
-    e = byte_800A3AA0 + player * 744 + slot * 248;
+    e = &teams_800A3AA0[player][slot];
     if (IsMinionSlotEmpty_800A1934(e) != 1)
     {
         a.text_4 = slotLabelSprites_800A48B8[slot];
@@ -207,7 +207,7 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
         {
             r1.x = q->x + 0x2F;
             r1.y = q->y;
-            DrawHpGauge_8002F078(e + 0x84, &r1, 0, 0xF);
+            DrawHpGauge_8002F078(&e->status_84, &r1, 0, 0xF);
             b.type_2 = 0;
         }
         DrawMenuItemWithWindow_8002ADB4(&b, box, 0xF, GetTime30Hz_8002C64C());

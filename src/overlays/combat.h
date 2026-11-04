@@ -35,10 +35,10 @@ typedef struct CombatSlot
 extern int dword_800A05A0;
 extern short combatCursor_800A1BBC[4];
 extern short combatMenuChoice_800A1BC4;
-extern unsigned char byte_800A38D8;
+extern unsigned char player2Pad_800A38D8;
 extern unsigned char curPlayer_800A38D9;
 extern unsigned char rosterFill_800A38DA;
-extern unsigned char byte_800A38DB;
+extern unsigned char selMode_800A38DB;
 extern unsigned char battleResult_800A38DC;
 extern int dword_800A38E0;
 extern int combatTaskDesc_800A38E4[6];
@@ -51,7 +51,7 @@ extern int combatFadeTaskDesc_800A3974[6];
 extern void *combatTaskList_800A398C[25];
 extern int stageOverlays_800A39F0[6];
 extern CombatSlot combatSlots_800A3A08[2];
-extern int dword_800A3A88; // bit 0: COMBSTRT goes on to COMBBTL (else back to COMBSEL)
+extern int combatFlags_800A3A88; // bit 0: COMBSTRT goes on to COMBBTL (else back to COMBSEL)
 extern int stage_800A3A8C; // stageOverlays_800A39F0 index: 0 CUI, 1 SEL, 2 LOAD, 3 STRT, 4 BTL, 5 RSLT
 extern int dword_800A3A90[4];
 extern int prevStage_800A4070;

@@ -102,8 +102,6 @@ typedef struct
     int f;
 } Params5510_equip;
 
-extern char name_8008D434[];
-extern char name_8008D440[];
 extern int GetEquipmentName_8001D128(int a0, int a1);
 extern int sub_800AD2C8(int a0, int a1);
 extern void DrawMenuWindows_8002A5A4(void* p);
@@ -702,8 +700,8 @@ void DrawEquipItemList_800C5510(EquipListParams* q, Rect8_equip* r, short sel)
         equipListRows_800C598C[i]->icon_4 = a;
         equipListRows_800C598C[i]->name_20 = v;
         equipListRows_800C598C[i]->count_3C = flag;
-        equipListRows_800C598C[i]->sprts_8 = name_8008D434;
-        equipListRows_800C598C[i]->tpages_C = name_8008D440;
+        equipListRows_800C598C[i]->sprts_8 = &publicTiySprts_8008D434;
+        equipListRows_800C598C[i]->tpages_C = &publicTiyTPages_8008D440;
         equipListRows_800C598C[i]->x_10 = r->x;
         equipListRows_800C598C[i]->y_12 = r->y + i * 22;
         equipListRows_800C598C[i]->nameX_2C = r->x + 0x15;

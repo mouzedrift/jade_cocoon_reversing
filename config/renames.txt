@@ -5195,3 +5195,132 @@ sub_800BDE38 GetMaxBuyEquipCount_800BDE38
 sub_800BDF68 GetMaxBuyItemCount_800BDF68
 sub_800BE058 GetStoreListCursor_800BE058
 sub_800BE084 AdjustBuyQuantity_800BE084
+# --- naming pass 2: overlays ---
+# BATTLE: kind 0x16 (handler 6) is the second form of a fixed two-enemy encounter (sub_800A2AB4() == 2 sets
+# battle flag 2) replacing the first one; the dying species that set flag 0x100000 play the boss death seq 0x1C
+[BATTLE]
+sub_800BBFFC CmdEnemySwap_800BBFFC
+sub_800BC05C CmdEnemySwapJoin_800BC05C
+sub_800BF9B4 IsBossSpecies_800BF9B4
+dword_800C9D83 fixedStageElement_800C9D83
+[BATTLE EXE]
+byte_800C9C7C actingUnit_800C9C7C
+# COMBAT: slot wrappers (like BATTLE's summoned minion ones), the versus flags / pads, the stage overlays' tasks
+[COMBAT COMBBTL]
+sub_800A0EE8 IsSlotActorIdle_800A0EE8
+sub_800A0F1C IsSlotActorReady_800A0F1C
+sub_800A0F50 StartSlotAction_800A0F50
+[COMBAT COMBBTL COMBCOM COMBRSLT]
+sub_800A1958 IsMinionFainted_800A1958
+[COMBAT EXE]
+sub_800A1B2C GetCombatPortraitPoly_800A1B2C
+[EXE]
+sub_800A11A0 GetSlotSkills_800A11A0
+sub_800A11D8 GetSlotMinion_800A11D8
+[COMBAT COMBBTL COMBCOM COMBSEL]
+byte_800A38D8 player2Pad_800A38D8
+[COMBAT COMBSEL]
+byte_800A38DB selMode_800A38DB
+[COMBAT COMBBTL COMBCOM]
+dword_800A3A88 combatFlags_800A3A88
+[COMBAT]
+sub_800A4394 VersusIntroTask_800A4394
+sub_800A40FC CombLoadStart_800A40FC
+sub_800A4170 VersusSetupTask_800A4170
+sub_800A40E0 VersusResultTask_800A40E0
+# COMB*: COMBAT's per-side data (dword_800A3A90[4]: wins bytes, the current pad, result bytes; dword_800A4074[3]: +4 the active slots)
+[COMBSEL COMBLOAD]
+dword_800A3A94 curPad_800A3A94
+[COMBBTL COMBRSLT]
+byte_800A3A90 sideWins_800A3A90
+byte_800A3A98 sideResult_800A3A98
+[COMBBTL COMBCOM]
+dword_800A4078 sideSlot_800A4078
+word_800A82D0 previewHp_800A82D0
+word_800A82D2 previewMp_800A82D2
+[COMBBTL]
+dword_800A849C fixedStageElement_800A849C
+dword_800A45F0 aEmptyLine_800A45F0
+[COMBCOM]
+byte_800A85BC swapSlot_800A85BC
+[COMBLOAD]
+sub_800BAE24 IsCardReady_800BAE24
+sub_800BB4A8 DrawCardSlotMenu_800BB4A8
+[LOAD]
+sub_800BAE24 IsCardReady_800BAE24
+# EVENTFNC
+[EVENTFNC]
+sub_800BAB5C EvCmdOpenMapSelect_800BAB5C
+sub_800BB180 EvCmdSetIdleAnim_800BB180
+sub_800BB45C EvCmdIfBattleResult_800BB45C
+name_80084540 sinTable_80084540
+[EXE]
+sub_800B6DD4 CollideLevantWithMap_800B6DD4
+sub_800B716C CollideWithMap_800B716C
+sub_800B73C0 MarkSharedEdges_800B73C0
+sub_800B76B8 FindTriAtXZ_800B76B8
+sub_800B8184 FindMeshAtPos_800B8184
+# MENU
+[MENU]
+sub_800BCF74 OnMinionLevelUp_800BCF74
+sub_800C1000 IsKeyItemUseAllowed_800C1000
+name_800B0EC0 fieldMode_800B0EC0
+name_800C18E4 moneyWindowRect_800C18E4
+# MAP / NAME / SHOP
+[MAP]
+name_800A75F8 StartMapOverlay_800A75F8
+[NAME]
+name_800B6CA0 ShopCtrlRequestShop_800B6CA0
+[SHOP]
+name_80079140 defaultBones_80079140
+# TITLE
+[TITLE]
+sub_800A24E0 StoreAllPartyMinions_800A24E0
+asc_800A05A4 nameCursorPulseColor_800A05A4
+# TSTCOMPO: the debug compound test's species list (katakana names), its light and bone position buffers
+[TSTCOMPO]
+dword_800A2514 compoPageRect_800A2514
+name_800A2570 compoLight_800A2570
+name_800A2588 compoBonePos_800A2588
+asc_800A05CC aPadoruka_800A05CC
+asc_800A05D8 aArupataron_800A05D8
+asc_800A05E8 aSheriku_800A05E8
+asc_800A05F4 aRashababa_800A05F4
+asc_800A0600 aTuingo_800A0600
+asc_800A060C aEsupu_800A060C
+asc_800A0614 aJiraru_800A0614
+asc_800A061C aYoruku_800A061C
+asc_800A0624 aUguramu_800A0624
+asc_800A0630 aSurikaata_800A0630
+asc_800A063C aRigu_800A063C
+asc_800A0644 aOje_800A0644
+asc_800A064C aNeebui_800A064C
+asc_800A0658 aMuguu_800A0658
+asc_800A0660 aMaayen_800A0660
+asc_800A066C aGinui_800A066C
+asc_800A0674 aAsha_800A0674
+asc_800A067C aMutsukishabu_800A067C
+asc_800A068C aRashabu_800A068C
+asc_800A0698 aNushabu_800A0698
+asc_800A06A4 aDoguruchuu_800A06A4
+asc_800A06B4 aRadoruchu_800A06B4
+asc_800A06C0 aPataruchuu_800A06C0
+asc_800A06D0 aRadoimeru_800A06D0
+asc_800A06DC aSukuimeru_800A06DC
+asc_800A06E8 aPataimeru_800A06E8
+asc_800A06F4 aHirasagu_800A06F4
+asc_800A0700 aMasukohira_800A0700
+asc_800A070C aHiraruko_800A070C
+asc_800A0718 aTerahanbuu_800A0718
+asc_800A0728 aDoguhanbuu_800A0728
+asc_800A0738 aMukahanbuu_800A0738
+asc_800A0748 aBerabansa_800A0748
+asc_800A0754 aDonguru_800A0754
+asc_800A0760 aRagidoguru_800A0760
+asc_800A076C aPatadorekku_800A076C
+asc_800A077C aRadoreggu_800A077C
+asc_800A0788 aMaadoreggu_800A0788
+# TSTMODEL
+[TSTMODEL]
+name_800A1EE8 modelLight_800A1EE8
+name_800A3804 modelBonePos_800A3804

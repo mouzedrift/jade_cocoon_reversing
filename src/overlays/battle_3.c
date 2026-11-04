@@ -166,7 +166,7 @@ void ApplyBattleCommand_800BEBB8()
         {
             m = GetUnitStatus_80014390(i & 0xFF);
             res.areaElement_24 = shownAreaElement_800C9D82;
-            res.f26 = (signed char)dword_800C9D83;
+            res.f26 = (signed char)fixedStageElement_800C9D83;
             cmd.targets_C = bit;
             ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
             if (encounterRecord_800ADE78.f0 == 1)
@@ -288,7 +288,7 @@ void ApplyBattleCommand_800BEBB8()
                     if (r == 2)
                     {
                         SetBattleFlag_800BC838(0x40);
-                        if (sub_800BF9B4(GetEnemySpecies_800A2BE4(i - 4)) == 1)
+                        if (IsBossSpecies_800BF9B4(GetEnemySpecies_800A2BE4(i - 4)) == 1)
                         {
                             SetBattleFlag_800BC838(0x100000);
                         }
@@ -618,7 +618,7 @@ int IsUncapturableSpecies_800BF980(int species)
     return r;
 }
 
-int sub_800BF9B4(int species)
+int IsBossSpecies_800BF9B4(int species)
 {
     int r = 0;
     switch (species)
@@ -4880,7 +4880,7 @@ void PreviewCommandResult_800C83B0()
                 m = GetUnitStatus_80014390(i & 0xFF);
 
                 d.areaElement_24 = shownAreaElement_800C9D82;
-                d.f26 = (signed char)dword_800C9D83;
+                d.f26 = (signed char)fixedStageElement_800C9D83;
                 a.targets_C = bit;
                 ResolveBattleAction_80012BB0(self, m, &a, &d);
                 if (sub_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
@@ -5092,7 +5092,7 @@ int dword_800C8B2C = 0xFFFF;
 unsigned char aiCounter_800C8B30 = 0;
 int aiAllyCalled_800C8B34 = 0;
 char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
-int commandHandlers_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)sub_800BBFFC };
+int commandHandlers_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)CmdEnemySwap_800BBFFC };
 unsigned short stage00Sprites_800C8B70[8] = { 40, 41, 42, 43, 44, 45, 46, 0xFFFF };
 unsigned short stage01Sprites_800C8B80[8] = { 51, 52, 53, 54, 55, 56, 0xFFFF };
 unsigned short stage02Sprites_800C8B90[8] = { 61, 62, 63, 64, 65, 66, 67, 0xFFFF };
@@ -5475,7 +5475,7 @@ short hitSfx_800C9D78 = 0;
 int btlExecLoad_800C9D7C = 0;
 short deathSfx_800C9D80 = 0;
 signed char shownAreaElement_800C9D82 = 0;
-char dword_800C9D83 = 0;
+char fixedStageElement_800C9D83 = 0;
 signed char areaElement_800C9D84 = 0;
 int dword_800C9D88 = 0;
 short stageAnimUv_800C9D8C[2] = { 0 };

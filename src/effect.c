@@ -279,7 +279,7 @@ Minion* GetUnitMinion_80014444(int unit)
     if (v >= 8)
     {
         v = unit - 8;
-        r = sub_800A11D8(v & 0xFF);
+        r = GetSlotMinion_800A11D8(v & 0xFF);
     }
     else if (v != 0)
     {

@@ -28,8 +28,8 @@ const int dword_800A4348 = 0;
 
 void CombSelMain_800A4360(CombSelTask* t, int a)
 {
-    CombSelCursor* cursor = modeCursors_800A5984[byte_800A38DB];
-    CombSelMenu* win = modeWindows_800A5994[byte_800A38DB];
+    CombSelCursor* cursor = modeCursors_800A5984[selMode_800A38DB];
+    CombSelMenu* win = modeWindows_800A5994[selMode_800A38DB];
     int i;
     int j;
     if (AllSlotsEmpty_800A5560(teams_800A3AA0[curPlayer_800A38D9], 3) == 1)
@@ -52,17 +52,17 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     }
     if (curPlayer_800A38D9 == 0)
     {
-        dword_800A3A94 = 0;
+        curPad_800A3A94 = 0;
     }
     else
     {
-        dword_800A3A94 = byte_800A38D8;
+        curPad_800A3A94 = player2Pad_800A38D8;
     }
     nextRow_800A58C0[0].icon_4 = nextIcons_800A59AC[curPlayer_800A38D9];
     listCursor_800A596C.rows_2 = 6;
     listCursor_800A596C.count_4 = 15;
     PlaceSideWindows_800A4C74();
-    switch (byte_800A38DB)
+    switch (selMode_800A38DB)
     {
     case 0:
         mainWindow_800A5948.flags_0 = 2;
@@ -145,7 +145,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         col.frame_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;
         DrawMenuItemWithWindow_8002ADB4(&item, &col, 10, 0);
-        if (byte_800A38DB == 2)
+        if (selMode_800A38DB == 2)
         {
             CombSelArrow arrow;
             short pos[4];
@@ -170,7 +170,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             col.color_0 = saveData_8008B570.uiColor_20.h;
             DrawMenuItemWithWindow_8002ADB4(&item, &col, 10, 0);
         }
-        switch (byte_800A38DB)
+        switch (selMode_800A38DB)
         {
         case 0:
             if (curPlayer_800A38D9 == 0)
@@ -223,7 +223,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         {
             DrawButtonHelpBar_8002B004(buttonHelpP2_800A5A04, 0, 15);
         }
-        if (byte_800A38DB == 3)
+        if (selMode_800A38DB == 3)
         {
             dword_80082784.flags_0 = 10;
             dword_80082784.time_4 = GetTime30Hz_8002C64C();
@@ -239,14 +239,14 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             DrawMenuWindows_8002A5A4(&dword_80082784);
         }
         DrawMenuBackground_8002BE10();
-        UpdateMenuCursor_8003D794(cursor, dword_800A3A94);
-        if (padPressed_8009194C[dword_800A3A94] & 0x80)
+        UpdateMenuCursor_8003D794(cursor, curPad_800A3A94);
+        if (padPressed_8009194C[curPad_800A3A94] & 0x80)
         {
             NextOrFight_800A5080(t, a);
         }
         else
         {
-            modeHandlers_800A59B4[byte_800A38DB](t, a);
+            modeHandlers_800A59B4[selMode_800A38DB](t, a);
         }
     }
 }
@@ -312,7 +312,7 @@ void CompactTeams_800A4E4C()
 
 void MainMenuInput_800A4E94(CombSelTask* t, int a)
 {
-    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, curPad_800A3A94))
     {
         switch (combatMenuChoice_800A1BC4)
         {
@@ -329,7 +329,7 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
             else
             {
                 PlaySfx_80031494(0x7E);
-                byte_800A38DB = 2;
+                selMode_800A38DB = 2;
             }
             break;
         case 2:
@@ -340,7 +340,7 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
             else
             {
                 PlaySfx_80031494(0x7E);
-                byte_800A38DB = 1;
+                selMode_800A38DB = 1;
             }
             break;
         case 3:
@@ -348,12 +348,12 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
             break;
         case 4:
             PlaySfx_80031494(0x7E);
-            byte_800A38DB = 3;
+            selMode_800A38DB = 3;
             quitCursor_800A5978.index_8 = 1;
             break;
         }
     }
-    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, curPad_800A3A94))
     {
         switch (curPlayer_800A38D9)
         {
@@ -380,7 +380,7 @@ void NextOrFight_800A5080(CombSelTask* t, int a)
     }
     else
     {
-        byte_800A38DB = 0;
+        selMode_800A38DB = 0;
         combatCursor_800A1BBC.index_8 = 3;
         PlaySfx_80031494(0x7E);
         switch (curPlayer_800A38D9)
@@ -405,7 +405,7 @@ INCLUDE_OVERLAY_ASM(combsel, NextOrFight_800A5080);
 
 void TeamSlotInput_800A5188()
 {
-    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, curPad_800A3A94))
     {
         switch (combatMenuChoice_800A1BC4)
         {
@@ -414,7 +414,7 @@ void TeamSlotInput_800A5188()
             Minion* a = &teams_800A3AA0[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)];
             Minion* b = &rosters_800A1BC8[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&listCursor_800A596C)];
             MemCopy_800403E8(a, b, 0xF8);
-            byte_800A38DB = 2;
+            selMode_800A38DB = 2;
             PlaySfx_80031494(0x7E);
             break;
         }
@@ -427,20 +427,20 @@ void TeamSlotInput_800A5188()
             {
                 PlaySfx_80031494(0x7E);
                 ClearMinionSlot_800A197C(&teams_800A3AA0[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)]);
-                byte_800A38DB = 0;
+                selMode_800A38DB = 0;
             }
             break;
         }
     }
-    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, curPad_800A3A94))
     {
         switch (combatMenuChoice_800A1BC4)
         {
         case 1:
-            byte_800A38DB = 2;
+            selMode_800A38DB = 2;
             break;
         case 2:
-            byte_800A38DB = 0;
+            selMode_800A38DB = 0;
             break;
         }
     }
@@ -449,7 +449,7 @@ void TeamSlotInput_800A5188()
 void ListInput_800A53B0()
 {
     short s;
-    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, curPad_800A3A94))
     {
         s = combatMenuChoice_800A1BC4;
         if (s == 1)
@@ -461,14 +461,14 @@ void ListInput_800A53B0()
             }
             else
             {
-                byte_800A38DB = 1;
+                selMode_800A38DB = 1;
                 PlaySfx_80031494(0x7E);
             }
         }
     }
-    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, curPad_800A3A94))
     {
-        byte_800A38DB = 0;
+        selMode_800A38DB = 0;
         if (CountTeamMinions_800A1AAC(curPlayer_800A38D9))
         {
             combatMenuChoice_800A1BC4 = 3;
@@ -478,7 +478,7 @@ void ListInput_800A53B0()
 
 void QuitConfirmInput_800A54A0(CombSelTask* t)
 {
-    if (IsConfirmPressed_8003D288(0, dword_800A3A94))
+    if (IsConfirmPressed_8003D288(0, curPad_800A3A94))
     {
         PlaySfx_80031494(0x7E);
         if ((short)GetMenuCursorIndex_8003DA54(&quitCursor_800A5978) == 0)
@@ -488,12 +488,12 @@ void QuitConfirmInput_800A54A0(CombSelTask* t)
         }
         else
         {
-            byte_800A38DB = 0;
+            selMode_800A38DB = 0;
         }
     }
-    else if (IsCancelPressed_8003D3C0(1, dword_800A3A94))
+    else if (IsCancelPressed_8003D3C0(1, curPad_800A3A94))
     {
-        byte_800A38DB = 0;
+        selMode_800A38DB = 0;
     }
 }
 

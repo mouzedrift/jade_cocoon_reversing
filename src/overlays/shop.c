@@ -150,7 +150,7 @@ extern int fn_80024F00(int a, int b);
 extern int fn_80024F38(int a, int b);
 extern void fn_80019B14(int a, int b, int c);
 extern void fn_8001D68C(void* p, int on);
-extern char name_80079140[];
+extern char defaultBones_80079140[];
 extern signed char name_8007BA74[];
 extern int UnitStatsToMinion_800B9E94(UnitStats* src, Minion* dst, short c);
 
@@ -3610,8 +3610,6 @@ def:
     u->shown_54 = u->base_4C;
 }
 
-extern char name_8008D434[];
-extern char name_8008D440[];
 extern void DrawScrollArrow_8002C6DC(void* p, int a, int b);
 void DrawSkinList_800BED48(short* s)
 {
@@ -3641,8 +3639,8 @@ void DrawSkinList_800BED48(short* s)
             cnt = 0;
         }
         skinListRows_800C0258[i][0].val_4 = icon;
-        skinListRows_800C0258[i][0].sprts_8 = name_8008D434;
-        skinListRows_800C0258[i][0].tpages_C = name_8008D440;
+        skinListRows_800C0258[i][0].sprts_8 = &publicTiySprts_8008D434;
+        skinListRows_800C0258[i][0].tpages_C = &publicTiyTPages_8008D440;
         skinListRows_800C0258[i][1].val_4 = name;
         skinListRows_800C0258[i][2].val_4 = cnt;
         skinListRows_800C0258[i][0].x_10 = 0x7B;
@@ -3925,7 +3923,7 @@ void SpawnFormActor_800BF574(int* a, unsigned short* b)
     q.w24 = -1;
     q.w2C = 4;
     q.w48 = r;
-    q.w34 = (int)name_80079140;
+    q.w34 = (int)defaultBones_80079140;
     q.w38 = fn_80024E90(r, v);
     q.w3C = fn_80024EC8(r, v);
     q.w40 = fn_80024E38(r);

@@ -77,7 +77,7 @@ extern void DrawMenuBackground_8002BE10();
 extern void EncodeName_8003F7C8(void* name, int a);
 extern void DecodeText_8003F748(int a, void* name);
 extern void SetFadeMode_8001C19C(int a, int b);
-extern void name_800B6CA0();
+extern void ShopCtrlRequestShop_800B6CA0();
 extern void MoveNameCursor_800B78EC(NameEntry* p);
 extern void UpdateNameEntry_800B70F4(NameEntry* p);
 extern void NameEntryNop_800B8018();
@@ -145,7 +145,7 @@ void NameEntryTask_800B6FD8(EventEntry* e, NameEntry* p)
         if (p->flags_0 & 0x10)
         {
             SetFadeMode_8001C19C(0, 0x20);
-            name_800B6CA0();
+            ShopCtrlRequestShop_800B6CA0();
         }
     }
     else if (IsConfirmPressedP1_8003D380(0) || IsCancelPressedP1_8003D41C(0))

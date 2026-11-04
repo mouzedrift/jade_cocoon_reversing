@@ -32,7 +32,6 @@ aSlash_800B6F04=0x800b6f04; // data
 aColon_800B6F08=0x800b6f08; // data
 IsShelfMenuActive_800B6F0C=0x800b6f0c;
 StartShelfMenu_800B6F1C=0x800b6f1c;
-sub_800B6F24=0x800b6f24;
 ShelfMenuTask_800B7000=0x800b7000;
 ShelfMenuConfirm_800B7144=0x800b7144;
 ShelfMenuCancel_800B72D4=0x800b72d4;

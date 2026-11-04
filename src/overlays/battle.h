@@ -414,7 +414,7 @@ extern void CmdActionReactions_800BBA70();
 
 extern void CmdRecallDone_800BBE00();
 
-extern void sub_800BC05C();
+extern void CmdEnemySwapJoin_800BC05C();
 
 extern void CmdEnemyCallJoin_800BBF64();
 
@@ -1139,7 +1139,7 @@ extern void CmdSwapMinion_800BBBF4();
 extern void CmdAction_800BBA24();
 extern void CmdSummon_800BBBA8();
 extern void CmdEnemyCall_800BBEFC();
-extern void sub_800BBFFC();
+extern void CmdEnemySwap_800BBFFC();
 extern void CmdSimple_800BC0FC();
 
 extern int dword_800B66C0;
@@ -1514,7 +1514,7 @@ extern short hitSfx_800C9D78;
 extern int btlExecLoad_800C9D7C;
 extern short deathSfx_800C9D80;
 extern signed char shownAreaElement_800C9D82;
-extern char dword_800C9D83;
+extern char fixedStageElement_800C9D83;
 extern signed char areaElement_800C9D84;
 extern int dword_800C9D88;
 extern short stageAnimUv_800C9D8C[2];

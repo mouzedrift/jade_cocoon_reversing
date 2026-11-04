@@ -442,7 +442,7 @@ void DestinationSelect_800B7044(MapTask* t, int a)
             {
                 GoToDest_800B8338(&word_800AEBF8);
                 MapSelectEnd_800B6F60(t, a);
-                t->next_8 = name_800A75F8;
+                t->next_8 = StartMapOverlay_800A75F8;
             }
         }
         else if (word_800AEBF8.b == 0)
@@ -468,7 +468,7 @@ void DestinationSelect_800B7044(MapTask* t, int a)
             {
                 GoToDest_800B8338(&word_800AEBF8);
                 MapSelectEnd_800B6F60(t, a);
-                t->next_8 = name_800A75F8;
+                t->next_8 = StartMapOverlay_800A75F8;
             }
             else
             {
@@ -515,7 +515,7 @@ void WaitDestPicture_800B7A38(MapTask* t)
 
 // what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in ability_menu.c)
 extern DISPENV dispEnv_8008D750[2];
-extern void name_800A75F8();
+extern void StartMapOverlay_800A75F8();
 extern int MeasureTextWidth_8003E4C8(void* p);
 extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
 extern void DrawMenuWindows_8002A5A4(void* p);
@@ -590,7 +590,7 @@ void ConfirmDestination_800B7A90(MapTask* t, int a)
         {
             GoToDest_800B8338(&word_800AEBF8);
             MapSelectEnd_800B6F60(t, a);
-            t->next_8 = name_800A75F8;
+            t->next_8 = StartMapOverlay_800A75F8;
         }
         else
         {
