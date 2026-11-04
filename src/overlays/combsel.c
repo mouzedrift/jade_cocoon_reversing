@@ -370,8 +370,7 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
     }
 }
 
-// Near miss: store order of the case 0 assignments
-#if 0
+// Matched
 void NextOrFight_800A5080(CombSelTask* t, int a)
 {
     if (AllSlotsEmpty_800A5560(teams_800A3AA0[curPlayer_800A38D9], 3) == 1)
@@ -399,8 +398,6 @@ void NextOrFight_800A5080(CombSelTask* t, int a)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(combsel, NextOrFight_800A5080);
 
 
 void TeamSlotInput_800A5188()
