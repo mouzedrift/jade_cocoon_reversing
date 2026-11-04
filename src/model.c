@@ -3871,11 +3871,11 @@ extern int mapCallback_80091CB4;
 extern EventNode* dword_800B1DA8;
 extern void FreeActors_8001D3C4(int a0);
 extern void FreeLevantAnimSet_800AC73C(void);
-extern void sub_800A54A0(void);
+extern void FreeAllEventData_800A54A0(void);
 extern void StopAllEventScripts_800A58B4(void);
 extern void ClearFieldMinions_800A7784(void);
-extern void sub_800A170C(void);
-extern void sub_800A1794(void);
+extern void ResetEncounter_800A170C(void);
+extern void ClearEnemySlots_800A1794(void);
 // Matched
 void UnloadMap_80027118(void)
 {
@@ -3906,12 +3906,12 @@ void UnloadMap_80027118(void)
     StopAllEventEntries_80043B40(enemyAiTasks_8008D49C);
     StopAllEventEntries_80043B40(encounterTask_8008D674);
     StopAllEventEntries_80043B40(fileRequestTasks_8008D488);
-    sub_800A54A0();
+    FreeAllEventData_800A54A0();
     StopAllEventScripts_800A58B4();
     FreeActors_8001D3C4(dword_80091CA0);
     ClearFieldMinions_800A7784();
-    sub_800A170C();
-    sub_800A1794();
+    ResetEncounter_800A170C();
+    ClearEnemySlots_800A1794();
     ListFreeAll_8003FEC8(&eventHeap_80091C10);
     ListFreeAll_8003FEC8(&mapHeap_80091C68);
     if (!(unknownFlags_8008D678 & 0x20000))
@@ -4268,14 +4268,14 @@ typedef struct
 } MapEntry16;
 extern MapEntry16** mapTable_800B0608[];
 #define MAP_ENTRY_CF8(i) mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
-extern int dword_800B0EC0;
+extern int fieldMode_800B0EC0;
 extern void SelectMapEntrance_800ADDAC(void);
-extern int sub_800A683C(int a0);
-extern void sub_800AD124(int a0);
+extern int GetSetReturnEntrance_800A683C(int a0);
+extern void ClearEventFlag_800AD124(int a0);
 extern int SelectEncounterSpecies_800A5030(int a0, int a1, int a2);
 extern void SetBattleStageForMap_800A52AC(int a0);
 extern Model* GetLevantModel_800AC38C(void);
-extern int sub_800AD154(int a0);
+extern int GetEventVar_800AD154(int a0);
 extern void StartEncounter_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
 extern void OnMapFileLoaded_80028808(void* a0, int* a1);
@@ -4293,7 +4293,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
     switch (st[0])
     {
     case 0:
-        m = dword_800B0EC0;
+        m = fieldMode_800B0EC0;
         if (m == 1 && IsOverlayLoaderIdle_80020D84() == 0)
         {
             eventDispatchHalt_8008B540 = m;
@@ -4312,9 +4312,9 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 {
                     SelectMapEntrance_800ADDAC();
                 }
-                if (sub_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6)
+                if (GetSetReturnEntrance_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6)
                 {
-                    sub_800AD124(0);
+                    ClearEventFlag_800AD124(0);
                 }
                 e = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
                 for (mapAreaCount_80091CB0 = 0; e[mapAreaCount_80091CB0].f0 != -1; mapAreaCount_80091CB0++)
@@ -4350,19 +4350,19 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 m = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f8;
                 if (m >= 0)
                 {
-                    if (sub_800AD154(12) == 1 && m == 0xD)
+                    if (GetEventVar_800AD154(12) == 1 && m == 0xD)
                     {
                         m = 0xF;
                     }
-                    else if (sub_800AD154(12) == 2 && m == 0xD)
+                    else if (GetEventVar_800AD154(12) == 2 && m == 0xD)
                     {
                         m = 0x91;
                     }
-                    else if (sub_800AD154(12) == 3 && m == 0x29)
+                    else if (GetEventVar_800AD154(12) == 3 && m == 0x29)
                     {
                         m = 0x26;
                     }
-                    else if (sub_800AD154(12) == 4 && m == 0x2A)
+                    else if (GetEventVar_800AD154(12) == 4 && m == 0x2A)
                     {
                         m = 0x25;
                     }
@@ -4439,8 +4439,8 @@ void InitAreaLoaderTask_80028388(EventEntry* p, int* q)
     AreaLoaderTask_800283C0(p, q);
     p->cb_8 = (EventEntryFn)AreaLoaderTask_800283C0;
 }
-extern int sub_800A6D50(int a0);
-extern int dword_800B1228;
+extern int GetGameMode_800A6D50(int a0);
+extern int battleFlags_800B1228;
 extern void OnRoomDataLoaded_80028C60();
 // Matched
 void AreaLoaderTask_800283C0(void* a0, int* state)
@@ -4456,11 +4456,11 @@ void AreaLoaderTask_800283C0(void* a0, int* state)
     switch (s)
     {
     case 0:
-        if (sub_800A6D50(0) != 1 && areaReload_80082670 == 0)
+        if (GetGameMode_800A6D50(0) != 1 && areaReload_80082670 == 0)
         {
             break;
         }
-        if (dword_800B1228 & 0x4000)
+        if (battleFlags_800B1228 & 0x4000)
         {
             break;
         }

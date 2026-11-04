@@ -9,7 +9,7 @@
 #include "engine.h"
 #include "minion_init.h"
 
-// one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's sub_800A6060 runs them until one returns 0)
+// one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInsEventfnc
 {
     int op_0;
@@ -60,7 +60,7 @@ typedef struct EvCtxEventfnc
     int maskStep_BC;
     int cmdStep_C0;
     unsigned int waitCount_C4;
-    int trigger_C8; // the trigger id waited for (EvCmdWaitTrigger_800B9B98, GAME's sub_800A5C40)
+    int trigger_C8; // the trigger id waited for (EvCmdWaitTrigger_800B9B98, GAME's FireEventTrigger_800A5C40)
     int vars_CC[8]; // script local variables (EvCmdSetVar_800B8FB8)
     int branch_EC; // the selected branch: choice / test / random result, indexes the goto / jump instructions
     int callArg_F0;
@@ -130,7 +130,7 @@ extern char eventHeap_80091C10[];
 // the low halves of cameraEye_8008D600 (VECTOR camera eye), read with lhu by IsActorLeftOf_800BC5C8
 extern unsigned short word_8008D600[];
 
-extern int dword_800AEBD8;
+extern int sceneScriptId_800AEBD8;
 
 extern void LoadEncounterModels_800B8940(int* ids);
 
@@ -224,15 +224,15 @@ typedef struct EvSpawnEventfnc
 
 extern EvMapEntEventfnc** mapTable_800B0608[];
 
-extern int sub_800A49CC(int a, int b, MapList16* c, EvSpawnEventfnc* d);
+extern int RollEncounterGroups_800A49CC(int a, int b, MapList16* c, EvSpawnEventfnc* d);
 
 extern void SpawnEncounterEnemy_800B8568();
 
 extern EventNode* encounterTask_8008D674;
 
-extern void sub_800A170C();
+extern void ResetEncounter_800A170C();
 
-extern void sub_800A1794();
+extern void ClearEnemySlots_800A1794();
 
 extern void EncounterSpawnTask_800B844C();
 
@@ -240,27 +240,27 @@ extern unsigned short padPressed_8009194C;
 
 extern int EvCmdEndScene_800B8A34(EvCtxEventfnc* c);
 
-extern void sub_800A1974(void);
+extern void ResumeAllEnemySlots_800A1974(void);
 
-extern void sub_800A5B54(EvCtxEventfnc* c);
+extern void ResetEventCtx_800A5B54(EvCtxEventfnc* c);
 
 extern int sub_800A7810(int a);
 
-extern void sub_800A8E0C(void);
+extern void HoldLevantControl_800A8E0C(void);
 
 extern void sub_800A8DEC(void);
 
-extern void sub_800A8E38(void);
+extern void ReleaseLevantControl_800A8E38(void);
 
 extern void sub_800A785C(int a);
 
-extern int sub_800AD16C(int a, int b);
+extern int SetEventVar_800AD16C(int a, int b);
 
-extern int sub_800AD154(int a);
+extern int GetEventVar_800AD154(int a);
 
-extern void (*dword_800B1D98)(int);
+extern void (*eventHook_800B1D98)(int);
 
-extern int sub_800A59D0(int a);
+extern int StartEventScript_800A59D0(int a);
 
 extern SVECTOR* GetActorRot_800BBBD0(int i); // rotation of Levant (0) or a party member
 
@@ -272,35 +272,35 @@ extern void SetGeomOffset(long ofx, long ofy);
 
 extern short name_80084540[];
 
-extern int sub_800AD0D4(int a);
+extern int TestEventFlag_800AD0D4(int a);
 
-extern void sub_800AD0F8(int a);
+extern void SetEventFlag_800AD0F8(int a);
 
-extern void sub_800AD124(int a);
+extern void ClearEventFlag_800AD124(int a);
 
-extern int sub_800AD184(int a, int b, int c);
+extern int AddInventory_800AD184(int a, int b, int c);
 
-extern int sub_800AD1E0(int a, int b, int c);
+extern int RemoveInventory_800AD1E0(int a, int b, int c);
 
-extern int sub_800AD73C(int a);
+extern int TestValuableFlag_800AD73C(int a);
 
-extern int sub_800AD68C(int a);
+extern int SetValuableFlag_800AD68C(int a);
 
-extern int sub_800AD6E4(int a);
+extern int ClearValuableFlag_800AD6E4(int a);
 
-extern int sub_800AD058(int a);
+extern int AddMoney_800AD058(int a);
 
-extern int sub_800AD8F4(int a);
+extern int AddEmptyCocoons_800AD8F4(int a);
 
-extern UnitStatus* sub_800A8C34();
-
-
+extern UnitStatus* GetLevantStatus_800A8C34();
 
 
 
-extern EvEntEventfnc* sub_800A5DDC(int a, int b, int c);
 
-extern void sub_800A6830(int a);
+
+extern EvEntEventfnc* FindEventEntity_800A5DDC(int a, int b, int c);
+
+extern void SetVoiceTable_800A6830(int a);
 
 extern void EvMessageNop_800BC7A0(EvCtxEventfnc* c);
 
@@ -312,19 +312,19 @@ extern int XaRequestStop_80043524(void);
 
 extern int ConsumeMsgWindowMark_80034ADC(int a, int b);
 
-extern EvObjEventfnc* sub_800A7A60(int a);
+extern EvObjEventfnc* GetFieldMinionActor_800A7A60(int a);
 
-extern void* sub_800A55B0(int a);
+extern void* GetEventDataSlot_800A55B0(int a);
 
 extern int useMapStartPos_80091C94;
 
 extern int eventDispatchHalt_8008B540;
 
-extern int sub_800A6D30(int a);
+extern int RequestGameMode_800A6D30(int a);
 
-extern void sub_800ADC5C(unsigned short* v, int a);
+extern void SetMapVar_800ADC5C(unsigned short* v, int a);
 
-extern void sub_800ADCEC(unsigned short* v, int a);
+extern void FindMapEntrance_800ADCEC(unsigned short* v, int a);
 
 extern int forceMapReload_80091C9C;
 
@@ -332,7 +332,7 @@ extern int dword_80091C54;
 
 extern int UsePreloadedArea_80027358(int a);
 
-extern int sub_800A683C(int a);
+extern int GetSetReturnEntrance_800A683C(int a);
 
 typedef struct EvWaitEventfnc
 {
@@ -341,9 +341,9 @@ typedef struct EvWaitEventfnc
     int f8_8;
 } EvWaitEventfnc;
 
-extern EvWaitEventfnc dword_800B06B0;
+extern EvWaitEventfnc shopRequest_800B06B0;
 
-extern int sub_800A5F9C(int a);
+extern int ExchangeEventResult_800A5F9C(int a);
 
 extern void SetCameraBlendTarget_800379DC(EvVecEventfnc* v, int b);
 
@@ -361,11 +361,11 @@ extern EvRectEventfnc dword_8008D420;
 
 extern void SetCameraZoom_80037A6C(int a, int b);
 
-extern int sub_800A7790(void);
+extern int GetFieldMinionCount_800A7790(void);
 
 extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c);
 
-extern int sub_800A6504(int a, EvVecEventfnc* v);
+extern int IsEventPointValid_800A6504(int a, EvVecEventfnc* v);
 
 extern int dword_800B1230;
 
@@ -381,7 +381,7 @@ extern int StartActorCmd_800BBB18(int* p);
 
 extern int FinishActorCmd_800BBB5C(int* p);
 
-extern int sub_800A8E7C();
+extern int IsLevantControlHeld_800A8E7C();
 
 extern int sub_800A7CB8(int a);
 
@@ -389,10 +389,10 @@ extern int sub_800A8FE0();
 
 extern int sub_800A7CFC(int a);
 
-extern EvVecEventfnc* sub_800A7940(int a);
+extern EvVecEventfnc* GetFieldMinionPos_800A7940(int a);
 
 
-extern SVECTOR* sub_800A7984(int a);
+extern SVECTOR* GetFieldMinionRot_800A7984(int a);
 
 extern int dword_800AEBD4;
 
@@ -421,7 +421,7 @@ typedef struct EvVoiceEventfnc
 
 extern int GetMsgWindowResultIfDone_800349B4(int a, EvMsgInfoEventfnc* b);
 
-extern void sub_800A67B4(EvCtxEventfnc* c);
+extern void SkipActorAnims_800A67B4(EvCtxEventfnc* c);
 
 extern void CloseMsgWindow_80034A84(int a);
 
@@ -429,11 +429,11 @@ extern int IsMsgWindowWaiting_80034A30(int a);
 
 extern void EnableMsgWindowAdvance_80034A68(int a);
 
-extern int dword_800AEBE8;
+extern int currentMessageId_800AEBE8;
 
 extern EvXaEventfnc* dword_800AEBEC;
 
-extern EvVoiceEventfnc* dword_800AEBF0;
+extern EvVoiceEventfnc* voiceTable_800AEBF0;
 
 
 extern void sub_8005BBC8();
@@ -471,13 +471,13 @@ typedef struct EvGfxArgEventfnc
     int f10_10;
 } EvGfxArgEventfnc;
 
-extern int dword_800AEB7C;
+extern int mdecBufferMode_800AEB7C;
 
 extern EvGfxEventfnc dword_800AEB80;
 
-extern void sub_800A5854(void);
+extern void FreeMdecBuffer_800A5854(void);
 
-extern void sub_800A5804(int a);
+extern void AllocMdecBuffer_800A5804(int a);
 
 extern void OnEffectFileLoaded_80020F5C(EvGfxArgEventfnc* p, int a);
 
@@ -506,19 +506,19 @@ typedef struct TaskEventfnc
 
 extern void ReturnWarpTask_800BCB3C();
 
-extern void sub_800AC604(int a, int b);
+extern void LoadLevantAnimById_800AC604(int a, int b);
 
-extern int sub_800AC768(void);
+extern int AreLevantFilesLoaded_800AC768(void);
 
-extern void sub_800AC6A8(int a);
+extern void FreeLevantAnimById_800AC6A8(int a);
 
 extern int IsSceneFadeDone_8001AB94(void);
 
 extern void StartSceneDarken_8001AAA8(int a);
 
-extern int sub_800A8EC4(int* p);
+extern int LevantCommand_800A8EC4(int* p);
 
-extern void sub_800A7720();
+extern void FieldModeTask_800A7720();
 
 extern short word_8008B858;
 

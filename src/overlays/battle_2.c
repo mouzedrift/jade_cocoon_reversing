@@ -332,7 +332,7 @@ void ActionStart_800BDA28(BatTask_a* t)
     int i;
     int f;
     int m;
-    if (!(dword_800B1228 & 0x1000))
+    if (!(battleFlags_800B1228 & 0x1000))
     {
         ResetUnitReactions_800BB794();
         ResetTurnResults_800BB7D4();
@@ -342,10 +342,10 @@ void ActionStart_800BDA28(BatTask_a* t)
             f = 0;
             for (i = 4; i < 7; i++)
             {
-                m = sub_800A248C() & (1 << i);
+                m = GetEnemyAliveMask_800A248C() & (1 << i);
                 if (m != 0)
                 {
-                    if (IsUncapturableSpecies_800BF980(sub_800A2BE4(i - 4)))
+                    if (IsUncapturableSpecies_800BF980(GetEnemySpecies_800A2BE4(i - 4)))
                     {
                         f = 1;
                         break;
@@ -399,10 +399,10 @@ void ActionRun_800BDC3C(BatTask_a* t)
     {
         while ((k = removedEnemyCount_800C9D90--) != 0)
         {
-            sub_800A2924(removedEnemies_800C9DD0[removedEnemyCount_800C9D90]);
+            RemoveEnemy_800A2924(removedEnemies_800C9DD0[removedEnemyCount_800C9D90]);
         }
         t->f0 = (t->f0 & ~1) | 0x8000;
-        dword_800B1228 &= ~0x1000;
+        battleFlags_800B1228 &= ~0x1000;
     }
     else
     {
@@ -434,7 +434,7 @@ int AreUnitsIdle_800BDD3C()
     }
     for (i = 4; i < 7; i++)
     {
-        m = sub_800A248C() & (1 << i);
+        m = GetEnemyAliveMask_800A248C() & (1 << i);
         if (m != 0)
         {
             if (sub_800A2550(i - 4) == 0)
@@ -469,7 +469,7 @@ int AreUnitsReady_800BDE04()
     }
     for (i = 4; i < 7; i++)
     {
-        r = sub_800A248C();
+        r = GetEnemyAliveMask_800A248C();
         m = 1 << i;
         if (r & m)
         {
@@ -564,7 +564,7 @@ BatPair_a* StartUnitAction_800BE058(BatPair_a* out, BatCmd_a* cmd, int isReactio
             StartMinionAction_800C0DDC(&r, cmd, isReaction);
             break;
         case 2:
-            sub_800A2684(&r, cmd, isReaction);
+            StartEnemyCommandAction_800A2684(&r, cmd, isReaction);
             break;
         }
     }
@@ -593,7 +593,7 @@ void TriggerUnitAction_800BE14C(BatCmd_a* cmd, int isReaction, int unit)
         TriggerMinionAction_800C0E84(cmd, isReaction);
         break;
     case 2:
-        sub_800A2760(cmd, isReaction);
+        TriggerEnemyEffects_800A2760(cmd, isReaction);
         if (cmd->kind_0 == 0x13 || cmd->kind_0 == 0xB || cmd->kind_0 == 7 || (cmd->kind_0 == 5 && sub_80013358(cmd->arg_4) == 1) || (cmd->kind_0 == 0x1A && sub_80013358(cmd->arg_4) == 1))
         {
             removedEnemies_800C9DD0[removedEnemyCount_800C9D90] = unit - 4;
@@ -651,11 +651,11 @@ void UpdateAction_800BE3C0()
         v = curCommand_800C9C88.kind_0;
         if (v == 5 || v == 0x1A)
         {
-            sub_800AD944(1);
+            RemoveEmptyCocoons_800AD944(1);
         }
         else if (v == 4)
         {
-            sub_800AD1E0(curCommand_800C9C88.arg_4, 1, 0);
+            RemoveInventory_800AD1E0(curCommand_800C9C88.arg_4, 1, 0);
         }
         else if (v == 0x13)
         {
@@ -720,7 +720,7 @@ void UpdateAction_800BE3C0()
                 BatCmd_a* s = &unitReactions_800C9CC8[i];
                 if ((s->kind_0 == 5 && sub_80013358(s->arg_4) == 1) || (s->kind_0 == 0x1A && sub_80013358(s->arg_4) == 1))
                 {
-                    sub_800A2898(i - 4);
+                    AddEnemyItem_800A2898(i - 4);
                 }
                 TriggerUnitAction_800BE14C(&unitReactions_800C9CC8[i], 1, i);
             }
@@ -733,7 +733,7 @@ void UpdateAction_800BE3C0()
                 {
                     if (i >= 4)
                     {
-                        sub_800A284C(i - 4);
+                        SetEnemyStatusTint_800A284C(i - 4);
                     }
                     else if (i != 0 && summonedUnit_800C9C82 != 0)
                     {

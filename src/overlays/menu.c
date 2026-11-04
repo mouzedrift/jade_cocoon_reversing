@@ -140,7 +140,7 @@ extern void SetLevantCmdWindows_800C01AC();
 extern void SetMinionCmdWindows_800C01D0();
 extern void MinionListScreen_800BD80C();
 
-extern int sub_800AD7F8();
+extern int GetNthValuable_800AD7F8();
 extern int IsConfirmPressedP1_8003D380();
 extern int IsCancelPressedP1_8003D41C();
 
@@ -171,7 +171,7 @@ typedef struct MenuTmp
 extern void UseItemOnUnit_80013C28();
 extern void ApplyItemUseDelta_800C00F8();
 extern void InitItemUse_800C00D4();
-extern void sub_800AD1E0();
+extern void RemoveInventory_800AD1E0();
 extern void CloseMenuReloadArea_800C0084();
 
 
@@ -632,7 +632,7 @@ extern void ResultEndTask_800BC24C();
 extern char resultHelpBar_800C172C[];
 extern int name_8008D678;
 extern void FreeActiveOverlay_8002C014();
-extern void sub_800A6D30();
+extern void RequestGameMode_800A6D30();
 void BattleResultTask_800BBF48(MenuTask* t, MenuMain* c)
 {
     void* p = 0;
@@ -703,7 +703,7 @@ void BattleResultTask_800BBF48(MenuTask* t, MenuMain* c)
             name_8008D678 |= 0x800000;
             g = (MenuTask*)&name_8008D498->entry;
             g->flags_0 = (g->flags_0 | 1) & ~0x8000;
-            sub_800A6D30(4);
+            RequestGameMode_800A6D30(4);
             eventDispatchHalt_8008B540 = 1;
             t->flags_0 = (t->flags_0 & ~1) | 0x8000;
         }
@@ -712,13 +712,13 @@ void BattleResultTask_800BBF48(MenuTask* t, MenuMain* c)
 
 extern int IsMapLoading_800272D0();
 extern void ResetOverlayLoaderTask_80020D68();
-extern void sub_800A6D30();
+extern void RequestGameMode_800A6D30();
 void ResultEndTask_800BC24C(MenuTask* t)
 {
     if (IsMapLoading_800272D0() == 0)
     {
         ResetOverlayLoaderTask_80020D68();
-        sub_800A6D30(1);
+        RequestGameMode_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
@@ -1993,7 +1993,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* c)
             if (c->showMessage_24 == 0)
             {
                 short pr[4];
-                pr[0] = sub_800AD288(c->cursors_2A[3] + c->scrolls_46[0], 0);
+                pr[0] = GetInventorySlotId_800AD288(c->cursors_2A[3] + c->scrolls_46[0], 0);
                 pr[1] = 0;
                 pr[2] = c->cursors_2A[5];
                 pr[3] = 1;
@@ -2238,7 +2238,7 @@ extern void DrawLevantHeaderWindows_8002FD0C();
 extern void DrawLevantStats_8002F7D0();
 extern void DrawAnimatedWindow_8002BEC8();
 extern int GetRankName_8002FCD8();
-extern int sub_800AD02C();
+extern int GetMoney_800AD02C();
 extern void DrawLargeNumber_8002C100();
 extern void AddClipDrawAreaPrim_80033308();
 extern void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c);
@@ -2295,18 +2295,18 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* a, short b)
     DrawUiTiySprt_8002C06C(pos, 0x7B, b);
     pos[0] = 0x104;
     pos[1] = 0x76;
-    DrawLargeNumber_8002C100(pos, sub_800AD02C(), b);
+    DrawLargeNumber_8002C100(pos, GetMoney_800AD02C(), b);
     pos[0] = 0x104;
     pos[1] = 0x76;
     DrawUiTiySprt_8002C06C(pos, 0xE9, b);
     DrawAnimatedWindow_8002BEC8(t50, name_800C18E4, (short)s, b, 0, 0);
 }
 
-extern void sub_800AD1E0();
+extern void RemoveInventory_800AD1E0();
 void UseSpore_800BF3AC(int item)
 {
     UseSporeItem_80011B24(item);
-    sub_800AD1E0(item, 1, 0);
+    RemoveInventory_800AD1E0(item, 1, 0);
 }
 
 extern void sub_800A911C();
@@ -2330,10 +2330,10 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* c)
         if (p)
             UseItemOnUnit_80013C28(&levantStatus_8008BD38, p, &tmp, &tmp.d_10);
         ApplyItemUseDelta_800C00F8(&tmp, &tmp.d_10);
-        sub_800AD1E0(r17, 1, 0);
+        RemoveInventory_800AD1E0(r17, 1, 0);
         break;
     case 0xE:
-        s = (short)sub_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
+        s = (short)GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
         c->flags_0 |= 8;
         CloseMenuReloadArea_800C0084();
         if (s == 0)
@@ -2363,8 +2363,8 @@ typedef struct MenuUseQ
 } MenuUseQ;
 extern int CheckItemUsable_80033AFC();
 extern int CheckItemOnTarget_80033DF4();
-extern int sub_800AD73C();
-extern int sub_800A5E80();
+extern int TestValuableFlag_800AD73C();
+extern int IsTriggerWaited_800A5E80();
 extern int sub_800C1000();
 // Not matched: cases 1, 2 and 4 match; in cases 6, 7 and 14 the original returns through the delay
 // slot of branches straight to the epilogue (v0 used as temp) and the 14 tail is not a store-flag;
@@ -2394,9 +2394,9 @@ int CheckMenuAction_800BF540(MenuCtx* c)
         return (r < 4) ? 2 : 0;
     case 2:
         s = c->cursors_2A[3] + c->scrolls_46[0];
-        if (sub_800AD2C8(s, 0) == 0)
+        if (GetInventorySlotCount_800AD2C8(s, 0) == 0)
             return 1;
-        q2.a = sub_800AD288(s, 0);
+        q2.a = GetInventorySlotId_800AD288(s, 0);
         q2.b = 0;
         q2.c = c->cursors_2A[5];
         q2.d = 1;
@@ -2429,13 +2429,13 @@ int CheckMenuAction_800BF540(MenuCtx* c)
     case 14:
     {
         int v;
-        s = sub_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
-        if (sub_800AD73C(s) == 0)
+        s = GetNthValuable_800AD7F8((short)((unsigned short)c->cursors_2A[4] + (unsigned short)c->scrolls_46[1]));
+        if (TestValuableFlag_800AD73C(s) == 0)
             return 3;
         if (sub_8001D36C(s))
             return 0xE;
         if (s)
-            v = sub_800A5E80(s);
+            v = IsTriggerWaited_800A5E80(s);
         else
             v = IsCurrentMapListed_80034140();
         if (v != 0 && sub_800C1000() != 0)
@@ -2480,8 +2480,8 @@ void DrawMenuMessage_800BF794(MenuCtx* c)
     c->messageTimer_56 = 0;
 }
 
-extern int sub_800AD308();
-extern int sub_800AD79C();
+extern int GetLastInventorySlot_800AD308();
+extern int CountValuables_800AD79C();
 extern int CountMagicBits_8001AE54();
 void SetMenuCursorLayout_800BF8B4(MenuCtx* c)
 {
@@ -2530,7 +2530,7 @@ void SetMenuCursorLayout_800BF8B4(MenuCtx* c)
     case 1:
         c->cursor_60 = c->cursors_2A[3];
         c->scroll_62 = c->scrolls_46[0];
-        v = sub_800AD308(0);
+        v = GetLastInventorySlot_800AD308(0);
         if (v < 3)
             v = 3;
         c->count_5C = v + 1;
@@ -2538,7 +2538,7 @@ void SetMenuCursorLayout_800BF8B4(MenuCtx* c)
     case 14:
         c->cursor_60 = c->cursors_2A[4];
         c->scroll_62 = c->scrolls_46[1];
-        v = sub_800AD79C();
+        v = CountValuables_800AD79C();
         if (v < 4)
             v = 4;
         c->count_5C = v;
@@ -2666,8 +2666,8 @@ int TopMenuCursorUp_800BFBE0(MenuCtx* c)
 INCLUDE_OVERLAY_ASM(menu, TopMenuCursorUp_800BFBE0);
 
 extern int name_8003D794();
-extern void sub_800AD3F0();
-extern int sub_800AD308();
+extern void CompactInventory_800AD3F0();
+extern int GetLastInventorySlot_800AD308();
 void HandleMenuCursorInput_800BFCA8(MenuCtx* c)
 {
     if (c->state_2 != 0)
@@ -2707,11 +2707,11 @@ void HandleMenuCursorInput_800BFCA8(MenuCtx* c)
         else if ((padPressed_8009194C & 0x80) && c->state_2 == 1)
         {
             int r;
-            sub_800AD3F0(0);
+            CompactInventory_800AD3F0(0);
             PlaySfx_80031494(0x7E);
             c->scroll_62 = 0;
             c->cursor_60 = 0;
-            r = sub_800AD308(0);
+            r = GetLastInventorySlot_800AD308(0);
             if (r < 3)
                 r = 3;
             c->count_5C = r + 1;
@@ -2791,16 +2791,16 @@ void ResumeFieldMenu_800BFF84(MenuCtx* c)
     DrawFieldMenu_800BE4A0(c);
 }
 
-extern void sub_800A7714();
+extern void SetFieldMode_800A7714();
 extern void StartFieldMenu_800BD40C();
 void MenuReloadAreaTask_800BFFFC(MenuTask* t)
 {
     if (IsMapLoading_800272D0() == 0)
     {
         if (leaveForest_800C29BC)
-            sub_800A7714(0);
+            SetFieldMode_800A7714(0);
         SetLoadFadeFlag_80027478(0x40, 0);
-        sub_800A6D30(1);
+        RequestGameMode_800A6D30(1);
         t->next_8 = StartFieldMenu_800BD40C;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
     }
@@ -2977,7 +2977,7 @@ void DrawKeyItemInfo_800C05E0(MenuCtx* c)
     int is = c->state_2 == 0xE;
     if (IsCircleHeldP1_8003D480() && is && c->showMessage_24 == 0)
     {
-        int r = (short)sub_800AD7F8((short)sum);
+        int r = (short)GetNthValuable_800AD7F8((short)sum);
         if (r < 0x26)
         {
             DrawLargeTextBox_8002AF10(&keyItemDescs_800C1E98[r], found, 0xE);
@@ -3066,7 +3066,7 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
     w = 8;
     for (i = 0; i < 4; i++)
     {
-        int id = (short)sub_800AD7F8(i + a->scroll_2);
+        int id = (short)GetNthValuable_800AD7F8(i + a->scroll_2);
         int icon;
         void* nm;
         if (id < 0x26)
@@ -3107,7 +3107,7 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
     d.f14 = a->ot_6;
     DrawMenuWindows_8002A5A4(&d);
     SetFontClutOffset_8003F900(2, 0);
-    n = sub_800AD79C();
+    n = CountValuables_800AD79C();
     if (n < 4)
         n = 4;
     if (a->scroll_2 != 0)
@@ -3117,7 +3117,7 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
 }
 
 
-extern int sub_800A5E80();
+extern int IsTriggerWaited_800A5E80();
 extern int sub_800C1000();
 // Not matched: compiler turns the tail into a boolean (sltu); also tried r = 1 / r = 0 tail,
 // == 0 inverted tests, nested if (r), return r && sub_800C1000()
@@ -3129,7 +3129,7 @@ int IsKeyItemUsable_800C0C3C(void* a)
     {
         if (sub_8001D36C((int)a))
             return 1;
-        r = sub_800A5E80(a);
+        r = IsTriggerWaited_800A5E80(a);
     }
     else
     {
@@ -3208,7 +3208,7 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c)
     {
         int icon;
         void* nm;
-        int id = sub_800AD990(i);
+        int id = GetEquippedId_800AD990(i);
         if (id != 0xFF)
         {
             icon = GetEquipmentIcon_8001D2D4(id, i);
@@ -3242,13 +3242,13 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* a, short* pos, short c)
 }
 
 extern int name_800B0EC0;
-extern int sub_800A5E68();
+extern int IsSceneHeld_800A5E68();
 int sub_800C1000(void)
 {
     int v = menuFromResults_800C29B8;
     if (v != 1)
         return 1;
-    if (sub_800A5E68() == 0 && name_800B0EC0 == v)
+    if (IsSceneHeld_800A5E68() == 0 && name_800B0EC0 == v)
         return 1;
     return 0;
 }

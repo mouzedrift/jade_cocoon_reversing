@@ -10,8 +10,8 @@ INCLUDE_OVERLAY_ASM(eventfnc, dword_800B6DC0);
 #if 0
 // Not matched: with this file's own .rdata the initializer and jump table land where the original's are;
 // the code is 1 word short: case 4 keeps the saveData address in a0 (dead across the calls, recomputed
-// for the stores) and shares the constant 4 of sub_800AD16C's first argument with word_8008B858 + 4
-extern int dword_800B0EC0;
+// for the stores) and shares the constant 4 of SetEventVar_800AD16C's first argument with word_8008B858 + 4
+extern int fieldMode_800B0EC0;
 void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
 {
     EvActorCmdEventfnc m;
@@ -21,20 +21,20 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
     switch (st[0])
     {
     case 0:
-        sub_800A1904();
-        sub_800A8E0C();
+        SuspendAllEnemySlots_800A1904();
+        HoldLevantControl_800A8E0C();
         sub_800A8DEC();
-        sub_800AC604(st[1], 0);
+        LoadLevantAnimById_800AC604(st[1], 0);
         st[0] = 1;
         break;
     case 1:
-        if (sub_800AC768())
+        if (AreLevantFilesLoaded_800AC768())
         {
             st[0] = 2;
         }
         break;
     case 2:
-        if (sub_800A8E7C())
+        if (IsLevantControlHeld_800A8E7C())
         {
             st[0] = 3;
         }
@@ -48,7 +48,7 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
             m.arg_C = st[1];
             m.arg2_10 = 0;
             m.field_14 = 1;
-            sub_800A8EC4((int*)&m);
+            LevantCommand_800A8EC4((int*)&m);
             StartSceneDarken_8001AAA8(0x3C);
             st[0] = 4;
         }
@@ -56,8 +56,8 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
     case 4:
         if (IsSceneFadeDone_8001AB94())
         {
-            sub_800AC6A8(st[1]);
-            sub_800A8E38();
+            FreeLevantAnimById_800AC6A8(st[1]);
+            ReleaseLevantControl_800A8E38();
             s = &saveData_8008B570;
             if (s->mapId_2E4[0].field_0 == 4 && s->mapId_2E4[1].field_0 == 0 && mapTable_800B0608[4][0][s->mapId_2E4[2].field_0].f4_4 == 0)
             {
@@ -68,20 +68,20 @@ void ReturnWarpTask_800BCB3C(TaskEventfnc* t, int* st)
             {
                 k = word_8008B858 + 4;
             }
-            sub_800AD16C(4, k);
-            sub_800ADCEC(v, sub_800A683C(-1));
+            SetEventVar_800AD16C(4, k);
+            FindMapEntrance_800ADCEC(v, GetSetReturnEntrance_800A683C(-1));
             forceMapReload_80091C9C = 1;
             useMapStartPos_80091C94 = 1;
             dword_80091C54 = 0;
             dword_80091C8C = 0;
-            dword_800B0EC0 = 1;
+            fieldMode_800B0EC0 = 1;
             s = &saveData_8008B570;
             s->mapId_2E4[3].field_0 = 0;
             s->mapId_2E4[0].field_0 = v[0];
             s->mapId_2E4[1].field_0 = v[1];
             s->mapId_2E4[2].field_0 = v[2];
             unknownFlags_8008D678 &= ~0x20000;
-            t->next_8 = sub_800A7720;
+            t->next_8 = FieldModeTask_800A7720;
         }
         break;
     }

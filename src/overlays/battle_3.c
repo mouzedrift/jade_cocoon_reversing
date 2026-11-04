@@ -169,9 +169,9 @@ void ApplyBattleCommand_800BEBB8()
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
             ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
-            if (dword_800ADE78.f0 == 1)
+            if (encounterRecord_800ADE78.f0 == 1)
             {
-                sub_800B4390(actor, m, &curCommand_800C9C88, &res, &dword_800ADE78);
+                sub_800B4390(actor, m, &curCommand_800C9C88, &res, &encounterRecord_800ADE78);
             }
             areaElement_800C9D84 = res.areaElement_24;
             unitHpDamage_800C9D38[i] = res.hpDamage_1C;
@@ -264,8 +264,8 @@ void ApplyBattleCommand_800BEBB8()
                     curCommand_800C9C88.arg_4 = res.arg_2;
                     if (sub_80013358(res.arg_2) == 1)
                     {
-                        MarkSpeciesCaptured_800BF9F0(sub_800A2BE4(i - 4));
-                        if (GetCapturedMinionsFromBitfield_8003BA58(sub_800A248C()) == 1)
+                        MarkSpeciesCaptured_800BF9F0(GetEnemySpecies_800A2BE4(i - 4));
+                        if (GetCapturedMinionsFromBitfield_8003BA58(GetEnemyAliveMask_800A248C()) == 1)
                         {
                             curCommand_800C9C88.kind_0 = 0x1A;
                         }
@@ -288,7 +288,7 @@ void ApplyBattleCommand_800BEBB8()
                     if (r == 2)
                     {
                         SetBattleFlag_800BC838(0x40);
-                        if (sub_800BF9B4(sub_800A2BE4(i - 4)) == 1)
+                        if (sub_800BF9B4(GetEnemySpecies_800A2BE4(i - 4)) == 1)
                         {
                             SetBattleFlag_800BC838(0x100000);
                         }
@@ -301,7 +301,7 @@ void ApplyBattleCommand_800BEBB8()
                             SetBattleFlag_800BC838(2);
                         }
                         
-                        dword_800B1238[i - 4].species_4 = sub_800A2BE4(i - 4);
+                        dword_800B1238[i - 4].species_4 = GetEnemySpecies_800A2BE4(i - 4);
                         dword_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
                         dword_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
                         dword_800B1238[i - 4].exp_0 = m->exp_4;
@@ -781,7 +781,7 @@ void StartEnemyWindows_800BFC40()
     int b;
     if (e)
     {
-        m = sub_800A248C();
+        m = GetEnemyAliveMask_800A248C();
         n = GetCapturedMinionsFromBitfield_8003BA58(m);
         if (sub_800A2AB4())
         {
@@ -831,7 +831,7 @@ void EnemyWindowsLayoutTask_800BFDEC()
     int one;
     int bit;
     BatXY_a* pp;
-    m = sub_800A248C();
+    m = GetEnemyAliveMask_800A248C();
     if (m != 0 && sub_800A2AB4() != 0)
     {
         m = 0x10;
@@ -897,7 +897,7 @@ void EnemyWindowTask_800C0074(EventEntry* t, void* arg)
     UnitStatus* m;
     int r;
     BatUnitWin_a* u;
-    if (dword_800B1228 & 0x10000)
+    if (battleFlags_800B1228 & 0x10000)
     {
         return;
     }
@@ -913,7 +913,7 @@ void EnemyWindowTask_800C0074(EventEntry* t, void* arg)
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
     InterpolateWindowRect_8004196C(u->rect_10, u->from_8, u->frame_4, 4, 9);
-    if (IsUncapturableSpecies_800BF980(sub_800A2BE4(k)))
+    if (IsUncapturableSpecies_800BF980(GetEnemySpecies_800A2BE4(k)))
     {
         DrawUnitStatusWindow_8002F1C8(m, enemyGaugePreview_800C9164[k], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[k], u->rect_10, 10, 1);
     }
@@ -960,11 +960,11 @@ void ActorWindowTask_800C0254(EventEntry* t, void* arg)
     BatBox_b box;
     short rect[4];
     UnitStatus* m;
-    if (dword_800ADE78.f0 == 1 && actingUnit_800C9C7C == 10)
+    if (encounterRecord_800ADE78.f0 == 1 && actingUnit_800C9C7C == 10)
     {
         return;
     }
-    if (dword_800B1228 & 0x8000)
+    if (battleFlags_800B1228 & 0x8000)
     {
         return;
     }
@@ -1055,7 +1055,7 @@ void HelpWindowTask_800C04A4(EventEntry* t, BatWin_b* u)
     {
         pos[0] += w;
         pos[1] += 3;
-        DrawNumberRightAlignedFont1_8003F264(pos, sub_800AD8E4(), 0);
+        DrawNumberRightAlignedFont1_8003F264(pos, GetEmptyCocoons_800AD8E4(), 0);
     }
     InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 7);
     DrawUiColorWindow_800424C0(u->rect_C, 0, pOT_8008D454, 0);
@@ -4107,14 +4107,14 @@ int AiFlee_800C6C58(BatTask* t)
 
 void GetEnemyStatuses_800C6C7C(UnitStatus** out)
 {
-    int bits = sub_800A248C();
+    int bits = GetEnemyAliveMask_800A248C();
     int i;
     for (i = 0; i < 3; i++)
     {
         int m = 1 << (i + 4);
         if (bits & m)
         {
-            out[i] = sub_800A2B60(i);
+            out[i] = GetEnemyStatus_800A2B60(i);
         }
         else
         {
@@ -4209,7 +4209,7 @@ int StartBattleMenu_800C6EFC()
         menuCommand_800C9E58.mask_8 = 1 << actingUnit_800C9C7C;
         partyMinionMask_800C9E78 = GetPartyMinionMask_800C0A9C();
         partyMinionCount_800C9E4B = GetCapturedMinionsFromBitfield_8003BA58(partyMinionMask_800C9E78);
-        enemyMask_800C9E4C = sub_800A248C();
+        enemyMask_800C9E4C = GetEnemyAliveMask_800A248C();
         enemyCount_800C9E4A = GetCapturedMinionsFromBitfield_8003BA58(enemyMask_800C9E4C);
         for (i = 0; i < 3; i++)
         {
@@ -4238,9 +4238,9 @@ void InitMenuCursors_800C7088()
 {
     if (menuForMinion_800C9E49 == 0)
     {
-        if (sub_800AD308(0) + 1 >= 5)
+        if (GetLastInventorySlot_800AD308(0) + 1 >= 5)
         {
-            itemMenu_800C9308->count_4 = sub_800AD308(0) + 1;
+            itemMenu_800C9308->count_4 = GetLastInventorySlot_800AD308(0) + 1;
         }
         itemMenu_800C9308->cursor_8 = 0;
         commandMenu_800C92D8->count_4 = 6;
@@ -4285,7 +4285,7 @@ void DisableMenuCommands_800C71C8()
             levantMenuItems_800C93A4[3].data_4 = msgCannotCapture_800C9384;
             winCapture_800C94A4[0].flags_0 |= 2;
         }
-        else if (sub_800AD8E4() == 0)
+        else if (GetEmptyCocoons_800AD8E4() == 0)
         {
             levantMenuItems_800C93A4[3].data_4 = msgNoEmptyCocoons_800C9388;
             winCapture_800C94A4[0].flags_0 |= 2;
@@ -4330,7 +4330,7 @@ int CanCapture_800C7334()
         m = enemyMask_800C9E4C & (1 << (i + 4));
         if (m != 0)
         {
-            if (IsUncapturableSpecies_800BF980(sub_800A2BE4(i)) == 1)
+            if (IsUncapturableSpecies_800BF980(GetEnemySpecies_800A2BE4(i)) == 1)
             {
                 return 0;
             }
@@ -4592,7 +4592,7 @@ INCLUDE_OVERLAY_ASM(battle, GetSelectedTargets_800C791C);
 
 int GetSelectedItem_800C79B8()
 {
-    return sub_800AD288((short)GetMenuCursorIndex_8003DA54(itemMenu_800C9308), 0);
+    return GetInventorySlotId_800AD288((short)GetMenuCursorIndex_8003DA54(itemMenu_800C9308), 0);
 }
 
 int GetSelectedSkill_800C79EC()

@@ -15,7 +15,7 @@ typedef struct BatSel_a
     char pad_0[0x18];
     int c_18;
 } BatSel_a;
-extern BatSel_a* sub_800A1E3C();
+extern BatSel_a* GetBattleSelection_800A1E3C();
 extern void BattleEndDefeat_800BA444();
 extern void BattleEndWaitLevant_800BA52C();
 extern void BattleEndVictory_800BA564();
@@ -39,9 +39,9 @@ void BattleEnd_800BA254(BatTask_a* t, BatStart_a* u)
     {
         return;
     }
-    r = sub_800A1E3C();
+    r = GetBattleSelection_800A1E3C();
     u->c_C = r->c_18;
-    dword_800ADE78.f0 = 0;
+    encounterRecord_800ADE78.f0 = 0;
     MoveBattleCameraForAction_80037828(2, 0, 0);
     switch (dword_800B1230)
     {
@@ -164,7 +164,7 @@ void BattleEndVictory_800BA564(BatTask_a* t, BatObj_a* u)
     int r = sub_800A8DAC();
     if (r == 1)
     {
-        if (sub_800A1B2C() == r)
+        if (AreAllEncounterEnemiesGone_800A1B2C() == r)
         {
             if (--u->f4 < 0)
             {
@@ -219,7 +219,7 @@ void BattleEndFled_800BA6A0(BatTask_a* t, BatObj_a* u)
 
 void RemoveAliveEnemies_800BA720()
 {
-    int m = sub_800A248C();
+    int m = GetEnemyAliveMask_800A248C();
     int i;
     int mask;
     for (i = 0; i < 3; i++)
@@ -227,7 +227,7 @@ void RemoveAliveEnemies_800BA720()
         mask = 1 << (i + 4);
         if (m & mask)
         {
-            sub_800A2924(i);
+            RemoveEnemy_800A2924(i);
         }
     }
 }
@@ -236,7 +236,7 @@ void BattleEndUnload_800BA788(BatTask_a* t)
 {
     SetFadeMode_8001C19C(0, 0x20);
     FreeSummonedMinion_800C0BA0();
-    sub_800A1B78();
+    DestroyEncounterActors_800A1B78();
     FreeActiveOverlay_8002C014();
     FreeStageEffects_80039FC0();
     StopSoundSeqs_80030D68(dword_80091D40);
@@ -247,7 +247,7 @@ void BattleEndUnload_800BA788(BatTask_a* t)
     LoadLoaderModelAnimSets_80020898();
     if (dword_80091C74 >= 0)
     {
-        sub_800AC708(dword_80091C74, 1);
+        LoadLevantAnimSet_800AC708(dword_80091C74, 1);
     }
     eventDispatchHalt_8008B540 = 1;
     t->next_8 = BattleEndReturnToField_800BA848;
@@ -256,35 +256,35 @@ void BattleEndUnload_800BA788(BatTask_a* t)
 void BattleEndReturnToField_800BA848(BatTask_a* t, BatObj_a* u)
 {
     SetFadeMode_8001C19C(0, 0x20);
-    if (AreLoaderModelsLoaded_80020924() && sub_800AC768())
+    if (AreLoaderModelsLoaded_80020924() && AreLevantFilesLoaded_800AC768())
     {
-        sub_800A1F0C();
+        ResumeOtherEnemies_800A1F0C();
         EndBattleCamera_80037770();
         sub_800A9384(1);
         sub_800A8DCC();
         sub_800A89C8();
-        sub_800A1E1C();
+        EndEncounter_800A1E1C();
         RecoverPartyAfterBattle_800BA97C();
         sub_800A094C();
         if ((dword_800B1230 == 0 || dword_800B1230 == 2) && u->fc == 1)
         {
             u->f0 = LoadOverlayIfChanged_80020D1C(1, 7);
-            t->next_8 = sub_800A14E0;
+            t->next_8 = WaitBattleReturnFiles_800A14E0;
         }
         else if (dword_800B1230 == 3)
         {
             sub_800A9364();
-            sub_800A5FAC();
+            WarpAfterLostBattle_800A5FAC();
             if (forceMapReload_80091C9C == 0)
             {
                 RequestAreaReload_80027314();
             }
-            t->next_8 = sub_800A15FC;
+            t->next_8 = WaitMapReloadAfterBattle_800A15FC;
         }
         else
         {
             RequestAreaReload_80027314();
-            t->next_8 = sub_800A15FC;
+            t->next_8 = WaitMapReloadAfterBattle_800A15FC;
         }
     }
     eventDispatchHalt_8008B540 = 1;
@@ -311,24 +311,24 @@ EventEntry* StartBattle_800BA9E4()
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         e->cb_8 = (EventEntryFn)BattleLoad_800BAC4C;
-        r = sub_800A5354();
+        r = GetSpecialStageIndex_800A5354();
         shownAreaElement_800C9D82 = r;
         areaElement_800C9D84 = r;
         dword_800C9D83 = r;
         InitTurnGauges_800BF648(turnGauges_800C9C68, GetEncounterAdvantage_800BAAD8());
-        dword_800B1228 = 0;
+        battleFlags_800B1228 = 0;
         SetBattleFlag_800BC838(0x80000);
         savedEnemyCursor_800C9D56 = 0;
         actingUnit_800C9C7C = 0;
         shownUnit_800C9C99 = 0;
         summonedUnit_800C9C82 = 0;
-        dword_800B122C = 0;
-        sub_800A1F80();
-        GetUnitsCenter_800BC378(sub_800A248C(), buf);
+        battleHitEnemies_800B122C = 0;
+        SpawnEncounterEnemies_800A1F80();
+        GetUnitsCenter_800BC378(GetEnemyAliveMask_800A248C(), buf);
         sub_800A8D0C(buf);
         InitEnemyRecords_800BABC4();
         battleLoadState_800C9C58 = 0;
-        sub_800A096C();
+        DisableCameraPoints_800A096C();
     }
     return e;
 }
@@ -339,9 +339,9 @@ int GetEncounterAdvantage_800BAAD8()
     int px = sd->levant_7A8.pos.x;
     int pz = sd->levant_7A8.pos.z;
     short ang = (unsigned short)sd->levant_7A8.rot.vy;
-    int x = sub_800A1E48()[0];
-    int z = sub_800A1E48()[2];
-    short* rot = sub_800A1E68();
+    int x = GetEncounterLeaderPos_800A1E48()[0];
+    int z = GetEncounterLeaderPos_800A1E48()[2];
+    short* rot = GetEncounterLeaderRot_800A1E68();
     int a;
     if (sinTable_80084540[(ang - rot[1] + 0x400) & 0xFFF] >= 0)
     {
@@ -364,10 +364,10 @@ void InitEnemyRecords_800BABC4()
     i = 0;
     p = dword_800B1238;
 loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the original keeps them inside
-    m = sub_800A248C() & (1 << (i + 4));
+    m = GetEnemyAliveMask_800A248C() & (1 << (i + 4));
     if (m != 0)
     {
-        p->species_4 = sub_800A2BE4(i);
+        p->species_4 = GetEnemySpecies_800A2BE4(i);
     }
     else
     {
@@ -402,7 +402,7 @@ void BattleLoad_800BAC4C(BatTask_a* t)
         {
             break;
         }
-        k = sub_800A2BE4(0);
+        k = GetEnemySpecies_800A2BE4(0);
         if (IsUncapturableSpecies_800BF980(k))
         {
             SetBattleFlag_800BC838(0x20000);
@@ -483,7 +483,7 @@ int IsBattleOver_800BAE10()
     {
         return 0;
     }
-    return sub_800A248C() == 0;
+    return GetEnemyAliveMask_800A248C() == 0;
 }
 
 void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
@@ -493,12 +493,12 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
     int f;
     ClearBattleFlag_800BC850(0x8000);
     ClearBattleFlag_800BC850(0x10000);
-    if (dword_800ADE78.f0 == 1)
+    if (encounterRecord_800ADE78.f0 == 1)
     {
-        if (dword_800ADE78.f10 >= 0)
+        if (encounterRecord_800ADE78.f10 >= 0)
         {
             actingUnit_800C9C7C = 10;
-            u->fc = sub_800B4200(&dword_800ADE78);
+            u->fc = sub_800B4200(&encounterRecord_800ADE78);
             t->next_8 = WaitChainMessage_800BB100;
             return;
         }
@@ -509,15 +509,15 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
             t->next_8 = BattleFinish_800BB1B0;
             return;
         }
-        dword_800ADE78.fc++;
-        if (sub_800B41D0(&dword_800ADE78) == 1)
+        encounterRecord_800ADE78.fc++;
+        if (sub_800B41D0(&encounterRecord_800ADE78) == 1)
         {
             SetBattleFlag_800BC838(0x100);
             BattleFinish_800BB1B0(t, u);
             t->next_8 = BattleFinish_800BB1B0;
             return;
         }
-        q = sub_800B41A8(&dword_800ADE78);
+        q = sub_800B41A8(&encounterRecord_800ADE78);
         f = *q;
         chainEntry_800C9C78 = q;
         if (f == 0)
@@ -530,7 +530,7 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
         }
         if (actingUnit_800C9C7C == 10)
         {
-            BatChain_a* p = &dword_800ADE78;
+            BatChain_a* p = &encounterRecord_800ADE78;
             p->f10 = chainEntry_800C9C78[5];
             v->fc = sub_800B4200(p);
             t->next_8 = WaitChainMessage_800BB100;
@@ -636,7 +636,7 @@ void BattleFinish_800BB1B0(BatTask_a* t, BatObj_a* u)
     }
     else
     {
-        if (sub_800A248C() != 0)
+        if (GetEnemyAliveMask_800A248C() != 0)
         {
             return;
         }
@@ -714,7 +714,7 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
             break;
         case 2:
             SetBattleFlag_800BC838(0x40);
-            if (sub_800BF9B4(sub_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
+            if (sub_800BF9B4(GetEnemySpecies_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
             {
                 SetBattleFlag_800BC838(0x100000);
                 deathSfx_800C9D80 = 0x1C;
@@ -751,7 +751,7 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
             break;
         case 2:
             SetBattleFlag_800BC838(0x40);
-            if (sub_800BF9B4(sub_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
+            if (sub_800BF9B4(GetEnemySpecies_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
             {
                 SetBattleFlag_800BC838(0x100000);
                 deathSfx_800C9D80 = 0x1C;
@@ -849,13 +849,13 @@ void InputCommand_800BB894(BatTask_a* t, BatObj_a* u)
 {
     if (actingUnit_800C9C7C >= 4)
     {
-        if (dword_800ADE78.f0 == 1)
+        if (encounterRecord_800ADE78.f0 == 1)
         {
-            sub_800B42A8(&curCommand_800C9C88, &dword_800ADE78);
+            sub_800B42A8(&curCommand_800C9C88, &encounterRecord_800ADE78);
         }
         else
         {
-            sub_800A2618(&curCommand_800C9C88, actingUnit_800C9C7C - 4);
+            EnemyChooseCommand_800A2618(&curCommand_800C9C88, actingUnit_800C9C7C - 4);
         }
         t->next_8 = (void (*)())GetCommandHandler_800BC174();
         u->next_8 = (void (*)())(u->f4 = (int)BattleNextTurn_800BAE74);
@@ -872,9 +872,9 @@ void WaitBattleMenu_800BB940(BatTask_a* t, BatObj_a* u)
     if ((*(int*)u->fc & 0x8001) != 1)
     {
         ClearBattleFlag_800BC850(0x2000);
-        if (dword_800ADE78.f0 == 1)
+        if (encounterRecord_800ADE78.f0 == 1)
         {
-            if ((dword_800ADE78.f10 = sub_800B4318(&curCommand_800C9C88, &dword_800ADE78)) >= 0)
+            if ((encounterRecord_800ADE78.f10 = sub_800B4318(&curCommand_800C9C88, &encounterRecord_800ADE78)) >= 0)
             {
                 SetBattleFlag_800BC838(0x2000);
                 t->next_8 = BattleNextTurn_800BAE74;
@@ -885,7 +885,7 @@ void WaitBattleMenu_800BB940(BatTask_a* t, BatObj_a* u)
         u->f4 = (int)BattleNextTurn_800BAE74;
         if (curCommand_800C9C88.kind_0 == 2)
         {
-            dword_800B122C |= curCommand_800C9C88.targets_C;
+            battleHitEnemies_800B122C |= curCommand_800C9C88.targets_C;
         }
     }
 }
@@ -987,7 +987,7 @@ void CmdSwapMinionLoad_800BBC84(BatTask_a* t)
     LoadSummonedMinion_800C0AEC(commandUnit_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
 }
 
-#if 0 // Not matched: needs the second copy of u (s3, from 'v'); remaining: u->fc store / dword_800ADE78 load order and the shared lui of BattleNextTurn_800BAE74 in the branch delay slot
+#if 0 // Not matched: needs the second copy of u (s3, from 'v'); remaining: u->fc store / encounterRecord_800ADE78 load order and the shared lui of BattleNextTurn_800BAE74 in the branch delay slot
 extern int CreateSummonedMinionActor_800C0BF0();
 extern void UpdateMinionStatusTint_800C0F1C();
 void CmdSummonWait_800BBCC8(BatTask_a* t, BatObj_a* u)
@@ -1002,7 +1002,7 @@ void CmdSummonWait_800BBCC8(BatTask_a* t, BatObj_a* u)
         summonedUnit_800C9C82 = commandUnit_800C9C98;
         curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
         u->fc = StartActionTask_800BC28C();
-        if (dword_800ADE78.f0 == 1)
+        if (encounterRecord_800ADE78.f0 == 1)
         {
             u->next_8 = BattleNextTurn_800BAE74;
         }
@@ -1044,7 +1044,7 @@ void CmdRecallEnd_800BBE7C(BatTask_a* t)
     {
         t->next_8 = BattleFinish_800BB1B0;
     }
-    else if (sub_800A248C() == 0)
+    else if (GetEnemyAliveMask_800A248C() == 0)
     {
         t->next_8 = BattleNextTurn_800BAE74;
     }
@@ -1269,7 +1269,7 @@ int IsUnitOnField_800BC570(int unit)
             return 1;
         }
     }
-    return (sub_800A248C() & (m = 1 << unit)) != 0;
+    return (GetEnemyAliveMask_800A248C() & (m = 1 << unit)) != 0;
 }
 
 BatV12_a* AveragePositions_800BC5EC(BatV12_a* dst, BatV12_a* src, unsigned int n)
@@ -1322,7 +1322,7 @@ int GetUnitPos_800BC6CC(int unit)
             }
             break;
         case 2:
-            pos = sub_800A2C28(unit - 4);
+            pos = GetEnemyPos_800A2C28(unit - 4);
             break;
         }
     }
@@ -1336,7 +1336,7 @@ int IsUnitInBattle_800BC784(int unit)
     {
         if ((GetPartyMinionMask_800C0A9C() & (m = 1 << unit)) == 0)
         {
-            return (sub_800A248C() & m) != 0;
+            return (GetEnemyAliveMask_800A248C() & m) != 0;
         }
     }
     return 1;
@@ -1370,17 +1370,17 @@ INCLUDE_OVERLAY_ASM(battle, GetUnitSide_800BC7DC);
 
 int TestBattleFlag_800BC820(unsigned int m)
 {
-    return (dword_800B1228 & m) != 0;
+    return (battleFlags_800B1228 & m) != 0;
 }
 
 void SetBattleFlag_800BC838(unsigned int m)
 {
-    dword_800B1228 |= m;
+    battleFlags_800B1228 |= m;
 }
 
 void ClearBattleFlag_800BC850(unsigned int m)
 {
-    dword_800B1228 &= ~m;
+    battleFlags_800B1228 &= ~m;
 }
 
 int GetAreaElement_800BC868()

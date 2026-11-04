@@ -19,7 +19,7 @@ extern int sub_800A2AB4();
 
 extern void SetHitVariant_80018430(int a);
 
-extern int sub_800AD8E4();
+extern int GetEmptyCocoons_800AD8E4();
 
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 
@@ -116,20 +116,20 @@ extern EventNode* dword_8008D624;
 extern char savedEnemyCursor_800C9D56;
 
 
-extern int sub_800A5354();
+extern int GetSpecialStageIndex_800A5354();
 
 extern int GetEncounterAdvantage_800BAAD8();
 
-extern void sub_800A1F80();
+extern void SpawnEncounterEnemies_800A1F80();
 
 extern void sub_800A8D0C();
 
-extern void sub_800A096C();
+extern void DisableCameraPoints_800A096C();
 
 extern void BattleLoad_800BAC4C();
 
 
-extern int sub_800A2C28();
+extern int GetEnemyPos_800A2C28();
 
 extern int IsActorActionDone_800BEB50();
 
@@ -146,7 +146,7 @@ typedef struct BatV12_a
     int z;
 } BatV12_a;
 
-extern unsigned int dword_800B122C;
+extern unsigned int battleHitEnemies_800B122C;
 
 extern int dword_800ADE88;
 
@@ -175,7 +175,7 @@ typedef struct BatChain_a
 {
     int f0, f4, f8, fc, f10;
 } BatChain_a;
-extern BatChain_a dword_800ADE78;
+extern BatChain_a encounterRecord_800ADE78;
 
 extern int dword_80091C74;
 
@@ -186,23 +186,23 @@ extern short dword_80091CE0[];
 
 extern void sub_800B42A8();
 
-extern void sub_800A2618();
+extern void EnemyChooseCommand_800A2618();
 
 extern int StartBattleMenu_800C6EFC();
 
 extern void WaitBattleMenu_800BB940();
 
-extern void sub_800A1B78();
+extern void DestroyEncounterActors_800A1B78();
 
 extern void FreeActiveOverlay_8002C014();
 
-extern void sub_800AC708();
+extern void LoadLevantAnimSet_800AC708();
 
 extern void sub_800A9364();
 
 extern int sub_800A8DAC();
 
-extern int sub_800A1B2C();
+extern int AreAllEncounterEnemiesGone_800A1B2C();
 
 
 
@@ -303,7 +303,7 @@ extern void CloseMsgWindow_80034A84();
 
 extern void TriggerActorEffect_8001E28C();
 
-extern void sub_800A2924();
+extern void RemoveEnemy_800A2924();
 
 
 
@@ -328,7 +328,7 @@ extern void sub_800A8D48();
 
 extern void sub_800A25D8();
 
-extern int sub_800A2BE4();
+extern int GetEnemySpecies_800A2BE4();
 
 extern int AdvanceTurnGauges_800BF6BC();
 
@@ -450,7 +450,7 @@ typedef struct BatTask_a
 
 
 
-extern unsigned int dword_800B1228;
+extern unsigned int battleFlags_800B1228;
 
 // the summoned minion's actor and where it appears (LoadSummonedMinion_800C0AEC)
 typedef struct BatSummon_a
@@ -537,9 +537,9 @@ extern int sub_800A8BE4();
 
 extern int sub_800A2594();
 
-extern int sub_800AC768();
+extern int AreLevantFilesLoaded_800AC768();
 
-extern void sub_800A1F0C();
+extern void ResumeOtherEnemies_800A1F0C();
 
 extern void sub_800A9384(int a);
 
@@ -547,23 +547,23 @@ extern void sub_800A8DCC();
 
 extern void sub_800A89C8();
 
-extern void sub_800A1E1C();
+extern void EndEncounter_800A1E1C();
 
 extern void sub_800A094C();
 
-extern void sub_800A5FAC();
+extern void WarpAfterLostBattle_800A5FAC();
 
-extern void sub_800A14E0();
+extern void WaitBattleReturnFiles_800A14E0();
 
-extern void sub_800A15FC();
+extern void WaitMapReloadAfterBattle_800A15FC();
 
 extern int forceMapReload_80091C9C;
 
 extern short sinTable_80084540[];
 
-extern int* sub_800A1E48(void); // GAME.BIN: an actor's pos_38
+extern int* GetEncounterLeaderPos_800A1E48(void); // GAME.BIN: an actor's pos_38
 
-extern short* sub_800A1E68(void); // GAME.BIN: the same actor's rot_5C
+extern short* GetEncounterLeaderRot_800A1E68(void); // GAME.BIN: the same actor's rot_5C
 
 extern int LoadSeqSlotSound_800303E8();
 
@@ -602,11 +602,11 @@ extern void ActionWaitIdle_800BDB4C();
 
 extern void sub_800A8A30();
 
-extern void sub_800A2684();
+extern void StartEnemyCommandAction_800A2684();
 
 extern void sub_800A8C0C(int b);
 
-extern void sub_800A2760(BatCmd_a* p, int b);
+extern void TriggerEnemyEffects_800A2760(BatCmd_a* p, int b);
 
 extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
@@ -616,13 +616,13 @@ extern void PlaySfx_80031494(int id);
 
 extern void StartPadVibration_80036528(int pad, int kind);
 
-extern void sub_800AD944(int a);
+extern void RemoveEmptyCocoons_800AD944(int a);
 
-extern void sub_800AD1E0(int a, int b, int c);
+extern void RemoveInventory_800AD1E0(int a, int b, int c);
 
-extern void sub_800A2898(int a);
+extern void AddEnemyItem_800A2898(int a);
 
-extern void sub_800A284C(int a);
+extern void SetEnemyStatusTint_800A284C(int a);
 
 extern void sub_80039ED8(int a);
 
@@ -969,7 +969,7 @@ extern void SelectMenuWindows_800C71A0();
 
 extern void BattleMenuTask_800C8A08();
 
-extern int sub_800AD308(int a);
+extern int GetLastInventorySlot_800AD308(int a);
 
 extern int CountMagicBits_8001AE54(unsigned int* h);
 

@@ -524,7 +524,7 @@ void EncounterSpawnTask_800B844C(TaskEventfnc* t)
         s = &saveData_8008B570;
         sp.f1A_1A = tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f6_6;
         sp.f18_18 = tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_0].f6_6;
-        n = sub_800A49CC(tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f4_4, sp.f18_18, &mapSpawns_80091C60, &sp);
+        n = RollEncounterGroups_800A49CC(tbl[s->mapId_2E4[0].field_0][s->mapId_2E4[1].field_0][s->mapId_2E4[2].field_2].f4_4, sp.f18_18, &mapSpawns_80091C60, &sp);
         for (i = 0; i < n; i++)
         {
             SpawnEncounterEnemy_800B8568(sp.a_0[i], sp.b_C[i], -1, i);
@@ -566,14 +566,14 @@ typedef struct EvLoaderEventfnc
     int f8;
     EvLoadEntEventfnc ents_C[4];
 } EvLoaderEventfnc;
-// an enemy slot of the GAME overlay (GameSlot_1): sub_800A17F4 copies the EvEnemyEventfnc into data_8
+// an enemy slot of the GAME overlay (GameSlot_1): AddEnemySlot_800A17F4 copies the EvEnemyEventfnc into data_8
 typedef struct EvEnemySlotEventfnc
 {
     int f0;
     int aiEvent_4;
     EvEnemyEventfnc data_8;
 } EvEnemySlotEventfnc;
-extern EvEnemySlotEventfnc* sub_800A17F4(EvEnemyEventfnc* src, int b);
+extern EvEnemySlotEventfnc* AddEnemySlot_800A17F4(EvEnemyEventfnc* src, int b);
 extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
 extern short defaultBones_80079140[]; // default bone table
 
@@ -668,7 +668,7 @@ void SpawnEncounterEnemy_800B8568(EvPosEventfnc* a, EvPlaceEventfnc* b, int c, i
         e.z_D4[0] = a[0].z;
         e.z_D4[1] = a[1].z;
         e.z_D4[2] = a[2].z;
-        slot = sub_800A17F4(&e, 0);
+        slot = AddEnemySlot_800A17F4(&e, 0);
         slot->aiEvent_4 = CreateEnemyAiEvent_800A2D90(actor, &slot->data_8.minion_1C, c);
     }
 }
@@ -700,8 +700,8 @@ void StartEncounter_800B88A4(int a)
     q->f10 = 0;
     q->f14 = 0;
     p->cb_8 = (EventEntryFn)EncounterSpawnTask_800B844C;
-    sub_800A170C();
-    sub_800A1794();
+    ResetEncounter_800A170C();
+    ClearEnemySlots_800A1794();
 }
 
 void sub_800B8928()
@@ -783,7 +783,7 @@ int EvCmdEndScene_800B8A34(EvCtxEventfnc* c)
             {
                 if (i == 0)
                 {
-                    sub_800A8E38();
+                    ReleaseLevantControl_800A8E38();
                 }
                 else
                 {
@@ -795,13 +795,13 @@ int EvCmdEndScene_800B8A34(EvCtxEventfnc* c)
         if (c->heldActors_14 == 0 && (c->flags_0 & 0x20))
         {
             c->flags_0 &= ~0x20;
-            sub_800A1974();
+            ResumeAllEnemySlots_800A1974();
         }
-        if (dword_800AEBD8 == c->id_10)
+        if (sceneScriptId_800AEBD8 == c->id_10)
         {
-            dword_800AEBD8 = -1;
+            sceneScriptId_800AEBD8 = -1;
         }
-        sub_800A5B54(c);
+        ResetEventCtx_800A5B54(c);
         c->step_B8 = 0;
         c->pc_8++;
         return 1;
@@ -810,14 +810,14 @@ int EvCmdEndScene_800B8A34(EvCtxEventfnc* c)
 }
 
 #if 0
-extern int dword_800B0EC0;
+extern int fieldMode_800B0EC0;
 extern int dword_800B1260;
-extern int sub_800A6D50(int a);
-extern void sub_800A1904(void);
+extern int GetGameMode_800A6D50(int a);
+extern void SuspendAllEnemySlots_800A1904(void);
 int EvCmdBeginScene_800B8BE8(EvCtxEventfnc* c)
 {
     int r;
-    if (dword_800B0EC0 != 1)
+    if (fieldMode_800B0EC0 != 1)
     {
         return 0;
     }
@@ -825,21 +825,21 @@ int EvCmdBeginScene_800B8BE8(EvCtxEventfnc* c)
     {
         return 0;
     }
-    if (dword_800AEBD8 >= 0)
+    if (sceneScriptId_800AEBD8 >= 0)
     {
-        if (c->id_10 != dword_800AEBD8)
+        if (c->id_10 != sceneScriptId_800AEBD8)
         {
             return 0;
         }
     }
-    r = sub_800A6D50(0);
-    if (r != sub_800A6D50(2))
+    r = GetGameMode_800A6D50(0);
+    if (r != GetGameMode_800A6D50(2))
     {
         return 0;
     }
     c->flags_0 |= 0x20;
-    sub_800A1904();
-    dword_800AEBD8 = c->id_10;
+    SuspendAllEnemySlots_800A1904();
+    sceneScriptId_800AEBD8 = c->id_10;
     c->pc_8++;
     return 1;
 }
@@ -874,7 +874,7 @@ int EvCmdTakeActors_800B8D08(EvCtxEventfnc* c)
         {
             if (i == 0)
             {
-                sub_800A8E0C();
+                HoldLevantControl_800A8E0C();
                 sub_800A8DEC();
             }
             else if (sub_800A7810(i - 1) == 0)
@@ -900,7 +900,7 @@ int EvCmdReleaseActors_800B8DDC(EvCtxEventfnc* c)
         {
             if (i == 0)
             {
-                sub_800A8E38();
+                ReleaseLevantControl_800A8E38();
             }
             else
             {
@@ -974,7 +974,7 @@ int EvCmdSetVar_800B8FB8(EvCtxEventfnc* c)
     }
     else
     {
-        sub_800AD16C(hi, lo);
+        SetEventVar_800AD16C(hi, lo);
     }
     c->pc_8++;
     return 1;
@@ -1028,18 +1028,18 @@ int EvCmdCountYanVar_800B9110(EvCtxEventfnc* c)
     int lo = a & 0xFFFF;
     int hi2 = b >> 16;
     int lo2 = b & 0xFFFF;
-    int v = sub_800AD154(hi);
+    int v = GetEventVar_800AD154(hi);
     c->branch_EC = v;
-    sub_800AD16C(hi, v + 1);
-    if (sub_800AD154(hi) >= hi2)
+    SetEventVar_800AD16C(hi, v + 1);
+    if (GetEventVar_800AD154(hi) >= hi2)
     {
         if (lo2)
         {
-            sub_800AD16C(hi, lo);
+            SetEventVar_800AD16C(hi, lo);
         }
         else
         {
-            sub_800AD16C(hi, hi2 - 1);
+            SetEventVar_800AD16C(hi, hi2 - 1);
         }
     }
     c->pc_8++;
@@ -1048,14 +1048,14 @@ int EvCmdCountYanVar_800B9110(EvCtxEventfnc* c)
 
 int EvCmdCallHook_800B91CC(EvCtxEventfnc* c)
 {
-    dword_800B1D98(c->pc_8->c_C);
+    eventHook_800B1D98(c->pc_8->c_C);
     c->pc_8++;
     return 1;
 }
 
 int EvCmdStartScript_800B9218(EvCtxEventfnc* c)
 {
-    sub_800A59D0(c->pc_8->c_C);
+    StartEventScript_800A59D0(c->pc_8->c_C);
     c->pc_8++;
     return 1;
 }
@@ -1201,28 +1201,28 @@ int EvCmdTestFlag_800B9840(EvCtxEventfnc* c)
 {
     if (c->pc_8->a_4 == 0)
     {
-        if (sub_800AD0D4(c->pc_8->b_8))
+        if (TestEventFlag_800AD0D4(c->pc_8->b_8))
         {
             c->pc_8++;
             return 1;
         }
         return 0;
     }
-    c->branch_EC = sub_800AD0D4(c->pc_8->b_8) == 0;
+    c->branch_EC = TestEventFlag_800AD0D4(c->pc_8->b_8) == 0;
     c->pc_8++;
     return 1;
 }
 
 int EvCmdSetFlag_800B98C4(EvCtxEventfnc* c)
 {
-    sub_800AD0F8(c->pc_8->b_8);
+    SetEventFlag_800AD0F8(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
 int EvCmdClearFlag_800B990C(EvCtxEventfnc* c)
 {
-    sub_800AD124(c->pc_8->b_8);
+    ClearEventFlag_800AD124(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
@@ -1259,41 +1259,41 @@ int EvCmdClearTempFlags_800B9A20(EvCtxEventfnc* c)
 
 int EvCmdAddItem_800B9A68(EvCtxEventfnc* c)
 {
-    sub_800AD184(c->pc_8->a_4, c->pc_8->b_8, 0);
+    AddInventory_800AD184(c->pc_8->a_4, c->pc_8->b_8, 0);
     c->pc_8++;
     return 1;
 }
 
 int EvCmdRemoveItem_800B9AB4(EvCtxEventfnc* c)
 {
-    sub_800AD1E0(c->pc_8->a_4, c->pc_8->b_8, 0);
+    RemoveInventory_800AD1E0(c->pc_8->a_4, c->pc_8->b_8, 0);
     c->pc_8++;
     return 1;
 }
 
 int EvCmdAddItemCat1_800B9B00(EvCtxEventfnc* c)
 {
-    sub_800AD184(c->pc_8->a_4, c->pc_8->b_8, 1);
+    AddInventory_800AD184(c->pc_8->a_4, c->pc_8->b_8, 1);
     c->pc_8++;
     return 1;
 }
 
 int EvCmdRemoveItemCat1_800B9B4C(EvCtxEventfnc* c)
 {
-    sub_800AD1E0(c->pc_8->a_4, c->pc_8->b_8, 1);
+    RemoveInventory_800AD1E0(c->pc_8->a_4, c->pc_8->b_8, 1);
     c->pc_8++;
     return 1;
 }
 
 #if 0
 // Not matched: the original places a shared 'return 0' block in front of the body and tests the condition differently
-// a == 0: wait for trigger b (GAME's sub_800A5C40 sets flags 4); else branch_EC = !valuable flag b
+// a == 0: wait for trigger b (GAME's FireEventTrigger_800A5C40 sets flags 4); else branch_EC = !valuable flag b
 int EvCmdWaitTrigger_800B9B98(EvCtxEventfnc* c)
 {
     unsigned int f;
     if (c->pc_8->a_4 == 0)
     {
-        if (dword_800AEBD8 < 0 || dword_800AEBD8 == c->id_10)
+        if (sceneScriptId_800AEBD8 < 0 || sceneScriptId_800AEBD8 == c->id_10)
         {
             f = c->flags_0 | 8;
             c->flags_0 = f;
@@ -1312,7 +1312,7 @@ int EvCmdWaitTrigger_800B9B98(EvCtxEventfnc* c)
     }
     else
     {
-        c->branch_EC = sub_800AD73C(c->pc_8->b_8) == 0;
+        c->branch_EC = TestValuableFlag_800AD73C(c->pc_8->b_8) == 0;
     }
     c->pc_8++;
     return 1;
@@ -1327,11 +1327,11 @@ int EvCmdSetValuable_800B9C5C(EvCtxEventfnc* c)
     int b = c->pc_8->b_8;
     if (a != 0)
     {
-        sub_800AD68C(b);
+        SetValuableFlag_800AD68C(b);
     }
     else
     {
-        sub_800AD6E4(b);
+        ClearValuableFlag_800AD6E4(b);
     }
     c->pc_8++;
     return 1;
@@ -1339,14 +1339,14 @@ int EvCmdSetValuable_800B9C5C(EvCtxEventfnc* c)
 
 int EvCmdAddMoney_800B9CC0(EvCtxEventfnc* c)
 {
-    sub_800AD058(c->pc_8->b_8);
+    AddMoney_800AD058(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
 
 int EvCmdAddEmptyCocoons_800B9D08(EvCtxEventfnc* c)
 {
-    sub_800AD8F4(c->pc_8->b_8);
+    AddEmptyCocoons_800AD8F4(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
@@ -1355,7 +1355,7 @@ int EvCmdHealParty_800B9D50(EvCtxEventfnc* c)
 {
     int i;
     UnitStatus* p;
-    Heal_80011CD0(sub_800A8C34());
+    Heal_80011CD0(GetLevantStatus_800A8C34());
 
     for (i = 0; i < CountMinions_80010548(3); i++)
     {
@@ -1369,7 +1369,7 @@ int EvCmdHealParty_800B9D50(EvCtxEventfnc* c)
 
 int EvCmdSetEntityState_800B9DE0(EvCtxEventfnc* c)
 {
-    EvEntEventfnc* e = sub_800A5DDC(c->pc_8->c_C, c->pc_8->a_4, 0);
+    EvEntEventfnc* e = FindEventEntity_800A5DDC(c->pc_8->c_C, c->pc_8->a_4, 0);
     if (e == 0)
     {
         return 0;
@@ -1381,7 +1381,7 @@ int EvCmdSetEntityState_800B9DE0(EvCtxEventfnc* c)
 
 int EvCmdWaitEntityState_800B9E48(EvCtxEventfnc* c)
 {
-    EvEntEventfnc* e = sub_800A5DDC(c->pc_8->c_C, c->pc_8->a_4, 0);
+    EvEntEventfnc* e = FindEventEntity_800A5DDC(c->pc_8->c_C, c->pc_8->a_4, 0);
     if (e != 0 && e->f80_80 == c->pc_8->b_8)
     {
         c->pc_8++;
@@ -1409,7 +1409,7 @@ int EvCmdWaitOwnEntityState_800B9EDC(EvCtxEventfnc* c)
 
 int EvCmdWaitEntityGone_800B9F0C(EvCtxEventfnc* c)
 {
-    if (sub_800A5DDC(c->pc_8->c_C, c->pc_8->b_8, 0) == 0)
+    if (FindEventEntity_800A5DDC(c->pc_8->c_C, c->pc_8->b_8, 0) == 0)
     {
         c->pc_8++;
         return 1;
@@ -1441,7 +1441,7 @@ int EvCmdSetMsgPosMode_800B9FB4(EvCtxEventfnc* c)
 
 int EvCmdSetVoiceTable_800B9FD8(EvCtxEventfnc* c)
 {
-    sub_800A6830(c->pc_8->c_C);
+    SetVoiceTable_800A6830(c->pc_8->c_C);
     c->pc_8++;
     return 1;
 }
@@ -1614,7 +1614,7 @@ int EvCmdPauseActorAnim_800BA45C(EvCtxEventfnc* c)
     int a = c->pc_8->a_4;
     if (a != 0)
     {
-        EvObjEventfnc* o = sub_800A7A60(a - 1);
+        EvObjEventfnc* o = GetFieldMinionActor_800A7A60(a - 1);
         if (o->f90_90 == o->f1A_1A)
         {
             SetActorAnimPaused_8001D6EC(o, c->pc_8->b_8);
@@ -1654,7 +1654,7 @@ int EvCmdPlayMotionData_800BA5CC(EvCtxEventfnc* c)
 {
     EvActorCmdEventfnc m;
     int n = c->pc_8->c_C;
-    int* r = sub_800A55B0(4);
+    int* r = GetEventDataSlot_800A55B0(4);
     unsigned int a = c->pc_8->a_4;
     m.actor_0 = 1 << (a >> 16);
     m.kind_4 = 0xB;
@@ -1688,7 +1688,7 @@ int EvCmdSetCallArgs_800BA6D0(EvCtxEventfnc* c)
 
 int EvCmdCallUntilDone_800BA714(EvCtxEventfnc* c)
 {
-    if (c->pc_8->b_8 == 1 || dword_800AEBD8 < 0 || dword_800AEBD8 == c->id_10)
+    if (c->pc_8->b_8 == 1 || sceneScriptId_800AEBD8 < 0 || sceneScriptId_800AEBD8 == c->id_10)
     {
         if (((int (*)(int))c->pc_8->c_C)(c->callArg_F0) == 1)
         {
@@ -1702,7 +1702,7 @@ int EvCmdCallUntilDone_800BA714(EvCtxEventfnc* c)
 
 int EvCmdCallSelect_800BA7A4(EvCtxEventfnc* c)
 {
-    if (c->pc_8->b_8 == 1 || dword_800AEBD8 < 0 || dword_800AEBD8 == c->id_10)
+    if (c->pc_8->b_8 == 1 || sceneScriptId_800AEBD8 < 0 || sceneScriptId_800AEBD8 == c->id_10)
     {
         c->branch_EC = ((int (*)(int))c->pc_8->c_C)(c->callArg_F0);
         c->callArg_F0 = 0;
@@ -1718,7 +1718,7 @@ int EvCmdSetChapter_800BA82C(EvCtxEventfnc* c)
 {
     SaveData* s = &saveData_8008B570;
     s->chapter_2DC = *(unsigned short*)&c->pc_8->b_8;
-    sub_800A6D30(0);
+    RequestGameMode_800A6D30(0);
     eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
     return 1;
@@ -1741,7 +1741,7 @@ int EvCmdSetMapVar_800BA8AC(EvCtxEventfnc* c)
     v[0] = ((unsigned short*)&c->pc_8->a_4)[0];
     v[1] = ((unsigned short*)&c->pc_8->b_8)[1];
     v[2] = ((unsigned short*)&c->pc_8->b_8)[0];
-    sub_800ADC5C(v, c->pc_8->c_C);
+    SetMapVar_800ADC5C(v, c->pc_8->c_C);
     c->pc_8++;
     return 1;
 }
@@ -1775,7 +1775,7 @@ int EvCmdChangeMapToPoint_800BA9E4(EvCtxEventfnc* c)
 {
     unsigned short v[3];
     SaveData* s;
-    sub_800ADCEC(v, c->pc_8->b_8);
+    FindMapEntrance_800ADCEC(v, c->pc_8->b_8);
     forceMapReload_80091C9C = 1;
     dword_80091C54 = 0;
     useMapStartPos_80091C94 = 1;
@@ -1810,7 +1810,7 @@ int EvCmdUsePreloadedArea_800BAAC0(EvCtxEventfnc* c)
 
 int EvCmdSetReturnPoint_800BAB14(EvCtxEventfnc* c)
 {
-    sub_800A683C(c->pc_8->b_8);
+    GetSetReturnEntrance_800A683C(c->pc_8->b_8);
     c->pc_8++;
     return 1;
 }
@@ -1820,7 +1820,7 @@ extern int SetFadeMode_8001C19C(int a, int b);
 int sub_800BAB5C(EvCtxEventfnc* c)
 {
     SetFadeMode_8001C19C(1, 0x20);
-    sub_800A6D30(8);
+    RequestGameMode_800A6D30(8);
     eventDispatchHalt_8008B540 = 1;
     c->pc_8++;
     return 1;
@@ -1835,15 +1835,15 @@ int EvCmdOpenShop_800BABB0(EvCtxEventfnc* c)
     switch (c->step_B8)
     {
     case 0:
-        dword_800B06B0.f0_0 = 1;
-        dword_800B06B0.f4_4 = ((unsigned short*)&c->pc_8->b_8)[1];
-        dword_800B06B0.f8_8 = ((unsigned short*)&c->pc_8->b_8)[0];
+        shopRequest_800B06B0.f0_0 = 1;
+        shopRequest_800B06B0.f4_4 = ((unsigned short*)&c->pc_8->b_8)[1];
+        shopRequest_800B06B0.f8_8 = ((unsigned short*)&c->pc_8->b_8)[0];
         c->step_B8 = 1;
         return 0;
     case 1:
-        if (dword_800B06B0.f0_0 == 0)
+        if (shopRequest_800B06B0.f0_0 == 0)
         {
-            c->branch_EC = sub_800A5F9C(0);
+            c->branch_EC = ExchangeEventResult_800A5F9C(0);
             c->step_B8 = 0;
             c->pc_8++;
             return 1;
@@ -1961,7 +1961,7 @@ int EvCmdWaitTalk_800BAFAC(EvCtxEventfnc* c)
     int i;
     int hit;
     unsigned int dist;
-    if (dword_800AEBD8 >= 0 && dword_800AEBD8 != c->id_10)
+    if (sceneScriptId_800AEBD8 >= 0 && sceneScriptId_800AEBD8 != c->id_10)
     {
         return 0;
     }
@@ -1974,7 +1974,7 @@ int EvCmdWaitTalk_800BAFAC(EvCtxEventfnc* c)
     c->flags_0 &= ~0xC;
     lev = GetActorPos_800BBBA0(0);
     rot = GetActorRot_800BBBD0(0);
-    for (i = 1; i < sub_800A7790() + 1; i++)
+    for (i = 1; i < GetFieldMinionCount_800A7790() + 1; i++)
     {
         int bit = 1 << i;
         if (c->pc_8->b_8 & bit)
@@ -2031,7 +2031,7 @@ int sub_800BB180(EvCtxEventfnc* c)
 int EvCmdWaitActorInRegion_800BB214(EvCtxEventfnc* c)
 {
     EvVecEventfnc* v = GetActorPos_800BBBA0(c->pc_8->a_4);
-    if (sub_800A6504(c->pc_8->b_8, v))
+    if (IsEventPointValid_800A6504(c->pc_8->b_8, v))
     {
         c->pc_8++;
         return 1;
@@ -2070,9 +2070,9 @@ typedef struct EvPartyEventfnc
     int fD4_D4[3];
 } EvPartyEventfnc;
 
-extern EvPartyEventfnc dword_800B1CB8;
-extern int dword_800AEBE0;
-extern int dword_800AEBE4;
+extern EvPartyEventfnc eventEnemy_800B1CB8;
+extern int eventBattlePending_800AEBE0;
+extern int eventBattleLoseWarp_800AEBE4;
 extern int dword_800B1260;
 extern int sub_800A7A9C(int i);
 int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
@@ -2084,34 +2084,34 @@ int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
     {
     case 0:
         s = (EvPartySrcEventfnc*)c->pc_8->c_C;
-        dword_800AEBE4 = s->f14_14;
-        dword_800B1CB8.f0_0[0] = s->f0_0[0];
-        dword_800B1CB8.f0_0[1] = s->f0_0[1];
-        dword_800B1CB8.f0_0[2] = s->f0_0[2];
-        dword_800B1CB8.f0_0[3] = s->f0_0[3];
-        dword_800B1CB8.f0_0[4] = s->f0_0[4];
-        dword_800B1CB8.f14_14 = -1;
-        dword_800B1CB8.f18_18 = 0;
+        eventBattleLoseWarp_800AEBE4 = s->f14_14;
+        eventEnemy_800B1CB8.f0_0[0] = s->f0_0[0];
+        eventEnemy_800B1CB8.f0_0[1] = s->f0_0[1];
+        eventEnemy_800B1CB8.f0_0[2] = s->f0_0[2];
+        eventEnemy_800B1CB8.f0_0[3] = s->f0_0[3];
+        eventEnemy_800B1CB8.f0_0[4] = s->f0_0[4];
+        eventEnemy_800B1CB8.f14_14 = -1;
+        eventEnemy_800B1CB8.f18_18 = 0;
         for (i = 0; i < 3; i++)
         {
             k = s->ids_18[i];
             if (k != 5)
             {
-                dword_800B1CB8.fA4_A4[i] = (int)sub_800A7A60(k - 1);
-                dword_800B1CB8.fB0_B0[i].a_0 = s->e_24[i].a_0;
-                dword_800B1CB8.fB0_B0[i].b_4 = s->e_24[i].b_4;
-                dword_800B1CB8.fC8_C8[i] = sub_800A7A9C(k - 1);
+                eventEnemy_800B1CB8.fA4_A4[i] = (int)GetFieldMinionActor_800A7A60(k - 1);
+                eventEnemy_800B1CB8.fB0_B0[i].a_0 = s->e_24[i].a_0;
+                eventEnemy_800B1CB8.fB0_B0[i].b_4 = s->e_24[i].b_4;
+                eventEnemy_800B1CB8.fC8_C8[i] = sub_800A7A9C(k - 1);
             }
             else
             {
-                dword_800B1CB8.fA4_A4[i] = 0;
-                dword_800B1CB8.fB0_B0[i].a_0 = s->e_24[i].a_0;
-                dword_800B1CB8.fB0_B0[i].b_4 = s->e_24[i].b_4;
-                dword_800B1CB8.fC8_C8[i] = 0;
+                eventEnemy_800B1CB8.fA4_A4[i] = 0;
+                eventEnemy_800B1CB8.fB0_B0[i].a_0 = s->e_24[i].a_0;
+                eventEnemy_800B1CB8.fB0_B0[i].b_4 = s->e_24[i].b_4;
+                eventEnemy_800B1CB8.fC8_C8[i] = 0;
             }
-            dword_800B1CB8.fD4_D4[i] = s->e_24[i].c_8;
+            eventEnemy_800B1CB8.fD4_D4[i] = s->e_24[i].c_8;
         }
-        dword_800AEBE0 = 1;
+        eventBattlePending_800AEBE0 = 1;
         c->step_B8++;
     case 1:
         c->step_B8++;
@@ -2121,8 +2121,8 @@ int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
         {
             return 0;
         }
-        dword_800AEBE4 = 1;
-        dword_800AEBE0 = 0;
+        eventBattleLoseWarp_800AEBE4 = 1;
+        eventBattlePending_800AEBE0 = 0;
         c->step_B8 = 0;
         c->pc_8++;
         return 1;
@@ -2152,7 +2152,7 @@ extern void StartSceneFadeOut_8001AA50(int a);
 extern void StopSceneDarken_8001AAF4();
 extern void StartSceneBrighten_8001AB1C(int a);
 extern void sub_800A094C();
-extern void sub_800A096C();
+extern void DisableCameraPoints_800A096C();
 extern short dword_80091CE0[];
 extern void SsSepSetDecrescendo(int, int, int, int);
 extern void SsSepStop(int, int);
@@ -2211,7 +2211,7 @@ int EvCmdFadeSound_800BB4A4(EvCtxEventfnc* c)
         sub_800A094C();
         break;
     case 11:
-        sub_800A096C();
+        DisableCameraPoints_800A096C();
         break;
     case 12:
         op = c->pc_8->b_8;
@@ -2392,7 +2392,7 @@ int IsActorCmdReady_800BBAB0(int i)
     int r;
     if (i == 0)
     {
-        r = sub_800A8E7C();
+        r = IsLevantControlHeld_800A8E7C();
     }
     else
     {
@@ -2416,26 +2416,26 @@ int IsActorCmdDone_800BBAE4(int i)
 }
 
 // Matched
-extern int sub_800A8EC4(int* p);
-extern int sub_800A7D40(int a, int* p);
+extern int LevantCommand_800A8EC4(int* p);
+extern int FieldMinionCommand_800A7D40(int a, int* p);
 int StartActorCmd_800BBB18(int* p)
 {
     int r;
     int v = *p;
     if (v == 0)
     {
-        r = sub_800A8EC4(p);
+        r = LevantCommand_800A8EC4(p);
     }
     else
     {
-        r = sub_800A7D40(v - 1, p);
+        r = FieldMinionCommand_800A7D40(v - 1, p);
     }
     return r;
 }
 
 // Matched
 extern int sub_800A9008(int* p);
-extern int sub_800A80C4(int a, int* p);
+extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
 int FinishActorCmd_800BBB5C(int* p)
 {
     int r;
@@ -2446,7 +2446,7 @@ int FinishActorCmd_800BBB5C(int* p)
     }
     else
     {
-        r = sub_800A80C4(v - 1, p);
+        r = TriggerFieldMinionEffect_800A80C4(v - 1, p);
     }
     return r;
 }
@@ -2460,7 +2460,7 @@ EvVecEventfnc* GetActorPos_800BBBA0(int i)
     }
     else
     {
-        r = sub_800A7940(i - 1);
+        r = GetFieldMinionPos_800A7940(i - 1);
     }
     return r;
 }
@@ -2474,7 +2474,7 @@ SVECTOR* GetActorRot_800BBBD0(int i)
     }
     else
     {
-        r = sub_800A7984(i - 1);
+        r = GetFieldMinionRot_800A7984(i - 1);
     }
     return r;
 }
@@ -2584,8 +2584,8 @@ typedef struct EvMsgOptEventfnc
     int fC8;
     int fCC;
 } EvMsgOptEventfnc;
-extern int sub_800A6738(int a);
-extern int sub_800A78A8(int a);
+extern int GetEventString_800A6738(int a);
+extern int GetFieldMinionModelId_800A78A8(int a);
 extern int sub_800A78F4(int a);
 extern int OpenMessageWindow_8003422C(EvMsgCfgEventfnc* cfg);
 extern int OpenItemMessageWindow_80035AC8(EvItemCfgEventfnc* cfg);
@@ -2650,7 +2650,7 @@ int OpenEventMessage_800BBE3C(EvCtxEventfnc* c)
         }
         else
         {
-            str = sub_800A6738(pc->c_C);
+            str = GetEventString_800A6738(pc->c_C);
         }
         mode = 3;
     }
@@ -2658,7 +2658,7 @@ int OpenEventMessage_800BBE3C(EvCtxEventfnc* c)
     {
         mask = 0;
         mode = 0;
-        str = sub_800A6738(pc->c_C);
+        str = GetEventString_800A6738(pc->c_C);
         list = FindMsgChoiceList_800BC560((int*)str);
         mask = GetChoiceMask_800BC58C(list) & ~c->choiceMask_114;
     }
@@ -2666,7 +2666,7 @@ int OpenEventMessage_800BBE3C(EvCtxEventfnc* c)
     {
         mode = mask;
         list = 0;
-        str = sub_800A6738(pc->c_C);
+        str = GetEventString_800A6738(pc->c_C);
     }
     if (*(short*)&c->msgX_100 != -1 && *(short*)&c->msgY_102 != -1)
     {
@@ -2730,15 +2730,15 @@ int OpenEventMessage_800BBE3C(EvCtxEventfnc* c)
         m.f38 = c8;
         m.f3C = 0;
         m.f40 = 0;
-        m.fC = sub_800A78A8(pc->a_4 - 1);
+        m.fC = GetFieldMinionModelId_800A78A8(pc->a_4 - 1);
         m.f2C = sub_800A78F4(pc->a_4 - 1);
-        v = dword_800AEBF0;
+        v = voiceTable_800AEBF0;
         m.voice_44 = 0;
         if (v != 0)
         {
             for (; v->xa_2.a_0 >= 0; v++)
             {
-                if (dword_800AEBE8 == v->id_0)
+                if (currentMessageId_800AEBE8 == v->id_0)
                 {
                     m.voice_44 = 1;
                     break;
@@ -2831,7 +2831,7 @@ int UpdateEventMessage_800BC2B4(EvCtxEventfnc* c)
                 c->flags_0 &= ~0x100;
             }
         }
-        sub_800A67B4(c);
+        SkipActorAnims_800A67B4(c);
         f = c->flags_0;
         c->flags_0 = f & ~2;
         if (!info.fC_C)
@@ -2847,19 +2847,19 @@ int UpdateEventMessage_800BC2B4(EvCtxEventfnc* c)
             c->branch_EC = info.s2_2;
         }
         CloseMsgWindow_80034A84(c->msgWindow_11C);
-        dword_800AEBE8 = 0x8000;
+        currentMessageId_800AEBE8 = 0x8000;
         dword_800AEBEC = 0;
         c->msgOpen_118 = 0;
         return 1;
     }
-    if (dword_800AEBF0)
+    if (voiceTable_800AEBF0)
     {
         k = 0;
-        for (i = 0; dword_800AEBF0[i].xa_2.a_0 >= 0; i++)
+        for (i = 0; voiceTable_800AEBF0[i].xa_2.a_0 >= 0; i++)
         {
-            if (dword_800AEBE8 == dword_800AEBF0[i].id_0 && ConsumeMsgWindowMark_80034ADC(c->msgWindow_11C, dword_800AEBF0[i].sub_1))
+            if (currentMessageId_800AEBE8 == voiceTable_800AEBF0[i].id_0 && ConsumeMsgWindowMark_80034ADC(c->msgWindow_11C, voiceTable_800AEBF0[i].sub_1))
             {
-                k = &dword_800AEBF0[i].xa_2;
+                k = &voiceTable_800AEBF0[i].xa_2;
             }
         }
         if (saveData_8008B570.settings_1C.bits.i_22 == 1 && k && dword_800AEBEC != k)
@@ -2981,9 +2981,9 @@ void EvMessageNop_800BC7A0(EvCtxEventfnc* c)
 void LoadEventEffectFile_800BC7A8(int a)
 {
     EvGfxArgEventfnc t;
-    if (dword_800AEB7C != 2)
+    if (mdecBufferMode_800AEB7C != 2)
     {
-        sub_800A5854();
+        FreeMdecBuffer_800A5854();
     }
     if (dword_800AEB80.f4_4)
     {
@@ -3001,7 +3001,7 @@ void LoadEventEffectFile_800BC7A8(int a)
     OnEffectFileLoaded_80020F5C(&t, a);
     if (dword_800AEB80.f2C_2C)
     {
-        sub_800A5804(0);
+        AllocMdecBuffer_800A5804(0);
     }
 }
 
