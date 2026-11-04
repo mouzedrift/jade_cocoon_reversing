@@ -560,8 +560,8 @@ extern int name_8003B548();
 extern void name_8004D0E8();
 extern TstCompoMat dword_8007C2EC;
 extern TstCompoMat dword_8007C30C;
-extern TstCompoMat dword_80087114;
-extern TstCompoMat dword_80087134;
+extern TstCompoMat lightMatrix_80087114;
+extern TstCompoMat colorMatrix_80087134;
 void SetCameraLookAt_800A1E68(TstCompoWork* c)
 {
     int v[3];
@@ -582,8 +582,8 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
     name_8008D474[0] = 0;
     name_8008D474[1] = 0;
     geomScreenDistance_8008B548 = 0xA0;
-    dword_80087114 = dword_8007C2EC;
-    dword_80087134 = dword_8007C30C;
+    lightMatrix_80087114 = dword_8007C2EC;
+    colorMatrix_80087134 = dword_8007C30C;
     name_8004D0E8();
 }
 

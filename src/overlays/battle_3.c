@@ -1076,11 +1076,11 @@ void sub_800C064C(Minion* m, BatModelReq_a* o, int c)
     int counts[3];
     int self;
     int t;
-    self = sub_80019C70(m->species_2)->modelId_0;
+    self = GetSpeciesModelDesc_80019C70(m->species_2)->modelId_0;
     o->count_0 = sub_800338DC(m->species_4C, ids, counts);
-    o->ids_4[0] = sub_80019C70(ids[0])->modelId_0;
-    o->ids_4[1] = sub_80019C70(ids[1])->modelId_0;
-    o->ids_4[2] = sub_80019C70(ids[2])->modelId_0;
+    o->ids_4[0] = GetSpeciesModelDesc_80019C70(ids[0])->modelId_0;
+    o->ids_4[1] = GetSpeciesModelDesc_80019C70(ids[1])->modelId_0;
+    o->ids_4[2] = GetSpeciesModelDesc_80019C70(ids[2])->modelId_0;
     o->nums_10[0] = counts[0];
     o->nums_10[1] = counts[1];
     o->nums_10[2] = counts[2];
@@ -1153,16 +1153,16 @@ void sub_800C064C(Minion* m, BatModelReq_a* o, int c)
     }
     o->f1C = GetRankForLevel_80019A80(m->status_84.level_44);
     o->f20 = o->count_0 - 1;
-    o->f28 = sub_80019C70(m->field_3)->modelId_0;
+    o->f28 = GetSpeciesModelDesc_80019C70(m->field_3)->modelId_0;
     o->f30 = c;
     o->angle_24 = sub_800C0904(m->status_84.element_3E);
     if (o->angle_24 == -1000)
     {
-        o->angle_24 = sub_80019C70(m->field_3)->field_2 * 2;
+        o->angle_24 = GetSpeciesModelDesc_80019C70(m->field_3)->field_2 * 2;
     }
     else
     {
-        o->angle_24 -= sub_80019C70(m->field_3)->field_3 * 2;
+        o->angle_24 -= GetSpeciesModelDesc_80019C70(m->field_3)->field_3 * 2;
         if (o->angle_24 < 0)
         {
             o->angle_24 += 360;
@@ -1323,7 +1323,7 @@ int sub_800C0BF0()
     s.effectTbl_44 = sub_80024E64(m);
     s.hasMatrices_4C = 1;
     dword_800C9190.obj = CreateActor_8001D45C(&s);
-    sub_8001D68C(dword_800C9190.obj, 0);
+    SetActorGroundMove_8001D68C(dword_800C9190.obj, 0);
     x = sub_80024F00(m, k);
     SetBoneGroupFlags_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
         return 1;
@@ -1348,7 +1348,7 @@ int sub_800C0D88()
 
 void sub_800C0DB0(int a)
 {
-    sub_8001DB00(dword_800C9190.obj, a, 0x55);
+    SetActorTurnTarget_8001DB00(dword_800C9190.obj, a, 0x55);
 }
 
 // Matched
@@ -1380,7 +1380,7 @@ int sub_800C0E84(BatCmd_a* p)
     mask = 1 << (dword_800C918C + 1);
     if (p->mask_8 & mask)
     {
-        sub_8001E28C(dword_800C9190.obj);
+        TriggerActorEffect_8001E28C(dword_800C9190.obj);
     }
     return 1;
 }
@@ -2373,10 +2373,10 @@ void sub_800C4090(int a0, int a1, int c, int a3)
     int* a = (int*)a0;
     unsigned char* b = (unsigned char*)a1;
     unsigned int d = a3;
-    dword_8008D680[0] = a[0];
-    dword_8008D680[1] = a[1];
-    dword_8008D680[2] = a[2];
-    dword_8008D3F0 = c;
+    pointLightPos_8008D680[0] = a[0];
+    pointLightPos_8008D680[1] = a[1];
+    pointLightPos_8008D680[2] = a[2];
+    pointLightRange_8008D3F0 = c;
     dword_8008D418[0] = b[0] * d >> 7;
     dword_8008D418[1] = b[1] * d >> 7;
     dword_8008D418[2] = b[2] * d >> 7;
@@ -2384,7 +2384,7 @@ void sub_800C4090(int a0, int a1, int c, int a3)
 
 void sub_800C410C()
 {
-    dword_8008D3F0 = 0;
+    pointLightRange_8008D3F0 = 0;
 }
 
 typedef void (*BatFxFn)(BatTask* t);
@@ -4405,7 +4405,7 @@ void sub_800C7A6C()
         dword_800C9E58.kind_0 = dword_800C96A4[sub_800C78D0()];
         break;
     case 1:
-        dword_800C9E68 = sub_8001CE8C(sub_800C79B8());
+        dword_800C9E68 = GetItemTargetFlags_8001CE8C(sub_800C79B8());
         dword_800C9E50 = 4;
         dword_800C9E5C = sub_800C79B8();
         break;
@@ -4417,7 +4417,7 @@ void sub_800C7A6C()
         break;
     case 3:
         m = sub_80010824(3, dword_800C9C7C - 1);
-        dword_800C9E68 = sub_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
+        dword_800C9E68 = GetMagicTargetFlags_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
         dword_800C9E50 = 4;
         dword_800C9E5C = sub_800C7A1C();
         break;

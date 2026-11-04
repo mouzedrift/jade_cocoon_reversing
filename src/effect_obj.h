@@ -92,7 +92,7 @@ typedef struct EffectTarget
     int hitFlags_34; // EffectTaskState.hitFlags_44[slot]
 } EffectTarget;
 
-/* effect request: built by sub_8001E28C (tu_80019BF0.c) from an actor, filled by CollectEffectTargets_800182B8,
+/* effect request: built by TriggerActorEffect_8001E28C (tu_80019BF0.c) from an actor, filled by CollectEffectTargets_800182B8,
    played by PlayActorEffect_800184DC / SpawnActorEffects_8001852C */
 typedef struct ActorEffectReq
 {
@@ -107,7 +107,7 @@ typedef struct ActorEffectReq
     int* scale_38;           // Actor.scale_2C
     int pad_3C;
     int count_40;
-    EffectTarget targets_44[4]; // filled from the 11 effect-task slots; sub_8001E28C's local is 0x128 bytes
+    EffectTarget targets_44[4]; // filled from the 11 effect-task slots; TriggerActorEffect_8001E28C's local is 0x128 bytes
     int pad_124;
 } ActorEffectReq;
 

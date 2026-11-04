@@ -340,7 +340,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     case 0:
         if (p[2] == 1)
         {
-            MemCopy_800403E8(&local, sub_8001D260(), 12);
+            MemCopy_800403E8(&local, GetLevantWeaponAction_8001D260(), 12);
         }
         break;
     case 6:
@@ -349,7 +349,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
         out->field_10 = sub_80031A04(t, p[1]);
         break;
     case 1:
-        MemCopy_800403E8(&local, sub_8001AD64(p[1]), 12);
+        MemCopy_800403E8(&local, GetMagicAction_8001AD64(p[1]), 12);
         out->field_10 = GetMagicMpCost_8001AC58(p[1]);
         break;
     case 4:
@@ -498,14 +498,14 @@ int sub_80013228(int a0, int a1, int* p)
     case 0:
         if (p[2] == 1)
         {
-            q = sub_8001D260();
+            q = GetLevantWeaponAction_8001D260();
         }
         break;
     case 6:
         q = sub_800129B0(&local, (unsigned char*)(sub_80031B30(b1 & 0xFF) + p[1] * 4), b2);
         break;
     case 1:
-        q = sub_8001AD64(p[1]);
+        q = GetMagicAction_8001AD64(p[1]);
         break;
     case 4:
         q = GetItemData_8001CDF4(p[1]);

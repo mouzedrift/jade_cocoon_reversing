@@ -21,7 +21,7 @@ extern void sub_800BA52C();
 extern void sub_800BA564();
 extern int sub_800BC820(unsigned int m);
 extern void sub_800A8984(int a);
-extern void sub_8001AAA8(int a);
+extern void StartSceneDarken_8001AAA8(int a);
 extern void StopSoundSeqs_80030D68(void* a);
 extern void StopSeqSlot_80031334(int a);
 extern void SsSepSetDecrescendo(int, int, int, int);
@@ -90,7 +90,7 @@ void sub_800BA254(BatTask_a* t, BatStart_a* u)
         break;
     case 3:
         sub_800A8984(0);
-        sub_8001AAA8(0x3C);
+        StartSceneDarken_8001AAA8(0x3C);
         t->next_8 = sub_800BA444;
         break;
     case 4:
@@ -118,7 +118,7 @@ void sub_800BA254(BatTask_a* t, BatStart_a* u)
 
 void sub_800BA444(BatTask_a* t)
 {
-    int r = sub_8001AB94(t);
+    int r = IsSceneFadeDone_8001AB94(t);
     if (r == 1)
     {
         sub_800A9364();
@@ -145,7 +145,7 @@ void sub_800BA444(BatTask_a* t)
 
 void sub_800BA4F4(BatTask_a* t)
 {
-    if (sub_8001AB94(t) == 1)
+    if (IsSceneFadeDone_8001AB94(t) == 1)
     {
         t->next_8 = sub_800BA624;
     }
@@ -191,7 +191,7 @@ void sub_800BA624(BatTask_a* t, BatObj_a* u)
 {
     SetFadeMode_8001C19C(0, 0x20);
     SetFadeMode_8001C19C(1, 0x20);
-    sub_8001AAF4();
+    StopSceneDarken_8001AAF4();
     if (dword_800B1230 == 2)
     {
         u->f4 = 0x1E;
@@ -449,7 +449,7 @@ void sub_800BAC4C(BatTask_a* t)
         sub_80037748();
         dword_800C9C58 = 5;
     case 5:
-        if (((int (*)())sub_8001AB94)() == 0) // called without its argument here
+        if (((int (*)())IsSceneFadeDone_8001AB94)() == 0) // called without its argument here
         {
             break;
         }

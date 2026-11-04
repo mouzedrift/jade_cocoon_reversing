@@ -503,7 +503,7 @@ void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base)
 // Matched
 void InitSpeciesSkills_800199A0(UnitStats* unit)
 {
-    unit->skills_6C = *sub_80019C28(unit->species_5C);
+    unit->skills_6C = *GetSpeciesSkills_80019C28(unit->species_5C);
 }
 // Matched
 void InitSpeciesMagic_80019A20(UnitStats* unit)

@@ -121,9 +121,9 @@ void sub_800BC90C(BatStageObj_a* p)
             if ((unsigned int)(x + 0x60) < 0x1A0)
             {
                 w = word_8008D51E * 96 / 240;
-                poly.r0 = poly.r0 * dword_8008D40C >> 12;
-                poly.g0 = poly.g0 * dword_8008D40C >> 12;
-                poly.b0 = poly.b0 * dword_8008D40C >> 12;
+                poly.r0 = poly.r0 * sceneBrightness_8008D40C >> 12;
+                poly.g0 = poly.g0 * sceneBrightness_8008D40C >> 12;
+                poly.b0 = poly.b0 * sceneBrightness_8008D40C >> 12;
                 setShadeTex(&poly, 0);
                 setXYWH(&poly, x, sxy.vy - w, w + 1, w + 1);
                 *(POLY_FT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = poly;

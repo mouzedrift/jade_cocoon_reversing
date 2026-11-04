@@ -45,12 +45,12 @@ void sub_800BCB3C(TaskEventfnc* t, int* st)
             m.m10_10 = 0;
             m.m14_14 = 1;
             sub_800A8EC4((int*)&m);
-            sub_8001AAA8(0x3C);
+            StartSceneDarken_8001AAA8(0x3C);
             st[0] = 4;
         }
         break;
     case 4:
-        if (sub_8001AB94())
+        if (IsSceneFadeDone_8001AB94())
         {
             sub_800AC6A8(st[1]);
             sub_800A8E38();

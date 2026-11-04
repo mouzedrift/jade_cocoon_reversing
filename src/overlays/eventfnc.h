@@ -261,7 +261,7 @@ extern int sub_800A59D0(int a);
 
 extern SVECTOR* sub_800BBBD0(int i); // rotation of Levant (0) or a party member
 
-extern short dword_8008D474[2];
+extern short screenOffset_8008D474[2];
 
 extern void sub_80037918(void* p);
 
@@ -509,9 +509,9 @@ extern int sub_800AC768(void);
 
 extern void sub_800AC6A8(int a);
 
-extern int sub_8001AB94(void);
+extern int IsSceneFadeDone_8001AB94(void);
 
-extern void sub_8001AAA8(int a);
+extern void StartSceneDarken_8001AAA8(int a);
 
 extern int sub_800A8EC4(int* p);
 

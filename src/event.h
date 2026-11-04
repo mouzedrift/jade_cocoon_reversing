@@ -19,8 +19,8 @@ extern int dword_80087014[5];
 extern void *off_8008703C[5];
 extern int dword_80087070[][8];
 extern int dword_80087110;
-extern MATRIX dword_80087114;
-extern MATRIX dword_80087134;
+extern MATRIX lightMatrix_80087114;
+extern MATRIX colorMatrix_80087134;
 
 extern int dword_8009611C;
 

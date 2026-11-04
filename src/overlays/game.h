@@ -44,7 +44,7 @@ typedef struct GameV3_1
 // an enemy group of the map (EVENTFNC's EvEnemyEventfnc, copied into GameSlot_1.data_8 by sub_800A17F4)
 typedef struct GameEnemyMember
 {
-    int species_0; // sub_80019C70 / InitMinionData_8001900C
+    int species_0; // GetSpeciesModelDesc_80019C70 / InitMinionData_8001900C
     int f4;
 } GameEnemyMember;
 
@@ -292,7 +292,7 @@ extern void SetActorStatusTint_80018EBC(Actor* a, UnitStatus* b);
 
 extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
-extern void sub_8001D760(Actor* a, int b, int c, int d);
+extern void SetActorAnim_8001D760(Actor* a, int b, int c, int d);
 
 extern int sub_800A52EC(short** a, int b, int c);
 
@@ -356,7 +356,7 @@ typedef struct GameQ_1
     int f3c;
 } GameQ_1;
 
-extern int sub_8001DD44(Actor* a, int b, int c, int d);
+extern int TurnActorBy_8001DD44(Actor* a, int b, int c, int d);
 
 extern void ReflectPoint_800A47B8(struct_v3* a, struct_v3* b, struct_v3* out);
 
@@ -391,7 +391,7 @@ extern void sub_800B8A34(GameEvCtx* q);
 
 extern void sub_800C4118(void* a, void* b, int c, int d);
 
-extern void sub_8001AA50(int a);
+extern void StartSceneFadeOut_8001AA50(int a);
 
 extern int sub_800BA9E4(void);
 
@@ -515,7 +515,7 @@ extern int CreateEventList_800435B4(char* p);
 
 extern char dword_800B0DA4[];
 
-extern void sub_8001E28C(Actor* a);
+extern void TriggerActorEffect_8001E28C(Actor* a);
 
 extern void sub_80026FAC(void);
 
@@ -523,7 +523,7 @@ extern void GameFn_800A094C(void);
 
 extern void ResetSoundTask_8002FEB8(void);
 
-extern void sub_8001A38C(void);
+extern void InitSceneFade_8001A38C(void);
 
 extern void ResetCameraToLevant_800376A8(void);
 
@@ -740,7 +740,7 @@ extern void sub_800A7280();
 
 extern int GetFileRequestStatus_8003BE30();
 
-extern void sub_8001C224();
+extern void FreezeScreen_8001C224();
 
 extern void EndFade_8001C290();
 
@@ -985,7 +985,7 @@ extern char dword_800A07E0[];
 
 extern char dword_800A0808[];
 
-extern int sub_8001AC8C(int);
+extern int GetMagicEffect_8001AC8C(int);
 
 extern void RequestEffect_800148F4(int);
 
@@ -1196,7 +1196,7 @@ typedef struct G2Skel_1
 } G2Skel_1;
 
 
-extern int sub_80019CC4(void* p);
+extern int FindNearestCameraPoint_80019CC4(void* p);
 
 
 extern short word_8007DC82;

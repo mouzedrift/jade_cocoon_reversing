@@ -616,7 +616,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
     }
     if (unknownFlags_8008D678 & 0x400)
     {
-        ctx->dq_C = 0x1000 - (((0x1000 - ctx->dq_C) * dword_8008D40C) >> 12);
+        ctx->dq_C = 0x1000 - (((0x1000 - ctx->dq_C) * sceneBrightness_8008D40C) >> 12);
     }
     ctx->clutAdd_1C = (flags & 0xFF00) << 14;
     ctx->flags_20 = flags;
@@ -781,17 +781,17 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
     }
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_18;
 }
-extern unsigned char byte_8008D460[3]; // back colour
-extern MATRIX dword_80087114;            // light matrix
-extern MATRIX dword_80087134;            // light colour matrix
+extern unsigned char backColor_8008D460[3]; // back colour
+extern MATRIX lightMatrix_80087114;            // light matrix
+extern MATRIX colorMatrix_80087134;            // light colour matrix
 extern SVECTOR word_8008D4C8;
 // Matched
 void SetGteLightAndCamera_8004D0E8(void)
 {
     MATRIX* m;
-    gte_SetBackColor(byte_8008D460[0], byte_8008D460[1], byte_8008D460[2]);
-    gte_SetColorMatrix(&dword_80087134);
-    gte_SetLightMatrix(&dword_80087114);
+    gte_SetBackColor(backColor_8008D460[0], backColor_8008D460[1], backColor_8008D460[2]);
+    gte_SetColorMatrix(&colorMatrix_80087134);
+    gte_SetLightMatrix(&lightMatrix_80087114);
     RotMatrixZXY_8004668C(&word_8008D4C8, (MATRIX*)getScratchAddr(0));
     m = (MATRIX*)getScratchAddr(0);
     m->t[2] = 0;

@@ -227,7 +227,7 @@ int PlayMovie_80040EB4(int idx)
     ClearMovieRect_80040E28(m);
     FreeMdecBuffer_800418CC();
     mdecVLCBuffer_80086F94 = 0;
-    sub_8001B230();
+    RestartDisplay_8001B230();
     return 1;
 }
 // Matched
