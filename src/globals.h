@@ -10,12 +10,12 @@
 
 typedef struct
 {
-    int field_0;
+    int mode_0; // index into screenModes_8007C728 (the screen width / height)
     int vsyncsPerFrame_4; // Draw waits until vsyncCounter_8008B4B4 reaches it
-    short field_8_x;
-    short field_A_y;
-    short field_C_w; // word_8008B4E4
-    short field_E_h; // word_8008B4E6
+    short x_8;
+    short y_A;
+    short w_C; // word_8008B4E4
+    short h_E; // word_8008B4E6
 } DisplayConfig;
 
 // Event list nodes (event.c / skel_draw.c). The list head has the same layout as a node.
@@ -24,7 +24,7 @@ typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
 typedef struct EventEntry
 {
     unsigned int flags;
-    int field_4; // nonzero: buffer is not owned
+    int index_4; // index among its EventDesc's entries; only entry 0 owns (frees) the shared buffer
     EventEntryFn cb_8;
     EventEntryFn cb_C;
     int size;
@@ -37,9 +37,9 @@ typedef struct ModelList ModelList;
 
 typedef struct EventNode
 {
-    int field_0;
+    int prev_0; // the previous node
     struct EventNode* next;
-    int field_8;
+    int index_8; // index in the list
     int count;
     EventEntry entry;
 } EventNode;
@@ -74,12 +74,12 @@ typedef struct
     int x;
     int y;
     int z;
-} struct_v3;
+} Vec3i;
 
 // Levant's position + rotation (SaveData.levant_7A8 == levantPos_8008BD18; rot == levantRot_8008BD24)
 typedef struct LevantPos
 {
-    struct_v3 pos;
+    Vec3i pos;
     SVECTOR rot; // rot.vy: facing angle
 } LevantPos;
 
@@ -112,7 +112,7 @@ typedef struct
 
 typedef struct
 {
-    int field_0; // bit 6: config.c
+    int flags_0; // option bits; bit 6: no pad vibration (config.c, StartPadVibration_80036528)
     int playTime_4; // vsyncs, counted by the vsync handler while not paused
     unsigned short buttonConfig_8[10]; // == buttonConfig_8008B578
     Settings settings_1C; // == settingsFlags_8008B58C.word
@@ -166,7 +166,7 @@ typedef struct
 typedef struct
 {
     int flags_0;           // 0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4
-    unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
+    unsigned char mpCost_4; // GetMagicMpCost_8001AC58 (Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
     unsigned char effect_6; // GetMagicEffect_8001AC8C
     unsigned char kind_7;   // with flags_0 & 0x40: 0 restores hp, 1 cures status (CheckMagicUsable_80034068)
@@ -219,24 +219,25 @@ typedef struct
     short w_10;
     short h_12;
     unsigned short* tpage_14;
-    short field_18;
-    short field_1A;
-    short field_1C;
+    short u0_18;      // the glyph sheet's top-left texel (the TIY sprite's u / v)
+    short v0_1A;
+    short columns_1C; // glyphs per sheet row
     unsigned short firstChar_1E;
     short clutX_20;
     short clutY_22;
     unsigned char* widths_24;
-    short field_28;
-    short field_2A;
+    short charsPerClut_28; // glyphs per CLUT row (the glyph index / this picks the CLUT row)
+    short clutOffset_2A;   // added CLUT row (text colour, SetFontClutOffset_8003F900)
 } Font;
 
 
+// a record table (AllocRecordTables_80026D78 / LoadRecordTable_80026EF8, model.c): count_0 records of 8 bytes
 typedef struct
 {
-    int field_0;
+    int count_0;
     int field_4;
-    int field_8;
-} struct_12;
+    int records_8; // unsigned short (*)[4], heap allocated
+} RecordTable;
 
 
 typedef struct
@@ -253,7 +254,7 @@ typedef struct
 typedef struct
 {
     short icon_0;               // index into equipmentIcons_8007D938
-    short field_2;
+    short kind_2;               // weapons: the weapon kind (GAME SetLevantWeaponKind_800AC3A4; weaponEffectIds_80079708 index)
     signed char statBonus_4[6]; // added to the six base stats by CalcEquippedStats_80033624
     char pad_A[0xA];
     int field_14;               // CalcEquippedStats_80033624 returns the largest one of the equipped items
@@ -328,12 +329,13 @@ extern int loadFade_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
 extern short seqSlotSepAccessNum_80091D0C;
+// a sequence slot (seqSlots_800833E4, PlaySeqSlot_80031160)
 typedef struct
 {
-    int field_0;
-    int field_4;
-} struct_833E4;
-extern struct_833E4 seqSlots_800833E4[];
+    int sep_0; // 1: the slot sound's second SEP (field_14_sep_access_num), else the first
+    int seq_4; // sequence number in the SEP
+} SeqSlot;
+extern SeqSlot seqSlots_800833E4[];
 extern unsigned char drawEnvRed_8008D448[3];
 extern char copyright_80086948[];
 extern char genkiMovie_80086968[];
@@ -344,10 +346,11 @@ typedef struct
 {
     int m[3];
 } struct_int3;
+// an RGB colour (+ pad / code byte) passed as 4 bytes
 typedef struct
 {
     unsigned char c[4];
-} struct_u8x4;
+} ColorRGBA;
 // 0x14 bytes copied without alignment
 typedef struct
 {
@@ -357,8 +360,8 @@ typedef struct
 // file load request (cd.c queue); fileId_10 == 0x10000 marks a free pool entry
 typedef struct FileRequest
 {
-    struct FileRequest* next;
-    int field_4;
+    struct FileRequest* next; // the older neighbour (toward the queue head that is processed first)
+    int newer_4;              // FileRequest*: the newer neighbour, processed after this one
     int key;
     unsigned int flags_C; // 0x100 / 0x1000: GetFileRequestStatus returns 2 / 3
     int fileId_10;        // DATA.001 file id
@@ -471,8 +474,8 @@ void ClearModel_800266CC(Model* p);
 int FindFreeModelIndex_8002667C(ModelList* p);
 void FreeModel_80024C48(Model* p);
 void ApplyModelFtgSwaps_80025C38(Model* p, int flag);
-int AddFileRequest_80025D00(Model* p, FileRequestDesc* q);
-void OnModelFileLoaded_80025D7C(int* a0, int b);
+int AddFileRequest_80025D00(Model* model, FileRequestDesc* req);
+void OnModelFileLoaded_80025D7C(int* arg, int data);
 
 
 extern unsigned short padButtonBits_8007CAD8[0xe];
@@ -484,22 +487,23 @@ typedef struct
     short id;
     short field_2;
     int field_4;
-} struct_8_id;
+} IdEntry;
 typedef struct
 {
     char pad_0[0xC];
     int count;
-    struct_8_id* items;
-} struct_8_list;
+    IdEntry* items;
+} IdEntryList;
 
 extern int speciesMagicBits_8007A6AC[];
 extern int sceneBrightness_8008D40C;
 
+// a hit window of an attack animation / effect, in frames (-1: none)
 typedef struct
 {
-    short field_0;
-    short field_2;
-} struct_4s;
+    short start_0;
+    short end_2;
+} HitTimes;
 
 typedef struct
 {
@@ -526,12 +530,6 @@ extern EventNode* fadeTask_8008D628;
 extern EventNode* actorTasks_8008D43C;
 extern EventNode* screenFlashTasks_8008D61C;
 
-typedef struct
-{
-    int x;
-    int y;
-    int z;
-} Vec3i;
 
 extern int memCardInfo_8008D4D8;
 extern short effectOutcomeFlag_8008D780;

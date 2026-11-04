@@ -275,7 +275,7 @@ typedef struct
     int field_4;
     int field_8;
     int field_C;
-    MenuItem_1C** field_10;
+    MenuItem** field_10;
     int field_14;
 } struct_A5A4;
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
@@ -293,7 +293,7 @@ void DrawItemList_8002C728(struct_minion_ref* menu)
     int count;
     int icon;
     int name;
-    MenuItem_1C** row;
+    MenuItem** row;
     int y;
     int total;
     cursor = menu->cursor_0;
@@ -314,11 +314,11 @@ void DrawItemList_8002C728(struct_minion_ref* menu)
             count = 0;
         }
         row = &itemListRows_800829E8[i];
-        (*row)[0].f4 = icon;
+        (*row)[0].text_4 = icon;
         (*row)[0].sprts_8 = &publicTiySprts_8008D434;
         (*row)[0].tpages_C = &publicTiyTPages_8008D440;
-        (*row)[1].f4 = name;
-        (*row)[2].f4 = count;
+        (*row)[1].text_4 = name;
+        (*row)[2].text_4 = count;
         (*row)[0].x = 0x53;
         y = i * 22 + 0x36;
         (*row)[0].y = y;
@@ -389,7 +389,7 @@ void DrawMagicList_8002CAC8(struct_minion_ref* menu, unsigned short* origin)
     int idx;
     int icon;
     int name;
-    MenuItem_1C** row;
+    MenuItem** row;
     int y;
     int total;
     cursor = menu->cursor_0;
@@ -422,8 +422,8 @@ void DrawMagicList_8002CAC8(struct_minion_ref* menu, unsigned short* origin)
             name = (int)&emptyString_800741EC;
         }
         row = &magicListRows_80082B54[i];
-        (*row)[0].f4 = icon;
-        (*row)[1].f4 = name;
+        (*row)[0].text_4 = icon;
+        (*row)[1].text_4 = name;
         (*row)[0].x = pos[0];
         y = i * 22;
         (*row)[0].y = pos[1] + y;

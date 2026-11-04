@@ -83,7 +83,7 @@ void InitRoomCamera_80028DC0(void)
             SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
         }
         UpdateCameraFollow_80037918(cam);
-        SetGeomOffset(display_8008B4D8.field_C_w / 2 + screenOffset_8008D474[0], display_8008B4D8.field_E_h / 2 + screenOffset_8008D474[1]);
+        SetGeomOffset(display_8008B4D8.w_C / 2 + screenOffset_8008D474[0], display_8008B4D8.h_E / 2 + screenOffset_8008D474[1]);
     }
 }
 // Matched

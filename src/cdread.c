@@ -19,26 +19,26 @@
 #include "cdread.h"
 #include "cd.h"
 
-const Ints14_8003CD5C loadingIconFrames_8007490C = { {
+const LoadingIconFrames loadingIconFrames_8007490C = { {
         7, 8, 9, 10, 11, 12, 13, 14,
         13, 12, 11, 10, 9, 8,
     } };
 
 extern EventNode* fileRequestTasks_8008D488;
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
-extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
-extern void UpdateFileRequestTask_8003C76C(int* a0, int* a1);
+extern EventEntry* AllocEventEntry_80043AF8(EventNode* list);
+extern void UpdateFileRequestTask_8003C76C(int* entry, int* task);
 
 // Matched
 int StartFileRequestTask_8003C6C8(FileRequestDesc* req)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(fileRequestTasks_8008D488);
+    EventEntry* entry = AllocEventEntry_80043AF8(fileRequestTasks_8008D488);
     int* buf;
-    if (e)
+    if (entry)
     {
-        buf = (int*)e->buffer;
-        e->cb_8 = (EventEntryFn)UpdateFileRequestTask_8003C76C;
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        buf = (int*)entry->buffer;
+        entry->cb_8 = (EventEntryFn)UpdateFileRequestTask_8003C76C;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
         buf[0] = QueueFileRequest_8003BC84(req);
         buf[1] = (req->flags_0 >> 2) & 1;
         if (buf[1])
@@ -50,15 +50,15 @@ int StartFileRequestTask_8003C6C8(FileRequestDesc* req)
     return 0;
 }
 // Matched
-void UpdateFileRequestTask_8003C76C(int* a0, int* a1)
+void UpdateFileRequestTask_8003C76C(int* entry, int* task)
 {
-    if (a1[1])
+    if (task[1])
     {
         eventDispatchHalt_8008B540 = 1;
     }
-    if (GetFileRequestStatus_8003BE30(a1[0]) == 0)
+    if (GetFileRequestStatus_8003BE30(task[0]) == 0)
     {
-        a0[0] = (a0[0] & ~1) | 0x8000;
+        entry[0] = (entry[0] & ~1) | 0x8000;
     }
 }
 // Matched
@@ -116,17 +116,17 @@ int CdSeekIsComplete_8003C900(void)
 extern int DsSystemStatus(void);
 
 // Matched
-int CdReadStart_8003C944(DslLOC* a, void* b, int c)
+int CdReadStart_8003C944(DslLOC* loc, void* buf, int sectors)
 {
     if (cdReadState_80086550.idle_0 != 0)
     {
         if (DsSystemStatus() == 1)
         {
             cdReadState_80086550.idle_0 = 0;
-            cdReadState_80086550.buf_4 = b;
-            cdReadState_80086550.loc_8 = a;
-            cdReadState_80086550.sectors_C = c;
-            cdReadState_80086550.packet_10 = DsPacket(0xA0, a, 6, (DslCB)CdReadSyncCallback_8003C9FC, -1);
+            cdReadState_80086550.buf_4 = buf;
+            cdReadState_80086550.loc_8 = loc;
+            cdReadState_80086550.sectors_C = sectors;
+            cdReadState_80086550.packet_10 = DsPacket(0xA0, loc, 6, (DslCB)CdReadSyncCallback_8003C9FC, -1);
             return 1;
         }
     }
@@ -191,26 +191,26 @@ void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
 // Matched
 void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors)
 {
-    int var_s0;
+    int state;
     int seekSuccess;
 
     seekSuccess = 1;
-    var_s0 = 0;
+    state = 0;
     cdReadFlags_8008B55C &= ~0x10;
     do
     {
-        switch (var_s0)
+        switch (state)
         {
             case 0:
                 if (DsControl(0x15, (u_char*)fileLoc, 0) != 0)
                 {
-                    var_s0 = 1;
+                    state = 1;
                 }
                 break;
             case 1:
                 if (ReadFileIntoBuffer_8003CC54(fileLoc, sectors, pFileBuffer) == 0)
                 {
-                    var_s0 = 0;
+                    state = 0;
                 }
                 else
                 {
@@ -260,55 +260,55 @@ int LoadData001File_8003CD1C(void)
 
     return 1;
 }
-extern void DrawPublicTiySprt_80033080(unsigned short* a, int i, int j);
+extern void DrawPublicTiySprt_80033080(unsigned short* pos, int sprtIdx, int ot);
 // Matched
 void DrawLoadingIcon_8003CD5C(void)
 {
     unsigned short pos[2];
-    Ints14_8003CD5C t;
-    int n;
+    LoadingIconFrames frames;
+    int sprtIdx;
 
-    t = loadingIconFrames_8007490C;
-    n = t.v[(unsigned int)frameCount_8008D3FC % 14];
+    frames = loadingIconFrames_8007490C;
+    sprtIdx = frames.sprt[(unsigned int)frameCount_8008D3FC % 14];
     pos[0] = 0xF8;
     pos[1] = 0xBA;
-    DrawPublicTiySprt_80033080(pos, n, 0);
+    DrawPublicTiySprt_80033080(pos, sprtIdx, 0);
 }
 // Matched
 void DrawBlinkSprite_8003CE18(short x, short y)
 {
-    SPRT* s;
-    unsigned int f = (unsigned int)frameCount_8008D3FC % 150;
-    switch (f)
+    SPRT* sprt;
+    unsigned int phase = (unsigned int)frameCount_8008D3FC % 150;
+    switch (phase)
     {
     case 0:
     case 6:
-        s = publicTiySprts_8008D434;
-        s += 71;
-        s->x0 = x;
-        s->y0 = y;
-        SetSemiTrans(s, 1);
+        sprt = publicTiySprts_8008D434;
+        sprt += 71;
+        sprt->x0 = x;
+        sprt->y0 = y;
+        SetSemiTrans(sprt, 1);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], 2);
         break;
     case 1:
     case 3:
     case 5:
-        s = publicTiySprts_8008D434;
-        s += 71;
-        s->x0 = x;
-        s->y0 = y;
-        SetSemiTrans(s, 1);
+        sprt = publicTiySprts_8008D434;
+        sprt += 71;
+        sprt->x0 = x;
+        sprt->y0 = y;
+        SetSemiTrans(sprt, 1);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], 2);
         break;
     case 2:
     case 4:
-        s = publicTiySprts_8008D434;
-        s += 72;
-        s->x0 = x;
-        s->y0 = y;
-        SetSemiTrans(s, 1);
+        sprt = publicTiySprts_8008D434;
+        sprt += 72;
+        sprt->x0 = x;
+        sprt->y0 = y;
+        SetSemiTrans(sprt, 1);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[72], 5);
         AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[72], 2);
         break;

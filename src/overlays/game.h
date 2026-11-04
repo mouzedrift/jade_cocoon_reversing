@@ -351,7 +351,7 @@ typedef struct GameBattleWork
 
 extern int TurnActorBy_8001DD44(Actor* a, int b, int c, int d);
 
-extern void ReflectPoint_800A47B8(struct_v3* center, struct_v3* point, struct_v3* out);
+extern void ReflectPoint_800A47B8(Vec3i* center, Vec3i* point, Vec3i* out);
 
 extern void WaitMapOverlay_800A7654();
 
@@ -760,7 +760,7 @@ typedef struct GameLevantCtl
     // 0x40: movement locked, 0x80: stop the scripted walk / turn
     unsigned int flags_0;
     char pad_4[0xC];
-    struct_v3 pos_10; // Levant's position, copied each frame by LevantControlTask_800A818C
+    Vec3i pos_10; // Levant's position, copied each frame by LevantControlTask_800A818C
     char pad_1C[0x18];
     int targets_34;
     int arg_38;

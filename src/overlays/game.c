@@ -78,8 +78,8 @@ void DrawTileAnimLayers_800A0A5C(short* work)
     s->zoom_54 = cameraZoom_8008B4F8;
     s->cx_50 = viewport_8008D420.x + viewport_8008D420.w / 2;
     s->cy_52 = viewport_8008D420.y + viewport_8008D420.h / 2;
-    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.field_C_w / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
-    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.field_E_h / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
+    s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.w_C / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
+    s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.h_E / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
     bright = (sceneBrightness_8008D40C << 7) >> 12;
     s->ft4_4.r0 = bright;
     s->ft4_4.g0 = bright;
@@ -1420,12 +1420,12 @@ void EnemyAiChaseBehind_800A3BEC(int unused, GameAi* ai)
             SetEnemyAiState_800A433C(ai, 1, 1, (rand() % 16) * 8 + 0x32, state, 1, 2);
             break;
         case 1:
-            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (struct_v3*)ai->actor_8->pos_38))
+            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (Vec3i*)ai->actor_8->pos_38))
                 SetEnemyAiState_800A433C(ai, 0xf, 2, 0, -1, state, 2);
             break;
         case 0xf:
             EnemyAiChaseStep_800A45F8(ai);
-            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (struct_v3*)ai->actor_8->pos_38) == 0)
+            if (IsInFrontHalf_800A4884(&levantPos_8008BD18.pos, &levantPos_8008BD18.rot.vx, (Vec3i*)ai->actor_8->pos_38) == 0)
                 aiCopy->state_c = -1;
             break;
         }
@@ -1613,7 +1613,7 @@ void EnemyAiFleeTurnStep_800A44C0(GameAi* ai)
     idx = (ang - ai->actor_8->rot_5C[1]) & 0xfff;
     away.x = ai->actor_8->pos_38[0] + (ai->actor_8->pos_38[0] - saveData_8008B570.levant_7A8.pos.x);
     away.z = ai->actor_8->pos_38[2] + (ai->actor_8->pos_38[2] - saveData_8008B570.levant_7A8.pos.z);
-    if (TurnActorTowards_8001DDFC(ai->actor_8, (struct_v3*)&away, TurnStepForAngle_800A48F4(idx * 3)) == 0)
+    if (TurnActorTowards_8001DDFC(ai->actor_8, (Vec3i*)&away, TurnStepForAngle_800A48F4(idx * 3)) == 0)
     {
         RestartActorMotion_8001D71C(ai->actor_8);
     }
@@ -1622,8 +1622,8 @@ void EnemyAiFleeTurnStep_800A44C0(GameAi* ai)
 // Matched
 void EnemyAiFleeStep_800A459C(GameAi* ai)
 {
-    struct_v3 away;
-    ReflectPoint_800A47B8(&levantPos_8008BD18.pos, (struct_v3*)ai->actor_8->pos_38, &away);
+    Vec3i away;
+    ReflectPoint_800A47B8(&levantPos_8008BD18.pos, (Vec3i*)ai->actor_8->pos_38, &away);
     if (TurnActorTowards_8001DDFC(ai->actor_8, &away, 0x155) == 0)
     {
         RestartActorMotion_8001D71C(ai->actor_8);
@@ -1663,7 +1663,7 @@ check:
         return;
     }
     step = 0x40;
-    if (IsInFrontHalf_800A4884((struct_v3*)ai->actor_8->pos_38, ai->actor_8->rot_5C, &levantPos_8008BD18.pos))
+    if (IsInFrontHalf_800A4884((Vec3i*)ai->actor_8->pos_38, ai->actor_8->rot_5C, &levantPos_8008BD18.pos))
     {
         step = 0x80;
     }
@@ -1707,7 +1707,7 @@ void EnemyAiWanderStep_800A46FC(GameAi* ai)
     }
 }
 
-void ReflectPoint_800A47B8(struct_v3* center, struct_v3* point, struct_v3* out)
+void ReflectPoint_800A47B8(Vec3i* center, Vec3i* point, Vec3i* out)
 {
     int d;
     d = point->x - center->x;
@@ -1749,7 +1749,7 @@ int EnemyAiCheckBlocked_800A4804(GameAi* ai)
 }
 
 // Matched
-int IsInFrontHalf_800A4884(struct_v3* from, short* rot, struct_v3* to)
+int IsInFrontHalf_800A4884(Vec3i* from, short* rot, Vec3i* to)
 {
     int ang = ratan2_8003B548(from->x - to->x, from->z - to->z);
     return sinTable_80084540[(ang - rot[1] + 0x400) & 0xfff] >= 0;

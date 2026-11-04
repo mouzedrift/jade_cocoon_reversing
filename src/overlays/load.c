@@ -345,7 +345,7 @@ void LoadMenuSetEndOfGame_800B78D0(void)
 {
     LoadMenuWork* work;
     saveData_8008B570.field_810 = -1;
-    saveData_8008B570.field_0 |= 0x180;
+    saveData_8008B570.flags_0 |= 0x180;
     work = loadMenuTask_8008D480->entry.buffer;
     work->screen_30 = 1;
     loadMenuRows_800BDF4C[0].cursor_C = 0;

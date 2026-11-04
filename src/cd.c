@@ -22,7 +22,7 @@
 #include "main.h"
 #include "gte.h"
 
-extern void RemoveFileRequest_8003BF18(FileRequest* n);
+extern void RemoveFileRequest_8003BF18(FileRequest* req);
 
 const char aDataData0011[] = "\\DATA\\DATA.001;1";
 const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
@@ -44,20 +44,21 @@ void FreeStageEffects_80039FC0(void)
 {
     FreeEffectFile_80020EE0(&battleEffectFile_80095468);
 }
+// FtgObject (model.h) seen as its eight polygon lists and two sprite lists
 typedef struct
 {
-    short n;
-    short pad;
-    char* p;
+    short count_0;
+    short pad_2;
+    char* prims_4;
 } PolyGroup;
 typedef struct
 {
     PolyGroup g[8];
-    int n8;
-    char* p8;
-    int n9;
-    int field_4C;
-    char* p9;
+    int spriteCount_40;
+    char* sprites_44;
+    int texSpriteCount_48;
+    int tpageClut_4C;
+    char* texSprites_50;
 } PolyGroups;
 typedef struct
 {
@@ -67,14 +68,14 @@ typedef struct
 } EdgeDelta;
 
 #define DIFF_GROUP(k, size, off, nv)                                              \
-    if (pb->g[k].n * nv)                                                          \
+    if (pb->g[k].count_0 * nv)                                                          \
     {                                                                             \
         int j;                                                                    \
-        for (i = 0; i < pb->g[k].n; i++)                                          \
+        for (i = 0; i < pb->g[k].count_0; i++)                                          \
         {                                                                         \
-            SVECTOR* vo = (SVECTOR*)(po->g[k].p + i * size + off);                \
-            SVECTOR* vb = (SVECTOR*)(pb->g[k].p + i * size + off);                \
-            SVECTOR* va = (SVECTOR*)(pa->g[k].p + i * size + off);                \
+            SVECTOR* vo = (SVECTOR*)(po->g[k].prims_4 + i * size + off);                \
+            SVECTOR* vb = (SVECTOR*)(pb->g[k].prims_4 + i * size + off);                \
+            SVECTOR* va = (SVECTOR*)(pa->g[k].prims_4 + i * size + off);                \
             for (j = 0; j < nv; j++)                                              \
             {                                                                     \
                 vo[j].vx = va[j].vx - vb[j].vx;                                   \
@@ -100,15 +101,15 @@ void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct Ft
     DIFF_GROUP(5, 0x50, 0x10, 8);
     DIFF_GROUP(6, 0x38, 0x10, 5);
     DIFF_GROUP(7, 0x5C, 0x1C, 8);
-    if (pa->n8)
+    if (pa->spriteCount_40)
     {
         EdgeDelta* ea;
         EdgeDelta* eb;
         EdgeDelta* eo;
-        ea = (EdgeDelta*)pa->p8;
-        eb = (EdgeDelta*)pb->p8;
-        eo = (EdgeDelta*)po->p8;
-        for (i = 0; i < pa->n8; i++)
+        ea = (EdgeDelta*)pa->sprites_44;
+        eb = (EdgeDelta*)pb->sprites_44;
+        eo = (EdgeDelta*)po->sprites_44;
+        for (i = 0; i < pa->spriteCount_40; i++)
         {
             eo->a.vx = ea->a.vx - eb->a.vx;
             eo->a.vy = ea->a.vy - eb->a.vy;
@@ -121,15 +122,15 @@ void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct Ft
             eo++;
         }
     }
-    if (pa->n9)
+    if (pa->texSpriteCount_48)
     {
         EdgeDelta* ea;
         EdgeDelta* eb;
         EdgeDelta* eo;
-        ea = (EdgeDelta*)pa->p9;
-        eb = (EdgeDelta*)pb->p9;
-        eo = (EdgeDelta*)po->p9;
-        for (i = 0; i < pa->n9; i++)
+        ea = (EdgeDelta*)pa->texSprites_50;
+        eb = (EdgeDelta*)pb->texSprites_50;
+        eo = (EdgeDelta*)po->texSprites_50;
+        for (i = 0; i < pa->texSpriteCount_48; i++)
         {
             eo->a.vx = ea->a.vx - eb->a.vx;
             eo->a.vy = ea->a.vy - eb->a.vy;
@@ -158,15 +159,15 @@ void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct Ft
     }
 
 #define LERP_GROUP(k, size, off, nn, nv)                                          \
-    if (pa->g[k].n * (nn + nv))                                                   \
+    if (pa->g[k].count_0 * (nn + nv))                                                   \
     {                                                                             \
         int i;                                                                    \
         int j;                                                                    \
-        for (i = 0; i < pa->g[k].n; i++)                                          \
+        for (i = 0; i < pa->g[k].count_0; i++)                                          \
         {                                                                         \
-            SVECTOR* vo = (SVECTOR*)(po->g[k].p + i * size + off);                \
-            SVECTOR* va = (SVECTOR*)(pa->g[k].p + i * size + off);                \
-            SVECTOR* vd = (SVECTOR*)(pd->g[k].p + i * size + off);                \
+            SVECTOR* vo = (SVECTOR*)(po->g[k].prims_4 + i * size + off);                \
+            SVECTOR* va = (SVECTOR*)(pa->g[k].prims_4 + i * size + off);                \
+            SVECTOR* vd = (SVECTOR*)(pd->g[k].prims_4 + i * size + off);                \
             for (j = 0; j < nn; j++)                                              \
             {                                                                     \
                 LERP_SV(&vo[j], &va[j], &vd[j], t);                               \
@@ -192,25 +193,25 @@ void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, s
     LERP_GROUP(5, 0x50, 0x10, 4, 4);
     LERP_GROUP(6, 0x38, 0x10, 1, 4);
     LERP_GROUP(7, 0x5C, 0x1C, 4, 4);
-    if (po->n8)
+    if (po->spriteCount_40)
     {
-        EdgeDelta* eo = (EdgeDelta*)po->p8;
-        EdgeDelta* ea = (EdgeDelta*)pa->p8;
-        EdgeDelta* ed = (EdgeDelta*)pd->p8;
+        EdgeDelta* eo = (EdgeDelta*)po->sprites_44;
+        EdgeDelta* ea = (EdgeDelta*)pa->sprites_44;
+        EdgeDelta* ed = (EdgeDelta*)pd->sprites_44;
         int i;
-        for (i = 0; i < po->n8; i++, eo++, ea++, ed++)
+        for (i = 0; i < po->spriteCount_40; i++, eo++, ea++, ed++)
         {
             LERP_SV(&eo->a, &ea->a, &ed->a, t);
             LERP_SV(&eo->b, &ea->b, &ed->b, t);
         }
     }
-    if (po->n9)
+    if (po->texSpriteCount_48)
     {
-        EdgeDelta* eo = (EdgeDelta*)po->p9;
-        EdgeDelta* ea = (EdgeDelta*)pa->p9;
-        EdgeDelta* ed = (EdgeDelta*)pd->p9;
+        EdgeDelta* eo = (EdgeDelta*)po->texSprites_50;
+        EdgeDelta* ea = (EdgeDelta*)pa->texSprites_50;
+        EdgeDelta* ed = (EdgeDelta*)pd->texSprites_50;
         int i;
-        for (i = 0; i < po->n9; i++, eo++, ea++, ed++)
+        for (i = 0; i < po->texSpriteCount_48; i++, eo++, ea++, ed++)
         {
             LERP_SV(&eo->a, &ea->a, &ed->a, t);
             LERP_SV(&eo->b, &ea->b, &ed->b, t);
@@ -227,30 +228,30 @@ short ratan2_8003B548(long y, long x)
 // Matched
 int ratan2Degrees_8003B56C(int x, int y)
 {
-    int r = ratan2(y, x);
-    int d;
-    if (r < 0)
+    int angle = ratan2(y, x);
+    int degrees;
+    if (angle < 0)
     {
-        r += 0x1000;
+        angle += 0x1000;
     }
-    d = r * 360 / 4096;
-    if ((unsigned int)d >= 360)
+    degrees = angle * 360 / 4096;
+    if ((unsigned int)degrees >= 360)
     {
-        d = 0;
+        degrees = 0;
     }
-    return d;
+    return degrees;
 }
 #if 0
-// Not matched: s1/s2 register assignment of out/len swapped (8 words). Also tried: declaration order, unsigned len, direct out[] stores, short a (loses the sext), copy pointer o = out, passing out as the 3D call's 2nd arg, b/a reuse; permuter 1500: nothing
+// Not matched: s1/s2 register assignment of out/len swapped (8 words). Also tried: declaration order, unsigned len, direct out[] stores, short pitch (loses the sext), copy pointer o = out, passing out as the 3D call's 2nd arg, yaw/pitch reuse; permuter 1500: nothing
 int VectorToAngles_8003B5D4(int* v, short* out)
 {
     int len = ISqrt_8003B918(LengthSquared3D_8003B8DC(v));
-    short b;
-    int a;
-    b = ratan2(v[0], v[2]);
-    out[1] = b;
-    a = (short)ratan2(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
-    out[0] = -a;
+    short yaw;
+    int pitch;
+    yaw = ratan2(v[0], v[2]);
+    out[1] = yaw;
+    pitch = (short)ratan2(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
+    out[0] = -pitch;
     out[2] = 0;
     return len;
 }
@@ -272,53 +273,53 @@ int Sign_8003B664(int x)
 // Matched
 void ScaleVectorToFit_8003B684(int* v)
 {
-    int m = 0x20;
-    int t = Lzc(v[0]);
-    if (t < m)
+    int minLzc = 0x20;
+    int lzc = Lzc(v[0]);
+    if (lzc < minLzc)
     {
-        m = t;
+        minLzc = lzc;
     }
-    t = Lzc(v[1]);
-    if (t < m)
+    lzc = Lzc(v[1]);
+    if (lzc < minLzc)
     {
-        m = t;
+        minLzc = lzc;
     }
-    t = Lzc(v[2]);
-    if (t < m)
+    lzc = Lzc(v[2]);
+    if (lzc < minLzc)
     {
-        m = t;
+        minLzc = lzc;
     }
-    if (m < 0x12)
+    if (minLzc < 0x12)
     {
-        int sh = 0x12 - m;
-        v[0] >>= sh;
-        v[1] >>= sh;
-        v[2] >>= sh;
+        int shift = 0x12 - minLzc;
+        v[0] >>= shift;
+        v[1] >>= shift;
+        v[2] >>= shift;
     }
 }
 // Matched
-int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c)
+int IsWithinDistance_8003B740(int* a, int* b, unsigned int* dist)
 {
     unsigned int sum = -1;
-    unsigned int r = *c;
+    unsigned int radius = *dist;
     short ok = 0;
     unsigned int dx = abs(a[0] - b[0]);
-    if (dx <= r)
+    if (dx <= radius)
     {
         unsigned int dy = abs(a[1] - b[1]);
-        if (dy <= r)
+        if (dy <= radius)
         {
             unsigned int dz = abs(a[2] - b[2]);
-            if (dz <= r)
+            if (dz <= radius)
             {
-                unsigned int rr;
+                unsigned int radius2;
                 sum = dx * dx + dy * dy + dz * dz;
-                rr = r * r;
-                ok = !(rr < sum);
+                radius2 = radius * radius;
+                ok = !(radius2 < sum);
             }
         }
     }
-    *c = sum;
+    *dist = sum;
     return ok;
 }
 // Matched
@@ -349,41 +350,41 @@ int LengthSquared2D_8003B8BC(int x, int y)
     return x * x + y * y;
 }
 // Matched
-int LengthSquared3D_8003B8DC(int* p)
+int LengthSquared3D_8003B8DC(int* v)
 {
-    return p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+    return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 }
 // Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
 // Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
 // Matched
-unsigned int ISqrt_8003B918(unsigned int n)
+unsigned int ISqrt_8003B918(unsigned int value)
 {
-    int x;
-    int y;
-    if (n != 0)
+    int next;
+    int guess;
+    if (value != 0)
     {
-        x = 1;
-        if (n >= 2)
+        next = 1;
+        if (value >= 2)
         {
-            x = n;
+            next = value;
         }
         do
         {
-            y = x;
-            x = (n / y + y) >> 1;
-        } while (x < y);
-        return y;
+            guess = next;
+            next = (value / guess + guess) >> 1;
+        } while (next < guess);
+        return guess;
     }
     return 0;
 }
 // Matched
 Vec3i* Midpoint3D_8003B95C(Vec3i* out, Vec3i* a, Vec3i* b)
 {
-    Vec3i t;
-    t.x = (a->x + b->x) / 2;
-    t.y = (a->y + b->y) / 2;
-    t.z = (a->z + b->z) / 2;
-    *out = t;
+    Vec3i mid;
+    mid.x = (a->x + b->x) / 2;
+    mid.y = (a->y + b->y) / 2;
+    mid.z = (a->z + b->z) / 2;
+    *out = mid;
     return out;
 }
 // Matched
@@ -392,14 +393,14 @@ short ratan2Difference_8003B9E0(int* a, int* b)
     return ratan2(b[0] - a[0], b[2] - a[2]);
 }
 // Matched
-short WrapAngle_8003BA18(int v)
+short WrapAngle_8003BA18(int angle)
 {
-    short r = v & 0xFFF;
-    if (r >= 0x800)
+    short wrapped = angle & 0xFFF;
+    if (wrapped >= 0x800)
     {
-        r |= 0xF000;
+        wrapped |= 0xF000;
     }
-    return r;
+    return wrapped;
 }
 // Matched
 int CompareUInt_8003BA38(unsigned int a, unsigned int b)
@@ -418,14 +419,14 @@ int CompareUInt_8003BA38(unsigned int a, unsigned int b)
 int GetCapturedMinionsFromBitfield_8003BA58(int bits)
 {
     int result;
-    int var_v0;
+    int bit;
     int i;
 
     result = 0;
     for (i = 0; i < 32; i++)
     {
-        var_v0 = 1 << i;
-        if (bits & var_v0)
+        bit = 1 << i;
+        if (bits & bit)
         {
             result += 1;
         }
@@ -435,10 +436,10 @@ int GetCapturedMinionsFromBitfield_8003BA58(int bits)
 // Matched
 void DelayLoop_8003BA90(void)
 {
-    float f = 0;
-    while (f < 621.0f)
+    float count = 0;
+    while (count < 621.0f)
     {
-        f += 1.0f;
+        count += 1.0f;
     }
 }
 // Matched
@@ -455,11 +456,11 @@ int GetMemCardInfoSync_8003BADC(int port)
 void CheckMemCards_8003BB1C(void)
 {
     int i;
-    int r;
+    int result;
     for (i = 0; i < 2; i++)
     {
-        r = GetMemCardInfoSync_8003BADC(i << 4);
-        if (r == 0 || r == 3)
+        result = GetMemCardInfoSync_8003BADC(i << 4);
+        if (result == 0 || result == 3)
         {
             unknownFlags_8008D678 |= 0x1000;
             return;
@@ -477,7 +478,7 @@ long cdRomEventErrorHandler_8003BBAC(void)
 // Matched
 void InitFileRequestQueue_8003BBE4(void)
 {
-    int v = 0x10000;
+    int freeId = 0x10000;
     int i;
     fileRequestQueue_80086540 = 0;
     ((int*)&fileRequestQueue_80086540)[1] = 0;
@@ -485,7 +486,7 @@ void InitFileRequestQueue_8003BBE4(void)
     ((int*)&fileRequestQueue_80086540)[3] = 0;
     for (i = 0x13; i >= 0; i--)
     {
-        fileRequests_80095C90[i].fileId_10 = v;
+        fileRequests_80095C90[i].fileId_10 = freeId;
     }
     fileBufferInUse_80086564 = 0;
     cdXaLock_80086568 = 0;
@@ -514,61 +515,61 @@ typedef struct
     int nextkey;
     FileRequest* first;
     FileRequest* last;
-} struct_head_8003BC84;
+} FileRequestQueue;
 // Matched
 int QueueFileRequest_8003BC84(FileRequestDesc* req)
 {
-    struct_head_8003BC84* head = (struct_head_8003BC84*)&fileRequestQueue_80086540;
+    FileRequestQueue* head = (FileRequestQueue*)&fileRequestQueue_80086540;
     int i = FindFreeFileRequest_8003BC44();
-    FileRequest* n = (FileRequest*)&fileRequests_80095C90[i];
-    FileRequest* t;
-    FileRequest* nx;
-    n->next = 0;
-    n->field_4 = 0;
-    n->key = head->nextkey;
-    n->flags_C = req->flags_0;
-    n->fileId_10 = req->fileId_4;
-    n->offset_14 = req->offset_8;
-    n->size_18 = req->size_C;
-    n->dest_1C = req->dest_10;
-    n->callback_24 = req->callback_1C;
+    FileRequest* node = (FileRequest*)&fileRequests_80095C90[i];
+    FileRequest* prev;
+    FileRequest* after;
+    node->next = 0;
+    node->newer_4 = 0;
+    node->key = head->nextkey;
+    node->flags_C = req->flags_0;
+    node->fileId_10 = req->fileId_4;
+    node->offset_14 = req->offset_8;
+    node->size_18 = req->size_C;
+    node->dest_1C = req->dest_10;
+    node->callback_24 = req->callback_1C;
     if (req->paramsSize_18 == 0 || req->params_14 == 0)
     {
-        n->params_20 = 0;
+        node->params_20 = 0;
     }
     else
     {
-        n->params_20 = fileRequestParams_800954C0[i];
-        MemCopy_800403E8(n->params_20, req->params_14, req->paramsSize_18);
+        node->params_20 = fileRequestParams_800954C0[i];
+        MemCopy_800403E8(node->params_20, req->params_14, req->paramsSize_18);
     }
     if (head->count == 0)
     {
-        head->first = n;
+        head->first = node;
     }
     else
     {
-        t = head->last;
-        if (t->flags_C & 0x10)
+        prev = head->last;
+        if (prev->flags_C & 0x10)
         {
             do
             {
-                t = t->next;
-                nx = t->next;
-            } while (nx->flags_C & 0x10);
-            n->next = nx;
-            n->field_4 = (int)t;
-            t->next = n;
+                prev = prev->next;
+                after = prev->next;
+            } while (after->flags_C & 0x10);
+            node->next = after;
+            node->newer_4 = (int)prev;
+            prev->next = node;
         }
         else
         {
-            n->next = t;
-            (head->last)->field_4 = (int)n;
+            node->next = prev;
+            (head->last)->newer_4 = (int)node;
         }
     }
-    head->last = n;
+    head->last = node;
     head->count++;
     head->nextkey++;
-    return n->key;
+    return node->key;
 }
 // Matched
 void EmptyCallback_8003BE28(void)
@@ -577,12 +578,12 @@ void EmptyCallback_8003BE28(void)
 // Matched
 int GetFileRequestStatus_8003BE30(int key)
 {
-    FileRequest* n = FindFileRequest_8003BED4(key);
-    if (n)
+    FileRequest* node = FindFileRequest_8003BED4(key);
+    if (node)
     {
-        if (n->flags_C & 0x100)
+        if (node->flags_C & 0x100)
         {
-            if (n->flags_C & 0x1000)
+            if (node->flags_C & 0x1000)
             {
                 return 3;
             }
@@ -595,10 +596,10 @@ int GetFileRequestStatus_8003BE30(int key)
 // Matched
 int CancelFileRequest_8003BE88(int key)
 {
-    FileRequest* n = FindFileRequest_8003BED4(key);
-    if (n && !(n->flags_C & 0x100))
+    FileRequest* node = FindFileRequest_8003BED4(key);
+    if (node && !(node->flags_C & 0x100))
     {
-        RemoveFileRequest_8003BF18(n);
+        RemoveFileRequest_8003BF18(node);
         return 1;
     }
     return 0;
@@ -606,38 +607,38 @@ int CancelFileRequest_8003BE88(int key)
 // Matched
 FileRequest* FindFileRequest_8003BED4(int key)
 {
-    FileRequest* p;
-    for (p = fileRequestTail_8008654C; p; p = p->next)
+    FileRequest* node;
+    for (node = fileRequestTail_8008654C; node; node = node->next)
     {
-        if (key == p->key)
+        if (key == node->key)
         {
-            return p;
+            return node;
         }
     }
     return 0;
 }
 // Matched
-void RemoveFileRequest_8003BF18(FileRequest* n)
+void RemoveFileRequest_8003BF18(FileRequest* req)
 {
-    // n->next (offset 0) is the previous node, n->field_4 the next one
-    struct_head_8003BC84* list = (struct_head_8003BC84*)&fileRequestQueue_80086540;
-    if (n->next == 0)
+    // req->next (offset 0) is the previous node, req->newer_4 the next one
+    FileRequestQueue* list = (FileRequestQueue*)&fileRequestQueue_80086540;
+    if (req->next == 0)
     {
-        list->first = (FileRequest*)n->field_4;
+        list->first = (FileRequest*)req->newer_4;
     }
     else
     {
-        n->next->field_4 = n->field_4;
+        req->next->newer_4 = req->newer_4;
     }
-    if (n->field_4 == 0)
+    if (req->newer_4 == 0)
     {
-        list->last = n->next;
+        list->last = req->next;
     }
     else
     {
-        ((FileRequest*)n->field_4)->next = n->next;
+        ((FileRequest*)req->newer_4)->next = req->next;
     }
-    n->fileId_10 = 0x10000;
+    req->fileId_10 = 0x10000;
     list->count--;
 }
 // Matched
@@ -650,33 +651,33 @@ int IsFileRequestQueueIdle_8003BF88(void)
     return 0;
 }
 // Matched
-void* SetFileBufferInUse_8003BFB8(int arg0)
+void* SetFileBufferInUse_8003BFB8(int inUse)
 {
-    fileBufferInUse_80086564 = arg0;
+    fileBufferInUse_80086564 = inUse;
     return fileBuffer_8008656C;
 }
 // Matched
 int ConsumeFileRequest_8003BFD0(int key, int flag)
 {
-    FileRequest* n = FindFileRequest_8003BED4(key);
-    if (n)
+    FileRequest* node = FindFileRequest_8003BED4(key);
+    if (node)
     {
-        unsigned int f = n->flags_C;
-        if (f & 0x1000)
+        unsigned int flags = node->flags_C;
+        if (flags & 0x1000)
         {
-            void (*cb)(void*, void*) = n->callback_24;
-            n->flags_C = f | 0x2000;
+            void (*cb)(void*, void*) = node->callback_24;
+            node->flags_C = flags | 0x2000;
             if (cb)
             {
-                cb(n->params_20, n->dest_1C);
-                n->callback_24 = 0;
+                cb(node->params_20, node->dest_1C);
+                node->callback_24 = 0;
                 return 0;
             }
             return 2;
         }
         if (flag)
         {
-            n->flags_C = f | 0x2000;
+            node->flags_C = flags | 0x2000;
             return 1;
         }
     }
@@ -685,11 +686,11 @@ int ConsumeFileRequest_8003BFD0(int key, int flag)
 // Matched
 int CancelFileRequest_8003C060(int key)
 {
-    FileRequest* n = FindFileRequest_8003BED4(key);
-    if (n)
+    FileRequest* node = FindFileRequest_8003BED4(key);
+    if (node)
     {
-        n->callback_24 = 0;
-        n->flags_C |= 0x2000;
+        node->callback_24 = 0;
+        node->flags_C |= 0x2000;
         return 0;
     }
     return 2;
@@ -708,13 +709,13 @@ struct FileTask
 // Matched
 int SetCdXaLock_8003C0A4(int lock)
 {
-    FileTask* p = fileRequestTask_8008B544->entry.buffer;
+    FileTask* task = fileRequestTask_8008B544->entry.buffer;
     if (cdXaLock_80086568 != lock)
     {
         if (lock == 1)
         {
-            FileRequest* q = p->cur;
-            if (q == 0 || (p->state == 8 && (q->flags_C & 0x1000)))
+            FileRequest* cur = task->cur;
+            if (cur == 0 || (task->state == 8 && (cur->flags_C & 0x1000)))
             {
                 cdXaLock_80086568 = lock;
             }
@@ -727,105 +728,105 @@ int SetCdXaLock_8003C0A4(int lock)
     }
     return 0;
 }
-void ProcessFileRequests_8003C184(int* a0, FileTask* t);
+void ProcessFileRequests_8003C184(int* entry, FileTask* task);
 // Matched
-void InitFileRequestTask_8003C128(int* a0, FileTask* a1)
+void InitFileRequestTask_8003C128(int* entry, FileTask* task)
 {
     InitFileRequestQueue_8003BBE4();
     fileBuffer_8008656C = (void*)0x801B9250;
-    a1->cur = 0;
-    a1->state = 0;
-    a1->buf = 0;
-    a1->retry = 0;
-    a0[2] = (int)ProcessFileRequests_8003C184;
+    task->cur = 0;
+    task->state = 0;
+    task->buf = 0;
+    task->retry = 0;
+    entry[2] = (int)ProcessFileRequests_8003C184;
 }
 extern FileRequest* fileRequestHead_80086548;
 // Matched
-void ProcessFileRequests_8003C184(int* a0, FileTask* t)
+void ProcessFileRequests_8003C184(int* entry, FileTask* task)
 {
     int loop;
-    FileRequest* r;
+    FileRequest* req;
 
     if (fileBufferInUse_80086564 != 0 || cdXaLock_80086568 != 0)
     {
         return;
     }
     loop = 1;
-    if (t->cur == 0)
+    if (task->cur == 0)
     {
-        t->state = 0;
-        t->cur = fileRequestHead_80086548;
+        task->state = 0;
+        task->cur = fileRequestHead_80086548;
     }
     while (loop)
     {
-        if (t->cur == 0)
+        if (task->cur == 0)
         {
             break;
         }
-        switch (t->state)
+        switch (task->state)
         {
         case 0:
-            t->cur->flags_C |= 0x100;
-            if (t->cur->flags_C & 4)
+            task->cur->flags_C |= 0x100;
+            if (task->cur->flags_C & 4)
             {
-                if (t->retry < 2)
+                if (task->retry < 2)
                 {
-                    t->retry++;
+                    task->retry++;
                     primBufferOffset_8008B550 = 0x3D000;
                     unknownFlags_8008D678 |= 0x200;
                     loop = 0;
                     break;
                 }
             }
-            t->state = 1;
+            task->state = 1;
         case 1:
-            DATA_GetFile_8003C7CC(&t->file, t->cur->fileId_10);
-            if (t->cur->flags_C & 0x40)
+            DATA_GetFile_8003C7CC(&task->file, task->cur->fileId_10);
+            if (task->cur->flags_C & 0x40)
             {
-                DsIntToPos(DsPosToInt(&t->file.field_0_position) + ((unsigned int)t->cur->offset_14 >> 11), &t->file.field_0_position);
-                t->sectors = (unsigned int)t->cur->size_18 >> 11;
+                DsIntToPos(DsPosToInt(&task->file.field_0_position) + ((unsigned int)task->cur->offset_14 >> 11), &task->file.field_0_position);
+                task->sectors = (unsigned int)task->cur->size_18 >> 11;
             }
             else
             {
-                t->sectors = t->file.field_4_sectors;
+                task->sectors = task->file.field_4_sectors;
             }
-            if (t->cur->flags_C & 2)
+            if (task->cur->flags_C & 2)
             {
-                t->cur->flags_C |= 1;
+                task->cur->flags_C |= 1;
             }
-            if (t->cur->flags_C & 1)
+            if (task->cur->flags_C & 1)
             {
-                if (fileBuffer_8008656C != 0 && !((unsigned int)(t->sectors << 11) > 0x1ADB0))
+                if (fileBuffer_8008656C != 0 && !((unsigned int)(task->sectors << 11) > 0x1ADB0))
                 {
-                    t->cur->flags_C |= 0x200;
-                    t->buf = fileBuffer_8008656C;
+                    task->cur->flags_C |= 0x200;
+                    task->buf = fileBuffer_8008656C;
                 }
                 else
                 {
-                    t->buf = malloc3_8003FC4C(t->sectors << 11);
+                    task->buf = malloc3_8003FC4C(task->sectors << 11);
                 }
             }
             else
             {
-                t->buf = (void*)0x801B9250;
+                task->buf = (void*)0x801B9250;
             }
-            if (t->cur->flags_C & 0x10)
+            if (task->cur->flags_C & 0x10)
             {
-                t->state = 2;
+                task->state = 2;
             }
-            else if (t->cur->flags_C & 8)
+            else if (task->cur->flags_C & 8)
             {
-                t->state = 5;
+                task->state = 5;
             }
             else
             {
-                t->state = 7;
+                task->state = 7;
             }
             break;
         case 2:
-            if (CdSeekStart_8003C8A0(&t->file.field_0_position))
+            if (CdSeekStart_8003C8A0(&task->file.field_0_position))
             {
-                t->state = 3;
+                task->state = 3;
             }
             else
             {
@@ -835,7 +836,7 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
         case 3:
             if (CdSeekIsComplete_8003C900())
             {
-                t->state = 10;
+                task->state = 10;
             }
             else
             {
@@ -843,9 +844,9 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
             }
             break;
         case 5:
-            if (CdReadStart_8003C944(&t->file.field_0_position, t->buf, t->sectors))
+            if (CdReadStart_8003C944(&task->file.field_0_position, task->buf, task->sectors))
             {
-                t->state = 6;
+                task->state = 6;
             }
             else
             {
@@ -855,29 +856,29 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
         case 6:
             if (CdReadIsIdle_8003C9EC())
             {
-                if (t->cur->flags_C & 2)
+                if (task->cur->flags_C & 2)
                 {
-                    MemCopy_800403E8(t->cur->dest_1C, t->buf, DATA_GetFileSize_8003C87C(t->cur->fileId_10));
+                    MemCopy_800403E8(task->cur->dest_1C, task->buf, DATA_GetFileSize_8003C87C(task->cur->fileId_10));
                 }
-                t->state = 8;
+                task->state = 8;
             }
             else
             {
             wait:
                 loop = 0;
-                if (!(t->cur->flags_C & 0x400) && !(unknownFlags_8008D678 & 0x4000000))
+                if (!(task->cur->flags_C & 0x400) && !(unknownFlags_8008D678 & 0x4000000))
                 {
                     DrawLoadingIcon_8003CD5C();
                 }
             }
             break;
         case 7:
-            if (CdReadStart_8003C944(&t->file.field_0_position, t->buf, t->sectors))
+            if (CdReadStart_8003C944(&task->file.field_0_position, task->buf, task->sectors))
             {
                 while (!CdReadIsIdle_8003C9EC())
                 {
                 }
-                t->state = 8;
+                task->state = 8;
             }
             else
             {
@@ -885,50 +886,50 @@ void ProcessFileRequests_8003C184(int* a0, FileTask* t)
             }
             break;
         case 8:
-            if (t->cur->flags_C & 0x800)
+            if (task->cur->flags_C & 0x800)
             {
-                t->cur->flags_C |= 0x1000;
-                t->cur->dest_1C = t->buf;
-                if (!(t->cur->flags_C & 0x2000))
+                task->cur->flags_C |= 0x1000;
+                task->cur->dest_1C = task->buf;
+                if (!(task->cur->flags_C & 0x2000))
                 {
                     loop = 0;
                     break;
                 }
             }
-            t->cur->flags_C &= ~0x1000;
-            t->state = 9;
+            task->cur->flags_C &= ~0x1000;
+            task->state = 9;
             break;
         case 9:
-            if (t->cur->callback_24)
+            if (task->cur->callback_24)
             {
-                t->cur->callback_24(t->cur->params_20, t->buf);
+                task->cur->callback_24(task->cur->params_20, task->buf);
             }
-            if (t->cur->flags_C & 1)
+            if (task->cur->flags_C & 1)
             {
-                if (t->buf)
+                if (task->buf)
                 {
-                    if (!(t->cur->flags_C & 0x200))
+                    if (!(task->cur->flags_C & 0x200))
                     {
-                        free3_8003FC6C(t->buf);
+                        free3_8003FC6C(task->buf);
                     }
-                    t->buf = 0;
+                    task->buf = 0;
                 }
             }
-            t->state = 10;
+            task->state = 10;
         case 10:
-            r = (FileRequest*)t->cur->field_4;
-            if ((r == 0 || !(r->flags_C & 4)) && t->retry != 0)
+            req = (FileRequest*)task->cur->newer_4;
+            if ((req == 0 || !(req->flags_C & 4)) && task->retry != 0)
             {
                 loop = 0;
-                t->retry--;
+                task->retry--;
                 primBufferOffset_8008B550 = 0;
                 unknownFlags_8008D678 &= ~0x200;
                 break;
             }
-            r = t->cur;
-            t->cur = (FileRequest*)r->field_4;
-            RemoveFileRequest_8003BF18(r);
-            t->state = 0;
+            req = task->cur;
+            task->cur = (FileRequest*)req->newer_4;
+            RemoveFileRequest_8003BF18(req);
+            task->state = 0;
             break;
         }
     }

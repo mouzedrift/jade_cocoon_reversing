@@ -357,7 +357,7 @@ int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int f
     return -1;
 }
 // Matched
-short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script, int anim)
+short GetActorHitTimes_8001F268(Actor* o, HitTimes* out, ActorScriptCmd* script, int anim)
 {
     short* e = o->anims_148[anim].hitFrames_8[0];
     int i;
@@ -365,16 +365,16 @@ short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script
     {
         if (e[i * 2] < 0 && e[i * 2 + 1] < 0)
         {
-            out[i].field_0 = -1;
-            out[i].field_2 = -1;
+            out[i].start_0 = -1;
+            out[i].end_2 = -1;
         }
         else
         {
-            out[i].field_0 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2]);
-            out[i].field_2 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2 + 1]);
+            out[i].start_0 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2]);
+            out[i].end_2 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2 + 1]);
         }
     }
-    return out[0].field_0;
+    return out[0].start_0;
 }
 extern void GetAnimRootMotion_8004D288(int* out, ModelAnim* s, int k);
 extern int CollideWithMap_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
@@ -490,7 +490,7 @@ void UpdateActorAnimLoad_8001F918(void* actor)
     case 0:
         break;
     case 1:
-        RequestModelAnim_8002032C(p->modelRef_16, p->task_0->field_4, p->animRequest_12);
+        RequestModelAnim_8002032C(p->modelRef_16, p->task_0->index_4, p->animRequest_12);
         *(unsigned short*)&p->animLoading_14 = *(unsigned short*)&p->animRequest_12;
         p->animRequest_12 = -1;
         p->animLoadState_10 = 2;
@@ -3725,35 +3725,35 @@ int GetRecordTableCount_80026D6C(int* p)
     return p[0];
 }
 // Matched
-void AllocRecordTables_80026D78(struct_12** out, int count, int heap)
+void AllocRecordTables_80026D78(RecordTable** out, int count, int heap)
 {
-    struct_12* p = HeapAlloc_8003FC8C(count * 12, heap);
+    RecordTable* p = HeapAlloc_8003FC8C(count * 12, heap);
     int i;
     for (i = 0; i < count; i++)
     {
-        p[i].field_0 = 0;
+        p[i].count_0 = 0;
         p[i].field_4 = 0;
-        p[i].field_8 = 0;
+        p[i].records_8 = 0;
     }
     *out = p;
 }
 // Matched
-void FreeRecordTables_80026DE8(struct_12** tables, int n, int h)
+void FreeRecordTables_80026DE8(RecordTable** tables, int n, int h)
 {
-    struct_12* p = *tables;
+    RecordTable* p = *tables;
     int i;
     for (i = 0; i < n; i++, p++)
     {
-        if (p->field_8 != 0)
+        if (p->records_8 != 0)
         {
-            HeapFree_8003FD18(p->field_8, h);
+            HeapFree_8003FD18(p->records_8, h);
         }
     }
     HeapFree_8003FD18(*tables, h);
     *tables = 0;
 }
 // Matched
-void LoadRecordTables_80026E74(struct_12* tables, int* file, int heap)
+void LoadRecordTables_80026E74(RecordTable* tables, int* file, int heap)
 {
     int i;
     for (i = 0; i < GetRecordTableCount_80026D6C(file); i++)
@@ -3770,17 +3770,17 @@ typedef struct
     unsigned short d;
 } struct_4h;
 // Matched
-void LoadRecordTable_80026EF8(struct_12* p, unsigned short* s, int heap)
+void LoadRecordTable_80026EF8(RecordTable* p, unsigned short* s, int heap)
 {
     unsigned short* d;
     int i;
-    p->field_0 = *(int*)s;
+    p->count_0 = *(int*)s;
     s += 2;
     p->field_4 = *(int*)s;
     s += 2;
-    d = HeapAlloc_8003FC8C(p->field_0 * 8, heap);
-    p->field_8 = (int)d;
-    for (i = 0; i < p->field_0; i++)
+    d = HeapAlloc_8003FC8C(p->count_0 * 8, heap);
+    p->records_8 = (int)d;
+    for (i = 0; i < p->count_0; i++)
     {
         d[0] = s[0];
         d[1] = s[1];
@@ -4551,7 +4551,7 @@ typedef struct
 } MapEntry16b;
 extern void LoadEventData_800A5628(int a0, int* a1, int a2);
 extern void MarkSharedEdges_800B73C0(MapMesh* a0, int a1);
-extern int FindTriAtXZ_800B76B8(MapMesh* a0, struct_v3* a1);
+extern int FindTriAtXZ_800B76B8(MapMesh* a0, Vec3i* a1);
 extern int* LoadMapMeshes_80027A88();
 extern short savedLevantRot_80091CA8[];
 extern EventNode* gameTask_8008B4A4; // the GAME overlay task

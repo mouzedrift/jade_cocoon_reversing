@@ -7,11 +7,11 @@
 
 // each species' starting skills: 0xC9 in the exe, the rest from the overlay (sub_800B3274)
 extern UnitSkills speciesSkills_8007A9F8[];
-extern UnitSkills* sub_800B3274(int a0);
+extern UnitSkills* sub_800B3274(int idx);
 extern UnitSkills* GetSpeciesSkills_80019C28(unsigned int idx);
 // each species' name (plain text, EncodeName_8003F7C8 converts it); species from 0xC9 on come from sub_800B32D4
 extern char* minionSpeciesNames_8007A170[];
-extern char* sub_800B32D4(int a0);
+extern char* sub_800B32D4(int idx);
 
 extern ActionData* GetMagicAction_8001AD64(unsigned int idx); // magic
 extern ActionData* GetItemData_8001CDF4(unsigned int idx);
@@ -38,9 +38,9 @@ typedef struct
     int kind; // 0: sfx, 1: music, 2: sequence, 3: fade out the system sequence
     short arg;
     short pad;
-} SoundCue_8007C750;
+} SoundCue;
 
-// the block at 0x8008D4F0 (camera.c copies its first 0x68 bytes as Block104)
+// the block at 0x8008D4F0 (camera.c copies its first 0x68 bytes as CameraView)
 typedef struct
 {
     char pad_0[0x30];
@@ -61,20 +61,20 @@ typedef struct
 // (also the camera's light list cameraState_8008D4F0.ent_44 / pointLights_8008D534)
 typedef struct
 {
-    struct_v3 pos_0;
+    Vec3i pos_0;
     SVECTOR color_C;   // only vx/vy/vz used
     int range_14;
 } PointLight;
 extern void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m);
 
 // screen fade task state (the fadeTask_8008D628 task buffer, run by SceneFadeTask_8001A41C)
-typedef struct Fade_8001A41C
+typedef struct SceneFade
 {
     unsigned short flags; // 0x10: flash, 1: fade in, 2: fade out, 4: darken, 8: brighten, 0x20: front OT
     short count;
     short pad_4;
     unsigned short duration;
-} Fade_8001A41C;
+} SceneFade;
 
 extern const int dword_80073048;
 extern const char aDevaMalti_8007304C[];

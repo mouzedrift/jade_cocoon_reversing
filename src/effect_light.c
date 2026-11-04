@@ -19,7 +19,7 @@
 #include "effect_obj.h"
 #include "effect_light.h"
 
-const struct_u8x4 orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
+const ColorRGBA orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
 const int dword_80072274 = 0;
 
 // Matched
@@ -31,7 +31,7 @@ void CountdownTask_80016BF4(EventEntry* entry, EffectObj* obj)
         PlaySfx_80031494(0x24);
     }
 }
-extern void PlayMusic_800300E0(int a, int b);
+extern void PlayMusic_800300E0(int idx, int a1);
 // Matched
 void BoneModelFadeTask_80016C3C(int* flags, void* buf)
 {
@@ -66,8 +66,8 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-extern void SpawnSpriteAnim_800C1A5C(void* a0, short* a1, int a2, int a3);
-void SpawnMdecEffect_80017A6C(int a0, int a1);
+extern void SpawnSpriteAnim_800C1A5C(void* pos, short* rot, int sprite, int speed);
+void SpawnMdecEffect_80017A6C(int parent, int frames);
 // Matched
 void RadialBurstTask_80016E20(int* flags, void* buf)
 {
@@ -104,7 +104,7 @@ void RadialBurstTask_80016E20(int* flags, void* buf)
     }
     obj->field_4++;
 }
-extern void PlayTimedSfx_800C1190(int a0, int a1);
+extern void PlayTimedSfx_800C1190(int frames, int sfx);
 // Matched
 void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
 {
@@ -140,33 +140,33 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
     obj->field_4++;
 }
 extern EventNode* effectObjects_8008B4A8;
-extern void LightFlashTask_80017208(int* a0, EffectObj* a1);
+extern void LightFlashTask_80017208(int* flags, EffectObj* obj);
 // Matched
 void SpawnLightFlash_80017158(int* pos, unsigned char* rgb)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
+    EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     EffectObj* obj;
-    if (e)
+    if (entry)
     {
-        e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        obj = e->buffer;
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        obj = entry->buffer;
         obj->pos_44[0] = pos[0];
         obj->pos_44[1] = pos[1];
         obj->pos_44[2] = pos[2];
-        obj->field_0 = 0;
+        obj->frame_0 = 0;
         obj->rgb_A8[0] = rgb[0];
         obj->rgb_A8[1] = rgb[1];
         obj->rgb_A8[2] = rgb[2];
-        e->cb_8 = (EventEntryFn)LightFlashTask_80017208;
+        entry->cb_8 = (EventEntryFn)LightFlashTask_80017208;
     }
 }
 // Matched
 void LightFlashTask_80017208(int* flags, EffectObj* obj)
 {
-    if (obj->field_0 < 0x20)
+    if (obj->frame_0 < 0x20)
     {
-        SetPointLight_800C4090((int)obj->pos_44, (int)obj->rgb_A8, 0x5DC, (0x20 - obj->field_0) << 7);
-        obj->field_0 = obj->field_0 + 1;
+        SetPointLight_800C4090((int)obj->pos_44, (int)obj->rgb_A8, 0x5DC, (0x20 - obj->frame_0) << 7);
+        obj->frame_0 = obj->frame_0 + 1;
     }
     else
     {
@@ -174,21 +174,21 @@ void LightFlashTask_80017208(int* flags, EffectObj* obj)
         flags[0] = (flags[0] & ~1) | 0x8000;
     }
 }
-void GlowModelTask_800173A8(int* a0, void* buf);
+void GlowModelTask_800173A8(int* flags, void* buf);
 // Matched
 void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
 {
-    EventEntry* e;
+    EventEntry* entry;
     SpawnMdecEffect_80017A6C((int)parent, 0);
-    e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
-    if (e)
+    entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
+    if (entry)
     {
-        EffectObj* obj = e->buffer;
+        EffectObj* obj = entry->buffer;
         int idx;
         obj->pos_44[0] = parent->targetPos_1C[0];
         obj->pos_44[1] = parent->targetPos_1C[1];
         obj->pos_44[2] = parent->targetPos_1C[2];
-        obj->field_0 = 0;
+        obj->frame_0 = 0;
         obj->field_4 = GetMdecEffectLength_800181E8();
         obj->field_30 = 0;
         obj->field_34 = 0x23F000;
@@ -197,28 +197,28 @@ void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
         obj->rot_80.vx = 0;
         obj->rot_80.pad = 0;
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
-        e->flags = (e->flags | 1) & ~0x8000;
-        obj->field_88 = (int)&effectFile_80091BD0.models_28[idx];
-        e->cb_8 = (EventEntryFn)GlowModelTask_800173A8;
+        entry->flags = (entry->flags | 1) & ~0x8000;
+        obj->res_88 = (int)&effectFile_80091BD0.models_28[idx];
+        entry->cb_8 = (EventEntryFn)GlowModelTask_800173A8;
     }
 }
 // Matched
 void GlowModelTask_800173A8(int* flags, void* buf)
 {
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->field_88;
-    struct_u8x4 col;
+    EffectModel* model = (EffectModel*)obj->res_88;
+    ColorRGBA color;
     int scale[3];
-    if (obj->field_0 < obj->field_4)
+    if (obj->frame_0 < obj->field_4)
     {
-        col = orangeGlowColor_80072270;
+        color = orangeGlowColor_80072270;
         obj->field_34 = obj->field_34 * 7 / 8;
         obj->field_30 += obj->field_34;
         scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
         obj->rot_80.vy += obj->rot_80.pad;
         DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, 0x30, scale);
-        SetPointLight_800C4090((int)obj->pos_44, (int)&col, 0x5DC, ((obj->field_4 - obj->field_0) << 12) / obj->field_4);
-        obj->field_0++;
+        SetPointLight_800C4090((int)obj->pos_44, (int)&color, 0x5DC, ((obj->field_4 - obj->frame_0) << 12) / obj->field_4);
+        obj->frame_0++;
     }
     else
     {

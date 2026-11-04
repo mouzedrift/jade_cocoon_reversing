@@ -16,13 +16,13 @@ typedef struct
 {
     unsigned short flags;
     short pad_2;
-    int f4;
+    int text_4; // the text, or the sprite index into sprts_8
     SPRT** sprts_8;
     DR_TPAGE** tpages_C;
     short x;
     short y;
     char pad_14[8];
-} MenuItem_1C;
+} MenuItem;
 
 // camera offsets (camera)
 typedef struct
@@ -31,7 +31,7 @@ typedef struct
     short y0;
     short z0;
     short pad_6;
-    int field_8;
+    int geomScreen_8; // projection distance
     short x1;
     short y1;
     short z1;
@@ -41,9 +41,9 @@ typedef struct
 // a step of a pad vibration pattern (vibrationPatterns_80083B30, camera)
 typedef struct
 {
-    unsigned short field_0;
-    unsigned char field_2;
-    unsigned char field_3;
+    unsigned short frames_0; // how long the step lasts (negative: the pattern ends)
+    unsigned char motor0_2;  // actuator values (PadVibration.motor_2)
+    unsigned char motor1_3;
 } PadVibEntry;
 
 typedef struct
@@ -69,7 +69,7 @@ extern unsigned char elementModifiers_8007BA74[];
 extern unsigned char speciesModifiers_8007BA84[];
 extern int sub_8007C30C[15];
 extern short screenModes_8007C728[][2];
-extern SoundCue_8007C750 soundCues_8007C750[];
+extern SoundCue soundCues_8007C750[];
 extern short levelSeqsCue2_8007CAC0[];
 extern short levelSeqsCue3_8007CACC[];
 extern char* (*nameGetters_8007CB08[])(int id);
@@ -221,7 +221,7 @@ extern int itemListRowData_800828FC[14];
 extern int aH6p_1[14];
 extern int itemListRowData_8008296C[14];
 extern int aH6p_2[17];
-extern MenuItem_1C* itemListRows_800829E8[];
+extern MenuItem* itemListRows_800829E8[];
 extern unsigned short magicScrollUpPos_800829FC[];
 extern unsigned short magicScrollDownPos_80082A00[];
 extern int magicListRowData_80082A04[11];
@@ -232,7 +232,7 @@ extern int magicListRowData_80082AA0[14];
 extern int aU6k_1[7];
 extern int magicListRowData_80082AF4[14];
 extern int aU6k_2[10];
-extern MenuItem_1C* magicListRows_80082B54[];
+extern MenuItem* magicListRows_80082B54[];
 extern int abilityListRowData_80082B68[4];
 extern int a8[21];
 extern int abilityListRowData_80082BCC[7];
@@ -243,7 +243,7 @@ extern int abilityListRowData_80082CAC[7];
 extern int a8_2[21];
 extern int abilityListRowData_80082D1C[7];
 extern int a8_3[24];
-extern MenuItem_1C* abilityListRows_80082D98[];
+extern MenuItem* abilityListRows_80082D98[];
 extern int aKumu[3];
 extern int familyTreeBoxPosData_80082DBC[4];
 extern Pos16* familyTreeBoxPos_80082DCC[7];

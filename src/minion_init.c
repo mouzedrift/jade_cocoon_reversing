@@ -231,7 +231,7 @@ const char aMarrdreg_80073028[] = "\202l\202\201\202\222\202\222\202\204\202\222
 // Matched
 int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
 {
-    struct_4s* t = actor->hitTimes_108;
+    HitTimes* t = actor->hitTimes_108;
     int v = 0;
     switch (idx)
     {
@@ -245,7 +245,7 @@ int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
     case 7:
     case 8:
     case 9:
-        v = t[idx].field_0;
+        v = t[idx].start_0;
         break;
     case 10:
         v = GetActorScriptTime_8001F03C((int)actor, (int)actor->script_D0, -1, 0x10);

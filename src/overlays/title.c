@@ -100,8 +100,8 @@ void NewGameInit_800A08C8(TitleTask* t, NameEntryWork* c)
     c->holding_6C = 0;
     r.x = 0x20;
     r.y = 0x20;
-    r.w = display_8008B4D8.field_C_w - 0x20;
-    r.h = display_8008B4D8.field_E_h - 0x20;
+    r.w = display_8008B4D8.w_C - 0x20;
+    r.h = display_8008B4D8.h_E - 0x20;
     t->next_8 = NewGameLoadSprites_800A093C;
 }
 
@@ -128,7 +128,7 @@ extern void NewGameLoadNameOvl_800A0A1C();
 void NewGameOpeningMovie_800A09C0(TitleTask* t)
 {
     int done;
-    if (saveData_8008B570.field_0 & 0x80)
+    if (saveData_8008B570.flags_0 & 0x80)
     {
         done = PlayMovie_80040EB4(8);
     }
@@ -166,7 +166,7 @@ void NewGameStartNameEntry_800A0A70(TitleTask* t)
 {
     if (GetFileRequestStatus_8003BE30(nameOvlRequest_800A2808) == 0)
     {
-        if (!(saveData_8008B570.field_0 & 0x80))
+        if (!(saveData_8008B570.flags_0 & 0x80))
         {
             EncodeName_8003F7C8(levantName_800A2718, saveData_8008B570.levantStatus_7C8.name_10);
         }
@@ -238,10 +238,10 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 {
     int done;
     SoundStruct* ss;
-    if (saveData_8008B570.field_0 & 0x80)
+    if (saveData_8008B570.flags_0 & 0x80)
     {
         done = PlayMovie_80040EB4(9);
-        saveData_8008B570.field_0 &= ~0x80;
+        saveData_8008B570.flags_0 &= ~0x80;
     }
     else
     {
@@ -364,7 +364,7 @@ void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
     {
         titleMenuState_8008B558[1] = 4;
         SetNewGameStartMap_800A2650();
-        saveData_8008B570.field_0 |= 0x80;
+        saveData_8008B570.flags_0 |= 0x80;
         StartNewGameTask_800A1B74(t);
     }
     else
@@ -613,7 +613,7 @@ typedef struct
 {
     short x, y, w, h;
 } TitleRect;
-// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in ability_menu.c)
+// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem in ability_menu.c)
 extern void DrawText_8003E91C(int mode, void* buf, void* rect, int c);
 extern void StartNewGameTask_800A1B74(TitleTask* t);
 
@@ -785,11 +785,11 @@ void LoadGameWait_800A1CC0(TitleTask* t)
     {
         if (GetLoadMenuLoaded_800B7914() == 1)
         {
-            if (saveData_8008B570.field_0 & 0x80)
+            if (saveData_8008B570.flags_0 & 0x80)
             {
                 word_8008B55A = 4;
                 SetNewGameStartMap_800A2650();
-                saveData_8008B570.field_0 |= 0x80;
+                saveData_8008B570.flags_0 |= 0x80;
                 StartNewGameTask_800A1B74(t);
             }
             else
@@ -880,7 +880,7 @@ extern void InitFlagTables_800A2540(void);
 extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
 extern void EncodeName_8003F7C8(void* text, void* out);
 
-extern struct_v3 dword_800B069C; // Levant's start position
+extern Vec3i dword_800B069C; // Levant's start position
 extern int useMapStartPos_80091C94;
 extern SVECTOR dword_800B06A8; // Levant's start rotation
 
@@ -954,7 +954,7 @@ void InitSaveData_800A211C(void)
 {
     SDECL;
     s->field_984 = 5;
-    saveData_8008B570.field_0 = 0;
+    saveData_8008B570.flags_0 = 0;
     s->chapterNext_2DE = -1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;

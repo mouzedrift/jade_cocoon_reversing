@@ -2602,7 +2602,7 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
         req.effect_0 = lev->effect_2C;
         hitFrames = GetLevantAnimHitFrames_800AC9CC(lev->actionAnim_20);
         loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
-        req.hitTimes_4 = (struct_4s*)RepeatHitTimes_80018200(hitFrames, loopStart, (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)), repeat, lev->effect_2C);
+        req.hitTimes_4 = (HitTimes*)RepeatHitTimes_80018200(hitFrames, loopStart, (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)), repeat, lev->effect_2C);
         GetLevantEffectTarget_800A93A4((EffectTarget*)&req.tbl_8);
         CollectEffectTargets_800182B8(&req, lev->targets_38);
         PlayActorEffect_800184DC(&req, 0);
@@ -3825,7 +3825,7 @@ void LevantModelTaskInit_800ACAA4(int* task, int* work)
     work[8] = -1;
     work[9] = 0;
     SetLevantHasArmor_800AC380(sd->levantStatus_7C8.field_1C[1] != 0xFF);
-    SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.field_1C[0])->field_2);
+    SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.field_1C[0])->kind_2);
     PoolInit_8003FF1C(&levantPool_800B1DD0, 0x2BF20);
     LevantModelTask_800ACB64(task, work);
     task[2] = (int)LevantModelTask_800ACB64;
@@ -4362,7 +4362,7 @@ int SetEquipment_800AD9EC(int id, int slot)
         RemoveInventory_800AD1E0(id, 1, 1);
         if (old < 0x17)
             AddInventory_800AD184(old, 1, 1);
-        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(id)->field_2);
+        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(id)->kind_2);
         GetArmorData_8001D034(sd->levantStatus_7C8.field_1C[1]);
         SetLevantOutfit_800AC3B0(dword_8001D060(sd->levantStatus_7C8.field_1C[1]));
         break;
@@ -4381,7 +4381,7 @@ int SetEquipment_800AD9EC(int id, int slot)
         RemoveInventory_800AD1E0(id, 1, 2);
         if (old < 0xF)
             AddInventory_800AD184(old, 1, 2);
-        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.field_1C[0])->field_2);
+        SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.field_1C[0])->kind_2);
         GetArmorData_8001D034(id);
         SetLevantOutfit_800AC3B0(dword_8001D060(id));
         break;

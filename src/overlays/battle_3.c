@@ -82,7 +82,7 @@ void ShowUnitHitResult_800BE834(int unit, int pos)
 #if 0 // Not matched: the shared 'return 1' block sits after the AreReactionsDone_800BEB68 test in the original (here it lands at the end and the last test flips); tried goto/early-return layouts
 int IsActionDone_800BEA94()
 {
-    if (!(saveData_8008B570.field_0 & 0x20))
+    if (!(saveData_8008B570.flags_0 & 0x20))
     {
         if (AnyHitNumberActive_800BF47C() == 1)
         {
@@ -1026,9 +1026,9 @@ void HelpWindowTask_800C04A4(EventEntry* task, BatAnimWindow* win)
     unsigned char* sealTable;
     if (padPressed_8009194C & 0x100)
     {
-        saveData_8008B570.field_0 ^= 0x10;
+        saveData_8008B570.flags_0 ^= 0x10;
     }
-    if (saveData_8008B570.field_0 & 0x10)
+    if (saveData_8008B570.flags_0 & 0x10)
     {
         return;
     }
@@ -4126,7 +4126,7 @@ int CanCastMagic_800C6CFC(unsigned int magic, unsigned int* magicBits, UnitStats
 {
     if (TestMagicBit_8001AE2C(magicBits, magic) != 0)
     {
-        if (magicData_8007C438[magic].field_4 <= self->st_0.mp_C.cur_0)
+        if (magicData_8007C438[magic].mpCost_4 <= self->st_0.mp_C.cur_0)
         {
             return 1;
         }

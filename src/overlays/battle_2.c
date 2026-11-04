@@ -339,7 +339,7 @@ void ActionStart_800BDA28(BatTaskEntry* task)
         ResetUnitReactions_800BB794();
         ResetTurnResults_800BB7D4();
         ApplyBattleCommand_800BEBB8();
-        if (!(saveData_8008B570.field_0 & 2))
+        if (!(saveData_8008B570.flags_0 & 2))
         {
             uncapturable = 0;
             for (i = 4; i < 7; i++)
@@ -418,7 +418,7 @@ int AreUnitsIdle_800BDD3C()
     unsigned char i;
     int idle;
     int alive;
-    if (saveData_8008B570.field_0 & 0x20)
+    if (saveData_8008B570.flags_0 & 0x20)
     {
         return 1;
     }
@@ -453,7 +453,7 @@ int AreUnitsReady_800BDE04()
     unsigned char i;
     int result;
     int bit;
-    if (saveData_8008B570.field_0 & 0x20)
+    if (saveData_8008B570.flags_0 & 0x20)
     {
         return 1;
     }
@@ -489,7 +489,7 @@ void FaceActorAndTargets_800BDEBC()
     int actors;
     int targets;
     int newTargets;
-    if (!(saveData_8008B570.field_0 & 0x20))
+    if (!(saveData_8008B570.flags_0 & 0x20))
     {
         actors = curCommand_800C9C88.mask_8;
         if (actors & 0xF)
@@ -550,7 +550,7 @@ void StartReactions_800BDFAC()
 BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BatCommand* cmd, int isReaction, int unit)
 {
     BatActionTiming timing;
-    if ((saveData_8008B570.field_0 & 0x20) || IsUnitOnField_800BC570(unit) == 0)
+    if ((saveData_8008B570.flags_0 & 0x20) || IsUnitOnField_800BC570(unit) == 0)
     {
         timing.hit_0 = 0;
         timing.end_2 = 0;
@@ -577,7 +577,7 @@ BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BatCommand* cmd,
 void TriggerUnitAction_800BE14C(BatCommand* cmd, int isReaction, int unit)
 {
     int side;
-    if (saveData_8008B570.field_0 & 0x20)
+    if (saveData_8008B570.flags_0 & 0x20)
     {
         return;
     }
@@ -603,7 +603,7 @@ void TriggerUnitAction_800BE14C(BatCommand* cmd, int isReaction, int unit)
         }
         break;
     }
-    if (!(saveData_8008B570.field_0 & 2) && isReaction == 0)
+    if (!(saveData_8008B570.flags_0 & 2) && isReaction == 0)
     {
         StartBattleCameraSpline_800377B4(side, (short)cmd->kind_0, unit - 4);
     }

@@ -11,7 +11,7 @@
 /* the buffer of the effect task (effectTask_8008D3F8->entry.buffer) */
 typedef struct
 {
-    struct_4s hitTimes_0[10]; // RepeatHitTimes_80018200's output
+    HitTimes hitTimes_0[10]; // RepeatHitTimes_80018200's output
     unsigned int flags_28; // 1: start, 2: file freed, 4: load requested, 8: SetEffectFlag8_80018460
     int state_2C;          // UpdateEffectTask_80014638: 0 idle, 1 loading, 2 loaded, 3 running
     int pad_30[2];
@@ -25,10 +25,10 @@ typedef struct
 /* buffer of an effect object (an EventEntry of effectObjects_8008B4A8) */
 typedef struct EffectObj
 {
-    int field_0; // frame counter
+    int frame_0; // frame counter
     int field_4;
     short field_8;
-    short hitEnd_A;   // last frame (the object ends once field_0 reaches it)
+    short hitEnd_A;   // last frame (the object ends once frame_0 reaches it)
     short hitStart_C; // first frame the kind's effect runs
     short kind_E;     // EffectObjectTask_80015478's switch
     int field_10;
@@ -45,7 +45,7 @@ typedef struct EffectObj
     int pos_50[3];
     int pad_5C[9];
     SVECTOR rot_80;
-    int field_88; // EffectModel*
+    int res_88; // the effect file resource it draws (an EffectModel* or a sprite)
     int field_8C;
     int field_90;
     FtgObject* work_94; // malloc'd copy of the model's first FtgObject
@@ -97,7 +97,7 @@ typedef struct EffectTarget
 typedef struct ActorEffectReq
 {
     int effect_0;            // effect index (effectFileTable_800795F0)
-    struct_4s* hitTimes_4;   // Actor.hitTimes_108
+    HitTimes* hitTimes_4;   // Actor.hitTimes_108
     short (*tbl_8)[6];       // Actor.effectTbl_14C
     int* pos_C;              // Actor.pos_38
     int* bonePos_10;         // Actor.bonePos_1C4

@@ -324,10 +324,10 @@ void DrawCharRow_800B75EC(NameCharRow row)
             clutRow = v / 126;
             font->clut_E = GetClut(font->clutX_20, font->clutY_22 + clutRow);
             v = v % 126;
-            col = v % (unsigned short)font->field_1C;
-            v = v / (unsigned short)font->field_1C;
-            font->u_C = font->field_18 + font->w_10 * col;
-            font->v_D = font->field_1A + font->h_12 * v;
+            col = v % (unsigned short)font->columns_1C;
+            v = v / (unsigned short)font->columns_1C;
+            font->u_C = font->u0_18 + font->w_10 * col;
+            font->v_D = font->v0_1A + font->h_12 * v;
             font->x0_8 = row.pos.vx + off;
             font->y0_A = row.pos.vy;
             ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
