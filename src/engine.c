@@ -2783,15 +2783,14 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
     actor->flags_4 = flags;
     return hitStart;
 }
-#if 0
-// Not matched (18 lines): the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block (with a
-// register copy of the anim index for 0xA4), here they are scheduled right after the d->animIdx_20 load. Tried: separate
-// anim variable, reading d->animIdx_20 directly / late, chained assignments, 0xA4 from f / 0x9C
+// Matched
 void InitActor_8001E574(Actor* actor, ActorDesc* desc)
 {
     Model* m;
     int v;
     int f;
+    int anim;
+    ModelList* list;
     if (desc->modelId_0 >= 0)
     {
         m = AcquireLoaderModel_80020734(desc->modelId_0);
@@ -2827,7 +2826,7 @@ void InitActor_8001E574(Actor* actor, ActorDesc* desc)
     actor->fade_20 = 0;
     actor->fadeDiv_22 = 0;
     actor->scaleStep_28 = 0;
-    actor->scaleTarget_2A = 0x1000;
+    actor->scaleTarget_2A = actor->scale_26;
     actor->blendDiv_24 = *(short*)&desc->blendDiv_2C;
     actor->prevPos_44[0] = actor->basePos_50[0] = actor->pos_38[0] = desc->pos_8[0];
     actor->prevPos_44[1] = actor->basePos_50[1] = actor->pos_38[1] = desc->pos_8[1];
@@ -2845,7 +2844,7 @@ void InitActor_8001E574(Actor* actor, ActorDesc* desc)
     actor->frame_90 = 0;
     actor->prevFrame_94 = 0;
     actor->pathStep_98 = 0;
-    f = desc->animIdx_20;
+    anim = desc->animIdx_20;
     actor->startMode_A8 = -1;
     actor->blend_AC = 0;
     actor->waitCount_B0 = 0;
@@ -2857,14 +2856,15 @@ void InitActor_8001E574(Actor* actor, ActorDesc* desc)
     actor->waitLen_CA = 0;
     actor->fCC = -1;
     actor->fCE = -1;
-    actor->anim_9C = f;
-    actor->prevAnim_A0 = f;
-    actor->nextAnim_A4 = actor->prevAnim_A0;
+    actor->anim_9C = anim;
+    actor->prevAnim_A0 = anim;
+    actor->nextAnim_A4 = actor->anim_9C;
     actor->animIdx_C2 = actor->prevAnimIdx_C0 = *(short*)&actor->anim_9C;
     actor->effect_130 = -1;
+    list = m->list_0;
     actor->model_15C = m;
     actor->image_150.x = actorImageRect_8007DC8C[0];
-    actor->image_150.y = actorImageRect_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
+    actor->image_150.y = actorImageRect_8007DC8C[1] + list->vram_C[m->slot_30].reloc_4[5];
     actor->image_150.w = actorImageRect_8007DC8C[2];
     actor->image_150.h = actorImageRect_8007DC8C[3];
     actor->clut_158[0] = actorClutPos_8007DC94[0];
@@ -2874,8 +2874,6 @@ void InitActor_8001E574(Actor* actor, ActorDesc* desc)
     FirFilterInit_8001450C(actor->turnFilterBuf_1A4, &actor->turn_194, turnFilterCoeffs_800795A0, 8);
     SetActorAnim_8001D760(actor, desc->animIdx_20, desc->frame_24, 0);
 }
-#endif
-INCLUDE_ASM(InitActor_8001E574);
 // Matched
 void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc)
 {

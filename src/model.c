@@ -2029,10 +2029,7 @@ void CountFtgSprites_80022B84(unsigned char* cursor, int* sprites, int* texSprit
 }
 #endif
 INCLUDE_ASM(CountFtgSprites_80022B84);
-#if 0
-// Not matched (2 words): the second loop has the j++ / n++ increments in the other order (j++, n++ in the for header
-// or in the body fixes them but then swaps the sprite pointer increments). A j of its own for the second loop fixed the
-// first loop's j/k registers
+// Matched
 void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h)
 {
     int j;
@@ -2070,38 +2067,40 @@ void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, Ft
     }
     if (groups9->count)
     {
-        int j;
-        j = 0;
+        int used;  // sprites taken from the current group
+        int item;  // index of the next one in it
+        used = 0;
+        item = 0;
         obj->tpage_4C = groups9->groups->tpage;
         obj->clut_4E = groups9->groups->clut;
         f = groups9->groups;
         k = 0;
-        for (sprite = 0; sprite < obj->texSpriteCount_48; sprite++, j++)
+        for (sprite = 0; sprite < obj->texSpriteCount_48; sprite++, item++)
         {
-            if (j >= groups9->groups[k].count)
+            if (used >= groups9->groups[k].count)
             {
                 k++;
-                j = 0;
+                item = 0;
+                used = 0;
                 f = &groups9->groups[k];
             }
-            obj->texSprites_50[sprite].p0.x = f->items[j].p0.x;
-            obj->texSprites_50[sprite].p0.y = f->items[j].p0.y;
-            obj->texSprites_50[sprite].p0.z = f->items[j].p0.z;
+            obj->texSprites_50[sprite].p0.x = f->items[item].p0.x;
+            obj->texSprites_50[sprite].p0.y = f->items[item].p0.y;
+            obj->texSprites_50[sprite].p0.z = f->items[item].p0.z;
             obj->texSprites_50[sprite].p0.uv = 0;
-            obj->texSprites_50[sprite].p1.x = f->items[j].p1.x;
-            obj->texSprites_50[sprite].p1.y = f->items[j].p1.y;
-            obj->texSprites_50[sprite].p1.z = f->items[j].p1.z;
+            obj->texSprites_50[sprite].p1.x = f->items[item].p1.x;
+            obj->texSprites_50[sprite].p1.y = f->items[item].p1.y;
+            obj->texSprites_50[sprite].p1.z = f->items[item].p1.z;
             obj->texSprites_50[sprite].p1.uv = 0;
-            obj->texSprites_50[sprite].c.r = f->items[j].c.r;
-            obj->texSprites_50[sprite].c.g = f->items[j].c.g;
-            obj->texSprites_50[sprite].c.b = f->items[j].c.b;
-            obj->texSprites_50[sprite].c.code = f->items[j].c.code;
-            obj->texSprites_50[sprite].p1.uv = f->items[j].p1.uv;
+            obj->texSprites_50[sprite].c.r = f->items[item].c.r;
+            obj->texSprites_50[sprite].c.g = f->items[item].c.g;
+            obj->texSprites_50[sprite].c.b = f->items[item].c.b;
+            obj->texSprites_50[sprite].c.code = f->items[item].c.code;
+            obj->texSprites_50[sprite].p1.uv = f->items[item].p1.uv;
+            used++;
         }
     }
 }
-#endif
-INCLUDE_ASM(MergeFtgSpriteGroups_80022CC4);
 // Matched
 int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* groups8, int k, int h)
 {
