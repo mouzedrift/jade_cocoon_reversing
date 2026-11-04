@@ -1027,16 +1027,13 @@ void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work)
     DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
 
-#if 0
-// Not matched: only the order of the prologue stores differs ($ra/$s0 vs argument set-up)
+// Matched
 void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
 {
-    LoadTextPos p0;
+    LoadTextPos p0 = { 0xBF, 0x15 };
     LoadTextPos p1;
     LoadWinRect rect;
     LoadWinColor color;
-    p0.x_0 = 0xBF;
-    p0.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&p0, 0x27, 1);
     p1.x_0 = 0x124;
     p1.y_2 = 0x15;
@@ -1047,8 +1044,6 @@ void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
     color.color_0 = uiColor_8008B590;
     DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, DrawCardSlotLabel_800B8A20);
 
 void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
 {
