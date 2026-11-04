@@ -253,15 +253,6 @@ int MoveGridCursorP1_8003D630(short* grid)
     }
     return 0;
 }
-typedef struct
-{
-    short columns_0;
-    short rows_2;           // visible rows
-    unsigned short count_4; // items
-    unsigned short flags_6; // 1/2: wrap columns/rows, 4..0x20: leave on right/left/up/down, 0x40: scroll
-    short cursor_8;         // index on the page (MoveGridCursor_8003D4C0's m[4])
-    short scroll_A;         // first shown item
-} MenuCursor;
 
 extern int MenuCursorInput_8003D830();
 

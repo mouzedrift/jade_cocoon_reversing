@@ -46,6 +46,6 @@ extern unsigned short scoreWindowP1_800A4878[14];
 extern unsigned short scoreWindowP2_800A4894[14];
 extern unsigned short *scoreWindows_800A48B0[2];
 extern int slotLabelSprites_800A48B8[3];
-extern CombRsltPos minionSlotPos_800A48C4[6];
+extern CombRsltPos minionSlotPos_800A48C4[2][3];
 
 #endif

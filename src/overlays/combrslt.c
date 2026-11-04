@@ -170,8 +170,7 @@ extern void DrawMinionNameLevel_800A1844();
 extern void DrawHpGauge_8002F078();
 extern void DrawWindow_80042460();
 
-// Near miss: register allocation of the q / j*4 address computation
-#if 0
+// Matched
 void DrawResultMinion_800A4554(int player, int slot, void* box)
 {
     CombRsltText label = minionLabelItem_800A40A8;
@@ -179,7 +178,6 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
     CombRsltPos r1;
     CombRsltPos r2;
     CombRsltPos r3[2];
-    CombRsltPos* pos;
     Minion* minion;
     int fainted;
     if (IsMinionFainted_800A1958(&teams_800A3AA0[player][slot]))
@@ -196,33 +194,30 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
     if (IsMinionSlotEmpty_800A1934(minion) != 1)
     {
         label.text_4 = slotLabelSprites_800A48B8[slot];
-        pos = minionSlotPos_800A48C4 + slot + player * 3;
-        label.x_10 = pos->x;
-        label.y_12 = pos->y;
+        label.x_10 = minionSlotPos_800A48C4[player][slot].x;
+        label.y_12 = minionSlotPos_800A48C4[player][slot].y;
         DrawMenuItemWithWindow_8002ADB4(&label, box, 0xF, GetTime30Hz_8002C64C());
         hp = minionHpItem_800A40C4;
-        hp.x_10 = pos->x + 0x32;
-        hp.y_12 = pos->y;
+        hp.x_10 = minionSlotPos_800A48C4[player][slot].x + 0x32;
+        hp.y_12 = minionSlotPos_800A48C4[player][slot].y;
         if (!fainted)
         {
-            r1.x = pos->x + 0x2F;
-            r1.y = pos->y;
+            r1.x = minionSlotPos_800A48C4[player][slot].x + 0x2F;
+            r1.y = minionSlotPos_800A48C4[player][slot].y;
             DrawHpGauge_8002F078(&minion->status_84, &r1, 0, 0xF);
             hp.type_2 = 0;
         }
         DrawMenuItemWithWindow_8002ADB4(&hp, box, 0xF, GetTime30Hz_8002C64C());
-        r2.x = pos->x;
-        r2.y = pos->y + 0x14;
+        r2.x = minionSlotPos_800A48C4[player][slot].x;
+        r2.y = minionSlotPos_800A48C4[player][slot].y + 0x14;
         DrawMinionNameLevel_800A1844(minion, &r2, label.flags_0);
-        r3[0].x = pos->x;
-        r3[0].y = pos->y + 0x14;
+        r3[0].x = minionSlotPos_800A48C4[player][slot].x;
+        r3[0].y = minionSlotPos_800A48C4[player][slot].y + 0x14;
         r3[1].x = 0x90;
         r3[1].y = 0x13;
         DrawWindow_80042460(r3, box, pOT_8008D454 + 15, GetTime30Hz_8002C64C());
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(combrslt, DrawResultMinion_800A4554);
 
 CombRsltCursor slotCursor_800A47E8[1] = { { { 1, 0, 1, 0, 1, 0, 64 } } };
 int dword_800A47F4 = 0;
@@ -242,11 +237,7 @@ unsigned short scoreWindowP2_800A4894[14] = {
 };
 unsigned short *scoreWindows_800A48B0[2] = { scoreWindowP1_800A4878, scoreWindowP2_800A4894 };
 int slotLabelSprites_800A48B8[3] = { 219, 115, 102 };
-CombRsltPos minionSlotPos_800A48C4[6] = {
-    { 10, 64 },
-    { 10, 109 },
-    { 10, 154 },
-    { 166, 64 },
-    { 166, 109 },
-    { 166, 154 },
+CombRsltPos minionSlotPos_800A48C4[2][3] = {
+    { { 10, 64 }, { 10, 109 }, { 10, 154 } },
+    { { 166, 64 }, { 166, 109 }, { 166, 154 } },
 };
