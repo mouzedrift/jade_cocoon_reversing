@@ -546,7 +546,7 @@ int GetMagicEffect_8001AC8C(int idx)
 {
     if (idx < 0x1E)
     {
-        return magicData_8007C438[idx].field_6;
+        return magicData_8007C438[idx].effect_6;
     }
     return 0x1A;
 }
@@ -558,7 +558,7 @@ int sub_8001ACC0(int idx)
 // Matched
 int GetMagicTargetFlags_8001ACE4(int idx)
 {
-    unsigned int flags = magicData_8007C438[idx].field_0;
+    unsigned int flags = magicData_8007C438[idx].flags_0;
     int r = (flags >> 5) & 2;
     if (flags & 0x80)
     {
@@ -575,7 +575,7 @@ int GetMagicElement_8001AD30(int idx)
 {
     if (idx < 0x1E)
     {
-        return magicData_8007C438[idx].field_8;
+        return magicData_8007C438[idx].element_8;
     }
     return 0xB;
 }

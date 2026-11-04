@@ -999,9 +999,9 @@ int CheckMagicHasEffect_80033D20(struct_minion_ref* p)
     Minion* minion = p->minion_C;
     UnitStatus* status = &minion->status_84;
     int magic = FindNthMagicBit_8001AEC0(&minion->magicBits_F4, p->cursor_0 + p->scroll_2);
-    if (magicData_8007C438[magic].field_0 & 0x40)
+    if (magicData_8007C438[magic].flags_0 & 0x40)
     {
-        switch (magicData_8007C438[magic].field_7)
+        switch (magicData_8007C438[magic].kind_7)
         {
         case 0:
             if (status->hp_8.cur_0 == status->hp_8.max_2)

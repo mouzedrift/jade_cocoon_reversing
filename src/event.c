@@ -423,12 +423,12 @@ int XaRequestStop_80043524(void)
     return 1;
 }
 // Matched
-void XaRequestPlay_80043564(short a0, short a1, short a2)
+void XaRequestPlay_80043564(short channel, short startSector, short length)
 {
     xaRequestPending_80096118 = 0;
-    xaRequest_80096110.channel_2 = a0;
-    xaRequest_80096110.startSector_4 = a1;
-    xaRequest_80096110.length_6 = a2;
+    xaRequest_80096110.channel_2 = channel;
+    xaRequest_80096110.startSector_4 = startSector;
+    xaRequest_80096110.length_6 = length;
 }
 // Matched
 int XaIsIdle_80043584(void)

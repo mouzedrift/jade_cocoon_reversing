@@ -18,10 +18,10 @@
 
 
 // Matched
-void SetDisplayMode_80040658(int arg1)
+void SetDisplayMode_80040658(int mode)
 {
     RestartDisplay_8001B230();
-    switch (arg1)
+    switch (mode)
     {
         case 0:
             display_8008B4D8.field_0 = 5;

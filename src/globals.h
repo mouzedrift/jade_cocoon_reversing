@@ -165,12 +165,12 @@ typedef struct
 // one of the 30 spells (magicData_8007C438, names in magicNames_8007C348)
 typedef struct
 {
-    int field_0;           // flags (0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4)
+    int flags_0;           // 0x40 checked by CheckMagicUsable_80034068; 0x04/0x40/0x80 mapped by GetMagicTargetFlags_8001ACE4
     unsigned char field_4; // MP cost (GetMagicMpCost_8001AC58; Agni 10, Agnis 15, Agnia 25)
     unsigned char field_5;
-    unsigned char field_6;
-    unsigned char field_7;
-    short field_8;         // enum Element (GetMagicElement_8001AD30)
+    unsigned char effect_6; // GetMagicEffect_8001AC8C
+    unsigned char kind_7;   // with flags_0 & 0x40: 0 restores hp, 1 cures status (CheckMagicUsable_80034068)
+    short element_8;        // enum Element (GetMagicElement_8001AD30)
     short pad_A;
 } MagicData;
 

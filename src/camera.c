@@ -508,9 +508,9 @@ void SetCameraZoom_80037A6C(int a, int b)
     }
 }
 // Matched
-void SetCameraTarget_80037AC8(int a0)
+void SetCameraTarget_80037AC8(int target)
 {
-    ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = a0;
+    ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = target;
 }
 extern int* sub_800A1E3C(void);
 extern BattleObj_800C0FAC* GetSummonedMinionBonePos_800C0FAC(void);

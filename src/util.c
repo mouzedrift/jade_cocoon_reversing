@@ -530,10 +530,10 @@ void* ListAlloc_8003FDC0(List* l, int size)
     return n + 1;
 }
 // Matched
-void ListFree_8003FE38(void* a0, void* a1)
+void ListFree_8003FE38(void* list, void* ptr)
 {
-    List* l = (List*)a0;
-    ListNode* n = a1;
+    List* l = (List*)list;
+    ListNode* n = ptr;
     n--;
     if (l->count)
     {
@@ -558,9 +558,9 @@ void ListFree_8003FE38(void* a0, void* a1)
     }
 }
 // Matched
-void ListFreeAll_8003FEC8(void* arg0)
+void ListFreeAll_8003FEC8(void* list)
 {
-    List* l = (List*)arg0;
+    List* l = (List*)list;
     ListNode* n = l->tail;
     while (n)
     {
@@ -720,9 +720,9 @@ PoolBlock* PoolFindFreeSpace_80040150(Pool* h, unsigned int size)
     return (PoolBlock*)best;
 }
 // Matched
-int IsPoolBlock_80040274(int a0, int* a1)
+int IsPoolBlock_80040274(int pool, int* ptr)
 {
-    return a1[-4] == 0x8FFFFFFF;
+    return ptr[-4] == 0x8FFFFFFF;
 }
 // Matched
 void sub_8004028C(void)
@@ -731,12 +731,12 @@ void sub_8004028C(void)
 }
 extern unsigned long* primAllocPtrs_800960A8[];
 // Matched
-void* AddPrimCopy_80040298(void* arg0, void* arg1, int arg2)
+void* AddPrimCopy_80040298(void* ot, void* prim, int words)
 {
     int cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
-    ReadBytesInto_80040388((int*)cur, (int*)arg1, arg2);
-    addPrim(arg0, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += arg2 * 4;
+    ReadBytesInto_80040388((int*)cur, (int*)prim, words);
+    addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += words * 4;
     return (void*)cur;
 }
 // Matched

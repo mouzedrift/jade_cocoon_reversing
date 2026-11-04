@@ -52,28 +52,28 @@ void UpdateReverb_8002A218(void)
     }
 }
 // Matched
-void SetReverbMode_8002A280(SpuReverbAttr* p, short a1)
+void SetReverbMode_8002A280(SpuReverbAttr* p, short mode)
 {
     p->mask |= 1;
-    p->mode = (short)(a1 | 0x100);
+    p->mode = (short)(mode | 0x100);
 }
 // Matched
-void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short a1, short a2)
+void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short left, short right)
 {
-    SetReverbDepthLeft_8002A2E8(p, a1);
-    SetReverbDepthRight_8002A2FC(p, a2);
+    SetReverbDepthLeft_8002A2E8(p, left);
+    SetReverbDepthRight_8002A2FC(p, right);
 }
 // Matched
-void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* p, short a1)
+void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* p, short depth)
 {
     p->mask |= 2;
-    p->depth.left = a1;
+    p->depth.left = depth;
 }
 // Matched
-void SetReverbDepthRight_8002A2FC(SpuReverbAttr* p, short a1)
+void SetReverbDepthRight_8002A2FC(SpuReverbAttr* p, short depth)
 {
     p->mask |= 4;
-    p->depth.right = a1;
+    p->depth.right = depth;
 }
 typedef struct
 {

@@ -1641,15 +1641,15 @@ int GetGrowthKind_80011D28(int base)
 }
 int ApplyLevelUps_80011D98(UnitStatus* m, int mode);
 // Matched
-void ApplyLevelUpsBonus_80011D78(UnitStatus* arg0)
+void ApplyLevelUpsBonus_80011D78(UnitStatus* status)
 {
-    ApplyLevelUps_80011D98(arg0, 1);
+    ApplyLevelUps_80011D98(status, 1);
 }
 extern int GetGrowthKind_80011D28(int a0);
 extern int BaseMagicRatio_800142B8(unsigned char* p);
 extern int BaseAttackRatio_80014308(unsigned char* p);
 // Matched
-int ApplyLevelUps_80011D98(UnitStatus* m, int arg1)
+int ApplyLevelUps_80011D98(UnitStatus* m, int mode)
 {
     unsigned int acc[6];
     unsigned char kind[6];
@@ -1680,7 +1680,7 @@ int ApplyLevelUps_80011D98(UnitStatus* m, int arg1)
     while (m->exp_4 >> 26)
     {
         add = 0;
-        if (arg1 == 1)
+        if (mode == 1)
         {
             add = 500;
         }

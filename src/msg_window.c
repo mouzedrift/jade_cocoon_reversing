@@ -35,9 +35,9 @@ INCLUDE_DATA(jpt_8007481C); // the jump table of UpdateMsgWindowState_80034C18 (
 int CheckMagicUsable_80034068(short* req)
 {
     UnitStatus* target = GetUnitStatus_80014390(((unsigned char*)req)[2]);
-    if (magicData_8007C438[req[0]].field_0 & 0x40)
+    if (magicData_8007C438[req[0]].flags_0 & 0x40)
     {
-        switch (magicData_8007C438[req[0]].field_7)
+        switch (magicData_8007C438[req[0]].kind_7)
         {
         case 0:
             if (target->hp_8.cur_0 == target->hp_8.max_2)

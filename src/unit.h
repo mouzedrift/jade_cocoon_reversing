@@ -86,12 +86,12 @@ typedef struct ActionData
 {
     unsigned char c0;
     unsigned char c1;
-    short s2;
+    short power_2;  // +60 when element_8 is the area element
     unsigned char c4;
     unsigned char c5;
     unsigned char c6;
-    unsigned char c7;
-    unsigned char c8; // IsDrainAction_80013228 tests it for 8
+    unsigned char hit_7;
+    unsigned char element_8; // 8: drain (IsDrainAction_80013228; the hp/mp damage goes to the actor)
     char pad_9[3];
 } ActionData;
 

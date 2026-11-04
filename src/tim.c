@@ -263,9 +263,9 @@ void LoadTim_80029674(void* p)
     LoadTimToVram_800296A0(&buf);
 }
 // Matched
-void LoadTimToVram_800296A0(void* arg0)
+void LoadTimToVram_800296A0(void* tim)
 {
-    int* p = (int*)arg0;
+    int* p = (int*)tim;
     if (p[0] == 1 && p[2] != 0)
     {
         LoadImage((RECT*)&p[3], (u_long*)p[5]);
@@ -275,10 +275,10 @@ void LoadTimToVram_800296A0(void* arg0)
     DrawSync(0);
 }
 // Matched
-int ParseTim_80029708(void* arg0, void* arg1)
+int ParseTim_80029708(void* outTim, void* inTim)
 {
-    int* out = (int*)arg0;
-    int* in = (int*)arg1;
+    int* out = (int*)outTim;
+    int* in = (int*)inTim;
     int* q;
     out[1] = in[1] & 7;
     q = in + 2;

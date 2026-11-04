@@ -4132,7 +4132,7 @@ void LoadMapFtg_80027708(int* file, int heap)
     }
 }
 // Matched
-void LoadTileSets_80027778(int* a0, int h)
+void LoadTileSets_80027778(int* data, int heap)
 {
     struct_27778* arr;
     unsigned int i;
@@ -4140,20 +4140,20 @@ void LoadTileSets_80027778(int* a0, int h)
     int* src;
     unsigned short* q;
     int n;
-    tileAnim_8008D648.field_4 = a0[0];
-    tileAnim_8008D648.field_8 = a0[1];
-    n = a0[2];
+    tileAnim_8008D648.field_4 = data[0];
+    tileAnim_8008D648.field_8 = data[1];
+    n = data[2];
     tileAnim_8008D648.count_0 = n;
-    arr = ListAlloc_8003FDC0(h, n * 16);
+    arr = ListAlloc_8003FDC0(heap, n * 16);
     for (i = 0; i < tileAnim_8008D648.count_0; i++)
     {
-        src = (int*)((char*)a0 + a0[i + 3]);
+        src = (int*)((char*)data + data[i + 3]);
         arr[i].field_0 = *src++;
         arr[i].count = *src++;
         q = (unsigned short*)src;
         arr[i].field_8 = *q++;
         arr[i].field_A = *q++;
-        arr[i].items = ListAlloc_8003FDC0(h, arr[i].count * 2);
+        arr[i].items = ListAlloc_8003FDC0(heap, arr[i].count * 2);
         for (j = 0; j < arr[i].count; j++)
         {
             arr[i].items[j] = *q++;
@@ -4162,23 +4162,23 @@ void LoadTileSets_80027778(int* a0, int h)
     tileAnim_8008D648.items_C = arr;
 }
 // Matched
-void LoadTileAnimLayers_800278BC(int* a, int h)
+void LoadTileAnimLayers_800278BC(int* data, int heap)
 {
-    int* a0 = a;
+    int* p = data;
     unsigned int i;
     unsigned int j;
     int n;
     int* q;
     struct_4b* r;
     struct_2s* e;
-    n = a0[0];
+    n = p[0];
     tileAnim_8008D648.listCount_10 = n;
-    tileAnim_8008D648.lists_14 = ListAlloc_8003FDC0(h, n * 8);
+    tileAnim_8008D648.lists_14 = ListAlloc_8003FDC0(heap, n * 8);
     for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
-        q = (int*)((char*)a0 + a0[i + 1]);
+        q = (int*)((char*)p + p[i + 1]);
         tileAnim_8008D648.lists_14[i].count = *q;
-        tileAnim_8008D648.lists_14[i].items = ListAlloc_8003FDC0(h, tileAnim_8008D648.lists_14[i].count * 4);
+        tileAnim_8008D648.lists_14[i].items = ListAlloc_8003FDC0(heap, tileAnim_8008D648.lists_14[i].count * 4);
         r = (struct_4b*)(q + 1);
         for (j = 0; j < tileAnim_8008D648.lists_14[i].count; j++)
         {
@@ -4187,7 +4187,7 @@ void LoadTileAnimLayers_800278BC(int* a, int h)
             tileAnim_8008D648.lists_14[i].items[j].c = r[j].c;
         }
     }
-    tileAnim_8008D648.pairs_18 = ListAlloc_8003FDC0(h, tileAnim_8008D648.listCount_10 * 4);
+    tileAnim_8008D648.pairs_18 = ListAlloc_8003FDC0(heap, tileAnim_8008D648.listCount_10 * 4);
     for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
         e = (struct_2s*)(i * 4 + (int)tileAnim_8008D648.pairs_18); // integer sum, as the original

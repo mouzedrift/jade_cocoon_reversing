@@ -589,7 +589,8 @@ typedef struct OverlayLoader
     int request_8; // LoadOverlay_80020BF8 file request
 } OverlayLoader;
 
-// map data block tileAnim_8008D648 (LoadTileSets_80027778 / LoadTileAnimLayers_800278BC); fields named by offset
+// the map's animated tile layers (tileAnim_8008D648, loaded by LoadTileSets_80027778 / LoadTileAnimLayers_800278BC, drawn by
+// GAME's DrawTileAnimLayers_800A0A5C); items_C are the tile sets (struct_27778: field_8 x field_A cells of 32x32)
 typedef struct
 {
     int field_0;

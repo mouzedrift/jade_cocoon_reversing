@@ -95,7 +95,7 @@ void DrawAbilityList_8002CE28(struct_minion_ref* menu, unsigned short* origin)
             abilityListRows_80082D98[i][1].flags |= 2;
             abilityListRows_80082D98[i][2].flags |= 2;
         }
-        y = GetAbilityIcon_8002D1A4(GetAbilityAction_800318C8(menu->minion_C->skills_DE.slot[i].id_1)->c8, i);
+        y = GetAbilityIcon_8002D1A4(GetAbilityAction_800318C8(menu->minion_C->skills_DE.slot[i].id_1)->element_8, i);
         row2 = &abilityListRows_80082D98[i];
         (*row2)[0].f4 = y;
         (*row2)[1].f4 = name;

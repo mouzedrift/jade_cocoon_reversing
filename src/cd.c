@@ -415,7 +415,7 @@ int CompareUInt_8003BA38(unsigned int a, unsigned int b)
     return a < b;
 }
 // Matched
-int GetCapturedMinionsFromBitfield_8003BA58(int arg0)
+int GetCapturedMinionsFromBitfield_8003BA58(int bits)
 {
     int result;
     int var_v0;
@@ -425,7 +425,7 @@ int GetCapturedMinionsFromBitfield_8003BA58(int arg0)
     for (i = 0; i < 32; i++)
     {
         var_v0 = 1 << i;
-        if (arg0 & var_v0)
+        if (bits & var_v0)
         {
             result += 1;
         }
@@ -442,10 +442,10 @@ void DelayLoop_8003BA90(void)
     }
 }
 // Matched
-int GetMemCardInfoSync_8003BADC(int a0)
+int GetMemCardInfoSync_8003BADC(int port)
 {
     int out[2];
-    McxAllInfo(a0, (unsigned char*)&memCardInfo_8008D4D8);
+    McxAllInfo(port, (unsigned char*)&memCardInfo_8008D4D8);
     while (!McxSync(0, (long*)&out[0], (long*)&out[1]))
     {
     }
@@ -575,9 +575,9 @@ void nullsub_6(void)
 {
 }
 // Matched
-int GetFileRequestStatus_8003BE30(int arg0)
+int GetFileRequestStatus_8003BE30(int key)
 {
-    FileRequest* n = FindFileRequest_8003BED4(arg0);
+    FileRequest* n = FindFileRequest_8003BED4(key);
     if (n)
     {
         if (n->flags_C & 0x100)
