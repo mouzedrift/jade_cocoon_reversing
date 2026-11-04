@@ -1272,8 +1272,6 @@ extern const char aAssertionFaile_800A0660[];
 extern const char aEventcomC_800A0688[];
 extern const int dword_800A0694;
 /* the jump table of LevantControlTask_800A818C (asm) and its targets, labels in the generated asm */
-extern char jtgt_800A81F4[], jtgt_800A8388[], jtgt_800A83A4[], jtgt_800A83D4[], jtgt_800A8454[], jtgt_800A84A0[], jtgt_800A84D0[], jtgt_800A8514[], jtgt_800A8540[], jtgt_800A85A0[], jtgt_800A85EC[], jtgt_800A86B4[], jtgt_800A878C[], jtgt_800A8818[], jtgt_800A8840[], jtgt_800A8870[], jtgt_800A8888[];
-extern void* const dword_800A06F0[17];
 extern const char aAssertionFailed_800A07E0[];
 extern const char aPLDISPC_800A0808[];
 extern GameBattleChain encounterRecord_800ADE78;

@@ -512,10 +512,9 @@ void DestroyEncounterActors_800A1B78(void)
     }
 }
 
-extern int dword_800B1CA8;
+extern int dword_800B1CA8[];
 extern int name_8007A024[];
-#if 0
-// Not matched: 1 word short: the original loads maxCount_4 into $v0 and copies it to n (move $a0,$v0), keeps &gCtx in $a1 (here $a2) and stores dword_800B1CA8 before the f788/f0/f48 stores (here it sinks into the epilogue); everything up to there matches
+// Matched
 void SetupEncounter_800A1BD0(void)
 {
     GameEnemy* enemy = GetEventEnemy_800A5F6C();
@@ -528,6 +527,7 @@ void SetupEncounter_800A1BD0(void)
     int done;
     int i;
     int n;
+    int max;
     GameEnemySlot* p;
     GameEnemySlot* q;
     GameEncounter* enc;
@@ -578,26 +578,28 @@ void SetupEncounter_800A1BD0(void)
             break;
         }
     }
-    n = p->data_8.maxCount_4;
-    if (n >= i)
+    max = p->data_8.maxCount_4;
+    if (max >= i)
     {
         n = i;
+    }
+    else
+    {
+        n = max;
     }
     enc->activeCount_76C = n;
     enc->memberCount_770 = i;
     q = (GameEnemySlot*)enc->leader_4;
     enc->fixed_774 = q->data_8.kind_0 == 0;
-    enc->f77c = 0;
     enc->reused_778 = q->data_8.kind_0 == 1;
+    enc->f77c = 0;
     enc->f780 = q->data_8.f8;
     enc->f784 = q->data_8.fC;
     enc->f788 = q->data_8.f10;
-    dword_800B1CA8 = 0;
-    gCtx_800B1260.active_0 = 1;
+    dword_800B1CA8[0] = 0;
     enc->groupIndex_48 = q->data_8.groupIndex_14;
+    gCtx_800B1260.active_0 = 1;
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, SetupEncounter_800A1BD0);
 
 // Matched
 void EndEncounter_800A1E1C(void)

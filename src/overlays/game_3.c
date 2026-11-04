@@ -1463,11 +1463,6 @@ INCLUDE_OVERLAY_ASM(game, FieldMinionCommand_800A7D40);
 // the jump table of LevantControlTask_800A818C (asm; its targets are labels of the generated asm, gen_asm.jump_label):
 // delete it and its externs in game.h when the function is C, the switch emits it then
 // (the zero word behind it in the original is the next jump table's .align 3, which the compiler adds)
-void* const dword_800A06F0[17] = {
-    jtgt_800A81F4, jtgt_800A8388, jtgt_800A83A4, jtgt_800A83D4, jtgt_800A84A0, jtgt_800A8454, jtgt_800A84D0, jtgt_800A8514,
-    jtgt_800A8540, jtgt_800A85A0, jtgt_800A85EC, jtgt_800A86B4, jtgt_800A878C, jtgt_800A8818, jtgt_800A8840, jtgt_800A8870,
-    jtgt_800A8888,
-};
 
 void TriggerFieldMinionEffect_800A80C4(int idx)
 {
@@ -1494,13 +1489,9 @@ void InitLevantControl_800A8140()
     ctl->state_C6 = 0;
 }
 
-#if 0
-// (Enabling this: drop the dword_800A06F0 table definition, the switch emits it.)
-// Not matched (6 words): in case 0 the first pad block's turn-on-the-spot branch fills its delay slot from the
-// branch target (lui 0x5000) where the original steals the fall-through lui 0x6000; tried the polarity / |= / ?:
-// forms. The |= forms keep jump.c from if-converting the turn arms.
 // Levant's movement command for this frame (SetLevantMoveCmd_800AB37C): 1 / 4 / 2 move, 0x10000000 / 0x20000000 turn
 // (or-ed onto a move), 0x50000000 / 0x60000000 turn on the spot
+// Matched
 void LevantControlTask_800A818C(EventEntry* entry, GameLevantCtl* ctl)
 {
     int cmd;
@@ -1521,16 +1512,16 @@ void LevantControlTask_800A818C(EventEntry* entry, GameLevantCtl* ctl)
             (padHeld_800918D0[0] & saveData_8008B570.buttonConfig_8[8]) || pads_800918E8[0][8] == 4)
         {
             int dir;
+            cmd = 0;
             if (FindFacingFieldMinion_800A9164(&dir) == 1)
             {
-                cmd = 0x40000000;
                 if (dir >= 0)
                 {
-                    cmd |= 0x20000000;
+                    cmd |= 0x60000000;
                 }
                 else
                 {
-                    cmd |= 0x10000000;
+                    cmd |= 0x50000000;
                 }
             }
             else
@@ -1803,8 +1794,6 @@ void LevantControlTask_800A818C(EventEntry* entry, GameLevantCtl* ctl)
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, LevantControlTask_800A818C);
 
 
 void PlaceWindowAwayFromTarget_800A88A0(int win, int flip)

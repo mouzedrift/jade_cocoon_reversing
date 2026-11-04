@@ -2,20 +2,12 @@
 #include "eventfnc.h"
 
 // the initializer of ReturnWarpTask_800BCB3C's tbl2 and its jump table (while it is assembly)
-const int returnWarpAreaVars_800B6D98[10] = {
-    0, 0, 0, 0, 0, 5, 7, 6,
-    8,
-};
 // the jump table of ReturnWarpTask_800BCB3C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
 // its externs in eventfnc.h when the function is C, the switch emits it then
-void* const dword_800B6DC0[5] = { jtgt_800BCB84, jtgt_800BCBB4, jtgt_800BCBCC, jtgt_800BCBE4, jtgt_800BCC30 };
 
-#if 0
-// Not matched: with this file's own .rdata (drop returnWarpAreaVars_800B6D98 and the C table dword_800B6DC0) the initializer
-// and jump table land where the original's are; the code is 1 word short: the copy loop of tbl2's initializer gets
-// dst/src/end in a0/v1/v0 instead of v1/v0/a0, so the load delay of its tail word is filled with the pendingArea load.
-// Everything else matches (two SetEventVar calls for the shared constant 4, saveData stores before the globals).
 extern int fieldMode_800B0EC0;
+// Returns from a warp: plays the warp animation, fades out, picks the return area var and reloads the map
+// Matched
 void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
 {
     EvActorCmd cmd;
@@ -64,11 +56,11 @@ void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
             if (saveData_8008B570.mapId_2E4[0].field_0 == 4 && saveData_8008B570.mapId_2E4[1].field_0 == 0 && mapTable_800B0608[4][0][saveData_8008B570.mapId_2E4[2].field_0].f4_4 == 0)
             {
                 int tbl2[9] = {0, 0, 0, 0, 0, 5, 7, 6, 8};
-                SetEventVar_800AD16C(4, tbl2[pendingArea_8008B860]);
+                SetEventVar_800AD16C(4, tbl2[saveData_8008B570.mapId_2E4[3].field_0]);
             }
             else
             {
-                SetEventVar_800AD16C(4, word_8008B858 + 4);
+                SetEventVar_800AD16C(4, saveData_8008B570.mapId_2E4[1].field_0 + 4);
             }
             FindMapEntrance_800ADCEC(v, GetSetReturnEntrance_800A683C(-1));
             save = &saveData_8008B570;
@@ -87,8 +79,6 @@ void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(eventfnc, ReturnWarpTask_800BCB3C);
 
 int (*eventFuncs_800BCDBC[157])() = {
     EvCmdNop_800B89A8, EvCmdWaitButton_800B89C0, EvCmdNop_800B89A8, EvCmdEnd_800B89F4,
