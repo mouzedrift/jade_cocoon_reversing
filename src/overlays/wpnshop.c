@@ -474,9 +474,8 @@ const char aBandWithLeather_800BACF8[] = "\202a\202\201\202\216\202\204\201@\202
 const char aOrnamentalItem_800BAD30[] = "\202n\202\222\202\216\202\201\202\215\202\205\202\216\202\224\202\201\202\214\201@\202h\202\224\202\205\202\215"; // Ornamental Item
 const int dword_800BAD50 = 0;
 
-#if 0
-// Not matched: with b as short the registers match; left is the scheduling of the store->quantity_18 = 1 store
-// and the stateWindows_800BE7CC[store->state_0] load among the field clears (17 words)
+// GAME starts it for a store: kind 0 equipment, 1 items; keeper selects the texts and the stock
+// Matched
 void StartStore_800BAE2C(int kind, short keeper)
 {
     StoreMenu* store;
@@ -503,13 +502,13 @@ void StartStore_800BAE2C(int kind, short keeper)
         store->nextState_2 = -1;
         store->flags_4 = 4;
         store->windows_8 = 0;
+        store->windows_8 = stateWindows_800BE7CC[store->state_0];
         store->windowsOpen_C = 0;
         store->equipKind_10 = 0;
         store->itemId_14 = 0;
         store->sell_12 = 0;
         store->quantity_18 = 1;
         store->storeKind_1C = kind;
-        store->windows_8 = stateWindows_800BE7CC[store->state_0];
         store->stockMask_1E = GetStoreStockMask_800BB088(store);
         store->stockCounts_20[0] = CountStock_800BDDF8(weaponStock_800BF244, 0x17, store->stockMask_1E);
         store->stockCounts_20[1] = CountStock_800BDDF8(armorStock_800BF274, 0xF, store->stockMask_1E);
@@ -536,9 +535,6 @@ void StartStore_800BAE2C(int kind, short keeper)
         t->cb_8 = (EventEntryFn)StoreWaitUiTiy_800BB130;
     }
 }
-#endif
-// GAME starts it for a store: kind 0 equipment, 1 items; keeper selects the texts and the stock
-INCLUDE_OVERLAY_ASM(wpnshop, StartStore_800BAE2C);
 
 // Matched
 int GetStoreStockMask_800BB088(StoreMenu* store)
@@ -1092,20 +1088,19 @@ void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
     DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
-#if 0
-// register allocation: original keeps &box in s0, 0x4d in s1, 0x77 in s2
+// Matched
 void DrawHeldCountWindow_800BBFD4(int count)
 {
     StoreRect rect;
     StoreSprtBox box;
-    rect.w = 0x45;
-    rect.h = 0x10;
-    box.frame_B = 1;
-    box.x_0 = 0x7B;
-    box.col_8 = uiColor_8008B590;
     rect.x = 0x77;
     rect.y = 0x4D;
+    rect.w = 0x45;
+    rect.h = 0x10;
+    box.col_8 = uiColor_8008B590;
     box.state_A = 0;
+    box.frame_B = 1;
+    box.x_0 = 0x7B;
     box.y_2 = 0x50;
     DrawUiTiySprt_8002C06C(&box, 0x93, 0xE);
     box.x_0 = 0xB8;
@@ -1115,8 +1110,6 @@ void DrawHeldCountWindow_800BBFD4(int count)
     box.y_2 = 0x4D;
     DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(wpnshop, DrawHeldCountWindow_800BBFD4);
 
 // Matched
 void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
@@ -1548,29 +1541,28 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
     }
 }
 
-#if 0
-// register allocation: original copies the ctx pointer to a1 (move a1,a0) and keeps the table in a0
+// Matched
 void SetStoreDialogText_800BCED4(StoreMenu* store)
 {
-    int** tbl;
     switch (store->keeperId_4C)
     {
     case 2:
-        tbl = storeTextsB_800BE3D8;
+        dialogLines_800BE134[1] = storeTextsB_800BE3D8[store->textId_3A][0];
+        dialogLines_800BE134[3] = storeTextsB_800BE3D8[store->textId_3A][1];
+        dialogLines_800BE134[5] = storeTextsB_800BE3D8[store->textId_3A][2];
         break;
     case 3:
-        tbl = storeTextsC_800BE434;
+        dialogLines_800BE134[1] = storeTextsC_800BE434[store->textId_3A][0];
+        dialogLines_800BE134[3] = storeTextsC_800BE434[store->textId_3A][1];
+        dialogLines_800BE134[5] = storeTextsC_800BE434[store->textId_3A][2];
         break;
     default:
-        tbl = storeTextsA_800BE37C;
+        dialogLines_800BE134[1] = storeTextsA_800BE37C[store->textId_3A][0];
+        dialogLines_800BE134[3] = storeTextsA_800BE37C[store->textId_3A][1];
+        dialogLines_800BE134[5] = storeTextsA_800BE37C[store->textId_3A][2];
         break;
     }
-    dialogLines_800BE134[1] = tbl[store->textId_3A][0];
-    dialogLines_800BE134[3] = tbl[store->textId_3A][1];
-    dialogLines_800BE134[5] = tbl[store->textId_3A][2];
 }
-#endif
-INCLUDE_OVERLAY_ASM(wpnshop, SetStoreDialogText_800BCED4);
 
 // Matched
 void DrawStoreButtonHelp_800BCF80(unsigned short* state)

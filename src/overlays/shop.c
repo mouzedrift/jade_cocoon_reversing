@@ -1119,7 +1119,7 @@ int CanInheritMagic_800BAB30()
     return 1;
 }
 
-#if 0 // near miss: compiler strength-reduces the first loop to pointer increments (96 of 102 words differ)
+// Matched
 void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner)
 {
     unsigned char tmp[0x30];
@@ -1137,12 +1137,12 @@ void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner)
             }
             else
             {
-                tmp[i] = out->species_4C[i * 6 - 0x8F];
+                tmp[i] = out->species_4C[(i - 0x18) * 6 + 1];
             }
         }
         else
         {
-            tmp[i] = partner->species_4C[i * 3 - 0x60];
+            tmp[i] = partner->species_4C[(i - 0x20) * 3];
         }
     }
     MemCopy_800403E8(out->species_4C, tmp, 0x30);
@@ -1162,13 +1162,11 @@ void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner)
     elements[3] = out->ancestorElements_7C[1];
     elements[4] = partner->ancestorElements_7C[0];
     elements[5] = partner->ancestorElements_7C[1];
-    for (j = 0; j < 6; j++)
+    for (i = 0; i < 6; i++)
     {
-        out->ancestorElements_7C[j] = elements[j];
+        out->ancestorElements_7C[i] = elements[i];
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, MergeSpeciesHistory_800BAB38);
 
 int GetSpecialMergeSpecies_800BACD0(Minion* minion)
 {
@@ -2470,75 +2468,73 @@ void DrawShopMainMenu_800BCEDC(ShopMenu* menu)
     DrawMenuWindows_8002A5A4(&win);
 }
 
-#if 0 // near miss: orig shares the field_30 == 0 block with case 4 and cross-jumps the return-2 tails
+// Matched
 int CheckShopSelection_800BCF74(ShopMenu* menu)
 {
-    int s;
     if (menu->state_0 == 0)
     {
-        s = menu->listIndex_30;
-        if (s == 0)
+        switch (menu->listIndex_30)
         {
+        case 0:
             if (menu->storedCount_4 + menu->partyCount_6 < 2)
             {
                 return 1;
             }
-        }
-        else if (s >= 0 && s < 4)
-        {
+            break;
+        case 1:
+        case 2:
+        case 3:
             if (menu->storedCount_4 + menu->partyCount_6 == 0)
             {
                 return 2;
             }
+            break;
         }
-        return 0;
     }
-    switch (menu->state_0)
+    else
     {
-    case 5:
-        if (!menu->marks_84 && !menu->partyMarks_88)
+        switch (menu->state_0)
         {
-            return 2;
+        case 5:
+            if (!menu->marks_84 && !menu->partyMarks_88)
+            {
+                return 2;
+            }
+            break;
+        case 1:
+        case 8:
+            if (menu->base_4C->id == 4)
+            {
+                return 2;
+            }
+            break;
+        case 2:
+            if (menu->partner_50->id == 4)
+            {
+                return 2;
+            }
+            if (menu->partner_50 == menu->base_4C)
+            {
+                return 3;
+            }
+            break;
+        case 4:
+            if (menu->storedCount_4 + menu->partyCount_6 < 2)
+            {
+                return 1;
+            }
+            break;
+        case 14:
+            if (GetInventorySlotId_800AD288(menu->savedIndex_5E[8] + menu->savedScroll_72[2], 4) == 0xFF)
+            {
+                return 4;
+            }
+            menu->flags_24 |= 0x200;
+            break;
         }
-        return 0;
-    case 1:
-    case 8:
-        if (menu->base_4C->id == 4)
-        {
-            return 2;
-        }
-        return 0;
-    case 2:
-        if (menu->partner_50->id == 4)
-        {
-            return 2;
-        }
-        if (menu->partner_50 == menu->base_4C)
-        {
-            return 3;
-        }
-        return 0;
-    case 4:
-        if (menu->storedCount_4 + menu->partyCount_6 < 2)
-        {
-            return 1;
-        }
-        return 0;
-    case 14:
-        if (GetInventorySlotId_800AD288(menu->savedIndex_5E[8] + menu->savedScroll_72[2], 4) == 0xFF)
-        {
-            return 4;
-        }
-        menu->flags_24 |= 0x200;
-        return 0;
     }
     return 0;
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, CheckShopSelection_800BCF74);
-// the jump table of CheckShopSelection_800BCF74 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in shop.h when the function is C, the switch emits it then
-void* const jpt_800B9624[14] = { jtgt_800BD01C, jtgt_800BD03C, jtgt_800BD0C0, jtgt_800BD06C, jtgt_800BCFF4, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD01C, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD0C0, jtgt_800BD090 };
 
 extern int IsInventory4NonEmpty_800AD398();
 extern void ShopMenuExecute_800BD9DC(ShopMenu* u);
@@ -2918,16 +2914,13 @@ void SetupShopCursor_800BD854(ShopMenu* menu)
     }
 }
 
-#if 0
-// Not matched (8 words): the two blocks that set tk = shopMenuTask_8008D670 + 0x10 before a call load
-// shopMenuTask_8008D670 straight into s0 and add 0x10 in place; here the load goes to a temporary.
-// (When writing this in C, delete the C table jpt_800B96F4 behind the function.)
 extern void ShopWaitAreaReload_800BDD74();
 extern void ShopWaitDarken_800BDE44();
 extern void RequestAreaReload_80027314();
 extern void StartSceneDarken_8001AAA8(int a);
 extern void AddInventory_800AD184(int a, int b, int c);
 extern int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short secondList);
+// Matched
 void ShopMenuExecute_800BD9DC(ShopMenu* menu)
 {
     EventEntry* tk;
@@ -2969,7 +2962,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
             menu->flags_24 |= 1;
             if (saveData_8008B570.settings_1C.bits.d_5 == 1)
             {
-                tk = &shopMenuTask_8008D670->entry;
+                EventEntry* tk = &shopMenuTask_8008D670->entry;
                 fn_80027478(0x40, 1);
                 fn_8002C014();
                 RequestAreaReload_80027314();
@@ -3009,7 +3002,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
         menu->flags_24 |= 1;
         if (saveData_8008B570.settings_1C.bits.d_5 == 1)
         {
-            tk = &shopMenuTask_8008D670->entry;
+            EventEntry* tk = &shopMenuTask_8008D670->entry;
             fn_80027478(0x40, 1);
             fn_8002C014();
             RequestAreaReload_80027314();
@@ -3017,6 +3010,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
         }
         else
         {
+            EventEntry* tk;
             menu->fadeAction_94 = 2;
             menu->flags_24 |= 0x800;
             tk = &shopMenuTask_8008D670->entry;
@@ -3025,7 +3019,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
             StartSceneDarken_8001AAA8(0x20);
         }
         break;
-    case 9:
+    case 10:
         ExchangeMinions_800BAF54((short*)menu->base_4C, (short*)menu->partner_50, menu->savedList_7A[0] == 0 ? 3 : 2, menu->savedList_7A[1] == 0 ? 3 : 2);
         menu->marks_84 = 0;
         menu->partyMarks_88 = 0;
@@ -3035,10 +3029,9 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
         menu->flags_24 |= 1;
         SetShopHelpText_800BBB54(menu, 0);
         break;
-    case 10:
-        tk = &shopMenuTask_8008D670->entry;
-        tk->cb_8 = ShopResumeAfterNameEntry_800BE128;
-        tk->flags = (tk->flags & ~1) | 0x8000;
+    case 9:
+        shopMenuTask_8008D670->entry.cb_8 = ShopResumeAfterNameEntry_800BE128;
+        shopMenuTask_8008D670->entry.flags = (shopMenuTask_8008D670->entry.flags & ~1) | 0x8000;
         ShopCtrlRequestNameEntry_800B6C6C(menu->base_4C->status_84.name_10
 , 0);
         SetFadeMode_8001C19C(0, 0x20);
@@ -3054,11 +3047,6 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
         break;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, ShopMenuExecute_800BD9DC);
-// the jump table of ShopMenuExecute_800BD9DC (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in shop.h when the function is C, the switch emits it then
-void* const jpt_800B96F4[10] = { jtgt_800BDA34, jtgt_800BDD58, jtgt_800BDD58, jtgt_800BDB4C, jtgt_800BDD58, jtgt_800BDD58, jtgt_800BDCEC, jtgt_800BDC7C, jtgt_800BDD40, jtgt_800BDD54 };
 const ShopMenuWindows minionListWindow_800B971C = { 0, 0, 8, 0, 0, 14 };
 
 void ShopWaitAreaReload_800BDD74(EventEntry* task, void* arg)
@@ -3692,8 +3680,6 @@ void DrawSkinList_800BED48(short* ref)
     }
 }
 
-#if 0
-// Not matched (17 words): the original cross-jumps the all-equal case into the o[1] == o[3] tail
 // (o[4] += o[6]) and reloads o[6] in the o[2] != o[3] case; here the two tails get different registers.
 typedef struct TopSpeciesBuf
 {
@@ -3702,11 +3688,11 @@ typedef struct TopSpeciesBuf
     int w[3];
 } TopSpeciesBuf;
 extern int GetElementHue_800BF2E4(unsigned char* p);
+// Matched
 void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
 {
     TopSpeciesBuf top;
     unsigned int h = GetSpeciesModelDesc_80019C70(minion->species_2)->modelId_0;
-    int t;
     desc[0] = GetTopSpecies_800338DC(minion->species_4C, top.b, top.w);
     desc[1] = GetSpeciesModelDesc_80019C70(top.b[0])->modelId_0;
     desc[2] = GetSpeciesModelDesc_80019C70(top.b[1])->modelId_0;
@@ -3718,15 +3704,17 @@ void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
     {
         if (desc[2] == desc[3])
         {
-            desc[4] = desc[4] + desc[5] + desc[6];
+            desc[4] = desc[4] + desc[5];
+            desc[4] = desc[4] + desc[6];
             desc[5] = 0;
             desc[6] = 0;
             desc[0] = 1;
         }
         else
         {
-            t = desc[6];
+            int t;
             desc[0] = 2;
+            t = desc[6];
             desc[4] = desc[4] + desc[5];
             desc[6] = 0;
             desc[2] = desc[3];
@@ -3750,7 +3738,7 @@ void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
     {
         if (desc[2] == h)
         {
-            t = desc[5];
+            int t = desc[5];
             desc[2] = desc[1];
             desc[1] = h;
             desc[5] = desc[4];
@@ -3758,7 +3746,7 @@ void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
         }
         else if (desc[3] == h)
         {
-            t = desc[6];
+            int t = desc[6];
             desc[3] = desc[1];
             desc[1] = h;
             desc[6] = desc[4];
@@ -3766,7 +3754,7 @@ void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
         }
         else if (desc[0] < 2)
         {
-            t = desc[4];
+            int t = desc[4];
             desc[2] = desc[1];
             desc[1] = h;
             desc[4] = 0;
@@ -3775,7 +3763,7 @@ void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
         }
         else
         {
-            t = desc[4];
+            int t = desc[4];
             desc[3] = desc[1];
             desc[1] = h;
             desc[4] = 0;
@@ -3802,8 +3790,6 @@ void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, BuildFormModelDesc_800BF02C);
 
 int GetElementHue_800BF2E4(unsigned char* elements)
 {
@@ -3904,7 +3890,7 @@ void FreeFormModelTask_800BF548()
     FreeModelTask_8001098C(task);
 }
 
-#if 0 // near miss: store scheduling / temp registers (17 words)
+// Matched
 void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
 {
     FormActorDesc desc;
@@ -3919,16 +3905,16 @@ void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
     desc.posZ_10 = pos[2];
     desc.rotX_14 = rot[0];
     desc.rotY_16 = rot[1];
-    stage = form->desc_8[7];
     desc.rotZ_18 = rot[2];
-    desc.frameSpeed_28 = 0x1000;
-    desc.visible_30 = 1;
     desc.clutRow_1C = 0;
     desc.animIdx_20 = 4;
     desc.frame_24 = -1;
+    desc.frameSpeed_28 = 0x1000;
     desc.blendDiv_2C = 4;
+    desc.visible_30 = 1;
     desc.model_48 = model;
     desc.bones_34 = (int)defaultBones_80079140;
+    stage = form->desc_8[7];
     desc.baseScale_38 = fn_80024E90(model, stage);
     desc.boneScale_3C = fn_80024EC8(model, stage);
     desc.anims_40 = fn_80024E38(model);
@@ -3936,11 +3922,9 @@ void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
     form->actor_3C = fn_8001D45C(&desc);
     levels = fn_80024F00(model, stage);
     model = fn_80024F38(model, stage);
-    fn_80019B14(*(int*)((char*)form->actor_3C + 0x134), levels, model);
+    fn_80019B14((int)form->actor_3C->bones_134, levels, model);
     fn_8001D68C(form->actor_3C, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, SpawnFormActor_800BF574);
 
 void DestroyFormActor_800BF6C4()
 {

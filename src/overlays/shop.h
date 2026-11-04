@@ -388,12 +388,6 @@ extern ShopFormModel formModel_800C09E0;
 extern char jtgt_800BA8A4[], jtgt_800BA8AC[], jtgt_800BA8B4[], jtgt_800BA8BC[], jtgt_800BA8C8[], jtgt_800BA910[], jtgt_800BA918[], jtgt_800BA920[], jtgt_800BA928[], jtgt_800BA958[];
 extern void* const jpt_800B6D4C[12];
 
-/* the jump table of CheckShopSelection_800BCF74 (asm) and its targets, labels in the generated asm */
-extern char jtgt_800BCFF4[], jtgt_800BD01C[], jtgt_800BD03C[], jtgt_800BD06C[], jtgt_800BD090[], jtgt_800BD0C0[];
-extern void* const jpt_800B9624[14];
 
-/* the jump table of ShopMenuExecute_800BD9DC (asm) and its targets, labels in the generated asm */
-extern char jtgt_800BDA34[], jtgt_800BDB4C[], jtgt_800BDC7C[], jtgt_800BDCEC[], jtgt_800BDD40[], jtgt_800BDD54[], jtgt_800BDD58[];
-extern void* const jpt_800B96F4[10];
 
 #endif

@@ -405,10 +405,7 @@ void DrawShelfSelectPage_800B7684(ShelfMenu* menu)
     DrawPageCount_800B7A90((ShelfRect*)pos, menu->cursor_8 + menu->scroll_A + 1, 0xf);
 }
 
-#if 0
-// Not matched: i/elements register allocation and delay slot filling differ (19 words).
-// Copying elements into a short k (k = elements; if (k) DrawElementIconsRow_8002B1B0(k, pos, ot);) fixes the registers and the
-// sign extension, but then the beqz delay slot is filled from the taken path (one extra word).
+// Matched
 void DrawShelfContentsPage_800B7858(ShelfMenu* menu)
 {
     ShelfRect row;
@@ -421,13 +418,14 @@ void DrawShelfContentsPage_800B7858(ShelfMenu* menu)
     Minion* minion;
     char* name;
     int level;
-    unsigned short elements;
+    short elements;
     short i;
     short ot = 14;
     row.x = 0x50;
     row.w = 0xa0;
     row.h = 0x12;
-    for (i = 0; i < 5; i++)
+    i = 0;
+    while (i < 5)
     {
         minion = GetShopMinion_800B9C5C(i + menu->scroll_A);
         if (minion && minion->id != 4)
@@ -459,8 +457,9 @@ void DrawShelfContentsPage_800B7858(ShelfMenu* menu)
         }
         pos[0] = 0xb2;
         pos[1] = row.y + 2;
-        if ((short)elements)
+        if (elements)
             DrawElementIconsRow_8002B1B0(elements, pos, ot);
+        i++;
     }
     titlePos[0] = 0x8c;
     titlePos[1] = 0x20;
@@ -478,8 +477,6 @@ void DrawShelfContentsPage_800B7858(ShelfMenu* menu)
     pos[1] = 0x50;
     DrawPageCount_800B7A90((ShelfRect*)pos, menu->cursor_8 + menu->scroll_A + 1, 0x19);
 }
-#endif
-INCLUDE_OVERLAY_ASM(shopentr, DrawShelfContentsPage_800B7858);
 
 // Matched
 void DrawPageCount_800B7A90(ShelfRect* pos, short num, short total)
