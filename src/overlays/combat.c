@@ -697,7 +697,7 @@ extern void sub_800A4394();
 extern void CombSelMain_800A4360();
 extern void sub_800A40FC();
 extern void sub_800A4170();
-extern void sub_800A4B8C();
+extern void CombBtlStart_800A4B8C();
 extern void sub_800A40E0();
 extern int CountRosterMinions_800A1AEC(int i);
 
@@ -740,7 +740,7 @@ void CombatEnterStage_800A15B4(CombatTask* t, int x)
         t->next_8 = sub_800A4170;
         break;
     case 4:
-        t->next_8 = sub_800A4B8C;
+        t->next_8 = CombBtlStart_800A4B8C;
         break;
     case 5:
         t->next_8 = sub_800A40E0;

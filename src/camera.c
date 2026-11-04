@@ -863,7 +863,7 @@ void MoveCameraToFocusPreset_80038E2C(CameraCtrl* p, int a, int b)
     p->field2EDst_180 = battleCamFocusPresets_80083C70[(unsigned short)a].field_8;
     ComputeCameraMoveAngles_80038D64(o, (int*)&p->pos_38);
 }
-extern int dword_800A85B8;
+extern int actorSide_800A85B8;
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 // Matched
 void MoveBattleCamera_800390F4(CameraCtrl* p_, int arg1)
@@ -886,11 +886,11 @@ void MoveBattleCamera_800390F4(CameraCtrl* p_, int arg1)
     }
     else if (unknownFlags_8008D678 & 0x2000000)
     {
-        if (dword_800A85B8 < 0)
+        if (actorSide_800A85B8 < 0)
         {
             sel = 4;
         }
-        else if (dword_800A85B8 == 0)
+        else if (actorSide_800A85B8 == 0)
         {
             sel = 1;
         }
