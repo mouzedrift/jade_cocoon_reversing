@@ -104,8 +104,7 @@ extern int GetElementHueAngle_800A0898(unsigned char* elements);
 
 int dword_800A05A0 SDATA = 14;
 
-#if 0
-// Not matched: register allocation differs in the first branch (o[4]+o[5] case); everything else was identical
+// Matched
 void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram)
 {
     CombatTopSpecies top;
@@ -123,18 +122,18 @@ void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, 
         if (params->parts_4[1] == params->parts_4[2])
         {
             params->weights_10[0] += params->weights_10[1];
+            params->weights_10[0] += params->weights_10[2];
             params->weights_10[1] = 0;
             params->weights_10[2] = 0;
             params->count_0 = 1;
         }
         else
         {
-            tmpWeight = params->weights_10[2];
             params->count_0 = 2;
             params->weights_10[0] = params->weights_10[0] + params->weights_10[1];
-            params->weights_10[2] = 0;
             params->parts_4[1] = params->parts_4[2];
-            params->weights_10[1] = tmpWeight;
+            params->weights_10[1] = params->weights_10[2];
+            params->weights_10[2] = 0;
         }
     }
     else if (params->parts_4[0] == params->parts_4[2])
@@ -205,9 +204,6 @@ void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, 
         }
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(combat, BuildMinionModelParams_800A05E0);
 
 // Matched
 int GetElementHueAngle_800A0898(unsigned char* elements)

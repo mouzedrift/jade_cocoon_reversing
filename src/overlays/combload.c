@@ -128,14 +128,14 @@ void CardSelectScreen_800A41FC(CombLoadTask* task)
     DrawMenuBackground_8002BE10();
 }
 
-// Near miss: the compiler shares the constant 0x78 between the two stores
-#if 0
+// Matched
 void DrawTitleWindow_800A4364()
 {
     RECT rect;
     CombLoadBox box;
+    int x = 0x78;
     SPRT* sprt = &uiTiySprts_8008D620[15];
-    sprt->x0 = 0x78;
+    sprt->x0 = x;
     sprt->y0 = 0x14;
     AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
     AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], 2);
@@ -148,37 +148,58 @@ void DrawTitleWindow_800A4364()
     box.state_2 = 0;
     DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combload, DrawTitleWindow_800A4364);
 
-INCLUDE_OVERLAY_ASM(combload, DrawTitleWindow2_800A4420);
+// Matched
+void DrawTitleWindow2_800A4420()
+{
+    RECT rect;
+    CombLoadBox box;
+    int x = 0x78;
+    SPRT* sprt = &uiTiySprts_8008D620[15];
+    sprt->x0 = x;
+    sprt->y0 = 0x14;
+    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], 2);
+    rect.x = 0x78;
+    rect.w = 0x7E;
+    rect.h = 0x12;
+    box.frame_3 = 1;
+    box.col_0 = uiColor_8008B590;
+    rect.y = 0x14;
+    box.state_2 = 0;
+    DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
+}
 
-// Near miss: pointer register allocation for UI sprite 155
-#if 0
+// (the three sprite blocks look like an expanded macro: { int x = X; SPRT* sprt = &uiTiySprts_8008D620[idx]; ... })
+// Matched
 void DrawDataHeaderWindows_800A44DC()
 {
     short rect[4];
     CombLoadBox box;
-    SPRT* sprt;
-    SPRT* base;
-    base = uiTiySprts_8008D620;
-    sprt = &base[155];
-    sprt->x0 = 0x66;
-    sprt->y0 = 0x2A;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
-    base = uiTiySprts_8008D620;
-    sprt = &base[155];
-    sprt->x0 = 0x8E;
-    sprt->y0 = 0x2A;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
-    base = uiTiySprts_8008D620;
-    sprt = &base[155];
-    sprt->x0 = 0xD4;
-    sprt->y0 = 0x2A;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
+    {
+        int x = 0x66;
+        SPRT* sprt = &uiTiySprts_8008D620[155];
+        sprt->x0 = x;
+        sprt->y0 = 0x2A;
+        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
+    }
+    {
+        int x = 0x8E;
+        SPRT* sprt = &uiTiySprts_8008D620[155];
+        sprt->x0 = x;
+        sprt->y0 = 0x2A;
+        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
+    }
+    {
+        int x = 0xD4;
+        SPRT* sprt = &uiTiySprts_8008D620[155];
+        sprt->x0 = x;
+        sprt->y0 = 0x2A;
+        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
+    }
     box.frame_3 = 1;
     rect[0] = 0x64;
     box.col_0 = uiColor_8008B590;
@@ -198,8 +219,6 @@ void DrawDataHeaderWindows_800A44DC()
     rect[3] = 0x10;
     DrawWindow_80042460(rect, &box, pOT_8008D454 + 10, 0);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combload, DrawDataHeaderWindows_800A44DC);
 
 CombLoadCursor cardSlotCursor_800A468C[1] = { { 0x10002, 0x10002 } };
 CombLoadCursor dataCursor_800A4698 = { 0x50001, 0x40000F };

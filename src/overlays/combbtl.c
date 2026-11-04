@@ -557,23 +557,17 @@ void NextLivingMinion_800A58E8(int side)
     } while (IsMinionSlotEmpty_800A1934(minion) || IsMinionFainted_800A1958(minion));
 }
 
-#if 0
-// Not matched: the original has a jump to the loop increment right after the i == 1 block (one word longer) plus a t0/a3 swap; tried continue/while/switch forms
-extern int GetGaugeRate_800A5B70(int side);
-extern void MoveBattleCameraDefault_800378CC();
-extern int dword_8008D610;
-extern int turnCount_800A82E8;
-extern unsigned char actorSlot_800A85BD;
-extern void StartTurn_800A5C64();
+// Matched
 void ChooseNextActor_800A599C(CombBtlTask* t, int side)
 {
     int gauge[2];
     int i;
+    void (*f)();
     actorSide_800A85B8 = -1;
     targetSide_800A8620 = -1;
     if (sideGauges_800A84D0[0] == 0 && sideGauges_800A84D0[1] == 0)
     {
-        *(short*)((char*)sideGauges_800A84D0 + (dword_8008D610 & 2)) += 100;
+        sideGauges_800A84D0[(dword_8008D610 & 2) >> 1] += 100;
     }
     for (i = 0; i < 2; i++)
     {
@@ -593,22 +587,20 @@ void ChooseNextActor_800A599C(CombBtlTask* t, int side)
                 {
                     sideGauges_800A84D0[1] += gauge[1];
                 }
+                break;
             }
         }
     }
     if (actorSide_800A85B8 >= 0)
     {
-        void (*f)();
         MoveBattleCameraDefault_800378CC();
-        turnCount_800A82E8++;
-        actorSlot_800A85BD = sideSlot_800A4078[actorSide_800A85B8];
-        f = StartTurn_800A5C64;
-        t->next_8 = f;
-        f(t, side);
     }
+    turnCount_800A82E8++;
+    actorSlot_800A85BD = sideSlot_800A4078[actorSide_800A85B8];
+    f = StartTurn_800A5C64;
+    t->next_8 = f;
+    f(t, side);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, ChooseNextActor_800A599C);
 
 int GetGaugeRate_800A5B70(int side)
 {

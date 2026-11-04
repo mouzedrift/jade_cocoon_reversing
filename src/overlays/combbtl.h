@@ -253,4 +253,8 @@ extern void* const dword_800A4A9C[6];
 
 extern const char aRa_800A4A8C[];
 extern const char aMu_800A4A94[];
+extern int dword_8008D610;
+int GetGaugeRate_800A5B70(int side);
+void StartTurn_800A5C64(CombBtlTask* t);
+
 #endif
