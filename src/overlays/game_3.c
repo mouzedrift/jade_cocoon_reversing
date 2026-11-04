@@ -2082,12 +2082,12 @@ void DrawLevantModel_800A9708(G2Act* p)
     }
     if (!(p->f0 & 0x10))
     {
-        sub_80046A58(&sk, &stru_8008D534[v], 0);
+        sub_80046A58(&sk, &pointLights_8008D534[v], 0);
     }
     else
     {
         anim = &p->model_40->anims_54[sub_800AC4A8(p->s1e)];
-        sub_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
+        sub_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &pointLights_8008D534[v], 0);
     }
     DrawSpriteVtxQuadsGT4_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
@@ -2317,10 +2317,10 @@ void sub_800AA430(G2Act* p)
         L.f0 = p->f2C;
         r17 = sub_800AC9CC(p->s20);
         r16 = (unsigned short)sub_800AC834(p->s1c, sub_800AC474(p->s1c));
-        L.f4 = sub_80018200(r17, r16, (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c)), v19, p->f2C);
+        L.f4 = RepeatHitTimes_80018200(r17, r16, (unsigned short)sub_800AC878(p->s1c, sub_800AC474(p->s1c)), v19, p->f2C);
         sub_800A93A4(L.rest);
-        sub_800182B8(&L, p->f38);
-        sub_800184DC((int)&L, 0);
+        CollectEffectTargets_800182B8(&L, p->f38);
+        PlayActorEffect_800184DC((int)&L, 0);
     }
 }
 #endif
@@ -3122,7 +3122,7 @@ void sub_800ABCF4(G2Act* p)
     }
     else if (p->s20 == 0x10)
     {
-        p->f2C = sub_800189F8();
+        p->f2C = GetWeaponEffect_800189F8();
         RequestEffect_800148F4(p->f2C);
     }
     else if (p->s20 == 0x1D)

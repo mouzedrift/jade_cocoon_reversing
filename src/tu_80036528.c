@@ -272,21 +272,21 @@ void sub_80036BB0(EventEntry* p, CameraCtrl* r)
         ex = SPLINE(sp[i].c[4]);
         ey = SPLINE(sp[i].c[5]);
         ez = SPLINE(sp[i].c[6]);
-        x = v.vx + ex * word_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * word_80084540[ang & 0xFFF] / 4096;
+        x = v.vx + ex * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * sinTable_80084540[ang & 0xFFF] / 4096;
         y = v.vy + ey;
-        z = v.vz - ex * word_80084540[ang & 0xFFF] / 4096 + ez * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
-        cameraState_8008D4F0.field_14.x = q->splinePos_1BC->vx + x * word_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096 + z * word_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096;
+        z = v.vz - ex * sinTable_80084540[ang & 0xFFF] / 4096 + ez * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_14.x = q->splinePos_1BC->vx + x * sinTable_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096 + z * sinTable_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096;
         cameraState_8008D4F0.field_14.y = q->splinePos_1BC->vy + y;
-        cameraState_8008D4F0.field_14.z = q->splinePos_1BC->vz - x * word_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096 + z * word_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_14.z = q->splinePos_1BC->vz - x * sinTable_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096 + z * sinTable_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096;
         ex = SPLINE(sp[i].c[8]);
         ey = SPLINE(sp[i].c[9]);
         ez = SPLINE(sp[i].c[10]);
-        x = v.vx + ex * word_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * word_80084540[ang & 0xFFF] / 4096;
+        x = v.vx + ex * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096 + ez * sinTable_80084540[ang & 0xFFF] / 4096;
         y = v.vy + ey;
-        z = v.vz - ex * word_80084540[ang & 0xFFF] / 4096 + ez * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
-        cameraState_8008D4F0.field_20.x = q->splinePos_1BC->vx + x * word_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096 + z * word_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096;
+        z = v.vz - ex * sinTable_80084540[ang & 0xFFF] / 4096 + ez * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_20.x = q->splinePos_1BC->vx + x * sinTable_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096 + z * sinTable_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096;
         cameraState_8008D4F0.field_20.y = q->splinePos_1BC->vy + y;
-        cameraState_8008D4F0.field_20.z = q->splinePos_1BC->vz - x * word_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096 + z * word_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096;
+        cameraState_8008D4F0.field_20.z = q->splinePos_1BC->vz - x * sinTable_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096 + z * sinTable_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096;
         cameraState_8008D4F0.field_2E = SPLINE(sp[i].c[7]);
     }
     sub_8003891C(q, &levantPos_8008BD18.pos);
@@ -592,12 +592,12 @@ void sub_80037C74(CameraCtrl* q)
     {
         sel = 0;
     }
-    cameraState_8008D4F0.field_20.x = q->pos_38.x + (word_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + word_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
+    cameraState_8008D4F0.field_20.x = q->pos_38.x + (sinTable_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + sinTable_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
     cameraState_8008D4F0.field_20.y = levantPos_8008BD18.pos.y + dword_80083BE4[sel].y1;
-    cameraState_8008D4F0.field_20.z = q->pos_38.z + (-word_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + word_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
-    cameraState_8008D4F0.field_14.x = q->pos_38.x + (word_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + word_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
+    cameraState_8008D4F0.field_20.z = q->pos_38.z + (-sinTable_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].x1 / 4096 + sinTable_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].z1 / 4096);
+    cameraState_8008D4F0.field_14.x = q->pos_38.x + (sinTable_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + sinTable_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
     cameraState_8008D4F0.field_14.y = levantPos_8008BD18.pos.y + dword_80083BE4[sel].y0;
-    cameraState_8008D4F0.field_14.z = q->pos_38.z + (-word_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + word_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
+    cameraState_8008D4F0.field_14.z = q->pos_38.z + (-sinTable_80084540[q->rotY_44 & 0xFFF] * dword_80083BE4[sel].x0 / 4096 + sinTable_80084540[(q->rotY_44 + 0x400) & 0xFFF] * dword_80083BE4[sel].z0 / 4096);
     cameraState_8008D4F0.field_2E = dword_80083BE4[sel].field_8;
     setVector(&cameraState_8008D4F0.rot_34, q->rot_164.vx, q->rot_164.vy, q->rot_164.vz);
     setVector(&cameraState_8008D4F0.rot_3C, q->rot_174.vx, q->rot_174.vy, q->rot_174.vz);
@@ -619,12 +619,12 @@ void sub_80037F44(CameraCtrl* q)
     q->lookDst_198.y = saveData_8008B570.levant_7A8.pos.y - 0xFA;
     q->lookDst_198.z = saveData_8008B570.levant_7A8.pos.z;
     q->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
-    q->eyeDst_18C.x = saveData_8008B570.levant_7A8.pos.x + word_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xFFF] * 200 / 4096;
+    q->eyeDst_18C.x = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xFFF] * 200 / 4096;
     q->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y - 0xFA;
-    q->eyeDst_18C.z = saveData_8008B570.levant_7A8.pos.z + word_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xFFF] * 200 / 4096;
-    q->pos_38.x = saveData_8008B570.levant_7A8.pos.x + word_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xFFF] * 500 / 4096;
+    q->eyeDst_18C.z = saveData_8008B570.levant_7A8.pos.z + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xFFF] * 200 / 4096;
+    q->pos_38.x = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xFFF] * 500 / 4096;
     q->pos_38.y = saveData_8008B570.levant_7A8.pos.y + 0xFA;
-    q->pos_38.z = saveData_8008B570.levant_7A8.pos.z + word_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xFFF] * 500 / 4096;
+    q->pos_38.z = saveData_8008B570.levant_7A8.pos.z + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xFFF] * 500 / 4096;
     q->rotY_44 = saveData_8008B570.levant_7A8.rot.vy;
     for (i = 7; i >= 0; i--)
     {
@@ -647,7 +647,7 @@ void sub_80037F44(CameraCtrl* q)
     sub_80038D64(q, &levantPos_8008BD18.pos.x);
     q->t_C = 0x1000;
 }
-#define EASE(p) (0x1000 - word_80084540[(((p)->t_C / 4) + 0x400) & 0xFFF])
+#define EASE(p) (0x1000 - sinTable_80084540[(((p)->t_C / 4) + 0x400) & 0xFFF])
 // Matched
 void sub_80038230(CameraCtrl* p)
 {
@@ -660,9 +660,9 @@ void sub_80038230(CameraCtrl* p)
 
     ang = *(unsigned short*)&p->angDst_152 + (p->angSrc_150 - p->angDst_152) * EASE(p) / 4096;
     r = *(unsigned short*)&p->distDst_158 + (p->distSrc_154 - p->distDst_158) * EASE(p) / 4096;
-    cameraState_8008D4F0.field_14.x = p->pos_38.x + r * word_80084540[ang & 0xFFF] / 4096;
+    cameraState_8008D4F0.field_14.x = p->pos_38.x + r * sinTable_80084540[ang & 0xFFF] / 4096;
     cameraState_8008D4F0.field_14.y = p->eyeDst_18C.y + (p->eyeSrc_1A4.y - p->eyeDst_18C.y) * EASE(p) / 4096;
-    cameraState_8008D4F0.field_14.z = p->pos_38.z + r * word_80084540[(ang + 0x400) & 0xFFF] / 4096;
+    cameraState_8008D4F0.field_14.z = p->pos_38.z + r * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
     cameraState_8008D4F0.field_2E = *(unsigned short*)&p->field2EDst_180 + (p->field2ESrc_17C - p->field2EDst_180) * EASE(p) / 4096;
     if (p->t_C == 0)
     {
@@ -852,13 +852,13 @@ void sub_80038E2C(CameraCtrl* p, int a, int b)
     o->lookSrc_1B0 = cameraState_8008D4F0.field_20;
     o->lookDst_198 = o->pos_38;
     o->lookDst_198.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C70[(unsigned short)a].y1;
-    o->lookDst_198.z += -word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
-    o->lookDst_198.x += word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
+    o->lookDst_198.z += -sinTable_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + sinTable_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
+    o->lookDst_198.x += sinTable_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x1 / 4096 + sinTable_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].z1 / 4096;
     o->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
     o->eyeDst_18C = o->pos_38;
     o->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C70[(unsigned short)a].y0 + b;
-    o->eyeDst_18C.z += -word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
-    o->eyeDst_18C.x += word_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + word_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
+    o->eyeDst_18C.z += -sinTable_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + sinTable_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
+    o->eyeDst_18C.x += sinTable_80084540[(p->rotY_44 + 0x400) & 0xFFF] * dword_80083C70[(unsigned short)a].x0 / 4096 + sinTable_80084540[p->rotY_44 & 0xFFF] * dword_80083C70[(unsigned short)a].z0 / 4096;
     p->field2ESrc_17C = cameraState_8008D4F0.field_2E;
     p->field2EDst_180 = dword_80083C70[(unsigned short)a].field_8;
     sub_80038D64(o, (int*)&p->pos_38);
@@ -906,8 +906,8 @@ void sub_800390F4(CameraCtrl* p_, int arg1)
         {
                     v = p_->pos_38;
             v.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C0C[sel].y1;
-            v.z += -word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
-            v.x += word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+            v.z += -sinTable_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+            v.x += sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + sinTable_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
             dist = DistanceSquared3D_8003B80C((int*)&cameraState_8008D4F0.field_14, (int*)&v);
             if (dist < best)
             {
@@ -919,13 +919,13 @@ void sub_800390F4(CameraCtrl* p_, int arg1)
     p_->lookSrc_1B0 = cameraState_8008D4F0.field_20;
     p_->lookDst_198 = p_->pos_38;
     p_->lookDst_198.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C0C[sel].y1;
-    p_->lookDst_198.z += -word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
-    p_->lookDst_198.x += word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+    p_->lookDst_198.z += -sinTable_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
+    p_->lookDst_198.x += sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x1 / 4096 + sinTable_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z1 / 4096;
     p_->eyeSrc_1A4 = cameraState_8008D4F0.field_14;
     p_->eyeDst_18C = p_->pos_38;
     p_->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y + dword_80083C0C[sel].y0;
-    p_->eyeDst_18C.z += -word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
-    p_->eyeDst_18C.x += word_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + word_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
+    p_->eyeDst_18C.z += -sinTable_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
+    p_->eyeDst_18C.x += sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * dword_80083C0C[sel].x0 / 4096 + sinTable_80084540[p_->rotY_44 & 0xFFF] * dword_80083C0C[sel].z0 / 4096;
     p_->field2ESrc_17C = cameraState_8008D4F0.field_2E;
     p_->field2EDst_180 = dword_80083C0C[sel].field_8;
     sub_80038D64(p_, (int*)&p_->pos_38);
@@ -1115,36 +1115,36 @@ void sub_80039E14(void)
     word_8008D4C8.vz = cameraState_8008D4F0.field_2C;
     SetGteLightAndCamera_8004D0E8();
 }
-// stru_8008D534[0].rot.vx/vy/vz through the CamEntry type changes the scheduling, so the short view stays
+// pointLights_8008D534[0].rot.vx/vy/vz through the CamEntry type changes the scheduling, so the short view stays
 // Matched
 void sub_80039ED8(int mode)
 {
     switch ((short)(mode + 1))
     {
     case 0:
-        ((short*)stru_8008D534)[6] = 0x800;
-        ((short*)stru_8008D534)[7] = 0x800;
-        ((short*)stru_8008D534)[8] = 0x800;
+        ((short*)pointLights_8008D534)[6] = 0x800;
+        ((short*)pointLights_8008D534)[7] = 0x800;
+        ((short*)pointLights_8008D534)[8] = 0x800;
         break;
     case 1:
-        ((short*)stru_8008D534)[6] = 0x1000;
-        ((short*)stru_8008D534)[7] = 0;
-        ((short*)stru_8008D534)[8] = 0x6B0;
+        ((short*)pointLights_8008D534)[6] = 0x1000;
+        ((short*)pointLights_8008D534)[7] = 0;
+        ((short*)pointLights_8008D534)[8] = 0x6B0;
         break;
     case 4:
-        ((short*)stru_8008D534)[6] = 0x150;
-        ((short*)stru_8008D534)[7] = 0;
-        ((short*)stru_8008D534)[8] = 0x1000;
+        ((short*)pointLights_8008D534)[6] = 0x150;
+        ((short*)pointLights_8008D534)[7] = 0;
+        ((short*)pointLights_8008D534)[8] = 0x1000;
         break;
     case 3:
-        ((short*)stru_8008D534)[6] = 0;
-        ((short*)stru_8008D534)[7] = 0x1000;
-        ((short*)stru_8008D534)[8] = 0x940;
+        ((short*)pointLights_8008D534)[6] = 0;
+        ((short*)pointLights_8008D534)[7] = 0x1000;
+        ((short*)pointLights_8008D534)[8] = 0x940;
         break;
     case 2:
-        ((short*)stru_8008D534)[6] = 0xEB0;
-        ((short*)stru_8008D534)[7] = 0x1000;
-        ((short*)stru_8008D534)[8] = 0;
+        ((short*)pointLights_8008D534)[6] = 0xEB0;
+        ((short*)pointLights_8008D534)[7] = 0x1000;
+        ((short*)pointLights_8008D534)[8] = 0;
         break;
     }
 }

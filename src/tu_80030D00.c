@@ -330,7 +330,7 @@ int sub_800316E4(void)
 }
 extern int sub_80031870(int a0);
 extern UnitSkill* sub_80031B30(int a0);
-extern void sub_80018430(short v);
+extern void SetHitVariant_80018430(short v);
 // Matched
 int sub_800316EC(unsigned int a0, int a1)
 {
@@ -341,7 +341,7 @@ int sub_800316EC(unsigned int a0, int a1)
     base = sub_80031B30(LowestSetBit_80014358(a1) & 0xFF);
     base += a0;
     k = base->id_1;
-    sub_80018430(-1);
+    SetHitVariant_80018430(-1);
     if (a0 >= 4)
     {
         r = 0x1E;
@@ -349,42 +349,42 @@ int sub_800316EC(unsigned int a0, int a1)
     switch (k)
     {
     case 2:
-        sub_80018430(2);
+        SetHitVariant_80018430(2);
         break;
     case 3:
-        sub_80018430(3);
+        SetHitVariant_80018430(3);
         break;
     case 4:
-        sub_80018430(0);
+        SetHitVariant_80018430(0);
         break;
     case 5:
     case 23:
     case 25:
     case 29:
-        sub_80018430(1);
+        SetHitVariant_80018430(1);
         break;
     case 6:
     case 20:
-        sub_80018430(4);
+        SetHitVariant_80018430(4);
         break;
     case 7:
     case 22:
-        sub_80018430(5);
+        SetHitVariant_80018430(5);
         break;
     case 9:
-        sub_80018430(10);
+        SetHitVariant_80018430(10);
         break;
     case 10:
-        sub_80018430(8);
+        SetHitVariant_80018430(8);
         break;
     case 11:
     case 19:
-        sub_80018430(9);
+        SetHitVariant_80018430(9);
         break;
     case 16:
         r = 0x26;
     case 8:
-        sub_80018430(6);
+        SetHitVariant_80018430(6);
         break;
     case 17:
         r = 0x3C;
@@ -406,7 +406,7 @@ int sub_800316EC(unsigned int a0, int a1)
     case 36:
     case 37:
         r = k + 0x1D;
-        sub_80018430(k - 0x22);
+        SetHitVariant_80018430(k - 0x22);
         break;
     case 33:
         r = 0x19;

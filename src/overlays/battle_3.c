@@ -743,7 +743,7 @@ void sub_800BFAF8(int x)
     default:
         return;
     }
-    sub_80018430(a);
+    SetHitVariant_80018430(a);
 }
 
 void sub_800BFB80()
@@ -1223,18 +1223,18 @@ int sub_800C0904(unsigned char* p)
 }
 
 // Matched
-extern short word_80084540[];
+extern short sinTable_80084540[];
 int sub_800C09D4(unsigned char* p)
 {
     int t2, t1, t4, t3, t5, t6, t7, t8;
-    t1 = word_80084540[0x2E3] * p[0];
-    t2 = word_80084540[0xEE3] * p[0];
-    t3 = word_80084540[0xEE3] * p[3];
-    t4 = word_80084540[0xAE3] * p[3];
-    t5 = word_80084540[0xAE3] * p[2];
-    t6 = word_80084540[0x6E3] * p[2];
-    t7 = word_80084540[0x6E3] * p[1];
-    t8 = word_80084540[0x2E3] * p[1];
+    t1 = sinTable_80084540[0x2E3] * p[0];
+    t2 = sinTable_80084540[0xEE3] * p[0];
+    t3 = sinTable_80084540[0xEE3] * p[3];
+    t4 = sinTable_80084540[0xAE3] * p[3];
+    t5 = sinTable_80084540[0xAE3] * p[2];
+    t6 = sinTable_80084540[0x6E3] * p[2];
+    t7 = sinTable_80084540[0x6E3] * p[1];
+    t8 = sinTable_80084540[0x2E3] * p[1];
     return ratan2Degrees_8003B56C(t1 + t3 + t5 + t7, t2 + t4 + t6 + t8);
 }
 
@@ -1364,7 +1364,7 @@ BatCol_a* sub_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
     }
     if (p->mask_8 & (mask = 1 << (dword_800C918C + 1)))
     {
-        sub_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
+        StartCommandAction_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
     }
     *out = buf;
     return out;
@@ -1938,7 +1938,7 @@ void sub_800C273C(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
+    sub_8004D1EC(u->obj_3C, pOT_8008D690, v, u->rot_34, pointLights_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -2023,7 +2023,7 @@ void sub_800C2CD8(EventEntry* t, BatShard_a* u)
     v[0] = u->base_1C[0] + u->pos_10[0] / 1024;
     v[1] = u->base_1C[1] + u->pos_10[1] / 1024;
     v[2] = u->base_1C[2] + u->pos_10[2] / 1024;
-    sub_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, stru_8008D534, 0x30, s);
+    sub_8004D1EC(d->ftg_4, pOT_8008D690, v, u->rot_34, pointLights_8008D534, 0x30, s);
     u->frame_0++;
 }
 
@@ -2096,10 +2096,10 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
             u->trail_50[1].z = u->trail_50[0].z;
         }
         u->frame_0 += u->speed_8;
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, stru_8008D534, 0x30, 0, 0);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, stru_8008D534, 0x30, 0, 1);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, stru_8008D534, 0x30, 0, 2);
-        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, stru_8008D534, 0x30, 0, 3);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4, pOT_8008D690, &u->trail_50[0], u->rot_80, pointLights_8008D534, 0x30, 0, 0);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 1, pOT_8008D690, &u->trail_50[1], u->rot_80, pointLights_8008D534, 0x30, 0, 1);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 2, pOT_8008D690, &u->trail_50[2], u->rot_80, pointLights_8008D534, 0x30, 0, 2);
+        DrawFtgObjectAt_80044D0C(u->clip_8C->ftg_4 + 3, pOT_8008D690, &u->trail_50[3], u->rot_80, pointLights_8008D534, 0x30, 0, 3);
         DrawSpriteVtxQuadsGT4_800459E4(dword_800C91A4, &u->clip_8C->mats_8, pOT_8008D690, 0x30);
     }
     else
@@ -2169,7 +2169,7 @@ void sub_800C33E4(EventEntry* t, BatAnim_a* u)
                 v[0] = u->pos_44[0] + k->x_4 * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096 + k->z_C * sinTable_80084540[u->rot_82 & 0xFFF] / 4096;
                 v[1] = u->pos_44[1] + k->y_8;
                 v[2] = u->pos_44[2] - k->x_4 * sinTable_80084540[u->rot_82 & 0xFFF] / 4096 + k->z_C * sinTable_80084540[(u->rot_82 + 0x400) & 0xFFF] / 4096;
-                DrawFtgObjectAt_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, stru_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
+                DrawFtgObjectAt_80044D0C(&c->ftg_4[k->model_0], pOT_8008D690, v, r, pointLights_8008D534, (0x1000 - k->alpha_2) << 16 | 0x80 | k->mode_24, k->f18, i);
                 if (c->ftg_4[k->model_0].texSpriteCount_48)
                 {
                     any = 1;
@@ -2221,7 +2221,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, pointLights_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         sub_800C4090((int)u->f44, (int)col, 0x5DC, u->f30);
         u->frame_0++;
     }
@@ -2238,7 +2238,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         v[1] = u->path_20[u->idx_98 * 3 + 1] + u->base_1C[1];
         v[2] = u->path_20[u->idx_98 * 3 + 2] + u->base_1C[2];
         LerpFtgObject_8003A6C4(a, m->ftg_4, m->ftg_4 + 1, u->work_94);
-        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, stru_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
+        sub_8004D1EC(m->ftg_4, pOT_8008D690, v, &dword_800795D4, pointLights_8008D534, ((0x1000 - a) << 16) | 0xB0, s);
         if (u->f30 == 0x1000)
         {
             sub_800C3B50(v, 0x25);
@@ -2332,7 +2332,7 @@ void sub_800C3D34(EventEntry* t, BatOrb_a* u)
         sub_80021804(u->model_94, 1);
         free3_8003FC6C(u->model_94);
     }
-    sub_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
+    sub_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, pointLights_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
 }
 
 void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
@@ -3437,7 +3437,7 @@ void sub_800C5D04(BatTask* t)
                 t->f8->kind_0 = 1;
                 t->f8->arg_4 = 0x1B;
                 t->f8->targets_C = t->f18;
-                sub_80018430(2);
+                SetHitVariant_80018430(2);
                 break;
             case 1:
                 t->f8->kind_0 = 6;
@@ -3490,7 +3490,7 @@ void sub_800C5EB8(BatTask* t)
             t->f8->kind_0 = 1;
             t->f8->arg_4 = 0x19;
             t->f8->targets_C = t->f18;
-            sub_80018430(0);
+            SetHitVariant_80018430(0);
             break;
         case 2:
             t->f8->kind_0 = 6;
@@ -3537,7 +3537,7 @@ void sub_800C6038(BatTask* t)
             t->f8->kind_0 = 1;
             t->f8->arg_4 = 0x1C;
             t->f8->targets_C = t->f18;
-            sub_80018430(1);
+            SetHitVariant_80018430(1);
             break;
         case 1:
             t->f8->kind_0 = 6;
@@ -3583,7 +3583,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x25;
         t->f10->st_0.elementMask_42 = 8;
-        sub_80018430(3);
+        SetHitVariant_80018430(3);
         sub_800C66B4((unsigned char*)t->f10, 2);
         dword_800C8B30 = 0;
     }
@@ -3592,7 +3592,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x22;
         t->f10->st_0.elementMask_42 = 1;
-        sub_80018430(0);
+        SetHitVariant_80018430(0);
         sub_800C66B4((unsigned char*)t->f10, 3);
         dword_800C8B30 = 0;
     }
@@ -3601,7 +3601,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x23;
         t->f10->st_0.elementMask_42 = 2;
-        sub_80018430(1);
+        SetHitVariant_80018430(1);
         sub_800C66B4((unsigned char*)t->f10, 0);
         dword_800C8B30 = 0;
     }
@@ -3610,7 +3610,7 @@ void sub_800C61FC(BatTask* t)
         sub_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x24;
         t->f10->st_0.elementMask_42 = 4;
-        sub_80018430(2);
+        SetHitVariant_80018430(2);
         sub_800C66B4((unsigned char*)t->f10, 1);
         dword_800C8B30 = 0;
     }
@@ -3638,7 +3638,7 @@ void sub_800C61FC(BatTask* t)
             else
             {
                 sub_800C6AFC(t, 1, 0x19);
-                sub_80018430(0);
+                SetHitVariant_80018430(0);
             }
         }
         else if (f & 2)
@@ -3646,7 +3646,7 @@ void sub_800C61FC(BatTask* t)
             if (rand() % 3 != 0)
             {
                 sub_800C6AFC(t, 1, 0x1C);
-                sub_80018430(1);
+                SetHitVariant_80018430(1);
             }
             else
             {
@@ -3664,7 +3664,7 @@ void sub_800C61FC(BatTask* t)
             else
             {
                 sub_800C6AFC(t, 1, 0x1B);
-                sub_80018430(2);
+                SetHitVariant_80018430(2);
             }
         }
     }

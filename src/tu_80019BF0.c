@@ -2709,8 +2709,8 @@ void sub_8001E28C(Actor* o)
         s.boneMatrices_14 = o->boneMatrices_1C8;
         s.boneScale_34 = o->boneScale_144;
         s.scale_38 = o->scale_2C;
-        sub_800182B8(&s, o->effectKinds_EC);
-        sub_800184DC(&s, LowestSetBit_80014358(o->effectMask_E8));
+        CollectEffectTargets_800182B8(&s, o->effectKinds_EC);
+        PlayActorEffect_800184DC(&s, LowestSetBit_80014358(o->effectMask_E8));
         o->effect_130 = -1;
     }
     o->flags_4 |= 0x20000;

@@ -989,7 +989,7 @@ extern int sub_8001AC8C(int);
 
 extern void RequestEffect_800148F4(int);
 
-extern int sub_800189F8();
+extern int GetWeaponEffect_800189F8();
 
 extern short word_8008D782;
 

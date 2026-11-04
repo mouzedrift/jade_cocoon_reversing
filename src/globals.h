@@ -474,7 +474,7 @@ void OnModelFileLoaded_80025D7C(int* a0, int b);
 extern unsigned short padButtonBits_8007CAD8[0xe];
 extern unsigned short defaultButtonConfig_8007CAF4[0xa];
 extern int dword_8008D4DC;
-extern int dword_80079708[];
+extern int weaponEffectIds_80079708[];
 typedef struct
 {
     short id;

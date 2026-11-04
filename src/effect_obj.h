@@ -11,15 +11,15 @@
 /* the buffer of the effect task (effectTask_8008D3F8->entry.buffer) */
 typedef struct
 {
-    struct_4s pairs_0[10]; // sub_80018200
+    struct_4s hitTimes_0[10]; // RepeatHitTimes_80018200's output
     unsigned int flags_28; // 1: start, 2: file freed, 4: load requested, 8: sub_80018460
     int state_2C;          // UpdateEffectTask_80014638: 0 idle, 1 loading, 2 loaded, 3 running
     int pad_30[2];
     int idx_38;            // effect file index (RequestEffect_800148F4)
     int timer_3C;
-    short field_40;
+    short hitVariant_40;      // SetHitVariant_80018430; copied to EffectObj.hitVariant_A5
     short field_42;
-    unsigned char bits_44[12];
+    unsigned char hitFlags_44[12]; // per target slot (SetTargetHitFlag_800184A0); EffectTarget.hitFlags_34
 } EffectTaskState;
 
 /* buffer of an effect object (an EventEntry of effectObjects_8008B4A8) */
@@ -28,16 +28,16 @@ typedef struct EffectObj
     int field_0; // frame counter
     int field_4;
     short field_8;
-    short field_A;
-    short field_C;
-    short field_E;
+    short hitEnd_A;   // last frame (the object ends once field_0 reaches it)
+    short hitStart_C; // first frame the kind's effect runs
+    short kind_E;     // EffectObjectTask_80015478's switch
     int field_10;
-    int* field_14; // target position
-    int* field_18; // target bone positions
-    int* field_1C; // position
-    int* field_20; // int[][3] bone offsets, indexed by field_98
-    SVECTOR field_24;
-    MATRIX* field_2C; // bone matrices, indexed by field_98
+    int* srcPos_14;                // source actor position
+    int* srcBonePos_18;            // source actor bone positions
+    int* targetPos_1C;             // target actor position
+    int* targetBonePos_20;         // int[][3] target bone offsets, indexed by bone_98
+    SVECTOR offset_24;             // offset from the bone (through targetBoneMatrices_2C)
+    MATRIX* targetBoneMatrices_2C; // indexed by bone_98
     int field_30;
     int field_34;
     int pad_38[3];
@@ -49,33 +49,33 @@ typedef struct EffectObj
     int field_8C;
     int field_90;
     FtgObject* work_94; // malloc'd copy of the model's first FtgObject
-    int field_98;
-    SVECTOR* field_9C; // bone scales
-    int* field_A0;     // scale (or 0)
+    int bone_98;
+    SVECTOR* boneScales_9C;
+    int* scale_A0; // scale (or 0)
     char field_A4;
-    signed char field_A5;
+    signed char hitVariant_A5; // EffectTaskState.hitVariant_40 (sprite choice for some kinds)
     short field_A6;
     unsigned char rgb_A8[4];
-    int field_AC;
+    int hitFlags_AC; // EffectTarget.hitFlags_34
 } EffectObj;
 
-/* arguments of sub_800149A4 (spawn an effect object), filled by sub_8001852C from an ActorEffectReq */
+/* arguments of SpawnEffectObject_800149A4 (spawn an effect object), filled by SpawnActorEffects_8001852C from an ActorEffectReq */
 typedef struct
 {
-    int field_0;
-    int* field_4;     // source position
-    int* field_8;     // source bone positions
-    int* field_C;     // target position
-    int* field_10;    // target bone positions
-    short* scale_14;
-    MATRIX* field_18; // target bone matrices
-    short field_1C;
-    short field_1E;
+    int kind_0;
+    int* srcPos_4;
+    int* srcBonePos_8;
+    int* targetPos_C;
+    int* targetBonePos_10;
+    short* offset_14;               // effect table row + 2 (x, y, z)
+    MATRIX* targetBoneMatrices_18;
+    short hitStart_1C;
+    short hitEnd_1E;
     int pad_20;
-    int field_24;
-    SVECTOR* field_28; // bone scales, indexed by field_24
-    int* field_2C;     // scale (or 0)
-    int field_30;
+    int bone_24;
+    SVECTOR* boneScales_28; // indexed by bone_24
+    int* scale_2C;                  // scale (or 0)
+    int hitFlags_30;
 } EffectArgs;
 
 /* what an effect needs to know about an actor (ActorEffectReq.targets_44; filled by sub_800C0FC4 (BATTLE),
@@ -89,11 +89,11 @@ typedef struct EffectTarget
     char pad_10[0x1C];
     SVECTOR* boneScale_2C;   // Actor.boneScale_144
     int* scale_30;           // Actor.scale_2C
-    int field_34;
+    int hitFlags_34; // EffectTaskState.hitFlags_44[slot]
 } EffectTarget;
 
-/* effect request: built by sub_8001E28C (tu_80019BF0.c) from an actor, filled by sub_800182B8,
-   played by sub_800184DC / sub_8001852C */
+/* effect request: built by sub_8001E28C (tu_80019BF0.c) from an actor, filled by CollectEffectTargets_800182B8,
+   played by PlayActorEffect_800184DC / SpawnActorEffects_8001852C */
 typedef struct ActorEffectReq
 {
     int effect_0;            // effect index (dword_800795F0)

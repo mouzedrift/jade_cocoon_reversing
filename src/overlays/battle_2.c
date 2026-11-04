@@ -40,7 +40,7 @@ void sub_800BC90C(BatStageObj_a* p)
 
     unknownFlags_8008D678 &= ~0x10000;
     idx = sub_80020F00(&dword_80095468, 1, dword_800C8EAC[dword_80083BD0].model_6);
-    sub_8004D1EC(dword_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, stru_8008D534, 1, scale);
+    sub_8004D1EC(dword_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, pointLights_8008D534, 1, scale);
     {
         unsigned short* list = dword_800C8EAC[dword_80083BD0].list_0;
         SaveData* sd = &saveData_8008B570;

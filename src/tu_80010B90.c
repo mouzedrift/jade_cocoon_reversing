@@ -1469,7 +1469,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
     sub_80046A58(&sk, buf, (char*)o->anims_54);
     {
         short (*tbl)[6] = sub_80024E64(o);
-        ent = &tbl[sub_80018908(0x26, tbl)];
+        ent = &tbl[FindEffectTblRow_80018908(0x26, tbl)];
     }
     mat = &dword_80098188[ent[0][1]];
     sv = (SVECTOR*)&ent[0][2];

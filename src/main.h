@@ -76,7 +76,7 @@ extern int dword_8008D694;
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
 extern int dword_8008D778[2];
-extern int dword_8008D784;
+extern int effectSfxStarted_8008D784;
 extern int dword_8008D790[2];
 extern int dword_80091860[2];
 extern unsigned short padPrevHeld_800918C8[];

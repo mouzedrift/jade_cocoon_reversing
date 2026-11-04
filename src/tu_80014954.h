@@ -52,16 +52,16 @@ typedef struct
     unsigned short y;
 } Pos16;
 
-extern int dword_80079754[182];
-extern int dword_80079A2C[37];
-extern int dword_80079AC0[33];
-extern int dword_80079B44[10];
-extern int dword_80079B6C[38];
-extern int dword_80079C04[55];
-extern int dword_80079CE0[65];
-extern int dword_80079DE4[91];
-extern int dword_80079F50[53];
-extern ActorScriptCmd* off_8007A024[];
+extern int commandScriptData_80079754[182];
+extern int commandScriptData_80079A2C[37];
+extern int commandScriptData_80079AC0[33];
+extern int commandScriptData_80079B44[10];
+extern int commandScriptData_80079B6C[38];
+extern int commandScriptData_80079C04[55];
+extern int commandScriptData_80079CE0[65];
+extern int commandScriptData_80079DE4[91];
+extern int commandScriptData_80079F50[53];
+extern ActorScriptCmd* commandScripts_8007A024[];
 extern int dword_8007A67C[];
 extern int dword_8007A68C[];
 extern int dword_8007A69C[];

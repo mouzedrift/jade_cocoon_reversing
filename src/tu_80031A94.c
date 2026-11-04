@@ -268,8 +268,8 @@ int sub_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int s
     AddPrimCopy_80040298(ot, p, 10);
     return 1;
 }
-#define ROT_X(x, y, a) ((x) * word_80084540[((a) + 0x400) & 0xFFF] / 4096 - (y) * word_80084540[(a) & 0xFFF] / 4096)
-#define ROT_Y(x, y, a) ((x) * word_80084540[(a) & 0xFFF] / 4096 + (y) * word_80084540[((a) + 0x400) & 0xFFF] / 4096)
+#define ROT_X(x, y, a) ((x) * sinTable_80084540[((a) + 0x400) & 0xFFF] / 4096 - (y) * sinTable_80084540[(a) & 0xFFF] / 4096)
+#define ROT_Y(x, y, a) ((x) * sinTable_80084540[(a) & 0xFFF] / 4096 + (y) * sinTable_80084540[((a) + 0x400) & 0xFFF] / 4096)
 // Matched
 void sub_80031FF4(int idx, unsigned long* ot, unsigned short* pos, int angle)
 {
@@ -336,8 +336,8 @@ void GetPublicTiySprt_80032470(int idx, SPRT* pOut20, DR_TPAGE* pOut8)
 void AddRotatedPolyFT4_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int angle, void* ot)
 {
     int a = -angle;
-    short* c = &word_80084540[(a + 0x400) & 0xFFF];
-    short* s = &word_80084540[(a + 0x800) & 0xFFF];
+    short* c = &sinTable_80084540[(a + 0x400) & 0xFFF];
+    short* s = &sinTable_80084540[(a + 0x800) & 0xFFF];
     p->x0 = cx + (w + (*c * -w + *s * -h) / 4096) / 2;
     p->y0 = cy + (h + (-*s * -w + *c * -h) / 4096) / 2;
     p->x1 = cx + (w + (*c * w + *s * -h) / 4096) / 2;
@@ -351,8 +351,8 @@ void AddRotatedPolyFT4_800324D8(POLY_FT4* p, int cx, int cy, int w, int h, int a
 // Matched
 void sub_800327A8(POLY_FT4* p, int cx, int cy, int w, int h, int du, int dv, int angle, void* ot)
 {
-    short* s = &word_80084540[angle & 0xFFF];
-    short* c = &word_80084540[(angle + 0x400) & 0xFFF];
+    short* s = &sinTable_80084540[angle & 0xFFF];
+    short* c = &sinTable_80084540[(angle + 0x400) & 0xFFF];
 
     p->u1 = p->u0 + du;
     p->v1 = p->v0;
@@ -374,8 +374,8 @@ void sub_800327A8(POLY_FT4* p, int cx, int cy, int w, int h, int du, int dv, int
 void sub_80032A88(POLY_FT4* p, int cx, int cy, int w, int h, int angle)
 {
     int a = -angle;
-    short* c = &word_80084540[(a + 0x400) & 0xFFF];
-    short* s = &word_80084540[(a + 0x800) & 0xFFF];
+    short* c = &sinTable_80084540[(a + 0x400) & 0xFFF];
+    short* s = &sinTable_80084540[(a + 0x800) & 0xFFF];
     p->x0 = cx + (w + (*c * -w + *s * -h) / 4096) / 2;
     p->y0 = cy + (h + (-*s * -w + *c * -h) / 4096) / 2;
     p->x1 = cx + (w + (*c * w + *s * -h) / 4096) / 2;

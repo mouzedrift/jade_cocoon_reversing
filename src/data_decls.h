@@ -22,8 +22,8 @@ extern const char name[];
 extern const char aAssertionFaile_3[];
 extern const char aEffectC[];
 extern unsigned char dword_8007C2E4[];
-extern short word_80084540[]; // sine table (0x1000 = 1.0), inside asc_80084350
-extern const struct_u8x4 dword_80072270;
+extern short sinTable_80084540[]; // sine table (0x1000 = 1.0), inside asc_80084350
+extern const struct_u8x4 orangeGlowColor_80072270;
 extern int dword_8007A0A4[];
 extern int dword_8007A0B0[];
 extern int dword_8007A0BC[];

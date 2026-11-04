@@ -665,11 +665,11 @@ void sub_8001FD08(void* a0)
         {
             sub_80047E28(&o->draw_164, o->draw_164.boneScale_10, &o->model_15C->anims_54[o->prevAnim_A0],
                          o->prevFrame_94 % o->model_15C->anims_54[o->prevAnim_A0].frameCount_0,
-                         0x1000 - o->blend_AC, &stru_8008D534[v], t);
+                         0x1000 - o->blend_AC, &pointLights_8008D534[v], t);
         }
         else
         {
-            sub_80046A58(&o->draw_164, &stru_8008D534[v], t);
+            sub_80046A58(&o->draw_164, &pointLights_8008D534[v], t);
         }
         if (unknownFlags_8008D678 & 0x10000)
         {

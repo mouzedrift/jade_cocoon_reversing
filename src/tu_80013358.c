@@ -227,7 +227,7 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
             }
             if (q->flags_0 & 0x7FB)
             {
-                sub_800184A0(b2, 2);
+                SetTargetHitFlag_800184A0(b2, 2);
             }
         }
         else if (q->c_A == 0)
@@ -256,20 +256,20 @@ void sub_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r
         if (i == 0)
         {
             out->flags_4 |= 0x800;
-            sub_800184A0(b2, 3);
+            SetTargetHitFlag_800184A0(b2, 3);
         }
         else if (i == 1)
         {
             out->flags_4 |= 0x1800;
-            sub_800184A0(b2, 4);
+            SetTargetHitFlag_800184A0(b2, 4);
         }
         else
         {
             out->flags_4 |= 0x3800;
-            sub_800184A0(b2, 5);
+            SetTargetHitFlag_800184A0(b2, 5);
         }
         out->field_8 &= ~0x7FB;
-        sub_800184A0(b2, 2);
+        SetTargetHitFlag_800184A0(b2, 2);
     }
     if (out->field_1C == 0 && out->field_20 == 0 && out->field_8 != 0 && out->flags_4 != 0)
     {

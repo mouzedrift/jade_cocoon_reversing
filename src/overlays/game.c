@@ -681,7 +681,7 @@ typedef struct GameCtxA_1
     int f70c[3];
 } GameCtxA_1;
 extern void* memset(void* p, int c, unsigned int n);
-extern GamePair_1 sub_80018A4C(int obj, int* p, int a2, int c);
+extern GamePair_1 StartCommandAction_80018A4C(int obj, int* p, int a2, int c);
 GamePair_1 sub_800A2684(int* p, int c)
 {
     GamePair_1 r;
@@ -693,7 +693,7 @@ GamePair_1 sub_800A2684(int* p, int c)
         {
             if (((unsigned)p[2] & (1 << i)) != 0)
             {
-                r = sub_80018A4C(((GameCtxA_1*)&gCtx_800B1260)->obj_7c[i - 4], p, ((GameCtxA_1*)&gCtx_800B1260)->f70c[i - 4], c);
+                r = StartCommandAction_80018A4C(((GameCtxA_1*)&gCtx_800B1260)->obj_7c[i - 4], p, ((GameCtxA_1*)&gCtx_800B1260)->f70c[i - 4], c);
             }
         }
     }

@@ -490,7 +490,7 @@ void sub_800A1BE0(TstCompoWork* a)
 }
 
 extern unsigned short padHeld_800918D0[];
-extern short word_80084540[];
+extern short sinTable_80084540[];
 extern void SetCameraLookAt_800A1E68();
 void TstCompoCameraInput_800A1C14(TstCompoWork* a)
 {
@@ -524,8 +524,8 @@ void TstCompoCameraInput_800A1C14(TstCompoWork* a)
         a->dist_150 += 0x20;
     }
     a->dist_150 = a->dist_150 < 100 ? 100 : a->dist_150 < 1201 ? a->dist_150 : 1200;
-    a->eye_154[0] = a->dist_150 * word_80084540[a->yaw_14C & 0xFFF] / 4096;
-    a->eye_154[2] = a->dist_150 * word_80084540[(a->yaw_14C + 0x400) & 0xFFF] / 4096;
+    a->eye_154[0] = a->dist_150 * sinTable_80084540[a->yaw_14C & 0xFFF] / 4096;
+    a->eye_154[2] = a->dist_150 * sinTable_80084540[(a->yaw_14C + 0x400) & 0xFFF] / 4096;
     if (padHeld_800918D0[0] & 1)
     {
         if (padHeld_800918D0[0] & 2)

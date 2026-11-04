@@ -298,7 +298,7 @@ typedef struct TstModelMat
     int w[8];
 } TstModelMat;
 extern unsigned short padHeld_800918D0[];
-extern short word_80084540[];
+extern short sinTable_80084540[];
 extern MATRIX name_800A1E84;
 extern TstModelMat name_800A1EA4;
 extern MATRIX dword_80087114;
@@ -361,8 +361,8 @@ void TstModelCameraInput_800A104C(TstModelD* c)
         c->s174 += 0x20;
     }
     c->s174 = c->s174 < 100 ? 100 : c->s174 < 1201 ? c->s174 : 1200;
-    c->i178 = c->s174 * word_80084540[c->s170 & 0xFFF] / 4096;
-    c->i180 = c->s174 * word_80084540[(c->s170 + 0x400) & 0xFFF] / 4096;
+    c->i178 = c->s174 * sinTable_80084540[c->s170 & 0xFFF] / 4096;
+    c->i180 = c->s174 * sinTable_80084540[(c->s170 + 0x400) & 0xFFF] / 4096;
     if (padHeld_800918D0[0] & 1)
     {
         if (padHeld_800918D0[0] & 2)

@@ -26,12 +26,12 @@
 #include "effect.h"
 #include "main.h"
 
-int dword_80079708[19] = {
+int weaponEffectIds_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,
     8, 9, 10, 11, 12, 13, 14, 15,
     16, 17, 9,
 };
-int dword_80079754[182] = {
+int commandScriptData_80079754[182] = {
     0xFFFF0201, 0x40000, 0xFFFE0100, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100, 0xFFFE020C,
     0x50000, 0xFFFE010D, 0xFFFE010F, 0xFFFF0103, 0xFFFF0201, 0x50000, 0xFFFF020E, 0x50000,
     0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100, 0xFFFE020C, 0x60000, 0xFFFE010D,
@@ -56,31 +56,31 @@ int dword_80079754[182] = {
     0x40000, 0xFFFE0100, 0xFFFE010F, 0xFFFE0110, 0xFFFF0207, 0x1000000, 0xFFFF0102, 0xFFFF0201,
     0x40000, 0xFFFE0214, 0x40000000, 0xFFFF0108, 0xFFFF020B,
 };
-int dword_80079A2C[37] = {
+int commandScriptData_80079A2C[37] = {
     0xFFFE0100, 0xFFFE010F, 0xFFFF0103, 0xFFFF0201, 0x120000, 0xFFFE0110, 0xFFFE0100, 0xFFFE010F,
     0xFFFF0103, 0xFFFF0201, 0x130000, 0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100,
     0xFFFE020C, 0x150000, 0xFFFE010D, 0xFFFE010F, 0xFFFF0103, 0xFFFF0201, 0x150000, 0xFFFE0115,
     0xFFFF0216, 0x10000, 0xFFFF0207, 0x1000000, 0xFFFE0217, 0x3C0000, 0xFFFE0214, 0x40000000,
     0xFFFF020E, 0x150000, 0xFFFF0108, 0xFFFF020B,
 };
-int dword_80079AC0[33] = {
+int commandScriptData_80079AC0[33] = {
     0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100, 0xFFFE010F, 0xFFFF020B, 0x10000,
     0xFFFF0206, 0x1000000, 0xFFFF0204, 0x10000, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0214,
     0x40000000, 0xFFFF0108, 0xFFFE0110, 0xFFFE0100, 0xFFFE010F, 0xFFFF0207, 0x1000000, 0xFFFF0204,
     0x10000, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0214, 0x40000000, 0xFFFF0108, 0xFFFF020B,
 };
-int dword_80079B44[10] = {
+int commandScriptData_80079B44[10] = {
     0xFFFE0110, 0xFFFE0100, 0xFFFE010F, 0xFFFF0216, 0x10000, 0xFFFE0110, 0xFFFE0100, 0xFFFE010F,
     0xFFFF0216,
 };
-int dword_80079B6C[38] = {
+int commandScriptData_80079B6C[38] = {
     0xFFFE0110, 0xFFFE0100, 0xFFFE010F, 0xFFFF0103, 0xFFFF0201, 0x170000, 0xFFFE0110, 0xFFFE0100,
     0xFFFE010F, 0xFFFF0103, 0xFFFF0201, 0x180000, 0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000,
     0xFFFE0100, 0xFFFE020C, 0x190000, 0xFFFE010D, 0xFFFE010F, 0xFFFF0103, 0xFFFF0201, 0x190000,
     0xFFFE0115, 0xFFFF0216, 0x10000, 0xFFFF0207, 0x1000000, 0xFFFE0217, 0x3C0000, 0xFFFE0214,
     0x40000000, 0xFFFF020E, 0x190000, 0xFFFF0108, 0xFFFF020B,
 };
-int dword_80079C04[55] = {
+int commandScriptData_80079C04[55] = {
     0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100, 0xFFFE020C, 0xF0000, 0xFFFE010D,
     0xFFFE020C, 0x100000, 0xFFFE010D, 0xFFFE020C, 0x110000, 0xFFFE010D, 0xFFFE010F, 0xFFFF0105,
     0xFFFF010A, 0xFFFF0103, 0xFFFF0201, 0xF0000, 0xFFFE0214, 0x40010000, 0xFFFE0115, 0xFFFE0110,
@@ -89,7 +89,7 @@ int dword_80079C04[55] = {
     0x110000, 0xFFFE010D, 0xFFFE010F, 0xFFFF0105, 0xFFFF0209, 0, 0xFFFF0103, 0xFFFF0201,
     0xF0000, 0xFFFE0214, 0x40010000, 0xFFFE0115, 0xFFFE0110, 0xFFFF020B,
 };
-int dword_80079CE0[65] = {
+int commandScriptData_80079CE0[65] = {
     0xFFFF020E, 0xF0000, 0xFFFF020E, 0x100000, 0xFFFF020E, 0x110000, 0xFFFE0100, 0xFFFE010F,
     0xFFFF0209, 0x10000000, 0xFFFF0103, 0xFFFF0201, 0x110000, 0xFFFE0214, 0x40010000, 0xFFFE0115,
     0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFF020E, 0xF0000, 0xFFFF020E, 0x100000,
@@ -99,7 +99,7 @@ int dword_80079CE0[65] = {
     0xFFFF0204, 0x10000, 0xFFFF0102, 0xFFFF0201, 0xF0000, 0xFFFE0214, 0x40010000, 0xFFFE0115,
     0xFFFF020E, 0xF0000, 0xFFFF020E, 0x100000, 0xFFFF020E, 0x110000, 0xFFFE0110, 0xFFFF020B,
 };
-int dword_80079DE4[91] = {
+int commandScriptData_80079DE4[91] = {
     0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100, 0xFFFE020C, 0xF0000, 0xFFFE010D,
     0xFFFE020C, 0x100000, 0xFFFE010D, 0xFFFE020C, 0x110000, 0xFFFE010D, 0xFFFE010F, 0xFFFF0209,
     0x1990000, 0xFFFF0204, 0x90000, 0xFFFF0201, 0xF0000, 0xFFFE0214, 0x40010000, 0xFFFE0115,
@@ -113,7 +113,7 @@ int dword_80079DE4[91] = {
     0x40010000, 0xFFFE0115, 0xFFFF020E, 0xF0000, 0xFFFF020E, 0x100000, 0xFFFF020E, 0x110000,
     0xFFFE0110, 0xFFFF020B,
 };
-int dword_80079F50[53] = {
+int commandScriptData_80079F50[53] = {
     0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100, 0xFFFE020C, 0xF0000, 0xFFFE010D,
     0xFFFE020C, 0x100000, 0xFFFE010D, 0xFFFE020C, 0x110000, 0xFFFE010D, 0xFFFE010F, 0xFFFF0209,
     0x9990000, 0xFFFF0204, 0x40000, 0xFFFF0201, 0xF0000, 0xFFFE0214, 0x40010000, 0xFFFE0115,
@@ -122,15 +122,15 @@ int dword_80079F50[53] = {
     0x40010000, 0xFFFE0115, 0xFFFF020E, 0xF0000, 0xFFFF020E, 0x100000, 0xFFFF020E, 0x110000,
     0xFFFE0110, 0xFFFF0102, 0xFFFF0201, 0x40000, 0xFFFE0100,
 };
-ActorScriptCmd *off_8007A024[32] = {
-    (void *)dword_80079754, (void *)&dword_80079754[3], (void *)&dword_80079754[7], (void *)&dword_80079754[21],
-    (void *)&dword_80079754[35], (void *)&dword_80079754[49], (void *)&dword_80079754[63], (void *)&dword_80079754[77],
-    (void *)&dword_80079754[91], (void *)&dword_80079754[105], (void *)&dword_80079754[128], (void *)&dword_80079754[142],
-    (void *)&dword_80079754[156], (void *)&dword_80079754[170], (void *)&dword_80079A2C[1], (void *)&dword_80079A2C[7],
-    (void *)&dword_80079A2C[16], (void *)&dword_80079AC0[5], (void *)&dword_80079AC0[20], (void *)&dword_80079B44[2],
-    (void *)&dword_80079B44[7], (void *)&dword_80079B6C[2], (void *)&dword_80079B6C[8], (void *)&dword_80079B6C[17],
-    (void *)&dword_80079C04[5], (void *)&dword_80079C04[25], (void *)&dword_80079C04[33], (void *)&dword_80079CE0[7],
-    (void *)&dword_80079CE0[27], (void *)&dword_80079DE4[5], (void *)&dword_80079DE4[44], (void *)&dword_80079F50[5],
+ActorScriptCmd *commandScripts_8007A024[32] = {
+    (void *)commandScriptData_80079754, (void *)&commandScriptData_80079754[3], (void *)&commandScriptData_80079754[7], (void *)&commandScriptData_80079754[21],
+    (void *)&commandScriptData_80079754[35], (void *)&commandScriptData_80079754[49], (void *)&commandScriptData_80079754[63], (void *)&commandScriptData_80079754[77],
+    (void *)&commandScriptData_80079754[91], (void *)&commandScriptData_80079754[105], (void *)&commandScriptData_80079754[128], (void *)&commandScriptData_80079754[142],
+    (void *)&commandScriptData_80079754[156], (void *)&commandScriptData_80079754[170], (void *)&commandScriptData_80079A2C[1], (void *)&commandScriptData_80079A2C[7],
+    (void *)&commandScriptData_80079A2C[16], (void *)&commandScriptData_80079AC0[5], (void *)&commandScriptData_80079AC0[20], (void *)&commandScriptData_80079B44[2],
+    (void *)&commandScriptData_80079B44[7], (void *)&commandScriptData_80079B6C[2], (void *)&commandScriptData_80079B6C[8], (void *)&commandScriptData_80079B6C[17],
+    (void *)&commandScriptData_80079C04[5], (void *)&commandScriptData_80079C04[25], (void *)&commandScriptData_80079C04[33], (void *)&commandScriptData_80079CE0[7],
+    (void *)&commandScriptData_80079CE0[27], (void *)&commandScriptData_80079DE4[5], (void *)&commandScriptData_80079DE4[44], (void *)&commandScriptData_80079F50[5],
 };
 int dword_8007A0A4[3] = { 0x1F001F, 0x249001F, 0x249 };
 int dword_8007A0B0[3] = { 0x1F001F, 0x492001F, 0x492 };
@@ -3477,7 +3477,7 @@ short asc_80084350[248] = {
     0, 0xC290, 0, 0x42D8, 0, 0, 0, 0xC30B,
     0, 0xC385, 0x8000, 0x43C7,
 };
-short word_80084540[4096] = {
+short sinTable_80084540[4096] = {
     0, 6, 13, 19, 25, 31, 38, 44,
     50, 57, 63, 69, 75, 82, 88, 94,
     101, 107, 113, 119, 126, 132, 138, 144,
@@ -4003,67 +4003,67 @@ void StartEffect_8001497C(void)
     EffectTaskState* p = effectTask_8008D3F8->entry.buffer;
     p->flags_28 |= 1;
 }
-void sub_80015478(EventEntry* e, void* buf);
+void EffectObjectTask_80015478(EventEntry* e, void* buf);
 // Matched
-void sub_800149A4(EffectArgs* p)
+void SpawnEffectObject_800149A4(EffectArgs* args)
 {
-    EffectTaskState* q = effectTask_8008D3F8->entry.buffer;
+    EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     EventEntry* e;
-    EffectObj* b;
-    int n;
-    int m;
-    n = p->field_1E;
-    m = q->timer_3C;
+    EffectObj* obj;
+    int hitEnd;
+    int timer;
+    hitEnd = args->hitEnd_1E;
+    timer = state->timer_3C;
     effectOutcomeFlag_8008D780 = 0;
-    if (m < n)
+    if (timer < hitEnd)
     {
-        q->timer_3C = n;
+        state->timer_3C = hitEnd;
     }
     e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (e)
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        b = e->buffer;
-        b->field_E = *(short*)&p->field_0;
-        b->field_14 = p->field_4;
-        b->field_18 = p->field_8;
-        b->field_1C = p->field_C;
-        b->field_20 = p->field_10;
-        b->field_2C = p->field_18;
-        b->field_C = p->field_1C;
-        b->field_A = p->field_1E;
-        b->field_0 = 0;
-        b->field_4 = 0;
-        b->field_8 = 0;
-        b->field_98 = p->field_24;
-        b->field_9C = p->field_28;
-        b->field_A0 = p->field_2C;
-        *(unsigned char*)&b->field_A5 = *(unsigned char*)&q->field_40;
-        b->field_A6 = q->field_42;
-        b->field_AC = p->field_30;
-        b->field_24.vx = p->scale_14[0] * p->field_28[b->field_98].vx / 4096;
-        b->field_24.vy = p->scale_14[1] * p->field_28[b->field_98].vy / 4096;
-        b->field_24.vz = p->scale_14[2] * p->field_28[b->field_98].vz / 4096;
-        if (p->field_2C)
+        obj = e->buffer;
+        obj->kind_E = *(short*)&args->kind_0;
+        obj->srcPos_14 = args->srcPos_4;
+        obj->srcBonePos_18 = args->srcBonePos_8;
+        obj->targetPos_1C = args->targetPos_C;
+        obj->targetBonePos_20 = args->targetBonePos_10;
+        obj->targetBoneMatrices_2C = args->targetBoneMatrices_18;
+        obj->hitStart_C = args->hitStart_1C;
+        obj->hitEnd_A = args->hitEnd_1E;
+        obj->field_0 = 0;
+        obj->field_4 = 0;
+        obj->field_8 = 0;
+        obj->bone_98 = args->bone_24;
+        obj->boneScales_9C = args->boneScales_28;
+        obj->scale_A0 = args->scale_2C;
+        *(unsigned char*)&obj->hitVariant_A5 = *(unsigned char*)&state->hitVariant_40;
+        obj->field_A6 = state->field_42;
+        obj->hitFlags_AC = args->hitFlags_30;
+        obj->offset_24.vx = args->offset_14[0] * args->boneScales_28[obj->bone_98].vx / 4096;
+        obj->offset_24.vy = args->offset_14[1] * args->boneScales_28[obj->bone_98].vy / 4096;
+        obj->offset_24.vz = args->offset_14[2] * args->boneScales_28[obj->bone_98].vz / 4096;
+        if (args->scale_2C)
         {
-            b->field_24.vx = b->field_24.vx * p->field_2C[0] / 4096;
-            b->field_24.vy = b->field_24.vy * p->field_2C[1] / 4096;
-            b->field_24.vz = b->field_24.vz * p->field_2C[2] / 4096;
+            obj->offset_24.vx = obj->offset_24.vx * args->scale_2C[0] / 4096;
+            obj->offset_24.vy = obj->offset_24.vy * args->scale_2C[1] / 4096;
+            obj->offset_24.vz = obj->offset_24.vz * args->scale_2C[2] / 4096;
         }
-        e->cb_8 = sub_80015478;
+        e->cb_8 = EffectObjectTask_80015478;
     }
 }
 // Matched
-void sub_80014C28(int* a0, EffectObj* a1)
+void RepeatUntilOutcomeTask_80014C28(int* flags, EffectObj* obj)
 {
     if (effectOutcomeFlag_8008D780 == 1)
     {
         StopSoundSeqById_800306FC(6);
-        *a0 = (*a0 & ~1) | 0x8000;
+        *flags = (*flags & ~1) | 0x8000;
     }
-    if (++a1->field_4 % 10 == 0)
+    if (++obj->field_4 % 10 == 0)
     {
-        sub_800C32DC(a1->field_1C, 30, 0, 0);
+        sub_800C32DC(obj->targetPos_1C, 30, 0, 0);
     }
 }
 typedef struct
@@ -4078,9 +4078,9 @@ extern CamView cameraState_8008D4F0;
 extern void DrawRotSprite_80044010(POLY_FT4* a0, int* pos, void* a2, short* uv, short* wh, short* a5, short* sz, short* col,
                          unsigned char* rgb, int a9, int a10, unsigned long* ot);
 // Matched
-void sub_80014CCC(int* a0, void* buf)
+void LensFlareTask_80014CCC(int* flags, void* buf)
 {
-    EffectObj* a1 = buf;
+    EffectObj* obj = buf;
     short sz[2];
     short col[4];
     int dir[3];
@@ -4097,36 +4097,36 @@ void sub_80014CCC(int* a0, void* buf)
     int* c;
     int* t;
 
-    a1->field_4++;
+    obj->field_4++;
     PushMatrix();
-    ApplyMatrix(&a1->field_2C[a1->field_98], (SVECTOR*)&a1->field_24, (VECTOR*)a1->pos_44);
+    ApplyMatrix(&obj->targetBoneMatrices_2C[obj->bone_98], (SVECTOR*)&obj->offset_24, (VECTOR*)obj->pos_44);
     PopMatrix();
-    a1->pos_44[0] = a1->field_20[a1->field_98 * 3 + 0] + a1->pos_44[0];
-    a1->pos_44[1] = a1->field_20[a1->field_98 * 3 + 1] + a1->pos_44[1];
-    a1->pos_44[2] = a1->field_20[a1->field_98 * 3 + 2] + a1->pos_44[2];
-    a1->pos_44[0] = a1->field_1C[0] + a1->pos_44[0];
-    a1->pos_44[1] = a1->field_1C[1] + a1->pos_44[1];
-    a1->pos_44[2] = a1->field_1C[2] + a1->pos_44[2];
+    obj->pos_44[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->pos_44[0];
+    obj->pos_44[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->pos_44[1];
+    obj->pos_44[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->pos_44[2];
+    obj->pos_44[0] = obj->targetPos_1C[0] + obj->pos_44[0];
+    obj->pos_44[1] = obj->targetPos_1C[1] + obj->pos_44[1];
+    obj->pos_44[2] = obj->targetPos_1C[2] + obj->pos_44[2];
     e1 = &effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x25)];
     idx = sub_80020F00(&effectFile_80091BD0, 0, 0x26);
     e2 = &effectFile_80091BD0.sprites_20[idx];
     sp = *e1->frames_8;
-    sz[0] = sp->size_C[0] * (word_80084540[(a1->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
-    sz[1] = sp->size_C[1] * (word_80084540[(a1->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
+    sz[0] = sp->size_C[0] * (sinTable_80084540[(obj->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
+    sz[1] = sp->size_C[1] * (sinTable_80084540[(obj->field_4 << 6) & 0xFC0] / 4 + 0x1000) / 4096;
     col[0] = sp->pos_10[0];
     col[1] = sp->pos_10[1];
     col[2] = sp->pos_10[2];
-    col[3] = a1->field_4 * 32;
-    DrawRotSprite_80044010(&e1->poly_C, a1->pos_44, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz, col, sp->rgb_18, 2, 0x30,
+    col[3] = obj->field_4 * 32;
+    DrawRotSprite_80044010(&e1->poly_C, obj->pos_44, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz, col, sp->rgb_18, 2, 0x30,
                  pOT_8008D690);
     c = cameraState_8008D4F0.pos_14;
     rgb[0] = sp->rgb_18[0] >> 3;
     rgb[1] = sp->rgb_18[1] >> 3;
     rgb[2] = sp->rgb_18[1] >> 3;
     t = c + 3;
-    pos[0] = a1->pos_44[0] - c[0];
-    pos[1] = a1->pos_44[1] - c[1];
-    pos[2] = a1->pos_44[2] - c[2];
+    pos[0] = obj->pos_44[0] - c[0];
+    pos[1] = obj->pos_44[1] - c[1];
+    pos[2] = obj->pos_44[2] - c[2];
     dir[0] = t[0] - c[0];
     dir[1] = t[1] - c[1];
     dir[2] = t[2] - c[2];
@@ -4139,12 +4139,12 @@ void sub_80014CCC(int* a0, void* buf)
     {
         sz2[0] = sz[0] / 4;
         sz2[1] = sz[1] / 4;
-        DrawRotSprite_80044010(&e2->poly_C, pos, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
-    d[0] = a1->pos_44[0] - pos[0];
-    d[1] = a1->pos_44[1] - pos[1];
-    d[2] = a1->pos_44[2] - pos[2];
+    d[0] = obj->pos_44[0] - pos[0];
+    d[1] = obj->pos_44[1] - pos[1];
+    d[2] = obj->pos_44[2] - pos[2];
     if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
     {
         pos2[0] = pos[0] + d[0] / 2;
@@ -4152,7 +4152,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] + d[2] / 2;
         sz2[0] = sz[0];
         sz2[1] = sz[1];
-        DrawRotSprite_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.field_2E * 2 < dot)
@@ -4162,7 +4162,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] - d[2] / 2;
         sz2[0] = sz[0] / 2;
         sz2[1] = sz[1] / 2;
-        DrawRotSprite_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
@@ -4172,12 +4172,12 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] - d[2] / 4;
         sz2[0] = sz[0] * 2;
         sz2[1] = sz[1] * 2;
-        DrawRotSprite_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (effectOutcomeFlag_8008D780 == 1)
     {
-        *a0 = (*a0 & ~1) | 0x8000;
+        *flags = (*flags & ~1) | 0x8000;
     }
 }
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
@@ -4193,61 +4193,61 @@ extern void PlayMusic_800300E0(int a, int b);
 extern void PlaySeqSlot_80031160(int idx, int loops);
 extern void PlaySfx_80031494(int a);
 extern void SpawnMdecEffect_80017A6C(int a0, int a1);
-extern void sub_80017158(int* a0, void* a1);
-extern void sub_800174F8(void* a0, int a1);
-extern void sub_80017290(void* a0, int a1);
-extern void sub_80017E30(EventEntry* e, void* buf);
-extern void sub_80016E20(int* a0, void* buf);
-extern void sub_80016FC8(int* a0, int* a1);
+extern void SpawnLightFlash_80017158(int* a0, void* a1);
+extern void SpawnPulseModel_800174F8(void* a0, int a1);
+extern void SpawnGlowModel_80017290(void* a0, int a1);
+extern void MorphInModelTask_80017E30(EventEntry* e, void* buf);
+extern void RadialBurstTask_80016E20(int* a0, void* buf);
+extern void QuadBurstTask_80016FC8(int* a0, int* a1);
 extern void sub_800C371C(EventEntry* e, void* buf);
 extern void sub_800C1450(EventEntry* e, void* buf);
 #define EFF(i) ((int)&effectFile_80091BD0.sprites_20[i])
 // Matched
-void sub_80015478(EventEntry* e, void* buf)
+void EffectObjectTask_80015478(EventEntry* e, void* buf)
 {
-    EffectObj* b = (EffectObj*)buf;
+    EffectObj* obj = (EffectObj*)buf;
     int idx;
     int i;
     int n;
     int f;
     void* p;
 
-    b->pos_50[0] = b->pos_44[0];
-    b->pos_50[1] = b->pos_44[1];
-    b->pos_50[2] = b->pos_44[2];
+    obj->pos_50[0] = obj->pos_44[0];
+    obj->pos_50[1] = obj->pos_44[1];
+    obj->pos_50[2] = obj->pos_44[2];
     PushMatrix();
-    ApplyMatrix(&b->field_2C[b->field_98], &b->field_24, (VECTOR*)b->pos_44);
+    ApplyMatrix(&obj->targetBoneMatrices_2C[obj->bone_98], &obj->offset_24, (VECTOR*)obj->pos_44);
     PopMatrix();
-    b->pos_44[0] = b->field_20[b->field_98 * 3 + 0] + b->pos_44[0];
-    b->pos_44[1] = b->field_20[b->field_98 * 3 + 1] + b->pos_44[1];
-    b->pos_44[2] = b->field_20[b->field_98 * 3 + 2] + b->pos_44[2];
-    b->pos_44[0] = b->field_1C[0] + b->pos_44[0];
-    b->pos_44[1] = b->field_1C[1] + b->pos_44[1];
-    b->pos_44[2] = b->field_1C[2] + b->pos_44[2];
-    if (b->field_0 >= b->field_C)
+    obj->pos_44[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->pos_44[0];
+    obj->pos_44[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->pos_44[1];
+    obj->pos_44[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->pos_44[2];
+    obj->pos_44[0] = obj->targetPos_1C[0] + obj->pos_44[0];
+    obj->pos_44[1] = obj->targetPos_1C[1] + obj->pos_44[1];
+    obj->pos_44[2] = obj->targetPos_1C[2] + obj->pos_44[2];
+    if (obj->field_0 >= obj->hitStart_C)
     {
-        switch (b->field_E)
+        switch (obj->kind_E)
         {
         case 0:
-            if (b->field_0 != 0)
+            if (obj->field_0 != 0)
             {
                 int v[3];
                 int d[3];
                 int k;
                 int m;
-                b->field_4 += ISqrt_8003B918(DistanceSquared3D_8003B80C(b->pos_44, b->pos_50));
-                d[0] = b->pos_44[0] - b->pos_50[0];
-                d[1] = b->pos_44[1] - b->pos_50[1];
-                d[2] = b->pos_44[2] - b->pos_50[2];
-                if (b->field_4 > 0x80)
+                obj->field_4 += ISqrt_8003B918(DistanceSquared3D_8003B80C(obj->pos_44, obj->pos_50));
+                d[0] = obj->pos_44[0] - obj->pos_50[0];
+                d[1] = obj->pos_44[1] - obj->pos_50[1];
+                d[2] = obj->pos_44[2] - obj->pos_50[2];
+                if (obj->field_4 > 0x80)
                 {
-                    m = b->field_4 / 128;
+                    m = obj->field_4 / 128;
                     for (k = 0; k < m; k++)
                     {
-                        v[0] = b->pos_50[0] + d[0] * k / m;
-                        v[1] = b->pos_50[1] + d[1] * k / m;
-                        v[2] = b->pos_50[2] + d[2] * k / m;
-                        b->field_4 -= 0x80;
+                        v[0] = obj->pos_50[0] + d[0] * k / m;
+                        v[1] = obj->pos_50[1] + d[1] * k / m;
+                        v[2] = obj->pos_50[2] + d[2] * k / m;
+                        obj->field_4 -= 0x80;
                         sub_800C1A5C(v, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0)), 0x1000);
                     }
                 }
@@ -4255,75 +4255,75 @@ void sub_80015478(EventEntry* e, void* buf)
             break;
         case 19:
         case 44:
-            if (b->field_0 == b->field_C)
+            if (obj->field_0 == obj->hitStart_C)
             {
-                sub_800C32DC(b->field_1C, 0x21, 0, 0);
-                if (b->field_0 < b->field_A)
+                sub_800C32DC(obj->targetPos_1C, 0x21, 0, 0);
+                if (obj->field_0 < obj->hitEnd_A)
                 {
                     PlayMusic_800300E0(6, 1);
                 }
             }
-            if (b->field_0 % 12 == 0)
+            if (obj->field_0 % 12 == 0)
             {
-                sub_800C32DC(b->field_1C, 0x22, 0, 0);
+                sub_800C32DC(obj->targetPos_1C, 0x22, 0, 0);
             }
-            if (b->field_0 % 9 == 3)
+            if (obj->field_0 % 9 == 3)
             {
-                sub_800C32DC(b->field_1C, 0x23, 0, 0);
+                sub_800C32DC(obj->targetPos_1C, 0x23, 0, 0);
             }
-            if (b->field_0 % 9 == 6)
+            if (obj->field_0 % 9 == 6)
             {
-                sub_800C32DC(b->field_1C, 0x24, 0, 0);
+                sub_800C32DC(obj->targetPos_1C, 0x24, 0, 0);
             }
-            if (b->field_0 >= b->field_A)
+            if (obj->field_0 >= obj->hitEnd_A)
             {
                 StopSoundSeqById_800306FC(6);
             }
             break;
         case 18:
-            if (b->field_0 == 0)
+            if (obj->field_0 == 0)
             {
-                if (b->field_A != 0)
+                if (obj->hitEnd_A != 0)
                 {
                     PlayMusic_800300E0(6, 1);
                 }
-                sub_800C32DC(b->field_1C, 0, 0, 0);
+                sub_800C32DC(obj->targetPos_1C, 0, 0, 0);
             }
-            if (b->field_0 == b->field_A)
+            if (obj->field_0 == obj->hitEnd_A)
             {
                 StopSoundSeqById_800306FC(6);
             }
             break;
         case 37:
-            if (b->field_0 == 0)
+            if (obj->field_0 == 0)
             {
                 PlayMusic_800300E0(6, 1);
-                sub_800C32DC(b->field_1C, 3, 0, 0);
+                sub_800C32DC(obj->targetPos_1C, 3, 0, 0);
             }
-            if (b->field_0 == b->field_A)
+            if (obj->field_0 == obj->hitEnd_A)
             {
                 StopSoundSeqById_800306FC(6);
             }
             break;
         case 21:
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x27)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x27)), 0x1000);
             break;
         case 52:
-            if (b->field_0 == 0 && dword_8008D784 == 0)
+            if (obj->field_0 == 0 && effectSfxStarted_8008D784 == 0)
             {
-                dword_8008D784 = 1;
-                sub_800C1190(b->field_A - b->field_C, 0x45);
+                effectSfxStarted_8008D784 = 1;
+                sub_800C1190(obj->hitEnd_A - obj->hitStart_C, 0x45);
             }
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1AC)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1AC)), 0x1000);
             break;
         case 23:
             n = -1;
-            if (b->field_0 == 0 && dword_8008D784 == 0)
+            if (obj->field_0 == 0 && effectSfxStarted_8008D784 == 0)
             {
-                dword_8008D784 = 1;
-                sub_800C1190(b->field_A - b->field_C, 0x45);
+                effectSfxStarted_8008D784 = 1;
+                sub_800C1190(obj->hitEnd_A - obj->hitStart_C, 0x45);
             }
-            switch (b->field_A5)
+            switch (obj->hitVariant_A5)
             {
             case 4:
                 n = 0x1A;
@@ -4355,27 +4355,27 @@ void sub_80015478(EventEntry* e, void* buf)
             }
             if (n >= 0)
             {
-                sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x2000);
+                sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x2000);
             }
             break;
         case 26:
             PlayMusic_800300E0(6, 1);
-            e->cb_8 = (EventEntryFn)sub_80014C28;
+            e->cb_8 = (EventEntryFn)RepeatUntilOutcomeTask_80014C28;
             return;
         case 25:
             PlaySfx_80031494(0x50);
-            SpawnMdecEffect_80017A6C((int)b, 600);
-            e->cb_8 = (EventEntryFn)sub_80014CCC;
+            SpawnMdecEffect_80017A6C((int)obj, 600);
+            e->cb_8 = (EventEntryFn)LensFlareTask_80014CCC;
             return;
         case 24:
-            if (b->field_AC & 4)
+            if (obj->hitFlags_AC & 4)
             {
                 break;
             }
             p = 0;
             n = -1;
             f = 0;
-            switch (b->field_A5)
+            switch (obj->hitVariant_A5)
             {
             case -1:
                 p = &dword_800795DC;
@@ -4422,14 +4422,14 @@ void sub_80015478(EventEntry* e, void* buf)
                 p = &dword_800795E4;
                 n = 0x23;
                 f = 1;
-                sub_800C32DC(b->pos_44, 0xC0, 0, 0);
+                sub_800C32DC(obj->pos_44, 0xC0, 0, 0);
                 break;
             case 10:
                 n = -1;
-                sub_800C32DC(b->pos_44, 0xC0, 0, 0);
+                sub_800C32DC(obj->pos_44, 0xC0, 0, 0);
                 break;
             }
-            b->field_A5 = -1;
+            obj->hitVariant_A5 = -1;
             if (n < 0)
             {
                 break;
@@ -4437,21 +4437,21 @@ void sub_80015478(EventEntry* e, void* buf)
             PlaySeqSlot_80031160(0x13, 1);
             if (f)
             {
-                sub_800C1654(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x800, b->field_14, b->field_18 + 2 * 3); // the target's third bone
+                sub_800C1654(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x800, obj->srcPos_14, obj->srcBonePos_18 + 2 * 3); // the target's third bone
             }
             else
             {
-                sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0, 0x1E);
+                sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0, 0x1E);
             }
-            sub_80017158(b->pos_44, p);
+            SpawnLightFlash_80017158(obj->pos_44, p);
             break;
         case 1:
-            if (b->field_AC & 2)
+            if (obj->hitFlags_AC & 2)
             {
                 break;
             }
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 2)), 0x1000);
-            sub_800C1C5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 1)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 2)), 0x1000);
+            sub_800C1C5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 1)), 0x1000);
             break;
         case 3:
         {
@@ -4462,8 +4462,8 @@ void sub_80015478(EventEntry* e, void* buf)
             for (i = 0; i < 3; i++)
             {
                 s[1] = (i << 12) / 3;
-                sub_800C1A5C(b->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x24)), 0x1000);
-                sub_800C32DC(b->pos_44, 0xBF, 0, s[1]);
+                sub_800C1A5C(obj->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x24)), 0x1000);
+                sub_800C32DC(obj->pos_44, 0xBF, 0, s[1]);
             }
             break;
         }
@@ -4482,11 +4482,11 @@ void sub_80015478(EventEntry* e, void* buf)
             q->field_0 = 0;
             q->field_4 = 600;
             q->field_30 = 0;
-            q->field_1C = b->field_1C;
-            q->field_20 = b->field_20;
-            q->field_A0 = b->field_A0;
-            q->field_20 = b->field_20;
-            q->field_98 = b->field_98;
+            q->targetPos_1C = obj->targetPos_1C;
+            q->targetBonePos_20 = obj->targetBonePos_20;
+            q->scale_A0 = obj->scale_A0;
+            q->targetBonePos_20 = obj->targetBonePos_20;
+            q->bone_98 = obj->bone_98;
             idx = sub_80020F00(&effectFile_80091BD0, 1, 0x1E);
             e2->flags = (e2->flags | 1) & 0xFFFF7FFF;
             t = &effectFile_80091BD0.models_28[idx];
@@ -4499,49 +4499,49 @@ void sub_80015478(EventEntry* e, void* buf)
         }
         case 48:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1B)].count_0);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1B)), 0x1000);
-            if (b->field_AC & 4)
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1B)].count_0);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1B)), 0x1000);
+            if (obj->hitFlags_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1A)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1A)), 0, 0x1E);
             break;
         case 50:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1E)].count_0);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1E)), 0x1000);
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1D)), 0, 0xC);
-            if (b->field_AC & 4)
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x1E)].count_0);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1E)), 0x1000);
+            sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1D)), 0, 0xC);
+            if (obj->hitFlags_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1C)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1C)), 0, 0x1E);
             break;
         case 49:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)b, sub_800C32DC(b->pos_44, 0x16, 0, 0));
-            if (b->field_AC & 4)
+            SpawnMdecEffect_80017A6C((int)obj, sub_800C32DC(obj->pos_44, 0x16, 0, 0));
+            if (obj->hitFlags_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x20)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x20)), 0, 0x1E);
             break;
         case 30:
-            sub_800174F8(b, 5);
-            SpawnMdecEffect_80017A6C((int)b, 100);
+            SpawnPulseModel_800174F8(obj, 5);
+            SpawnMdecEffect_80017A6C((int)obj, 100);
             PlaySeqSlot_80031160(0x13, 1);
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0xC);
-            if (b->field_AC & 4)
+            sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0xC);
+            if (obj->hitFlags_AC & 4)
             {
                 break;
             }
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0x1E);
             break;
         case 6:
             PlaySeqSlot_80031160(0xE, 1);
-            sub_800C2914(b, 0x18);
-            SpawnMdecEffect_80017A6C((int)b, 100);
+            sub_800C2914(obj, 0x18);
+            SpawnMdecEffect_80017A6C((int)obj, 100);
             break;
         case 9:
         {
@@ -4553,17 +4553,17 @@ void sub_80015478(EventEntry* e, void* buf)
             for (i = 0; i < 5; i++)
             {
                 s[1] = (i << 12) / 5;
-                sub_800C1A5C(b->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x12)), 0x1000);
-                sub_800C32DC(b->field_1C, 0xB, 0, s[1]);
+                sub_800C1A5C(obj->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x12)), 0x1000);
+                sub_800C32DC(obj->targetPos_1C, 0xB, 0, s[1]);
             }
-            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x12)].count_0);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x12)].count_0);
             break;
         }
         case 8:
             PlaySeqSlot_80031160(0x10, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xA)), 0x1000);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 9)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xA)].count_0);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xA)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 9)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xA)].count_0);
             break;
         case 20:
         {
@@ -4571,12 +4571,12 @@ void sub_80015478(EventEntry* e, void* buf)
             PlaySeqSlot_80031160(0x14, 1);
             t = EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x18));
             idx = sub_80020F00(&effectFile_80091BD0, 1, 0x13);
-            sub_800C2E28(b->field_1C, &dword_800795D4, t, (int)&effectFile_80091BD0.models_28[idx], 0x1000, 6);
-            sub_800C32DC(b->field_1C, 0x12, 0, 0);
+            sub_800C2E28(obj->targetPos_1C, &dword_800795D4, t, (int)&effectFile_80091BD0.models_28[idx], 0x1000, 6);
+            sub_800C32DC(obj->targetPos_1C, 0x12, 0, 0);
             break;
         }
         case 13:
-            sub_800C1FFC(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1F)), 0, 0x1E);
+            sub_800C1FFC(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x1F)), 0, 0x1E);
             break;
         case 12:
         {
@@ -4584,7 +4584,7 @@ void sub_80015478(EventEntry* e, void* buf)
             s[0] = dword_800795D4.vx;
             s[1] = dword_800795D4.vy;
             s[2] = dword_800795D4.vz;
-            SpawnMdecEffect_80017A6C((int)b, sub_800C32DC(b->field_1C, 0xB1, 0, 0));
+            SpawnMdecEffect_80017A6C((int)obj, sub_800C32DC(obj->targetPos_1C, 0xB1, 0, 0));
             break;
         }
         case 11:
@@ -4592,20 +4592,20 @@ void sub_80015478(EventEntry* e, void* buf)
         case 16:
         case 17:
             PlaySfx_80031494(0x48);
-            SpawnMdecEffect_80017A6C((int)b, sub_800C32DC(b->field_1C, 0x1C, 0, 0));
+            SpawnMdecEffect_80017A6C((int)obj, sub_800C32DC(obj->targetPos_1C, 0x1C, 0, 0));
             break;
         case 27:
         {
             EffectModel* t;
             idx = sub_80020F00(&effectFile_80091BD0, 1, 0x15);
             t = &effectFile_80091BD0.models_28[idx];
-            b->field_88 = (int)t;
-            sub_800218A8(t->ftg_4, b->work_94 = malloc3_8003FC4C(0x54), 1);
-            sub_80039FE4(t->ftg_4, t->ftg_4 + 1, b->work_94);
-            b->field_30 = 0x1000;
-            e->cb_8 = sub_80017E30;
+            obj->field_88 = (int)t;
+            sub_800218A8(t->ftg_4, obj->work_94 = malloc3_8003FC4C(0x54), 1);
+            sub_80039FE4(t->ftg_4, t->ftg_4 + 1, obj->work_94);
+            obj->field_30 = 0x1000;
+            e->cb_8 = MorphInModelTask_80017E30;
             PlaySfx_80031494(0x4A);
-            SpawnMdecEffect_80017A6C((int)b, 0x40);
+            SpawnMdecEffect_80017A6C((int)obj, 0x40);
             return;
         }
         case 28:
@@ -4613,106 +4613,106 @@ void sub_80015478(EventEntry* e, void* buf)
         case 35:
         case 36:
             PlaySeqSlot_80031160(0x15, 1);
-            SpawnMdecEffect_80017A6C((int)b, sub_800C32DC(b->field_1C, 0x17, 0, 0));
+            SpawnMdecEffect_80017A6C((int)obj, sub_800C32DC(obj->targetPos_1C, 0x17, 0, 0));
             break;
         case 29:
             PlaySeqSlot_80031160(0x12, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xC)), 0x1000);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xB)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)b, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xC)].count_0);
-            sub_800C32DC(b->field_1C, 4, 0, 0);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xC)), 0x1000);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0xB)), 0x1000);
+            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0xC)].count_0);
+            sub_800C32DC(obj->targetPos_1C, 4, 0, 0);
             break;
         case 7:
         {
             int r;
-            r = sub_800C32DC(b->field_1C, 0x10, 0, 0);
-            SpawnMdecEffect_80017A6C((int)b, r);
+            r = sub_800C32DC(obj->targetPos_1C, 0x10, 0, 0);
+            SpawnMdecEffect_80017A6C((int)obj, r);
             sub_800C10B8(r, 0xD);
             break;
         }
         case 32:
-            sub_80017290(b, 0x11);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x17)), 0x1000);
+            SpawnGlowModel_80017290(obj, 0x11);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x17)), 0x1000);
             sub_800C10B8(0x35, 0xD);
             break;
         case 33:
             PlaySeqSlot_80031160(0x17, 1);
-            sub_800C1C5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x13)), 0x1000);
-            sub_800C32DC(b->field_1C, 0xC, 0, 0);
-            sub_800C32DC(b->field_1C, 0xD, 0, 0);
+            sub_800C1C5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x13)), 0x1000);
+            sub_800C32DC(obj->targetPos_1C, 0xC, 0, 0);
+            sub_800C32DC(obj->targetPos_1C, 0xD, 0, 0);
             break;
         case 31:
             PlaySeqSlot_80031160(0xF, 1);
-            SpawnMdecEffect_80017A6C((int)b, sub_800C32DC(b->field_1C, 0x1A, 0, 0));
+            SpawnMdecEffect_80017A6C((int)obj, sub_800C32DC(obj->targetPos_1C, 0x1A, 0, 0));
             break;
         case 38:
             PlaySfx_80031494(0x20);
             PlaySfx_80031494(0x21);
             PlaySfx_80031494(0x22);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 7)), 0x1000);
-            sub_800C32DC(b->field_1C, 1, 0, 0);
-            sub_800C32DC(b->field_1C, 2, 0, 0);
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 7)), 0x1000);
+            sub_800C32DC(obj->targetPos_1C, 1, 0, 0);
+            sub_800C32DC(obj->targetPos_1C, 2, 0, 0);
             break;
         case 39:
             sub_800C1190(0x14, 0x23);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x19)), 0x1000);
-            sub_800C32DC(b->field_1C, 0x14, 0, ratan2Difference_8003B9E0(b->field_1C, b->field_14));
-            b->field_4 = 3;
-            e->cb_8 = (EventEntryFn)sub_80016BF4;
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x19)), 0x1000);
+            sub_800C32DC(obj->targetPos_1C, 0x14, 0, ratan2Difference_8003B9E0(obj->targetPos_1C, obj->srcPos_14));
+            obj->field_4 = 3;
+            e->cb_8 = (EventEntryFn)CountdownTask_80016BF4;
             return;
         case 42:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 6)), 0x1000);
-            b->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 6));
-            b->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
-            b->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
-            b->field_8 = 0x1000;
-            b->field_4 = 0;
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 6)), 0x1000);
+            obj->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 6));
+            obj->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
+            obj->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
+            obj->field_8 = 0x1000;
+            obj->field_4 = 0;
             e->cb_8 = sub_800C1450;
             return;
         case 41:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
-            b->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
-            b->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
-            b->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
-            b->field_8 = 0x1000;
-            b->field_4 = 0;
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
+            obj->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
+            obj->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
+            obj->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
+            obj->field_8 = 0x1000;
+            obj->field_4 = 0;
             e->cb_8 = sub_800C1450;
             return;
         case 43:
             PlaySeqSlot_80031160(0x14, 1);
-            sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
-            b->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
-            b->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
-            b->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
-            b->field_8 = 0x1000;
-            b->field_4 = 0;
+            sub_800C1A5C(obj->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 4)), 0x1000);
+            obj->field_88 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 4));
+            obj->field_8C = EFF(sub_80020F00(&effectFile_80091BD0, 0, 3));
+            obj->field_90 = EFF(sub_80020F00(&effectFile_80091BD0, 0, 5));
+            obj->field_8 = 0x1000;
+            obj->field_4 = 0;
             e->cb_8 = sub_800C1450;
             return;
         case 40:
-            b->field_4 = 0;
-            e->cb_8 = (EventEntryFn)sub_80016E20;
+            obj->field_4 = 0;
+            e->cb_8 = (EventEntryFn)RadialBurstTask_80016E20;
             return;
         case 47:
-            SpawnMdecEffect_80017A6C((int)b, 100);
-            b->field_4 = 0;
-            e->cb_8 = (EventEntryFn)sub_80016FC8;
+            SpawnMdecEffect_80017A6C((int)obj, 100);
+            obj->field_4 = 0;
+            e->cb_8 = (EventEntryFn)QuadBurstTask_80016FC8;
             return;
         case 51:
-            if (b->field_AC & 0x38)
+            if (obj->hitFlags_AC & 0x38)
             {
                 PlaySfx_80031494(0x49);
-                b->field_4 = 0x10;
-                sub_800C32DC(b->pos_44, 6, 0, 0);
+                obj->field_4 = 0x10;
+                sub_800C32DC(obj->pos_44, 6, 0, 0);
             }
             break;
         }
     }
-    if (b->field_0 >= b->field_A)
+    if (obj->field_0 >= obj->hitEnd_A)
     {
         e->flags = (e->flags & ~1) | 0x8000;
     }
-    b->field_0++;
+    obj->field_0++;
 }
 #undef EFF

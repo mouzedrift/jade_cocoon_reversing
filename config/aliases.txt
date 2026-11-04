@@ -22,6 +22,6 @@ levantCaptureLevel_8008BD7C      # == saveData_8008B570.levantStatus_7C8.level_4
 allMinionsBitfields_8008BD84     # == saveData_8008B570.allMinionsBitfields_814
 dword_8008D60C                   # == dword_8008D600.pad
 dword_8008D654                   # == dword_8008D648.items_C
-dword_80091BE0                   # == effectFile_80091BD0.data_10
+effectRows_80091BE0                   # == effectFile_80091BD0.data_10
 mdecEffectSchedule_80091C00      # == effectFile_80091BD0.imageSets_30
 word_80091D0C                    # == seqSlotSound_80091D00.field_C_sep_access_num

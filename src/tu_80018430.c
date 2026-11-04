@@ -24,67 +24,67 @@
 
 typedef struct
 {
-    int field_0;
-    int field_4;
-    short ids_8[6];
+    int kind_0;     // effect object kind (EffectObj.kind_E), -1: unused row
+    int mode_4;     // 0: on the source actor, 1: on each target
+    short ids_8[6]; // effect table ids (FindEffectTblRow_80018908), -1: unused
 } EffectRow;
 extern struct_4s dword_800795F0[];
-extern EffectRow* dword_80091BE0;
-extern int dword_8008D784;
-extern int sub_80018908(int id, short (*tbl)[6]);
-extern void sub_800149A4(EffectArgs* a);
-void sub_8001852C(ActorEffectReq* p, int a1);
+extern EffectRow* effectRows_80091BE0;
+extern int effectSfxStarted_8008D784;
+extern int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
+extern void SpawnEffectObject_800149A4(EffectArgs* a);
+void SpawnActorEffects_8001852C(ActorEffectReq* p, int a1);
 // Matched
-void sub_80018430(short v)
+void SetHitVariant_80018430(short variant)
 {
-    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
-    base->field_40 = v;
+    EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
+    state->hitVariant_40 = variant;
 }
 // Matched
 void sub_80018448(short v)
 {
-    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
-    base->field_42 = v;
+    EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
+    state->field_42 = v;
 }
 // Matched
 void sub_80018460(int on)
 {
-    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
+    EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     if (on)
     {
-        base->flags_28 |= 8;
+        state->flags_28 |= 8;
     }
     else
     {
-        base->flags_28 &= ~8;
+        state->flags_28 &= ~8;
     }
 }
 // Matched
-void sub_800184A0(int arg, int bit)
+void SetTargetHitFlag_800184A0(int slot, int bit)
 {
-    EffectTaskState* base = effectTask_8008D3F8->entry.buffer;
+    EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     if (bit == 0)
     {
-        base->bits_44[arg] = 0;
+        state->hitFlags_44[slot] = 0;
     }
     else
     {
-        base->bits_44[arg] |= 1 << bit;
+        state->hitFlags_44[slot] |= 1 << bit;
     }
 }
 // Matched
-int sub_800184DC(ActorEffectReq* a0, int a1)
+int PlayActorEffect_800184DC(ActorEffectReq* req, int slot)
 {
-    EffectTaskState* p = effectTask_8008D3F8->entry.buffer;
-    sub_8001852C(a0, p->bits_44[a1]);
-    p->flags_28 |= 1;
+    EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
+    SpawnActorEffects_8001852C(req, state->hitFlags_44[slot]);
+    state->flags_28 |= 1;
     return 1;
 }
 // Matched
-void sub_8001852C(ActorEffectReq* p, int a1)
+void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
 {
     EffectArgs args;
-    EffectRow* base;
+    EffectRow* rows;
     int i;
     int j;
     int k;
@@ -94,87 +94,87 @@ void sub_8001852C(ActorEffectReq* p, int a1)
     int idx;
     short (*tbl)[6];
 
-    base = dword_80091BE0;
-    dword_8008D784 = 0;
+    rows = effectRows_80091BE0;
+    effectSfxStarted_8008D784 = 0;
     for (n = 0; n < 10; n++)
     {
-        if (p->hitTimes_4[n].field_0 >= 0)
+        if (req->hitTimes_4[n].field_0 >= 0)
         {
-            p->hitTimes_4[n].field_0 += dword_800795F0[p->effect_0].field_2;
+            req->hitTimes_4[n].field_0 += dword_800795F0[req->effect_0].field_2;
         }
-        if (p->hitTimes_4[n].field_2 >= 0)
+        if (req->hitTimes_4[n].field_2 >= 0)
         {
-            p->hitTimes_4[n].field_2 += dword_800795F0[p->effect_0].field_2;
+            req->hitTimes_4[n].field_2 += dword_800795F0[req->effect_0].field_2;
         }
     }
     for (k = 0; k < 10; k++)
     {
-        if (base[k].field_0 == -1)
+        if (rows[k].kind_0 == -1)
         {
             continue;
         }
         for (j = 0; j < 6; j++)
         {
-            id = *(short*)((char*)base + (k * 20 + j * 2) + 8);
-            mode = base[k].field_4;
+            id = *(short*)((char*)rows + (k * 20 + j * 2) + 8);
+            mode = rows[k].mode_4;
             if (id == -1)
             {
                 continue;
             }
             if (mode == 0)
             {
-                tbl = p->tbl_8;
-                idx = sub_80018908(id, tbl);
-                if (idx == -1 || p->hitTimes_4[k].field_0 == -1)
+                tbl = req->tbl_8;
+                idx = FindEffectTblRow_80018908(id, tbl);
+                if (idx == -1 || req->hitTimes_4[k].field_0 == -1)
                 {
                     continue;
                 }
-                args.field_0 = base[k].field_0;
-                args.field_4 = p->pos_C;
-                args.field_8 = p->bonePos_10;
-                args.field_C = p->pos_C;
-                args.field_10 = p->bonePos_10;
-                args.field_18 = p->boneMatrices_14;
-                args.scale_14 = &tbl[idx][2];
-                args.field_1C = p->hitTimes_4[k].field_0;
-                args.field_1E = p->hitTimes_4[k].field_2;
-                args.field_24 = tbl[idx][1];
-                args.field_28 = p->boneScale_34;
-                args.field_2C = p->scale_38;
-                args.field_30 = p->targets_44[0].field_34;
-                sub_800149A4(&args);
+                args.kind_0 = rows[k].kind_0;
+                args.srcPos_4 = req->pos_C;
+                args.srcBonePos_8 = req->bonePos_10;
+                args.targetPos_C = req->pos_C;
+                args.targetBonePos_10 = req->bonePos_10;
+                args.targetBoneMatrices_18 = req->boneMatrices_14;
+                args.offset_14 = &tbl[idx][2];
+                args.hitStart_1C = req->hitTimes_4[k].field_0;
+                args.hitEnd_1E = req->hitTimes_4[k].field_2;
+                args.bone_24 = tbl[idx][1];
+                args.boneScales_28 = req->boneScale_34;
+                args.scale_2C = req->scale_38;
+                args.hitFlags_30 = req->targets_44[0].hitFlags_34;
+                SpawnEffectObject_800149A4(&args);
             }
             else if (mode == 1)
             {
-                for (i = 0; i < p->count_40; i++)
+                for (i = 0; i < req->count_40; i++)
                 {
-                    tbl = p->targets_44[i].tbl_0;
-                    idx = sub_80018908(id, tbl);
-                    if (idx == -1 || p->hitTimes_4[k].field_0 == -1)
+                    tbl = req->targets_44[i].tbl_0;
+                    idx = FindEffectTblRow_80018908(id, tbl);
+                    if (idx == -1 || req->hitTimes_4[k].field_0 == -1)
                     {
                         continue;
                     }
-                        args.field_0 = base[k].field_0;
-                    args.field_4 = p->pos_C;
-                    args.field_8 = p->bonePos_10;
-                    args.field_C = p->targets_44[i].pos_4;
-                    args.field_10 = p->targets_44[i].bonePos_8;
-                    args.field_18 = p->targets_44[i].boneMatrices_C;
-                    args.scale_14 = &tbl[idx][2];
-                    args.field_1C = p->hitTimes_4[k].field_0;
-                    args.field_1E = p->hitTimes_4[k].field_2;
-                    args.field_24 = tbl[idx][1];
-                    args.field_28 = p->targets_44[i].boneScale_2C;
-                    args.field_2C = p->targets_44[i].scale_30;
-                    args.field_30 = p->targets_44[i].field_34;
-                    sub_800149A4(&args);
+                        args.kind_0 = rows[k].kind_0;
+                    args.srcPos_4 = req->pos_C;
+                    args.srcBonePos_8 = req->bonePos_10;
+                    args.targetPos_C = req->targets_44[i].pos_4;
+                    args.targetBonePos_10 = req->targets_44[i].bonePos_8;
+                    args.targetBoneMatrices_18 = req->targets_44[i].boneMatrices_C;
+                    args.offset_14 = &tbl[idx][2];
+                    args.hitStart_1C = req->hitTimes_4[k].field_0;
+                    args.hitEnd_1E = req->hitTimes_4[k].field_2;
+                    args.bone_24 = tbl[idx][1];
+                    args.boneScales_28 = req->targets_44[i].boneScale_2C;
+                    args.scale_2C = req->targets_44[i].scale_30;
+                    args.hitFlags_30 = req->targets_44[i].hitFlags_34;
+                    SpawnEffectObject_800149A4(&args);
                 }
             }
         }
     }
 }
 // Matched
-int sub_80018908(int id, short (*tbl)[6])
+int FindEffectTblRow_80018908(int id, short (*tbl)[6])
 {
     int i;
     int r = -1;
@@ -207,27 +207,27 @@ int sub_80018908(int id, short (*tbl)[6])
     return r;
 }
 // Matched
-int sub_800189F8(void)
+int GetWeaponEffect_800189F8(void)
 {
     SaveData* sd = &saveData_8008B570;
-    EquipmentData* p = GetWeaponData_8001CF84(*((unsigned char*)sd + 0x7E4));
+    EquipmentData* weapon = GetWeaponData_8001CF84(*((unsigned char*)sd + 0x7E4));
     sub_800BFAF8(*((unsigned char*)sd + 0x7E4));
-    return dword_80079708[p->field_2];
+    return weaponEffectIds_80079708[weapon->field_2];
 }
 typedef struct
 {
     short a;
     short b;
 } ShortPair;
-extern int sub_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** a2);
+extern int SetupCommandAction_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** a2);
 // Matched
-ShortPair sub_80018A4C(Actor* obj, int* p, ActorScriptCmd** a2, int c)
+ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c)
 {
     ShortPair r;
-    ActorActionDesc d;
+    ActorActionDesc desc;
     short (*q)[2];
     memset(&r, 0, 4);
-    if (p[0] == 0x16)
+    if (cmd[0] == 0x16)
     {
         /* animation 27: its last hit window is at least 30 frames from its start */
         q = obj->anims_148[27].hitFrames_8;
@@ -242,31 +242,31 @@ ShortPair sub_80018A4C(Actor* obj, int* p, ActorScriptCmd** a2, int c)
             q[9][1] = q[9][0] + 30;
         }
     }
-    d.hitAnim_E = -1;
-    d.effect_10 = -1;
-    d.nextAnim_24 = -1;
-    d.nextAnim_26 = -1;
-    d.field_28 = -1;
-    d.queuedAnim_2A = -1;
-    d.flags_0 = 0;
-    d.script_4 = 0;
-    d.target_8 = 0;
-    d.turnStep_C = 0;
-    d.effectKinds_18 = 0;
-    d.loopCount_20 = 0;
-    d.scaleTarget_22 = 0;
-    d.field_1C = 1;
-    d.field_2C = 0;
-    d.path_30 = 0;
-    d.field_1C = (c == 0);
-    d.effectMask_14 = p[2];
-    if (sub_80018C00(&d, p, a2))
+    desc.hitAnim_E = -1;
+    desc.effect_10 = -1;
+    desc.nextAnim_24 = -1;
+    desc.nextAnim_26 = -1;
+    desc.field_28 = -1;
+    desc.queuedAnim_2A = -1;
+    desc.flags_0 = 0;
+    desc.script_4 = 0;
+    desc.target_8 = 0;
+    desc.turnStep_C = 0;
+    desc.effectKinds_18 = 0;
+    desc.loopCount_20 = 0;
+    desc.scaleTarget_22 = 0;
+    desc.field_1C = 1;
+    desc.field_2C = 0;
+    desc.path_30 = 0;
+    desc.field_1C = (c == 0);
+    desc.effectMask_14 = cmd[2];
+    if (SetupCommandAction_80018C00(&desc, cmd, scripts))
     {
-        d.field_1C = 1;
+        desc.field_1C = 1;
     }
-    r.a = sub_8001E254(obj, &d);
+    r.a = sub_8001E254(obj, &desc);
     r.b = sub_8001F03C((int)obj, (int)obj->script_D0, -1, 0x10);
-    if (p[0] != 0x12 && c)
+    if (cmd[0] != 0x12 && c)
     {
         r.a = 0;
     }
@@ -277,109 +277,109 @@ extern int sub_8001AC8C(int idx);
 extern int sub_80031870(int a0);
 extern int sub_800316EC(int a0, int a1);
 // Matched
-int sub_80018C00(ActorActionDesc* d, int* p, ActorScriptCmd** t)
+int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)
 {
     int r;
-    if (t == 0)
+    if (scripts == 0)
     {
-        t = off_8007A024;
+        scripts = commandScripts_8007A024;
     }
-    switch (p[0])
+    switch (cmd[0])
     {
     case 0:
-        d->script_4 = t[2];
-        d->hitAnim_E = 5;
-        d->effect_10 = 0x13;
-        d->effectKinds_18 = p[3];
+        desc->script_4 = scripts[2];
+        desc->hitAnim_E = 5;
+        desc->effect_10 = 0x13;
+        desc->effectKinds_18 = cmd[3];
         break;
     case 1:
-        d->script_4 = t[9];
-        d->turnStep_C = p[1];
-        d->hitAnim_E = 0xC;
-        d->effect_10 = sub_8001AC8C(p[1]);
-        d->effectKinds_18 = p[3];
+        desc->script_4 = scripts[9];
+        desc->turnStep_C = cmd[1];
+        desc->hitAnim_E = 0xC;
+        desc->effect_10 = sub_8001AC8C(cmd[1]);
+        desc->effectKinds_18 = cmd[3];
         break;
     case 2:
-        d->hitAnim_E = 4;
-        d->effect_10 = 0x3A;
-        d->script_4 = t[17];
-        d->effectKinds_18 = p[2];
+        desc->hitAnim_E = 4;
+        desc->effect_10 = 0x3A;
+        desc->script_4 = scripts[17];
+        desc->effectKinds_18 = cmd[2];
         break;
     case 3:
-        d->hitAnim_E = 4;
-        d->effect_10 = 0x39;
-        d->script_4 = t[18];
-        d->effectKinds_18 = p[2];
+        desc->hitAnim_E = 4;
+        desc->effect_10 = 0x39;
+        desc->script_4 = scripts[18];
+        desc->effectKinds_18 = cmd[2];
         break;
     case 6:
-        r = sub_80031870(p[1]);
-        d->script_4 = t[3 + r];
-        d->turnStep_C = r;
-        d->hitAnim_E = r + 6;
-        d->effect_10 = sub_800316EC(p[1], p[2]);
-        d->effectKinds_18 = p[3];
+        r = sub_80031870(cmd[1]);
+        desc->script_4 = scripts[3 + r];
+        desc->turnStep_C = r;
+        desc->hitAnim_E = r + 6;
+        desc->effect_10 = sub_800316EC(cmd[1], cmd[2]);
+        desc->effectKinds_18 = cmd[3];
         break;
     case 7:
-        d->script_4 = t[13];
-        d->hitAnim_E = 4;
+        desc->script_4 = scripts[13];
+        desc->hitAnim_E = 4;
         break;
     case 9:
-        d->script_4 = t[10];
-        d->hitAnim_E = 0xD;
+        desc->script_4 = scripts[10];
+        desc->hitAnim_E = 0xD;
         break;
     case 10:
-        d->script_4 = t[11];
-        d->hitAnim_E = 0xE;
+        desc->script_4 = scripts[11];
+        desc->hitAnim_E = 0xE;
         break;
     case 11:
-        d->script_4 = t[16];
-        d->hitAnim_E = 0x15;
+        desc->script_4 = scripts[16];
+        desc->hitAnim_E = 0x15;
         break;
     case 12:
-        d->script_4 = t[12];
-        d->hitAnim_E = 0x14;
+        desc->script_4 = scripts[12];
+        desc->hitAnim_E = 0x14;
         break;
     case 13:
-        d->script_4 = t[20];
+        desc->script_4 = scripts[20];
         break;
     case 14:
-        d->script_4 = t[19];
+        desc->script_4 = scripts[19];
         break;
     case 15:
-        d->script_4 = t[22];
-        d->hitAnim_E = 0x18;
+        desc->script_4 = scripts[22];
+        desc->hitAnim_E = 0x18;
         break;
     case 16:
-        d->script_4 = t[21];
-        d->hitAnim_E = 0x17;
+        desc->script_4 = scripts[21];
+        desc->hitAnim_E = 0x17;
         break;
     case 18:
-        d->script_4 = t[14];
-        d->hitAnim_E = 0x12;
+        desc->script_4 = scripts[14];
+        desc->hitAnim_E = 0x12;
         break;
     case 17:
-        d->script_4 = t[15];
-        d->hitAnim_E = 0x13;
+        desc->script_4 = scripts[15];
+        desc->hitAnim_E = 0x13;
         break;
     case 19:
-        d->script_4 = t[23];
-        d->hitAnim_E = 0x19;
+        desc->script_4 = scripts[23];
+        desc->hitAnim_E = 0x19;
         break;
     case 21:
-        d->hitAnim_E = 0x1A;
-        d->effect_10 = dword_800B129C[0] ? 0x3A : 0x39;
-        d->script_4 = t[17];
-        d->effectKinds_18 = p[2];
+        desc->hitAnim_E = 0x1A;
+        desc->effect_10 = dword_800B129C[0] ? 0x3A : 0x39;
+        desc->script_4 = scripts[17];
+        desc->effectKinds_18 = cmd[2];
         break;
     case 22:
-        d->hitAnim_E = 0x1B;
-        d->effect_10 = dword_800B129C[0] ? 0x39 : 0x3A;
-        d->script_4 = t[18];
-        d->effectKinds_18 = p[2];
+        desc->hitAnim_E = 0x1B;
+        desc->effect_10 = dword_800B129C[0] ? 0x39 : 0x3A;
+        desc->script_4 = scripts[18];
+        desc->effectKinds_18 = cmd[2];
         break;
     case 5:
     case 26:
-        d->script_4 = t[0x70 / 4 + p[1]];
+        desc->script_4 = scripts[0x70 / 4 + cmd[1]];
         break;
     case 27:
         break;

@@ -18,7 +18,7 @@ extern unsigned char dword_800C8B30;
 
 extern int sub_800A2AB4();
 
-extern void sub_80018430(int a);
+extern void SetHitVariant_80018430(int a);
 
 extern int sub_800AD8E4();
 
@@ -358,7 +358,7 @@ extern void sub_800A2AE8();
 
 extern void PlaySeqSlot_80031160();
 
-extern void sub_80018A4C();
+extern void StartCommandAction_80018A4C();
 
 extern int LoadOverlay_80020BF8();
 

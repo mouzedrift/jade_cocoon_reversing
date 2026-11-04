@@ -28,7 +28,7 @@ typedef struct
 } Block104;
 
 /* cameraState_8008D4F0.ent_44: accessed through its own symbol (going through cameraState changes the codegen) */
-extern CamEntry stru_8008D534[8];
+extern CamEntry pointLights_8008D534[8];
 extern VECTOR dword_8008D600; // camera eye (cameraState_8008D4F0.field_14)
 
 typedef struct

@@ -333,7 +333,7 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     out->field_18 = 0;
     out->field_1C = 0;
     out->field_20 = 0;
-    sub_800184A0(b2, 0);
+    SetTargetHitFlag_800184A0(b2, 0);
     q = &local;
     switch (p[0])
     {
@@ -482,8 +482,8 @@ void sub_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, ActionResult* out)
     }
     if (out->kind_0 == 5)
     {
-        sub_800184A0(b2, 1);
-        sub_800184A0(b2, 2);
+        SetTargetHitFlag_800184A0(b2, 1);
+        SetTargetHitFlag_800184A0(b2, 2);
     }
 }
 // Matched
