@@ -535,8 +535,8 @@ extern void NewGameMemCardOk_800A1728();
 extern void sub_800BB9F4(int a0);
 extern void sub_800BC9DC(int a0, int* a1, int* a2);
 extern void sub_800BAFB0(int a0);
-extern int sub_800BAE2C(void);
-extern int sub_800BAE3C(void);
+extern int GetCardFreeBlocks_800BAE2C(void);
+extern int GetCardSaveCount_800BAE3C(void);
 // Matched
 void NewGameCheckMemCards_800A14A8(TitleTask* t)
 {
@@ -567,7 +567,7 @@ void NewGameCheckMemCards_800A14A8(TitleTask* t)
         }
         {
             sub_800BAFB0(i);
-            if (sub_800BAE2C() || sub_800BAE3C())
+            if (GetCardFreeBlocks_800BAE2C() || GetCardSaveCount_800BAE3C())
             {
                 t->next_8 = NewGameMemCardOk_800A1728;
                 return;
@@ -753,7 +753,7 @@ void InitNewGameData_800A1BCC(void)
 }
 
 extern int dword_8008BD80;
-extern void sub_800B7674(int a, int b);
+extern void LoadMenuInit_800B7674(int a, int b);
 extern void LoadGameWait_800A1CC0(TitleTaskM* t);
 
 // Matched
@@ -763,7 +763,7 @@ void MenuLoadGame_800A1C18(TitleTaskM* t)
     LoadOverlay_80020BF8(2, 0x10);
     SetDisplayMode_80040658(1);
     dword_8008BD80 = -2;
-    sub_800B7674(1, 0);
+    LoadMenuInit_800B7674(1, 0);
     t->next_8 = LoadGameWait_800A1CC0;
 }
 
@@ -779,15 +779,15 @@ void MenuQuickStart_800A1C7C(TitleTaskM* t)
     TitleExit_800A1AFC(t, 0xC);
 }
 
-extern int sub_800B793C(void);
-extern int sub_800B7914(void);
+extern int IsLoadMenuActive_800B793C(void);
+extern int GetLoadMenuLoaded_800B7914(void);
 
 // Matched
 void LoadGameWait_800A1CC0(TitleTaskM* t)
 {
-    if (!sub_800B793C())
+    if (!IsLoadMenuActive_800B793C())
     {
-        if (sub_800B7914() == 1)
+        if (GetLoadMenuLoaded_800B7914() == 1)
         {
             if (saveData_8008B570.field_0 & 0x80)
             {
@@ -827,7 +827,7 @@ void MenuConfig_800A1D8C(TitleTaskM* t)
     t->next_8 = ConfigWaitUiTiy_800A1DD8;
 }
 
-extern void sub_800C2EB4(void);
+extern void StartConfigMenu_800C2EB4(void);
 extern void ConfigWait_800A1E24();
 
 // Matched
@@ -836,18 +836,18 @@ void ConfigWaitUiTiy_800A1DD8(TitleTaskM* t)
     if (uiTiyLoaded_8008B4E8)
     {
         SetFadeMode_8001C19C(3, 0x20);
-        sub_800C2EB4();
+        StartConfigMenu_800C2EB4();
         t->next_8 = ConfigWait_800A1E24;
     }
 }
 
-extern int sub_800C45D8(void);
+extern int IsConfigMenuActive_800C45D8(void);
 extern void ConfigReturn_800A1E9C();
 
 // Matched
 void ConfigWait_800A1E24(TitleTaskM* t, TitleMenuWork* u)
 {
-    if (!sub_800C45D8())
+    if (!IsConfigMenuActive_800C45D8())
     {
         u->frames_0 = 0;
         FreeActiveOverlay_8002C014();

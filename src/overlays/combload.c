@@ -34,7 +34,7 @@ extern void CombatNextStage_800A16FC();
 extern void CopySaveMinionsToRoster_800A1988();
 extern void LoadMenuInit_800B7674(int, int);
 extern int IsLoadMenuActive_800B793C();
-extern int sub_800B7914();
+extern int GetLoadMenuLoaded_800B7914();
 extern void DrawMenuBackground_8002BE10();
 extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
 
@@ -65,7 +65,7 @@ void CombLoadWaitMenu_800A41A8(CombLoadTask* task)
 {
     if (IsLoadMenuActive_800B793C() == 0)
     {
-        if (sub_800B7914() == 1)
+        if (GetLoadMenuLoaded_800B7914() == 1)
         {
             CopySaveMinionsToRoster_800A1988();
         }
