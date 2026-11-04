@@ -441,8 +441,7 @@ unsigned int XaNoRequestPending_800435A4(void)
 {
     return xaRequestPending_80096118 >> 31;
 }
-#if 0
-// Not matched: only next/next2 get swapped registers ($s6/$s7, 7 words). Also tried: declaration orders, static inline node-init helper, next2 = next + 1 / n + 2 / next2++ forms, head->next = head + 1, separate count-loop vars, int i, idx = 0 outside the for; permuter 1000: nothing
+// Matched
 EventNode* CreateEventList_800435B4(EventDesc** list)
 {
     EventDesc** descs;
@@ -470,9 +469,10 @@ EventNode* CreateEventList_800435B4(EventDesc** list)
     node = head;
     next = head + 1;
     head->prev_0 = (int)prev;
-    next2 = head + 2;
-    last = head;
+    next2 = next;
     head->next = next;
+    next2++;
+    last = head;
     head->entry.size = 0;
     head->entry.buffer = NULL;
     head->entry.flags = 0;
@@ -526,8 +526,6 @@ EventNode* CreateEventList_800435B4(EventDesc** list)
     last->next = NULL;
     return head;
 }
-#endif
-INCLUDE_ASM(CreateEventList_800435B4);
 // Matched
 void* EventEntryAllocBuffer_800437E8(int* entry, int size)
 {

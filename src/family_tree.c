@@ -72,10 +72,7 @@ extern void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char
 extern void DrawElementIconsRow_8002B1B0(short mask, int pos, int ot);
 extern void DrawUiWindow_8002A384(UiWindowArgs* args);
 extern void DrawLine_80042870(DVECTOR* from, DVECTOR* to, unsigned char* rgb, void* ot);
-#if 0
-// Not matched (4 words): writing pos.y through pp once gets the m/pp/table saved registers right (19 words with pos.y),
-// but that store then goes through $s4 instead of $sp; the (short)w sll goes to a0 instead of v0 (int / u_short /
-// u_char w, ternary: no)
+// Matched
 void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
 {
     RECT rect;
@@ -87,7 +84,6 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
     UiWindowArgs win;
     unsigned char* name;
     Pos16* pPos;
-    short elemMask;
     int i;
     int k;
     color = familyTreeLineColor_800743CC;
@@ -109,21 +105,19 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
             name = GetAncestorName_80033830(m, i - 1);
         }
         pos.x = familyTreeBoxPos_80082DCC[i]->x + base->x + 3;
-        pPos->y = familyTreeBoxPos_80082DCC[i]->y + base->y + 4;
+        pos.y = familyTreeBoxPos_80082DCC[i]->y + base->y + 4;
         DrawSmallText_8002FAA0(0, (unsigned short*)pPos, name, ot);
         pos.x = (unsigned short)(base->x + 4) + familyTreeBoxPos_80082DCC[i]->x;
         pos.y = (unsigned short)(base->y + 0x10) + familyTreeBoxPos_80082DCC[i]->y;
         if (i == 0)
         {
             GetElementLevels_80033864(m, levels);
-            elemMask = ElementLevelsToMask_8002F424(levels);
+            DrawElementIconsRow_8002B1B0(ElementLevelsToMask_8002F424(levels), (int)pPos, ot);
         }
         else
         {
-            elemMask = GetAncestorElementMask_80033848(m, i - 1);
-
+            DrawElementIconsRow_8002B1B0(GetAncestorElementMask_80033848(m, i - 1), (int)pPos, ot);
         }
-        DrawElementIconsRow_8002B1B0(elemMask, (int)pPos, ot);
         win.field_8 = 0;
         win.rect = (int)&rect;
         win.ot = ot;
@@ -139,5 +133,3 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
         DrawLine_80042870((DVECTOR*)&lineFrom, (DVECTOR*)&lineTo, (unsigned char*)&color, &pOT_8008D454[ot]);
     }
 }
-#endif
-INCLUDE_ASM(DrawFamilyTree_8002D7D0);
