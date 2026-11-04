@@ -4,29 +4,22 @@
 #include "globals.h"
 #include "shopctrl.h"
 
-typedef struct ShopCtrlTask
-{
-    unsigned int flags_0;
-    int field_4;
-    void (*next_8)();
-} ShopCtrlTask;
-
 extern int dword_8008D438;
 extern int dword_8008D670;
-typedef struct { unsigned int pad:5; unsigned int f5:1; } ShopCtrlFlags;
-extern ShopCtrlFlags dword_8008B58C;
 extern int eventDispatchHalt_8008B540;
 extern short word_8008D474[2];
 extern int cameraState_8008D4F0;
-extern void sub_800B6720();
-extern void sub_800B6840();
-extern void sub_800B6898();
-extern void sub_800B6900();
-extern void sub_800B6AE0();
-extern void sub_800B6964();
-extern void sub_800B6A6C();
-extern void sub_800B67C0();
-extern void sub_800B681C();
+extern // restores the map camera GAME saved before the shop and recentres the geometry offset
+void RestoreMapCamera_800B6720();
+extern void ShopCtrlLoadOverlay_800B6840(EventEntry* t, void* buffer);
+extern void ShopCtrlWaitOverlay_800B6898(EventEntry* t, void* buffer);
+extern void ShopCtrlWaitUiReload_800B6900(EventEntry* t, void* buffer);
+extern void ShopCtrlStartMode_800B6AE0(EventEntry* t, void* buffer);
+extern // waits for a mode request: 0 shop, 1 name entry, 2 resume, 3 leave the shop (reload the area)
+void ShopCtrlIdle_800B6964(EventEntry* t, void* buffer);
+extern void ShopCtrlWaitMapReload_800B6A6C(EventEntry* t, void* buffer);
+extern void ShopCtrlInit_800B67C0(EventEntry* t, void* buffer);
+extern void ShopCtrlWaitUiTiy_800B681C(EventEntry* t, void* buffer);
 extern void StartNameEntry_800B6E4C(int, int);
 extern void sub_800B9DA8();
 extern void sub_800BB058(int);
@@ -43,18 +36,20 @@ extern void FreeActiveOverlay_8002C014();
 
 int dword_800B66C0 SDATA = 30;
 
-void sub_800B66C4(int a)
+// starts the shop controller task: it loads SHOP (or NAME for a rename) into the slot behind it
+void StartShopCtrl_800B66C4(int shopId)
 {
     EventEntry* e = AllocEventEntry_80043AF8((EventNode*)dword_8008D438);
     if (e)
     {
-        word_800B6CEA = a;
+        shopCtrlShopId_800B6CEA = shopId;
         e->flags = (e->flags | 1) & ~0x8000;
-        sub_800B6720();
+        RestoreMapCamera_800B6720();
     }
 }
 
-void sub_800B6720()
+// restores the map camera GAME saved before the shop and recentres the geometry offset
+void RestoreMapCamera_800B6720()
 {
     unsigned short* s;
     unsigned int* buf = sub_800A55B0(3);
@@ -64,80 +59,81 @@ void sub_800B6720()
     SetGeomOffset((short)s[6] / 2 + word_8008D474[0], (short)s[7] / 2 + word_8008D474[1]);
 }
 
-void sub_800B67C0(ShopCtrlTask* t)
+void ShopCtrlInit_800B67C0(EventEntry* t, void* buffer)
 {
     SetFadeMode_8001C19C(0, 0x20);
     sub_800A7B00(-1);
-    word_800B6CE8 = 0;
-    word_800B6CEC = 0;
-    dword_800B6CF8 = 0;
+    shopCtrlPrevMode_800B6CE8 = 0;
+    shopCtrlMode_800B6CEC = 0;
+    shopCtrlReloadUi_800B6CF8 = 0;
     LoadUiTiy_8002BF74();
-    t->next_8 = sub_800B681C;
+    t->cb_8 = ShopCtrlWaitUiTiy_800B681C;
 }
 
-void sub_800B681C(ShopCtrlTask* t)
+void ShopCtrlWaitUiTiy_800B681C(EventEntry* t, void* buffer)
 {
     if (uiTiyLoaded_8008B4E8)
     {
-        t->next_8 = sub_800B6840;
+        t->cb_8 = ShopCtrlLoadOverlay_800B6840;
     }
 }
 
-void sub_800B6840(ShopCtrlTask* t)
+void ShopCtrlLoadOverlay_800B6840(EventEntry* t, void* buffer)
 {
-    dword_800B6CF4 = LoadOverlay_80020BF8(1, shopOverlayIds_800B6CD8[word_800B6CEC]);
-    t->next_8 = sub_800B6898;
+    shopCtrlOverlayReq_800B6CF4 = LoadOverlay_80020BF8(1, shopOverlayIds_800B6CD8[shopCtrlMode_800B6CEC]);
+    t->cb_8 = ShopCtrlWaitOverlay_800B6898;
 }
 
-void sub_800B6898(ShopCtrlTask* t)
+void ShopCtrlWaitOverlay_800B6898(EventEntry* t, void* buffer)
 {
-    if (GetFileRequestStatus_8003BE30(dword_800B6CF4) == 0)
+    if (GetFileRequestStatus_8003BE30(shopCtrlOverlayReq_800B6CF4) == 0)
     {
-        if (dword_800B6CF8)
+        if (shopCtrlReloadUi_800B6CF8)
         {
             LoadUiTiy_8002BF74();
-            t->next_8 = sub_800B6900;
+            t->cb_8 = ShopCtrlWaitUiReload_800B6900;
         }
         else
         {
-            t->next_8 = sub_800B6AE0;
+            t->cb_8 = ShopCtrlStartMode_800B6AE0;
         }
     }
 }
 
-void sub_800B6900(ShopCtrlTask* t)
+void ShopCtrlWaitUiReload_800B6900(EventEntry* t, void* buffer)
 {
     if (uiTiyLoaded_8008B4E8)
     {
         DrawMenuBackground_8002BE10();
-        if (dword_800B6CF8)
+        if (shopCtrlReloadUi_800B6CF8)
         {
-            t->next_8 = sub_800B6AE0;
+            t->cb_8 = ShopCtrlStartMode_800B6AE0;
         }
         else
         {
-            t->next_8 = sub_800B6840;
+            t->cb_8 = ShopCtrlLoadOverlay_800B6840;
         }
-        dword_800B6CF8 = 0;
+        shopCtrlReloadUi_800B6CF8 = 0;
     }
 }
 
-void sub_800B6964(ShopCtrlTask* t)
+// waits for a mode request: 0 shop, 1 name entry, 2 resume, 3 leave the shop (reload the area)
+void ShopCtrlIdle_800B6964(EventEntry* t, void* buffer)
 {
-    if (word_800B6CEC != word_800B6CE8)
+    if (shopCtrlMode_800B6CEC != shopCtrlPrevMode_800B6CE8)
     {
-        if (word_800B6CEC != 3)
+        if (shopCtrlMode_800B6CEC != 3)
         {
             sub_800A7B00(-1);
-            if (word_800B6CEC == 2 && dword_8008B58C.f5 == 1)
+            if (shopCtrlMode_800B6CEC == 2 && settingsFlags_8008B58C.bits.d_5 == 1)
             {
                 SetFadeMode_8001C19C(0, 0x20);
-                t->next_8 = sub_800B6AE0;
+                t->cb_8 = ShopCtrlStartMode_800B6AE0;
             }
             else
             {
-                t->next_8 = sub_800B6840;
-                if (word_800B6CEC == 1 && dword_8008B58C.f5 == 1)
+                t->cb_8 = ShopCtrlLoadOverlay_800B6840;
+                if (shopCtrlMode_800B6CEC == 1 && settingsFlags_8008B58C.bits.d_5 == 1)
                 {
                     SetFadeMode_8001C19C(0, 0x20);
                 }
@@ -149,40 +145,40 @@ void sub_800B6964(ShopCtrlTask* t)
             SetLoadFadeFlag_80027478(0x40, 1);
             FreeActiveOverlay_8002C014();
             RequestAreaReload_80027314();
-            t->next_8 = sub_800B6A6C;
+            t->cb_8 = ShopCtrlWaitMapReload_800B6A6C;
         }
     }
 }
 
-void sub_800B6A6C(ShopCtrlTask* t)
+void ShopCtrlWaitMapReload_800B6A6C(EventEntry* t, void* buffer)
 {
     if (IsMapLoading_800272D0() == 0)
     {
         sub_800A7BF0(-1);
-        t->next_8 = sub_800B67C0;
-        t->flags_0 = (t->flags_0 & ~1) | 0x8000;
+        t->cb_8 = ShopCtrlInit_800B67C0;
+        t->flags = (t->flags & ~1) | 0x8000;
         SetLoadFadeFlag_80027478(0x40, 0);
         sub_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }
 }
 
-void sub_800B6AE0(ShopCtrlTask* t)
+void ShopCtrlStartMode_800B6AE0(EventEntry* t, void* buffer)
 {
     EventEntry* e;
-    switch (word_800B6CEC)
+    switch (shopCtrlMode_800B6CEC)
     {
     case 0:
-        if (word_800B6CE8 == 0)
+        if (shopCtrlPrevMode_800B6CE8 == 0)
         {
-            sub_800BB058(word_800B6CEA);
+            sub_800BB058(shopCtrlShopId_800B6CEA);
         }
         else
         {
             e = AllocEventEntry_80043AF8((EventNode*)dword_8008D670);
-            if (dword_8008B58C.f5 == 1)
+            if (settingsFlags_8008B58C.bits.d_5 == 1)
             {
-                sub_800B6720();
+                RestoreMapCamera_800B6720();
             }
             if (e)
             {
@@ -191,62 +187,62 @@ void sub_800B6AE0(ShopCtrlTask* t)
         }
         break;
     case 1:
-        StartNameEntry_800B6E4C(dword_800B6CFC, 0x10);
+        StartNameEntry_800B6E4C(shopCtrlNameTarget_800B6CFC, 0x10);
         SetFadeMode_8001C19C(3, 0x20);
         break;
     case 2:
         e = AllocEventEntry_80043AF8((EventNode*)dword_8008D670);
-        if (dword_8008B58C.f5 == 1)
+        if (settingsFlags_8008B58C.bits.d_5 == 1)
         {
-            sub_800B6720();
+            RestoreMapCamera_800B6720();
         }
         if (e)
         {
-            word_800B6CEC = 0;
-            word_800B6CE8 = 0;
+            shopCtrlMode_800B6CEC = 0;
+            shopCtrlPrevMode_800B6CE8 = 0;
             e->flags = (e->flags | 1) & ~0x8000;
         }
         break;
     }
-    t->next_8 = sub_800B6964;
-    word_800B6CE8 = word_800B6CEC;
+    t->cb_8 = ShopCtrlIdle_800B6964;
+    shopCtrlPrevMode_800B6CE8 = shopCtrlMode_800B6CEC;
 }
 
-void sub_800B6C6C(int a, int b)
+void ShopCtrlRequestNameEntry_800B6C6C(int name, int reloadUi)
 {
     short t;
-    dword_800B6CFC = a;
-    t = word_800B6CEC;
-    word_800B6CEC = 1;
-    word_800B6CE8 = t;
-    if (b)
+    shopCtrlNameTarget_800B6CFC = name;
+    t = shopCtrlMode_800B6CEC;
+    shopCtrlMode_800B6CEC = 1;
+    shopCtrlPrevMode_800B6CE8 = t;
+    if (reloadUi)
     {
-        dword_800B6CF8 = b;
+        shopCtrlReloadUi_800B6CF8 = reloadUi;
     }
 }
 
-void sub_800B6CA0()
+void ShopCtrlRequestShop_800B6CA0()
 {
-    short t = word_800B6CEC;
-    word_800B6CEC = 0;
-    word_800B6CE8 = t;
+    short t = shopCtrlMode_800B6CEC;
+    shopCtrlMode_800B6CEC = 0;
+    shopCtrlPrevMode_800B6CE8 = t;
 }
 
-void sub_800B6CB8()
+void ShopCtrlRequestExit_800B6CB8()
 {
-    word_800B6CEC = 3;
+    shopCtrlMode_800B6CEC = 3;
 }
 
-void sub_800B6CC8()
+void ShopCtrlRequestResume_800B6CC8()
 {
-    word_800B6CEC = 2;
+    shopCtrlMode_800B6CEC = 2;
 }
 
 int shopOverlayIds_800B6CD8[4] = { 13, 17, 13 };
-short word_800B6CE8 = 0;
-short word_800B6CEA = 0;
-short word_800B6CEC = 0;
+short shopCtrlPrevMode_800B6CE8 = 0;
+short shopCtrlShopId_800B6CEA = 0;
+short shopCtrlMode_800B6CEC = 0;
 int dword_800B6CF0 = 0;
-int dword_800B6CF4 = 0;
-int dword_800B6CF8 = 0;
-int dword_800B6CFC = 0;
+int shopCtrlOverlayReq_800B6CF4 = 0;
+int shopCtrlReloadUi_800B6CF8 = 0;
+int shopCtrlNameTarget_800B6CFC = 0;

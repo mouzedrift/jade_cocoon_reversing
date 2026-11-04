@@ -164,8 +164,8 @@ extern int sub_800B9E94(UnitStats* src, Minion* dst, short c);
 extern int fn_800272D0();
 extern void fn_800A7BF0(int a);
 extern void fn_800A5F9C(int a);
-extern void fn_800B6C6C(void* p, int a);
-extern void fn_800B6CC8();
+extern void ShopCtrlRequestNameEntry_800B6C6C(void* p, int a);
+extern void ShopCtrlRequestResume_800B6CC8();
 extern void fn_80027478(int a, int b);
 extern void fn_800A6D30(int a);
 extern int eventDispatchHalt_8008B540;
@@ -1475,7 +1475,7 @@ extern void sub_800BC2DC();
 extern void sub_800BC1A8();
 extern void sub_800BD0D4();
 extern void sub_800BE2B4();
-extern void sub_800B6CB8();
+extern void ShopCtrlRequestExit_800B6CB8();
 extern unsigned short padPressed_8009194C;
 void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit3Shop* u)
 {
@@ -1602,7 +1602,7 @@ void ShopMenuTask_800BB444(ShopTaskShop* t, ShopUnit3Shop* u)
         else
         {
             t->flags_0 = (t->flags_0 & ~1) | 0x8000;
-            sub_800B6CB8();
+            ShopCtrlRequestExit_800B6CB8();
         }
     }
     else
@@ -3039,7 +3039,7 @@ void sub_800BD9DC(ShopUnit3Shop* u)
         tk = (ShopTaskShop*)&name_8008D670->entry;
         tk->next_8 = sub_800BE128;
         tk->flags_0 = (tk->flags_0 & ~1) | 0x8000;
-        fn_800B6C6C(u->field_4C->status_84.name_10
+        ShopCtrlRequestNameEntry_800B6C6C(u->field_4C->status_84.name_10
 , 0);
         SetFadeMode_8001C19C(0, 0x20);
         u->field_84 = 0;
@@ -3071,14 +3071,14 @@ void sub_800BDD74(ShopTaskShop* t, void* arg)
         {
             fn_800A5F9C(1);
             t->next_8 = sub_800BE128;
-            fn_800B6C6C(u->field_4C->status_84.name_10
+            ShopCtrlRequestNameEntry_800B6C6C(u->field_4C->status_84.name_10
 , 1);
         }
         else if (u->field_0 == 6)
         {
             fn_800A5F9C(2);
             t->next_8 = sub_800BE07C;
-            fn_800B6CC8();
+            ShopCtrlRequestResume_800B6CC8();
         }
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
         fn_80027478(0x40, 0);
@@ -3148,13 +3148,13 @@ void sub_800BDEA8(int dummy, ShopUnit3Shop* u)
                 u->field_8C = 0;
                 u->field_24 |= 1;
             }
-            fn_800B6C6C(u->field_4C->status_84.name_10
+            ShopCtrlRequestNameEntry_800B6C6C(u->field_4C->status_84.name_10
 , 1);
             SetFadeMode_8001C19C(0, 0x20);
         }
         else if (u->field_94 == 2)
         {
-            fn_800B6CC8();
+            ShopCtrlRequestResume_800B6CC8();
             SetFadeMode_8001C19C(0, 0x20);
         }
         u->field_24 &= ~0x800;
