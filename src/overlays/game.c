@@ -37,10 +37,8 @@ void TileAnimTaskInit_800A09D8(GameTask* task, short* work)
     TileAnimTask_800A0A04(task, work);
 }
 
-#if 0
-// Matches byte for byte when enabled, but the stack switch is inline asm (src/spadstack.h), an undecided exception:
-// kept disabled, the assembly stays included.
 // Draws the animated tile layers on the scratchpad stack, unless the camera points are disabled.
+// Matched
 void TileAnimTask_800A0A04(GameTask* task, short* work)
 {
     if (!(unknownFlags_8008D678 & 0x8000))
@@ -50,8 +48,6 @@ void TileAnimTask_800A0A04(GameTask* task, short* work)
         ResetSpadStack();
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, TileAnimTask_800A0A04);
 
 #if 0
 // Not matched: register pressure / spills differ (the original spills the cell pointer and u0 + 31, keeps 0xFFFFFF hoisted; here the tpage value spills); logic complete.
