@@ -424,8 +424,7 @@ extern short menuNextState_800C1950[18];
 extern short menuPrevState_800C1974[18];
 extern int menuStateWindows_800C1998[17];
 extern MenuCursorLayout menuStateCursors_800C19DC[17];
-extern RECT menuWindowRects_800C1AEC[6];
-extern int dword_800C1B1C[22];
+extern RECT menuWindowRects_800C1AEC[17]; // one per menu state
 extern short cursorSaveSlot_800C1B74[18];
 extern short cursorRestoreSlot_800C1B98[18];
 extern int levantCmdWindows_800C1BBC[5];

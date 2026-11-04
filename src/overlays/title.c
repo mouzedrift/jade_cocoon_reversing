@@ -7,7 +7,7 @@
 
 
 int dword_800A05A0 SDATA = 13;
-const char nameCursorPulseColor_800A05A4[] = "$$$";
+const TitleColor nameCursorPulseColor_800A05A4 = { "$$$" };
 const char aCaution_800A05A8[] = "\202b\202\201\202\225\202\224\202\211\202\217\202\216\201I"; // Caution!
 const char str_800A05BC[] = "\202s\202\210\202\205\202\222\202\205\201@\202\211\202\223\201@\202\216\202\217\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\224\202\210\202\205\201@\202r\202k\202n\202s"; // There is no MEMORY CARD in the SLOT
 const char str_800A0604[] = "\202x\202\217\202\225\201@\202\227\202\211\202\214\202\214\201@\202\216\202\217\202\224\201@\202\202\202\205\201@\202\201\202\202\202\214\202\205\201@\202\224\202\217\201@\202\223\202\201\202\226\202\205"; // You will not be able to save
@@ -298,7 +298,7 @@ void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, Name
         memset(zero, 0, 4);
         y = 0x17;
         i = (short)i;
-        color = *(TitleColor*)nameCursorPulseColor_800A05A4;
+        color = nameCursorPulseColor_800A05A4;
         sprts[i].x0 = 0x6F;
         sprts[i].y0 = y;
         PulseColor_80033394(&sprts[i].r0, zero, &color, c->pulseTime_5C, pulseMax_800A280C, pulseMin_800A2810);

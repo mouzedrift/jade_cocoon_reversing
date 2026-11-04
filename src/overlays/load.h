@@ -78,6 +78,19 @@ typedef struct
     unsigned char pad_E[2];
 } LoadMenuRow;
 
+// a DrawButtonHelpBar_8002B004 entry, icon -1 ends the list
+typedef struct
+{
+    int icon_0;
+    const char* text_4;
+} LoadHelpEntry;
+
+typedef struct
+{
+    char icon_0[0x80];        // the save icon bitmap copied into the card header (BuildCardHeader_800BB2AC)
+    const char* textsJp_80[5]; // unused Japanese memory card texts
+} CardHeaderTail;
+
 typedef union
 {
     char str[0x42];
@@ -212,7 +225,7 @@ extern const LoadMenuItemPair cardSlotMenuItem2_800B7368;
 extern LoadTextPos saveSlotFieldPos_800BD93C[9];
 extern LoadUiSprite saveSlotSprites_800BD960[7];
 extern LoadUiSprite modeTitleSprites_800BD998[2];
-extern int cardSlotSprites_800BD9A8[16];
+extern LoadUiSprite cardSlotSprites_800BD9A8[8];
 extern LoadUiSprite saveIconSprites_800BD9E8[4];
 extern char *saveListPrompts_800BDA08[2];
 extern RECT saveListClip_800BDA10;
@@ -222,15 +235,13 @@ extern LoadMenuItem saveListRow2_800BDA88[2];
 extern LoadMenuItem saveListRow3_800BDAC0[2];
 extern LoadMenuItem *saveListRows_800BDAF8[5];
 extern LoadMenuWin saveListWin_800BDB0C;
-extern int cardSlot1Item_800BDB24[14];
-extern void *cardSlot1Items_800BDB5C[2];
-extern int cardSlot1Win_800BDB64;
-extern int cardSlot1WinRest_800BDB68[5];
-extern int cardSlot2Item_800BDB7C[14];
-extern void *cardSlot2Items_800BDBB4[2];
-extern int cardSlot2Win_800BDBBC;
-extern int cardSlot2WinRest_800BDBC0[5];
-extern int *cardSlotWins_800BDBD4[2];
+extern LoadMenuItem cardSlot1Item_800BDB24[2];
+extern LoadMenuItem *cardSlot1Items_800BDB5C[2];
+extern LoadMenuWin cardSlot1Win_800BDB64;
+extern LoadMenuItem cardSlot2Item_800BDB7C[2];
+extern LoadMenuItem *cardSlot2Items_800BDBB4[2];
+extern LoadMenuWin cardSlot2Win_800BDBBC;
+extern LoadMenuWin *cardSlotWins_800BDBD4[2];
 extern LoadMenuItem topMenuSave_800BDBDC[2];
 extern LoadMenuItem topMenuLoad_800BDC14[2];
 extern LoadMenuItem topMenuExit_800BDC4C[2];
@@ -249,7 +260,7 @@ extern LoadMenuItem titleYes_800BDE10[2];
 extern LoadMenuItem titleNo_800BDE48[2];
 extern LoadMenuItem *titleItems_800BDE80[3];
 extern LoadMenuWin titleWin_800BDE8C;
-extern char loadMenuButtonHelp_800BDEA4[24];
+extern LoadHelpEntry loadMenuButtonHelp_800BDEA4[3];
 extern char *msgCardFull_800BDEBC[4];
 extern char *msgFormatting_800BDECC[4];
 extern char *msgLoading_800BDEDC[4];
@@ -258,16 +269,12 @@ extern char *msgNoSaveData_800BDEFC[8];
 extern char *msgFormatFailed_800BDF1C[4];
 extern char *msgSaveFailed_800BDF2C[4];
 extern char *msgLoadFailed_800BDF3C[4];
-extern LoadMenuRow loadMenuRows_800BDF4C[2];
-extern int loadMenuRow2_800BDF6C[4];
-extern int loadMenuRow3_800BDF7C[4];
-extern int loadMenuRow4_800BDF8C[4];
-extern int loadMenuRow5_800BDF9C[4];
+extern LoadMenuRow loadMenuRows_800BDF4C[6];
 extern SaveTitle *saveTitle_800BDFAC;
 extern char *cardTitles_800BDFB0[30];
 extern char *saveFileNames_800BE028[2][15];
 extern SaveIconSrc saveIconSrc_800BE0A0[3];
-extern char cardHeaderTail_800BE0B8[148];
+extern CardHeaderTail cardHeaderTail_800BE0B8;
 extern int cardFreeBlocks_800BE14C;
 extern int cardSaveCount_800BE150;
 extern int loadMenuActive_800BE184;
