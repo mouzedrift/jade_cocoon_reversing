@@ -231,8 +231,8 @@ const char aMarrdreg_80073028[] = "\202l\202\201\202\222\202\222\202\204\202\222
 // Matched
 int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
 {
-    struct_4s* t = actor->hitTimes_108;
-    int v = 0;
+    struct_4s* hitTimes = actor->hitTimes_108;
+    int frame = 0;
     switch (idx)
     {
     case 0:
@@ -245,48 +245,48 @@ int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
     case 7:
     case 8:
     case 9:
-        v = t[idx].field_0;
+        frame = hitTimes[idx].field_0;
         break;
     case 10:
-        v = GetActorScriptTime_8001F03C((int)actor, (int)actor->script_D0, -1, 0x10);
+        frame = GetActorScriptTime_8001F03C((int)actor, (int)actor->script_D0, -1, 0x10);
         break;
     }
-    return v;
+    return frame;
 }
 // Matched
 void SetActorStatusTint_80018EBC(int actor, UnitStatus* status)
 {
-    unsigned int f = status->status_0;
+    unsigned int flags = status->status_0;
     int* tint = 0;
-    if (f & 0x200)
+    if (flags & 0x200)
     {
-        tint = (f & 1) ? statusTintPoisonLevel7_8007A14C : statusTintLevel7_8007A0EC;
+        tint = (flags & 1) ? statusTintPoisonLevel7_8007A14C : statusTintLevel7_8007A0EC;
     }
-    else if (f & 0x100)
+    else if (flags & 0x100)
     {
-        tint = (f & 1) ? statusTintPoisonLevel6_8007A140 : statusTintLevel6_8007A0E0;
+        tint = (flags & 1) ? statusTintPoisonLevel6_8007A140 : statusTintLevel6_8007A0E0;
     }
-    else if (f & 0x80)
+    else if (flags & 0x80)
     {
-        tint = (f & 1) ? statusTintPoisonLevel5_8007A134 : statusTintLevel5_8007A0D4;
+        tint = (flags & 1) ? statusTintPoisonLevel5_8007A134 : statusTintLevel5_8007A0D4;
     }
-    else if (f & 0x40)
+    else if (flags & 0x40)
     {
-        tint = (f & 1) ? statusTintPoisonLevel4_8007A128 : statusTintLevel4_8007A0C8;
+        tint = (flags & 1) ? statusTintPoisonLevel4_8007A128 : statusTintLevel4_8007A0C8;
     }
-    else if (f & 0x20)
+    else if (flags & 0x20)
     {
-        tint = (f & 1) ? statusTintPoisonLevel3_8007A11C : statusTintLevel3_8007A0BC;
+        tint = (flags & 1) ? statusTintPoisonLevel3_8007A11C : statusTintLevel3_8007A0BC;
     }
-    else if (f & 0x10)
+    else if (flags & 0x10)
     {
-        tint = (f & 1) ? statusTintPoisonLevel2_8007A110 : statusTintLevel2_8007A0B0;
+        tint = (flags & 1) ? statusTintPoisonLevel2_8007A110 : statusTintLevel2_8007A0B0;
     }
-    else if (f & 0x8)
+    else if (flags & 0x8)
     {
-        tint = (f & 1) ? statusTintPoisonLevel1_8007A104 : statusTintLevel1_8007A0A4;
+        tint = (flags & 1) ? statusTintPoisonLevel1_8007A104 : statusTintLevel1_8007A0A4;
     }
-    else if (f & 1)
+    else if (flags & 1)
     {
         tint = statusTintPoison_8007A0F8;
     }
@@ -300,9 +300,9 @@ extern void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* ba
 extern void InitSpeciesSkills_800199A0(UnitStats* unit);
 extern void InitSpeciesMagic_80019A20(UnitStats* a0);
 // Matched
-int InitMinionData_8001900C(UnitStats* m, int* params)
+int InitMinionData_8001900C(UnitStats* unit, int* params)
 {
-    MinionBaseStats st;
+    MinionBaseStats base;
     char** name;
     int seed;
     unsigned int id;
@@ -312,163 +312,163 @@ int InitMinionData_8001900C(UnitStats* m, int* params)
     int j;
     int k;
     int l;
-    int n;
-    int v;
+    int species;
+    int digits;
 
-    n = params[0];
-    m->species_5C = n;
-    name = &minionSpeciesNames_8007A170[n];
+    species = params[0];
+    unit->species_5C = species;
+    name = &minionSpeciesNames_8007A170[species];
     seed = minionVariantSeed_8008D4DC;
-    EncodeName_8003F7C8(*name, m->st_0.name_10);
-    EncodeName_8003F7C8(*name, m->name_60);
-    id = m->species_5C;
+    EncodeName_8003F7C8(*name, unit->st_0.name_10);
+    EncodeName_8003F7C8(*name, unit->name_60);
+    id = unit->species_5C;
     if (id < 0x39)
     {
-        st = minionBaseStats_8007A4B4[id];
-        if (m->species_5C - 0x25 < 4)
+        base = minionBaseStats_8007A4B4[id];
+        if (unit->species_5C - 0x25 < 4)
         {
-            st.attack += (seed % 5) * 10 - 20;
-            st.magicAttack += (seed / 10 % 5) * 10 - 20;
-            st.defense += (seed / 100 % 5) * 10 - 20;
-            st.magicDefense += (seed / 1000 % 5) * 10 - 20;
-            st.speed += (seed / 10000 % 5) * 10 - 20;
-            st.critical += (seed / 100000 % 5) * 10 - 20;
+            base.attack += (seed % 5) * 10 - 20;
+            base.magicAttack += (seed / 10 % 5) * 10 - 20;
+            base.defense += (seed / 100 % 5) * 10 - 20;
+            base.magicDefense += (seed / 1000 % 5) * 10 - 20;
+            base.speed += (seed / 10000 % 5) * 10 - 20;
+            base.critical += (seed / 100000 % 5) * 10 - 20;
         }
     }
     else if (id < 0xC9)
     {
         id = (id - 0x39) / 4;
-        st = minionBaseStats_8007A4B4[id];
-        e = (m->species_5C - 0x39) & 3;
-        if (st.element != e)
+        base = minionBaseStats_8007A4B4[id];
+        e = (unit->species_5C - 0x39) & 3;
+        if (base.element != e)
         {
-            st.element = e;
+            base.element = e;
             switch (e)
             {
             case 0:
-                st.attack += 10;
-                st.magicAttack += 10;
-                st.defense -= 10;
-                st.magicDefense -= 10;
+                base.attack += 10;
+                base.magicAttack += 10;
+                base.defense -= 10;
+                base.magicDefense -= 10;
                 break;
             case 1:
-                st.defense -= 10;
-                st.magicDefense -= 10;
-                st.speed += 10;
-                st.critical += 10;
+                base.defense -= 10;
+                base.magicDefense -= 10;
+                base.speed += 10;
+                base.critical += 10;
                 break;
             case 2:
-                st.defense += 10;
-                st.magicDefense += 10;
-                st.speed -= 10;
-                st.critical -= 10;
+                base.defense += 10;
+                base.magicDefense += 10;
+                base.speed -= 10;
+                base.critical -= 10;
                 break;
             case 3:
-                st.attack -= 10;
-                st.magicAttack += 10;
-                st.defense -= 10;
-                st.magicDefense += 10;
+                base.attack -= 10;
+                base.magicAttack += 10;
+                base.defense -= 10;
+                base.magicDefense += 10;
                 break;
             }
         }
     }
     else
     {
-        st = *sub_800B32A4(id - 0xC9);
+        base = *sub_800B32A4(id - 0xC9);
     }
-    InitStatsFromBase_8001980C(m->st_0.stats_2C.cur_0, &st);
-    m->st_0.status_0 = 0;
-    if (st.element != -1)
+    InitStatsFromBase_8001980C(unit->st_0.stats_2C.cur_0, &base);
+    unit->st_0.status_0 = 0;
+    if (base.element != -1)
     {
-        m->st_0.elementMask_42 = 1 << st.element;
+        unit->st_0.elementMask_42 = 1 << base.element;
         for (j = 0; j < 4; j++)
         {
-            m->st_0.element_3E[j] = 0;
+            unit->st_0.element_3E[j] = 0;
         }
-        m->st_0.element_3E[st.element] = 0x20;
+        unit->st_0.element_3E[base.element] = 0x20;
     }
     else
     {
-        m->st_0.elementMask_42 = 0;
+        unit->st_0.elementMask_42 = 0;
         for (l = 0; l < 4; l++)
         {
-            m->st_0.element_3E[l] = 8;
+            unit->st_0.element_3E[l] = 8;
         }
     }
-    m->st_0.exp_4 = 0x4000000;
-    m->st_0.level_44 = 0;
-    m->st_0.equipment_1C[0] = 0xFF;
-    m->st_0.equipment_1C[1] = 0xFF;
-    m->st_0.equipment_1C[2] = 0xFF;
-    m->st_0.equipment_1C[3] = 0xFF;
-    m->st_0.field_45 = 0;
-    id2 = m->species_5C;
+    unit->st_0.exp_4 = 0x4000000;
+    unit->st_0.level_44 = 0;
+    unit->st_0.equipment_1C[0] = 0xFF;
+    unit->st_0.equipment_1C[1] = 0xFF;
+    unit->st_0.equipment_1C[2] = 0xFF;
+    unit->st_0.equipment_1C[3] = 0xFF;
+    unit->st_0.field_45 = 0;
+    id2 = unit->species_5C;
     if (id2 < 0x39)
     {
-        MemCopy_800403E8(m->st_0.modifiers_20, speciesModifiers_8007BA84 + id2 * 12, 12);
+        MemCopy_800403E8(unit->st_0.modifiers_20, speciesModifiers_8007BA84 + id2 * 12, 12);
     }
     else if (id2 < 0xC9)
     {
         id2 = (id2 - 0x39) / 4;
-        MemCopy_800403E8(m->st_0.modifiers_20, speciesModifiers_8007BA84 + id2 * 12, 12);
+        MemCopy_800403E8(unit->st_0.modifiers_20, speciesModifiers_8007BA84 + id2 * 12, 12);
     }
     else
     {
-        MemCopy_800403E8(m->st_0.modifiers_20, sub_800B32F0(id2 - 0xC9), 12);
+        MemCopy_800403E8(unit->st_0.modifiers_20, sub_800B32F0(id2 - 0xC9), 12);
     }
-    if (m->species_5C - 0x25 < 4)
+    if (unit->species_5C - 0x25 < 4)
     {
-        v = seed;
+        digits = seed;
         for (i = 4; i < 9; i++)
         {
-            m->st_0.modifiers_20[i] = (v % 9) * 4 + 8;
-            v /= 10;
+            unit->st_0.modifiers_20[i] = (digits % 9) * 4 + 8;
+            digits /= 10;
         }
     }
-    if (st.element != -1)
+    if (base.element != -1)
     {
-        id2 = m->species_5C;
+        id2 = unit->species_5C;
         if (!(id2 - 0x2B < 0xE) && !(id2 - 0xC9 < 0xA))
         {
-            MemCopy_800403E8(m->st_0.modifiers_20, elementModifiers_8007BA74 + st.element * 4, 4);
+            MemCopy_800403E8(unit->st_0.modifiers_20, elementModifiers_8007BA74 + base.element * 4, 4);
         }
     }
-    m->st_0.exp_4 += params[1];
-    ApplyLevelUpsPlain_80012188(&m->st_0);
-    FillHpMp_80011C0C(&m->st_0, &m->st_0);
-    InitSpeciesSkills_800199A0(m);
-    if (m->species_5C - 0x25 < 4)
+    unit->st_0.exp_4 += params[1];
+    ApplyLevelUpsPlain_80012188(&unit->st_0);
+    FillHpMp_80011C0C(&unit->st_0, &unit->st_0);
+    InitSpeciesSkills_800199A0(unit);
+    if (unit->species_5C - 0x25 < 4)
     {
-        m->skills_6C.slot[seed % 4].field_3 = 1;
-        m->skills_6C.slot[seed % 4].bonus_2 = seed % 3 + 2;
+        unit->skills_6C.slot[seed % 4].field_3 = 1;
+        unit->skills_6C.slot[seed % 4].bonus_2 = seed % 3 + 2;
         k = seed % 3 + 1;
-        m->skills_6C.slot[k].id_1 = seed % 10 + 6;
-        m->skills_6C.slot[4].id_1 = 12;
+        unit->skills_6C.slot[k].id_1 = seed % 10 + 6;
+        unit->skills_6C.slot[4].id_1 = 12;
     }
-    InitSpeciesMagic_80019A20(m);
-    if (m->species_5C - 0x25 < 4)
+    InitSpeciesMagic_80019A20(unit);
+    if (unit->species_5C - 0x25 < 4)
     {
         if (seed / 11 % 3)
         {
-            m->magicBits_80 |= elementBonusMagic1_8007A67C[st.element];
+            unit->magicBits_80 |= elementBonusMagic1_8007A67C[base.element];
         }
         if (seed / 70 & 1)
         {
-            m->magicBits_80 |= elementBonusMagic2_8007A68C[st.element];
+            unit->magicBits_80 |= elementBonusMagic2_8007A68C[base.element];
         }
         if (seed / 500 & 1)
         {
-            m->magicBits_80 |= elementBonusMagic3_8007A69C[st.element];
+            unit->magicBits_80 |= elementBonusMagic3_8007A69C[base.element];
         }
     }
-    return GetRankForLevel_80019A80(*(char*)&m->st_0.level_44);
+    return GetRankForLevel_80019A80(*(char*)&unit->st_0.level_44);
 }
 // Matched
 void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base)
 {
     int i;
     int j;
-    int v;
+    int value;
     stats[6] = (base->attack < 200) ? base->attack : 200;
     stats[8] = (base->magicAttack < 200) ? base->magicAttack : 200;
     stats[10] = (base->speed < 200) ? base->speed : 200;
@@ -477,23 +477,23 @@ void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base)
     stats[11] = (base->critical < 200) ? base->critical : 200;
     for (i = 0; i < 6; i++)
     {
-        int r;
-        unsigned char* q = stats + i;
-        v = (unsigned char)(q[6] / 10) + 10;
-        if (v >= 0)
+        int clamped;
+        unsigned char* stat = stats + i;
+        value = (unsigned char)(stat[6] / 10) + 10;
+        if (value >= 0)
         {
-            int t = v;
-            if (t > 100)
+            int capped = value;
+            if (capped > 100)
             {
-                t = 100;
+                capped = 100;
             }
-            r = t;
+            clamped = capped;
         }
         else
         {
-            r = 0;
+            clamped = 0;
         }
-        q[0] = r;
+        stat[0] = clamped;
     }
     for (j = 0; j < 6; j++)
     {

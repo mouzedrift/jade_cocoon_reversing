@@ -18,10 +18,10 @@
 #include "unit.h"
 #include "unit_gauges.h"
 
-const Icon_F480 statusIcon0_800743D4 = { { 16, 0, 1, 0, 151, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 210, 172, 21, 20 }, 0x40003 };
-const Icon_F480 statusIcon1_800743F0 = { { 16, 0, 1, 0, 189, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50003 };
-const Icon_F480 statusIcon2_8007440C = { { 16, 0, 1, 0, 177, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50006 };
-const Mask_F480 statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
+const StatusIcon statusIcon0_800743D4 = { { 16, 0, 1, 0, 151, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 210, 172, 21, 20 }, 0x40003 };
+const StatusIcon statusIcon1_800743F0 = { { 16, 0, 1, 0, 189, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50003 };
+const StatusIcon statusIcon2_8007440C = { { 16, 0, 1, 0, 177, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50006 };
+const StatusIconMasks statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
 
 extern void DrawUnitStatus_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
@@ -32,24 +32,24 @@ void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unuse
 {
     unsigned short loc[2];
     unsigned int expGauge[4];
-    RECT r;
-    unsigned int x;
-    r.x = pos[0];
-    r.y = pos[1];
-    r.w = 0;
-    r.h = 0;
-    DrawUnitStatus_8002F23C(unit, 0, frameCount_8008D3FC, (unsigned short*)&r, (short)ot, 0);
+    RECT rect;
+    unsigned int exp;
+    rect.x = pos[0];
+    rect.y = pos[1];
+    rect.w = 0;
+    rect.h = 0;
+    DrawUnitStatus_8002F23C(unit, 0, frameCount_8008D3FC, (unsigned short*)&rect, (short)ot, 0);
     loc[0] = pos[0] + 7;
     loc[1] = pos[1] + 0x37;
     DrawUiTiySprt_8002C06C(loc, 0x3B, ot);
     expGauge[0] = 2;
     expGauge[1] = 0;
-    x = unit->exp_4;
-    while (x > 0x4000000)
+    exp = unit->exp_4;
+    while (exp > 0x4000000)
     {
-        x -= 0x4000000;
+        exp -= 0x4000000;
     }
-    expGauge[2] = x;
+    expGauge[2] = exp;
     expGauge[3] = 0x4000000;
     loc[0] = pos[0] + 0x20;
     loc[1] = pos[1] + 0x42;
@@ -163,24 +163,24 @@ void DrawMpGauge_8002F120(char* unit, unsigned short* pos, int gaugeArg, short o
 }
 typedef struct
 {
-    int field_0;
-    int field_4;
-    short field_8;
-    short field_A;
-} struct_F1C8;
+    int rect_0;
+    int time_4;
+    short colorSet_8;
+    short ot_A;
+} UiWindowDesc;
 extern void DrawUnitStatus_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
-extern void DrawUiWindow_8002A384(struct_F1C8* p);
+extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, int rect, int ot, int flags)
 
 {
-    struct_F1C8 s;
+    UiWindowDesc desc;
     DrawUnitStatus_8002F23C(unit, gaugeArg, time, (unsigned short*)rect, ot, flags);
-    s.field_8 = highlight;
-    s.field_0 = rect;
-    s.field_4 = time;
-    s.field_A = ot;
-    DrawUiWindow_8002A384(&s);
+    desc.colorSet_8 = highlight;
+    desc.rect_0 = rect;
+    desc.time_4 = time;
+    desc.ot_A = ot;
+    DrawUiWindow_8002A384(&desc);
 }
 
 extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
@@ -246,26 +246,26 @@ short ElementLevelsToMask_8002F424(unsigned char* levels)
 typedef struct
 {
     unsigned short color;
-    unsigned char b;
-    unsigned char c;
-} TextParam_F480;
+    unsigned char colorSet_2; // GetWindowColors_8004226C
+    unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
+} WindowStyle;
 extern short uiColor_8008B590;
 extern void DrawMenuItemWithWindow_8002ADB4(char* a0, int a1, int a2, int a3);
 // Matched
 void DrawStatusIcons_8002F480(int* status, unsigned short* pos, int ot, int reverse)
 {
-    Icon_F480 i0 = statusIcon0_800743D4;
-    Icon_F480 i1 = statusIcon1_800743F0;
-    Icon_F480 i2 = statusIcon2_8007440C;
-    TextParam_F480 t;
-    Icon_F480* icons[3];
-    Mask_F480 masks = statusIconMasks_80074428;
+    StatusIcon icon0 = statusIcon0_800743D4;
+    StatusIcon icon1 = statusIcon1_800743F0;
+    StatusIcon icon2 = statusIcon2_8007440C;
+    WindowStyle style;
+    StatusIcon* icons[3];
+    StatusIconMasks masks = statusIconMasks_80074428;
     unsigned short loc[2];
     int i;
     int j;
-    icons[0] = &i0;
-    icons[1] = &i1;
-    icons[2] = &i2;
+    icons[0] = &icon0;
+    icons[1] = &icon1;
+    icons[2] = &icon2;
     if (pos)
     {
         loc[0] = pos[0];
@@ -276,9 +276,9 @@ void DrawStatusIcons_8002F480(int* status, unsigned short* pos, int ot, int reve
         loc[0] = 0xD2;
         loc[1] = 0xAC;
     }
-    t.b = 0;
-    t.c = 1;
-    t.color = uiColor_8008B590;
+    style.colorSet_2 = 0;
+    style.semiTrans_3 = 1;
+    style.color = uiColor_8008B590;
     for (i = 0; i < 3; i++)
     {
         j = i;
@@ -292,7 +292,7 @@ void DrawStatusIcons_8002F480(int* status, unsigned short* pos, int ot, int reve
             {
                 icons[j]->r.x = loc[0];
                 icons[j]->r.y = loc[1];
-                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&t, ot, 0);
+                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&style, ot, 0);
                 loc[0] += icons[j]->r.w;
             }
             else
@@ -300,7 +300,7 @@ void DrawStatusIcons_8002F480(int* status, unsigned short* pos, int ot, int reve
                 loc[0] -= icons[j]->r.w;
                 icons[j]->r.x = loc[0];
                 icons[j]->r.y = loc[1];
-                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&t, ot, 0);
+                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&style, ot, 0);
             }
         }
     }

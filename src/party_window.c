@@ -23,17 +23,17 @@ const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
 typedef struct
 {
-    int field_0;
-    int field_4;
-    short field_8;
-    short field_A;
-} struct_F6F8;
-extern void DrawUiWindow_8002A384(struct_F6F8* p);
+    int rect_0;
+    int time_4;
+    short colorSet_8;
+    short ot_A;
+} UiWindowDesc;
+extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawPulsingWindow_8002F6F8(int rect, int* st)
 {
     unsigned char col[4];
-    struct_F6F8 s;
+    UiWindowDesc desc;
     short pulse = 20;
     if (st[2])
     {
@@ -53,11 +53,11 @@ void DrawPulsingWindow_8002F6F8(int rect, int* st)
     {
         col[0] = col[1] = col[2] = 0xA0;
     }
-    s.field_8 = 1;
-    s.field_0 = rect;
-    s.field_4 = pulse;
-    s.field_A = 0xF;
-    DrawUiWindow_8002A384(&s);
+    desc.colorSet_8 = 1;
+    desc.rect_0 = rect;
+    desc.time_4 = pulse;
+    desc.ot_A = 0xF;
+    DrawUiWindow_8002A384(&desc);
 }
 
 extern unsigned char statIcons_80082EBC[];
@@ -82,59 +82,59 @@ void DrawLevantStats_8002F7D0(unsigned short* pos, short ot)
 }
 typedef struct
 {
-    short field_0;
-    short field_2;
-    short field_4;
-    short field_6;
-    int field_8;
-    short field_C;
+    short open_0;      // open animation step, 8: open
+    short partySize_2; // partyWindowRects_80082E90 row + 1
+    short cursor_4;    // the selected slot
+    short ot_6;
+    int time_8;        // window pulse time of the selected slot
+    short slot_C;
     short pad_E;
-    unsigned int field_10;
-} struct_F8E4;
+    unsigned int highlight_10;
+} PartySlotWindow;
 extern void DrawUnitStatusExp_8002ECE0(int a0, unsigned short* pos, int a2, short ot);
 extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
 extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 // Matched
-void DrawPartySlotWindow_8002F8E4(int unit, struct_F8E4* p)
+void DrawPartySlotWindow_8002F8E4(int unit, PartySlotWindow* win)
 {
     unsigned short loc[2];
     char buf[8];
-    struct_F6F8 s;
-    int v;
-    int flag;
-    loc[0] = partyWindowRects_80082E90[p->field_2 - 1][p->field_C].x;
+    UiWindowDesc desc;
+    int time;
+    int highlight;
+    loc[0] = partyWindowRects_80082E90[win->partySize_2 - 1][win->slot_C].x;
     loc[1] = 0x72;
-    DrawUnitStatusExp_8002ECE0(unit, loc, p->field_C, p->field_6);
-    v = 0;
-    flag = v < p->field_10;
-    if (p->field_4 == p->field_C)
+    DrawUnitStatusExp_8002ECE0(unit, loc, win->slot_C, win->ot_6);
+    time = 0;
+    highlight = time < win->highlight_10;
+    if (win->cursor_4 == win->slot_C)
     {
-        v = p->field_8;
+        time = win->time_8;
     }
-    InterpolateWindowRect_8004196C(buf, &partyWindowRects_80082E90[p->field_2 - 1][p->field_C], p->field_0, 8, 0);
-    AddDrawAreaPrim_8003326C(buf, &pOT_8008D454[p->field_6]);
-    s.field_8 = flag;
-    s.field_0 = (int)buf;
-    s.field_4 = v;
-    s.field_A = p->field_6;
-    DrawUiWindow_8002A384(&s);
-    AddClipDrawAreaPrim_80033308(&pOT_8008D454[p->field_6]);
+    InterpolateWindowRect_8004196C(buf, &partyWindowRects_80082E90[win->partySize_2 - 1][win->slot_C], win->open_0, 8, 0);
+    AddDrawAreaPrim_8003326C(buf, &pOT_8008D454[win->ot_6]);
+    desc.colorSet_8 = highlight;
+    desc.rect_0 = (int)buf;
+    desc.time_4 = time;
+    desc.ot_A = win->ot_6;
+    DrawUiWindow_8002A384(&desc);
+    AddClipDrawAreaPrim_80033308(&pOT_8008D454[win->ot_6]);
 }
 // Matched
 short GetPartyWindowX_8002FA0C(short partySize, short slot)
 {
-    short r = 0;
+    short x = 0;
     int i;
     if (partySize > 0)
     {
         i = partySize - 1;
         if (i < 3 && slot < 3)
         {
-            r = partyWindowRects_80082E90[i][slot].x;
+            x = partyWindowRects_80082E90[i][slot].x;
         }
     }
-    return r;
+    return x;
 }
 // Matched
 short GetLevantLevel_8002FA70(void)
@@ -151,23 +151,23 @@ void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text,
 {
     unsigned short loc[2];
     NameBuf buf = emptyNameBuf_80074434;
-    int w;
+    int offset;
     CopyPlayerName_8003F860(text, buf.s);
     DecodeText_8003F748(1, &buf);
     UppercaseSjisName_8003F89C(&buf);
     if (align == 1)
     {
-        w = MeasureTextWidthFont1_8003E6B0(&buf);
+        offset = MeasureTextWidthFont1_8003E6B0(&buf);
     }
     else if (align == 2)
     {
-        w = MeasureTextWidthFont1_8003E6B0(&buf) / 2;
+        offset = MeasureTextWidthFont1_8003E6B0(&buf) / 2;
     }
     else
     {
-        w = 0;
+        offset = 0;
     }
-    loc[0] = pos[0] - w;
+    loc[0] = pos[0] - offset;
     loc[1] = pos[1];
     DrawText_8003E91C(1, &buf, loc, ot);
 }
@@ -176,18 +176,18 @@ void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text,
 {
     unsigned short loc[2];
     NameBuf buf = emptyNameBuf_80074434;
-    int w;
+    int offset;
     CopyPlayerName_8003F860(text, buf.s);
     DecodeText_8003F748(1, &buf);
     if (align == 1)
     {
-        w = MeasureTextWidth_8003E4C8(&buf);
+        offset = MeasureTextWidth_8003E4C8(&buf);
     }
     else
     {
-        w = 0;
+        offset = 0;
     }
-    loc[0] = pos[0] - w;
+    loc[0] = pos[0] - offset;
     loc[1] = pos[1];
     DrawText_8003E91C(2, &buf, loc, ot);
 }

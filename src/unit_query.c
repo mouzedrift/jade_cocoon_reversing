@@ -776,7 +776,7 @@ unsigned char* GetAncestorName_80033830(Minion* m, int idx)
 // Matched
 int GetAncestorElementMask_80033848(Minion* m, int idx)
 {
-    return m->field_7C[idx];
+    return m->ancestorElements_7C[idx];
 }
 // Matched
 short GetMinionId_80033858(Minion* minion)

@@ -38,10 +38,10 @@ int FrameEdgeCoord_80041E68(int mode, int pos, int size, int inset)
 extern const CVECTOR windowFrameGrey_80074BA0;
 extern int windowFrameShades_80086F9C[];
 // Matched
-void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned char semi)
+void DrawWindowFrame_80041ED0(RECT* rect, unsigned char* rgb, u_long* ot, unsigned char semi)
 {
-    POLY_F4 p[5];
-    DR_TPAGE dm;
+    POLY_F4 quads[5];
+    DR_TPAGE tpage;
     CVECTOR col = windowFrameGrey_80074BA0;
     int abe;
     int i;
@@ -61,8 +61,8 @@ void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned 
     }
     for (i = 0; i < 5; i++)
     {
-        setPolyF4(&p[i]);
-        setSemiTrans(&p[i], abe);
+        setPolyF4(&quads[i]);
+        setSemiTrans(&quads[i], abe);
         if (rgb)
         {
             cr = rgb[0] * windowFrameShades_80086F9C[i] / 100;
@@ -96,20 +96,20 @@ void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned 
             col.g = cg;
             col.b = cb;
         }
-        setRGB0(&p[i], col.r, col.g, col.b);
-        p[i].x0 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][0], r->x, r->w, 2);
-        p[i].y0 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][1], r->y, r->h, 2);
-        p[i].x1 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][2], r->x, r->w, 2);
-        p[i].y1 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][3], r->y, r->h, 2);
-        p[i].x2 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][4], r->x, r->w, 2);
-        p[i].y2 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][5], r->y, r->h, 2);
-        p[i].x3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][6], r->x, r->w, 2);
-        p[i].y3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][7], r->y, r->h, 2);
-        AddPrimCopy_80040298(ot, &p[i], 6);
+        setRGB0(&quads[i], col.r, col.g, col.b);
+        quads[i].x0 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][0], rect->x, rect->w, 2);
+        quads[i].y0 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][1], rect->y, rect->h, 2);
+        quads[i].x1 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][2], rect->x, rect->w, 2);
+        quads[i].y1 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][3], rect->y, rect->h, 2);
+        quads[i].x2 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][4], rect->x, rect->w, 2);
+        quads[i].y2 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][5], rect->y, rect->h, 2);
+        quads[i].x3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][6], rect->x, rect->w, 2);
+        quads[i].y3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][7], rect->y, rect->h, 2);
+        AddPrimCopy_80040298(ot, &quads[i], 6);
     }
-    setDrawTPage(&dm, 0, 0, GetTPage(0, semi, 0, 0));
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)&dm)[0];
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)&dm)[1];
+    setDrawTPage(&tpage, 0, 0, GetTPage(0, semi, 0, 0));
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)&tpage)[0];
+    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)&tpage)[1];
     addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }

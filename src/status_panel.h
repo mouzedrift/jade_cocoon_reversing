@@ -5,15 +5,15 @@
 typedef struct
 {
     short ot_0;
-    short field_2;
-    int field_4;
-    int field_8;
+    short open_2;      // open animation step (DrawAnimatedWindow_8002BEC8)
+    int highlight_4;
+    int time_8;
 } MenuDrawArgs;
 
 typedef struct
 {
     unsigned char c[4];
-} Color_EACC;
-extern const Color_EACC statGridLineColor_800743D0;
+} StatGridColor;
+extern const StatGridColor statGridLineColor_800743D0;
 
 #endif

@@ -162,16 +162,16 @@ void ClearMinionsAndItems_80010600(void)
 void ClearMinionsAndItems_80010600(void)
 {
     int i;
-    int v = 4;
+    int marker = 4;
 
     for (i = 14; i >= 0; i--)
     {
-        saveData_8008B570.minions[i].id = v;
+        saveData_8008B570.minions[i].id = marker;
     }
-    v = 0xD3;
+    marker = 0xD3;
     for (i = 11; i >= 0; i--)
     {
-        saveData_8008B570.items[i].species_5C = v;
+        saveData_8008B570.items[i].species_5C = marker;
     }
 }
 // Matched
@@ -231,7 +231,7 @@ unsigned char GetMinionAncestorElement_80010768(int id, int nth, int idx)
     Minion* m = GetMinion_80010598(id, nth);
     if (m)
     {
-        return m->field_7C[idx];
+        return m->ancestorElements_7C[idx];
     }
     return 0;
 }
@@ -325,12 +325,12 @@ int key;
     return 0;
 }
 // Matched
-int FreeModelTask_8001098C(int arg0)
+int FreeModelTask_8001098C(int key)
 {
     EventEntry* e = FindModelTask_8001091C();
     ModelTaskBuf* buf = e->buffer;
-    ModelTaskState* q = buf->state_4;
-    if (q->state_38 == 5)
+    ModelTaskState* state = buf->state_4;
+    if (state->state_38 == 5)
     {
         FreeModelList_80024BB0(&buf->state_4->models_0);
         free3_8003FC6C(buf->state_4);
@@ -341,60 +341,60 @@ int FreeModelTask_8001098C(int arg0)
     return 0;
 }
 // Matched
-void RunModelTask_80010A10(int arg0)
+void RunModelTask_80010A10(int key)
 {
-    EventEntry* p = FindModelTask_8001091C();
-    StepModelTask_80010AD8(((ModelTaskBuf*)p->buffer)->state_4);
+    EventEntry* entry = FindModelTask_8001091C();
+    StepModelTask_80010AD8(((ModelTaskBuf*)entry->buffer)->state_4);
 }
 // Matched
 Model* GetModelTaskModel_80010A44(int key)
 {
-    ModelTaskBuf* p = FindModelTask_8001091C()->buffer;
-    ModelTaskState* q = p->state_4;
-    if (q->state_38 == 5)
+    ModelTaskBuf* buf = FindModelTask_8001091C()->buffer;
+    ModelTaskState* state = buf->state_4;
+    if (state->state_38 == 5)
     {
-        return q->models_0->items_8;
+        return state->models_0->items_8;
     }
     return 0;
 }
 // Matched
-void ModelTaskUpdateCb_80010A90(int arg0, int* arg1)
+void ModelTaskUpdateCb_80010A90(int entry, int* buf)
 {
-    RunModelTask_80010A10(*arg1);
+    RunModelTask_80010A10(*buf);
 }
 // Matched
-void ModelTaskFreeCb_80010AB4(int arg0, int* arg1)
+void ModelTaskFreeCb_80010AB4(int entry, int* buf)
 {
-    FreeModelTask_8001098C(*arg1);
+    FreeModelTask_8001098C(*buf);
 }
 // Matched
-int StepModelTask_80010AD8(ModelTaskState* p)
+int StepModelTask_80010AD8(ModelTaskState* state)
 {
     int cont = 1;
-    int r = 0;
+    int done = 0;
     do
     {
-        switch (p->state_38)
+        switch (state->state_38)
         {
         case 0:
             break;
         case 1:
-            cont = ModelTaskLoad_80010B90(p);
+            cont = ModelTaskLoad_80010B90(state);
             break;
         case 2:
-            cont = ModelTaskDraw_80010DB0(p);
+            cont = ModelTaskDraw_80010DB0(state);
             break;
         case 3:
-            cont = ModelTaskApplyTextures_80010CDC(p);
+            cont = ModelTaskApplyTextures_80010CDC(state);
             break;
         case 4:
-            cont = ModelTaskWaitLoad_80010C30(p);
+            cont = ModelTaskWaitLoad_80010C30(state);
             break;
         case 5:
             cont = 0;
-            r = 1;
+            done = 1;
             break;
         }
     } while (cont);
-    return r;
+    return done;
 }

@@ -1607,7 +1607,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         }
         for (j = 0; j < 8; j++)
         {
-            pm->field_34[j] = m->field_7C[j];
+            pm->field_34[j] = m->ancestorElements_7C[j];
         }
         pm->field_74 = m->field_CC;
         pm->skills_86 = m->skills_DE;
@@ -1808,7 +1808,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* s)
             }
             for (j = 0; j < 8; j++)
             {
-                m->field_7C[j] = pm->field_34[j];
+                m->ancestorElements_7C[j] = pm->field_34[j];
             }
             m->field_CC = pm->field_74;
             m->skills_DE = pm->skills_86;

@@ -2713,14 +2713,14 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* d)
     int f;
     int g;
     actor->flags_D4 = d->flags_0;
-    actor->fE0 = d->turnStep_C;
+    actor->turnStep_E0 = d->turnStep_C;
     actor->effectMask_E8 = d->effectMask_14;
     actor->effectKinds_EC = d->effectKinds_18;
     actor->loopCount_F4 = d->loopCount_20;
     actor->scaleTarget_F6 = d->scaleTarget_22;
     actor->fFC = d->field_28;
     actor->queuedAnim_FE = d->queuedAnim_2A;
-    actor->fE0 = d->turnStep_C;
+    actor->turnStep_E0 = d->turnStep_C;
     actor->f100 = d->field_2C;
     r = 0;
     if (d->script_4)

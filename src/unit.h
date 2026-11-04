@@ -72,7 +72,7 @@ typedef struct
     unsigned char field_3;
     unsigned char ancestors_4[6][0xC]; // names (GetMinionAncestorName_80010724, GetAncestorName_80033830)
     unsigned char species_4C[0x30];    // species history (GetDominantSpecies_800338B0)
-    unsigned char field_7C[8];         // element masks of the ancestors (GetMinionAncestorElement_80010768, GetAncestorElementMask_80033848); 6 used, 8 saved
+    unsigned char ancestorElements_7C[8];       // element masks of the ancestors (GetMinionAncestorElement_80010768, GetAncestorElementMask_80033848); 6 used, 8 saved
     UnitStatus status_84;
     UnitStatBlock field_CC;
     UnitSkills skills_DE;

@@ -414,7 +414,7 @@ int UnitStatsToMinion_800B9E94(UnitStats* src, Minion* dst, short state)
     for (i = 0; i < 6; i++)
     {
         CopyName_80019AF4((unsigned int*)dst->ancestors_4[i], (unsigned int*)src->st_0.name_10);
-        dst->field_7C[i] = src->st_0.elementMask_42;
+        dst->ancestorElements_7C[i] = src->st_0.elementMask_42;
     }
     r = LowestSetBit_80014358(src->st_0.elementMask_42);
     for (j = 0; j < 4; j++)
@@ -1158,13 +1158,13 @@ void MergeSpeciesHistory_800BAB38(Minion* a, Minion* b)
     }
     g[0] = a->status_84.elementMask_42;
     g[1] = b->status_84.elementMask_42;
-    g[2] = a->field_7C[0];
-    g[3] = a->field_7C[1];
-    g[4] = b->field_7C[0];
-    g[5] = b->field_7C[1];
+    g[2] = a->ancestorElements_7C[0];
+    g[3] = a->ancestorElements_7C[1];
+    g[4] = b->ancestorElements_7C[0];
+    g[5] = b->ancestorElements_7C[1];
     for (j = 0; j < 6; j++)
     {
-        a->field_7C[j] = g[j];
+        a->ancestorElements_7C[j] = g[j];
     }
 }
 #endif

@@ -257,17 +257,17 @@ int DrawAbilityDescription_8002C670(char* minion, int pos, int texts, short slot
 }
 typedef struct
 {
-    short a;
-    short b;
-} ShortPair2;
-extern void DrawScrollArrow_8002B3DC(ShortPair2 p, int b, int c, int d);
+    short kind;
+    short dir;
+} ScrollArrow;
+extern void DrawScrollArrow_8002B3DC(ScrollArrow p, int b, int c, int d);
 // Matched
 void DrawScrollArrow_8002C6DC(int pos, short dir, short ot)
 {
-    ShortPair2 p;
-    p.a = 2;
-    p.b = dir;
-    DrawScrollArrow_8002B3DC(p, frameCount_8008D3FC, pos, ot);
+    ScrollArrow arrow;
+    arrow.kind = 2;
+    arrow.dir = dir;
+    DrawScrollArrow_8002B3DC(arrow, frameCount_8008D3FC, pos, ot);
 }
 typedef struct
 {
