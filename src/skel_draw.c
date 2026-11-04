@@ -956,10 +956,102 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
 }
 #endif
 INCLUDE_ASM(DrawAnimSkel_80046A58);
-#if 0
-// Not matched: full C, about half the words differ (register allocation from the first loop on; the stack layout and block order follow the original)
+/* RotZYXThenX with the last two rows computed row by row (the blend's inline copy) */
+static inline void BlendRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
+{
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int c;
+    int s;
+    int a;
+    int b;
+    int m00;
+    int m01;
+    int m02;
+    int m10;
+    int m11;
+    int m12;
+    int m21;
+    int m22;
+    a = (cz * sy) >> 12;
+    b = (sz * sy) >> 12;
+    m21 = (sx * cy) >> 12;
+    m22 = (cx * cy) >> 12;
+    m10 = (cy * sz) >> 12;
+    m11 = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    m12 = -((cz * sx) >> 12) + ((b * cx) >> 12);
+    m00 = (cz * cy) >> 12;
+    m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
+    m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    c = SIN_TABLE[(rx->vx + 0x400) & 0xFFF];
+    s = SIN_TABLE[rx->vx & 0xFFF];
+    m->m[0][0] = m00;
+    m->m[0][1] = m01;
+    m->m[0][2] = m02;
+    m->m[1][0] = ((m10 * c) >> 12) + ((sy * s) >> 12);
+    m->m[1][1] = ((m11 * c) >> 12) - ((m21 * s) >> 12);
+    m->m[1][2] = ((m12 * c) >> 12) - ((m22 * s) >> 12);
+    m->m[2][0] = ((m10 * s) >> 12) - ((sy * c) >> 12);
+    m->m[2][1] = ((m11 * s) >> 12) + ((m21 * c) >> 12);
+    m->m[2][2] = ((m12 * s) >> 12) + ((m22 * c) >> 12);
+}
+/* RotZYX with the matrix stored column by column (the blend's inline copy) */
+static inline void BlendRotZYX(SVECTOR* rot, MATRIX* m)
+{
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int a;
+    int b;
+    a = (cz * sy) >> 12;
+    b = (sz * sy) >> 12;
+    m->m[0][0] = (cz * cy) >> 12;
+    m->m[1][0] = (sz * cy) >> 12;
+    m->m[2][0] = -sy;
+    m->m[0][1] = -((sz * cx) >> 12) + ((a * sx) >> 12);
+    m->m[1][1] = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    m->m[2][1] = (cy * sx) >> 12;
+    m->m[0][2] = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    m->m[2][2] = (cy * cx) >> 12;
+    m->m[1][2] = -((cz * sx) >> 12) + ((b * cx) >> 12);
+}
+/* the root bone's offset at frame f (stored after the rotations of each frame) */
+static inline void GetRootOfs(SVECTOR* out, AnimPose* pose, int frame)
+{
+    int k = frame * (pose->n_4 + 2) + 1;
+    out->vx = pose->rot[k * 3];
+    out->vy = pose->rot[k * 3 + 1];
+    out->vz = pose->rot[k * 3 + 2];
+}
+/* GetFrameRot keeping bone + 2 in the argument */
+static inline void BlendFrameRot(SVECTOR* out, AnimPose* pose, int frame, int bone)
+{
+    int k;
+    if (bone == 0)
+    {
+        out->vx = 0;
+        out->vy = 0;
+        out->vz = 0;
+    }
+    else
+    {
+        bone += 2;
+        k = frame * (pose->n_4 + 2) + bone;
+        out->vx = pose->rot[k * 3];
+        out->vy = pose->rot[k * 3 + 1];
+        out->vz = pose->rot[k * 3 + 2];
+    }
+}
 // DrawAnimSkel_80046A58 blending two poses: the bone rotations are interpolated by t through the axis / angle of the
 // relative rotation (GetRotationAxis_8004AD44 / BasisFromAxis_8004B0A8), the bone offsets and per-bone scales linearly
+// Matched
 void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, int t, PointLight* light, AnimPose* alt)
 {
     VECTOR root;
@@ -985,11 +1077,10 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
         VECTOR l;
         SVECTOR v;
     } acc;
+    int i;
+    int n;
     MATRIX* m;
     MATRIX* mr;
-    SVECTOR* o;
-    int n;
-    int i;
     int k;
     int a;
     int flags;
@@ -998,7 +1089,7 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
     m = SKEL_MATS;
     gte_ReadRotMatrix(m);
     mr = &SKEL_MATS[1];
-    RotZYX(sk->rot_8, mr);
+    BlendRotZYX(sk->rot_8, mr);
     root.vx = sk->pos_4->vx;
     root.vy = sk->pos_4->vy;
     root.vz = sk->pos_4->vz;
@@ -1009,18 +1100,18 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
     for (i = 0; sk->bones[i].parent >= 0; i++)
     {
         n = sk->bones[i].parent + 2;
-        GetFrameRot(&r1, sk->pose_14, sk->frame_18, sk->bones[i].idx);
-        GetFrameRot(&r2, pose2, frame2, sk->bones[i].idx);
+        BlendFrameRot(&r1, sk->pose_14, sk->frame_18, sk->bones[i].idx);
+        BlendFrameRot(&r2, pose2, frame2, sk->bones[i].idx);
         if (alt)
         {
             GetRot(&r3, alt, sk->bones[i].idx);
-            RotZYXThenX(&r1, &r3, &ma);
-            RotZYXThenX(&r2, &r3, &mb);
+            BlendRotZYXThenX(&r1, &r3, &ma);
+            BlendRotZYXThenX(&r2, &r3, &mb);
         }
         else
         {
-            RotZYX(&r1, &ma);
-            RotZYX(&r2, &mb);
+            BlendRotZYX(&r1, &ma);
+            BlendRotZYX(&r2, &mb);
         }
         TransposeMatrix(&ma, &d);
         gte_MulMatrix0(&d, &mb, &d);
@@ -1037,7 +1128,11 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
             gte_MulMatrix0(&tmp.m, &axis[i], &rel[i]);
             angle[i] = ratan2(rel[i].m[1][2], rel[i].m[1][1]);
             a = angle[i] * t / 4096;
-            if (ABS_80043AF8(a) > 0)
+            if (abs(a) <= 0)
+            {
+                m[n] = ma;
+            }
+            else
             {
                 rel[i].m[1][1] = SIN_TABLE[(a + 0x400) & 0xFFF];
                 rel[i].m[1][2] = SIN_TABLE[a & 0xFFF];
@@ -1047,62 +1142,51 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
                 gte_MulMatrix0(&tmp.m, &axisT[i], &d);
                 gte_MulMatrix0(&ma, &d, &m[n]);
             }
-            else
-            {
-                m[n] = ma;
-            }
         }
         gte_MulMatrix0(&m[n - 1], &m[n], &m[n]);
-        o = &boneOffsets_80098690[n];
         if (alt)
         {
             if (i == 1)
             {
-                k = (sk->frame_18 * (sk->pose_14->n_4 + 2) + 1) * 3;
-                o->vx = sk->pose_14->rot[k];
-                o->vy = sk->pose_14->rot[k + 1];
-                o->vz = sk->pose_14->rot[k + 2];
+                GetRootOfs(&boneOffsets_80098690[n], sk->pose_14, sk->frame_18);
                 GetBonePos(&acc.v, alt, sk->bones[1].idx);
-                o->vy += acc.v.vy;
+                // only the height of the alt pose's root is taken over; the original still reads x and z
+                boneOffsets_80098690[n].vx += 0;
+                boneOffsets_80098690[n].vy += acc.v.vy;
+                boneOffsets_80098690[n].vz += 0;
             }
             else
             {
-                GetBonePos(o, alt, sk->bones[i].idx);
+                GetBonePos(&boneOffsets_80098690[n], alt, sk->bones[i].idx);
             }
         }
         else
         {
             if (i == 1)
             {
-                k = (sk->frame_18 * (sk->pose_14->n_4 + 2) + 1) * 3;
-                acc.v.vx = sk->pose_14->rot[k];
-                acc.v.vy = sk->pose_14->rot[k + 1];
-                acc.v.vz = sk->pose_14->rot[k + 2];
-                k = (frame2 * (pose2->n_4 + 2) + 1) * 3;
-                tmp.v[0].vx = pose2->rot[k];
-                tmp.v[0].vy = pose2->rot[k + 1];
-                tmp.v[0].vz = pose2->rot[k + 2];
-                LerpSVector_8004D7A8(&acc.v, &tmp.v[0], o, t);
+                GetRootOfs(&acc.v, sk->pose_14, sk->frame_18);
+                GetRootOfs(&tmp.v[0], pose2, frame2);
+                LerpSVector_8004D7A8(&acc.v, &tmp.v[0], &boneOffsets_80098690[n], t);
             }
             else
             {
                 GetBonePos(&tmp.v[1], sk->pose_14, sk->bones[i].idx);
                 GetBonePos(&tmp.v[2], pose2, sk->bones[i].idx);
-                LerpSVector_8004D7A8(&tmp.v[1], &tmp.v[2], o, t);
+                LerpSVector_8004D7A8(&tmp.v[1], &tmp.v[2], &boneOffsets_80098690[n], t);
             }
             if (sk->bones[i].parent > 0)
             {
-                k = sk->bones[i].scale_3;
-                o->vx = o->vx * (sk->base[k].vx + (scale2[k].vx - sk->base[k].vx) * t / 4096) / 4096;
-                o->vy = o->vy * (sk->base[k].vy + (scale2[k].vy - sk->base[k].vy) * t / 4096) / 4096;
-                o->vz = o->vz * (sk->base[k].vz + (scale2[k].vz - sk->base[k].vz) * t / 4096) / 4096;
+                int s = sk->bones[i].scale_3;
+                boneOffsets_80098690[n].vx = boneOffsets_80098690[n].vx * (sk->base[s].vx + (scale2[s].vx - sk->base[s].vx) * t / 4096) / 4096;
+                boneOffsets_80098690[n].vy = boneOffsets_80098690[n].vy * (sk->base[s].vy + (scale2[s].vy - sk->base[s].vy) * t / 4096) / 4096;
+                boneOffsets_80098690[n].vz = boneOffsets_80098690[n].vz * (sk->base[s].vz + (scale2[s].vz - sk->base[s].vz) * t / 4096) / 4096;
             }
         }
         if (sk->scale_24)
         {
-            o->vx = o->vx * sk->scale_24->vx / 4096;
-            o->vy = o->vy * sk->scale_24->vy / 4096;
-            o->vz = o->vz * sk->scale_24->vz / 4096;
+            boneOffsets_80098690[n].vx = boneOffsets_80098690[n].vx * sk->scale_24->vx / 4096;
+            boneOffsets_80098690[n].vy = boneOffsets_80098690[n].vy * sk->scale_24->vy / 4096;
+            boneOffsets_80098690[n].vz = boneOffsets_80098690[n].vz * sk->scale_24->vz / 4096;
         }
         n++;
         boneMatrices_80098188[i] = m[n - 1];
@@ -1184,8 +1268,6 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
     gte_SetRotMatrix(m);
     PopMatrix();
 }
-#endif
-INCLUDE_ASM(DrawAnimSkelBlend_80047E28);
 
 // Matched
 void BlendSkelPoses_8004A4FC(AnimSkel* sk, SVECTOR* scale1, AnimPose* pose1, int t1, SVECTOR* scale2, AnimPose* pose2, int t2,
