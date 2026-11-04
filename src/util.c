@@ -264,13 +264,13 @@ unsigned short* DecodeText_8003F748(int mode, unsigned short* s)
     return s;
 }
 // Matched
-void EncodeName_8003F7C8(void* a0, unsigned char* a1)
+void EncodeName_8003F7C8(void* text, unsigned char* out)
 {
     unsigned short tmp[11];
     unsigned short* p;
     int flag = 0;
     int i;
-    MemCopy_800403E8(tmp, a0, 0x16);
+    MemCopy_800403E8(tmp, text, 0x16);
     p = EncodeText_8003F684(1, DecodeText_8003F748(2, tmp));
     for (i = 0; i < 10; i++)
     {
@@ -283,9 +283,9 @@ void EncodeName_8003F7C8(void* a0, unsigned char* a1)
                 flag = 1;
             }
         }
-        a1[i] = c;
+        out[i] = c;
     }
-    a1[10] = 0;
+    out[10] = 0;
 }
 // Matched
 int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut)
@@ -430,15 +430,15 @@ void StrCopy_8003FB8C(char* d, char* s)
     d[i] = s[i];
 }
 // Matched
-void DecodeNames_8003FBD4(int a0)
+void DecodeNames_8003FBD4(int mode)
 {
     int n;
     int i;
-    DecodeText_8003F748(a0, playerName_8008BD48);
+    DecodeText_8003F748(mode, playerName_8008BD48);
     n = CountMinions_80010548(3);
     for (i = 0; i < n; i++)
     {
-        DecodeText_8003F748(a0, GetMinionName_800106F8(3, i));
+        DecodeText_8003F748(mode, GetMinionName_800106F8(3, i));
     }
 }
 // Matched

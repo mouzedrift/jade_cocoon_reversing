@@ -30,7 +30,7 @@ extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
 extern void UpdateFileRequestTask_8003C76C(int* a0, int* a1);
 
 // Matched
-int StartFileRequestTask_8003C6C8(FileRequestDesc* a0)
+int StartFileRequestTask_8003C6C8(FileRequestDesc* req)
 {
     EventEntry* e = AllocEventEntry_80043AF8(fileRequestTasks_8008D488);
     int* buf;
@@ -39,8 +39,8 @@ int StartFileRequestTask_8003C6C8(FileRequestDesc* a0)
         buf = (int*)e->buffer;
         e->cb_8 = (EventEntryFn)UpdateFileRequestTask_8003C76C;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        buf[0] = QueueFileRequest_8003BC84(a0);
-        buf[1] = (a0->flags_0 >> 2) & 1;
+        buf[0] = QueueFileRequest_8003BC84(req);
+        buf[1] = (req->flags_0 >> 2) & 1;
         if (buf[1])
         {
             eventDispatchHalt_8008B540 = 1;
@@ -91,13 +91,13 @@ int DATA_GetFileSize_8003C87C(int idx)
     return Data001Files_80075AA0[idx].field_8_size;
 }
 // Matched
-int CdSeekStart_8003C8A0(DslLOC* a0)
+int CdSeekStart_8003C8A0(DslLOC* loc)
 {
     if (cdReadState_80086550.idle_0 != 0)
     {
         cdReadState_80086550.idle_0 = 0;
-        cdReadState_80086550.loc_8 = a0;
-        cdReadState_80086550.packet_10 = DsPacket(0xA0, a0, 0x15, 0, -1);
+        cdReadState_80086550.loc_8 = loc;
+        cdReadState_80086550.packet_10 = DsPacket(0xA0, loc, 0x15, 0, -1);
         return 1;
     }
     return 0;

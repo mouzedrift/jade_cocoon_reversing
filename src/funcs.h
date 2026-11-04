@@ -212,7 +212,7 @@ extern int FreeModelTask_8001098C(int arg0);
 extern int GetRankForLevel_80019A80(int arg0);
 extern int GetFileRequestStatus_8003BE30(int key);
 extern void RelocateTPageClut_80022AE8(unsigned short* a0, unsigned short* a1, short* a2);
-extern void FreeSoundSeqs_80030EEC(void* arg0);
+extern void FreeSoundSeqs_80030EEC(void* sound);
 extern void* SetFileBufferInUse_8003BFB8(int arg0);
 extern void ListFree_8003FE38(void* arg0, void* arg1);
 struct Pool;

@@ -87,9 +87,9 @@ void FreeSoundVab_80030EA4(SoundStruct* p)
     }
 }
 // Matched
-void FreeSoundSeqs_80030EEC(void* arg0)
+void FreeSoundSeqs_80030EEC(void* sound)
 {
-    SoundStruct* s = arg0;
+    SoundStruct* s = sound;
     int i;
     if (s->field_8_sep_data_ptr)
     {
