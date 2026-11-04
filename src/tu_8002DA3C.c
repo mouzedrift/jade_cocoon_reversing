@@ -17,12 +17,11 @@
 #include "data_decls.h"
 #include "unit.h"
 #include "tu_8002DA3C.h"
+#include "tu_80014954.h"
 
 const Color_EACC dword_800743D0 = { "```" };
 
 
-extern unsigned char dword_80082EBC[];
-extern unsigned char a1ftf[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 void sub_8002E0D8(unsigned short* p, short a1);
 // Matched
@@ -381,9 +380,6 @@ void sub_8002E334(UnitStatus* a0, MenuDrawArgs* a1)
     w[3] = 0x4000000;
     DrawGauge_8002BA54(w, 0, loc2, a1->ot_0);
 }
-extern unsigned char dword_80082EA4[];
-extern unsigned char dword_80082EA8[][4];
-extern unsigned char dword_80082EB8[];
 void sub_8002E944(POLY_F3* p, unsigned short* pos, short idx, short dir);
 // Matched
 void sub_8002E730(unsigned short* pos, unsigned char* a1, short ot)
@@ -444,7 +440,6 @@ void sub_8002E730(unsigned short* pos, unsigned char* a1, short ot)
     }
     DrawUiTiySprt_8002C06C(pos, 0xB, ot);
 }
-extern unsigned char dword_80082EF0[];
 // Matched
 void sub_8002E944(POLY_F3* p, unsigned short* pos, short idx, short dir)
 {
@@ -486,8 +481,6 @@ void sub_8002E944(POLY_F3* p, unsigned short* pos, short idx, short dir)
         break;
     }
 }
-extern unsigned char dword_80082E9C[];
-extern unsigned char dword_80082EA0[];
 extern void sub_8001419C(unsigned char* p, short* out);
 extern void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot);
 extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);

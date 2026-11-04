@@ -151,7 +151,6 @@ extern CameraState cameraState_8008D4F0;
 extern MATRIX dword_80087114; // light matrix
 extern MATRIX dword_80087134; // light colour matrix
 extern short dword_8008D474[2];
-extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();
@@ -859,7 +858,6 @@ void sub_8001B714(void)
         unknownFlags_8008D678 |= 0x10;
     }
 }
-extern short dword_8007C728[][2];
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
 extern DRAWENV* SetDefDrawEnv(DRAWENV* env, int x, int y, int w, int h);
@@ -1242,7 +1240,6 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
     }
     return r;
 }
-extern SoundCue_8007C750 dword_8007C750[];
 // Matched
 void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
 {
@@ -1265,8 +1262,6 @@ void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
         }
     }
 }
-extern short dword_8007CAC0[];
-extern short dword_8007CACC[];
 extern int PlayMusic_800300E0(int idx, int a1);
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
 // Matched
@@ -2676,10 +2671,6 @@ void sub_8001E28C(Actor* o)
         sub_8001EFC4(o);
     }
 }
-extern ActorScriptCmd dword_8007D95C[];
-extern ActorScriptCmd dword_8007D980[];
-extern ActorScriptCmd dword_8007D9A4[];
-extern ActorScriptCmd dword_8007D9C0[];
 // Matched
 int sub_8001E34C(Actor* o, ActorActionDesc* d)
 {
@@ -2757,8 +2748,6 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
     o->flags_4 = g;
     return r;
 }
-extern unsigned short word_8007DC8C[];
-extern unsigned short word_8007DC94[];
 extern int dword_800795A0[];
 #if 0
 // Not matched: the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block, here they are scheduled right after the d[8] load

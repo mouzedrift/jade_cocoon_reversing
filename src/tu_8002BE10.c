@@ -222,7 +222,6 @@ int sub_8002C5A4(int n)
     } while (n);
     return 0;
 }
-extern unsigned char largeDigitColors_800826F8[][4];
 // Matched
 void SetLargeDigitColor_8002C5D0(int a0)
 {
@@ -283,9 +282,6 @@ extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
 extern int CheckItemUsable_80033AFC(struct_minion_ref* p);
 extern int sub_800AD308(int a0);
 extern const int dword_800741EC;
-extern int dword_80082820;
-extern int dword_80082824;
-extern MenuItem_1C* off_800829E8[];
 // Matched
 void sub_8002C728(struct_minion_ref* a0)
 {
@@ -381,9 +377,6 @@ void sub_8002C728(struct_minion_ref* a0)
 extern int FindNthMagicBit_8001AEC0(void* p, int v);
 extern int CountMagicBits_8001AE54(void* p);
 extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
-extern MenuItem_1C* off_80082B54[];
-extern unsigned short word_800829FC[];
-extern unsigned short word_80082A00[];
 // Matched
 void sub_8002CAC8(struct_minion_ref* a0, unsigned short* a1)
 {

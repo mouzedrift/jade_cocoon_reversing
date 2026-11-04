@@ -31,9 +31,6 @@ typedef struct
 extern void DrawMenuWindows_8002A5A4(struct_A5A4* p);
 extern int sub_80033C98(struct_minion_ref* p);
 int sub_8002D1A4(int a, short b);
-extern int abilityNames_800834E4[];
-extern int abilityBonusNames_80083580[];
-extern MenuItem_1C* off_80082D98[];
 // Matched
 void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
 {
@@ -122,8 +119,6 @@ void sub_8002CE28(struct_minion_ref* a0, unsigned short* a1)
     DrawMenuWindows_8002A5A4(&s);
     SetFontClutOffset_8003F900(2, 0);
 }
-extern unsigned char dword_800827F0[];
-extern unsigned char* off_8008280C[];
 // Matched
 int sub_8002D1A4(int a, short b)
 {

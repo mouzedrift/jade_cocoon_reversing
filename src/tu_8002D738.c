@@ -66,9 +66,6 @@ typedef struct
     short ot;
 } struct_D7D0;
 extern const CVECTOR dword_800743CC;
-extern Pos16* off_80082DCC[7];
-extern Pos16 aHroto[12];
-extern Pos16 aNrutu[12];
 extern void sub_80033864(Minion* m, unsigned char* out);
 extern int sub_8002F424(unsigned char* p);
 extern void sub_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);

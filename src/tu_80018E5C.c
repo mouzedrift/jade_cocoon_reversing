@@ -19,6 +19,7 @@
 #include "unit.h"
 #include "tu_80019BF0.h"
 #include "tu_80018E5C.h"
+#include "tu_80014954.h"
 
 const char dword_80072310[] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
 const char dword_80072324[] = "\202x\202\217\202\214\202\207\202\201"; // Yolga
@@ -291,12 +292,6 @@ void sub_80018EBC(int a0, UnitStatus* a1)
     }
     SetActorTint_8001DAAC(a0, r);
 }
-extern void* minionSpeciesNames_8007A170[];
-extern unsigned char dword_8007BA84[];
-extern unsigned char dword_8007BA74[];
-extern int dword_8007A67C[];
-extern int dword_8007A68C[];
-extern int dword_8007A69C[];
 extern MinionBaseStats* sub_800B32A4(int a0);
 extern unsigned char* sub_800B32F0(int a0);
 extern void EncodeName_8003F7C8(void* a0, unsigned char* a1);

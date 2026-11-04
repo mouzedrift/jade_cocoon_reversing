@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "msgwin.h"
 #include "tu_80034068.h"
+#include "tu_80014954.h"
 
 const char dword_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -68,8 +69,6 @@ int sub_8003412C(UnitStatus* p)
     }
     return 0;
 }
-extern unsigned char** off_80083800[];
-extern unsigned char* off_800837D8;
 // Matched
 int sub_80034140(void)
 {
@@ -1115,9 +1114,6 @@ typedef struct
 extern const int dword_80074850[];
 extern const int dword_8007485C[];
 extern const int dword_80074864[];
-extern char* (*nameGetters_8007CB08[])(int id);
-extern char* itemMessageSuffixes_80083818[];
-extern char* off_80083820;
 extern void sub_8003F264(void* pos, int val, int ot);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);

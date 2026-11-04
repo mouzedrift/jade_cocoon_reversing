@@ -931,11 +931,17 @@ def generate(exe, tu, only=None, secs=None):
         try:
             if addr is None:
                 raise GenError("no address")
-            d = types.decls.get(n)
+            # another name of the symbol (an alias the C code declared) is the one to define
+            dn = n
+            if n not in types.decls:
+                alias = [x for x in syms.by_addr.get(addr, []) if x in types.decls and x != n]
+                if alias:
+                    dn = alias[0]
+            d = types.decls.get(dn)
             t = types.resolve(d.type) if d is not None else None
             char_decl = t is not None and t.kind == "array" and t.n is None and t.of.kind == "int" and t.of.nbytes == 1
             if d is None or char_decl:
-                g = guess(syms, n, addr, size, sec, gen)
+                g = guess(syms, dn, addr, size, sec, gen)
                 if char_decl and not g[0][2].startswith("char"):
                     g = None
                 if g is not None:
@@ -945,11 +951,17 @@ def generate(exe, tu, only=None, secs=None):
                         gen.local[gn] = gt
                         syms.add(gn, ga)
                     continue
-            decl = decl_text(d.type, n)
+            decl = decl_text(d.type, dn)
             if t.kind == "array" and t.n is None:
                 es = t.of.size()
+                # a following symbol that can't be an object of its own (not on 4 bytes) is more of the array
+                while (i < len(todo) and syms.addr.get(todo[i]) == addr + size and info[todo[i]][0] == sec and
+                       (addr + size) % 4 and todo[i] not in types.decls):
+                    absorbed[todo[i]] = n
+                    size += info[todo[i]][1]
+                    i += 1
                 t = T("array", of=t.of, n=size // es)
-                decl = sized(decl, n, t.n)
+                decl = sized(decl, dn, t.n)
             # a type larger than the symbol takes the following symbols (if they are INCLUDE_DATA here too)
             end = addr + size
             while t.size() > end - addr:
@@ -961,8 +973,8 @@ def generate(exe, tu, only=None, secs=None):
                 end += info[todo[i]][1]
                 i += 1
             size = end - addr
-            defs.append(Def(n, n, addr, sec, t, unconst(decl, n), True))
-            gen.local[n] = t
+            defs.append(Def(n, dn, addr, sec, t, unconst(decl, dn), True))
+            gen.local[dn] = t
             # bytes behind the declared object (up to the next symbol) that are more than alignment padding:
             # objects of their own
             ra = (addr + t.size() + 3) & ~3

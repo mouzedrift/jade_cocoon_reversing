@@ -22,7 +22,6 @@
 
 extern Block104 cameraState_8008D4F0;
 extern ShortPair dword_8008D474;
-extern PadVibEntry* vibrationPatterns_80083B30[];
 typedef struct
 {
     unsigned char idx;
@@ -100,7 +99,6 @@ void StopPadVibrationTask_800367F0(int a0, unsigned char* a1)
     padVibration_80095460[*a1].motor_2[0] = 0;
     padVibration_80095460[*a1].motor_2[1] = 0;
 }
-extern unsigned char dword_80083844[];
 
 // Matched
 void UpdatePadVibration_80036820(int port)
@@ -399,8 +397,6 @@ void sub_80037770(void)
     p->flags_4 &= ~0x2000;
     RestoreCameraState_80039698(p);
 }
-extern int dword_80083D00[];
-extern int dword_80084330[];
 extern void sub_8003970C(int a, int* b);
 extern void sub_8003983C(int a, int* b);
 // Matched
@@ -521,7 +517,6 @@ void SetCameraTarget_80037AC8(int a0)
 {
     ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = a0;
 }
-extern unsigned short dword_80083CE8[][4];
 extern int* sub_800A1E3C(void);
 extern BattleObj_800C0FAC* sub_800C0FAC(void);
 extern unsigned char byte_800C9C7C;
@@ -583,7 +578,6 @@ void sub_80037C4C(void)
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 &= ~0x100;
 }
-extern CamOffset dword_80083BE4[];
 // Matched
 void sub_80037C74(CameraCtrl* q)
 {
@@ -856,7 +850,6 @@ void sub_80038D64(CameraCtrl* p, int* a1)
         p->angDst_152 = *(unsigned short*)&p->angDst_152 + 0x1000;
     }
 }
-extern CamOffset dword_80083C70[];
 // Matched
 void sub_80038E2C(CameraCtrl* p, int a, int b)
 {
@@ -878,7 +871,6 @@ void sub_80038E2C(CameraCtrl* p, int a, int b)
     p->field2EDst_180 = dword_80083C70[(unsigned short)a].field_8;
     sub_80038D64(o, (int*)&p->pos_38);
 }
-extern CamOffset dword_80083C0C[];
 extern int dword_800A85B8;
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 // Matched
@@ -1037,7 +1029,6 @@ typedef struct
 } ShortRect;
 extern ShortRect stru_8008D420;
 extern short* dword_8008D654;
-extern signed char dword_80083BD4[];
 extern DRAWENV drawEnv_8008D698[2];
 #define CLAMP_HALF(v, lim) ((v) < -(lim) / 2 ? -(lim) / 2 : ((lim) / 2 < (v) ? (lim) / 2 : (v)))
 // Matched

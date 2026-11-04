@@ -3813,7 +3813,6 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
     }
 }
 extern struct_8008D648 dword_8008D648;
-extern int* dword_80082674;
 extern int dword_80091C98;
 extern int dword_80091C94;
 extern int dword_80091C5C;
@@ -3887,8 +3886,6 @@ void sub_80026FAC(void)
 }
 extern int dword_80091C74;
 extern int dword_80091CB4;
-extern int dword_80082668;
-extern int dword_8008266C;
 extern EventNode* dword_800B1DA8;
 extern EventNode* dword_8008D400;
 extern EventNode* messageWindowTask_8008D640;

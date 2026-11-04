@@ -20,6 +20,7 @@
 
 #include "effect_obj.h"
 #include "actor.h"
+#include "tu_80014954.h"
 
 typedef struct
 {
@@ -271,7 +272,6 @@ ShortPair sub_80018A4C(Actor* obj, int* p, ActorScriptCmd** a2, int c)
     }
     return r;
 }
-extern ActorScriptCmd* off_8007A024[]; // the default action scripts
 extern int dword_800B129C[];
 extern int sub_8001AC8C(int idx);
 extern int sub_80031870(int a0);

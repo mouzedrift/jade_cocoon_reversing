@@ -16,11 +16,11 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
+#include "tu_80014954.h"
 
 const CVECTOR dword_800741E4 = { 128, 128, 128 };
 const CVECTOR dword_800741E8 = { 255, 255, 255 };
 
-extern int elementIconsUnlit_800827D0[];
 extern int elementIcons_800827BC[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
@@ -60,7 +60,6 @@ typedef struct
 } UShortPair;
 extern const CVECTOR dword_800741E4;
 extern const CVECTOR dword_800741E8;
-extern short dword_8008279C[];
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 #if 0
 // Not matched: same shape; the original reloads publicTiyPolyFT4s_8008D430 one division earlier in the third vertex (CSE path length) and allocates registers differently
