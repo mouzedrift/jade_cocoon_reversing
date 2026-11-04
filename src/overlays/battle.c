@@ -55,7 +55,7 @@ void BattleEnd_800BA254(BatTask_a* t, BatStart_a* u)
         }
         StopSeqSlot_80031334(0);
         PlaySeqSlot_80031160(1, 1);
-        if (dword_800C9C82 != 0)
+        if (summonedUnit_800C9C82 != 0)
         {
             sub_800A8984(0);
         }
@@ -312,22 +312,22 @@ EventEntry* StartBattle_800BA9E4()
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         e->cb_8 = (EventEntryFn)BattleLoad_800BAC4C;
         r = sub_800A5354();
-        dword_800C9D82 = r;
-        dword_800C9D84 = r;
+        shownAreaElement_800C9D82 = r;
+        areaElement_800C9D84 = r;
         dword_800C9D83 = r;
-        InitTurnGauges_800BF648(dword_800C9C68, GetEncounterAdvantage_800BAAD8());
+        InitTurnGauges_800BF648(turnGauges_800C9C68, GetEncounterAdvantage_800BAAD8());
         dword_800B1228 = 0;
         SetBattleFlag_800BC838(0x80000);
-        dword_800C9D56 = 0;
-        dword_800C9C7C = 0;
-        dword_800C9C99 = 0;
-        dword_800C9C82 = 0;
+        savedEnemyCursor_800C9D56 = 0;
+        actingUnit_800C9C7C = 0;
+        shownUnit_800C9C99 = 0;
+        summonedUnit_800C9C82 = 0;
         dword_800B122C = 0;
         sub_800A1F80();
         GetUnitsCenter_800BC378(sub_800A248C(), buf);
         sub_800A8D0C(buf);
         InitEnemyRecords_800BABC4();
-        dword_800C9C58 = 0;
+        battleLoadState_800C9C58 = 0;
         sub_800A096C();
     }
     return e;
@@ -389,14 +389,14 @@ void BattleLoad_800BAC4C(BatTask_a* t)
 {
     int k;
     int m;
-    switch (dword_800C9C58)
+    switch (battleLoadState_800C9C58)
     {
     case 0:
         if (LoadSeqSlotSound_800303E8() == 0)
         {
             break;
         }
-        dword_800C9C58 = 1;
+        battleLoadState_800C9C58 = 1;
     case 1:
         if (IsSoundTaskReady_80030688() == 0)
         {
@@ -429,17 +429,17 @@ void BattleLoad_800BAC4C(BatTask_a* t)
             FreeBgmAndSfx_800315F4();
             PlaySeqSlot_80031160(0, 1);
         }
-        dword_800C9C58 = 2;
+        battleLoadState_800C9C58 = 2;
     case 2:
         LoadStageEffects_800BC878();
-        dword_800C9C58 = 3;
+        battleLoadState_800C9C58 = 3;
         break;
     case 3:
         if (AreStageEffectsLoaded_800BC8E8() == 0)
         {
             break;
         }
-        dword_800C9C58 = 4;
+        battleLoadState_800C9C58 = 4;
     case 4:
         if (IsFadeDone_8001C2FC() == 0)
         {
@@ -447,23 +447,23 @@ void BattleLoad_800BAC4C(BatTask_a* t)
         }
         SetFadeMode_8001C19C(3, 0x20);
         StartBattleCamera_80037748();
-        dword_800C9C58 = 5;
+        battleLoadState_800C9C58 = 5;
     case 5:
         if (((int (*)())IsSceneFadeDone_8001AB94)() == 0) // called without its argument here
         {
             break;
         }
-        dword_800C9C58 = 6;
+        battleLoadState_800C9C58 = 6;
     case 6:
         LoadUiTiy_8002BF74();
-        dword_800C9C58 = 7;
+        battleLoadState_800C9C58 = 7;
     case 7:
         if (uiTiyLoaded_8008B4E8 == 0)
         {
             break;
         }
         StartBattleWindows_800BFB80();
-        dword_800C9C58 = 8;
+        battleLoadState_800C9C58 = 8;
     case 8:
         if (GetCameraMode_800378F8() >= 4u)
         {
@@ -497,7 +497,7 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
     {
         if (dword_800ADE78.f10 >= 0)
         {
-            dword_800C9C7C = 10;
+            actingUnit_800C9C7C = 10;
             u->fc = sub_800B4200(&dword_800ADE78);
             t->next_8 = WaitChainMessage_800BB100;
             return;
@@ -519,19 +519,19 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
         }
         q = sub_800B41A8(&dword_800ADE78);
         f = *q;
-        dword_800C9C78 = q;
+        chainEntry_800C9C78 = q;
         if (f == 0)
         {
-            dword_800C9C7C = dword_800C9C82;
+            actingUnit_800C9C7C = summonedUnit_800C9C82;
         }
         else
         {
-            dword_800C9C7C = *dword_800C9C78;
+            actingUnit_800C9C7C = *chainEntry_800C9C78;
         }
-        if (dword_800C9C7C == 10)
+        if (actingUnit_800C9C7C == 10)
         {
             BatChain_a* p = &dword_800ADE78;
-            p->f10 = dword_800C9C78[5];
+            p->f10 = chainEntry_800C9C78[5];
             v->fc = sub_800B4200(p);
             t->next_8 = WaitChainMessage_800BB100;
             return;
@@ -548,11 +548,11 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
         if (TestBattleFlag_800BC820(8) == 1)
         {
             ClearBattleFlag_800BC850(8);
-            dword_800C9C7C = 0;
-            dword_800C9C88.kind_0 = 3;
-            dword_800C9C88.arg_4 = 0;
-            dword_800C9C88.mask_8 = 1;
-            dword_800C9C88.targets_C = 0;
+            actingUnit_800C9C7C = 0;
+            curCommand_800C9C88.kind_0 = 3;
+            curCommand_800C9C88.arg_4 = 0;
+            curCommand_800C9C88.mask_8 = 1;
+            curCommand_800C9C88.targets_C = 0;
             SetBattleFlag_800BC838(0x8000);
             t->next_8 = CmdRecallDone_800BBE00;
             u->next_8 = (void (*)())(u->f4 = (int)BattleNextTurn_800BAE74);
@@ -561,18 +561,18 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
         if (TestBattleFlag_800BC820(2) == 1)
         {
             ClearBattleFlag_800BC850(2);
-            dword_800C9C98 = 4;
-            dword_800C9C7C = 4;
-            dword_800C9C88.kind_0 = 3;
-            dword_800C9C88.arg_4 = 0;
-            dword_800C9C88.mask_8 = 0x10;
-            dword_800C9C88.targets_C = 0;
+            commandUnit_800C9C98 = 4;
+            actingUnit_800C9C7C = 4;
+            curCommand_800C9C88.kind_0 = 3;
+            curCommand_800C9C88.arg_4 = 0;
+            curCommand_800C9C88.mask_8 = 0x10;
+            curCommand_800C9C88.targets_C = 0;
             SetBattleFlag_800BC838(0x10000);
             t->next_8 = sub_800BC05C;
             v->next_8 = (void (*)())(v->f4 = (int)BattleNextTurn_800BAE74);
             return;
         }
-        dword_800C9C7C = 7;
+        actingUnit_800C9C7C = 7;
     }
     t->next_8 = SelectActingUnit_800BB314;
 }
@@ -612,13 +612,13 @@ void BattleFinish_800BB1B0(BatTask_a* t, BatObj_a* u)
     }
     else if (TestBattleFlag_800BC820(0x100) == 1)
     {
-        if (dword_800C9C82 != 0)
+        if (summonedUnit_800C9C82 != 0)
         {
-            dword_800C9C7C = dword_800C9C82;
-            dword_800C9C88.kind_0 = 3;
-            dword_800C9C88.arg_4 = 0;
-            dword_800C9C88.targets_C = 0;
-            dword_800C9C88.mask_8 = 1 << dword_800C9C7C;
+            actingUnit_800C9C7C = summonedUnit_800C9C82;
+            curCommand_800C9C88.kind_0 = 3;
+            curCommand_800C9C88.arg_4 = 0;
+            curCommand_800C9C88.targets_C = 0;
+            curCommand_800C9C88.mask_8 = 1 << actingUnit_800C9C7C;
             t->next_8 = (void (*)())GetCommandHandler_800BC174();
             u->f4 = (int)BattleFinish_800BB1B0;
             u->next_8 = BattleFinish_800BB1B0;
@@ -658,12 +658,12 @@ INCLUDE_OVERLAY_ASM(battle, BattleFinish_800BB1B0);
 
 void SelectActingUnit_800BB314(BatTask_a* t)
 {
-    if (dword_800C9C7C == 7)
+    if (actingUnit_800C9C7C == 7)
     {
-        dword_800C9C7C = AdvanceTurnGauges_800BF6BC(dword_800C9C68, dword_800C9C82);
+        actingUnit_800C9C7C = AdvanceTurnGauges_800BF6BC(turnGauges_800C9C68, summonedUnit_800C9C82);
     }
     t->next_8 = BeginUnitTurn_800BB380;
-    dword_800C9C99 = dword_800C9C82;
+    shownUnit_800C9C99 = summonedUnit_800C9C82;
 }
 
 #if 0 // Not matched: only u and flags swap saved registers (s5/s6); reducing flags refs flips them; tried decl order, types, split ifs, tail variable
@@ -676,53 +676,53 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
     unsigned int f;
     ResetCurrentCommand_800BB74C();
     ResetTurnResults_800BB7D4();
-    m = GetUnitStatus_80014390(dword_800C9C7C);
+    m = GetUnitStatus_80014390(actingUnit_800C9C7C);
     flags = m->status_0;
-    kind = GetUnitSide_800BC7DC(dword_800C9C7C);
-    TickUnitStatus_800BF7C4(m, &dword_800C9C7E, &dword_800C9C80);
-    if (dword_800C9C7E != 0)
+    kind = GetUnitSide_800BC7DC(actingUnit_800C9C7C);
+    TickUnitStatus_800BF7C4(m, &actorHpChange_800C9C7E, &actorMpChange_800C9C80);
+    if (actorHpChange_800C9C7E != 0)
     {
-        if (dword_800C9C80 != 0)
+        if (actorMpChange_800C9C80 != 0)
         {
-            dword_800C9CBC[dword_800C9C7C] = 3;
+            unitHitKinds_800C9CBC[actingUnit_800C9C7C] = 3;
         }
         else
         {
-            dword_800C9CBC[dword_800C9C7C] = 1;
+            unitHitKinds_800C9CBC[actingUnit_800C9C7C] = 1;
         }
     }
-    else if (dword_800C9C80 != 0)
+    else if (actorMpChange_800C9C80 != 0)
     {
-        dword_800C9CBC[dword_800C9C7C] = 2;
+        unitHitKinds_800C9CBC[actingUnit_800C9C7C] = 2;
     }
     f = m->status_0;
     r = GetStatusCommand_800BFA4C(f, flags);
-    dword_800C9C88.kind_0 = r;
-    dword_800C9C88.arg_4 = 0;
-    dword_800C9C88.targets_C = 0;
+    curCommand_800C9C88.kind_0 = r;
+    curCommand_800C9C88.arg_4 = 0;
+    curCommand_800C9C88.targets_C = 0;
     if (r == 0x13)
     {
         switch ((unsigned int)kind)
         {
         case 0:
             SetBattleFlag_800BC838(4);
-            dword_800C9D80 = 0x1C;
+            deathSfx_800C9D80 = 0x1C;
             break;
         case 1:
             SetBattleFlag_800BC838(8);
-            dword_800C9D80 = 0x6F;
+            deathSfx_800C9D80 = 0x6F;
             break;
         case 2:
             SetBattleFlag_800BC838(0x40);
-            if (sub_800BF9B4(sub_800A2BE4(dword_800C9C7C - 4)) == 1)
+            if (sub_800BF9B4(sub_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
             {
                 SetBattleFlag_800BC838(0x100000);
-                dword_800C9D80 = 0x1C;
+                deathSfx_800C9D80 = 0x1C;
             }
             else
             {
                 ClearBattleFlag_800BC850(0x100000);
-                dword_800C9D80 = 0x6F;
+                deathSfx_800C9D80 = 0x6F;
             }
             if (sub_800A2AB4() == 2)
             {
@@ -735,31 +735,31 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
         u->f4 = (int)(u->next_8 = BattleNextTurn_800BAE74);
         return;
     }
-    if (m->hp_8.cur_0 - dword_800C9C7E <= 0)
+    if (m->hp_8.cur_0 - actorHpChange_800C9C7E <= 0)
     {
-        dword_800C9C88.kind_0 = 0xB;
-        dword_800C9C7E = m->hp_8.cur_0;
+        curCommand_800C9C88.kind_0 = 0xB;
+        actorHpChange_800C9C7E = m->hp_8.cur_0;
         switch ((unsigned int)kind)
         {
         case 0:
             SetBattleFlag_800BC838(4);
-            dword_800C9D80 = 0x1C;
+            deathSfx_800C9D80 = 0x1C;
             break;
         case 1:
             SetBattleFlag_800BC838(8);
-            dword_800C9D80 = 0x6F;
+            deathSfx_800C9D80 = 0x6F;
             break;
         case 2:
             SetBattleFlag_800BC838(0x40);
-            if (sub_800BF9B4(sub_800A2BE4(dword_800C9C7C - 4)) == 1)
+            if (sub_800BF9B4(sub_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
             {
                 SetBattleFlag_800BC838(0x100000);
-                dword_800C9D80 = 0x1C;
+                deathSfx_800C9D80 = 0x1C;
             }
             else
             {
                 ClearBattleFlag_800BC850(0x100000);
-                dword_800C9D80 = 0x6F;
+                deathSfx_800C9D80 = 0x6F;
             }
             if (sub_800A2AB4() == 2)
             {
@@ -777,7 +777,7 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
         t->next_8 = BattleNextTurn_800BAE74;
         return;
     }
-    if (dword_800C9C88.kind_0 == 0x14)
+    if (curCommand_800C9C88.kind_0 == 0x14)
     {
         t->next_8 = PrepareCommandInput_800BB860;
         return;
@@ -803,10 +803,10 @@ INCLUDE_OVERLAY_ASM(battle, BeginUnitTurn_800BB380);
 
 void ResetCurrentCommand_800BB74C()
 {
-    dword_800C9C88.kind_0 = 0x14;
-    dword_800C9C88.arg_4 = 0;
-    dword_800C9C88.targets_C = 0;
-    dword_800C9C88.mask_8 = 1 << dword_800C9C7C;
+    curCommand_800C9C88.kind_0 = 0x14;
+    curCommand_800C9C88.arg_4 = 0;
+    curCommand_800C9C88.targets_C = 0;
+    curCommand_800C9C88.mask_8 = 1 << actingUnit_800C9C7C;
     ResetUnitReactions_800BB794();
 }
 
@@ -815,27 +815,27 @@ void ResetUnitReactions_800BB794()
     int i;
     for (i = 0; i < 7; i++)
     {
-        dword_800C9CC8[i].kind_0 = 0x14;
-        dword_800C9CC8[i].arg_4 = 0;
-        dword_800C9CC8[i].mask_8 = 1 << i;
-        dword_800C9CC8[i].targets_C = 0;
+        unitReactions_800C9CC8[i].kind_0 = 0x14;
+        unitReactions_800C9CC8[i].arg_4 = 0;
+        unitReactions_800C9CC8[i].mask_8 = 1 << i;
+        unitReactions_800C9CC8[i].targets_C = 0;
     }
 }
 
 void ResetTurnResults_800BB7D4()
 {
     int i;
-    dword_800C9D78 = -1;
-    dword_800C9D80 = -1;
-    dword_800C9C7E = 0;
-    dword_800C9C80 = 0;
+    hitSfx_800C9D78 = -1;
+    deathSfx_800C9D80 = -1;
+    actorHpChange_800C9C7E = 0;
+    actorMpChange_800C9C80 = 0;
     for (i = 0; i < 7; i++)
     {
-        dword_800C9D38[i] = 0;
-        dword_800C9D48[i] = 0;
-        dword_800C9CBC[i] = 0;
+        unitHpDamage_800C9D38[i] = 0;
+        unitMpDamage_800C9D48[i] = 0;
+        unitHitKinds_800C9CBC[i] = 0;
         dword_800C9D58[i] = 0;
-        dword_800C9CA0[i] = 0;
+        unitStatusInflicted_800C9CA0[i] = 0;
     }
 }
 
@@ -847,15 +847,15 @@ void PrepareCommandInput_800BB860(BatTask_a* t)
 
 void InputCommand_800BB894(BatTask_a* t, BatObj_a* u)
 {
-    if (dword_800C9C7C >= 4)
+    if (actingUnit_800C9C7C >= 4)
     {
         if (dword_800ADE78.f0 == 1)
         {
-            sub_800B42A8(&dword_800C9C88, &dword_800ADE78);
+            sub_800B42A8(&curCommand_800C9C88, &dword_800ADE78);
         }
         else
         {
-            sub_800A2618(&dword_800C9C88, dword_800C9C7C - 4);
+            sub_800A2618(&curCommand_800C9C88, actingUnit_800C9C7C - 4);
         }
         t->next_8 = (void (*)())GetCommandHandler_800BC174();
         u->next_8 = (void (*)())(u->f4 = (int)BattleNextTurn_800BAE74);
@@ -874,7 +874,7 @@ void WaitBattleMenu_800BB940(BatTask_a* t, BatObj_a* u)
         ClearBattleFlag_800BC850(0x2000);
         if (dword_800ADE78.f0 == 1)
         {
-            if ((dword_800ADE78.f10 = sub_800B4318(&dword_800C9C88, &dword_800ADE78)) >= 0)
+            if ((dword_800ADE78.f10 = sub_800B4318(&curCommand_800C9C88, &dword_800ADE78)) >= 0)
             {
                 SetBattleFlag_800BC838(0x2000);
                 t->next_8 = BattleNextTurn_800BAE74;
@@ -883,9 +883,9 @@ void WaitBattleMenu_800BB940(BatTask_a* t, BatObj_a* u)
         }
         t->next_8 = (void (*)())GetCommandHandler_800BC174();
         u->f4 = (int)BattleNextTurn_800BAE74;
-        if (dword_800C9C88.kind_0 == 2)
+        if (curCommand_800C9C88.kind_0 == 2)
         {
-            dword_800B122C |= dword_800C9C88.targets_C;
+            dword_800B122C |= curCommand_800C9C88.targets_C;
         }
     }
 }
@@ -903,13 +903,13 @@ void CmdActionReactions_800BBA70(BatTask_a* t, BatObj_a* u)
     unsigned int mask;
     int i;
     BatCmd_a* s;
-    if (NeedsStatusReaction_800BC1A8(dword_800C9C88.targets_C) == 1)
+    if (NeedsStatusReaction_800BC1A8(curCommand_800C9C88.targets_C) == 1)
     {
-        mask = dword_800C9C88.targets_C;
+        mask = curCommand_800C9C88.targets_C;
         SetBattleFlag_800BC838(0x1000);
         ResetCurrentCommand_800BB74C();
         ResetTurnResults_800BB7D4();
-        s = dword_800C9CC8;
+        s = unitReactions_800C9CC8;
         for (i = 0; i < 7; i++)
         {
             if (mask & (1 << i))
@@ -936,7 +936,7 @@ void CmdActionReactions_800BBA70(BatTask_a* t, BatObj_a* u)
                 s[i].targets_C = 0;
             }
         }
-        dword_800C9C7C = 7;
+        actingUnit_800C9C7C = 7;
         u->fc = StartActionTask_800BC28C();
         u->next_8 = (void (*)())u->f4;
         t->next_8 = WaitActionTask_800BC144;
@@ -957,14 +957,14 @@ void CmdSummon_800BBBA8(BatTask_a* t, BatObj_a* u)
     t->next_8 = WaitActionTask_800BC144;
 }
 
-#if 0 // Not matched: the lbu of dword_800C9C98 is scheduled above the store to dword_800C9C88.targets_C; the
-      // original keeps them in order, as if dword_800C9C98 were a field of the same struct (gcc only disambiguates a
+#if 0 // Not matched: the lbu of commandUnit_800C9C98 is scheduled above the store to curCommand_800C9C88.targets_C; the
+      // original keeps them in order, as if commandUnit_800C9C98 were a field of the same struct (gcc only disambiguates a
       // fixed scalar from a struct field behind a register). CmdRecall_800BBDB4 gets no arguments (t/u are still in a0/a1)
 void CmdSwapMinion_800BBBF4(BatTask_a* t, BatObj_a* u)
 {
-    dword_800C9C88.kind_0 = 3;
-    dword_800C9C88.targets_C = 0;
-    if (!dword_800C9C98)
+    curCommand_800C9C88.kind_0 = 3;
+    curCommand_800C9C88.targets_C = 0;
+    if (!commandUnit_800C9C98)
     {
         CmdRecall_800BBDB4();
     }
@@ -984,7 +984,7 @@ void CmdSwapMinionLoad_800BBC84(BatTask_a* t)
 {
     t->next_8 = CmdSummonWait_800BBCC8;
     FreeSummonedMinion_800C0BA0(t);
-    LoadSummonedMinion_800C0AEC(dword_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
+    LoadSummonedMinion_800C0AEC(commandUnit_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
 }
 
 #if 0 // Not matched: needs the second copy of u (s3, from 'v'); remaining: u->fc store / dword_800ADE78 load order and the shared lui of BattleNextTurn_800BAE74 in the branch delay slot
@@ -995,12 +995,12 @@ void CmdSummonWait_800BBCC8(BatTask_a* t, BatObj_a* u)
     BatObj_a* v = u;
     if (CreateSummonedMinionActor_800C0BF0(t) == 1)
     {
-        dword_800C9C88.kind_0 = 2;
-        dword_800C9C88.targets_C = 0;
-        dword_800C9C99 = dword_800C9C98;
-        dword_800C9C7C = dword_800C9C98;
-        dword_800C9C82 = dword_800C9C98;
-        dword_800C9C88.mask_8 = 1 << dword_800C9C98;
+        curCommand_800C9C88.kind_0 = 2;
+        curCommand_800C9C88.targets_C = 0;
+        shownUnit_800C9C99 = commandUnit_800C9C98;
+        actingUnit_800C9C7C = commandUnit_800C9C98;
+        summonedUnit_800C9C82 = commandUnit_800C9C98;
+        curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
         u->fc = StartActionTask_800BC28C();
         if (dword_800ADE78.f0 == 1)
         {
@@ -1008,7 +1008,7 @@ void CmdSummonWait_800BBCC8(BatTask_a* t, BatObj_a* u)
         }
         else
         {
-            ResetTurnGauge_800BF770(dword_800C9C68, dword_800C9C7C);
+            ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
             v->next_8 = BattleNextTurn_800BAE74;
         }
         UpdateMinionStatusTint_800C0F1C();
@@ -1028,10 +1028,10 @@ void CmdRecall_800BBDB4(BatTask_a* t, BatObj_a* u)
 
 void CmdRecallDone_800BBE00(BatTask_a* t, BatObj_a* u)
 {
-    dword_800C9C7C = 0;
-    dword_800C9C99 = 0;
-    dword_800C9C82 = 0;
-    dword_800C9C88.mask_8 = 1 << dword_800C9C98;
+    actingUnit_800C9C7C = 0;
+    shownUnit_800C9C99 = 0;
+    summonedUnit_800C9C82 = 0;
+    curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
     u->fc = StartActionTask_800BC28C();
     u->next_8 = CmdRecallEnd_800BBE7C;
     t->next_8 = WaitActionTask_800BC144;
@@ -1051,7 +1051,7 @@ void CmdRecallEnd_800BBE7C(BatTask_a* t)
     else
     {
         t->next_8 = BattleNextTurn_800BAE74;
-        ResetTurnGauge_800BF770(dword_800C9C68, dword_800C9C7C);
+        ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
     }
 }
 
@@ -1059,22 +1059,22 @@ void CmdEnemyCall_800BBEFC(BatTask_a* t, BatObj_a* u)
 {
     u->fc = StartActionTask_800BC28C(t);
     u->next_8 = CmdEnemyCallJoin_800BBF64;
-    dword_800C9C88.targets_C = 0;
-    dword_800C9C98 = dword_800C9C88.arg_4 + 4;
+    curCommand_800C9C88.targets_C = 0;
+    commandUnit_800C9C98 = curCommand_800C9C88.arg_4 + 4;
     t->next_8 = WaitActionTask_800BC144;
 }
 
 #if 0 // Not matched: instruction scheduling only (s0/s1 save order, C68 address placement); tried assignment-expression, pointer local, byte temp
 void CmdEnemyCallJoin_800BBF64(BatTask_a* t, BatObj_a* u)
 {
-    dword_800C9C88.kind_0 = 0x15;
-    dword_800C9C7C = dword_800C9C98;
-    dword_800C9C88.mask_8 = 1 << dword_800C9C7C;
-    sub_800A2AE8(&dword_800C9C88);
+    curCommand_800C9C88.kind_0 = 0x15;
+    actingUnit_800C9C7C = commandUnit_800C9C98;
+    curCommand_800C9C88.mask_8 = 1 << actingUnit_800C9C7C;
+    sub_800A2AE8(&curCommand_800C9C88);
     u->fc = StartActionTask_800BC28C();
     u->next_8 = (void (*)())u->f4;
     t->next_8 = WaitActionTask_800BC144;
-    ResetTurnGauge_800BF770(dword_800C9C68, dword_800C9C7C);
+    ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
 }
 #endif
 
@@ -1084,22 +1084,22 @@ void sub_800BBFFC(BatTask_a* t, BatObj_a* u)
 {
     u->fc = StartActionTask_800BC28C(t);
     u->next_8 = sub_800BC05C;
-    dword_800C9C98 = dword_800C9C88.arg_4 + 4;
+    commandUnit_800C9C98 = curCommand_800C9C88.arg_4 + 4;
     t->next_8 = WaitActionTask_800BC144;
 }
 
 #if 0
 void sub_800BC05C(BatTask_a* t, BatObj_a* u)
 {
-    dword_800C9C88.kind_0 = 0x16;
-    dword_800C9C7C = dword_800C9C98;
-    dword_800C9C88.mask_8 = 1 << dword_800C9C98;
-    sub_800A2AE8(&dword_800C9C88);
+    curCommand_800C9C88.kind_0 = 0x16;
+    actingUnit_800C9C7C = commandUnit_800C9C98;
+    curCommand_800C9C88.mask_8 = 1 << commandUnit_800C9C98;
+    sub_800A2AE8(&curCommand_800C9C88);
     SetBattleFlag_800BC838(0x10000);
     u->fc = StartActionTask_800BC28C();
     u->next_8 = (void (*)())u->f4;
     t->next_8 = WaitActionTask_800BC144;
-    ResetTurnGauge_800BF770(dword_800C9C68, dword_800C9C7C);
+    ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
 }
 #endif
 
@@ -1122,7 +1122,7 @@ void WaitActionTask_800BC144(BatTask_a* t, BatTask_a* u)
 
 int GetCommandHandler_800BC174()
 {
-    return dword_800C8B54[(unsigned char)dword_800C8B38[dword_800C9C88.kind_0]];
+    return commandHandlers_800C8B54[(unsigned char)commandHandlerIdx_800C8B38[curCommand_800C9C88.kind_0]];
 }
 
 int NeedsStatusReaction_800BC1A8(unsigned int mask)
@@ -1137,10 +1137,10 @@ int NeedsStatusReaction_800BC1A8(unsigned int mask)
         if (mask & m)
         {
             mn = GetUnitStatus_80014390(i & 0xFF);
-            c = (unsigned char)dword_800C9CBC[i];
+            c = (unsigned char)unitHitKinds_800C9CBC[i];
             if (c != 0 && c != 5 && c != 6 && mn->hp_8.cur_0 > 0)
             {
-                if (dword_800C9CA0[i] & 0x18202)
+                if (unitStatusInflicted_800C9CA0[i] & 0x18202)
                 {
                     return 1;
                 }
@@ -1162,7 +1162,7 @@ int StartActionTask_800BC28C()
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         if (TestBattleFlag_800BC820(0x80000) == 1)
         {
-            dword_800C9D7C = LoadOverlay_80020BF8(1, 0x1E);
+            btlExecLoad_800C9D7C = LoadOverlay_80020BF8(1, 0x1E);
             e->cb_8 = (EventEntryFn)WaitBtlExecLoaded_800BC324;
             ClearBattleFlag_800BC850(0x80000);
         }
@@ -1176,7 +1176,7 @@ int StartActionTask_800BC28C()
 
 void WaitBtlExecLoaded_800BC324(BatTask_a* t, int a)
 {
-    if (GetFileRequestStatus_8003BE30(dword_800C9D7C) == 0)
+    if (GetFileRequestStatus_8003BE30(btlExecLoad_800C9D7C) == 0)
     {
         t->next_8 = ActionStart_800BDA28;
         t->next_8(t, a);
@@ -1258,13 +1258,13 @@ void TurnUnitToward_800BC4D4(int a, int b)
 int IsUnitOnField_800BC570(int x)
 {
     int m;
-    if (x == 0 && dword_800C9C82 == 0)
+    if (x == 0 && summonedUnit_800C9C82 == 0)
     {
         return 1;
     }
     if (GetPartyMinionMask_800C0A9C() & (m = 1 << x))
     {
-        if (x == dword_800C9C82)
+        if (x == summonedUnit_800C9C82)
         {
             return 1;
         }
@@ -1309,7 +1309,7 @@ int GetUnitPos_800BC6CC(int a)
         switch ((unsigned int)k)
         {
         case 1:
-            m = GetUnitSide_800BC7DC(dword_800C9C82);
+            m = GetUnitSide_800BC7DC(summonedUnit_800C9C82);
             if (m == 0)
             {
             case 0:
@@ -1385,16 +1385,16 @@ void ClearBattleFlag_800BC850(unsigned int m)
 
 int GetAreaElement_800BC868()
 {
-    return dword_800C9D84;
+    return areaElement_800C9D84;
 }
 
 void LoadStageEffects_800BC878()
 {
     char buf[4];
     memset(buf, 0, 4);
-    LoadEffectFile_80020DDC(dword_800C8EAC[battleStageId_80083BD0].effect_4, &battleEffectFile_80095468, buf, buf, 0, 0);
-    dword_800C9D8C[1] = -1;
-    dword_800C9D8C[0] = -1;
+    LoadEffectFile_80020DDC(battleStages_800C8EAC[battleStageId_80083BD0].effect_4, &battleEffectFile_80095468, buf, buf, 0, 0);
+    stageAnimUv_800C9D8C[1] = -1;
+    stageAnimUv_800C9D8C[0] = -1;
 }
 
 int AreStageEffectsLoaded_800BC8E8()

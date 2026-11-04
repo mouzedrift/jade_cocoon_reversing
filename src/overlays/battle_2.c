@@ -19,11 +19,11 @@ typedef struct BatLight_a
     short b_54;
 } BatLight_a;
 
-extern char dword_800C9124[];
+extern char stageRot_800C9124[];
 extern char cameraState_8008D4F0[];
 extern short cameraRot_8008D4C8;
 extern short geomScreenBase_8008D51E;
-extern unsigned char dword_800C911C[];
+extern unsigned char stageAnimPhases_800C911C[];
 extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
 typedef struct BatStageObj_a
 {
@@ -40,10 +40,10 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
     int i;
 
     unknownFlags_8008D678 &= ~0x10000;
-    idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, dword_800C8EAC[battleStageId_80083BD0].model_6);
-    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, pointLights_8008D534, 1, scale);
+    idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, battleStages_800C8EAC[battleStageId_80083BD0].model_6);
+    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, stageRot_800C9124, pointLights_8008D534, 1, scale);
     {
-        unsigned short* list = dword_800C8EAC[battleStageId_80083BD0].list_0;
+        unsigned short* list = battleStages_800C8EAC[battleStageId_80083BD0].list_0;
         SaveData* sd = &saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
@@ -78,7 +78,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
                         {
                             sz[0] = e->size_C[0] * 5;
                             sz[1] = e->size_C[1] * 5;
-                            DrawRotSprite_80044010(&g->poly_C, &pos, dword_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
+                            DrawRotSprite_80044010(&g->poly_C, &pos, stageRot_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {
@@ -89,7 +89,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
             }
         }
     }
-    if (dword_800C8EAC[battleStageId_80083BD0].floor_8 >= 0)
+    if (battleStages_800C8EAC[battleStageId_80083BD0].floor_8 >= 0)
     {
         for (i = 0; i < 32; i++)
         {
@@ -117,7 +117,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
             sv.vy = v.vy;
             sv.vz = v.vz;
             RotTransPers(&sv, (long*)&sxy, &pp, &flag);
-            poly = battleEffectFile_80095468.sprites_20[dword_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
+            poly = battleEffectFile_80095468.sprites_20[battleStages_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
             x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * geomScreenBase_8008D51E / 240;
             if ((unsigned int)(x + 0x60) < 0x1A0)
             {
@@ -133,7 +133,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
             }
         }
     }
-    if (dword_800C8EAC[battleStageId_80083BD0].anim_A >= 0)
+    if (battleStages_800C8EAC[battleStageId_80083BD0].anim_A >= 0)
     {
         int cols = 0;
         unsigned int n = 0;
@@ -162,12 +162,12 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
         case 0x1C:
         case 0x1D:
         {
-            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[battleStageId_80083BD0].anim_A)];
+            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, battleStages_800C8EAC[battleStageId_80083BD0].anim_A)];
             int j;
             for (j = 0; j < g->count_0; j++)
             {
                 int half = n >> 1;
-                int t = (dword_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % n;
+                int t = (stageAnimPhases_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % n;
                 int k;
                 if (battleStageId_80083BD0 == 0x13 && half < t)
                 {
@@ -192,10 +192,10 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
                     int vv;
                     SaveData* sd;
                     BatLight_a* l;
-                    if (dword_800C9D8C[1] < 0 && dword_800C9D8C[0] < 0)
+                    if (stageAnimUv_800C9D8C[1] < 0 && stageAnimUv_800C9D8C[0] < 0)
                     {
-                        dword_800C9D8C[0] = g->poly_C.u0;
-                        dword_800C9D8C[1] = g->poly_C.v0;
+                        stageAnimUv_800C9D8C[0] = g->poly_C.u0;
+                        stageAnimUv_800C9D8C[1] = g->poly_C.v0;
                     }
                     du = t % cols;
                     dv = t / cols;
@@ -214,14 +214,14 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
                     {
                         uu = e->u_0;
                     }
-                    g->poly_C.u0 = dword_800C9D8C[0] + uu;
-                    g->poly_C.v0 = dword_800C9D8C[1] + vv;
-                    g->poly_C.u1 = dword_800C9D8C[0] + uu + e->w_4;
-                    g->poly_C.v1 = dword_800C9D8C[1] + vv;
-                    g->poly_C.u2 = dword_800C9D8C[0] + uu;
-                    g->poly_C.v2 = dword_800C9D8C[1] + vv + e->h_6;
-                    g->poly_C.u3 = dword_800C9D8C[0] + uu + e->w_4;
-                    g->poly_C.v3 = dword_800C9D8C[1] + vv + e->h_6;
+                    g->poly_C.u0 = stageAnimUv_800C9D8C[0] + uu;
+                    g->poly_C.v0 = stageAnimUv_800C9D8C[1] + vv;
+                    g->poly_C.u1 = stageAnimUv_800C9D8C[0] + uu + e->w_4;
+                    g->poly_C.v1 = stageAnimUv_800C9D8C[1] + vv;
+                    g->poly_C.u2 = stageAnimUv_800C9D8C[0] + uu;
+                    g->poly_C.v2 = stageAnimUv_800C9D8C[1] + vv + e->h_6;
+                    g->poly_C.u3 = stageAnimUv_800C9D8C[0] + uu + e->w_4;
+                    g->poly_C.v3 = stageAnimUv_800C9D8C[1] + vv + e->h_6;
                     if (e->size_C[1] != 0)
                     {
                         l = (BatLight_a*)cameraState_8008D4F0;
@@ -237,7 +237,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
         }
         default:
         {
-            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[battleStageId_80083BD0].anim_A)];
+            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, battleStages_800C8EAC[battleStageId_80083BD0].anim_A)];
             int j = ((unsigned int)frameCount_8008D3FC % (g->count_0 * 2)) / 2;
             int k;
             for (k = 0; k < g->frameCounts_4[j]; k++)
@@ -281,11 +281,11 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
         }
         }
     }
-    if (dword_800C8EAC[battleStageId_80083BD0].models_C != 0)
+    if (battleStages_800C8EAC[battleStageId_80083BD0].models_C != 0)
     {
         for (i = 0; i < 3; i++)
         {
-            unsigned short* ent = &dword_800C8EAC[battleStageId_80083BD0].models_C[i * 4];
+            unsigned short* ent = &battleStages_800C8EAC[battleStageId_80083BD0].models_C[i * 4];
             int id = ent[0];
             int fl = ent[1];
             unsigned long* ot = pOT_8008B4C8;
@@ -354,11 +354,11 @@ void ActionStart_800BDA28(BatTask_a* t)
             }
             if (f)
             {
-                MoveBattleCameraForAction_80037828(GetUnitSide_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 1);
+                MoveBattleCameraForAction_80037828(GetUnitSide_800BC7DC(actingUnit_800C9C7C), (short)curCommand_800C9C88.kind_0, 1);
             }
             else
             {
-                MoveBattleCameraForAction_80037828(GetUnitSide_800BC7DC(dword_800C9C7C), (short)dword_800C9C88.kind_0, 0);
+                MoveBattleCameraForAction_80037828(GetUnitSide_800BC7DC(actingUnit_800C9C7C), (short)curCommand_800C9C88.kind_0, 0);
             }
         }
     }
@@ -382,12 +382,12 @@ void ActionWaitReady_800BDBB0(BatTask_a* t)
 {
     if (sub_800BDE04() == 1)
     {
-        if (dword_800C9C88.kind_0 == 2 && dword_800C9C7C == 0)
+        if (curCommand_800C9C88.kind_0 == 2 && actingUnit_800C9C7C == 0)
         {
-            LoadSummonedMinion_800C0AEC(dword_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
+            LoadSummonedMinion_800C0AEC(commandUnit_800C9C98 - 1, &levantPos_8008BD18.pos.x, levantPos_8008BD18.rot.vy);
         }
-        dword_800C9D90 = 0;
-        dword_800C9D94 = 0;
+        removedEnemyCount_800C9D90 = 0;
+        actionFrame_800C9D94 = 0;
         t->next_8 = ActionRun_800BDC3C;
     }
 }
@@ -395,11 +395,11 @@ void ActionWaitReady_800BDBB0(BatTask_a* t)
 void ActionRun_800BDC3C(BatTask_a* t)
 {
     int k;
-    if ((short)GetLatestHitFrame_800BE364() < dword_800C9D94 && IsActionDone_800BEA94() == 1)
+    if ((short)GetLatestHitFrame_800BE364() < actionFrame_800C9D94 && IsActionDone_800BEA94() == 1)
     {
-        while ((k = dword_800C9D90--) != 0)
+        while ((k = removedEnemyCount_800C9D90--) != 0)
         {
-            sub_800A2924(dword_800C9DD0[dword_800C9D90]);
+            sub_800A2924(removedEnemies_800C9DD0[removedEnemyCount_800C9D90]);
         }
         t->f0 = (t->f0 & ~1) | 0x8000;
         dword_800B1228 &= ~0x1000;
@@ -408,7 +408,7 @@ void ActionRun_800BDC3C(BatTask_a* t)
     {
         UpdateAction_800BE3C0();
     }
-    dword_800C9D94++;
+    actionFrame_800C9D94++;
 }
 
 int sub_800BDD3C()
@@ -420,7 +420,7 @@ int sub_800BDD3C()
     {
         return 1;
     }
-    if (dword_800C9C82 == 0)
+    if (summonedUnit_800C9C82 == 0)
     {
         r = sub_800A89F0();
     }
@@ -455,7 +455,7 @@ int sub_800BDE04()
     {
         return 1;
     }
-    if (dword_800C9C82 == 0)
+    if (summonedUnit_800C9C82 == 0)
     {
         r = sub_800A8BE4();
     }
@@ -489,13 +489,13 @@ void FaceActorAndTargets_800BDEBC()
     int ny;
     if (!(saveData_8008B570.field_0 & 0x20))
     {
-        x = dword_800C9C88.mask_8;
+        x = curCommand_800C9C88.mask_8;
         if (x & 0xF)
         {
             x &= ~0xE;
             x |= 1;
         }
-        y = dword_800C9C88.targets_C;
+        y = curCommand_800C9C88.targets_C;
         if (y & 0xF)
         {
             y &= ~0xE;
@@ -506,16 +506,16 @@ void FaceActorAndTargets_800BDEBC()
         y = ny;
         if (y)
         {
-            if (dword_800C9C88.mask_8)
+            if (curCommand_800C9C88.mask_8)
             {
-                TurnUnitsToward_800BC468(y, dword_800C9C88.mask_8);
+                TurnUnitsToward_800BC468(y, curCommand_800C9C88.mask_8);
             }
         }
         if (x)
         {
-            if (dword_800C9C88.targets_C)
+            if (curCommand_800C9C88.targets_C)
             {
-                TurnUnitsToward_800BC468(x, dword_800C9C88.targets_C);
+                TurnUnitsToward_800BC468(x, curCommand_800C9C88.targets_C);
             }
         }
     }
@@ -523,7 +523,7 @@ void FaceActorAndTargets_800BDEBC()
 
 void StartActorAction_800BDF74()
 {
-    StartUnitAction_800BE058(dword_800C9D98, &dword_800C9C88, 0, dword_800C9C7C);
+    StartUnitAction_800BE058(actorTiming_800C9D98, &curCommand_800C9C88, 0, actingUnit_800C9C7C);
 }
 
 void StartReactions_800BDFAC()
@@ -532,16 +532,16 @@ void StartReactions_800BDFAC()
     BatPair_a t;
     for (i = 0; i < 7; i++)
     {
-        if (dword_800C9C7C == i)
+        if (actingUnit_800C9C7C == i)
         {
             t.a = 0;
             t.b = 0;
         }
         else
         {
-            StartUnitAction_800BE058(&t, &dword_800C9CC8[i], 1, i);
+            StartUnitAction_800BE058(&t, &unitReactions_800C9CC8[i], 1, i);
         }
-        dword_800C9DA0[i] = t;
+        reactionTimings_800C9DA0[i] = t;
     }
 }
 
@@ -596,8 +596,8 @@ void TriggerUnitAction_800BE14C(BatCmd_a* p, int b, int k)
         sub_800A2760(p, b);
         if (p->kind_0 == 0x13 || p->kind_0 == 0xB || p->kind_0 == 7 || (p->kind_0 == 5 && sub_80013358(p->arg_4) == 1) || (p->kind_0 == 0x1A && sub_80013358(p->arg_4) == 1))
         {
-            dword_800C9DD0[dword_800C9D90] = k - 4;
-            dword_800C9D90++;
+            removedEnemies_800C9DD0[removedEnemyCount_800C9D90] = k - 4;
+            removedEnemyCount_800C9D90++;
         }
         break;
     }
@@ -611,24 +611,24 @@ void AlignActionTimings_800BE2C8()
 {
     int m = GetLatestHitFrame_800BE364();
     unsigned char i;
-    dword_800C9DBC = m - dword_800C9D98[0];
-    dword_800C9D98[1] += dword_800C9DBC;
+    actorHitShift_800C9DBC = m - actorTiming_800C9D98[0];
+    actorTiming_800C9D98[1] += actorHitShift_800C9DBC;
     for (i = 0; i < 7; i++)
     {
-        dword_800C9DC0[i] = m - dword_800C9DA0[i].a;
-        dword_800C9DA0[i].b += dword_800C9DC0[i];
+        reactionHitFrames_800C9DC0[i] = m - reactionTimings_800C9DA0[i].a;
+        reactionTimings_800C9DA0[i].b += reactionHitFrames_800C9DC0[i];
     }
 }
 
 int GetLatestHitFrame_800BE364()
 {
     unsigned char i;
-    short m = dword_800C9D98[0];
+    short m = actorTiming_800C9D98[0];
     for (i = 0; i < 7; i++)
     {
-        if (m < dword_800C9DA0[i].a)
+        if (m < reactionTimings_800C9DA0[i].a)
         {
-            m = dword_800C9DA0[i].a;
+            m = reactionTimings_800C9DA0[i].a;
         }
     }
     return m;
@@ -638,36 +638,36 @@ void UpdateAction_800BE3C0()
 {
     unsigned char i;
     int v;
-    if (dword_800C9DBC == dword_800C9D94 && dword_800C9C7C < 7)
+    if (actorHitShift_800C9DBC == actionFrame_800C9D94 && actingUnit_800C9C7C < 7)
     {
-        TriggerUnitAction_800BE14C(&dword_800C9C88, 0, dword_800C9C7C);
-        StartHitNumber_800BF3DC(dword_800C9C7C, 0, dword_800C9C7E, GetUnitPos_800BC6CC(dword_800C9C7C), 0);
-        if (dword_800C9C7E > 0)
+        TriggerUnitAction_800BE14C(&curCommand_800C9C88, 0, actingUnit_800C9C7C);
+        StartHitNumber_800BF3DC(actingUnit_800C9C7C, 0, actorHpChange_800C9C7E, GetUnitPos_800BC6CC(actingUnit_800C9C7C), 0);
+        if (actorHpChange_800C9C7E > 0)
         {
             StartCameraShake_80037BFC(0x1E);
             PlaySfx_80031494(0x72);
         }
-        StartHitNumber_800BF3DC(dword_800C9C7C, 1, dword_800C9C80, GetUnitPos_800BC6CC(dword_800C9C7C), 0);
-        v = dword_800C9C88.kind_0;
+        StartHitNumber_800BF3DC(actingUnit_800C9C7C, 1, actorMpChange_800C9C80, GetUnitPos_800BC6CC(actingUnit_800C9C7C), 0);
+        v = curCommand_800C9C88.kind_0;
         if (v == 5 || v == 0x1A)
         {
             sub_800AD944(1);
         }
         else if (v == 4)
         {
-            sub_800AD1E0(dword_800C9C88.arg_4, 1, 0);
+            sub_800AD1E0(curCommand_800C9C88.arg_4, 1, 0);
         }
         else if (v == 0x13)
         {
-            KillUnit_800127B8(GetUnitStatus_80014390(dword_800C9C7C));
+            KillUnit_800127B8(GetUnitStatus_80014390(actingUnit_800C9C7C));
         }
-        if (dword_800C9C88.kind_0 == 7 && dword_800C9C7C != 0)
+        if (curCommand_800C9C88.kind_0 == 7 && actingUnit_800C9C7C != 0)
         {
             PlaySeqSlot_80031160(0x1C, 1);
         }
-        if (GetUnitSide_800BC7DC(dword_800C9C7C) == 0 || GetUnitSide_800BC7DC(dword_800C9C7C) == 1)
+        if (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 0 || GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 1)
         {
-            v = dword_800C9C88.kind_0;
+            v = curCommand_800C9C88.kind_0;
             if (v == 5)
             {
                 if (((BatSettingsBits*)&settingsFlags_8008B58C.word)->b21 == 1)
@@ -685,16 +685,16 @@ void UpdateAction_800BE3C0()
             }
         }
     }
-    if (dword_800C9D98[0] + dword_800C9DBC == dword_800C9D94)
+    if (actorTiming_800C9D98[0] + actorHitShift_800C9DBC == actionFrame_800C9D94)
     {
-        if (dword_800C9D78 >= 0)
+        if (hitSfx_800C9D78 >= 0)
         {
-            if ((unsigned short)(dword_800C9D78 - 0x70) < 3)
+            if ((unsigned short)(hitSfx_800C9D78 - 0x70) < 3)
             {
-                PlaySfx_80031494(dword_800C9D78);
+                PlaySfx_80031494(hitSfx_800C9D78);
             }
         }
-        if (dword_800C9D80 >= 0)
+        if (deathSfx_800C9D80 >= 0)
         {
             if (TestBattleFlag_800BC820(4) == 1 || (TestBattleFlag_800BC820(8) != 1 && TestBattleFlag_800BC820(0x100000) == 1))
             {
@@ -705,29 +705,29 @@ void UpdateAction_800BE3C0()
                 PlaySfx_80031494(0x6F);
             }
         }
-        if (dword_800C9D84 != dword_800C9D82)
+        if (areaElement_800C9D84 != shownAreaElement_800C9D82)
         {
-            sub_80039ED8(dword_800C9D84);
-            dword_800C9D82 = dword_800C9D84;
+            sub_80039ED8(areaElement_800C9D84);
+            shownAreaElement_800C9D82 = areaElement_800C9D84;
         }
     }
     for (i = 0; i < 7; i++)
     {
-        if (dword_800C9DC0[i] == dword_800C9D94)
+        if (reactionHitFrames_800C9DC0[i] == actionFrame_800C9D94)
         {
-            if (dword_800C9C7C != i)
+            if (actingUnit_800C9C7C != i)
             {
-                BatCmd_a* s = &dword_800C9CC8[i];
+                BatCmd_a* s = &unitReactions_800C9CC8[i];
                 if ((s->kind_0 == 5 && sub_80013358(s->arg_4) == 1) || (s->kind_0 == 0x1A && sub_80013358(s->arg_4) == 1))
                 {
                     sub_800A2898(i - 4);
                 }
-                TriggerUnitAction_800BE14C(&dword_800C9CC8[i], 1, i);
+                TriggerUnitAction_800BE14C(&unitReactions_800C9CC8[i], 1, i);
             }
-            if (dword_800C9DC0[i] == dword_800C9D94)
+            if (reactionHitFrames_800C9DC0[i] == actionFrame_800C9D94)
             {
                 AdjustUnitStatById_800127D0(i, 0x11, 0, dword_800C9D58[i]);
-                AdjustUnitStatById_800127D0(i, 0x10, 0, dword_800C9CA0[i]);
+                AdjustUnitStatById_800127D0(i, 0x10, 0, unitStatusInflicted_800C9CA0[i]);
                 ShowUnitHitResult_800BE834(i, GetUnitPos_800BC6CC(i));
                 if (IsUnitInBattle_800BC784(i) == 1)
                 {
@@ -735,7 +735,7 @@ void UpdateAction_800BE3C0()
                     {
                         sub_800A284C(i - 4);
                     }
-                    else if (i != 0 && dword_800C9C82 != 0)
+                    else if (i != 0 && summonedUnit_800C9C82 != 0)
                     {
                         UpdateMinionStatusTint_800C0F1C();
                     }

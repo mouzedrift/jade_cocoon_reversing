@@ -4,13 +4,13 @@
 
 void ShowUnitHitResult_800BE834(int idx, int b)
 {
-    switch (dword_800C9CBC[idx])
+    switch (unitHitKinds_800C9CBC[idx])
     {
     case 0:
         break;
     case 1:
-        StartHitNumber_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0);
-        if (dword_800C9D38[idx] > 0)
+        StartHitNumber_800BF3DC(idx, 0, unitHpDamage_800C9D38[idx], b, 0);
+        if (unitHpDamage_800C9D38[idx] > 0)
         {
             StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
@@ -24,8 +24,8 @@ void ShowUnitHitResult_800BE834(int idx, int b)
         }
         break;
     case 2:
-        StartHitNumber_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0);
-        if (dword_800C9D48[idx] > 0)
+        StartHitNumber_800BF3DC(idx, 1, unitMpDamage_800C9D48[idx], b, 0);
+        if (unitMpDamage_800C9D48[idx] > 0)
         {
             StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
@@ -39,9 +39,9 @@ void ShowUnitHitResult_800BE834(int idx, int b)
         }
         break;
     case 3:
-        StartHitNumber_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0);
-        StartHitNumber_800BF3DC(idx, 1, dword_800C9D48[idx], b, 0xC);
-        if (dword_800C9D38[idx] > 0 || dword_800C9D48[idx] > 0)
+        StartHitNumber_800BF3DC(idx, 0, unitHpDamage_800C9D38[idx], b, 0);
+        StartHitNumber_800BF3DC(idx, 1, unitMpDamage_800C9D48[idx], b, 0xC);
+        if (unitHpDamage_800C9D38[idx] > 0 || unitMpDamage_800C9D48[idx] > 0)
         {
             StartCameraShake_80037BFC(0x1E);
             if (idx == 0)
@@ -56,7 +56,7 @@ void ShowUnitHitResult_800BE834(int idx, int b)
         break;
     case 4:
         StartHitNumber_800BF3DC(idx, 2, 0, b, 0);
-        StartHitNumber_800BF3DC(idx, 0, dword_800C9D38[idx], b, 0xC);
+        StartHitNumber_800BF3DC(idx, 0, unitHpDamage_800C9D38[idx], b, 0xC);
         FlashScreenWhite_800BF3AC();
         StartCameraShake_80037BFC(0x1E);
         if (idx == 0)
@@ -74,7 +74,7 @@ void ShowUnitHitResult_800BE834(int idx, int b)
     case 6:
         break;
     case 7:
-        StartPadVibration_80036528(0, dword_800C9134[dword_800C9CC8[idx].arg_4]);
+        StartPadVibration_80036528(0, captureVibrations_800C9134[unitReactions_800C9CC8[idx].arg_4]);
         break;
     }
 }
@@ -101,7 +101,7 @@ int IsActionDone_800BEA94()
         }
         else
         {
-            if (dword_800C912C[(unsigned char)dword_800C8B38[dword_800C9C88.kind_0]] == 0)
+            if (handlerWaitsReactions_800C912C[(unsigned char)commandHandlerIdx_800C8B38[curCommand_800C9C88.kind_0]] == 0)
             {
                 return IsActorActionDone_800BEB50();
             }
@@ -116,7 +116,7 @@ INCLUDE_OVERLAY_ASM(battle, IsActionDone_800BEA94);
 
 int IsActorActionDone_800BEB50()
 {
-    return dword_800C9D94 > dword_800C9D9A;
+    return actionFrame_800C9D94 > actorActionEnd_800C9D9A;
 }
 
 int AreReactionsDone_800BEB68()
@@ -124,7 +124,7 @@ int AreReactionsDone_800BEB68()
     int i;
     for (i = 0; i < 7; i++)
     {
-        if (dword_800C9D94 < dword_800C9DA0[i].b)
+        if (actionFrame_800C9D94 < reactionTimings_800C9DA0[i].b)
         {
             return 0;
         }
@@ -145,96 +145,96 @@ void ApplyBattleCommand_800BEBB8()
     int bit;
     int a;
 
-    GetUnitSide_800BC7DC(dword_800C9C7C);
+    GetUnitSide_800BC7DC(actingUnit_800C9C7C);
     flag = 1;
-    actor = GetUnitStatus_80014390(dword_800C9C7C);
-    cmd = dword_800C9C88;
-    if (dword_800C9C88.kind_0 == 0x12)
+    actor = GetUnitStatus_80014390(actingUnit_800C9C7C);
+    cmd = curCommand_800C9C88;
+    if (curCommand_800C9C88.kind_0 == 0x12)
     {
-        actor = GetUnitStatus_80014390(dword_800C9C7C);
+        actor = GetUnitStatus_80014390(actingUnit_800C9C7C);
         actor->status_0 |= 0x8000;
     }
     for (i = 0; i < 7; i++)
     {
         r = GetUnitSide_800BC7DC(i);
         bit = 1 << i;
-        dword_800C9CC8[i].kind_0 = 0x14;
-        dword_800C9CC8[i].arg_4 = 0;
-        dword_800C9CC8[i].mask_8 = bit;
-        dword_800C9CC8[i].targets_C = 0;
-        if (dword_800C9C88.targets_C & bit)
+        unitReactions_800C9CC8[i].kind_0 = 0x14;
+        unitReactions_800C9CC8[i].arg_4 = 0;
+        unitReactions_800C9CC8[i].mask_8 = bit;
+        unitReactions_800C9CC8[i].targets_C = 0;
+        if (curCommand_800C9C88.targets_C & bit)
         {
             m = GetUnitStatus_80014390(i & 0xFF);
-            res.f24 = dword_800C9D82;
+            res.f24 = shownAreaElement_800C9D82;
             res.f26 = (signed char)dword_800C9D83;
             cmd.targets_C = bit;
             ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
             if (dword_800ADE78.f0 == 1)
             {
-                sub_800B4390(actor, m, &dword_800C9C88, &res, &dword_800ADE78);
+                sub_800B4390(actor, m, &curCommand_800C9C88, &res, &dword_800ADE78);
             }
-            dword_800C9D84 = res.f24;
-            dword_800C9D38[i] = res.f1C;
-            dword_800C9D48[i] = res.f20;
-            if (dword_800C9C7C < 7 && i != dword_800C9C7C)
+            areaElement_800C9D84 = res.f24;
+            unitHpDamage_800C9D38[i] = res.f1C;
+            unitMpDamage_800C9D48[i] = res.f20;
+            if (actingUnit_800C9C7C < 7 && i != actingUnit_800C9C7C)
             {
-                dword_800C9D38[dword_800C9C7C] += res.f14;
-                dword_800C9D48[dword_800C9C7C] += res.f18;
-                if (dword_800C9D38[dword_800C9C7C] != 0)
+                unitHpDamage_800C9D38[actingUnit_800C9C7C] += res.f14;
+                unitMpDamage_800C9D48[actingUnit_800C9C7C] += res.f18;
+                if (unitHpDamage_800C9D38[actingUnit_800C9C7C] != 0)
                 {
-                    if (dword_800C9D48[dword_800C9C7C] != 0)
+                    if (unitMpDamage_800C9D48[actingUnit_800C9C7C] != 0)
                     {
-                        dword_800C9CBC[dword_800C9C7C] = 3;
+                        unitHitKinds_800C9CBC[actingUnit_800C9C7C] = 3;
                     }
                     else
                     {
-                        dword_800C9CBC[dword_800C9C7C] = 1;
+                        unitHitKinds_800C9CBC[actingUnit_800C9C7C] = 1;
                     }
                 }
-                else if (dword_800C9D48[dword_800C9C7C] != 0)
+                else if (unitMpDamage_800C9D48[actingUnit_800C9C7C] != 0)
                 {
-                    dword_800C9CBC[dword_800C9C7C] = 2;
+                    unitHitKinds_800C9CBC[actingUnit_800C9C7C] = 2;
                 }
             }
-            if (dword_800C9D38[i] > 0)
+            if (unitHpDamage_800C9D38[i] > 0)
             {
-                if (m->hp_8.cur_0 < dword_800C9D38[i])
+                if (m->hp_8.cur_0 < unitHpDamage_800C9D38[i])
                 {
-                    dword_800C9D38[i] = m->hp_8.cur_0;
+                    unitHpDamage_800C9D38[i] = m->hp_8.cur_0;
                 }
             }
-            else if (dword_800C9D38[i] < m->hp_8.cur_0 - m->hp_8.max_2)
+            else if (unitHpDamage_800C9D38[i] < m->hp_8.cur_0 - m->hp_8.max_2)
             {
-                dword_800C9D38[i] = m->hp_8.cur_0 - m->hp_8.max_2;
+                unitHpDamage_800C9D38[i] = m->hp_8.cur_0 - m->hp_8.max_2;
             }
-            if (dword_800C9D48[i] > 0)
+            if (unitMpDamage_800C9D48[i] > 0)
             {
-                if (m->mp_C.cur_0 < dword_800C9D48[i])
+                if (m->mp_C.cur_0 < unitMpDamage_800C9D48[i])
                 {
-                    dword_800C9D48[i] = m->mp_C.cur_0;
+                    unitMpDamage_800C9D48[i] = m->mp_C.cur_0;
                 }
             }
-            else if (dword_800C9D48[i] < m->mp_C.cur_0 - m->mp_C.max_2)
+            else if (unitMpDamage_800C9D48[i] < m->mp_C.cur_0 - m->mp_C.max_2)
             {
-                dword_800C9D48[i] = m->mp_C.cur_0 - m->mp_C.max_2;
+                unitMpDamage_800C9D48[i] = m->mp_C.cur_0 - m->mp_C.max_2;
             }
             if (res.fC != 0)
             {
-                dword_800C9C7E = res.fC;
+                actorHpChange_800C9C7E = res.fC;
             }
             if (res.f10 != 0)
             {
-                dword_800C9C80 = res.f10;
+                actorMpChange_800C9C80 = res.f10;
             }
             if (IsUnitInBattle_800BC784(i) == 1)
             {
-                dword_800C9CBC[i] = res.kind_0;
+                unitHitKinds_800C9CBC[i] = res.kind_0;
                 dword_800C9D58[i] = res.f4;
-                dword_800C9CA0[i] = res.f8;
+                unitStatusInflicted_800C9CA0[i] = res.f8;
                 switch (res.kind_0)
                 {
                 case 0:
-                    dword_800C9CC8[i].arg_4 = res.arg_2;
+                    unitReactions_800C9CC8[i].arg_4 = res.arg_2;
                     if (res.arg_2 != 0)
                     {
                         flag = 0;
@@ -243,48 +243,48 @@ void ApplyBattleCommand_800BEBB8()
                 case 1:
                 case 2:
                 case 3:
-                    if (dword_800C9D38[i] > 0 || dword_800C9D48[i] > 0)
+                    if (unitHpDamage_800C9D38[i] > 0 || unitMpDamage_800C9D48[i] > 0)
                     {
-                        dword_800C9CC8[i].kind_0 = 9;
-                        dword_800C9D78 = 0x72;
+                        unitReactions_800C9CC8[i].kind_0 = 9;
+                        hitSfx_800C9D78 = 0x72;
                     }
                     break;
                 case 4:
-                    dword_800C9CC8[i].kind_0 = 10;
-                    dword_800C9D78 = 0x71;
+                    unitReactions_800C9CC8[i].kind_0 = 10;
+                    hitSfx_800C9D78 = 0x71;
                     break;
                 case 5:
                     a = m->status_0 & 0x8000;
-                    dword_800C9CC8[i].kind_0 = a ? 0x14 : 0xC;
-                    dword_800C9D78 = 0x70;
+                    unitReactions_800C9CC8[i].kind_0 = a ? 0x14 : 0xC;
+                    hitSfx_800C9D78 = 0x70;
                     break;
                 case 7:
-                    dword_800C9CC8[i].kind_0 = 5;
-                    dword_800C9CC8[i].arg_4 = res.arg_2;
-                    dword_800C9C88.arg_4 = res.arg_2;
+                    unitReactions_800C9CC8[i].kind_0 = 5;
+                    unitReactions_800C9CC8[i].arg_4 = res.arg_2;
+                    curCommand_800C9C88.arg_4 = res.arg_2;
                     if (sub_80013358(res.arg_2) == 1)
                     {
                         MarkSpeciesCaptured_800BF9F0(sub_800A2BE4(i - 4));
                         if (GetCapturedMinionsFromBitfield_8003BA58(sub_800A248C()) == 1)
                         {
-                            dword_800C9C88.kind_0 = 0x1A;
+                            curCommand_800C9C88.kind_0 = 0x1A;
                         }
                         SetBattleFlag_800BC838(0x40);
                         if (r == 2)
                         {
                             
-                            dword_800B1238[i - 4].c = dword_800C9C7C;
-                            dword_800B1238[i - 4].e = dword_800C9C88.kind_0;
+                            dword_800B1238[i - 4].c = actingUnit_800C9C7C;
+                            dword_800B1238[i - 4].e = curCommand_800C9C88.kind_0;
                             dword_800B1238[i - 4].a = m->exp_4;
                             dword_800B1238[i - 4].d = m->level_44;
                         }
                     }
                     break;
                 }
-                if (m->hp_8.cur_0 <= dword_800C9D38[i] || (dword_800C9CA0[i] & 0x600))
+                if (m->hp_8.cur_0 <= unitHpDamage_800C9D38[i] || (unitStatusInflicted_800C9CA0[i] & 0x600))
                 {
-                    dword_800C9D38[i] = m->hp_8.cur_0;
-                    dword_800C9CC8[i].kind_0 = 0xB;
+                    unitHpDamage_800C9D38[i] = m->hp_8.cur_0;
+                    unitReactions_800C9CC8[i].kind_0 = 0xB;
                     if (r == 2)
                     {
                         SetBattleFlag_800BC838(0x40);
@@ -302,53 +302,53 @@ void ApplyBattleCommand_800BEBB8()
                         }
                         
                         dword_800B1238[i - 4].b = sub_800A2BE4(i - 4);
-                        dword_800B1238[i - 4].c = dword_800C9C7C;
-                        dword_800B1238[i - 4].e = dword_800C9C88.kind_0;
+                        dword_800B1238[i - 4].c = actingUnit_800C9C7C;
+                        dword_800B1238[i - 4].e = curCommand_800C9C88.kind_0;
                         dword_800B1238[i - 4].a = m->exp_4;
                         dword_800B1238[i - 4].d = m->level_44;
                         if (TestBattleFlag_800BC820(0x100000) == 1)
                         {
-                            dword_800C9D80 = 0x1C;
+                            deathSfx_800C9D80 = 0x1C;
                         }
                         else
                         {
-                            dword_800C9D80 = 0x6F;
+                            deathSfx_800C9D80 = 0x6F;
                         }
                     }
                     else if (r == 0)
                     {
                         SetBattleFlag_800BC838(4);
-                        dword_800C9D80 = 0x1C;
+                        deathSfx_800C9D80 = 0x1C;
                     }
                     else
                     {
                         SetBattleFlag_800BC838(8);
-                        dword_800C9D80 = 0x6F;
+                        deathSfx_800C9D80 = 0x6F;
                     }
                 }
             }
-            if (i == dword_800C9C7C)
+            if (i == actingUnit_800C9C7C)
             {
-                dword_800C9CC8[i].kind_0 = 0x14;
+                unitReactions_800C9CC8[i].kind_0 = 0x14;
             }
         }
     }
-    if (dword_800C9C88.kind_0 == 7)
+    if (curCommand_800C9C88.kind_0 == 7)
     {
         if (flag == 1)
         {
-            dword_800C9C88.arg_4 = 0;
-            if (GetUnitSide_800BC7DC(dword_800C9C7C) == 0)
+            curCommand_800C9C88.arg_4 = 0;
+            if (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 0)
             {
                 SetBattleFlag_800BC838(0x80);
             }
         }
         else
         {
-            dword_800C9C88.arg_4 = 1;
-            if (GetUnitSide_800BC7DC(dword_800C9C7C) == 2)
+            curCommand_800C9C88.arg_4 = 1;
+            if (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 2)
             {
-                dword_800C9C88.kind_0 = 0x14;
+                curCommand_800C9C88.kind_0 = 0x14;
             }
         }
     }
@@ -357,8 +357,8 @@ void ApplyBattleCommand_800BEBB8()
 void UpdateWindowsHidden_800BF2E8()
 {
     int v;
-    if ((GetUnitSide_800BC7DC(dword_800C9C7C) == 0 && ((v = dword_800C9C88.kind_0) == 5 || v == 0x1A || v == 2 || v == 3 || v == 7))
-        || (GetUnitSide_800BC7DC(dword_800C9C7C) == 1 && ((v = dword_800C9C88.kind_0) - 2 < 2U || v == 8)))
+    if ((GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 0 && ((v = curCommand_800C9C88.kind_0) == 5 || v == 0x1A || v == 2 || v == 3 || v == 7))
+        || (GetUnitSide_800BC7DC(actingUnit_800C9C7C) == 1 && ((v = curCommand_800C9C88.kind_0) - 2 < 2U || v == 8)))
     {
         SetBattleFlag_800BC838(0x8000);
         SetBattleFlag_800BC838(0x10000);
@@ -543,7 +543,7 @@ typedef struct BatChance_a
     unsigned int mask;
     unsigned int chance;
 } BatChance_a;
-extern BatChance_a dword_800C9138[];
+extern BatChance_a statusCureChances_800C9138[];
 extern int GetEquipmentId_8003356C(UnitStatus* p, unsigned int idx);
 extern unsigned int Rand100_80013E30();
 void TickUnitStatus_800BF7C4(UnitStatus* p, short* a, short* b)
@@ -579,7 +579,7 @@ void TickUnitStatus_800BF7C4(UnitStatus* p, short* a, short* b)
     }
     i = 0;
 loop:
-    e = &dword_800C9138[i];
+    e = &statusCureChances_800C9138[i];
     if (f0 & e->mask)
     {
         if (Rand100_80013E30() >= e->chance)
@@ -764,12 +764,12 @@ void StopBattleWindows_800BFBB8()
 
 void ResetWindowHighlights_800BFC10()
 {
-    dword_800C9DFD = 0;
-    dword_800C9DFC = 0;
-    dword_800C9170 = 0;
-    dword_800C9174[0] = 0;
-    dword_800C9174[1] = 0;
-    dword_800C9174[2] = 0;
+    actorWindowHighlight_800C9DFD = 0;
+    enemyWindowsHighlight_800C9DFC = 0;
+    actorHighlightTime_800C9170 = 0;
+    enemyHighlightTimes_800C9174[0] = 0;
+    enemyHighlightTimes_800C9174[1] = 0;
+    enemyHighlightTimes_800C9174[2] = 0;
 }
 
 void StartEnemyWindows_800BFC40()
@@ -787,8 +787,8 @@ void StartEnemyWindows_800BFC40()
         {
             m = 0x10;
         }
-        dword_800C9DF8 = 0;
-        dword_800C9E24 = 0;
+        enemyWindowFlags_800C9DF8 = 0;
+        enemyWindowMask_800C9E24 = 0;
         e->cb_8 = (EventEntryFn)EnemyWindowsLayoutTask_800BFDEC;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         for (i = 0; i < 3; i++)
@@ -799,7 +799,7 @@ void StartEnemyWindows_800BFC40()
                 e = AllocEventEntry_80043AF8(dword_8008B564);
                 if (e)
                 {
-                    BatXY_a* pp = (BatXY_a*)((char*)dword_800C9140 + ((n - 1) * 12 + i * 4));
+                    BatXY_a* pp = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((n - 1) * 12 + i * 4));
                     BatUnitWin_a* q;
                     e->flags = (e->flags | 1) & 0xFFFF7FFF;
                     q = e->buffer;
@@ -810,11 +810,11 @@ void StartEnemyWindows_800BFC40()
                     q->from_8[2] = 0x64;
                     q->from_8[3] = 0x29;
                     e->cb_8 = (EventEntryFn)EnemyWindowTask_800C0074;
-                    dword_800C9E28[i] = q;
-                    dword_800C9E18[i].x = pp->x;
-                    dword_800C9E18[i].x = pp->x;
-                    dword_800C9E18[i].y = pp->y;
-                    dword_800C9E08[i] = e;
+                    enemyWindows_800C9E28[i] = q;
+                    enemyWindowPos_800C9E18[i].x = pp->x;
+                    enemyWindowPos_800C9E18[i].x = pp->x;
+                    enemyWindowPos_800C9E18[i].y = pp->y;
+                    enemyWindowTasks_800C9E08[i] = e;
                 }
             }
         }
@@ -837,21 +837,21 @@ void EnemyWindowsLayoutTask_800BFDEC()
         m = 0x10;
     }
     n = GetCapturedMinionsFromBitfield_8003BA58(m);
-    if (dword_800C9E24 != m)
+    if (enemyWindowMask_800C9E24 != m)
     {
-        diff = (dword_800C9E24 | m) ^ m;
-        dword_800C9E24 = m;
+        diff = (enemyWindowMask_800C9E24 | m) ^ m;
+        enemyWindowMask_800C9E24 = m;
         one = 1;
-        dword_800C9DF8 |= one;
-        dword_800C9E00 = 0;
+        enemyWindowFlags_800C9DF8 |= one;
+        enemyWindowSlide_800C9E00 = 0;
         for (i = 0; i < 3; i++)
         {
             if (diff & (one << (i + 4)))
             {
                 if (sub_800A2AB4() != 2)
                 {
-                    dword_800C9E08[i]->flags &= ~1;
-                    dword_800C9E08[i]->flags |= 0x8000;
+                    enemyWindowTasks_800C9E08[i]->flags &= ~1;
+                    enemyWindowTasks_800C9E08[i]->flags |= 0x8000;
                 }
                 else
                 {
@@ -860,31 +860,31 @@ void EnemyWindowsLayoutTask_800BFDEC()
             }
             if (m & (one << (i + 4)))
             {
-                dword_800C9E18[i].x = dword_800C9E28[i]->from_8[0];
-                dword_800C9E18[i].y = dword_800C9E28[i]->from_8[1];
+                enemyWindowPos_800C9E18[i].x = enemyWindows_800C9E28[i]->from_8[0];
+                enemyWindowPos_800C9E18[i].y = enemyWindows_800C9E28[i]->from_8[1];
             }
         }
     }
-    if (dword_800C9DF8 & 1)
+    if (enemyWindowFlags_800C9DF8 & 1)
     {
-        if (dword_800C9E00 < 4)
+        if (enemyWindowSlide_800C9E00 < 4)
         {
-            dword_800C9E00++;
+            enemyWindowSlide_800C9E00++;
             k = 0;
             for (i = 0, bit = 1; i < 3; i++)
             {
                 if (m & (bit << (i + 4)))
                 {
-                    pp = (BatXY_a*)((char*)dword_800C9140 + ((n - 1) * 12 + k * 4));
-                    dword_800C9E28[i]->from_8[0] += (pp->x - dword_800C9E28[i]->from_8[0]) * dword_800C9E00 >> 2;
-                    dword_800C9E28[i]->from_8[1] += (pp->y - dword_800C9E28[i]->from_8[1]) * dword_800C9E00 >> 2;
+                    pp = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((n - 1) * 12 + k * 4));
+                    enemyWindows_800C9E28[i]->from_8[0] += (pp->x - enemyWindows_800C9E28[i]->from_8[0]) * enemyWindowSlide_800C9E00 >> 2;
+                    enemyWindows_800C9E28[i]->from_8[1] += (pp->y - enemyWindows_800C9E28[i]->from_8[1]) * enemyWindowSlide_800C9E00 >> 2;
                     k++;
                 }
             }
         }
         else
         {
-            dword_800C9DF8 &= ~1;
+            enemyWindowFlags_800C9DF8 &= ~1;
         }
     }
 }
@@ -915,11 +915,11 @@ void EnemyWindowTask_800C0074(EventEntry* t, void* arg)
     InterpolateWindowRect_8004196C(u->rect_10, u->from_8, u->frame_4, 4, 9);
     if (IsUncapturableSpecies_800BF980(sub_800A2BE4(k)))
     {
-        DrawUnitStatusWindow_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 1);
+        DrawUnitStatusWindow_8002F1C8(m, enemyGaugePreview_800C9164[k], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[k], u->rect_10, 10, 1);
     }
     else
     {
-        DrawUnitStatusWindow_8002F1C8(m, dword_800C9164[k], dword_800C9DFC, dword_800C9174[k], u->rect_10, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(m, enemyGaugePreview_800C9164[k], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[k], u->rect_10, 10, 0);
     }
     u->frame_4++;
     AddDrawAreaPrim_8003326C(u->rect_10, pOT_8008D454 + 10);
@@ -960,7 +960,7 @@ void ActorWindowTask_800C0254(EventEntry* t, void* arg)
     BatBox_b box;
     short rect[4];
     UnitStatus* m;
-    if (dword_800ADE78.f0 == 1 && dword_800C9C7C == 10)
+    if (dword_800ADE78.f0 == 1 && actingUnit_800C9C7C == 10)
     {
         return;
     }
@@ -969,22 +969,22 @@ void ActorWindowTask_800C0254(EventEntry* t, void* arg)
         return;
     }
     u = arg;
-    m = GetUnitStatus_80014390(dword_800C9C99);
+    m = GetUnitStatus_80014390(shownUnit_800C9C99);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     InterpolateWindowRect_8004196C(u->rect_C, u->from_4, u->frame_0, 4, 9);
-    if (dword_800C9C99 == 0)
+    if (shownUnit_800C9C99 == 0)
     {
-        DrawUnitStatusWindow_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 2);
+        DrawUnitStatusWindow_8002F1C8(m, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, u->rect_C, 10, 2);
     }
     else
     {
-        DrawUnitStatusWindow_8002F1C8(m, dword_800C9180, dword_800C9DFD, dword_800C9170, u->rect_C, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(m, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, u->rect_C, 10, 0);
     }
-    if (dword_800C9C99 != 0)
+    if (shownUnit_800C9C99 != 0)
     {
         pos[0] = 0xD2;
         pos[1] = 0xC0;
-        DrawMpGauge_8002F120(m, pos, dword_800C9182, 0xF);
+        DrawMpGauge_8002F120(m, pos, previewMpChange_800C9182, 0xF);
         box.c_3 = 1;
         rect[2] = 0x64;
         rect[3] = 0x15;
@@ -1008,7 +1008,7 @@ void StartHelpWindow_800C0440()
     EventEntry* e = AllocEventEntry_80043AF8(dword_8008D63C);
     if (e)
     {
-        dword_800C9D74 = 0;
+        helpWindowText_800C9D74 = 0;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         ((BatWin_b*)e->buffer)->frame_0 = 0;
         e->cb_8 = (EventEntryFn)HelpWindowTask_800C04A4;
@@ -1033,14 +1033,14 @@ void HelpWindowTask_800C04A4(EventEntry* t, BatWin_b* u)
     {
         return;
     }
-    if (dword_800C9D74 == 0)
+    if (helpWindowText_800C9D74 == 0)
     {
         return;
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
-    w = MeasureTextWidth_8003E4C8(dword_800C9D74);
+    w = MeasureTextWidth_8003E4C8(helpWindowText_800C9D74);
     g = sealOutcomeTable_800793C8 + 0x14;
-    if (*(int*)(g + 0x24) == dword_800C9D74)
+    if (*(int*)(g + 0x24) == helpWindowText_800C9D74)
     {
         w += 0x10;
     }
@@ -1050,8 +1050,8 @@ void HelpWindowTask_800C04A4(EventEntry* t, BatWin_b* u)
     u->from_4[1] = 0x88;
     pos[0] = u->from_4[0] + 2;
     pos[1] = u->from_4[1] + 3;
-    DrawText_8003E91C(2, (void*)dword_800C9D74, pos, 0);
-    if (*(int*)(g + 0x24) == dword_800C9D74)
+    DrawText_8003E91C(2, (void*)helpWindowText_800C9D74, pos, 0);
+    if (*(int*)(g + 0x24) == helpWindowText_800C9D74)
     {
         pos[0] += w;
         pos[1] += 3;
@@ -1266,14 +1266,14 @@ int LoadSummonedMinion_800C0AEC(int a, int* b, int c)
     {
         return 0;
     }
-    dword_800C9188 = h;
+    summonedMinion_800C9188 = h;
     BuildMinionModelReq_800C064C(h, &buf, dword_8007DC74);
     StartModelTask_80010850(&buf);
-    dword_800C9190.f4 = b[0];
-    dword_800C9190.f8 = b[1];
-    dword_800C9190.fc = b[2];
-    dword_800C918C = a;
-    dword_800C9190.f10 = c;
+    summonedActor_800C9190.f4 = b[0];
+    summonedActor_800C9190.f8 = b[1];
+    summonedActor_800C9190.fc = b[2];
+    summonedMinionSlot_800C918C = a;
+    summonedActor_800C9190.f10 = c;
     return 1;
 }
 
@@ -1282,8 +1282,8 @@ int FreeSummonedMinion_800C0BA0()
     if (GetSummonedMinionSlot_800C0D50() >= 0)
     {
         FreeModelTask_8001098C(0);
-        DestroyActor_8001D600(dword_800C9190.obj);
-        dword_800C918C = -1;
+        DestroyActor_8001D600(summonedActor_800C9190.obj);
+        summonedMinionSlot_800C918C = -1;
         return 1;
     }
     return 0;
@@ -1299,14 +1299,14 @@ int CreateSummonedMinionActor_800C0BF0()
     if (((int (*)(int))RunModelTask_80010A10)(0) != 0)
     {
     m = GetModelTaskModel_80010A44(0);
-    k = GetRankForLevel_80019A80(dword_800C9188->status_84.level_44);
+    k = GetRankForLevel_80019A80(summonedMinion_800C9188->status_84.level_44);
     s.modelId_0 = -1;
     s.kind_4 = 2;
-    s.pos_8[0] = dword_800C9190.f4;
-    s.pos_8[1] = dword_800C9190.f8;
-    s.pos_8[2] = dword_800C9190.fc;
+    s.pos_8[0] = summonedActor_800C9190.f4;
+    s.pos_8[1] = summonedActor_800C9190.f8;
+    s.pos_8[2] = summonedActor_800C9190.fc;
     s.rot_14[0] = 0;
-    s.rot_14[1] = dword_800C9190.f10;
+    s.rot_14[1] = summonedActor_800C9190.f10;
     s.rot_14[2] = 0;
     s.clutRow_1C = 3;
     s.animIdx_20 = 4;
@@ -1321,10 +1321,10 @@ int CreateSummonedMinionActor_800C0BF0()
     s.anims_40 = GetModelActorAnims_80024E38(m);
     s.effectTbl_44 = GetModelEffectTable_80024E64(m);
     s.hasMatrices_4C = 1;
-    dword_800C9190.obj = CreateActor_8001D45C(&s);
-    SetActorGroundMove_8001D68C(dword_800C9190.obj, 0);
+    summonedActor_800C9190.obj = CreateActor_8001D45C(&s);
+    SetActorGroundMove_8001D68C(summonedActor_800C9190.obj, 0);
     x = sub_80024F00(m, k);
-    SetBoneGroupFlags_80019B14(dword_800C9190.obj->bones_134, x, sub_80024F38(m, k));
+    SetBoneGroupFlags_80019B14(summonedActor_800C9190.obj->bones_134, x, sub_80024F38(m, k));
         return 1;
     }
     return 0;
@@ -1332,22 +1332,22 @@ int CreateSummonedMinionActor_800C0BF0()
 
 int GetSummonedMinionSlot_800C0D50()
 {
-    return dword_800C918C;
+    return summonedMinionSlot_800C918C;
 }
 
 int sub_800C0D60()
 {
-    return sub_8001E1C8((void*)dword_800C9190.obj);
+    return sub_8001E1C8((void*)summonedActor_800C9190.obj);
 }
 
 int sub_800C0D88()
 {
-    return sub_8001E1DC(dword_800C9190.obj);
+    return sub_8001E1DC(summonedActor_800C9190.obj);
 }
 
 void TurnSummonedMinionToward_800C0DB0(int a)
 {
-    SetActorTurnTarget_8001DB00(dword_800C9190.obj, a, 0x55);
+    SetActorTurnTarget_8001DB00(summonedActor_800C9190.obj, a, 0x55);
 }
 
 // Matched
@@ -1361,9 +1361,9 @@ BatCol_a* StartMinionAction_800C0DDC(BatCol_a* out, BatCmd_a* p, int c)
         *out = buf;
         return out;
     }
-    if (p->mask_8 & (mask = 1 << (dword_800C918C + 1)))
+    if (p->mask_8 & (mask = 1 << (summonedMinionSlot_800C918C + 1)))
     {
-        StartCommandAction_80018A4C(&buf, dword_800C9190.obj, p, 0, c);
+        StartCommandAction_80018A4C(&buf, summonedActor_800C9190.obj, p, 0, c);
     }
     *out = buf;
     return out;
@@ -1376,17 +1376,17 @@ int TriggerMinionAction_800C0E84(BatCmd_a* p)
     {
         return 0;
     }
-    mask = 1 << (dword_800C918C + 1);
+    mask = 1 << (summonedMinionSlot_800C918C + 1);
     if (p->mask_8 & mask)
     {
-        TriggerActorEffect_8001E28C(dword_800C9190.obj);
+        TriggerActorEffect_8001E28C(summonedActor_800C9190.obj);
     }
     return 1;
 }
 
 void GetMinionHitFrame_800C0EE8(int a)
 {
-    GetActorHitFrame_80018E5C(dword_800C9190.obj, a);
+    GetActorHitFrame_80018E5C(summonedActor_800C9190.obj, a);
 }
 
 int sub_800C0F14()
@@ -1396,7 +1396,7 @@ int sub_800C0F14()
 
 void UpdateMinionStatusTint_800C0F1C()
 {
-    SetActorStatusTint_80018EBC(dword_800C9190.obj, GetPartyMinionStatus_800C0F78(dword_800C918C));
+    SetActorStatusTint_80018EBC(summonedActor_800C9190.obj, GetPartyMinionStatus_800C0F78(summonedMinionSlot_800C918C));
 }
 
 void GetPartyMinionName_800C0F54(int a)
@@ -1411,17 +1411,17 @@ UnitStatus* GetPartyMinionStatus_800C0F78(int a)
 
 int* GetSummonedMinionPos_800C0F9C()
 {
-    return dword_800C9190.obj->pos_38;
+    return summonedActor_800C9190.obj->pos_38;
 }
 
 int* GetSummonedMinionBonePos_800C0FAC()
 {
-    return dword_800C9190.obj->bonePos_1C4;
+    return summonedActor_800C9190.obj->bonePos_1C4;
 }
 
 void GetSummonedMinionEffectTarget_800C0FC4(EffectTarget* p)
 {
-    Actor* q = dword_800C9190.obj;
+    Actor* q = summonedActor_800C9190.obj;
     p->tbl_0 = q->effectTbl_14C;
     p->pos_4 = q->pos_38;
     p->bonePos_8 = q->bonePos_1C4;
@@ -2431,7 +2431,7 @@ void ChooseEnemyCommand_800C4118(BatCmd_a* a, UnitStats* b, int c, unsigned int 
     case 0:
         if (k < 0x39)
         {
-            dword_800C9204[k](&t);
+            enemyAi_800C9204[k](&t);
         }
         else if (k < 0xC9)
         {
@@ -2445,7 +2445,7 @@ void ChooseEnemyCommand_800C4118(BatCmd_a* a, UnitStats* b, int c, unsigned int 
         else
         {
             k -= 0xC9;
-            dword_800C91DC[k](&t);
+            enemyAiHigh_800C91DC[k](&t);
         }
         break;
     case 2:
@@ -2853,7 +2853,7 @@ int EnemyAi0A_800C4EA8(BatTask* t)
 {
     int r;
     int m = rand() % 100;
-    if (dword_800C8B30 < 2)
+    if (aiCounter_800C8B30 < 2)
     {
         if (TargetHasStatus_800C6EC8(t, 2) == 0 && m < 40)
         {
@@ -2862,7 +2862,7 @@ int EnemyAi0A_800C4EA8(BatTask* t)
             {
                 return r;
             }
-            dword_800C8B30++;
+            aiCounter_800C8B30++;
         }
         if (TargetHasStatus_800C6EC8(t, 2) == 0 && m < 40)
         {
@@ -2871,7 +2871,7 @@ int EnemyAi0A_800C4EA8(BatTask* t)
             {
                 return r;
             }
-            dword_800C8B30++;
+            aiCounter_800C8B30++;
         }
     }
     return AiAttack_800C6A68(t);
@@ -3259,7 +3259,7 @@ void EnemyAiDefend_800C58AC(BatTask* t)
 
 void BossAi0A_800C58BC(BatTask* t)
 {
-    unsigned char k = dword_800C8B30 % 6;
+    unsigned char k = aiCounter_800C8B30 % 6;
     switch (k)
     {
     case 0:
@@ -3284,7 +3284,7 @@ void BossAi0A_800C58BC(BatTask* t)
         t->f8->targets_C = t->f18;
         break;
     }
-    dword_800C8B30++;
+    aiCounter_800C8B30++;
 }
 
 const char aAttackWithReadi_800B68AC[] = "\202`\202\224\202\224\202\201\202\203\202\213\201@\202\227\202\211\202\224\202\210\201@\202\222\202\205\202\201\202\204\202\211\202\205\202\204\201@\202\227\202\205\202\201\202\220\202\217\202\216"; // Attack with readied weapon
@@ -3509,7 +3509,7 @@ const int dword_800BA174[2] = { 0 };
 
 void BossAi04_800C59A0(BatTask* t)
 {
-    unsigned char k = dword_800C8B30 % 3;
+    unsigned char k = aiCounter_800C8B30 % 3;
     switch (k)
     {
     case 0:
@@ -3528,18 +3528,18 @@ void BossAi04_800C59A0(BatTask* t)
         t->f8->targets_C = t->f18;
         break;
     }
-    dword_800C8B30++;
+    aiCounter_800C8B30++;
 }
 
 void BossAi02_800C5A7C(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
         }
@@ -3551,7 +3551,7 @@ void BossAi02_800C5A7C(BatTask* t)
     }
     else if (t->fC == 1)
     {
-        unsigned char k = dword_800C8B30 % 3;
+        unsigned char k = aiCounter_800C8B30 % 3;
         switch (k)
         {
         case 0:
@@ -3569,7 +3569,7 @@ void BossAi02_800C5A7C(BatTask* t)
             t->f8->targets_C = t->f18;
             break;
         }
-        dword_800C8B30++;
+        aiCounter_800C8B30++;
     }
 }
 
@@ -3577,11 +3577,11 @@ void BossAi03_800C5BC0(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
         }
@@ -3593,7 +3593,7 @@ void BossAi03_800C5BC0(BatTask* t)
     }
     else if (t->fC == 1)
     {
-        unsigned char k = dword_800C8B30 % 3;
+        unsigned char k = aiCounter_800C8B30 % 3;
         switch (k)
         {
         case 0:
@@ -3611,7 +3611,7 @@ void BossAi03_800C5BC0(BatTask* t)
             t->f8->targets_C = t->f18;
             break;
         }
-        dword_800C8B30++;
+        aiCounter_800C8B30++;
     }
 }
 
@@ -3619,11 +3619,11 @@ void BossAi0D_800C5D04(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
         }
@@ -3635,7 +3635,7 @@ void BossAi0D_800C5D04(BatTask* t)
     }
     else
     {
-        unsigned char* p = &dword_800C8B30;
+        unsigned char* p = &aiCounter_800C8B30;
         if (p[1])
         {
             t->f8->kind_0 = 6;
@@ -3662,23 +3662,23 @@ void BossAi0D_800C5D04(BatTask* t)
                 t->f8->kind_0 = 6;
                 t->f8->arg_4 = 0;
                 t->f8->targets_C = t->f8->mask_8;
-                (&dword_800C8B30)[1] = 1;
+                (&aiCounter_800C8B30)[1] = 1;
                 break;
             }
         }
     }
-    dword_800C8B30++;
+    aiCounter_800C8B30++;
 }
 
 void BossAi0B_800C5EB8(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
         }
@@ -3713,19 +3713,19 @@ void BossAi0B_800C5EB8(BatTask* t)
             break;
         }
     }
-    dword_800C8B30++;
+    aiCounter_800C8B30++;
 }
 
-#if 0 // Not matched: one spot: in the 'f8[3] = f8[2]; dword_800C8B30 = 0' arm the byte store is scheduled above the word store (original keeps it in the j delay slot), which also swaps v0/v1
+#if 0 // Not matched: one spot: in the 'f8[3] = f8[2]; aiCounter_800C8B30 = 0' arm the byte store is scheduled above the word store (original keeps it in the j delay slot), which also swaps v0/v1
 void BossAi0C_800C6038(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
         }
@@ -3735,16 +3735,16 @@ void BossAi0C_800C6038(BatTask* t)
             t->f8->targets_C = t->f18;
         }
     }
-    else if (dword_800C8B30 != 0 && TargetHasStatus_800C6EC8(t, 2))
+    else if (aiCounter_800C8B30 != 0 && TargetHasStatus_800C6EC8(t, 2))
     {
         t->f8->kind_0 = 6;
         t->f8->arg_4 = 0;
         t->f8->targets_C = t->f8->mask_8;
-        dword_800C8B30 = 0;
+        aiCounter_800C8B30 = 0;
     }
     else
     {
-        dword_800C8B30++;
+        aiCounter_800C8B30++;
         switch (rand() % 3)
         {
         case 0:
@@ -3775,11 +3775,11 @@ void BossAi0E_800C61FC(BatTask* t)
     unsigned short f;
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
         }
@@ -3792,48 +3792,48 @@ void BossAi0E_800C61FC(BatTask* t)
             t->f8->targets_C = t->f18;
         }
     }
-    else if ((GetAreaElement_800BC868() == 0 && !((unsigned short)t->f10->st_0.elementMask_42 & 1)) || (dword_800C8B30 >= 3 && GetAreaElement_800BC868() == 0))
+    else if ((GetAreaElement_800BC868() == 0 && !((unsigned short)t->f10->st_0.elementMask_42 & 1)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 0))
     {
         AiSetCommand_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x25;
         t->f10->st_0.elementMask_42 = 8;
         SetHitVariant_80018430(3);
         sub_800C66B4((unsigned char*)t->f10, 2);
-        dword_800C8B30 = 0;
+        aiCounter_800C8B30 = 0;
     }
-    else if ((GetAreaElement_800BC868() == 1 && !((unsigned short)t->f10->st_0.elementMask_42 & 2)) || (dword_800C8B30 >= 3 && GetAreaElement_800BC868() == 1))
+    else if ((GetAreaElement_800BC868() == 1 && !((unsigned short)t->f10->st_0.elementMask_42 & 2)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 1))
     {
         AiSetCommand_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x22;
         t->f10->st_0.elementMask_42 = 1;
         SetHitVariant_80018430(0);
         sub_800C66B4((unsigned char*)t->f10, 3);
-        dword_800C8B30 = 0;
+        aiCounter_800C8B30 = 0;
     }
-    else if ((GetAreaElement_800BC868() == 2 && !((unsigned short)t->f10->st_0.elementMask_42 & 4)) || (dword_800C8B30 >= 3 && GetAreaElement_800BC868() == 2))
+    else if ((GetAreaElement_800BC868() == 2 && !((unsigned short)t->f10->st_0.elementMask_42 & 4)) || (aiCounter_800C8B30 >= 3 && GetAreaElement_800BC868() == 2))
     {
         AiSetCommand_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x23;
         t->f10->st_0.elementMask_42 = 2;
         SetHitVariant_80018430(1);
         sub_800C66B4((unsigned char*)t->f10, 0);
-        dword_800C8B30 = 0;
+        aiCounter_800C8B30 = 0;
     }
-    else if ((GetAreaElement_800BC868() == 3 && !((unsigned short)t->f10->st_0.elementMask_42 & 8)) || (dword_800C8B30 >= 4 && GetAreaElement_800BC868() == 3) || GetAreaElement_800BC868() == -1)
+    else if ((GetAreaElement_800BC868() == 3 && !((unsigned short)t->f10->st_0.elementMask_42 & 8)) || (aiCounter_800C8B30 >= 4 && GetAreaElement_800BC868() == 3) || GetAreaElement_800BC868() == -1)
     {
         AiSetCommand_800C6AFC(t, 6, 2);
         t->f4->slot[2].id_1 = 0x24;
         t->f10->st_0.elementMask_42 = 4;
         SetHitVariant_80018430(2);
         sub_800C66B4((unsigned char*)t->f10, 1);
-        dword_800C8B30 = 0;
+        aiCounter_800C8B30 = 0;
     }
     else
     {
         f = (unsigned short)t->f10->st_0.elementMask_42;
         if (f & 8)
         {
-            if (dword_800C8B30 == 1)
+            if (aiCounter_800C8B30 == 1)
             {
                 AiSetCommandOnSelf_800C6B24(t, 1, 0x1D);
             }
@@ -3882,7 +3882,7 @@ void BossAi0E_800C61FC(BatTask* t)
             }
         }
     }
-    dword_800C8B30 += ((rand() & 3) >> 1) + 1;
+    aiCounter_800C8B30 += ((rand() & 3) >> 1) + 1;
 }
 
 void sub_800C66B4(unsigned char* buf, unsigned int b)
@@ -3908,11 +3908,11 @@ void BossAi0F_800C66F4(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
             return;
@@ -3950,11 +3950,11 @@ void BossAi10_800C6824(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
             return;
@@ -3988,11 +3988,11 @@ void BossAi11_800C6928(BatTask* t)
 {
     if (t->fC == 0)
     {
-        if (dword_800C8B34 == 0)
+        if (aiAllyCalled_800C8B34 == 0)
         {
             t->f8->mask_8 = 0x10;
             t->f8->kind_0 = 0x15;
-            dword_800C8B34 = 1;
+            aiAllyCalled_800C8B34 = 1;
             t->f8->arg_4 = 1;
             t->f8->targets_C = 2;
             return;
@@ -4195,111 +4195,111 @@ int StartBattleMenu_800C6EFC()
     {
         e->cb_8 = (EventEntryFn)BattleMenuTask_800C8A08;
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        if (dword_800C9C7C == 0)
+        if (actingUnit_800C9C7C == 0)
         {
-            dword_800C9E49 = 0;
+            menuForMinion_800C9E49 = 0;
         }
         else
         {
-            dword_800C9E49 = 1;
+            menuForMinion_800C9E49 = 1;
         }
-        dword_800C9E58.kind_0 = 0;
-        dword_800C9E58.arg_4 = 0;
-        dword_800C9E58.targets_C = 0;
-        dword_800C9E58.mask_8 = 1 << dword_800C9C7C;
-        dword_800C9E78 = GetPartyMinionMask_800C0A9C();
-        dword_800C9E4B = GetCapturedMinionsFromBitfield_8003BA58(dword_800C9E78);
-        dword_800C9E4C = sub_800A248C();
-        dword_800C9E4A = GetCapturedMinionsFromBitfield_8003BA58(dword_800C9E4C);
+        menuCommand_800C9E58.kind_0 = 0;
+        menuCommand_800C9E58.arg_4 = 0;
+        menuCommand_800C9E58.targets_C = 0;
+        menuCommand_800C9E58.mask_8 = 1 << actingUnit_800C9C7C;
+        partyMinionMask_800C9E78 = GetPartyMinionMask_800C0A9C();
+        partyMinionCount_800C9E4B = GetCapturedMinionsFromBitfield_8003BA58(partyMinionMask_800C9E78);
+        enemyMask_800C9E4C = sub_800A248C();
+        enemyCount_800C9E4A = GetCapturedMinionsFromBitfield_8003BA58(enemyMask_800C9E4C);
         for (i = 0; i < 3; i++)
         {
             m = 1 << (i + 4);
-            if (dword_800C9E4C & m)
+            if (enemyMask_800C9E4C & m)
             {
-                dword_800C9E80[n] = i + 4;
-                dword_800C9E72[n] = m;
+                enemyUnits_800C9E80[n] = i + 4;
+                enemyBits_800C9E72[n] = m;
                 n++;
             }
         }
-        dword_800C9E50 = 0;
-        dword_800C9E40 = 0;
-        dword_800C9E48 = 0;
-        dword_800C9E68 = 4;
+        menuPage_800C9E50 = 0;
+        prevMenuPage_800C9E40 = 0;
+        menuState_800C9E48 = 0;
+        targetFlags_800C9E68 = 4;
         dword_800C9E70 = 0;
         InitMenuCursors_800C7088();
         SelectMenuWindows_800C71A0();
         DisableMenuCommands_800C71C8();
-        dword_800C9E38 = -1;
+        cameraFocus_800C9E38 = -1;
     }
     return (int)e;
 }
 
 void InitMenuCursors_800C7088()
 {
-    if (dword_800C9E49 == 0)
+    if (menuForMinion_800C9E49 == 0)
     {
         if (sub_800AD308(0) + 1 >= 5)
         {
-            dword_800C9308->count_4 = sub_800AD308(0) + 1;
+            itemMenu_800C9308->count_4 = sub_800AD308(0) + 1;
         }
-        dword_800C9308->cursor_8 = 0;
-        dword_800C92D8->count_4 = 6;
-        dword_800C92D8->cursor_8 = 0;
+        itemMenu_800C9308->cursor_8 = 0;
+        commandMenu_800C92D8->count_4 = 6;
+        commandMenu_800C92D8->cursor_8 = 0;
     }
     else
     {
-        if (CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, dword_800C9C7C - 1)) >= 5)
+        if (CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, actingUnit_800C9C7C - 1)) >= 5)
         {
-            dword_800C92F0->count_4 = CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, dword_800C9C7C - 1));
+            magicMenu_800C92F0->count_4 = CountMagicBits_8001AE54(GetMinionMagicBits_80010824(3, actingUnit_800C9C7C - 1));
         }
-        dword_800C92F0->cursor_8 = 0;
-        dword_800C92E4->cursor_8 = 0;
-        dword_800C92D8->count_4 = 5;
-        dword_800C92D8->cursor_8 = 0;
+        magicMenu_800C92F0->cursor_8 = 0;
+        skillMenu_800C92E4->cursor_8 = 0;
+        commandMenu_800C92D8->count_4 = 5;
+        commandMenu_800C92D8->cursor_8 = 0;
     }
-    if ((unsigned char)dword_800C9D56 > dword_800C9E4A - 1)
+    if ((unsigned char)savedEnemyCursor_800C9D56 > enemyCount_800C9E4A - 1)
     {
-        dword_800C9D56 = 0;
+        savedEnemyCursor_800C9D56 = 0;
     }
-    dword_800C9314->f0 = dword_800C9E4A;
-    dword_800C9314->count_4 = dword_800C9E4A;
-    dword_800C9314->cursor_8 = (unsigned char)dword_800C9D56;
+    enemyTargetMenu_800C9314->f0 = enemyCount_800C9E4A;
+    enemyTargetMenu_800C9314->count_4 = enemyCount_800C9E4A;
+    enemyTargetMenu_800C9314->cursor_8 = (unsigned char)savedEnemyCursor_800C9D56;
 }
 
 void SelectMenuWindows_800C71A0()
 {
-    dword_800C9640 = dword_800C9628[dword_800C9E49];
+    dword_800C9640 = menuWindowSets_800C9628[menuForMinion_800C9E49];
 }
 
 void DisableMenuCommands_800C71C8()
 {
-    if (dword_800C9E49 == 0)
+    if (menuForMinion_800C9E49 == 0)
     {
         if (GetPartyMinionMask_800C0A9C() == 0)
         {
-            dword_800C93B8[0] = dword_800C9378;
+            dword_800C93B8[0] = msgNoDivineMinions_800C9378;
             dword_800C946C |= 2;
         }
         if (CanCapture_800C7334() == 0)
         {
-            dword_800C93B8[2] = dword_800C9384;
+            dword_800C93B8[2] = msgCannotCapture_800C9384;
             dword_800C94A4 |= 2;
         }
         else if (sub_800AD8E4() == 0)
         {
-            dword_800C93B8[2] = dword_800C9388;
+            dword_800C93B8[2] = msgNoEmptyCocoons_800C9388;
             dword_800C94A4 |= 2;
         }
         if (CanFlee_800C72B8() == 0)
         {
-            dword_800C93B8[6] = dword_800C938C;
+            dword_800C93B8[6] = msgCannotEscape_800C938C;
             dword_800C9514 |= 2;
         }
-        dword_800C9E6C = dword_800C93A4;
+        menuItems_800C9E6C = levantMenuItems_800C93A4;
     }
     else
     {
-        dword_800C9E6C = dword_800C93D4;
+        menuItems_800C9E6C = minionMenuItems_800C93D4;
     }
 }
 
@@ -4309,7 +4309,7 @@ int CanFlee_800C72B8()
     int m;
     for (i = 0; i < 3; i++)
     {
-        m = dword_800C9E4C & (1 << (i + 4));
+        m = enemyMask_800C9E4C & (1 << (i + 4));
         if (m != 0)
         {
             if (sub_800A28FC(i) == 0)
@@ -4327,7 +4327,7 @@ int CanCapture_800C7334()
     int m;
     for (i = 0; i < 3; i++)
     {
-        m = dword_800C9E4C & (1 << (i + 4));
+        m = enemyMask_800C9E4C & (1 << (i + 4));
         if (m != 0)
         {
             if (IsUncapturableSpecies_800BF980(sub_800A2BE4(i)) == 1)
@@ -4343,17 +4343,17 @@ BatMenu_a* GetPageCursor_800C73B8(unsigned char a)
 {
     if (a == 4)
     {
-        if (dword_800C9E68 & 1)
+        if (targetFlags_800C9E68 & 1)
         {
-            return dword_800C932C;
+            return allTargetsMenu_800C932C;
         }
-        if (dword_800C9E68 & 4)
+        if (targetFlags_800C9E68 & 4)
         {
-            return dword_800C9314;
+            return enemyTargetMenu_800C9314;
         }
-        return dword_800C9320;
+        return targetMenu_800C9320;
     }
-    return dword_800C9338[a];
+    return pageMenus_800C9338[a];
 }
 
 void HighlightTargetWindows_800C7424(unsigned char a)
@@ -4361,32 +4361,32 @@ void HighlightTargetWindows_800C7424(unsigned char a)
     ResetWindowHighlights_800BFC10();
     if (a == 4)
     {
-        if (dword_800C9E68 & 1)
+        if (targetFlags_800C9E68 & 1)
         {
-            if (dword_800C9E68 & 4)
+            if (targetFlags_800C9E68 & 4)
             {
-                dword_800C9DFC = 1;
-                dword_800C9174[0] = GetTime30Hz_8002C64C();
-                dword_800C9174[1] = GetTime30Hz_8002C64C();
-                dword_800C9174[2] = GetTime30Hz_8002C64C();
+                enemyWindowsHighlight_800C9DFC = 1;
+                enemyHighlightTimes_800C9174[0] = GetTime30Hz_8002C64C();
+                enemyHighlightTimes_800C9174[1] = GetTime30Hz_8002C64C();
+                enemyHighlightTimes_800C9174[2] = GetTime30Hz_8002C64C();
             }
-            if (dword_800C9E68 & 2)
+            if (targetFlags_800C9E68 & 2)
             {
-                dword_800C9DFD = 1;
-                dword_800C9170 = GetTime30Hz_8002C64C();
+                actorWindowHighlight_800C9DFD = 1;
+                actorHighlightTime_800C9170 = GetTime30Hz_8002C64C();
             }
         }
-        else if (dword_800C9E68 & 4)
+        else if (targetFlags_800C9E68 & 4)
         {
             short i;
-            dword_800C9DFC = 1;
-            i = GetMenuCursorIndex_8003DA54(dword_800C9314);
-            dword_800C9174[dword_800C9E80[i] - 4] = GetTime30Hz_8002C64C();
+            enemyWindowsHighlight_800C9DFC = 1;
+            i = GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314);
+            enemyHighlightTimes_800C9174[enemyUnits_800C9E80[i] - 4] = GetTime30Hz_8002C64C();
         }
         else
         {
-            dword_800C9DFD = 1;
-            dword_800C9170 = GetTime30Hz_8002C64C();
+            actorWindowHighlight_800C9DFD = 1;
+            actorHighlightTime_800C9170 = GetTime30Hz_8002C64C();
         }
     }
 }
@@ -4397,20 +4397,20 @@ int IsMenuSelectionValid_800C7530()
     BatTgtQ_a b;
     short idx;
     int* p;
-    idx = GetMenuCursorIndex_8003DA54(dword_800C9E44);
-    q.cursor_0 = dword_800C9E44->cursor_8;
-    q.scroll_2 = dword_800C9E44->scroll_A;
+    idx = GetMenuCursorIndex_8003DA54(pageCursor_800C9E44);
+    q.cursor_0 = pageCursor_800C9E44->cursor_8;
+    q.scroll_2 = pageCursor_800C9E44->scroll_A;
     q.field_A = 0;
-    dword_800C9E7C = 0;
-    switch (dword_800C9E50)
+    menuErrorText_800C9E7C = 0;
+    switch (menuPage_800C9E50)
     {
     case 0:
-        p = dword_800C9E6C[idx].data_4;
+        p = menuItems_800C9E6C[idx].data_4;
         if (p == 0)
         {
             return 1;
         }
-        dword_800C9E7C = *p;
+        menuErrorText_800C9E7C = *p;
         return 0;
     case 1:
         switch (CheckItemUsable_80033AFC(&q))
@@ -4421,7 +4421,7 @@ int IsMenuSelectionValid_800C7530()
             return 0;
         case 2:
         case 4:
-            dword_800C9E7C = dword_800C93A0;
+            menuErrorText_800C9E7C = msgCannotUseHere_800C93A0;
             return 0;
         case 3:
         case 5:
@@ -4431,7 +4431,7 @@ int IsMenuSelectionValid_800C7530()
             return 1;
         }
     case 2:
-        q.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
+        q.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
         switch (CheckSkillUsable_80033C98(&q))
         {
         case 0:
@@ -4443,13 +4443,13 @@ int IsMenuSelectionValid_800C7530()
         default:
             return 1;
         case 5:
-            dword_800C9E7C = dword_800C9380;
+            menuErrorText_800C9E7C = msgNotEnoughMana_800C9380;
             return 0;
         case 7:
             return 0;
         }
     case 3:
-        q.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
+        q.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
         switch (CheckMagicCastable_80033C08(&q))
         {
         case 0:
@@ -4461,15 +4461,15 @@ int IsMenuSelectionValid_800C7530()
         default:
             return 1;
         case 5:
-            dword_800C9E7C = dword_800C9380;
+            menuErrorText_800C9E7C = msgNotEnoughMana_800C9380;
             return 0;
         case 6:
             return 0;
         }
     case 4:
-        b.f0 = dword_800C9E5C;
-        b.f2 = dword_800C9C7C;
-        b.f4 = dword_800C9E54;
+        b.f0 = menuCommandArg_800C9E5C;
+        b.f2 = actingUnit_800C9C7C;
+        b.f4 = menuTarget_800C9E54;
         b.f6 = 0;
         if (GetSelectedCommand_800C78D0() == 4)
         {
@@ -4478,13 +4478,13 @@ int IsMenuSelectionValid_800C7530()
             case 0:
                 return 1;
             case 1:
-                dword_800C9E7C = dword_800C939C;
+                menuErrorText_800C9E7C = msgDivineMinionsCannot_800C939C;
                 return 0;
             case 2:
-                dword_800C9E7C = dword_800C9398;
+                menuErrorText_800C9E7C = msgItemForDivineMinions_800C9398;
                 return 0;
             case 3:
-                dword_800C9E7C = dword_800C9390;
+                menuErrorText_800C9E7C = msgNoNeedToUseItem_800C9390;
                 return 0;
             case 4:
                 break;
@@ -4499,12 +4499,12 @@ int IsMenuSelectionValid_800C7530()
             case 0:
                 return 1;
             case 1:
-                dword_800C9E7C = dword_800C939C;
+                menuErrorText_800C9E7C = msgDivineMinionsCannot_800C939C;
                 return 0;
             case 2:
                 return 0;
             case 3:
-                dword_800C9E7C = dword_800C9390;
+                menuErrorText_800C9E7C = msgNoNeedToUseItem_800C9390;
                 return 0;
             case 4:
                 break;
@@ -4519,12 +4519,12 @@ int IsMenuSelectionValid_800C7530()
             case 0:
                 return 1;
             case 1:
-                dword_800C9E7C = dword_800C939C;
+                menuErrorText_800C9E7C = msgDivineMinionsCannot_800C939C;
                 return 0;
             case 2:
                 return 0;
             case 3:
-                dword_800C9E7C = dword_800C9390;
+                menuErrorText_800C9E7C = msgNoNeedToUseItem_800C9390;
                 return 0;
             case 4:
                 break;
@@ -4534,7 +4534,7 @@ int IsMenuSelectionValid_800C7530()
         }
         else if (GetSelectedCommand_800C78D0() == 2 || GetSelectedCommand_800C78D0() == 8)
         {
-            if (HasStatusFlag_80033548(GetUnitStatus_80014390((unsigned char)dword_800C9E54), 0x400) == 0)
+            if (HasStatusFlag_80033548(GetUnitStatus_80014390((unsigned char)menuTarget_800C9E54), 0x400) == 0)
             {
                 return 1;
             }
@@ -4543,7 +4543,7 @@ int IsMenuSelectionValid_800C7530()
         {
             return 1;
         }
-        dword_800C9E7C = dword_800C937C;
+        menuErrorText_800C9E7C = msgCannotSummon_800C937C;
         return 0;
     case 5:
     default:
@@ -4555,34 +4555,34 @@ INCLUDE_OVERLAY_ASM(battle, dword_800BA238);
 
 unsigned char GetSelectedCommand_800C78D0()
 {
-    return dword_800C9648[dword_800C9E49 + (short)GetMenuCursorIndex_8003DA54(dword_800C92D8) * 2];
+    return commandByCursor_800C9648[menuForMinion_800C9E49 + (short)GetMenuCursorIndex_8003DA54(commandMenu_800C92D8) * 2];
 }
 
 #if 0 // Not matched: b and r swap registers (v1/a0); tried declaration order, int b, re-reading the global, early returns
 int GetSelectedTargets_800C791C()
 {
-    unsigned char b = dword_800C9E68;
+    unsigned char b = targetFlags_800C9E68;
     int r = 0;
     if (b & 1)
     {
         if (b & 4)
         {
-            r = dword_800C9E4C;
+            r = enemyMask_800C9E4C;
         }
         if (b & 2)
         {
             r |= 1;
-            r |= dword_800C9E78;
+            r |= partyMinionMask_800C9E78;
         }
     }
     else if (b & 4)
     {
-        short i = GetMenuCursorIndex_8003DA54(dword_800C9314);
-        r = dword_800C9E72[i];
+        short i = GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314);
+        r = enemyBits_800C9E72[i];
     }
     else
     {
-        r = 1 << dword_800C9E54;
+        r = 1 << menuTarget_800C9E54;
     }
     return r;
 }
@@ -4592,80 +4592,80 @@ INCLUDE_OVERLAY_ASM(battle, GetSelectedTargets_800C791C);
 
 int GetSelectedItem_800C79B8()
 {
-    return sub_800AD288((short)GetMenuCursorIndex_8003DA54(dword_800C9308), 0);
+    return sub_800AD288((short)GetMenuCursorIndex_8003DA54(itemMenu_800C9308), 0);
 }
 
 int GetSelectedSkill_800C79EC()
 {
-    return MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4));
+    return MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4));
 }
 
 int GetSelectedMagic_800C7A1C()
 {
-    unsigned int* h = GetMinionMagicBits_80010824(3, dword_800C9C7C - 1);
-    return FindNthMagicBit_8001AEC0(h, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0));
+    unsigned int* h = GetMinionMagicBits_80010824(3, actingUnit_800C9C7C - 1);
+    return FindNthMagicBit_8001AEC0(h, (short)GetMenuCursorIndex_8003DA54(magicMenu_800C92F0));
 }
 
 void AdvanceMenuPage_800C7A6C()
 {
     int h;
     char* m;
-    dword_800C9E40 = dword_800C9E50;
-    switch (dword_800C9E50)
+    prevMenuPage_800C9E40 = menuPage_800C9E50;
+    switch (menuPage_800C9E50)
     {
     case 0:
-        dword_800C9E68 = dword_800C9660[GetSelectedCommand_800C78D0()];
-        dword_800C9E50 = dword_800C9654[GetSelectedCommand_800C78D0()];
-        dword_800C9E58.kind_0 = dword_800C96A4[GetSelectedCommand_800C78D0()];
+        targetFlags_800C9E68 = commandTargetFlags_800C9660[GetSelectedCommand_800C78D0()];
+        menuPage_800C9E50 = commandNextPage_800C9654[GetSelectedCommand_800C78D0()];
+        menuCommand_800C9E58.kind_0 = commandKinds_800C96A4[GetSelectedCommand_800C78D0()];
         break;
     case 1:
-        dword_800C9E68 = GetItemTargetFlags_8001CE8C(GetSelectedItem_800C79B8());
-        dword_800C9E50 = 4;
-        dword_800C9E5C = GetSelectedItem_800C79B8();
+        targetFlags_800C9E68 = GetItemTargetFlags_8001CE8C(GetSelectedItem_800C79B8());
+        menuPage_800C9E50 = 4;
+        menuCommandArg_800C9E5C = GetSelectedItem_800C79B8();
         break;
     case 2:
-        h = GetUnitSkills_80031B30(dword_800C9C7C);
-        dword_800C9E68 = sub_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
-        dword_800C9E50 = 4;
-        dword_800C9E5C = GetSelectedSkill_800C79EC();
+        h = GetUnitSkills_80031B30(actingUnit_800C9C7C);
+        targetFlags_800C9E68 = sub_80031B0C(h, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
+        menuPage_800C9E50 = 4;
+        menuCommandArg_800C9E5C = GetSelectedSkill_800C79EC();
         break;
     case 3:
-        m = GetMinionMagicBits_80010824(3, dword_800C9C7C - 1);
-        dword_800C9E68 = GetMagicTargetFlags_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
-        dword_800C9E50 = 4;
-        dword_800C9E5C = GetSelectedMagic_800C7A1C();
+        m = GetMinionMagicBits_80010824(3, actingUnit_800C9C7C - 1);
+        targetFlags_800C9E68 = GetMagicTargetFlags_8001ACE4(FindNthMagicBit_8001AEC0(m, (short)GetMenuCursorIndex_8003DA54(magicMenu_800C92F0)));
+        menuPage_800C9E50 = 4;
+        menuCommandArg_800C9E5C = GetSelectedMagic_800C7A1C();
         break;
     case 4:
-        dword_800C9E50 = 5;
-        dword_800C9E64 = GetSelectedTargets_800C791C();
+        menuPage_800C9E50 = 5;
+        menuCommandTargets_800C9E64 = GetSelectedTargets_800C791C();
         break;
     case 5:
         break;
     }
-    if (dword_800C9E50 == 4)
+    if (menuPage_800C9E50 == 4)
     {
         if (GetSelectedCommand_800C78D0() == 4)
         {
-            dword_800C9320[0].f2 = dword_800C9E4B + 1;
-            dword_800C9320[0].count_4 = dword_800C9E4B + 1;
+            targetMenu_800C9320[0].f2 = partyMinionCount_800C9E4B + 1;
+            targetMenu_800C9320[0].count_4 = partyMinionCount_800C9E4B + 1;
         }
         else if (GetSelectedCommand_800C78D0() == 2)
         {
-            dword_800C9320[0].f2 = dword_800C9E4B;
-            dword_800C9320[0].count_4 = dword_800C9E4B;
+            targetMenu_800C9320[0].f2 = partyMinionCount_800C9E4B;
+            targetMenu_800C9320[0].count_4 = partyMinionCount_800C9E4B;
         }
         else if (GetSelectedCommand_800C78D0() == 7)
         {
-            dword_800C9320[0].f2 = 1;
-            dword_800C9320[0].count_4 = 1;
+            targetMenu_800C9320[0].f2 = 1;
+            targetMenu_800C9320[0].count_4 = 1;
         }
         else if (GetSelectedCommand_800C78D0() == 8)
         {
-            dword_800C9320[0].f2 = dword_800C9E4B;
-            dword_800C9320[0].count_4 = dword_800C9E4B;
+            targetMenu_800C9320[0].f2 = partyMinionCount_800C9E4B;
+            targetMenu_800C9320[0].count_4 = partyMinionCount_800C9E4B;
         }
-        dword_800C9320[0].cursor_8 = 0;
-        dword_800C9320[0].scroll_A = 0;
+        targetMenu_800C9320[0].cursor_8 = 0;
+        targetMenu_800C9320[0].scroll_A = 0;
     }
 }
 
@@ -4674,34 +4674,34 @@ void UpdateMenuWindows_800C7CE8(unsigned char a)
     unsigned int n;
     if (a == 0)
     {
-        dword_800C9630.f0 = 2;
+        menuWindows_800C9630.f0 = 2;
     }
     else
     {
-        dword_800C9630.f0 = 4;
+        menuWindows_800C9630.f0 = 4;
     }
-    dword_800C9630.f4 = GetTime30Hz_8002C64C();
-    n = dword_800C9630.f8;
+    menuWindows_800C9630.f4 = GetTime30Hz_8002C64C();
+    n = menuWindows_800C9630.f8;
     if (n < 8)
     {
-        dword_800C9630.f8 = n + 1;
+        menuWindows_800C9630.f8 = n + 1;
     }
-    dword_800C9630.fC = dword_800C92E0;
+    menuWindows_800C9630.fC = commandMenuCursor_800C92E0;
 }
 
 void UpdateShownUnit_800C7D54(unsigned char a)
 {
     if (a != 4)
     {
-        dword_800C9C99 = dword_800C9C7C;
+        shownUnit_800C9C99 = actingUnit_800C9C7C;
     }
-    else if (dword_800C9E68 & 5)
+    else if (targetFlags_800C9E68 & 5)
     {
-        dword_800C9C99 = dword_800C9C7C;
+        shownUnit_800C9C99 = actingUnit_800C9C7C;
     }
     else
     {
-        dword_800C9C99 = dword_800C9E54;
+        shownUnit_800C9C99 = menuTarget_800C9E54;
     }
 }
 
@@ -4711,34 +4711,34 @@ void BattleMenuDraw_800C7DA8()
     int k = 0;
     int c;
     short sel[2];
-    dword_800C9180 = 0;
-    dword_800C9182 = 0;
-    if (IsCircleHeldP1_8003D480() == 1 && dword_800C9E48 != 1)
+    previewHpChange_800C9180 = 0;
+    previewMpChange_800C9182 = 0;
+    if (IsCircleHeldP1_8003D480() == 1 && menuState_800C9E48 != 1)
     {
-        if (dword_800C9E50 == 0)
+        if (menuPage_800C9E50 == 0)
         {
             k = 1;
-            DrawMenuHelpText_800C8828(*dword_800C9E6C[(short)GetMenuCursorIndex_8003DA54(dword_800C92D8)].text);
+            DrawMenuHelpText_800C8828(*menuItems_800C9E6C[(short)GetMenuCursorIndex_8003DA54(commandMenu_800C92D8)].text);
         }
-        else if (dword_800C9E50 == 1)
+        else if (menuPage_800C9E50 == 1)
         {
             if (GetSelectedItem_800C79B8() != 0xFF)
             {
-                DrawLargeTextBox_8002AF10((int)dword_800C96C8[GetSelectedItem_800C79B8()], 0, 0xF);
+                DrawLargeTextBox_8002AF10((int)itemDescriptions_800C96C8[GetSelectedItem_800C79B8()], 0, 0xF);
                 k = 1;
             }
         }
-        else if (dword_800C9E50 == 2)
+        else if (menuPage_800C9E50 == 2)
         {
-            Minion* m = GetMinion_80010598(3, dword_800C9C7C - 1);
-            DrawAbilityDescription_8002C670(m, 0, dword_800C9B58, (short)GetMenuCursorIndex_8003DA54(dword_800C92E4), 0xF);
+            Minion* m = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
+            DrawAbilityDescription_8002C670(m, 0, skillDescriptions_800C9B58, (short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4), 0xF);
             k = 1;
         }
-        else if (dword_800C9E50 == 3)
+        else if (menuPage_800C9E50 == 3)
         {
             if (GetSelectedMagic_800C7A1C() < 0x1E)
             {
-                DrawLargeTextBox_8002AF10((int)dword_800C9978[GetSelectedMagic_800C7A1C()], 0, 0xF);
+                DrawLargeTextBox_8002AF10((int)magicDescriptions_800C9978[GetSelectedMagic_800C7A1C()], 0, 0xF);
                 k = 1;
             }
         }
@@ -4749,25 +4749,25 @@ void BattleMenuDraw_800C7DA8()
     }
     else
     {
-        k = dword_800C9E48;
+        k = menuState_800C9E48;
     }
-    sel[0] = dword_800C9E5C;
-    sel[1] = dword_800C9C7C;
-    if (!(dword_800C968C[dword_800C9E50][k] & 0x10))
+    sel[0] = menuCommandArg_800C9E5C;
+    sel[1] = actingUnit_800C9C7C;
+    if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x10))
     {
-        if (dword_800C9E68 & 1)
+        if (targetFlags_800C9E68 & 1)
         {
             c = -1;
         }
         else
         {
-            c = (short)GetMenuCursorIndex_8003DA54(dword_800C9E44);
+            c = (short)GetMenuCursorIndex_8003DA54(pageCursor_800C9E44);
         }
         if (GetSelectedCommand_800C78D0() == 4)
         {
-            if (dword_800C9E68 & 2)
+            if (targetFlags_800C9E68 & 2)
             {
-                dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 0, c, 0xF);
+                menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 0, c, 0xF);
                 flags |= 1;
             }
         }
@@ -4776,24 +4776,24 @@ void BattleMenuDraw_800C7DA8()
         }
         else if (GetSelectedCommand_800C78D0() == 7)
         {
-            if (dword_800C9E68 & 2)
+            if (targetFlags_800C9E68 & 2)
             {
-                dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 1, c, 0xF);
+                menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 1, c, 0xF);
                 flags |= 1;
             }
         }
         else if (GetSelectedCommand_800C78D0() == 2)
         {
-            dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 2, c, 0xF);
+            menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 2, c, 0xF);
             flags |= 1;
         }
         else if (GetSelectedCommand_800C78D0() == 8)
         {
-            dword_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 3, c, 0xF);
+            menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 3, c, 0xF);
             flags |= 1;
         }
     }
-    if (dword_800C968C[dword_800C9E50][k] & 2)
+    if (pageHideFlags_800C968C[menuPage_800C9E50][k] & 2)
     {
         SetBattleFlag_800BC838(0x8000);
     }
@@ -4801,7 +4801,7 @@ void BattleMenuDraw_800C7DA8()
     {
         ClearBattleFlag_800BC850(0x8000);
     }
-    if (dword_800C968C[dword_800C9E50][k] & 1)
+    if (pageHideFlags_800C968C[menuPage_800C9E50][k] & 1)
     {
         SetBattleFlag_800BC838(0x10000);
     }
@@ -4809,11 +4809,11 @@ void BattleMenuDraw_800C7DA8()
     {
         ClearBattleFlag_800BC850(0x10000);
     }
-    if (!(dword_800C968C[dword_800C9E50][k] & 4) && !(flags & 1))
+    if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 4) && !(flags & 1))
     {
-        DrawMenuWindows_8002A5A4(&dword_800C9630);
+        DrawMenuWindows_8002A5A4(&menuWindows_800C9630);
     }
-    if (!(dword_800C968C[dword_800C9E50][k] & 0x20) && !(flags & 2))
+    if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x20) && !(flags & 2))
     {
         struct_minion_ref w;
         w.field_4 = 2;
@@ -4821,40 +4821,40 @@ void BattleMenuDraw_800C7DA8()
         w.field_8 = -1;
         w.minion_C = 0;
         w.field_A = 0;
-        w.cursor_0 = dword_800C9308->cursor_8;
-        w.scroll_2 = dword_800C9308->scroll_A;
+        w.cursor_0 = itemMenu_800C9308->cursor_8;
+        w.scroll_2 = itemMenu_800C9308->scroll_A;
         DrawItemList_8002C728(&w);
     }
-    if (!(dword_800C968C[dword_800C9E50][k] & 0x40) && !(flags & 4))
+    if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x40) && !(flags & 4))
     {
         struct_minion_ref w;
         w.field_4 = 2;
         w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.cursor_0 = dword_800C92E4->cursor_8;
-        w.scroll_2 = dword_800C92E4->scroll_A;
-        w.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
+        w.cursor_0 = skillMenu_800C92E4->cursor_8;
+        w.scroll_2 = skillMenu_800C92E4->scroll_A;
+        w.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
         w.field_A = 0;
         DrawAbilityList_8002CE28(&w, 0);
-        dword_800C9182 = -GetSkillMpCost_80031A04(&w.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800C92E4)));
+        previewMpChange_800C9182 = -GetSkillMpCost_80031A04(&w.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
     }
-    if (!(dword_800C968C[dword_800C9E50][k] & 0x80) && !(flags & 8))
+    if (!(pageHideFlags_800C968C[menuPage_800C9E50][k] & 0x80) && !(flags & 8))
     {
         struct_minion_ref w;
         short sz[2];
         w.field_4 = 2;
         w.ot_6 = 0xF;
         w.field_8 = -1;
-        w.cursor_0 = dword_800C92F0->cursor_8;
-        w.scroll_2 = dword_800C92F0->scroll_A;
-        w.minion_C = GetMinion_80010598(3, dword_800C9C7C - 1);
+        w.cursor_0 = magicMenu_800C92F0->cursor_8;
+        w.scroll_2 = magicMenu_800C92F0->scroll_A;
+        w.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
         sz[0] = 0x60;
         w.field_A = 0;
         sz[1] = 0x45;
         DrawMagicList_8002CAC8(&w, sz);
-        dword_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&w.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800C92F0)));
+        previewMpChange_800C9182 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&w.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicMenu_800C92F0)));
     }
-    DrawButtonHelpBar_8002B004(dword_800C9674[dword_800C9E50], 0, 0xF);
+    DrawButtonHelpBar_8002B004(pageButtonHelp_800C9674[menuPage_800C9E50], 0, 0xF);
 }
 
 void PreviewCommandResult_800C83B0()
@@ -4866,66 +4866,66 @@ void PreviewCommandResult_800C83B0()
     int bit;
     UnitStatus* self;
     UnitStatus* m;
-    a = dword_800C9E58;
-    if (dword_800C9E50 == 4)
+    a = menuCommand_800C9E58;
+    if (menuPage_800C9E50 == 4)
     {
-        dword_800C9180 = 0;
-        dword_800C9182 = 0;
-        self = GetUnitStatus_80014390(dword_800C9C7C);
+        previewHpChange_800C9180 = 0;
+        previewMpChange_800C9182 = 0;
+        self = GetUnitStatus_80014390(actingUnit_800C9C7C);
         for (i = 0; i < 4; i++)
         {
             bit = 1 << i;
-            if ((dword_800C9E58.targets_C & bit) && i == dword_800C9C99)
+            if ((menuCommand_800C9E58.targets_C & bit) && i == shownUnit_800C9C99)
             {
                 m = GetUnitStatus_80014390(i & 0xFF);
 
-                d.f24 = dword_800C9D82;
+                d.f24 = shownAreaElement_800C9D82;
                 d.f26 = (signed char)dword_800C9D83;
                 a.targets_C = bit;
                 ResolveBattleAction_80012BB0(self, m, &a, &d);
-                if (sub_80013228(self, m, &a, &d) == 0 && (dword_800C9E58.mask_8 & bit))
+                if (sub_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
                 {
-                    dword_800C9180 -= d.fC;
-                    dword_800C9182 -= d.f10;
-                    dword_800C9180 -= d.f14;
-                    dword_800C9182 -= d.f18;
+                    previewHpChange_800C9180 -= d.fC;
+                    previewMpChange_800C9182 -= d.f10;
+                    previewHpChange_800C9180 -= d.f14;
+                    previewMpChange_800C9182 -= d.f18;
                 }
-                dword_800C9180 -= d.f1C;
-                dword_800C9182 -= d.f20;
-                if (dword_800C9180 > m->hp_8.max_2 - m->hp_8.cur_0)
+                previewHpChange_800C9180 -= d.f1C;
+                previewMpChange_800C9182 -= d.f20;
+                if (previewHpChange_800C9180 > m->hp_8.max_2 - m->hp_8.cur_0)
                 {
-                    dword_800C9180 = m->hp_8.max_2 - m->hp_8.cur_0;
+                    previewHpChange_800C9180 = m->hp_8.max_2 - m->hp_8.cur_0;
                 }
-                if (dword_800C9182 > m->mp_C.max_2 - m->mp_C.cur_0)
+                if (previewMpChange_800C9182 > m->mp_C.max_2 - m->mp_C.cur_0)
                 {
-                    dword_800C9182 = m->mp_C.max_2 - m->mp_C.cur_0;
+                    previewMpChange_800C9182 = m->mp_C.max_2 - m->mp_C.cur_0;
                 }
             }
         }
-        b.f0 = dword_800C9E5C;
-        b.f2 = dword_800C9C7C;
-        b.f4 = dword_800C9E54;
+        b.f0 = menuCommandArg_800C9E5C;
+        b.f2 = actingUnit_800C9C7C;
+        b.f4 = menuTarget_800C9E54;
         b.f6 = 0;
         if (GetSelectedCommand_800C78D0() == 4)
         {
             if (CheckItemOnTarget_80033DF4(&b))
             {
-                dword_800C9180 = 0;
-                dword_800C9182 = 0;
+                previewHpChange_800C9180 = 0;
+                previewMpChange_800C9182 = 0;
             }
         }
         else if (GetSelectedCommand_800C78D0() == 6)
         {
             if (((int (*)(BatTgtQ_a*))CheckUsableStub_80034124)(&b))
             {
-                dword_800C9180 = 0;
+                previewHpChange_800C9180 = 0;
             }
         }
         else if (GetSelectedCommand_800C78D0() == 7)
         {
             if (CheckMagicUsable_80034068(&b))
             {
-                dword_800C9180 = 0;
+                previewHpChange_800C9180 = 0;
             }
         }
     }
@@ -4933,23 +4933,23 @@ void PreviewCommandResult_800C83B0()
 
 void SetCameraFocusTargets_800C8694(unsigned char a)
 {
-    if (a == 4 && (dword_800C9E68 & 5) == 4)
+    if (a == 4 && (targetFlags_800C9E68 & 5) == 4)
     {
-        dword_800C9E3C = dword_800C9E72[(short)GetMenuCursorIndex_8003DA54(dword_800C9314)];
+        newCameraFocus_800C9E3C = enemyBits_800C9E72[(short)GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314)];
     }
     else
     {
-        dword_800C9E3C = dword_800C9E4C;
+        newCameraFocus_800C9E3C = enemyMask_800C9E4C;
     }
 }
 
 void UpdateTargetCamera_800C8710()
 {
-    if (dword_800C9E38 != dword_800C9E3C)
+    if (cameraFocus_800C9E38 != newCameraFocus_800C9E3C)
     {
-        dword_800C9E38 = dword_800C9E3C;
-        FocusBattleCamera_80037AE0((unsigned short)dword_800C9E3C);
-        TurnUnitsToward_800BC468(dword_800C9E3C, 1 << dword_800C9C7C);
+        cameraFocus_800C9E38 = newCameraFocus_800C9E3C;
+        FocusBattleCamera_80037AE0((unsigned short)newCameraFocus_800C9E3C);
+        TurnUnitsToward_800BC468(newCameraFocus_800C9E3C, 1 << actingUnit_800C9C7C);
     }
 }
 
@@ -4965,22 +4965,22 @@ void MenuInput_800C8768()
         else
         {
             PlaySfx_80031494(0x7C);
-            if (dword_800C9E7C)
+            if (menuErrorText_800C9E7C)
             {
-                dword_800C9E51 = 0x96;
-                dword_800C9E48 = 1;
+                menuErrorTimer_800C9E51 = 0x96;
+                menuState_800C9E48 = 1;
             }
         }
     }
     else if (IsCancelPressedP1_8003D41C(0))
     {
-        if (dword_800C9E50)
+        if (menuPage_800C9E50)
         {
             unsigned char c;
             PlaySfx_80031494(0x7D);
-            c = dword_800C9E40;
-            dword_800C9E40 = 0;
-            dword_800C9E50 = c;
+            c = prevMenuPage_800C9E40;
+            prevMenuPage_800C9E40 = 0;
+            menuPage_800C9E50 = c;
         }
     }
 }
@@ -5019,25 +5019,25 @@ void MenuShowError_800C88E4()
 {
     if (padPressed_8009194C)
     {
-        dword_800C9E51 = 0;
+        menuErrorTimer_800C9E51 = 0;
     }
-    if (dword_800C9E51 == 0)
+    if (menuErrorTimer_800C9E51 == 0)
     {
-        dword_800C9E48 = 0;
+        menuState_800C9E48 = 0;
     }
     else
     {
-        dword_800C9E51--;
+        menuErrorTimer_800C9E51--;
     }
-    if (dword_800C9E7C)
+    if (menuErrorText_800C9E7C)
     {
-        if (dword_800C9E50 == 0)
+        if (menuPage_800C9E50 == 0)
         {
-            DrawMenuHelpText_800C8828(dword_800C9E7C);
+            DrawMenuHelpText_800C8828(menuErrorText_800C9E7C);
         }
         else
         {
-            DrawMenuMessage_800C88AC(dword_800C9E7C);
+            DrawMenuMessage_800C88AC(menuErrorText_800C9E7C);
         }
     }
 }
@@ -5045,197 +5045,197 @@ void MenuShowError_800C88E4()
 void CommitMenuCommand_800C8970()
 {
     int v;
-    dword_800C9C88.kind_0 = dword_800C9E58.kind_0;
-    dword_800C9C88.arg_4 = dword_800C9E58.arg_4;
-    dword_800C9C88.mask_8 = dword_800C9E58.mask_8;
-    v = dword_800C9E58.kind_0;
+    curCommand_800C9C88.kind_0 = menuCommand_800C9E58.kind_0;
+    curCommand_800C9C88.arg_4 = menuCommand_800C9E58.arg_4;
+    curCommand_800C9C88.mask_8 = menuCommand_800C9E58.mask_8;
+    v = menuCommand_800C9E58.kind_0;
     if (v == 7 || v == 0x12)
     {
-        dword_800C9C88.targets_C = dword_800C9E4C;
+        curCommand_800C9C88.targets_C = enemyMask_800C9E4C;
     }
     else if (v == 8)
     {
-        dword_800C9C88.targets_C = 0;
+        curCommand_800C9C88.targets_C = 0;
     }
     else
     {
-        dword_800C9C88.targets_C = dword_800C9E58.targets_C;
+        curCommand_800C9C88.targets_C = menuCommand_800C9E58.targets_C;
     }
-    dword_800C9C98 = LowestSetBit_80014358(dword_800C9E64);
+    commandUnit_800C9C98 = LowestSetBit_80014358(menuCommandTargets_800C9E64);
 }
 
 void BattleMenuTask_800C8A08(EventEntry* t, int a)
 {
-    dword_800C9E44 = GetPageCursor_800C73B8(dword_800C9E50);
-    HighlightTargetWindows_800C7424(dword_800C9E50);
-    UpdateMenuCursor_8003D794(dword_800C9E44, 0);
-    UpdateMenuWindows_800C7CE8(dword_800C9E50);
+    pageCursor_800C9E44 = GetPageCursor_800C73B8(menuPage_800C9E50);
+    HighlightTargetWindows_800C7424(menuPage_800C9E50);
+    UpdateMenuCursor_8003D794(pageCursor_800C9E44, 0);
+    UpdateMenuWindows_800C7CE8(menuPage_800C9E50);
     BattleMenuDraw_800C7DA8();
-    dword_800C9E64 = GetSelectedTargets_800C791C();
-    UpdateShownUnit_800C7D54(dword_800C9E50);
+    menuCommandTargets_800C9E64 = GetSelectedTargets_800C791C();
+    UpdateShownUnit_800C7D54(menuPage_800C9E50);
     PreviewCommandResult_800C83B0();
-    SetCameraFocusTargets_800C8694(dword_800C9E50);
+    SetCameraFocusTargets_800C8694(menuPage_800C9E50);
     UpdateTargetCamera_800C8710();
-    dword_800C966C[dword_800C9E48](t, a);
-    if (dword_800C9E50 == 5)
+    menuStateFns_800C966C[menuState_800C9E48](t, a);
+    if (menuPage_800C9E50 == 5)
     {
-        dword_800C9D56 = dword_800C9314->cursor_8;
+        savedEnemyCursor_800C9D56 = enemyTargetMenu_800C9314->cursor_8;
         ResetWindowHighlights_800BFC10();
         CommitMenuCommand_800C8970();
-        dword_800C9180 = 0;
-        dword_800C9182 = 0;
+        previewHpChange_800C9180 = 0;
+        previewMpChange_800C9182 = 0;
         t->flags = (t->flags & ~1) | 0x8000;
     }
 }
 
 int dword_800C8B2C = 0xFFFF;
-unsigned char dword_800C8B30 = 0;
-int dword_800C8B34 = 0;
-char dword_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
-int dword_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)sub_800BBFFC };
-unsigned short dword_800C8B70[8] = { 40, 41, 42, 43, 44, 45, 46, 0xFFFF };
-unsigned short dword_800C8B80[8] = { 51, 52, 53, 54, 55, 56, 0xFFFF };
-unsigned short dword_800C8B90[8] = { 61, 62, 63, 64, 65, 66, 67, 0xFFFF };
-unsigned short dword_800C8BA0[8] = { 72, 73, 74, 75, 76, 77, 78, 0xFFFF };
-unsigned short dword_800C8BB0[8] = { 84, 85, 86, 87, 88, 89, 90, 0xFFFF };
-unsigned short dword_800C8BC0[10] = {
+unsigned char aiCounter_800C8B30 = 0;
+int aiAllyCalled_800C8B34 = 0;
+char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
+int commandHandlers_800C8B54[7] = { (int)CmdAction_800BBA24, (int)CmdSummon_800BBBA8, (int)CmdRecall_800BBDB4, (int)CmdSimple_800BC0FC, (int)CmdSwapMinion_800BBBF4, (int)CmdEnemyCall_800BBEFC, (int)sub_800BBFFC };
+unsigned short stage00Sprites_800C8B70[8] = { 40, 41, 42, 43, 44, 45, 46, 0xFFFF };
+unsigned short stage01Sprites_800C8B80[8] = { 51, 52, 53, 54, 55, 56, 0xFFFF };
+unsigned short stage02Sprites_800C8B90[8] = { 61, 62, 63, 64, 65, 66, 67, 0xFFFF };
+unsigned short stage03Sprites_800C8BA0[8] = { 72, 73, 74, 75, 76, 77, 78, 0xFFFF };
+unsigned short stage04Sprites_800C8BB0[8] = { 84, 85, 86, 87, 88, 89, 90, 0xFFFF };
+unsigned short stage05Sprites_800C8BC0[10] = {
     91, 92, 93, 94, 95, 96, 97, 98,
     0xFFFF,
 };
-unsigned short dword_800C8BD4[10] = {
+unsigned short stage06Sprites_800C8BD4[10] = {
     99, 100, 101, 102, 103, 104, 105, 106,
     0xFFFF,
 };
-unsigned short dword_800C8BE8[8] = { 108, 109, 110, 111, 112, 113, 0xFFFF };
-unsigned short dword_800C8BF8[10] = {
+unsigned short stage07Sprites_800C8BE8[8] = { 108, 109, 110, 111, 112, 113, 0xFFFF };
+unsigned short stage08Sprites_800C8BF8[10] = {
     118, 119, 120, 121, 122, 123, 124, 125,
     0xFFFF,
 };
-unsigned short dword_800C8C0C[8] = { 126, 127, 128, 129, 130, 131, 0xFFFF };
-unsigned short dword_800C8C1C[8] = { 136, 137, 138, 139, 140, 141, 0xFFFF };
-unsigned short dword_800C8C2C[8] = { 0x11D, 0x11E, 0x11F, 0x120, 0x121, 0x122, 0xFFFF };
-unsigned short dword_800C8C3C[10] = {
+unsigned short stage09Sprites_800C8C0C[8] = { 126, 127, 128, 129, 130, 131, 0xFFFF };
+unsigned short stage0ASprites_800C8C1C[8] = { 136, 137, 138, 139, 140, 141, 0xFFFF };
+unsigned short stage0BSprites_800C8C2C[8] = { 0x11D, 0x11E, 0x11F, 0x120, 0x121, 0x122, 0xFFFF };
+unsigned short stage0CSprites_800C8C3C[10] = {
     0x127, 0x128, 0x129, 0x12A, 0x12B, 0x12C, 0x12D, 0x12E,
     0xFFFF,
 };
-unsigned short dword_800C8C50[8] = { 0x12F, 0x130, 0x131, 0x132, 0x133, 0x134, 0xFFFF };
-unsigned short dword_800C8C60[8] = { 0x139, 0x13A, 0x13B, 0x13C, 0x13D, 0x13E, 0xFFFF };
-unsigned short dword_800C8C70[6] = { 146, 147, 148, 149, 150, 0xFFFF };
-unsigned short dword_800C8C7C[6] = { 152, 153, 154, 155, 0xFFFF };
-unsigned short dword_800C8C88[8] = { 156, 157, 158, 159, 160, 161, 0xFFFF };
-unsigned short dword_800C8C98[2] = { 0xFFFF };
-unsigned short dword_800C8C9C[6] = { 166, 167, 168, 169, 0xFFFF };
-unsigned short dword_800C8CA8[6] = { 171, 172, 173, 174, 175, 0xFFFF };
-unsigned short dword_800C8CB4[6] = { 176, 177, 178, 179, 180, 0xFFFF };
-unsigned short dword_800C8CC0[6] = { 182, 183, 184, 185, 186, 0xFFFF };
-unsigned short dword_800C8CCC[8] = { 187, 188, 189, 190, 191, 192, 193, 0xFFFF };
-unsigned short dword_800C8CDC[8] = { 198, 199, 200, 201, 202, 203, 0xFFFF };
-unsigned short dword_800C8CEC[8] = { 208, 209, 210, 211, 212, 213, 214, 0xFFFF };
-unsigned short dword_800C8CFC[8] = { 219, 220, 221, 222, 223, 224, 225, 0xFFFF };
-unsigned short dword_800C8D0C[8] = { 0x16F, 0x170, 0x171, 0x172, 0x173, 0x174, 0x175, 0xFFFF };
-unsigned short dword_800C8D1C[10] = {
+unsigned short stage0DSprites_800C8C50[8] = { 0x12F, 0x130, 0x131, 0x132, 0x133, 0x134, 0xFFFF };
+unsigned short stage0ESprites_800C8C60[8] = { 0x139, 0x13A, 0x13B, 0x13C, 0x13D, 0x13E, 0xFFFF };
+unsigned short stage0FSprites_800C8C70[6] = { 146, 147, 148, 149, 150, 0xFFFF };
+unsigned short stage10Sprites_800C8C7C[6] = { 152, 153, 154, 155, 0xFFFF };
+unsigned short stage11Sprites_800C8C88[8] = { 156, 157, 158, 159, 160, 161, 0xFFFF };
+unsigned short stage12Sprites_800C8C98[2] = { 0xFFFF };
+unsigned short stage13Sprites_800C8C9C[6] = { 166, 167, 168, 169, 0xFFFF };
+unsigned short stage14Sprites_800C8CA8[6] = { 171, 172, 173, 174, 175, 0xFFFF };
+unsigned short stage15Sprites_800C8CB4[6] = { 176, 177, 178, 179, 180, 0xFFFF };
+unsigned short stage16Sprites_800C8CC0[6] = { 182, 183, 184, 185, 186, 0xFFFF };
+unsigned short stage17Sprites_800C8CCC[8] = { 187, 188, 189, 190, 191, 192, 193, 0xFFFF };
+unsigned short stage18Sprites_800C8CDC[8] = { 198, 199, 200, 201, 202, 203, 0xFFFF };
+unsigned short stage19Sprites_800C8CEC[8] = { 208, 209, 210, 211, 212, 213, 214, 0xFFFF };
+unsigned short stage1ASprites_800C8CFC[8] = { 219, 220, 221, 222, 223, 224, 225, 0xFFFF };
+unsigned short stage1BSprites_800C8D0C[8] = { 0x16F, 0x170, 0x171, 0x172, 0x173, 0x174, 0x175, 0xFFFF };
+unsigned short stage1CSprites_800C8D1C[10] = {
     0x10C, 0x10D, 0x10E, 0x10F, 0x110, 0x111, 0x112, 0x113,
     0xFFFF,
 };
-unsigned short dword_800C8D30[10] = {
+unsigned short stage1DSprites_800C8D30[10] = {
     0x114, 0x115, 0x116, 0x117, 0x118, 0x119, 0x11A, 0x11B,
     0xFFFF,
 };
-unsigned short dword_800C8D44[8] = { 230, 231, 232, 233, 234, 235, 0xFFFF };
-unsigned short dword_800C8D54[10] = {
+unsigned short stage1ESprites_800C8D44[8] = { 230, 231, 232, 233, 234, 235, 0xFFFF };
+unsigned short stage1FSprites_800C8D54[10] = {
     240, 241, 242, 243, 244, 245, 246, 247,
     0xFFFF,
 };
-unsigned short dword_800C8D68[8] = { 248, 249, 250, 251, 252, 253, 0xFFFF };
-unsigned short dword_800C8D78[8] = { 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0xFFFF };
-unsigned short dword_800C8D88[8] = { 0x183, 0x184, 0x185, 0x186, 0x187, 0x188, 0xFFFF };
-unsigned short dword_800C8D98[6] = { 0x197, 0x198, 0x199, 0x19A, 0x19B, 0xFFFF };
-unsigned short dword_800C8DA4[8] = { 0x18D, 0x18E, 0x18F, 0x190, 0x191, 0x192, 0xFFFF };
-unsigned short dword_800C8DB4[8] = { 0x1A0, 0x1A1, 0x1A2, 0x1A3, 0x1A4, 0x1A5, 0xFFFF };
-unsigned short dword_800C8DC4[8] = { 0x179, 0x17A, 0x17B, 0x17C, 0x17D, 0x17E, 0xFFFF };
-unsigned short dword_800C8DD4[12] = {
+unsigned short stage20Sprites_800C8D68[8] = { 248, 249, 250, 251, 252, 253, 0xFFFF };
+unsigned short stage21Sprites_800C8D78[8] = { 0x102, 0x103, 0x104, 0x105, 0x106, 0x107, 0xFFFF };
+unsigned short stage22Sprites_800C8D88[8] = { 0x183, 0x184, 0x185, 0x186, 0x187, 0x188, 0xFFFF };
+unsigned short stage23Sprites_800C8D98[6] = { 0x197, 0x198, 0x199, 0x19A, 0x19B, 0xFFFF };
+unsigned short stage24Sprites_800C8DA4[8] = { 0x18D, 0x18E, 0x18F, 0x190, 0x191, 0x192, 0xFFFF };
+unsigned short stage25Sprites_800C8DB4[8] = { 0x1A0, 0x1A1, 0x1A2, 0x1A3, 0x1A4, 0x1A5, 0xFFFF };
+unsigned short stage26Sprites_800C8DC4[8] = { 0x179, 0x17A, 0x17B, 0x17C, 0x17D, 0x17E, 0xFFFF };
+unsigned short stage10Models_800C8DD4[12] = {
     49, 48, 0, 0, 255, 0, 0, 0,
     255,
 };
-unsigned short dword_800C8DEC[12] = {
+unsigned short stage12Models_800C8DEC[12] = {
     52, 0, 0, 0, 255, 0, 0, 0,
     255,
 };
-unsigned short dword_800C8E04[12] = {
+unsigned short stage13Models_800C8E04[12] = {
     54, 0, 1, 0, 55, 48, 0, 0,
     56, 48,
 };
-unsigned short dword_800C8E1C[12] = {
+unsigned short stage0AModels_800C8E1C[12] = {
     193, 48, 0, 0, 255, 0, 0, 0,
     255,
 };
-unsigned short dword_800C8E34[12] = {
+unsigned short stage0EModels_800C8E34[12] = {
     194, 48, 0, 0, 255, 0, 0, 0,
     255,
 };
-unsigned short dword_800C8E4C[12] = {
+unsigned short stage21Models_800C8E4C[12] = {
     195, 48, 0, 0, 255, 0, 0, 0,
     255,
 };
-unsigned short dword_800C8E64[12] = {
+unsigned short stage14Models_800C8E64[12] = {
     58, 0, 1, 0, 255, 0, 0, 0,
     255,
 };
-unsigned short dword_800C8E7C[12] = {
+unsigned short stage15Models_800C8E7C[12] = {
     60, 0, 1, 0, 255, 0, 0, 0,
     255,
 };
-unsigned short dword_800C8E94[12] = {
+unsigned short stage16Models_800C8E94[12] = {
     62, 0, 1, 0, 255, 0, 0, 0,
     255,
 };
-BatStage_a dword_800C8EAC[39] = {
-    { dword_800C8B70, 0x3A6, 37, 0, 7, -1 },
-    { dword_800C8B80, 0x3A8, 38, 0, 6, -1 },
-    { dword_800C8B90, 0x3A9, 39, 0, 7, -1 },
-    { dword_800C8BA0, 0x3AA, 40, 0, 7, -1 },
-    { dword_800C8BB0, 0x3AB, 41, 0, -1, 83 },
-    { dword_800C8BC0, 0x3C5, 42, 0, -1, 0x1AA },
-    { dword_800C8BD4, 0x3C7, 43, 0, -1, 107 },
-    { dword_800C8BE8, 0x3AC, 44, 0, 6, -1 },
-    { dword_800C8BF8, 0x3AD, 45, 0, -1, -1 },
-    { dword_800C8C0C, 0x3B7, 46, 0, -1, -1 },
-    { dword_800C8C1C, 0x3BA, 47, 0, -1, -1, dword_800C8E1C },
-    { dword_800C8C2C, 0x3B3, 74, 0, 6, -1 },
-    { dword_800C8C3C, 0x3B5, 75, 0, -1, -1 },
-    { dword_800C8C50, 0x3B8, 76, 0, 6, -1 },
-    { dword_800C8C60, 0x3BB, 77, 0, 6, -1, dword_800C8E34 },
-    { dword_800C8C70, 0x3BD, 48, 0, -1, 151 },
-    { dword_800C8C7C, 0x3BE, 50, 0, -1, -1, dword_800C8DD4 },
-    { dword_800C8C88, 0x3BF, 51, 0, -1, -1 },
-    { dword_800C8C98, 0x3C0, 53, 0, 0, -1, dword_800C8DEC },
-    { dword_800C8C9C, 0x3C1, 57, 0, -1, 170, dword_800C8E04 },
-    { dword_800C8CA8, 0x3C2, 59, 0, -1, -1, dword_800C8E64 },
-    { dword_800C8CB4, 0x3C3, 61, 0, -1, 181, dword_800C8E7C },
-    { dword_800C8CC0, 0x3C4, 63, 0, -1, -1, dword_800C8E94 },
-    { dword_800C8CCC, 0x3AE, 64, 0, 7, -1 },
-    { dword_800C8CDC, 0x3AF, 65, 0, 6, -1 },
-    { dword_800C8CEC, 0x3B0, 66, 0, 7, -1 },
-    { dword_800C8CFC, 0x3B1, 67, 0, 7, -1 },
-    { dword_800C8D0C, 0x3B2, 175, 0, -1, 0x16E },
-    { dword_800C8D1C, 0x3C6, 72, 0, -1, 0x1AB },
-    { dword_800C8D30, 0x3C8, 73, 0, -1, 0x11C },
-    { dword_800C8D44, 0x3B4, 68, 0, 6, -1 },
-    { dword_800C8D54, 0x3B6, 69, 0, -1, -1 },
-    { dword_800C8D68, 0x3B9, 70, 0, 6, -1 },
-    { dword_800C8D78, 0x3BC, 71, 0, 6, -1, dword_800C8E4C },
-    { dword_800C8D88, 0x434, 187, 0, 6, -1 },
-    { dword_800C8D98, 0x435, 189, 0, 5, -1 },
-    { dword_800C8DA4, 0x436, 188, 0, 6, -1 },
-    { dword_800C8DB4, 0x437, 190, 0, 6, -1 },
-    { dword_800C8DC4, 0x438, 186, 0, 6, -1 },
+BatStage_a battleStages_800C8EAC[39] = {
+    { stage00Sprites_800C8B70, 0x3A6, 37, 0, 7, -1 },
+    { stage01Sprites_800C8B80, 0x3A8, 38, 0, 6, -1 },
+    { stage02Sprites_800C8B90, 0x3A9, 39, 0, 7, -1 },
+    { stage03Sprites_800C8BA0, 0x3AA, 40, 0, 7, -1 },
+    { stage04Sprites_800C8BB0, 0x3AB, 41, 0, -1, 83 },
+    { stage05Sprites_800C8BC0, 0x3C5, 42, 0, -1, 0x1AA },
+    { stage06Sprites_800C8BD4, 0x3C7, 43, 0, -1, 107 },
+    { stage07Sprites_800C8BE8, 0x3AC, 44, 0, 6, -1 },
+    { stage08Sprites_800C8BF8, 0x3AD, 45, 0, -1, -1 },
+    { stage09Sprites_800C8C0C, 0x3B7, 46, 0, -1, -1 },
+    { stage0ASprites_800C8C1C, 0x3BA, 47, 0, -1, -1, stage0AModels_800C8E1C },
+    { stage0BSprites_800C8C2C, 0x3B3, 74, 0, 6, -1 },
+    { stage0CSprites_800C8C3C, 0x3B5, 75, 0, -1, -1 },
+    { stage0DSprites_800C8C50, 0x3B8, 76, 0, 6, -1 },
+    { stage0ESprites_800C8C60, 0x3BB, 77, 0, 6, -1, stage0EModels_800C8E34 },
+    { stage0FSprites_800C8C70, 0x3BD, 48, 0, -1, 151 },
+    { stage10Sprites_800C8C7C, 0x3BE, 50, 0, -1, -1, stage10Models_800C8DD4 },
+    { stage11Sprites_800C8C88, 0x3BF, 51, 0, -1, -1 },
+    { stage12Sprites_800C8C98, 0x3C0, 53, 0, 0, -1, stage12Models_800C8DEC },
+    { stage13Sprites_800C8C9C, 0x3C1, 57, 0, -1, 170, stage13Models_800C8E04 },
+    { stage14Sprites_800C8CA8, 0x3C2, 59, 0, -1, -1, stage14Models_800C8E64 },
+    { stage15Sprites_800C8CB4, 0x3C3, 61, 0, -1, 181, stage15Models_800C8E7C },
+    { stage16Sprites_800C8CC0, 0x3C4, 63, 0, -1, -1, stage16Models_800C8E94 },
+    { stage17Sprites_800C8CCC, 0x3AE, 64, 0, 7, -1 },
+    { stage18Sprites_800C8CDC, 0x3AF, 65, 0, 6, -1 },
+    { stage19Sprites_800C8CEC, 0x3B0, 66, 0, 7, -1 },
+    { stage1ASprites_800C8CFC, 0x3B1, 67, 0, 7, -1 },
+    { stage1BSprites_800C8D0C, 0x3B2, 175, 0, -1, 0x16E },
+    { stage1CSprites_800C8D1C, 0x3C6, 72, 0, -1, 0x1AB },
+    { stage1DSprites_800C8D30, 0x3C8, 73, 0, -1, 0x11C },
+    { stage1ESprites_800C8D44, 0x3B4, 68, 0, 6, -1 },
+    { stage1FSprites_800C8D54, 0x3B6, 69, 0, -1, -1 },
+    { stage20Sprites_800C8D68, 0x3B9, 70, 0, 6, -1 },
+    { stage21Sprites_800C8D78, 0x3BC, 71, 0, 6, -1, stage21Models_800C8E4C },
+    { stage22Sprites_800C8D88, 0x434, 187, 0, 6, -1 },
+    { stage23Sprites_800C8D98, 0x435, 189, 0, 5, -1 },
+    { stage24Sprites_800C8DA4, 0x436, 188, 0, 6, -1 },
+    { stage25Sprites_800C8DB4, 0x437, 190, 0, 6, -1 },
+    { stage26Sprites_800C8DC4, 0x438, 186, 0, 6, -1 },
 };
-int dword_800C911C[2] = { 0x2090501, 0x4070306 };
-int dword_800C9124[2] = { 0 };
-char dword_800C912C[8] = { 0, 0, 0, 1 };
-unsigned char dword_800C9134[4] = { 5, 6, 7, 8 };
-int dword_800C9138[2] = { 2, 77 };
-BatXY_a dword_800C9140[9] = {
+int stageAnimPhases_800C911C[2] = { 0x2090501, 0x4070306 };
+int stageRot_800C9124[2] = { 0 };
+char handlerWaitsReactions_800C912C[8] = { 0, 0, 0, 1 };
+unsigned char captureVibrations_800C9134[4] = { 5, 6, 7, 8 };
+int statusCureChances_800C9138[2] = { 2, 77 };
+BatXY_a enemyWindowLayouts_800C9140[9] = {
     { 110, 20 },
     { -1, -1 },
     { -1, -1 },
@@ -5246,22 +5246,22 @@ BatXY_a dword_800C9140[9] = {
     { 110, 20 },
     { 210, 20 },
 };
-int dword_800C9164[3] = { 0 };
-int dword_800C9170 = 0;
-int dword_800C9174[3] = { 0 };
-short dword_800C9180 = 0;
-short dword_800C9182 = 0;
+int enemyGaugePreview_800C9164[3] = { 0 };
+int actorHighlightTime_800C9170 = 0;
+int enemyHighlightTimes_800C9174[3] = { 0 };
+short previewHpChange_800C9180 = 0;
+short previewMpChange_800C9182 = 0;
 int dword_800C9184 = 0x24639300;
-Minion *dword_800C9188 = 0;
-int dword_800C918C = -1;
-BatCtx_a dword_800C9190 = { 0 };
+Minion *summonedMinion_800C9188 = 0;
+int summonedMinionSlot_800C918C = -1;
+BatCtx_a summonedActor_800C9190 = { 0 };
 char dword_800C91A4[56] = { 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2 };
-BatFxFn dword_800C91DC[10] = {
+BatFxFn enemyAiHigh_800C91DC[10] = {
     EnemyAiC9_800C4328, EnemyAiCA_800C43D8, EnemyAiCB_800C4424, (BatFxFn)EnemyAiCC_800C4470,
     EnemyAiCD_800C4494, EnemyAiCE_800C44FC, EnemyAiCF_800C4548, EnemyAiD0_800C45A8,
     (BatFxFn)EnemyAiD1_800C46FC, (BatFxFn)EnemyAiD2_800C471C,
 };
-BatFxFn dword_800C9204[53] = {
+BatFxFn enemyAi_800C9204[53] = {
     (BatFxFn)EnemyAi00_800C4D38, (BatFxFn)EnemyAi00_800C4D38, (BatFxFn)EnemyAi02_800C54A4, (BatFxFn)EnemyAi03_800C4FE0,
     (BatFxFn)EnemyAi04_800C57D8, (BatFxFn)EnemyAi05_800C56B8, (BatFxFn)EnemyAi06_800C4BE4, (BatFxFn)EnemyAi07_800C4E34,
     (BatFxFn)EnemyAi08_800C580C, (BatFxFn)EnemyAi09_800C4DB8, (BatFxFn)EnemyAi0A_800C4EA8, (BatFxFn)EnemyAi0B_800C5510,
@@ -5277,50 +5277,50 @@ BatFxFn dword_800C9204[53] = {
     (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C, (BatFxFn)EnemyAiDefault_800C473C,
     (BatFxFn)EnemyAiDefault_800C473C,
 };
-BatMenu_a dword_800C92D8[1] = { { 2, 3 } };
-BatMenu_a dword_800C92E4[1] = { { 1, 5, 5 } };
-BatMenu_a dword_800C92F0[1] = { { 1, 4, 4, 64 } };
+BatMenu_a commandMenu_800C92D8[1] = { { 2, 3 } };
+BatMenu_a skillMenu_800C92E4[1] = { { 1, 5, 5 } };
+BatMenu_a magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
 int dword_800C92FC[3] = { 0x10001, 1 };
-BatMenu_a dword_800C9308[1] = { { 1, 4, 4, 64 } };
-BatMenu_a dword_800C9314[1] = { { 0, 1 } };
-BatMenu_a dword_800C9320[1] = { { 1 } };
-BatMenu_a dword_800C932C[1] = { { 1, 1, 1 } };
-BatMenu_a *dword_800C9338[6] = { dword_800C92D8, dword_800C9308, dword_800C92E4, dword_800C92F0, dword_800C9320, dword_800C92D8 };
-int dword_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
-int dword_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
-const char *dword_800C9358[1] = { aSummonDivineMin_800B6914 };
-char dword_800C935C[4] = { 64, 105, 11, 128 };
-const char *dword_800C9360[1] = { aUseItem_800B6984 };
-const char *dword_800C9364[1] = { aFleeFromCombat_800B6998 };
-int dword_800C9368[1] = { (int)aUseNormalAttack_800B69BC };
-int dword_800C936C[1] = { (int)aUseSpecialAttac_800B69E0 };
-int dword_800C9370[1] = { (int)aUseMagicSpell_800B6A08 };
-int dword_800C9374[1] = { (int)aChangeCurrentFi_800B6A28 };
-char dword_800C9378[4] = { 88, 106, 11, 128 };
-int dword_800C937C = (int)aCannotSummonInt_800B6A88;
-int dword_800C9380 = (int)aNotEnoughMana_800B6ABC;
-char dword_800C9384[4] = { 220, 106, 11, 128 };
-char dword_800C9388[4] = { 252, 106, 11, 128 };
-char dword_800C938C[4] = { 32, 107, 11, 128 };
-int dword_800C9390 = (int)aNoNeedToUseItem_800B6B3C;
-const char *dword_800C9394[1] = { aCannotSelect_800B6B64 };
-int dword_800C9398 = (int)aThisItemIsForDi_800B6B80;
-int dword_800C939C = (int)aDivineMinionsCa_800B6BC0;
-int dword_800C93A0 = (int)aCannotUseHere_800B6C08;
-BatMenuItem_a dword_800C93A4[2] = {
-    { dword_800C9350 },
-    { dword_800C9354 },
+BatMenu_a itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
+BatMenu_a enemyTargetMenu_800C9314[1] = { { 0, 1 } };
+BatMenu_a targetMenu_800C9320[1] = { { 1 } };
+BatMenu_a allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
+BatMenu_a *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
+int helpAttack_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
+int helpDefend_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
+const char *helpSummon_800C9358[1] = { aSummonDivineMin_800B6914 };
+char helpCapture_800C935C[4] = { 64, 105, 11, 128 };
+const char *helpItem_800C9360[1] = { aUseItem_800B6984 };
+const char *helpFlee_800C9364[1] = { aFleeFromCombat_800B6998 };
+int helpMinionAttack_800C9368[1] = { (int)aUseNormalAttack_800B69BC };
+int helpSpecialAttack_800C936C[1] = { (int)aUseSpecialAttac_800B69E0 };
+int helpMagic_800C9370[1] = { (int)aUseMagicSpell_800B6A08 };
+int helpChangeFighter_800C9374[1] = { (int)aChangeCurrentFi_800B6A28 };
+char msgNoDivineMinions_800C9378[4] = { 88, 106, 11, 128 };
+int msgCannotSummon_800C937C = (int)aCannotSummonInt_800B6A88;
+int msgNotEnoughMana_800C9380 = (int)aNotEnoughMana_800B6ABC;
+char msgCannotCapture_800C9384[4] = { 220, 106, 11, 128 };
+char msgNoEmptyCocoons_800C9388[4] = { 252, 106, 11, 128 };
+char msgCannotEscape_800C938C[4] = { 32, 107, 11, 128 };
+int msgNoNeedToUseItem_800C9390 = (int)aNoNeedToUseItem_800B6B3C;
+const char *msgCannotSelect_800C9394[1] = { aCannotSelect_800B6B64 };
+int msgItemForDivineMinions_800C9398 = (int)aThisItemIsForDi_800B6B80;
+int msgDivineMinionsCannot_800C939C = (int)aDivineMinionsCa_800B6BC0;
+int msgCannotUseHere_800C93A0 = (int)aCannotUseHere_800B6C08;
+BatMenuItem_a levantMenuItems_800C93A4[2] = {
+    { helpAttack_800C9350 },
+    { helpDefend_800C9354 },
 };
-void *dword_800C93B4[1] = { (void *)dword_800C9358 };
-char *dword_800C93B8[2] = { 0, dword_800C935C };
-void *dword_800C93C0[4] = { 0, (void *)dword_800C9360, 0, (void *)dword_800C9364 };
+void *dword_800C93B4[1] = { (void *)helpSummon_800C9358 };
+char *dword_800C93B8[2] = { 0, helpCapture_800C935C };
+void *dword_800C93C0[4] = { 0, (void *)helpItem_800C9360, 0, (void *)helpFlee_800C9364 };
 int dword_800C93D0 = 0;
-BatMenuItem_a dword_800C93D4[5] = {
-    { dword_800C9368 },
-    { dword_800C9354 },
-    { dword_800C936C },
-    { dword_800C9370 },
-    { dword_800C9374 },
+BatMenuItem_a minionMenuItems_800C93D4[5] = {
+    { helpMinionAttack_800C9368 },
+    { helpDefend_800C9354 },
+    { helpSpecialAttack_800C936C },
+    { helpMagic_800C9370 },
+    { helpChangeFighter_800C9374 },
 };
 int dword_800C93FC[14] = {
     0x10008, 13, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x9D0016, 0x120026, 0x20002, 1,
@@ -5430,29 +5430,29 @@ int dword_800C95BC[14] = {
     0x10008, 40, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0xC30016, 0x12004C, 0x20002, 1,
     0, 0, 0, -1, -1, -1,
 };
-void *dword_800C95F4[7] = { (void *)dword_800C93FC, (void *)dword_800C9434, (void *)&dword_800C946C, (void *)&dword_800C94A4, (void *)dword_800C94DC, (void *)&dword_800C9514 };
-void *dword_800C9610[6] = { (void *)dword_800C93FC, (void *)dword_800C9434, (void *)dword_800C954C, (void *)dword_800C9584, (void *)dword_800C95BC };
-int dword_800C9628[2] = { (int)dword_800C95F4, (int)dword_800C9610 };
-struct BatState dword_800C9630 = { 2 };
+void *levantMenuWindows_800C95F4[7] = { (void *)dword_800C93FC, (void *)dword_800C9434, (void *)&dword_800C946C, (void *)&dword_800C94A4, (void *)dword_800C94DC, (void *)&dword_800C9514 };
+void *minionMenuWindows_800C9610[6] = { (void *)dword_800C93FC, (void *)dword_800C9434, (void *)dword_800C954C, (void *)dword_800C9584, (void *)dword_800C95BC };
+int menuWindowSets_800C9628[2] = { (int)levantMenuWindows_800C95F4, (int)minionMenuWindows_800C9610 };
+struct BatState menuWindows_800C9630 = { 2 };
 int dword_800C9640 = 0;
 int dword_800C9644 = 0;
-unsigned char dword_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 5 };
-unsigned char dword_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
-unsigned char dword_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };
-void (*dword_800C966C[2])(EventEntry *t, int a) = { (void (*)(EventEntry *, int))MenuInput_800C8768, (void (*)(EventEntry *, int))MenuShowError_800C88E4 };
-int dword_800C9674[6] = { 0x80082698, 0x800826B0, 0x800826B0, 0x800826B0, 0x80082680 };
-unsigned short dword_800C968C[6][2] = {
+unsigned char commandByCursor_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 5 };
+unsigned char commandNextPage_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
+unsigned char commandTargetFlags_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };
+void (*menuStateFns_800C966C[2])(EventEntry *t, int a) = { (void (*)(EventEntry *, int))MenuInput_800C8768, (void (*)(EventEntry *, int))MenuShowError_800C88E4 };
+int pageButtonHelp_800C9674[6] = { 0x80082698, 0x800826B0, 0x800826B0, 0x800826B0, 0x80082680 };
+unsigned short pageHideFlags_800C968C[6][2] = {
     { 0x1F0, 240 },
     { 0x1D1, 0x1D7 },
     { 0x1B1, 0x1B7 },
     { 0x170, 0x176 },
     { 0x1E0, 246 },
 };
-int dword_800C96A4[9] = {
+int commandKinds_800C96A4[9] = {
     0, 18, 2, 5, 4, 7, 6, 1,
     8,
 };
-int dword_800C96C8[43][4] = {
+int itemDescriptions_800C96C8[43][4] = {
     { (int)aRestoreHealth_800B8CFC, (int)aGrowsInOpenArea_800B8CB4, (int)aIncreasesHealth_800B8C68, (int)aGrindLeavesInto_800B8C0C },
     { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortB_800B8BCC, (int)aSweeterSmelling_800B8B74, (int)aCuresBleedingAn_800B8B30 },
     { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortW_800B8ACC, (int)aBitterTasteThat_800B8A60 },
@@ -5497,7 +5497,7 @@ int dword_800C96C8[43][4] = {
     { (int)aTreeSpores_800B6D68, (int)aSweetSmellingSl_800B6D00, (int)aCausesSurroundi_800B6CA8 },
     { (int)aTreeSpores_800B6D68, (int)aTreeSporesWithA_800B6C5C, (int)aAttractsNearbyM_800B6C28 },
 };
-int dword_800C9978[30][4] = {
+int magicDescriptions_800C9978[30][4] = {
     { (int)aFireAttackOneEn_800B97B8, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
     { (int)aFireAttackAllEn_800B96FC, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
     { (int)aAdvancedFireAtt_800B96D0, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
@@ -5524,67 +5524,67 @@ int dword_800C9978[30][4] = {
     { (int)aEnhanceEarth_800B8EA4, (int)aIncreasesEarthA_800B8E4C, (int)aEffectivenessOf_800B8DEC },
     { (int)aEnhanceWind_800B8DD0, (int)aIncreasesWindAt_800B8D7C, (int)aEffectivenessOf_800B8D1C },
 };
-char dword_800C9B58[256] = { 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 72, 161, 11, 128, 240, 160, 11, 128, 232, 148, 11, 128, 0, 0, 0, 0, 196, 160, 11, 128, 108, 160, 11, 128, 16, 150, 11, 128, 0, 0, 0, 0, 68, 160, 11, 128, 236, 159, 11, 128, 48, 151, 11, 128, 0, 0, 0, 0, 196, 159, 11, 128, 108, 159, 11, 128, 200, 147, 11, 128, 0, 0, 0, 0, 64, 159, 11, 128, 236, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 192, 158, 11, 128, 88, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 28, 158, 11, 128, 176, 157, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 116, 157, 11, 128, 12, 157, 11, 128, 188, 156, 11, 128, 0, 0, 0, 0, 132, 156, 11, 128, 56, 156, 11, 128, 232, 155, 11, 128, 0, 0, 0, 0, 172, 155, 11, 128, 100, 155, 11, 128, 28, 155, 11, 128, 0, 0, 0, 0, 224, 154, 11, 128, 164, 154, 11, 128, 88, 154, 11, 128, 0, 0, 0, 0, 28, 154, 11, 128, 208, 153, 11, 128, 120, 153, 11, 128, 0, 0, 0, 0, 64, 153, 11, 128, 224, 152, 11, 128, 124, 152, 11, 128, 0, 0, 0, 0, 64, 152, 11, 128, 232, 151, 11, 128, 124, 152, 11, 128 };
-int dword_800C9C58 = 0;
+char skillDescriptions_800C9B58[256] = { 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 72, 161, 11, 128, 240, 160, 11, 128, 232, 148, 11, 128, 0, 0, 0, 0, 196, 160, 11, 128, 108, 160, 11, 128, 16, 150, 11, 128, 0, 0, 0, 0, 68, 160, 11, 128, 236, 159, 11, 128, 48, 151, 11, 128, 0, 0, 0, 0, 196, 159, 11, 128, 108, 159, 11, 128, 200, 147, 11, 128, 0, 0, 0, 0, 64, 159, 11, 128, 236, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 192, 158, 11, 128, 88, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 28, 158, 11, 128, 176, 157, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 116, 157, 11, 128, 12, 157, 11, 128, 188, 156, 11, 128, 0, 0, 0, 0, 132, 156, 11, 128, 56, 156, 11, 128, 232, 155, 11, 128, 0, 0, 0, 0, 172, 155, 11, 128, 100, 155, 11, 128, 28, 155, 11, 128, 0, 0, 0, 0, 224, 154, 11, 128, 164, 154, 11, 128, 88, 154, 11, 128, 0, 0, 0, 0, 28, 154, 11, 128, 208, 153, 11, 128, 120, 153, 11, 128, 0, 0, 0, 0, 64, 153, 11, 128, 224, 152, 11, 128, 124, 152, 11, 128, 0, 0, 0, 0, 64, 152, 11, 128, 232, 151, 11, 128, 124, 152, 11, 128 };
+int battleLoadState_800C9C58 = 0;
 int dword_800C9C5C[3] = { 0 };
-short dword_800C9C68[8] = { 0 };
-int *dword_800C9C78 = 0;
-unsigned char dword_800C9C7C = 0;
-short dword_800C9C7E = 0;
-short dword_800C9C80 = 0;
-unsigned char dword_800C9C82 = 0;
+short turnGauges_800C9C68[8] = { 0 };
+int *chainEntry_800C9C78 = 0;
+unsigned char actingUnit_800C9C7C = 0;
+short actorHpChange_800C9C7E = 0;
+short actorMpChange_800C9C80 = 0;
+unsigned char summonedUnit_800C9C82 = 0;
 int dword_800C9C84 = 0;
-BatCmd_a dword_800C9C88 = { 0 };
-unsigned char dword_800C9C98 = 0;
-unsigned char dword_800C9C99 = 0;
+BatCmd_a curCommand_800C9C88 = { 0 };
+unsigned char commandUnit_800C9C98 = 0;
+unsigned char shownUnit_800C9C99 = 0;
 int dword_800C9C9C = 0;
-int dword_800C9CA0[7] = { 0 };
-char dword_800C9CBC[12] = { 0 };
-BatCmd_a dword_800C9CC8[7] = { { 0 } };
-short dword_800C9D38[8] = { 0 };
-short dword_800C9D48[8] = { 0 };
+int unitStatusInflicted_800C9CA0[7] = { 0 };
+char unitHitKinds_800C9CBC[12] = { 0 };
+BatCmd_a unitReactions_800C9CC8[7] = { { 0 } };
+short unitHpDamage_800C9D38[8] = { 0 };
+short unitMpDamage_800C9D48[8] = { 0 };
 int dword_800C9D58[7] = { 0 };
-int dword_800C9D74 = 0;
-short dword_800C9D78 = 0;
-int dword_800C9D7C = 0;
-short dword_800C9D80 = 0;
-signed char dword_800C9D82 = 0;
+int helpWindowText_800C9D74 = 0;
+short hitSfx_800C9D78 = 0;
+int btlExecLoad_800C9D7C = 0;
+short deathSfx_800C9D80 = 0;
+signed char shownAreaElement_800C9D82 = 0;
 char dword_800C9D83 = 0;
-signed char dword_800C9D84 = 0;
+signed char areaElement_800C9D84 = 0;
 int dword_800C9D88 = 0;
-short dword_800C9D8C[2] = { 0 };
-int dword_800C9D90 = 0;
-short dword_800C9D94 = 0;
-short dword_800C9D98[4] = { 0 };
-BatPair_a dword_800C9DA0[7] = { { 0 } };
-short dword_800C9DBC = 0;
-short dword_800C9DC0[8] = { 0 };
-int dword_800C9DD0[10] = { 0 };
-int dword_800C9DF8 = 0;
-char dword_800C9DFC = 0;
-char dword_800C9DFD = 0;
-unsigned int dword_800C9E00 = 0;
+short stageAnimUv_800C9D8C[2] = { 0 };
+int removedEnemyCount_800C9D90 = 0;
+short actionFrame_800C9D94 = 0;
+short actorTiming_800C9D98[4] = { 0 };
+BatPair_a reactionTimings_800C9DA0[7] = { { 0 } };
+short actorHitShift_800C9DBC = 0;
+short reactionHitFrames_800C9DC0[8] = { 0 };
+int removedEnemies_800C9DD0[10] = { 0 };
+int enemyWindowFlags_800C9DF8 = 0;
+char enemyWindowsHighlight_800C9DFC = 0;
+char actorWindowHighlight_800C9DFD = 0;
+unsigned int enemyWindowSlide_800C9E00 = 0;
 int dword_800C9E04 = 0;
-EventEntry *dword_800C9E08[4] = { 0 };
-BatXY_a dword_800C9E18[3] = { { 0 } };
-int dword_800C9E24 = 0;
-BatUnitWin_a *dword_800C9E28[4] = { 0 };
-int dword_800C9E38 = 0;
-int dword_800C9E3C = 0;
-unsigned char dword_800C9E40 = 0;
-BatMenu_a *dword_800C9E44 = 0;
-unsigned char dword_800C9E48 = 0;
-unsigned char dword_800C9E49 = 0;
-unsigned char dword_800C9E4A = 0;
-unsigned char dword_800C9E4B = 0;
-int dword_800C9E4C = 0;
-unsigned char dword_800C9E50 = 0;
-unsigned char dword_800C9E51 = 0;
-int dword_800C9E54 = 0;
-BatCmd_a dword_800C9E58 = { 0 };
-unsigned char dword_800C9E68 = 0;
-BatMenuItem_a *dword_800C9E6C = 0;
+EventEntry *enemyWindowTasks_800C9E08[4] = { 0 };
+BatXY_a enemyWindowPos_800C9E18[3] = { { 0 } };
+int enemyWindowMask_800C9E24 = 0;
+BatUnitWin_a *enemyWindows_800C9E28[4] = { 0 };
+int cameraFocus_800C9E38 = 0;
+int newCameraFocus_800C9E3C = 0;
+unsigned char prevMenuPage_800C9E40 = 0;
+BatMenu_a *pageCursor_800C9E44 = 0;
+unsigned char menuState_800C9E48 = 0;
+unsigned char menuForMinion_800C9E49 = 0;
+unsigned char enemyCount_800C9E4A = 0;
+unsigned char partyMinionCount_800C9E4B = 0;
+int enemyMask_800C9E4C = 0;
+unsigned char menuPage_800C9E50 = 0;
+unsigned char menuErrorTimer_800C9E51 = 0;
+int menuTarget_800C9E54 = 0;
+BatCmd_a menuCommand_800C9E58 = { 0 };
+unsigned char targetFlags_800C9E68 = 0;
+BatMenuItem_a *menuItems_800C9E6C = 0;
 INCLUDE_OVERLAY_ASM(battle, dword_800C9E70);
-INCLUDE_OVERLAY_ASM(battle, dword_800C9E78);
-INCLUDE_OVERLAY_ASM(battle, dword_800C9E7C);
-INCLUDE_OVERLAY_ASM(battle, dword_800C9E80);
+INCLUDE_OVERLAY_ASM(battle, partyMinionMask_800C9E78);
+INCLUDE_OVERLAY_ASM(battle, menuErrorText_800C9E7C);
+INCLUDE_OVERLAY_ASM(battle, enemyUnits_800C9E80);
