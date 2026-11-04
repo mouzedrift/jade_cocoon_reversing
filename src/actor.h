@@ -153,7 +153,7 @@ typedef struct Actor
     short queuedAnim_FE;        // 0xFE
     int f100;                   // 0x100
     int f104;                   // 0x104
-    struct_4s hitTimes_108[10]; // 0x108: (start, end) frames, GetActorHitFrame_80018E5C
+    HitTimes hitTimes_108[10]; // 0x108: (start, end) frames, GetActorHitFrame_80018E5C
     int effect_130;             // 0x130
     short* bones_134;           // 0x134: 4 shorts per bone, -1 terminated; start of the actor's allocation
     int baseScale_138[3];       // 0x138

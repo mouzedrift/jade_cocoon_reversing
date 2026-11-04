@@ -357,7 +357,7 @@ int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int f
     return -1;
 }
 // Matched
-short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script, int anim)
+short GetActorHitTimes_8001F268(Actor* o, HitTimes* out, ActorScriptCmd* script, int anim)
 {
     short* e = o->anims_148[anim].hitFrames_8[0];
     int i;
@@ -365,16 +365,16 @@ short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script
     {
         if (e[i * 2] < 0 && e[i * 2 + 1] < 0)
         {
-            out[i].field_0 = -1;
-            out[i].field_2 = -1;
+            out[i].start_0 = -1;
+            out[i].end_2 = -1;
         }
         else
         {
-            out[i].field_0 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2]);
-            out[i].field_2 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2 + 1]);
+            out[i].start_0 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2]);
+            out[i].end_2 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2 + 1]);
         }
     }
-    return out[0].field_0;
+    return out[0].start_0;
 }
 extern void GetAnimRootMotion_8004D288(int* out, ModelAnim* s, int k);
 extern int CollideWithMap_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);

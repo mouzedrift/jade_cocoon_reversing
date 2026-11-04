@@ -20,9 +20,9 @@ extern const int dword_80074960;
 
 typedef struct
 {
-    int v[14];
-} Ints14_8003CD5C;
-extern const Ints14_8003CD5C loadingIconFrames_8007490C;
+    int sprt[14]; // public TIY sprite per frame
+} LoadingIconFrames;
+extern const LoadingIconFrames loadingIconFrames_8007490C;
 
 extern int cdXaLock_80086568;
 

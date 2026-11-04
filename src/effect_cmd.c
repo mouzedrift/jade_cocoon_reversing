@@ -28,7 +28,13 @@ typedef struct
     int mode_4;     // 0: on the source actor, 1: on each target
     short ids_8[6]; // effect table ids (FindEffectTblRow_80018908), -1: unused
 } EffectRow;
-extern struct_4s effectFileTable_800795F0[];
+// effectFileTable_800795F0 (effect.c): per effect, the effect file and the frame offset of its hits
+typedef struct
+{
+    short fileId_0;
+    short hitOffset_2;
+} EffectFileEntry;
+extern EffectFileEntry effectFileTable_800795F0[];
 extern EffectRow* effectRows_80091BE0;
 extern int effectSfxStarted_8008D784;
 extern int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
@@ -98,13 +104,13 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
     effectSfxStarted_8008D784 = 0;
     for (n = 0; n < 10; n++)
     {
-        if (req->hitTimes_4[n].field_0 >= 0)
+        if (req->hitTimes_4[n].start_0 >= 0)
         {
-            req->hitTimes_4[n].field_0 += effectFileTable_800795F0[req->effect_0].field_2;
+            req->hitTimes_4[n].start_0 += effectFileTable_800795F0[req->effect_0].hitOffset_2;
         }
-        if (req->hitTimes_4[n].field_2 >= 0)
+        if (req->hitTimes_4[n].end_2 >= 0)
         {
-            req->hitTimes_4[n].field_2 += effectFileTable_800795F0[req->effect_0].field_2;
+            req->hitTimes_4[n].end_2 += effectFileTable_800795F0[req->effect_0].hitOffset_2;
         }
     }
     for (k = 0; k < 10; k++)
@@ -125,7 +131,7 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
             {
                 tbl = req->tbl_8;
                 idx = FindEffectTblRow_80018908(id, tbl);
-                if (idx == -1 || req->hitTimes_4[k].field_0 == -1)
+                if (idx == -1 || req->hitTimes_4[k].start_0 == -1)
                 {
                     continue;
                 }
@@ -136,8 +142,8 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
                 args.targetBonePos_10 = req->bonePos_10;
                 args.targetBoneMatrices_18 = req->boneMatrices_14;
                 args.offset_14 = &tbl[idx][2];
-                args.hitStart_1C = req->hitTimes_4[k].field_0;
-                args.hitEnd_1E = req->hitTimes_4[k].field_2;
+                args.hitStart_1C = req->hitTimes_4[k].start_0;
+                args.hitEnd_1E = req->hitTimes_4[k].end_2;
                 args.bone_24 = tbl[idx][1];
                 args.boneScales_28 = req->boneScale_34;
                 args.scale_2C = req->scale_38;
@@ -150,7 +156,7 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
                 {
                     tbl = req->targets_44[i].tbl_0;
                     idx = FindEffectTblRow_80018908(id, tbl);
-                    if (idx == -1 || req->hitTimes_4[k].field_0 == -1)
+                    if (idx == -1 || req->hitTimes_4[k].start_0 == -1)
                     {
                         continue;
                     }
@@ -161,8 +167,8 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
                     args.targetBonePos_10 = req->targets_44[i].bonePos_8;
                     args.targetBoneMatrices_18 = req->targets_44[i].boneMatrices_C;
                     args.offset_14 = &tbl[idx][2];
-                    args.hitStart_1C = req->hitTimes_4[k].field_0;
-                    args.hitEnd_1E = req->hitTimes_4[k].field_2;
+                    args.hitStart_1C = req->hitTimes_4[k].start_0;
+                    args.hitEnd_1E = req->hitTimes_4[k].end_2;
                     args.bone_24 = tbl[idx][1];
                     args.boneScales_28 = req->targets_44[i].boneScale_2C;
                     args.scale_2C = req->targets_44[i].scale_30;

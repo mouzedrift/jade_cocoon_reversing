@@ -495,11 +495,12 @@ typedef struct
 extern int speciesMagicBits_8007A6AC[];
 extern int sceneBrightness_8008D40C;
 
+// a hit window of an attack animation / effect, in frames (-1: none)
 typedef struct
 {
-    short field_0;
-    short field_2;
-} struct_4s;
+    short start_0;
+    short end_2;
+} HitTimes;
 
 typedef struct
 {

@@ -34,8 +34,8 @@ typedef struct
     signed char hit_7;
     unsigned char element_8;
     unsigned char kind_9;
-    unsigned char c_A;
-    unsigned char c_B;
+    unsigned char statusMode_A; // 0: the status flags always apply, 3: they apply on a chance roll
+    unsigned char damageType_B; // 0 hp, 1 mp (halved), 2 hp + 2/5 as mp, 3 instant death chance
 } AttackDesc;
 typedef struct
 {
@@ -53,25 +53,25 @@ typedef struct
 extern double sqrt(double);
 extern int Rand100_80013E30(void);
 #if 0
-// Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and n (Rand chance) is in $v1 instead of $v0. Also tried: dead/used second conversion into another var (c/n: call deleted), (int)dmg in the test, n = 100 hoisted, if/else and nested ternary for n, ra < n, n renamed to other locals
-void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, int* r0, int* r1, int* p, AttackResult* out)
+// Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and statusChance (Rand chance) is in $v1 instead of $v0. Also tried: dead/used second conversion into another var (deathChance/statusChance: call deleted), (int)dmg in the test, statusChance = 100 hoisted, if/else and nested ternary for it, statusRoll < statusChance, statusChance renamed to other locals
+void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, int* cmd, AttackResult* out)
 {
     int crit0;
     int crit1;
-    int b2;
+    int targetUnit;
     int atk;
     int def;
     int hit;
     int eva;
-    int a;
-    int b;
-    int v;
+    int hitRoll;
+    int critRoll;
+    int damage;
     int i;
-    int n;
-    int c;
-    int ra;
+    int statusChance;
+    int deathChance;
+    int statusRoll;
     int ch;
-    double d;
+    double root;
     double dmg;
 
     crit0 = 0;
@@ -80,29 +80,29 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
     eva = 0;
     atk = 0;
     def = 0;
-    b2 = LowestSetBit_80014358(p[3]);
-    switch (q->kind_9)
+    targetUnit = LowestSetBit_80014358(cmd[3]);
+    switch (action->kind_9)
     {
     case 0:
-        atk = r0[0];
-        hit = r0[4];
-        def = r1[1];
-        eva = r1[5];
-        crit0 = r0[6];
-        crit1 = r1[7];
+        atk = actorStats[0];
+        hit = actorStats[4];
+        def = targetStats[1];
+        eva = targetStats[5];
+        crit0 = actorStats[6];
+        crit1 = targetStats[7];
         break;
     case 1:
-        atk = r0[2];
-        def = r1[3];
+        atk = actorStats[2];
+        def = targetStats[3];
         hit = 100;
         break;
     case 2:
-        atk = q->power_2;
+        atk = action->power_2;
         def = 1;
         hit = 100;
         break;
     }
-    if ((signed char)f1->field_20[q->element_8] < 0)
+    if ((signed char)targetStatus->field_20[action->element_8] < 0)
     {
         def = 1;
         eva = def;
@@ -111,77 +111,77 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
     {
         def = 1;
     }
-    if (q->power_2 != 0)
+    if (action->power_2 != 0)
     {
-        a = Rand100_80013E30();
-        b = Rand100_80013E30();
-        if (!(hit - eva < a) || HasStatusFlag_80033548(f1, 2) != 0)
+        hitRoll = Rand100_80013E30();
+        critRoll = Rand100_80013E30();
+        if (!(hit - eva < hitRoll) || HasStatusFlag_80033548(targetStatus, 2) != 0)
         {
             out->kind_0 = 1;
-            if (q->element_8 != 0xFF)
+            if (action->element_8 != 0xFF)
             {
-                d = atk * 100 / def;
-                d = sqrt(d);
-                dmg = (double)(atk * (f0->level_44 + 3)) * d / 10.0 * q->power_2 / 100.0 / 20.0;
-                if (b < crit0 - crit1 + q->hit_7 && q->kind_9 == 0)
+                root = atk * 100 / def;
+                root = sqrt(root);
+                dmg = (double)(atk * (actorStatus->level_44 + 3)) * root / 10.0 * action->power_2 / 100.0 / 20.0;
+                if (critRoll < crit0 - crit1 + action->hit_7 && action->kind_9 == 0)
                 {
                     out->kind_0 = 4;
                     dmg = dmg * 7.0 / 4.0;
                 }
-                if (q->element_8 < 4)
+                if (action->element_8 < 4)
                 {
-                    d = sqrt(sqrt(f0->element_3E[q->element_8] * 1250));
-                    dmg = dmg * (d / 10.0);
+                    root = sqrt(sqrt(actorStatus->element_3E[action->element_8] * 1250));
+                    dmg = dmg * (root / 10.0);
                 }
-                dmg = dmg * (signed char)f1->field_20[q->element_8];
+                dmg = dmg * (signed char)targetStatus->field_20[action->element_8];
                 dmg = dmg / 32.0;
-                v = dmg;
-                v = dmg;
-                if (v == 0 || (v += frameCount_8008D3FC & 1) == 0)
+                damage = dmg;
+                damage = dmg;
+                if (damage == 0 || (damage += frameCount_8008D3FC & 1) == 0)
                 {
-                    v = 1;
+                    damage = 1;
                 }
             }
             else
             {
-                v = atk;
+                damage = atk;
             }
-            if (HasStatusFlag_80033548(f1, 0x400) && (q->c_A != 0 || !(q->flags_0 & 0x400)))
+            if (HasStatusFlag_80033548(targetStatus, 0x400) && (action->statusMode_A != 0 || !(action->flags_0 & 0x400)))
             {
-                v = 0;
+                damage = 0;
             }
-            if (q->c_B == 0)
+            if (action->damageType_B == 0)
             {
-                out->hpDamage_1C = v;
-                if (q->element_8 == 8 && v > 0)
+                out->hpDamage_1C = damage;
+                if (action->element_8 == 8 && damage > 0)
                 {
-                    if (GetHp_800334D8(f1) < v)
+                    if (GetHp_800334D8(targetStatus) < damage)
                     {
-                        v = GetHp_800334D8(f1);
+                        damage = GetHp_800334D8(targetStatus);
                     }
-                    out->actorHpDamage_14 = -v;
+                    out->actorHpDamage_14 = -damage;
                 }
             }
-            else if (q->c_B == 1)
+            else if (action->damageType_B == 1)
             {
-                v /= 2;
-                out->mpDamage_20 = v;
+                damage /= 2;
+                out->mpDamage_20 = damage;
                 out->kind_0 = 2;
-                if (q->element_8 == 8 && v > 0)
+                if (action->element_8 == 8 && damage > 0)
                 {
-                    if (GetMp_800334F0(f1) < v)
+                    if (GetMp_800334F0(targetStatus) < damage)
                     {
-                        v = GetMp_800334F0(f1);
+                        damage = GetMp_800334F0(targetStatus);
                     }
-                    out->actorMpDamage_18 = -v;
+                    out->actorMpDamage_18 = -damage;
                 }
             }
-            else if (q->c_B == 3)
+            else if (action->damageType_B == 3)
             {
-                c = (signed char)f1->field_20[q->element_8];
-                if (rand() % 32 < c)
+                deathChance = (signed char)targetStatus->field_20[action->element_8];
+                if (rand() % 32 < deathChance)
                 {
-                    out->hpDamage_1C = GetHp_800334D8(f1) - 1;
+                    out->hpDamage_1C = GetHp_800334D8(targetStatus) - 1;
                     out->kind_0 = 4;
                     out->flags_4 |= 2;
                 }
@@ -190,11 +190,11 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
                     goto miss;
                 }
             }
-            else if (q->c_B == 2)
+            else if (action->damageType_B == 2)
             {
-                out->hpDamage_1C = v;
+                out->hpDamage_1C = damage;
                 out->kind_0 = 3;
-                out->mpDamage_20 = v / 5 * 2;
+                out->mpDamage_20 = damage / 5 * 2;
             }
         }
         else
@@ -207,48 +207,48 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
     {
         out->flags_4 |= 2;
     }
-    if (q->power_2 == 0 || out->kind_0 != 5)
+    if (action->power_2 == 0 || out->kind_0 != 5)
     {
-        v = (q->c6 + r0[8]) * r1[9] / 100;
-        if (q->c_A == 3)
+        damage = (action->c6 + actorStats[8]) * targetStats[9] / 100;
+        if (action->statusMode_A == 3)
         {
-            ra = Rand100_80013E30();
-            if (q->element_8 == 11)
+            statusRoll = Rand100_80013E30();
+            if (action->element_8 == 11)
             {
-                n = 100;
+                statusChance = 100;
             }
             else
             {
-                n = (v * (signed char)f1->field_20[q->element_8]) ? v * (signed char)f1->field_20[q->element_8] / 32 : 0;
+                statusChance = (damage * (signed char)targetStatus->field_20[action->element_8]) ? damage * (signed char)targetStatus->field_20[action->element_8] / 32 : 0;
             }
-            if (n > ra)
+            if (statusChance > statusRoll)
             {
                 goto status;
             }
-            if (q->flags_0 & 0x7FB)
+            if (action->flags_0 & 0x7FB)
             {
-                SetTargetHitFlag_800184A0(b2, 2);
+                SetTargetHitFlag_800184A0(targetUnit, 2);
             }
         }
-        else if (q->c_A == 0)
+        else if (action->statusMode_A == 0)
         {
-            if (q->flags_0 & 0x3800)
+            if (action->flags_0 & 0x3800)
             {
             status:
-                out->status_8 |= q->flags_0;
+                out->status_8 |= action->flags_0;
             }
             else
             {
-                out->flags_4 |= q->flags_0;
+                out->flags_4 |= action->flags_0;
             }
         }
     }
-    if (HasStatusFlag_80033548(f1, 0x3800) && (q->flags_0 & 0x7FB) && q->c_A == 3)
+    if (HasStatusFlag_80033548(targetStatus, 0x3800) && (action->flags_0 & 0x7FB) && action->statusMode_A == 3)
     {
         for (i = 0; i < 3; i++)
         {
             int m = 1 << (i + 11);
-            if (f1->status_0 & m)
+            if (targetStatus->status_0 & m)
             {
                 break;
             }
@@ -256,20 +256,20 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
         if (i == 0)
         {
             out->flags_4 |= 0x800;
-            SetTargetHitFlag_800184A0(b2, 3);
+            SetTargetHitFlag_800184A0(targetUnit, 3);
         }
         else if (i == 1)
         {
             out->flags_4 |= 0x1800;
-            SetTargetHitFlag_800184A0(b2, 4);
+            SetTargetHitFlag_800184A0(targetUnit, 4);
         }
         else
         {
             out->flags_4 |= 0x3800;
-            SetTargetHitFlag_800184A0(b2, 5);
+            SetTargetHitFlag_800184A0(targetUnit, 5);
         }
         out->status_8 &= ~0x7FB;
-        SetTargetHitFlag_800184A0(b2, 2);
+        SetTargetHitFlag_800184A0(targetUnit, 2);
     }
     if (out->hpDamage_1C == 0 && out->mpDamage_20 == 0 && out->status_8 != 0 && out->flags_4 != 0)
     {
@@ -277,41 +277,41 @@ void CalcActionDamage_80013374(AttackDesc* q, UnitStatus* f0, UnitStatus* f1, in
     }
     if (out->status_8 & 0x400)
     {
-        out->hpDamage_1C = GetHp_800334D8(f1);
+        out->hpDamage_1C = GetHp_800334D8(targetStatus);
         out->kind_0 = 1;
     }
-    if (HasStatusFlag_80033548(f1, 2))
+    if (HasStatusFlag_80033548(targetStatus, 2))
     {
         out->status_8 &= ~2;
     }
 }
 #endif
 INCLUDE_ASM(CalcActionDamage_80013374);
-extern void ResolveBattleAction_80012BB0(UnitStatus* a0, UnitStatus* a1, int* p, int a3);
+extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cmd, int result);
 // Matched
-void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, int* cmd, int a3)
+void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, int* cmd, int result)
 {
-    int r;
+    int bonus;
     if (cmd[0] == 4)
     {
         switch (cmd[1])
         {
         case 3:
-            r = rand() % 6;
-            if (r == 0)
+            bonus = rand() % 6;
+            if (bonus == 0)
             {
-                r = 1;
+                bonus = 1;
             }
-            else if (r == 5)
+            else if (bonus == 5)
             {
-                r = 3;
+                bonus = 3;
             }
             else
             {
-                r = 2;
+                bonus = 2;
             }
-            AdjustUnitStat_80012614(target, 1, r, 0);
-            AdjustUnitStat_80012614(target, 0, r, 0);
+            AdjustUnitStat_80012614(target, 1, bonus, 0);
+            AdjustUnitStat_80012614(target, 0, bonus, 0);
             break;
         case 4:
             AdjustUnitStat_80012614(target, 5, RollOilBonus_80013DB0(), 0);
@@ -330,6 +330,6 @@ void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, int* cmd, int
             break;
         }
         UseSporeItem_80011B24(cmd[1]);
-        ResolveBattleAction_80012BB0(actor, target, cmd, a3);
+        ResolveBattleAction_80012BB0(actor, target, cmd, result);
     }
 }

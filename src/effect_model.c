@@ -34,7 +34,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         obj->pos_44[0] = parent->targetPos_1C[0];
         obj->pos_44[1] = parent->targetPos_1C[1];
         obj->pos_44[2] = parent->targetPos_1C[2];
-        obj->field_0 = 0;
+        obj->frame_0 = 0;
         obj->field_30 = 0;
         obj->field_34 = 0x23F000;
         obj->rot_80.vz = 0;
@@ -44,7 +44,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         e->flags = (e->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
-        obj->field_88 = (int)model;
+        obj->res_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
@@ -54,17 +54,17 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
 // Matched
 void PulseModelTask_8001761C(int* flags, EffectObj* obj)
 {
-    EffectModel* model = (EffectModel*)obj->field_88;
+    EffectModel* model = (EffectModel*)obj->res_88;
     int scale[3];
     int fade;
     obj->field_34 = obj->field_34 * 7 / 8;
     obj->field_30 += obj->field_34;
     scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
     obj->rot_80.vy += 0x80;
-    fade = (obj->field_0 < 45) ? 0 : (((obj->field_0 - 44) << 24) | 0x80);
-    LerpFtgObject_8003A6C4(sinTable_80084540[(obj->field_0 * 512) & 0xE00] / 2 + 0x800, model->ftg_4, model->ftg_4 + 1, obj->work_94);
+    fade = (obj->frame_0 < 45) ? 0 : (((obj->frame_0 - 44) << 24) | 0x80);
+    LerpFtgObject_8003A6C4(sinTable_80084540[(obj->frame_0 * 512) & 0xE00] / 2 + 0x800, model->ftg_4, model->ftg_4 + 1, obj->work_94);
     DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, fade | 0x31, scale);
-    if (obj->field_0++ > 60)
+    if (obj->frame_0++ > 60)
     {
         *flags = (*flags & ~1) | 0x8000;
         FreeFtgObjectData_80021804(obj->work_94, 1);
@@ -84,7 +84,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         obj->pos_44[0] = parent->targetPos_1C[0];
         obj->pos_44[1] = parent->targetPos_1C[1];
         obj->pos_44[2] = parent->targetPos_1C[2];
-        obj->field_0 = 0;
+        obj->frame_0 = 0;
         obj->field_8 = 0;
         obj->field_30 = 0;
         obj->field_34 = 0x23F000;
@@ -94,7 +94,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         e->flags = (e->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
-        obj->field_88 = (int)model;
+        obj->res_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
@@ -104,18 +104,18 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
 // Matched
 void MorphModelTask_800178C0(int* flags, EffectObj* obj)
 {
-    EffectModel* model = (EffectModel*)obj->field_88;
+    EffectModel* model = (EffectModel*)obj->res_88;
     int scale[3];
     obj->field_34 = obj->field_34 * 7 / 8;
     obj->field_30 += obj->field_34;
     scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
     if (obj->field_8 < 3)
     {
-        LerpFtgObject_8003A6C4(0x1000 - (obj->field_0 << 10), model->ftg_4, &model->ftg_4[obj->field_8 + 1], obj->work_94);
-        if (++obj->field_0 >= 5)
+        LerpFtgObject_8003A6C4(0x1000 - (obj->frame_0 << 10), model->ftg_4, &model->ftg_4[obj->field_8 + 1], obj->work_94);
+        if (++obj->frame_0 >= 5)
         {
             obj->field_8++;
-            obj->field_0 = 0;
+            obj->frame_0 = 0;
             if (obj->field_8 < 3)
             {
                 DiffFtgObjects_80039FE4(&model->ftg_4[obj->field_8], &model->ftg_4[obj->field_8 + 1], obj->work_94);
@@ -124,9 +124,9 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
     }
     else
     {
-        if (++obj->field_0 >= 0x35)
+        if (++obj->frame_0 >= 0x35)
         {
-            obj->field_0 = 0;
+            obj->frame_0 = 0;
             *flags = (*flags & ~1) | 0x8000;
             FreeFtgObjectData_80021804(obj->work_94, 1);
             free3_8003FC6C(obj->work_94);
@@ -145,7 +145,7 @@ void SpawnMdecEffect_80017A6C(int parent, int frames)
     {
         obj = e->buffer;
         obj->field_8C = (int)mdecEffectSchedule_80091C00;
-        obj->field_0 = 0;
+        obj->frame_0 = 0;
         if (frames > 0)
         {
             obj->field_4 = frames;
@@ -164,11 +164,11 @@ void SpawnMdecEffect_80017A6C(int parent, int frames)
 void MdecEffectTask_80017B10(unsigned int* flags, EffectObj* obj)
 {
     int* schedule = (int*)obj->field_8C;
-    if (++obj->field_0 < obj->field_4 && effectOutcomeFlag_8008D780 == 0)
+    if (++obj->frame_0 < obj->field_4 && effectOutcomeFlag_8008D780 == 0)
     {
         if (!(unknownFlags_8008D678 & 0x800))
         {
-            DecodeMdec_80041920(((unsigned long**)schedule[1])[obj->field_0 % schedule[0]], mdecEffectVlcBuffer_8008D42C, 2);
+            DecodeMdec_80041920(((unsigned long**)schedule[1])[obj->frame_0 % schedule[0]], mdecEffectVlcBuffer_8008D42C, 2);
             unknownFlags_8008D678 |= 0x800;
         }
     }
@@ -192,7 +192,7 @@ void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
         obj->pos_44[0] = ((int*)parent->buffer)[0];
         obj->pos_44[1] = ((int*)parent->buffer)[1];
         obj->pos_44[2] = ((int*)parent->buffer)[2];
-        obj->field_0 = 0;
+        obj->frame_0 = 0;
         obj->field_30 = 0;
         obj->field_34 = 0x23F000;
         obj->rot_80.vz = 0;
@@ -200,7 +200,7 @@ void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
         obj->rot_80.vx = 0;
         r = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
-        obj->field_88 = (int)&effectFile_80091BD0.models_28[r];
+        obj->res_88 = (int)&effectFile_80091BD0.models_28[r];
         e->cb_8 = WaveModelTask_80017CE4;
     }
 }
@@ -209,20 +209,20 @@ void WaveModelTask_80017CE4(EventEntry* e, void* buf)
 {
     int* flags = (int*)e;
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->field_88;
+    EffectModel* model = (EffectModel*)obj->res_88;
     int i;
     int scale[3];
     int y;
-    if (obj->field_0 < 0x80)
+    if (obj->frame_0 < 0x80)
     {
         for (i = 0; i < 16; i++)
         {
             scale[0] = scale[2] = 0x1000 + i * 0x80;
-            y = sinTable_80084540[(obj->field_0 * 16) & 0xFF0] * (sinTable_80084540[((i - obj->field_0) * 256) & 0xF00] + 0x1000) / 4096;
+            y = sinTable_80084540[(obj->frame_0 * 16) & 0xFF0] * (sinTable_80084540[((i - obj->frame_0) * 256) & 0xF00] + 0x1000) / 4096;
             scale[1] = y;
             DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, ((0x1000 - y / 2) << 16) | 0xB0, scale);
         }
-        obj->field_0++;
+        obj->frame_0++;
     }
     else
     {
@@ -234,13 +234,13 @@ void FadeOutModelTask_80017FF8(EventEntry* e, void* buf);
 void MorphInModelTask_80017E30(EventEntry* e, void* buf)
 {
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->field_88;
+    EffectModel* model = (EffectModel*)obj->res_88;
     int pos[3];
     int scale[3];
     int* scalePtr;
     if ((obj->field_30 -= 0x80) <= 0)
     {
-        obj->field_0 = 0x1000;
+        obj->frame_0 = 0x1000;
         obj->field_30 = 0;
         e->cb_8 = FadeOutModelTask_80017FF8;
     }
@@ -265,11 +265,11 @@ void MorphInModelTask_80017E30(EventEntry* e, void* buf)
 void FadeOutModelTask_80017FF8(EventEntry* e, void* buf)
 {
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->field_88;
+    EffectModel* model = (EffectModel*)obj->res_88;
     int pos[3];
     int scale[3];
     int* scalePtr;
-    if ((obj->field_0 -= 0x80) > 0)
+    if ((obj->frame_0 -= 0x80) > 0)
     {
         LerpFtgObject_8003A6C4(0x1000 - obj->field_30, model->ftg_4, model->ftg_4 + 1, obj->work_94);
         if (obj->scale_A0)
@@ -301,29 +301,29 @@ int GetMdecEffectLength_800181E8(void)
     return *mdecEffectSchedule_80091C00;
 }
 // Matched
-struct_4s* RepeatHitTimes_80018200(struct_4s* src, unsigned short loopStart, unsigned short loopEnd, short loops)
+HitTimes* RepeatHitTimes_80018200(HitTimes* src, unsigned short loopStart, unsigned short loopEnd, short loops)
 {
-    struct_4s* dst = ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->hitTimes_0;
+    HitTimes* dst = ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->hitTimes_0;
     int i;
     int j;
     short len;
     for (i = 0; i < 10; i++)
     {
-        dst[i].field_0 = src[i].field_0;
-        dst[i].field_2 = src[i].field_2;
+        dst[i].start_0 = src[i].start_0;
+        dst[i].end_2 = src[i].end_2;
     }
     len = loopEnd - loopStart;
     for (i = 0; i < loops; i++)
     {
         for (j = 0; j < 10; j++)
         {
-            if (dst[j].field_0 >= loopEnd)
+            if (dst[j].start_0 >= loopEnd)
             {
-                dst[j].field_0 += len;
+                dst[j].start_0 += len;
             }
-            if (dst[j].field_2 >= loopEnd)
+            if (dst[j].end_2 >= loopEnd)
             {
-                dst[j].field_2 += len;
+                dst[j].end_2 += len;
             }
         }
     }
