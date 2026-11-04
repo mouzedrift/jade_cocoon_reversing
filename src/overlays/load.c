@@ -192,9 +192,19 @@ extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void DrawUiTiySprt_8002C06C(void* a, int b, int c);
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
+// the summary block (file offset 0x280) of a save file
 typedef struct
 {
-    char* summaries_LOAD; // 15 x 0x80 bytes: the summary block (file offset 0x280) of each save
+    unsigned char name_0[0xC];
+    char text_C[0x18];
+    short icon_24;
+    short f26;
+    int vals_28[6];
+    char pad40[0x40];
+} SaveSummary_LOAD;
+typedef struct
+{
+    SaveSummary_LOAD* summaries_LOAD; // one per save (15)
     char* fileBuf_LOAD;   // one save file (0x2180 bytes)
     int f8_LOAD;
     char padC_LOAD[8];
@@ -255,7 +265,7 @@ typedef struct
 extern Row16_LOAD stru_800BDF4C[];
 extern void ResetMenuRow_800BADE0(Row16_LOAD* p);
 extern void sub_8002B8DC(Pair_LOAD q, short* a, short* b, int c);
-extern void sub_800B8BD4(void* t);
+void sub_800B8BD4(LoadTask_LOAD* t);
 extern void PlaySfx_80031494(int a);
 extern void WaitCardSync_800BADF4(void);
 extern char* GetCardSaveName_800BAE4C(int n);
@@ -993,7 +1003,150 @@ void sub_800B8AE4(LoadTask_LOAD* t)
     DrawWindow_80042460(&a, &b, dword_8008D454 + 0x38, 0);
 }
 
-INCLUDE_OVERLAY_ASM(load, sub_800B8BD4);
+extern Pos_LOAD dword_800BD93C[]; // the save list's column positions
+extern Row8_LOAD dword_800BD960[]; // sprites drawn on every save row (ends with f4 <= 0)
+extern Row8_LOAD dword_800BD9E8[]; // the save's icon sprite per SaveSummary_LOAD.icon_24
+extern RECT dword_800BDA10; // the save list's clip area
+extern char byte_800B6BA8[];
+extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
+extern void AddClipDrawAreaPrim_80033308(char* ot);
+extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
+extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
+extern void sub_8002FAA0(int a0, void* pos, unsigned char* name, int a3);
+// Matched
+void sub_800B8BD4(LoadTask_LOAD* t)
+{
+    Pos_LOAD p0;
+    Pos_LOAD p1;
+    Pos_LOAD p2;
+    Pos_LOAD p3;
+    Pos_LOAD p4;
+    Pos_LOAD p5;
+    int i;
+    int j;
+    int n;
+    int k;
+    int v;
+    Row8_LOAD* r;
+    Row8_LOAD* icon;
+    for (i = -1; i < 5; i++)
+    {
+        n = stru_800BDF4C[3].fD_LOAD + i;
+        if (!((n >= 0 && n < 15) || i == 0 || i == 1))
+        {
+            continue;
+        }
+        if (n >= t->f20_LOAD - 1)
+        {
+            p0.x_LOAD = 0x7D;
+            p0.y_LOAD = i * 33 + 0x39;
+            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            DrawUiTiySprt_8002C06C(&p0, 0x9C, 1);
+            AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+        }
+        else if (!GetCardSaveName_800BAE4C(n))
+        {
+            p1.x_LOAD = 0x8B;
+            p1.y_LOAD = i * 33 + 0x39;
+            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            DrawUiTiySprt_8002C06C(&p1, 0x74, 1);
+            AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+        }
+        else
+        {
+            for (j = 0; j < 9; j++)
+            {
+                if (j < 6)
+                {
+                    if (j == 5)
+                    {
+                        v = t->summaries_LOAD[n].vals_28[5];
+                        k = 0;
+                        do
+                        {
+                            v /= 10;
+                            k++;
+                        } while (v);
+                        p2.x_LOAD = dword_800BD93C[j].x_LOAD + k * 7;
+                        p2.y_LOAD = dword_800BD93C[j].y_LOAD + i * 33;
+                        AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                        DrawSmallNumber9_8002C414(&p2, t->summaries_LOAD[n].vals_28[j], 1);
+                    }
+                    else
+                    {
+                        p2.x_LOAD = dword_800BD93C[j].x_LOAD;
+                        p2.y_LOAD = dword_800BD93C[j].y_LOAD + i * 33;
+                        AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                        DrawSmallNumber3_8002C290(&p2, t->summaries_LOAD[n].vals_28[j], 1);
+                    }
+                    if ((j == 3 || j == 4) && t->summaries_LOAD[n].vals_28[j] < 10)
+                    {
+                        p2.x_LOAD = dword_800BD93C[j].x_LOAD - 8;
+                        p2.y_LOAD = dword_800BD93C[j].y_LOAD + i * 33;
+                        DrawSmallNumber3_8002C290(&p2, 0, 1);
+                    }
+                    AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+                }
+                else if (j == 6)
+                {
+                    AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                    p3.x_LOAD = dword_800BD93C[6].x_LOAD;
+                    p3.y_LOAD = dword_800BD93C[6].y_LOAD + i * 33;
+                    sub_8002FAA0(0, &p3, t->summaries_LOAD[n].name_0, 1);
+                    AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+                }
+                else if (j == 7)
+                {
+                    p3.x_LOAD = dword_800BD93C[j].x_LOAD;
+                    p3.y_LOAD = dword_800BD93C[j].y_LOAD + i * 33;
+                    AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                    DrawText_8003E91C(1, t->summaries_LOAD[n].text_C, &p3, 1);
+                    AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+                    if (t->summaries_LOAD[n].f26 >= 0)
+                    {
+                        p3.x_LOAD = dword_800BD93C[j].x_LOAD + 0x38;
+                        p3.y_LOAD = dword_800BD93C[j].y_LOAD + i * 33;
+                        AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                        sub_8003F264(&p3, t->summaries_LOAD[n].f26, 1);
+                        AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+                    }
+                }
+                else if (j == 8)
+                {
+                    icon = &dword_800BD9E8[t->summaries_LOAD[n].icon_24];
+                    p3.x_LOAD = icon->f0_LOAD;
+                    p3.y_LOAD = icon->f2_LOAD + i * 33;
+                    AddClipDrawAreaPrim_80033308(dword_8008D454 + icon->f6_LOAD * 4);
+                    DrawUiTiySprt_8002C06C(&p3, icon->f4_LOAD, icon->f6_LOAD);
+                    AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + icon->f6_LOAD * 4);
+                }
+                for (r = dword_800BD960; r->f4_LOAD > 0; r++)
+                {
+                    p3.x_LOAD = r->f0_LOAD;
+                    p3.y_LOAD = r->f2_LOAD + i * 33;
+                    AddClipDrawAreaPrim_80033308(dword_8008D454 + r->f6_LOAD * 4);
+                    DrawUiTiySprt_8002C06C(&p3, r->f4_LOAD, r->f6_LOAD);
+                    AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + r->f6_LOAD * 4);
+                }
+            }
+            p2.x_LOAD = dword_800BD93C[1].x_LOAD;
+            p2.y_LOAD = dword_800BD93C[1].y_LOAD + i * 33;
+            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            DrawUiTiySprt_8002C06C(&p2, 0xDA, 1);
+            AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+            p4.x_LOAD = dword_800BD93C[3].x_LOAD + 2;
+            p4.y_LOAD = (dword_800BD93C[3].y_LOAD - 4) + i * 33;
+            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            DrawText_8003E91C(2, byte_800B6BA8, &p4, 1);
+            AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+            p5.x_LOAD = dword_800BD93C[3].x_LOAD + 2;
+            p5.y_LOAD = dword_800BD93C[3].y_LOAD + i * 33;
+            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            DrawText_8003E91C(2, byte_800B6BA8, &p5, 1);
+            AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
+        }
+    }
+}
 
 void sub_800B9220(LoadTask_LOAD* t)
 {
@@ -1214,7 +1367,7 @@ int ReadSaveSummaries_800B9724(LoadTask_LOAD* t)
             name = GetCardSaveName_800BAE4C(t->f20_LOAD);
             if (name)
             {
-                MemCardReadFile(chan, name, t->summaries_LOAD + t->f20_LOAD * 128, 0x280, 0x80);
+                MemCardReadFile(chan, name, &t->summaries_LOAD[t->f20_LOAD], 0x280, 0x80);
             }
             else if (t->f20_LOAD == 14)
             {
@@ -1291,7 +1444,7 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadTask_LOAD* s)
                 s->f28_LOAD = 0;
                 s->f24_LOAD = 3;
                 PlaySfx_80031494(0x7E);
-                MemCopy_800403E8(s->summaries_LOAD + n * 128, s->fileBuf_LOAD + 0x280, 0x80);
+                MemCopy_800403E8(&s->summaries_LOAD[n], s->fileBuf_LOAD + 0x280, 0x80);
                 ScanCardSaves_800BAFB0(stru_800BDF4C[1].fC_LOAD);
                 break;
             case 1:
