@@ -1920,15 +1920,15 @@ void sub_800A9384()
     sub_800ABBD8();
 }
 
-void sub_800A93A4(int* a)
+void sub_800A93A4(EffectTarget* a)
 {
     G2Act* p = dword_8008B4A4->f24;
-    a[0] = (int)sub_80024E64(p->model_40);
-    a[1] = (int)&levantPos_8008BD18;
-    a[2] = (int)p + 0x590;
-    a[3] = (int)p + 0x90;
-    a[11] = (int)&dword_800B0FB0;
-    a[12] = 0;
+    a->tbl_0 = sub_80024E64(p->model_40);
+    a->pos_4 = &levantPos_8008BD18.pos.x;
+    a->bonePos_8 = p->bonePos_590[0];
+    a->boneMatrices_C = p->mats_90;
+    a->boneScale_2C = dword_800B0FB0;
+    a->scale_30 = 0;
 }
 
 void sub_800A9414(void* pv, int b, int c)
@@ -2069,7 +2069,7 @@ void DrawLevantModel_800A9708(G2Act* p)
     sk.f4 = &levantPos_8008BD18.pos;
     sk.f8 = &levantPos_8008BD18.rot;
     sk.bones = &dword_800B0EF8;
-    sk.base = &dword_800B0FB0;
+    sk.base = dword_800B0FB0;
     sk.f24 = 0;
     sk.pose = (char*)anim;
     sk.frame = p->f10 % anim->frameCount_0;
@@ -2087,7 +2087,7 @@ void DrawLevantModel_800A9708(G2Act* p)
     else
     {
         anim = &p->model_40->anims_54[sub_800AC4A8(p->s1e)];
-        sub_80047E28(&sk, &dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
+        sub_80047E28(&sk, dword_800B0FB0, (char*)anim, p->f14 % anim->frameCount_0, 0x1000 - p->s26, &stru_8008D534[v], 0);
     }
     sub_800459E4(&dword_800B0EF8, &p->model_40->mats_5C, pOT_8008D690, sk.flags);
 }

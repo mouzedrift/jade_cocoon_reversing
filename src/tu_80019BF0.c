@@ -2823,7 +2823,7 @@ void sub_8001E7F0(Actor* o, ActorDesc* d)
     }
     o->anims_148 = d->anims_40;
     o->effectTbl_14C = d->effectTbl_44;
-    o->bonePos_1C4 = mem;
+    o->bonePos_1C4 = (int*)mem;
     mem += n * 12;
     if (d->hasMatrices_4C)
     {

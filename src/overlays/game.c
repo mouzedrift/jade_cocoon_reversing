@@ -668,17 +668,17 @@ void sub_800A2924(int a)
 }
 
 // Matched
-void sub_800A29CC(int a, GameActorInfo* out)
+void sub_800A29CC(int a, EffectTarget* out)
 {
     sub_800A2CA8(a, 0);
     {
         Actor* e = gCtx_800B1260.actors_7c[a];
-        out->f0 = (int)e->effectTbl_14C;
+        out->tbl_0 = e->effectTbl_14C;
         out->pos_4 = e->pos_38;
-        out->f8 = e->bonePos_1C4;
-        out->fC = (char*)e->boneMatrices_1C8;
-        out->f2C = (char*)e->boneScale_144;
-        out->f30 = e->scale_2C;
+        out->bonePos_8 = e->bonePos_1C4;
+        out->boneMatrices_C = e->boneMatrices_1C8;
+        out->boneScale_2C = e->boneScale_144;
+        out->scale_30 = e->scale_2C;
     }
 }
 
@@ -778,7 +778,7 @@ int* sub_800A2C28(int a)
 }
 
 // Matched
-char* sub_800A2C68(int a)
+int* sub_800A2C68(int a)
 {
     sub_800A2CA8(a, 0);
     return gCtx_800B1260.actors_7c[a]->bonePos_1C4;

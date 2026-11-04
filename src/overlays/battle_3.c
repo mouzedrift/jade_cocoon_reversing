@@ -1421,20 +1421,20 @@ int* sub_800C0F9C()
     return dword_800C9190.obj->pos_38;
 }
 
-int sub_800C0FAC()
+int* sub_800C0FAC()
 {
-    return (int)dword_800C9190.obj->bonePos_1C4;
+    return dword_800C9190.obj->bonePos_1C4;
 }
 
-void sub_800C0FC4(BatModelInfo_a* p)
+void sub_800C0FC4(EffectTarget* p)
 {
     Actor* q = dword_800C9190.obj;
-    p->f0 = (int)q->effectTbl_14C;
+    p->tbl_0 = q->effectTbl_14C;
     p->pos_4 = q->pos_38;
-    p->f8 = q->bonePos_1C4;
-    p->fC = (char*)q->boneMatrices_1C8;
-    p->f2C = (char*)q->boneScale_144;
-    p->f30 = q->scale_2C;
+    p->bonePos_8 = q->bonePos_1C4;
+    p->boneMatrices_C = q->boneMatrices_1C8;
+    p->boneScale_2C = q->boneScale_144;
+    p->scale_30 = q->scale_2C;
 }
 
 UnitSkills* sub_800C100C(int a)
@@ -2069,9 +2069,8 @@ void sub_800C2FC8(EventEntry* t, BatTrail_a* u)
     }
 }
 
-int sub_800C32DC(int a0, int a1, int a2, int a3)
+int sub_800C32DC(int* pos, int a1, int a2, int a3)
 {
-    int* pos = (int*)a0;
     EventEntry* e = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     BatAnim_a* b;
     int idx;

@@ -30,9 +30,9 @@ void sub_800174F8(EffectObj* a0, int a1)
         EffectObj* b = e->buffer;
         EffectModel* p;
         int idx;
-        b->pos_44[0] = ((int*)a0->field_1C)[0];
-        b->pos_44[1] = ((int*)a0->field_1C)[1];
-        b->pos_44[2] = ((int*)a0->field_1C)[2];
+        b->pos_44[0] = a0->field_1C[0];
+        b->pos_44[1] = a0->field_1C[1];
+        b->pos_44[2] = a0->field_1C[2];
         b->field_0 = 0;
         b->field_30 = 0;
         b->field_34 = 0x23F000;
@@ -80,9 +80,9 @@ void sub_80017784(EffectObj* a0, int a1, short* a2)
         EffectObj* b = e->buffer;
         EffectModel* p;
         int idx;
-        b->pos_44[0] = ((int*)a0->field_1C)[0];
-        b->pos_44[1] = ((int*)a0->field_1C)[1];
-        b->pos_44[2] = ((int*)a0->field_1C)[2];
+        b->pos_44[0] = a0->field_1C[0];
+        b->pos_44[1] = a0->field_1C[1];
+        b->pos_44[2] = a0->field_1C[2];
         b->field_0 = 0;
         b->field_8 = 0;
         b->field_30 = 0;
@@ -248,17 +248,17 @@ void sub_80017E30(EventEntry* e, void* buf)
     if (a1->field_A0)
     {
         vp = v;
-        v[0] = ((int*)a1->field_A0)[0] * 3 / 2;
-        v[1] = ((int*)a1->field_A0)[1] * 3 / 2;
-        v[2] = ((int*)a1->field_A0)[2] * 3 / 2;
+        v[0] = a1->field_A0[0] * 3 / 2;
+        v[1] = a1->field_A0[1] * 3 / 2;
+        v[2] = a1->field_A0[2] * 3 / 2;
     }
     else
     {
         vp = 0;
     }
-    pos[0] = ((int*)a1->field_20)[a1->field_98 * 3 + 0] + ((int*)a1->field_1C)[0];
-    pos[1] = ((int*)a1->field_20)[a1->field_98 * 3 + 1] + ((int*)a1->field_1C)[1];
-    pos[2] = ((int*)a1->field_20)[a1->field_98 * 3 + 2] + ((int*)a1->field_1C)[2];
+    pos[0] = a1->field_20[a1->field_98 * 3 + 0] + a1->field_1C[0];
+    pos[1] = a1->field_20[a1->field_98 * 3 + 1] + a1->field_1C[1];
+    pos[2] = a1->field_20[a1->field_98 * 3 + 2] + a1->field_1C[2];
     sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_30 << 16) | 0xB0, vp);
 }
 // Matched
@@ -275,17 +275,17 @@ void sub_80017FF8(EventEntry* e, void* buf)
         if (a1->field_A0)
         {
             vp = v;
-            v[0] = ((int*)a1->field_A0)[0] * 3 / 2;
-            v[1] = ((int*)a1->field_A0)[1] * 3 / 2;
-            v[2] = ((int*)a1->field_A0)[2] * 3 / 2;
+            v[0] = a1->field_A0[0] * 3 / 2;
+            v[1] = a1->field_A0[1] * 3 / 2;
+            v[2] = a1->field_A0[2] * 3 / 2;
         }
         else
         {
             vp = 0;
         }
-        pos[0] = ((int*)a1->field_20)[a1->field_98 * 3 + 0] + ((int*)a1->field_1C)[0];
-        pos[1] = ((int*)a1->field_20)[a1->field_98 * 3 + 1] + ((int*)a1->field_1C)[1];
-        pos[2] = ((int*)a1->field_20)[a1->field_98 * 3 + 2] + ((int*)a1->field_1C)[2];
+        pos[0] = a1->field_20[a1->field_98 * 3 + 0] + a1->field_1C[0];
+        pos[1] = a1->field_20[a1->field_98 * 3 + 1] + a1->field_1C[1];
+        pos[2] = a1->field_20[a1->field_98 * 3 + 2] + a1->field_1C[2];
         sub_8004D1EC(t->ftg_4, pOT_8008D690, pos, &dword_800795D4, stru_8008D534, (a1->field_30 << 16) | 0xB0, vp);
     }
     else
@@ -331,10 +331,10 @@ struct_4s* sub_80018200(struct_4s* src, unsigned short lo, unsigned short hi, sh
     return dst;
 }
 extern int sub_800C0D50(void);
-extern void sub_800C0FC4(void* a0);
-extern void sub_800A93A4(void* a0);
-extern void sub_800A29CC(int a0, void* a1);
-extern void sub_800A111C(int a0, void* a1);
+extern void sub_800C0FC4(EffectTarget* a0);
+extern void sub_800A93A4(EffectTarget* a0);
+extern void sub_800A29CC(int a0, EffectTarget* a1);
+extern void sub_800A111C(int a0, EffectTarget* a1);
 // Matched
 void sub_800182B8(ActorEffectReq* p, int mask)
 {

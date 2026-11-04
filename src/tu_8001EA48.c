@@ -646,7 +646,7 @@ void sub_8001FD08(void* a0)
         o->draw_164.frame_18 = o->frame_90 % o->draw_164.anim_14->frameCount_0;
         o->draw_164.drawMode_1C = o->drawMode_8;
         o->draw_164.scale_24 = o->scale_2C;
-        o->draw_164.bonePos_20 = (int)o->bonePos_1C4;
+        o->draw_164.bonePos_20 = o->bonePos_1C4;
         if (unknownFlags_8008D678 & 0x10000)
         {
             ot = pOT_8008B4C8;
@@ -4710,6 +4710,7 @@ void sub_80028808(void* a0, int* a1)
         saveData_8008B570.levant_7A8.rot.vz = buf.start_0.rot.vz;
     }
     dword_80091C94 = 0;
+    // stays an int* view: stru_80091C78.mapIdx addresses the field as sym+12 and changes the code
     if (((int*)&stru_80091C78)[3] >= 0)
     {
         saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&stru_80091C78)[3];

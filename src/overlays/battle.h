@@ -246,17 +246,6 @@ typedef struct BatModelReq_a
     int f34;
 } BatModelReq_a;
 
-// sub_800C0FC4: filled from the battle model actor
-typedef struct BatModelInfo_a
-{
-    int f0;
-    int* pos_4;
-    char* f8;
-    char* fC;
-    int f10[7];
-    char* f2C;
-    int* f30;
-} BatModelInfo_a;
 
 extern void sub_800C064C();
 

@@ -9,6 +9,7 @@
 #include "actor.h"
 
 #include "tu_8001EA48.h"
+#include "effect_obj.h"
 #include "tu_80036528.h"
 
 extern void sub_800A6D30(int a);
@@ -280,17 +281,6 @@ extern GameActorDesc* sub_800A7A1C(int a);
 
 extern short* dword_800AE254[];
 
-// what sub_800A29CC hands out about an actor
-typedef struct GameActorInfo
-{
-    int f0;
-    int* pos_4;
-    char* f8;
-    char* fC;
-    int pad_10[7];
-    char* f2C;
-    int* f30;
-} GameActorInfo;
 
 typedef struct GameCtx_1
 {
@@ -806,7 +796,8 @@ typedef struct G2Act
     int f7c;
     char pad_80[0x10];
     MATRIX mats_90[40];
-    char pad_590[0x1E8];
+    int bonePos_590[40][3];
+    char pad_770[8];
     int f778;
     unsigned short u77C;
 } G2Act;
@@ -832,7 +823,7 @@ extern short word_8008BDA6;
 
 extern char dword_800B1DF8;
 
-extern char dword_800B0FB0;
+extern SVECTOR dword_800B0FB0[]; // Levant's bone scales
 
 extern void sub_800AC380(int);
 

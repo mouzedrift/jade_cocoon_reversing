@@ -523,14 +523,14 @@ void sub_800149A4(EffectArgs* p)
         *(unsigned char*)&b->field_A5 = *(unsigned char*)&q->field_40;
         b->field_A6 = q->field_42;
         b->field_AC = p->field_30;
-        b->field_24.vx = p->scale_14[0] * ((SVECTOR*)p->field_28)[b->field_98].vx / 4096;
-        b->field_24.vy = p->scale_14[1] * ((SVECTOR*)p->field_28)[b->field_98].vy / 4096;
-        b->field_24.vz = p->scale_14[2] * ((SVECTOR*)p->field_28)[b->field_98].vz / 4096;
+        b->field_24.vx = p->scale_14[0] * p->field_28[b->field_98].vx / 4096;
+        b->field_24.vy = p->scale_14[1] * p->field_28[b->field_98].vy / 4096;
+        b->field_24.vz = p->scale_14[2] * p->field_28[b->field_98].vz / 4096;
         if (p->field_2C)
         {
-            b->field_24.vx = b->field_24.vx * ((int*)p->field_2C)[0] / 4096;
-            b->field_24.vy = b->field_24.vy * ((int*)p->field_2C)[1] / 4096;
-            b->field_24.vz = b->field_24.vz * ((int*)p->field_2C)[2] / 4096;
+            b->field_24.vx = b->field_24.vx * p->field_2C[0] / 4096;
+            b->field_24.vy = b->field_24.vy * p->field_2C[1] / 4096;
+            b->field_24.vz = b->field_24.vz * p->field_2C[2] / 4096;
         }
         e->cb_8 = sub_80015478;
     }
@@ -581,14 +581,14 @@ void sub_80014CCC(int* a0, void* buf)
 
     a1->field_4++;
     PushMatrix();
-    ApplyMatrix((MATRIX*)(a1->field_2C + a1->field_98 * 32), (SVECTOR*)&a1->field_24, (VECTOR*)a1->pos_44);
+    ApplyMatrix(&a1->field_2C[a1->field_98], (SVECTOR*)&a1->field_24, (VECTOR*)a1->pos_44);
     PopMatrix();
-    a1->pos_44[0] = ((int*)a1->field_20)[a1->field_98 * 3 + 0] + a1->pos_44[0];
-    a1->pos_44[1] = ((int*)a1->field_20)[a1->field_98 * 3 + 1] + a1->pos_44[1];
-    a1->pos_44[2] = ((int*)a1->field_20)[a1->field_98 * 3 + 2] + a1->pos_44[2];
-    a1->pos_44[0] = ((int*)a1->field_1C)[0] + a1->pos_44[0];
-    a1->pos_44[1] = ((int*)a1->field_1C)[1] + a1->pos_44[1];
-    a1->pos_44[2] = ((int*)a1->field_1C)[2] + a1->pos_44[2];
+    a1->pos_44[0] = a1->field_20[a1->field_98 * 3 + 0] + a1->pos_44[0];
+    a1->pos_44[1] = a1->field_20[a1->field_98 * 3 + 1] + a1->pos_44[1];
+    a1->pos_44[2] = a1->field_20[a1->field_98 * 3 + 2] + a1->pos_44[2];
+    a1->pos_44[0] = a1->field_1C[0] + a1->pos_44[0];
+    a1->pos_44[1] = a1->field_1C[1] + a1->pos_44[1];
+    a1->pos_44[2] = a1->field_1C[2] + a1->pos_44[2];
     e1 = &effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x25)];
     idx = sub_80020F00(&effectFile_80091BD0, 0, 0x26);
     e2 = &effectFile_80091BD0.sprites_20[idx];
@@ -672,9 +672,9 @@ extern int dword_8008D784;
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 extern void sub_800C1A5C(void* a0, void* a1, int a2, int a3);
 extern void sub_800C1C5C(void* a0, void* a1, int a2, int a3);
-extern void sub_800C1654(void* a0, void* a1, int a2, int a3, int a4, int a5);
+extern void sub_800C1654(void* a0, void* a1, int a2, int a3, int* a4, int* a5);
 extern void sub_800C1FFC(void* a0, void* a1, int a2, int a3, int a4);
-extern void sub_800C2E28(int a0, void* a1, int a2, int a3, int a4, int a5);
+extern void sub_800C2E28(int* a0, void* a1, int a2, int a3, int a4, int a5);
 extern void sub_800C2914(void* a0, int a1);
 extern void sub_800C1190(int a0, int a1);
 extern void sub_800C10B8(int a0, int a1);
@@ -705,14 +705,14 @@ void sub_80015478(EventEntry* e, void* buf)
     b->pos_50[1] = b->pos_44[1];
     b->pos_50[2] = b->pos_44[2];
     PushMatrix();
-    ApplyMatrix((MATRIX*)(b->field_2C + b->field_98 * 32), &b->field_24, (VECTOR*)b->pos_44);
+    ApplyMatrix(&b->field_2C[b->field_98], &b->field_24, (VECTOR*)b->pos_44);
     PopMatrix();
-    b->pos_44[0] = ((int*)b->field_20)[b->field_98 * 3 + 0] + b->pos_44[0];
-    b->pos_44[1] = ((int*)b->field_20)[b->field_98 * 3 + 1] + b->pos_44[1];
-    b->pos_44[2] = ((int*)b->field_20)[b->field_98 * 3 + 2] + b->pos_44[2];
-    b->pos_44[0] = ((int*)b->field_1C)[0] + b->pos_44[0];
-    b->pos_44[1] = ((int*)b->field_1C)[1] + b->pos_44[1];
-    b->pos_44[2] = ((int*)b->field_1C)[2] + b->pos_44[2];
+    b->pos_44[0] = b->field_20[b->field_98 * 3 + 0] + b->pos_44[0];
+    b->pos_44[1] = b->field_20[b->field_98 * 3 + 1] + b->pos_44[1];
+    b->pos_44[2] = b->field_20[b->field_98 * 3 + 2] + b->pos_44[2];
+    b->pos_44[0] = b->field_1C[0] + b->pos_44[0];
+    b->pos_44[1] = b->field_1C[1] + b->pos_44[1];
+    b->pos_44[2] = b->field_1C[2] + b->pos_44[2];
     if (b->field_0 >= b->field_C)
     {
         switch (b->field_E)
@@ -911,11 +911,11 @@ void sub_80015478(EventEntry* e, void* buf)
                 p = &dword_800795E4;
                 n = 0x23;
                 f = 1;
-                sub_800C32DC((int)b->pos_44, 0xC0, 0, 0);
+                sub_800C32DC(b->pos_44, 0xC0, 0, 0);
                 break;
             case 10:
                 n = -1;
-                sub_800C32DC((int)b->pos_44, 0xC0, 0, 0);
+                sub_800C32DC(b->pos_44, 0xC0, 0, 0);
                 break;
             }
             b->field_A5 = -1;
@@ -926,7 +926,7 @@ void sub_80015478(EventEntry* e, void* buf)
             PlaySeqSlot_80031160(0x13, 1);
             if (f)
             {
-                sub_800C1654(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x800, b->field_14, b->field_18 + 0x18);
+                sub_800C1654(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, n)), 0x800, b->field_14, b->field_18 + 2 * 3); // the target's third bone
             }
             else
             {
@@ -952,7 +952,7 @@ void sub_80015478(EventEntry* e, void* buf)
             {
                 s[1] = (i << 12) / 3;
                 sub_800C1A5C(b->pos_44, s, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x24)), 0x1000);
-                sub_800C32DC((int)b->pos_44, 0xBF, 0, s[1]);
+                sub_800C32DC(b->pos_44, 0xBF, 0, s[1]);
             }
             break;
         }
@@ -1009,7 +1009,7 @@ void sub_80015478(EventEntry* e, void* buf)
             break;
         case 49:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)b, sub_800C32DC((int)b->pos_44, 0x16, 0, 0));
+            SpawnMdecEffect_80017A6C((int)b, sub_800C32DC(b->pos_44, 0x16, 0, 0));
             if (b->field_AC & 4)
             {
                 break;
@@ -1145,7 +1145,7 @@ void sub_80015478(EventEntry* e, void* buf)
         case 39:
             sub_800C1190(0x14, 0x23);
             sub_800C1A5C(b->pos_44, &dword_800795D4, EFF(sub_80020F00(&effectFile_80091BD0, 0, 0x19)), 0x1000);
-            sub_800C32DC(b->field_1C, 0x14, 0, ratan2Difference_8003B9E0((int*)b->field_1C, (int*)b->field_14));
+            sub_800C32DC(b->field_1C, 0x14, 0, ratan2Difference_8003B9E0(b->field_1C, b->field_14));
             b->field_4 = 3;
             e->cb_8 = (EventEntryFn)sub_80016BF4;
             return;
@@ -1193,7 +1193,7 @@ void sub_80015478(EventEntry* e, void* buf)
             {
                 PlaySfx_80031494(0x49);
                 b->field_4 = 0x10;
-                sub_800C32DC((int)b->pos_44, 6, 0, 0);
+                sub_800C32DC(b->pos_44, 6, 0, 0);
             }
             break;
         }

@@ -531,7 +531,7 @@ extern int sub_8001247C(double x);
 extern int sub_800255F0(ModelList* a0, int idx, int a2);
 extern int sub_800256B8(ModelList* a0, int id);
 extern void StopSoundSeqById_800306FC(int a0);
-extern int sub_800C32DC(int a0, int a1, int a2, int a3);
+extern int sub_800C32DC(int* pos, int a1, int a2, int a3);
 extern void sub_800218A8(struct FtgObject* s, struct FtgObject* d, int a2);
 extern void sub_80039FE4(struct FtgObject* a, struct FtgObject* b, struct FtgObject* out);
 extern void sub_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale);

@@ -62,7 +62,7 @@ typedef struct
     ModelAnim* anim_14;     // 0x178
     unsigned int frame_18;  // 0x17C
     int drawMode_1C;        // 0x180: Actor.drawMode_8
-    int bonePos_20;         // 0x184: Actor.bonePos_1C4
+    int* bonePos_20;        // 0x184: Actor.bonePos_1C4
     int* scale_24;          // 0x188: Actor.scale_2C
     unsigned long* ot_28;   // 0x18C
 } ActorDrawArgs;
@@ -176,7 +176,7 @@ typedef struct Actor
     int f190;                   // 0x190
     ActorFirFilter turn_194;    // 0x194: input_8 is the turn speed, output_C the smoothed one
     int turnFilterBuf_1A4[8];   // 0x1A4
-    char* bonePos_1C4;          // 0x1C4
+    int* bonePos_1C4;           // 0x1C4: int[3] per bone
     MATRIX* boneMatrices_1C8;   // 0x1C8
 } Actor;
 

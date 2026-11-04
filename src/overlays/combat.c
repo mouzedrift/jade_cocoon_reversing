@@ -29,17 +29,6 @@ typedef struct CombatSlotCombat
     Actor* actor_3C;
 } CombatSlotCombat;
 
-// what sub_800A111C hands out about a slot's actor
-typedef struct CombatActorInfo
-{
-    int f0;
-    int* pos_4;
-    char* f8;
-    char* fC;
-    int pad_10[7];
-    char* f2C;
-    int* f30;
-} CombatActorInfo;
 
 // the part of cameraState_8008D4F0 that sub_800A12B8 resets
 typedef struct CombatCameraState
@@ -577,22 +566,22 @@ int sub_800A10DC(int i)
 }
 
 // Matched
-int sub_800A10F8(int i)
+int* sub_800A10F8(int i)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    return (int)s->actor_3C->bonePos_1C4;
+    return s->actor_3C->bonePos_1C4;
 }
 
 // Matched
-void sub_800A111C(int i, CombatActorInfo* out)
+void sub_800A111C(int i, EffectTarget* out)
 {
     CombatSlotCombat* s = &dword_800A3A08[i];
-    out->f0 = (int)s->actor_3C->effectTbl_14C;
+    out->tbl_0 = s->actor_3C->effectTbl_14C;
     out->pos_4 = s->actor_3C->pos_38;
-    out->f8 = s->actor_3C->bonePos_1C4;
-    out->fC = (char*)s->actor_3C->boneMatrices_1C8;
-    out->f2C = (char*)s->actor_3C->boneScale_144;
-    out->f30 = s->actor_3C->scale_2C;
+    out->bonePos_8 = s->actor_3C->bonePos_1C4;
+    out->boneMatrices_C = s->actor_3C->boneMatrices_1C8;
+    out->boneScale_2C = s->actor_3C->boneScale_144;
+    out->scale_30 = s->actor_3C->scale_2C;
 }
 
 // Matched
