@@ -32,15 +32,15 @@ typedef struct CombBtlPair
     short hi;
 } CombBtlPair;
 
-typedef struct CombBtlA24
+typedef struct CombBtlSidePos
 {
     int pos_0[2][3]; // per side
-} CombBtlA24;
+} CombBtlSidePos;
 
-typedef struct CombBtlB16
+typedef struct CombBtlSideRot
 {
-    unsigned char f0[2][8]; // per side
-} CombBtlB16;
+    unsigned char rot_0[2][8]; // per side: the actor rotation (3 shorts + pad)
+} CombBtlSideRot;
 
 typedef struct CombBtlResult
 {
@@ -55,7 +55,7 @@ typedef struct CombBtlResult
     int hpDamage_1C;
     int mpDamage_20;
     short element_24;
-    short f26;
+    short fixedElement_26; // fixedStageElement_800A849C
 } CombBtlResult;
 
 // a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (DrawMenuWindowContents_8002A710)
@@ -138,8 +138,8 @@ extern const char aWellDone_800A49A0[];
 extern const char aReached_800A49B8[];
 extern const char aFinallyADecisio_800A49CC[];
 extern const char aWhatACloseFight_800A4A04[];
-extern const CombBtlA24 sideActorPos_800A4AD4;
-extern const CombBtlB16 sideActorArgs_800A4AEC;
+extern const CombBtlSidePos sideActorPos_800A4AD4;
+extern const CombBtlSideRot sideActorArgs_800A4AEC;
 extern const CombBtlItem sideLabel0_800A4AFC;
 extern const CombBtlItem sideLabel1_800A4B18;
 extern const CombBtlPos2 statusIconPos_800A4B34;
@@ -220,13 +220,13 @@ typedef struct CombBtlTask
 } CombBtlTask;
 
 // a side's unit window task (OpenSideWindow_800A75F8, SideWindowTask_800A7694)
-typedef struct CombBtlObj
+typedef struct CombBtlSideWindow
 {
     int side_0;
     int frame_4; // of the open animation
     RECT dst_8;  // the final window rect
     RECT cur_10; // the window rect being opened (InterpolateWindowRect_8004196C)
-} CombBtlObj;
+} CombBtlSideWindow;
 
 // a menu item (DrawMenuItemWithWindow_8002ADB4)
 typedef struct CombBtlBox

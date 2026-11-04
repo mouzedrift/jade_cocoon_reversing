@@ -11,24 +11,26 @@ typedef struct CombStrtTask
     void (*next_8)();
 } CombStrtTask;
 
+// the window colour DrawWindow_80042460 takes (CombSelBox)
 typedef struct CombStrtBox
 {
     short col_0;
-    char c_2;
-    char c_3;
+    char state_2;
+    char frame_3;
 } CombStrtBox;
 
 
+// a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (CombSelItem)
 typedef struct CombStrtWin
 {
-    int f0;
-    void* text_4;
-    int f8;
-    int fC;
+    int flagsType_0; // flags_0 | type_2 << 16
+    void* icon_4;
+    int sprts_8;
+    int tpages_C;
     short x_10;
     short y_12;
-    int f14;
-    int f18;
+    int size_14;
+    int margin_18;
 } CombStrtWin;
 
 extern int dword_800A3A88;
@@ -56,16 +58,16 @@ const int minionLabelItem_800A4154[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620,
 // Not matched: CSE/regalloc of the %hi parts: the original keeps setupState_800A4C14's high half in s2 from the != 3 test on and rematerialises windowAnimStep_800A4C8C's
 typedef struct CombStrtMenu
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
+    int flags_0;
+    int time_4;
+    int anim_8;
+    int cursor_C;
+    int rows_10;
+    int ot_14;
 } CombStrtMenu;
 typedef struct CombStrtPos
 {
-    short s0;
+    short flags_0;
     char pad_2[0xE];
     short x_10;
     short y_12;
@@ -94,15 +96,15 @@ extern void DrawMenuBackground_8002BE10();
 extern void UpdateMenuCursor_8003D794(void* p, int a);
 void VersusSetupTask_800A4170(CombStrtTask* t, int a)
 {
-    CombStrtBox col;
-    CombStrtWin w;
+    CombStrtBox box;
+    CombStrtWin title;
     int i;
-    int old;
-    w = titleItem_800A4138;
-    col.c_2 = 0;
-    col.c_3 = 1;
-    col.col_0 = uiColor_8008B590;
-    DrawMenuItemWithWindow_8002ADB4(&w, &col, 0xF, 0);
+    int prevState;
+    title = titleItem_800A4138;
+    box.state_2 = 0;
+    box.frame_3 = 1;
+    box.col_0 = uiColor_8008B590;
+    DrawMenuItemWithWindow_8002ADB4(&title, &box, 0xF, 0);
     HealTeams_800A48C0();
     if (CountTeamMinions_800A1AAC(0) < 2u && CountTeamMinions_800A1AAC(1) < 2u)
     {
@@ -122,17 +124,17 @@ void VersusSetupTask_800A4170(CombStrtTask* t, int a)
     }
     if (setupState_800A4C14 != 3)
     {
-        dword_80082784.f0 = 10;
-        dword_80082784.f4 = GetTime30Hz_8002C64C();
-        dword_80082784.f14 = 10;
-        dword_80082708.s0 = 8;
-        dword_80082740.s0 = 8;
+        dword_80082784.flags_0 = 10;
+        dword_80082784.time_4 = GetTime30Hz_8002C64C();
+        dword_80082784.ot_14 = 10;
+        dword_80082708.flags_0 = 8;
+        dword_80082740.flags_0 = 8;
         dword_80082708.x_10 = 0xC8;
         dword_80082708.y_12 = 0xC3;
         dword_80082740.x_10 = 0xF6;
         dword_80082740.y_12 = 0xC3;
-        dword_80082784.f8 = windowAnimStep_800A4C8C;
-        dword_80082784.fC = yesNoSel_800A4BF8;
+        dword_80082784.anim_8 = windowAnimStep_800A4C8C;
+        dword_80082784.cursor_C = yesNoSel_800A4BF8;
         DrawMenuWindows_8002A5A4(&dword_80082784);
         if (++windowAnimStep_800A4C8C >= 9)
         {
@@ -143,9 +145,9 @@ void VersusSetupTask_800A4170(CombStrtTask* t, int a)
     DrawButtonHelpBar_8002B004(dword_800826E8, 0, 0xF);
     DrawMenuBackground_8002BE10();
     UpdateMenuCursor_8003D794(&yesNoCursor_800A4BF0, 0);
-    old = setupState_800A4C14;
-    setupStateHandlers_800A4C7C[old](t, a);
-    if (old != setupState_800A4C14)
+    prevState = setupState_800A4C14;
+    setupStateHandlers_800A4C7C[prevState](t, a);
+    if (prevState != setupState_800A4C14)
     {
         yesNoCursor_800A4BF0.sel_8 = stateDefaultSel_800A4BFC[setupState_800A4C14];
     }
@@ -213,8 +215,8 @@ void SetupStartFightInput_800A4524(CombStrtTask* task)
 // state 3: reshuffles every frame, then ever slower, then back to "Start fight?"
 void SetupShuffleAnim_800A45B8()
 {
-    short st = shufflePhase_800A4C92;
-    switch (st)
+    short phase = shufflePhase_800A4C92;
+    switch (phase)
     {
     case 0:
         ShuffleTeams_800A46FC();
@@ -255,47 +257,47 @@ void ShuffleTeams_800A46FC()
 }
 
 extern int rand(void);
-extern int PickNthFreeSlot_800A4878(int idx, int* arr, int n);
+extern int PickNthFreeSlot_800A4878(int nth, int* slots, int count);
 void ShuffleTeam_800A473C(int side)
 {
     int used[10];
     int order[10];
-    Minion tmp[10];
-    int n = CountTeamMinions_800A1AAC(side);
+    Minion shuffled[10];
+    int count = CountTeamMinions_800A1AAC(side);
     Minion* units = teams_800A3AA0[side];
     int i;
-    if (n < 2)
+    if (count < 2)
     {
         return;
     }
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
         used[i] = -1;
         order[i] = -1;
     }
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        order[i] = PickNthFreeSlot_800A4878(rand() % (n - i), used, n);
-        MemCopy_800403E8(&tmp[i], &units[order[i]], 0xF8);
+        order[i] = PickNthFreeSlot_800A4878(rand() % (count - i), used, count);
+        MemCopy_800403E8(&shuffled[i], &units[order[i]], 0xF8);
     }
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        MemCopy_800403E8(&units[i], &tmp[i], 0xF8);
+        MemCopy_800403E8(&units[i], &shuffled[i], 0xF8);
     }
 }
 
-int PickNthFreeSlot_800A4878(int idx, int* arr, int n)
+int PickNthFreeSlot_800A4878(int nth, int* slots, int count)
 {
     int i;
     int cnt = 0;
     i = 0;
-    for (; i < n; i++, arr++)
+    for (; i < count; i++, slots++)
     {
-        if (*arr < 0)
+        if (*slots < 0)
         {
-            if (cnt == idx)
+            if (cnt == nth)
             {
-                *arr = cnt;
+                *slots = cnt;
                 break;
             }
             cnt++;
@@ -313,10 +315,10 @@ void HealTeams_800A48C0()
     {
         for (j = 0; j < 3; j++)
         {
-            Minion* p = &teams_800A3AA0[i][j];
-            if (IsMinionSlotEmpty_800A1934(p) == 0)
+            Minion* minion = &teams_800A3AA0[i][j];
+            if (IsMinionSlotEmpty_800A1934(minion) == 0)
             {
-                Heal_80011CD0(&p->status_84);
+                Heal_80011CD0(&minion->status_84);
             }
         }
     }
@@ -326,8 +328,8 @@ void DrawTeam_800A4958(int side)
 {
     CombStrtBox box;
     int slot;
-    box.c_3 = 1;
-    box.c_2 = 0;
+    box.frame_3 = 1;
+    box.state_2 = 0;
     box.col_0 = uiColor_8008B590;
     DrawMenuItemWithWindow_8002ADB4(playerLabelItems_800A4C50[side], &box, 0xF, 0);
     for (slot = 0; slot < 3; slot++)
@@ -347,31 +349,31 @@ extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 void DrawTeamMinion_800A49DC(int side, int slot)
 {
     CombStrtBox c1;
-    CombStrtWin w;
+    CombStrtWin label;
     short pos[4];
     CombStrtBox c2;
     RECT r1;
     short pos2[4];
     CombStrtBox c3;
     RECT r2;
-    Minion* u = &teams_800A3AA0[side][slot];
+    Minion* minion = &teams_800A3AA0[side][slot];
     short* xy;
-    if (IsMinionSlotEmpty_800A1934(u) != 1)
+    if (IsMinionSlotEmpty_800A1934(minion) != 1)
     {
-        w = minionLabelItem_800A4154;
-        w.text_4 = slotLabelSprites_800A4C58[slot];
+        label = minionLabelItem_800A4154;
+        label.icon_4 = slotLabelSprites_800A4C58[slot];
         xy = minionSlotPos_800A4C64[side][slot];
-        w.x_10 = xy[0];
-        w.y_12 = xy[1];
-        c1.c_2 = 0;
-        c1.c_3 = 1;
+        label.x_10 = xy[0];
+        label.y_12 = xy[1];
+        c1.state_2 = 0;
+        c1.frame_3 = 1;
         c1.col_0 = saveData_8008B570.uiColor_20.i;
-        DrawMenuItemWithWindow_8002ADB4(&w, &c1, 0xF, 0);
+        DrawMenuItemWithWindow_8002ADB4(&label, &c1, 0xF, 0);
         pos[0] = xy[0] + 0x2F;
         pos[1] = xy[1];
-        DrawHpGauge_8002F078(&u->status_84, pos, 0, 0xF);
-        c2.c_2 = 0;
-        c2.c_3 = 1;
+        DrawHpGauge_8002F078(&minion->status_84, pos, 0, 0xF);
+        c2.state_2 = 0;
+        c2.frame_3 = 1;
         c2.col_0 = saveData_8008B570.uiColor_20.i;
         r1.x = xy[0] + 0x32;
         r1.y = xy[1];
@@ -380,9 +382,9 @@ void DrawTeamMinion_800A49DC(int side, int slot)
         DrawWindow_80042460(&r1, &c2, pOT_8008D454 + 15, 0);
         pos2[0] = xy[0];
         pos2[1] = xy[1] + 0x14;
-        DrawMinionNameLevel_800A1844(u, pos2, 0);
-        c3.c_2 = 0;
-        c3.c_3 = 1;
+        DrawMinionNameLevel_800A1844(minion, pos2, 0);
+        c3.state_2 = 0;
+        c3.frame_3 = 1;
         c3.col_0 = saveData_8008B570.uiColor_20.i;
         r2.x = xy[0];
         r2.y = xy[1] + 0x14;

@@ -28,14 +28,15 @@ typedef struct CombChuiTask
     void (*next_8)();
 } CombChuiTask;
 
+// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
 typedef struct CombChuiWin
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
+    int flags_0;
+    int time_4;  // blink timer
+    int anim_8;  // window open animation step
+    int cursor_C;
+    int rows_10;
+    int ot_14;
 } CombChuiWin;
 
 typedef struct CombChuiPos
@@ -96,14 +97,14 @@ void VersusIntroTask_800A4394(CombChuiTask* task, int arg)
         menuY = 0xC8;
         rect[3] = menuY;
         DrawTextLines_800A450C(introTextLines_800A45BC, rect);
-        dword_80082784.f4 = GetTime30Hz_8002C64C();
-        dword_80082784.f8 = 8;
-        dword_80082784.f14 = 0;
+        dword_80082784.time_4 = GetTime30Hz_8002C64C();
+        dword_80082784.anim_8 = 8;
+        dword_80082784.ot_14 = 0;
         dword_80082708.x_10 = 0x72;
         dword_80082708.y_12 = menuY;
         dword_80082740.x_10 = 0xA0;
         dword_80082740.y_12 = menuY;
-        dword_80082784.fC = p2PadYesNoMenu_800A45B0.sel_8;
+        dword_80082784.cursor_C = p2PadYesNoMenu_800A45B0.sel_8;
         DrawMenuWindows_8002A5A4(&dword_80082784);
         DrawMenuBackground_8002BE10();
     }

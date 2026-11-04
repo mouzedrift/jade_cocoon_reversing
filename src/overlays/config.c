@@ -20,7 +20,7 @@ typedef struct CfgCtxConfig
     short noticeTimer_34;
     short pad_36;
     int editing_38; // EditConfigSettingTask_800C45E8 runs
-    Bytes8Config cursor_3C; // cursor_3C..scroll_46: an exe MenuCursor (UpdateMenuCursor_8003D794)
+    CfgCursorHead cursor_3C; // cursor_3C..scroll_46: an exe MenuCursor (UpdateMenuCursor_8003D794)
     short cursorPos_44;
     short scroll_46;
 } CfgCtxConfig;
@@ -41,11 +41,11 @@ typedef struct CfgHolderConfig
     CfgTaskConfig t_10;
 } CfgHolderConfig;
 extern CfgHolderConfig* configTask_8008B4B8;
-extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
+extern void DrawTextLinesWindow_8002AE38(void* lines, void* pos, int ot, void* rect, int count);
 extern int IsConfirmPressedP1_8003D380(int a);
 extern int IsCancelPressedP1_8003D41C(int a);
 extern void PlaySfx_80031494(int a);
-extern void DrawOptionUnavailable_800C4BDC(int n);
+extern void DrawOptionUnavailable_800C4BDC(int notice);
 typedef struct CfgSpinConfig
 {
     int flags_0;
@@ -65,8 +65,8 @@ typedef struct CfgBoxConfig
 extern char* dword_8008D454;
 extern unsigned short uiColor_8008B590;
 extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);
-extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
-extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 extern unsigned int GetTime30Hz_8002C64C(void);
 extern void ApplyBgmVolume_800309D8(void* p);
 typedef struct CfgTailConfig
@@ -114,10 +114,10 @@ const char aSelect_800C2C5C[] = "\202r\202\205\202\214\202\205\202\203\202\224";
 // Matched
 void StartConfigMenu_800C2EB4(void)
 {
-    CfgHolderConfig* h = configTask_8008B4B8;
-    CfgTaskConfig* t = &h->t_10;
-    CfgCtxConfig* c = t->ctx_14;
-    h->t_10.flags_0 = (h->t_10.flags_0 | 1) & 0xFFFF7FFF;
+    CfgHolderConfig* holder = configTask_8008B4B8;
+    CfgTaskConfig* task = &holder->t_10;
+    CfgCtxConfig* c = task->ctx_14;
+    holder->t_10.flags_0 = (holder->t_10.flags_0 | 1) & 0xFFFF7FFF;
     DrawMenuBackground_8002BE10();
     c->nextPage_4 = 0;
     c->page_2 = 0;
@@ -130,23 +130,23 @@ void StartConfigMenu_800C2EB4(void)
     LoadConfigSettings_800C3060(c);
     DrawConfigPage_800C383C(c);
     configMenuActive_800C5944 = 1;
-    t->next_8 = ConfigMenuTask_800C2F70;
+    task->next_8 = ConfigMenuTask_800C2F70;
 }
 
 #if 0
 // Not matched: the original keeps a second copy of the context pointer in another register
-void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* d)
+void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* ctx)
 {
-    short old;
+    short prevPos;
     CfgCtxConfig* c;
     DrawMenuBackground_8002BE10();
-    DrawConfigPage_800C383C(d);
-    DrawConfigHelpText_800C450C(d);
+    DrawConfigPage_800C383C(ctx);
+    DrawConfigHelpText_800C450C(ctx);
     DrawButtonHelpBar_8002B004(helpBar_800C592C, 0, 0xE);
-    old = d->cursorPos_44;
-    UpdateMenuCursor_8003D794(&d->cursor_3C, 0);
-    c = d;
-    if (old != c->cursorPos_44)
+    prevPos = ctx->cursorPos_44;
+    UpdateMenuCursor_8003D794(&ctx->cursor_3C, 0);
+    c = ctx;
+    if (prevPos != c->cursorPos_44)
     {
         LoadConfigSettings_800C3060(c);
     }
@@ -159,13 +159,13 @@ void ConfigMenuTask_800C2F70(CfgTaskConfig* t, CfgCtxConfig* d)
         if (c->nextPage_4 != 5)
         {
             OpenConfigPage_800C378C(c);
-            if (d->nextPage_4 != 5)
+            if (ctx->nextPage_4 != 5)
             {
                 return;
             }
         }
     }
-    else if (d->nextPage_4 != 5)
+    else if (ctx->nextPage_4 != 5)
     {
         return;
     }
@@ -179,20 +179,20 @@ INCLUDE_OVERLAY_ASM(config, ConfigMenuTask_800C2F70);
 // Matched
 void LoadConfigSettings_800C3060(CfgCtxConfig* c)
 {
-    SaveData* s = &saveData_8008B570;
-    c->subtitles_14 = ((unsigned char*)s)[0x1F] & 1;
-    c->displaySpeed_8 = s->settings_1C.bits.a_0;
-    c->animSkip_9 = s->settings_1C.bits.b_3;
-    c->animSkip_A = s->settings_1C.bits.c_4;
-    c->magicEffects_B = s->settings_1C.bits.d_5;
-    c->outputFormat_C = s->settings_1C.bits.e_6;
-    c->bgmVolume_D = s->settings_1C.bits.bgmVol_7 / 16;
-    c->sfxVolume_E = s->settings_1C.bits.sfxVol_14 / 16;
+    SaveData* save = &saveData_8008B570;
+    c->subtitles_14 = ((unsigned char*)save)[0x1F] & 1;
+    c->displaySpeed_8 = save->settings_1C.bits.a_0;
+    c->animSkip_9 = save->settings_1C.bits.b_3;
+    c->animSkip_A = save->settings_1C.bits.c_4;
+    c->magicEffects_B = save->settings_1C.bits.d_5;
+    c->outputFormat_C = save->settings_1C.bits.e_6;
+    c->bgmVolume_D = save->settings_1C.bits.bgmVol_7 / 16;
+    c->sfxVolume_E = save->settings_1C.bits.sfxVol_14 / 16;
     c->savedBgmVolume_15 = c->bgmVolume_D;
     c->savedSfxVolume_16 = c->sfxVolume_E;
-    c->uiColor_F = s->uiColor_20.b;
-    c->captureEffects_10 = s->settings_1C.bits.h_21;
-    c->speech_11 = s->settings_1C.bits.i_22;
+    c->uiColor_F = save->uiColor_20.b;
+    c->captureEffects_10 = save->settings_1C.bits.h_21;
+    c->speech_11 = save->settings_1C.bits.i_22;
     if (c->subtitles_14 == 0)
     {
         c->speech_11 = 1;
@@ -245,59 +245,59 @@ void ApplyConfigSetting_800C31DC(CfgCtxConfig* c)
             {
             case 0:
                 {
-                SaveData* s = &saveData_8008B570;
-                s->settings_1C.bits.a_0 = c->displaySpeed_8;
+                SaveData* save = &saveData_8008B570;
+                save->settings_1C.bits.a_0 = c->displaySpeed_8;
                 }
                 break;
             case 1:
                 {
-                SaveData* s = &saveData_8008B570;
-                unsigned char t = c->animSkip_9;
-                s->settings_1C.bits.b_3 = t;
-                s->settings_1C.bits.c_4 = t;
-                s->settings_1C.bits.c_4 = c->animSkip_A;
+                SaveData* save = &saveData_8008B570;
+                unsigned char skip = c->animSkip_9;
+                save->settings_1C.bits.b_3 = skip;
+                save->settings_1C.bits.c_4 = skip;
+                save->settings_1C.bits.c_4 = c->animSkip_A;
                 }
                 break;
             case 2:
                 {
-                SaveData* s = &saveData_8008B570;
-                s->settings_1C.bits.i_22 = c->speech_11;
-                if (s->settings_1C.bits.i_22 == 0)
+                SaveData* save = &saveData_8008B570;
+                save->settings_1C.bits.i_22 = c->speech_11;
+                if (save->settings_1C.bits.i_22 == 0)
                 {
                     c->autoMessage_13 = 0;
-                    s->settings_1C.bits.j_23 = 0;
+                    save->settings_1C.bits.j_23 = 0;
                 }
                 }
                 break;
             case 3:
                 {
-                SaveData* s = &saveData_8008B570;
-                s->settings_1C.bits.j_23 = c->autoMessage_13;
+                SaveData* save = &saveData_8008B570;
+                save->settings_1C.bits.j_23 = c->autoMessage_13;
                 }
                 break;
             case 4:
                 {
-                SaveData* s = &saveData_8008B570;
-                s->settings_1C.bits.k_24 = c->subtitles_14;
-                if (s->settings_1C.bits.k_24 == 0)
+                SaveData* save = &saveData_8008B570;
+                save->settings_1C.bits.k_24 = c->subtitles_14;
+                if (save->settings_1C.bits.k_24 == 0)
                 {
                     c->speech_11 = 1;
-                    s->settings_1C.bits.i_22 = 1;
+                    save->settings_1C.bits.i_22 = 1;
                     c->autoMessage_13 = 1;
-                    s->settings_1C.bits.j_23 = 1;
+                    save->settings_1C.bits.j_23 = 1;
                 }
                 }
                 break;
             case 5:
                 {
-                SaveData* s = &saveData_8008B570;
-                s->settings_1C.bits.d_5 = c->magicEffects_B;
+                SaveData* save = &saveData_8008B570;
+                save->settings_1C.bits.d_5 = c->magicEffects_B;
                 }
                 break;
             case 6:
                 {
-                SaveData* s = &saveData_8008B570;
-                s->settings_1C.bits.h_21 = c->captureEffects_10;
+                SaveData* save = &saveData_8008B570;
+                save->settings_1C.bits.h_21 = c->captureEffects_10;
                 }
                 break;
             }
@@ -483,7 +483,7 @@ void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
 {
     short rect[4];
     CfgDlgConfig cfg;
-    CfgBoxConfig b;
+    CfgBoxConfig box;
     cfg = menuHdrActive_800C2CD0;
     cfg.time_4 = GetTime30Hz_8002C64C();
     cfg.cursor_C = c->cursorPos_44;
@@ -493,77 +493,77 @@ void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
     rect[1] = 0x12;
     rect[2] = 0x46;
     rect[3] = 0x12;
-    b.frame_B = 1;
-    b.x_0 = 0x84;
-    b.col_8 = uiColor_8008B590;
-    b.colors_A = 0;
-    b.y_2 = 0x15;
-    DrawUiTiySprt_8002C06C(&b, 0x4F, 0xE);
-    DrawWindow_80042460(rect, &b.col_8, dword_8008D454 + 0x38, 0);
+    box.frame_B = 1;
+    box.x_0 = 0x84;
+    box.col_8 = uiColor_8008B590;
+    box.colors_A = 0;
+    box.y_2 = 0x15;
+    DrawUiTiySprt_8002C06C(&box, 0x4F, 0xE);
+    DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
 // Matched
 void DrawAudioPage_800C39C4(CfgCtxConfig* c)
 {
     short rect[4];
-    CfgDlgConfig a;
-    CfgDlgConfig b;
-    CfgDlgConfig d;
-    CfgDlgConfig e;
+    CfgDlgConfig top;
+    CfgDlgConfig music;
+    CfgDlgConfig sfx;
+    CfgDlgConfig output;
     CfgBoxConfig box;
-    a = menuHdrActive_800C2CD0;
-    b = menuHdrIdle_800C2CE8;
-    d = menuHdrIdle_800C2CE8;
-    e = menuHdrIdle_800C2CE8;
-    a.time_4 = GetTime30Hz_8002C64C();
-    a.cursor_C = c->cursorPos_44;
-    a.items_10 = (int)audioPageItems_800C4E98;
-    b.time_4 = GetTime30Hz_8002C64C();
-    b.cursor_C = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
-    b.items_10 = (int)musicVolumeItems_800C5298;
-    d.time_4 = GetTime30Hz_8002C64C();
-    d.cursor_C = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
-    d.items_10 = (int)sfxVolumeItems_800C52BC;
-    e.time_4 = GetTime30Hz_8002C64C();
-    e.cursor_C = c->outputFormat_C;
-    e.items_10 = (int)outputItems_800C52E0;
+    top = menuHdrActive_800C2CD0;
+    music = menuHdrIdle_800C2CE8;
+    sfx = menuHdrIdle_800C2CE8;
+    output = menuHdrIdle_800C2CE8;
+    top.time_4 = GetTime30Hz_8002C64C();
+    top.cursor_C = c->cursorPos_44;
+    top.items_10 = (int)audioPageItems_800C4E98;
+    music.time_4 = GetTime30Hz_8002C64C();
+    music.cursor_C = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
+    music.items_10 = (int)musicVolumeItems_800C5298;
+    sfx.time_4 = GetTime30Hz_8002C64C();
+    sfx.cursor_C = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
+    sfx.items_10 = (int)sfxVolumeItems_800C52BC;
+    output.time_4 = GetTime30Hz_8002C64C();
+    output.cursor_C = c->outputFormat_C;
+    output.items_10 = (int)outputItems_800C52E0;
     ApplyBgmVolume_800309D8(&bgmSound_80091CE0);
     if (c->editing_38)
     {
-        a.mode_0 = 4;
+        top.mode_0 = 4;
     }
     else
     {
-        a.mode_0 = 2;
+        top.mode_0 = 2;
     }
-    DrawMenuWindows_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&top);
     if (c->editing_38)
     {
-        b.mode_0 = 4;
-        d.mode_0 = 4;
-        e.mode_0 = 4;
+        music.mode_0 = 4;
+        sfx.mode_0 = 4;
+        output.mode_0 = 4;
         switch (c->cursorPos_44)
         {
         case 0:
-            b.mode_0 = 2;
+            music.mode_0 = 2;
             break;
         case 1:
-            d.mode_0 = 2;
+            sfx.mode_0 = 2;
             break;
         case 2:
-            e.mode_0 = 2;
+            output.mode_0 = 2;
             break;
         }
     }
     else
     {
-        b.mode_0 = 4;
-        d.mode_0 = 4;
-        e.mode_0 = 4;
+        music.mode_0 = 4;
+        sfx.mode_0 = 4;
+        output.mode_0 = 4;
     }
-    DrawMenuWindows_8002A5A4(&b);
-    DrawMenuWindows_8002A5A4(&d);
-    DrawMenuWindows_8002A5A4(&e);
+    DrawMenuWindows_8002A5A4(&music);
+    DrawMenuWindows_8002A5A4(&sfx);
+    DrawMenuWindows_8002A5A4(&output);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -582,7 +582,7 @@ void DrawAudioPage_800C39C4(CfgCtxConfig* c)
 void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
 {
     short rect[4];
-    CfgDlgConfig a;
+    CfgDlgConfig top;
     CfgDlgConfig b1;
     CfgDlgConfig b2;
     CfgDlgConfig b3;
@@ -591,8 +591,8 @@ void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
     CfgDlgConfig b6;
     CfgDlgConfig b7;
     CfgBoxConfig box;
-    unsigned short** t;
-    a = menuHdrActive_800C2CD0;
+    unsigned short** items;
+    top = menuHdrActive_800C2CD0;
     b1 = menuHdrIdle_800C2CE8;
     b2 = menuHdrIdle_800C2CE8;
     b3 = menuHdrIdle_800C2CE8;
@@ -600,10 +600,10 @@ void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
     b5 = menuHdrIdle_800C2CE8;
     b6 = menuHdrIdle_800C2CE8;
     b7 = menuHdrIdle_800C2CE8;
-    a.time_4 = GetTime30Hz_8002C64C();
-    a.cursor_C = c->cursorPos_44;
-    t = subtitlePageItems_800C5474;
-    a.items_10 = (int)t;
+    top.time_4 = GetTime30Hz_8002C64C();
+    top.cursor_C = c->cursorPos_44;
+    items = subtitlePageItems_800C5474;
+    top.items_10 = (int)items;
     b1.time_4 = GetTime30Hz_8002C64C();
     b1.cursor_C = c->displaySpeed_8;
     b1.items_10 = (int)displaySpeedItems_800C5574;
@@ -627,28 +627,28 @@ void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
     b7.items_10 = (int)subtitlesItems_800C5864;
     if (c->editing_38)
     {
-        a.mode_0 = 4;
+        top.mode_0 = 4;
     }
     else
     {
-        a.mode_0 = 2;
+        top.mode_0 = 2;
         if (c->subtitles_14 == 0)
         {
-            *t[2] |= 2;
+            *items[2] |= 2;
         }
         else
         {
-            *t[2] &= ~2;
-            *t[3] &= ~2;
+            *items[2] &= ~2;
+            *items[3] &= ~2;
             if (c->speech_11 != 0)
             {
                 goto done;
             }
         }
-        *t[3] |= 2;
+        *items[3] |= 2;
     }
 done:
-    DrawMenuWindows_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&top);
     if (c->editing_38)
     {
         b1.mode_0 = 4;
@@ -739,7 +739,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     DrawWindow_80042460(rect, &box1.col_8, dword_8008D454 + 0x38, 0);
     for (i = 0; i < 4; i++)
     {
-        unsigned int n = 0;
+        unsigned int blink = 0;
         rect2[0] = 0x52;
         rect2[1] = i * 38 + 0x2A;
         rect2[2] = 0x12;
@@ -747,11 +747,11 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         tail.colors_2 = 1;
         if (c->uiColor_F == i)
         {
-            n = (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
+            blink = (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
         }
         tail.col_0 = i;
         tail.frame_3 = 1;
-        DrawWindow_80042460(rect2, &tail, dword_8008D454 + 0x38, n);
+        DrawWindow_80042460(rect2, &tail, dword_8008D454 + 0x38, blink);
         rect3[0] = 0x66;
         rect3[1] = i * 38 + 0x2A;
         rect3[2] = 0x76;
@@ -774,35 +774,35 @@ INCLUDE_OVERLAY_ASM(config, DrawScreenColorPage_800C4180);
 void DrawVibrationPage_800C4390(CfgCtxConfig* c)
 {
     short rect[4];
-    CfgDlgConfig a;
-    CfgDlgConfig b;
+    CfgDlgConfig label;
+    CfgDlgConfig opts;
     CfgBoxConfig box;
-    a = menuHdrIdle_800C2CE8;
-    b = menuHdrIdle_800C2CE8;
-    a.time_4 = GetTime30Hz_8002C64C();
-    a.cursor_C = 0;
-    a.items_10 = (int)vibrationLabelItems_800C58A8;
-    b.time_4 = GetTime30Hz_8002C64C();
-    b.cursor_C = c->vibration_12;
-    b.items_10 = (int)vibrationItems_800C5920;
+    label = menuHdrIdle_800C2CE8;
+    opts = menuHdrIdle_800C2CE8;
+    label.time_4 = GetTime30Hz_8002C64C();
+    label.cursor_C = 0;
+    label.items_10 = (int)vibrationLabelItems_800C58A8;
+    opts.time_4 = GetTime30Hz_8002C64C();
+    opts.cursor_C = c->vibration_12;
+    opts.items_10 = (int)vibrationItems_800C5920;
     if (c->editing_38)
     {
-        a.mode_0 = 4;
+        label.mode_0 = 4;
     }
     else
     {
-        a.mode_0 = 2;
+        label.mode_0 = 2;
     }
-    DrawMenuWindows_8002A5A4(&a);
+    DrawMenuWindows_8002A5A4(&label);
     if (c->editing_38)
     {
-        b.mode_0 = 2;
+        opts.mode_0 = 2;
     }
     else
     {
-        b.mode_0 = 4;
+        opts.mode_0 = 4;
     }
-    DrawMenuWindows_8002A5A4(&b);
+    DrawMenuWindows_8002A5A4(&opts);
     rect[0] = 0x72;
     rect[1] = 0x12;
     rect[2] = 0x5C;
@@ -821,28 +821,28 @@ void DrawVibrationPage_800C4390(CfgCtxConfig* c)
 // Matched
 void DrawConfigHelpText_800C450C(CfgCtxConfig* c)
 {
-    int p;
+    int text;
     short rect[4];
     short pos[2];
-    short s = c->page_2;
-    if (s >= 0)
+    short page = c->page_2;
+    if (page >= 0)
     {
-        if (s < 3)
+        if (page < 3)
         {
-            p = pageHelpTexts_800C4CC0[s][c->cursorPos_44];
+            text = pageHelpTexts_800C4CC0[page][c->cursorPos_44];
         }
-        else if (s < 5)
+        else if (page < 5)
         {
-            p = *pageHelpTexts_800C4CC0[s];
+            text = *pageHelpTexts_800C4CC0[page];
         }
         else
         {
-            p = 0;
+            text = 0;
         }
     }
     else
     {
-        p = 0;
+        text = 0;
     }
     rect[0] = 10;
     rect[1] = 0xC2;
@@ -850,7 +850,7 @@ void DrawConfigHelpText_800C450C(CfgCtxConfig* c)
     rect[3] = 0x12;
     pos[0] = 0xE;
     pos[1] = 0xC5;
-    DrawTextLinesWindow_8002AE38(&p, pos, 0xE, rect, 1);
+    DrawTextLinesWindow_8002AE38(&text, pos, 0xE, rect, 1);
 }
 
 // Matched
@@ -872,7 +872,7 @@ void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
     CfgSpinConfig v60;
     CfgSpinConfig v70;
     CfgSpinConfig v80;
-    int v;
+    int sel;
     DrawMenuBackground_8002BE10();
     DrawConfigPage_800C383C(c);
     DrawConfigHelpText_800C450C(c);
@@ -882,34 +882,34 @@ void EditConfigSettingTask_800C45E8(CfgTaskConfig* t, CfgCtxConfig* c)
         switch (c->cursorPos_44)
         {
         case 0:
-            v = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
+            sel = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
             v10.flags_0 = 0;
             v10.unused_4 = 0;
             v10.cols_8 = 8;
             v10.rows_A = 1;
-            v10.pos_6 = v;
+            v10.pos_6 = sel;
             MoveGridCursorP1_8003D630(&v10);
-            if (v != v10.pos_6)
+            if (sel != v10.pos_6)
             {
                 PlaySfx_80031494(0x7F);
             }
-            v = v10.pos_6;
-            saveData_8008B570.settings_1C.bits.bgmVol_7 = v * 16;
+            sel = v10.pos_6;
+            saveData_8008B570.settings_1C.bits.bgmVol_7 = sel * 16;
             break;
         case 1:
-            v = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
+            sel = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
             v20.flags_0 = 0;
             v20.unused_4 = 0;
             v20.cols_8 = 8;
             v20.rows_A = 1;
-            v20.pos_6 = v;
+            v20.pos_6 = sel;
             MoveGridCursorP1_8003D630(&v20);
-            if (v != v20.pos_6)
+            if (sel != v20.pos_6)
             {
                 PlaySfx_80031494(0x7F);
             }
-            v = v20.pos_6;
-            saveData_8008B570.settings_1C.bits.sfxVol_14 = v * 16;
+            sel = v20.pos_6;
+            saveData_8008B570.settings_1C.bits.sfxVol_14 = sel * 16;
             break;
         case 2:
             v30.flags_0 = 0;
@@ -1091,20 +1091,20 @@ void ConfigNoticeTask_800C4B34(CfgTaskConfig* t, CfgCtxConfig* c)
 }
 
 // Matched
-void DrawOptionUnavailable_800C4BDC(int n)
+void DrawOptionUnavailable_800C4BDC(int notice)
 {
     short rect[4];
     short pos[2];
-    char* p[2];
-    if ((short)n == 2)
+    char* lines[2];
+    if ((short)notice == 2)
     {
-        p[0] = aOptionNotAvaila_800C2D40;
-        p[1] = aSetSpeechToONTo_800C2DA4;
+        lines[0] = aOptionNotAvaila_800C2D40;
+        lines[1] = aSetSpeechToONTo_800C2DA4;
     }
     else
     {
-        p[0] = aOptionNotAvaila_800C2DF4;
-        p[1] = aSetSubtitlesToO_800C2E5C;
+        lines[0] = aOptionNotAvaila_800C2DF4;
+        lines[1] = aSetSubtitlesToO_800C2E5C;
     }
     rect[0] = 10;
     rect[1] = 0xC2;
@@ -1112,7 +1112,7 @@ void DrawOptionUnavailable_800C4BDC(int n)
     rect[3] = 0x22;
     pos[0] = 0xD;
     pos[1] = 0xC4;
-    DrawTextLinesWindow_8002AE38(p, pos, 0xE, rect, 2);
+    DrawTextLinesWindow_8002AE38(lines, pos, 0xE, rect, 2);
 }
 
 int topMenuHelp_800C4C80[4] = { (int)aChangeAudioSett_800C2A54, (int)aChangeSubtitleS_800C2A20, (int)aSetScreenColor_800C29FC, (int)aVibrationSettin_800C29D4 };
@@ -1121,7 +1121,7 @@ int subtitlePageHelp_800C4C9C[7] = { (int)aSetDisplaySpeed_800C2C28, (int)aAllow
 int screenColorPageHelp_800C4CB8[1] = { (int)aSetScreenColor_800C29FC };
 int vibrationPageHelp_800C4CBC[1] = { (int)aVibrationSettin_800C29D4 };
 int *pageHelpTexts_800C4CC0[5] = { topMenuHelp_800C4C80, audioPageHelp_800C4C90, subtitlePageHelp_800C4C9C, screenColorPageHelp_800C4CB8, vibrationPageHelp_800C4CBC };
-Bytes8Config pageCursors_800C4CD4[5] = {
+CfgCursorHead pageCursors_800C4CD4[5] = {
     { { 1, 0, 4, 0, 4 } },
     { { 1, 0, 3, 0, 3 } },
     { { 1, 0, 7, 0, 7 } },

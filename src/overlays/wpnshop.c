@@ -40,25 +40,26 @@ typedef struct StoreMenu
     short messageTimer_50;
 } StoreMenu;
 
-typedef struct WpnRect_wpnshop
+typedef struct StoreRect
 {
     short x, y, w, h;
-} WpnRect_wpnshop;
+} StoreRect;
 
-typedef struct WpnCol_wpnshop
+// window style for DrawWindow_80042460 (CombSelBox)
+typedef struct StoreWinStyle
 {
     unsigned short col_0;
-    char c_2;
-    char c_3;
-} WpnCol_wpnshop;
+    char state_2;
+    char frame_3;
+} StoreWinStyle;
 
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern int frameCount_8008D3FC;
-extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 /* funcs.h declares unsigned short; the callers here use the full register */
 #define GETINT_8001CE54(x) (((int (*)(int))GetItemPrice_8001CE54)(x))
-extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
+extern void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot);
 extern void DrawMenuBackground_8002BE10();
 extern void DrawPortraitWindow_8002A4E4(int a);
 extern void SetFadeMode_8001C19C(int a, int b);
@@ -76,31 +77,33 @@ extern void AddMoney_800AD058(int a);
 extern int SpendMoney_800AD0A4(int a);
 extern void DrawNextPrompt_8003CF88(short a0, short a1, int a2);
 extern void PlaySfx_80031494(int a);
-extern void UpdateMenuCursor_8003D794(void* p, int a1);
+extern void UpdateMenuCursor_8003D794(void* cursor, int pad);
 extern void DrawTextList_8002A310(void* p, int a);
 extern void DrawWindowBackground_800429F8(int a0, int a1);
 extern void DrawWindowBorder_80042B38(int a0, int a1);
 extern void DrawStoreMainCursor_800BC210();
-typedef struct WpnPair_wpnshop
+// DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
+typedef struct StoreArrow
 {
-    short a;
-    short b;
-} WpnPair_wpnshop;
-typedef struct WpnSmall_wpnshop
+    short kind_0;
+    short dir_2;
+} StoreArrow;
+// window colour for DrawWindow_80042460 (CombSelBox)
+typedef struct StoreWinColor
 {
-    short a;
-    char b;
-    char c;
-} WpnSmall_wpnshop;
-extern void DrawLevantStats_8002F7D0(void* p, int a1);
-extern void CalcStatsWithEquip_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
-extern void DrawStatCompare_8002E188(void* a0, void* a1, void* a2, int a3);
-extern void DrawScrollArrow_8002B3DC(WpnPair_wpnshop p, int b, void* c, int d);
+    short color_0;
+    char state_2;
+    char frame_3;
+} StoreWinColor;
+extern void DrawLevantStats_8002F7D0(void* pos, int ot);
+extern void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out);
+extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot);
+extern void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot);
 extern int IsCircleHeldP1_8003D480(void);
 extern void DrawStoreMainMenu_800BC194();
 extern void DrawItemHeldCount_800BC2E4();
 extern void DrawMoneyWindow_800BBED0();
-extern void DrawStoreList_800BC374(StoreMenu* o, short k);
+extern void DrawStoreList_800BC374(StoreMenu* store, short panel);
 extern void DrawEquipHeldCount_800BCC4C();
 extern void DrawEquipStatCompare_800BCCE8();
 extern void DrawEquipQuantity_800BD174();
@@ -114,48 +117,50 @@ extern void SuspendFieldMinions_800A7B00(int a);
 extern void StoreWaitUiTiy_800BB130();
 extern short CountStock_800BDDF8();
 extern int GetStoreStockMask_800BB088();
-typedef struct WpnA384_wpnshop
+// DrawUiWindow_8002A384's parameter block
+typedef struct StoreUiWindow
 {
     void* rect;
     int frame;
-    short a;
-    short b;
-} WpnA384_wpnshop;
-typedef struct WpnBox2_wpnshop
+    short highlight;
+    short ot;
+} StoreUiWindow;
+typedef struct StoreXY
 {
     short x;
     short y;
-} WpnBox2_wpnshop;
+} StoreXY;
 extern void DrawUiWindow_8002A384(void* p);
 extern int GetMoney_800AD02C(void);
 extern int GetMaxBuyItemCount_800BDF68(short id);
 extern int GetMaxBuyEquipCount_800BDE38(short id, short kind);
-typedef struct WpnPos_wpnshop
+typedef struct StorePos
 {
     unsigned short x;
     unsigned short y;
-} WpnPos_wpnshop;
+} StorePos;
 extern void DrawHeldCountWindow_800BBFD4();
-extern short GetStoreListPos_800BE00C(StoreMenu* o, short i);
+extern short GetStoreListPos_800BE00C(StoreMenu* store, short panel);
 extern int GetStockItem_800BDDB0();
 extern int GetStockEquipment_800BDD2C();
-extern int GetInventorySlotCount_800AD2C8(int a, int b);
+extern int GetInventorySlotCount_800AD2C8(int slot, int category);
 extern int GetInventoryCount_800AD254(int a, int b);
-extern int GetInventorySlotId_800AD288(int a, int b);
+extern int GetInventorySlotId_800AD288(int slot, int category);
 extern int TestValuableFlag_800AD73C(int a);
-extern void DrawUiTiySprt_8002C06C(void* p, int a, short b);
+extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
 extern void DrawSmallNumber9_8002C414(void* p, int a, short b);
-typedef struct WpnBox_wpnshop
+// a UI sprite position followed by a window style (DrawUiTiySprt_8002C06C, then DrawWindow_80042460 on col_8)
+typedef struct StoreSprtBox
 {
     short x_0;
     short y_2;
     int pad_4;
     unsigned short col_8;
-    char c_A;
-    char c_B;
-} WpnBox_wpnshop;
+    char state_A;
+    char frame_B;
+} StoreSprtBox;
 extern void FreeActiveOverlay_8002C014(void);
-extern void SetEquipment_800AD9EC(int a, int b);
+extern void SetEquipment_800AD9EC(int itemId, int category);
 extern void UpdateStoreCursor_800BBDD0();
 extern void StoreInput_800BB664();
 extern void StoreEnterState_800BB30C();
@@ -470,61 +475,61 @@ const char aOrnamentalItem_800BAD30[] = "\202n\202\222\202\216\202\201\202\215\2
 const int dword_800BAD50 = 0;
 
 #if 0
-// Not matched: with b as short the registers match; left is the scheduling of the o->quantity_18 = 1 store
-// and the stateWindows_800BE7CC[o->state_0] load among the field clears (17 words)
+// Not matched: with b as short the registers match; left is the scheduling of the store->quantity_18 = 1 store
+// and the stateWindows_800BE7CC[store->state_0] load among the field clears (17 words)
 void StartStore_800BAE2C(int kind, short keeper)
 {
-    StoreMenu* o;
+    StoreMenu* store;
     EventEntry* t = AllocEventEntry_80043AF8((EventNode*)storeTask_8008D3E0);
     if (t)
     {
         t->flags = (t->flags | 1) & ~0x8000;
-        o = (StoreMenu*)t->buffer;
-        o->keeperId_4C = keeper;
+        store = (StoreMenu*)t->buffer;
+        store->keeperId_4C = keeper;
         if (kind == 0)
         {
-            o->state_0 = 1;
-            o->panel_34 = 6;
-            o->textId_3A = 0;
+            store->state_0 = 1;
+            store->panel_34 = 6;
+            store->textId_3A = 0;
         }
         else if (kind == 1)
         {
-            o->state_0 = 0;
-            o->panel_34 = 0;
-            o->textId_3A = 9;
+            store->state_0 = 0;
+            store->panel_34 = 0;
+            store->textId_3A = 9;
         }
         SetFontClutOffset_8003F900(2, 0);
         SetFontClutOffset_8003F900(1, 0);
-        o->nextState_2 = -1;
-        o->flags_4 = 4;
-        o->windows_8 = 0;
-        o->windowsOpen_C = 0;
-        o->equipKind_10 = 0;
-        o->itemId_14 = 0;
-        o->sell_12 = 0;
-        o->quantity_18 = 1;
-        o->storeKind_1C = kind;
-        o->windows_8 = stateWindows_800BE7CC[o->state_0];
-        o->stockMask_1E = GetStoreStockMask_800BB088(o);
-        o->stockCounts_20[0] = CountStock_800BDDF8(weaponStock_800BF244, 0x17, o->stockMask_1E);
-        o->stockCounts_20[1] = CountStock_800BDDF8(armorStock_800BF274, 0xF, o->stockMask_1E);
-        o->stockCounts_20[2] = CountStock_800BDDF8(accessoryStock_800BF294, 0x11, o->stockMask_1E);
-        o->stockCounts_20[3] = CountStock_800BDDF8(itemStock_800BF1EC, 0x2B, o->stockMask_1E);
-        o->savedIndex_36 = 0;
-        o->savedScroll_38 = 0;
-        o->field_3C = 0;
-        o->field_3E = 0;
-        o->cursor_28[0] = storePanels_800BE580[o->panel_34].cursor_0[0];
-        o->cursor_28[1] = storePanels_800BE580[o->panel_34].cursor_0[1];
-        o->cursor_28[2] = storePanels_800BE580[o->panel_34].cursor_0[2];
-        o->cursor_28[3] = storePanels_800BE580[o->panel_34].cursor_0[3];
-        o->cursorIndex_30 = 0;
-        o->cursorScroll_32 = 0;
-        o->confirm_40 = 0;
-        o->cancel_44 = 0;
-        o->openTimer_48 = 0;
-        o->errorId_4E = 0;
-        o->messageTimer_50 = 0;
+        store->nextState_2 = -1;
+        store->flags_4 = 4;
+        store->windows_8 = 0;
+        store->windowsOpen_C = 0;
+        store->equipKind_10 = 0;
+        store->itemId_14 = 0;
+        store->sell_12 = 0;
+        store->quantity_18 = 1;
+        store->storeKind_1C = kind;
+        store->windows_8 = stateWindows_800BE7CC[store->state_0];
+        store->stockMask_1E = GetStoreStockMask_800BB088(store);
+        store->stockCounts_20[0] = CountStock_800BDDF8(weaponStock_800BF244, 0x17, store->stockMask_1E);
+        store->stockCounts_20[1] = CountStock_800BDDF8(armorStock_800BF274, 0xF, store->stockMask_1E);
+        store->stockCounts_20[2] = CountStock_800BDDF8(accessoryStock_800BF294, 0x11, store->stockMask_1E);
+        store->stockCounts_20[3] = CountStock_800BDDF8(itemStock_800BF1EC, 0x2B, store->stockMask_1E);
+        store->savedIndex_36 = 0;
+        store->savedScroll_38 = 0;
+        store->field_3C = 0;
+        store->field_3E = 0;
+        store->cursor_28[0] = storePanels_800BE580[store->panel_34].cursor_0[0];
+        store->cursor_28[1] = storePanels_800BE580[store->panel_34].cursor_0[1];
+        store->cursor_28[2] = storePanels_800BE580[store->panel_34].cursor_0[2];
+        store->cursor_28[3] = storePanels_800BE580[store->panel_34].cursor_0[3];
+        store->cursorIndex_30 = 0;
+        store->cursorScroll_32 = 0;
+        store->confirm_40 = 0;
+        store->cancel_44 = 0;
+        store->openTimer_48 = 0;
+        store->errorId_4E = 0;
+        store->messageTimer_50 = 0;
         SetFadeMode_8001C19C(0, 0x20);
         SuspendFieldMinions_800A7B00(-1);
         LoadUiTiy_8002BF74();
@@ -536,7 +541,7 @@ void StartStore_800BAE2C(int kind, short keeper)
 INCLUDE_OVERLAY_ASM(wpnshop, StartStore_800BAE2C);
 
 // Matched
-int GetStoreStockMask_800BB088(StoreMenu* o)
+int GetStoreStockMask_800BB088(StoreMenu* store)
 {
     int r = 1;
     if (TestValuableFlag_800AD73C(4))
@@ -547,11 +552,11 @@ int GetStoreStockMask_800BB088(StoreMenu* o)
     {
         r = 4;
     }
-    if (o->keeperId_4C == 3)
+    if (store->keeperId_4C == 3)
     {
         r = 8;
     }
-    if (saveData_8008B570.chapter_2DC == 0 && saveData_8008B570.mapId_2E4[0].field_0 == 0 && saveData_8008B570.mapId_2E4[1].field_0 == 4 && o->keeperId_4C == 3)
+    if (saveData_8008B570.chapter_2DC == 0 && saveData_8008B570.mapId_2E4[0].field_0 == 0 && saveData_8008B570.mapId_2E4[1].field_0 == 4 && store->keeperId_4C == 3)
     {
         r = 0x10;
     }
@@ -559,370 +564,370 @@ int GetStoreStockMask_800BB088(StoreMenu* o)
 }
 
 // Matched
-void StoreWaitUiTiy_800BB130(EventEntry* t, unsigned short* p)
+void StoreWaitUiTiy_800BB130(EventEntry* task, unsigned short* store)
 {
     if (uiTiyLoaded_8008B4E8 != 0)
     {
         DrawMenuBackground_8002BE10();
         DrawPortraitWindow_8002A4E4(0xE);
-        DrawStoreButtonHelp_800BCF80(p);
-        DrawStore_800BB950(p);
-        t->cb_8 = StoreFadeIn_800BB194;
+        DrawStoreButtonHelp_800BCF80(store);
+        DrawStore_800BB950(store);
+        task->cb_8 = StoreFadeIn_800BB194;
     }
 }
 
 // Matched
-void StoreFadeIn_800BB194(EventEntry* t, unsigned short* p)
+void StoreFadeIn_800BB194(EventEntry* task, unsigned short* store)
 {
     DrawMenuBackground_8002BE10();
     DrawPortraitWindow_8002A4E4(0xE);
-    DrawStoreButtonHelp_800BCF80(p);
-    DrawStore_800BB950(p);
+    DrawStoreButtonHelp_800BCF80(store);
+    DrawStore_800BB950(store);
     SetFadeMode_8001C19C(3, 0x20);
-    t->cb_8 = StoreTask_800BB1F4;
+    task->cb_8 = StoreTask_800BB1F4;
 }
 
-void StoreTask_800BB1F4(EventEntry* t, StoreMenu* o)
+void StoreTask_800BB1F4(EventEntry* task, StoreMenu* store)
 {
-    StoreMenu* p = o;
+    StoreMenu* p = store;
     DrawMenuBackground_8002BE10();
-    UpdateStoreCursor_800BBDD0(o);
-    StoreInput_800BB664(o);
-    StoreEnterState_800BB30C(o);
-    if (o->openTimer_48 < 8)
+    UpdateStoreCursor_800BBDD0(store);
+    StoreInput_800BB664(store);
+    StoreEnterState_800BB30C(store);
+    if (store->openTimer_48 < 8)
     {
-        o->openTimer_48++;
+        store->openTimer_48++;
     }
     if (p->flags_4 & 2)
     {
         SetLoadFadeFlag_80027478(0x40, 1);
         FreeActiveOverlay_8002C014();
         RequestAreaReload_80027314();
-        t->cb_8 = StoreWaitMapReload_800BB298;
+        task->cb_8 = StoreWaitMapReload_800BB298;
     }
 }
 
 // Matched
-void StoreWaitMapReload_800BB298(EventEntry* t)
+void StoreWaitMapReload_800BB298(EventEntry* task)
 {
     if (IsMapLoading_800272D0() == 0)
     {
         ResumeFieldMinions_800A7BF0(-1);
-        t->cb_8 = StoreTask_800BB1F4;
-        t->flags = (t->flags & ~1) | 0x8000;
+        task->cb_8 = StoreTask_800BB1F4;
+        task->flags = (task->flags & ~1) | 0x8000;
         SetLoadFadeFlag_80027478(0x40, 0);
         RequestGameMode_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }
 }
 
-void StoreEnterState_800BB30C(StoreMenu* o)
+void StoreEnterState_800BB30C(StoreMenu* store)
 {
     int r;
     int a;
     short i;
     int old;
     int m;
-    if (o->nextState_2 != -1)
+    if (store->nextState_2 != -1)
     {
-        o->windows_8 = 0;
-        o->panel_34 = statePanels_800BE818[o->nextState_2];
-        o->cursor_28[0] = storePanels_800BE580[o->panel_34].cursor_0[0];
-        o->cursor_28[1] = storePanels_800BE580[o->panel_34].cursor_0[1];
-        o->cursor_28[2] = storePanels_800BE580[o->panel_34].cursor_0[2];
-        o->cursor_28[3] = storePanels_800BE580[o->panel_34].cursor_0[3];
-        switch (o->nextState_2)
+        store->windows_8 = 0;
+        store->panel_34 = statePanels_800BE818[store->nextState_2];
+        store->cursor_28[0] = storePanels_800BE580[store->panel_34].cursor_0[0];
+        store->cursor_28[1] = storePanels_800BE580[store->panel_34].cursor_0[1];
+        store->cursor_28[2] = storePanels_800BE580[store->panel_34].cursor_0[2];
+        store->cursor_28[3] = storePanels_800BE580[store->panel_34].cursor_0[3];
+        switch (store->nextState_2)
         {
         case 3:
             r = GetLastInventorySlot_800AD308(0);
             if (r < 3)
                 r = 3;
-            o->cursor_28[2] = r + 1;
+            store->cursor_28[2] = r + 1;
             break;
         case 5:
-            r = GetLastInventorySlot_800AD308(o->equipKind_10 + 1);
+            r = GetLastInventorySlot_800AD308(store->equipKind_10 + 1);
             if (r < 3)
                 r = 3;
-            o->cursor_28[2] = r + 1;
+            store->cursor_28[2] = r + 1;
             break;
         }
-        o->textId_3A = stateTexts_800BE840[o->nextState_2];
-        switch (o->nextState_2)
+        store->textId_3A = stateTexts_800BE840[store->nextState_2];
+        switch (store->nextState_2)
         {
         case 0:
         case 1:
-            o->cursorIndex_30 = (unsigned short)o->sell_12;
-            o->cursorScroll_32 = 0;
-            o->equipKind_10 = 0;
+            store->cursorIndex_30 = (unsigned short)store->sell_12;
+            store->cursorScroll_32 = 0;
+            store->equipKind_10 = 0;
             break;
         case 2:
         case 3:
-            o->cursorIndex_30 = (unsigned short)o->savedIndex_36;
-            o->cursorScroll_32 = (unsigned short)o->savedScroll_38;
-            if (o->sell_12 == 0)
-                o->cursor_28[2] = o->stockCounts_20[3];
+            store->cursorIndex_30 = (unsigned short)store->savedIndex_36;
+            store->cursorScroll_32 = (unsigned short)store->savedScroll_38;
+            if (store->sell_12 == 0)
+                store->cursor_28[2] = store->stockCounts_20[3];
             break;
         case 4:
         case 5:
-            o->cursorIndex_30 = (unsigned short)o->savedIndex_36;
-            o->cursorScroll_32 = (unsigned short)o->savedScroll_38;
-            if (o->sell_12 == 0)
-                o->cursor_28[2] = o->stockCounts_20[o->equipKind_10];
+            store->cursorIndex_30 = (unsigned short)store->savedIndex_36;
+            store->cursorScroll_32 = (unsigned short)store->savedScroll_38;
+            if (store->sell_12 == 0)
+                store->cursor_28[2] = store->stockCounts_20[store->equipKind_10];
             break;
         case 6:
         case 7:
-            o->cursorIndex_30 = (unsigned short)o->equipKind_10;
-            o->cursorScroll_32 = 0;
-            o->savedIndex_36 = 0;
-            o->savedScroll_38 = 0;
+            store->cursorIndex_30 = (unsigned short)store->equipKind_10;
+            store->cursorScroll_32 = 0;
+            store->savedIndex_36 = 0;
+            store->savedScroll_38 = 0;
             break;
         case 8:
         case 9:
-            o->cursorIndex_30 = (unsigned short)o->cursorIndex_30;
-            o->savedIndex_36 = o->cursorIndex_30;
-            o->savedScroll_38 = o->cursorScroll_32;
-            o->quantity_18 = 1;
-            if (o->sell_12 == 1)
-                o->windows_8 |= 0x800;
-            else if (o->sell_12 == 0)
-                o->windows_8 |= 0x400;
+            store->cursorIndex_30 = (unsigned short)store->cursorIndex_30;
+            store->savedIndex_36 = store->cursorIndex_30;
+            store->savedScroll_38 = store->cursorScroll_32;
+            store->quantity_18 = 1;
+            if (store->sell_12 == 1)
+                store->windows_8 |= 0x800;
+            else if (store->sell_12 == 0)
+                store->windows_8 |= 0x400;
             break;
         case 10:
         case 11:
-            o->savedIndex_36 = o->cursorIndex_30;
-            o->savedScroll_38 = o->cursorScroll_32;
-            o->quantity_18 = 1;
-            if (o->sell_12 == 1)
-                o->windows_8 |= 0x20;
-            else if (o->sell_12 == 0)
-                o->windows_8 |= 0x10;
+            store->savedIndex_36 = store->cursorIndex_30;
+            store->savedScroll_38 = store->cursorScroll_32;
+            store->quantity_18 = 1;
+            if (store->sell_12 == 1)
+                store->windows_8 |= 0x20;
+            else if (store->sell_12 == 0)
+                store->windows_8 |= 0x10;
             break;
         case 12:
         case 13:
         case 14:
         case 15:
         case 16:
-            o->cursorIndex_30 = 1;
-            o->cursorScroll_32 = 0;
+            store->cursorIndex_30 = 1;
+            store->cursorScroll_32 = 0;
             break;
         case 17:
         case 18:
-            o->cursorIndex_30 = 0;
-            o->cursorScroll_32 = 0;
+            store->cursorIndex_30 = 0;
+            store->cursorScroll_32 = 0;
             break;
         }
-        o->openTimer_48 = 0;
-        old = o->windowsOpen_C;
-        o->windows_8 |= stateWindows_800BE7CC[o->nextState_2];
-        o->windowsOpen_C = 0;
+        store->openTimer_48 = 0;
+        old = store->windowsOpen_C;
+        store->windows_8 |= stateWindows_800BE7CC[store->nextState_2];
+        store->windowsOpen_C = 0;
         for (i = 0; i < 29; i++)
         {
             m = 1 << i;
-            if ((old & m) && (o->windows_8 & m))
-                o->windowsOpen_C |= m;
+            if ((old & m) && (store->windows_8 & m))
+                store->windowsOpen_C |= m;
         }
-        o->state_0 = o->nextState_2;
-        o->nextState_2 = -1;
+        store->state_0 = store->nextState_2;
+        store->nextState_2 = -1;
     }
 }
 
-void StoreInput_800BB664(StoreMenu* o)
+void StoreInput_800BB664(StoreMenu* store)
 {
-    if (o->openTimer_48 == 8 && !(o->flags_4 & 1))
+    if (store->openTimer_48 == 8 && !(store->flags_4 & 1))
     {
         if (IsConfirmPressedP1_8003D380(0))
         {
-            o->confirm_40 = 1;
+            store->confirm_40 = 1;
         }
         else if (IsCancelPressedP1_8003D41C(0))
         {
-            o->cancel_44 = 1;
+            store->cancel_44 = 1;
         }
     }
-    if (o->flags_4 & 1)
+    if (store->flags_4 & 1)
     {
-        SetStoreErrorText_800BBE54(o);
-        if (o->messageTimer_50 < 150)
+        SetStoreErrorText_800BBE54(store);
+        if (store->messageTimer_50 < 150)
         {
-            o->messageTimer_50++;
+            store->messageTimer_50++;
         }
-        if (padPressed_8009194C || o->messageTimer_50 >= 150)
+        if (padPressed_8009194C || store->messageTimer_50 >= 150)
         {
-            o->textId_3A = stateTexts_800BE840[o->state_0];
-            o->flags_4 &= ~1;
-            o->errorId_4E = 0;
-            o->field_3E = 0;
-            o->messageTimer_50 = 0;
+            store->textId_3A = stateTexts_800BE840[store->state_0];
+            store->flags_4 &= ~1;
+            store->errorId_4E = 0;
+            store->field_3E = 0;
+            store->messageTimer_50 = 0;
         }
     }
     else
     {
-        switch (o->state_0)
+        switch (store->state_0)
         {
         case 0:
         case 1:
-            StoreMainInput_800BD1A8(o);
+            StoreMainInput_800BD1A8(store);
             break;
         case 2:
-            ItemBuyListInput_800BD278(o);
+            ItemBuyListInput_800BD278(store);
             break;
         case 3:
-            ItemSellListInput_800BD378(o);
+            ItemSellListInput_800BD378(store);
             break;
         case 4:
-            EquipBuyListInput_800BD9A8(o);
+            EquipBuyListInput_800BD9A8(store);
             break;
         case 5:
-            EquipSellListInput_800BDAB4(o);
+            EquipSellListInput_800BDAB4(store);
             break;
         case 6:
         case 7:
-            EquipKindInput_800BD928(o);
+            EquipKindInput_800BD928(store);
             break;
         case 8:
         case 9:
         case 10:
         case 11:
-            StoreQuantityInput_800BD760(o);
+            StoreQuantityInput_800BD760(store);
             break;
         case 12:
         case 13:
         case 14:
         case 15:
-            StoreConfirmInput_800BD444(o);
+            StoreConfirmInput_800BD444(store);
             break;
         case 16:
-            ReadyEquipInput_800BD61C(o);
+            ReadyEquipInput_800BD61C(store);
             break;
         case 17:
         case 18:
-            StoreWaitPrompt_800BD6A4(o);
+            StoreWaitPrompt_800BD6A4(store);
             break;
         }
-        if (o->confirm_40)
+        if (store->confirm_40)
         {
-            o->confirm_40 = 0;
+            store->confirm_40 = 0;
         }
-        if (o->cancel_44)
+        if (store->cancel_44)
         {
-            o->cancel_44 = 0;
+            store->cancel_44 = 0;
         }
     }
-    DrawStore_800BB950(o);
-    DrawStoreButtonHelp_800BCF80(o);
+    DrawStore_800BB950(store);
+    DrawStoreButtonHelp_800BCF80(store);
 }
 const StoreMenuWindows menuWindow_800BADF0 = { 2, 0, 8, 0, 0, 14 };
 const int dword_800BAE08 = 0;
 
 // Matched
-void DrawStoreWindowFrame_800BB868(StoreMenu* o, WpnRect_wpnshop* r, int a2, int a3, short idx)
+void DrawStoreWindowFrame_800BB868(StoreMenu* store, StoreRect* rect, int a2, int a3, short idx)
 {
-    WpnCol_wpnshop c;
+    StoreWinStyle style;
     int bit = 1 << idx;
-    if (o->windowsOpen_C & bit)
+    if (store->windowsOpen_C & bit)
     {
-        c.col_0 = uiColor_8008B590;
-        c.c_2 = 1;
-        c.c_3 = 1;
-        DrawWindow_80042460(r, &c, dword_8008D454 + 0x38, frameCount_8008D3FC);
+        style.col_0 = uiColor_8008B590;
+        style.state_2 = 1;
+        style.frame_3 = 1;
+        DrawWindow_80042460(rect, &style, dword_8008D454 + 0x38, frameCount_8008D3FC);
     }
 }
 
 // Matched
-void DrawStoreDialog_800BB8CC(StoreMenu* o)
+void DrawStoreDialog_800BB8CC(StoreMenu* store)
 {
     DrawPortraitWindow_8002A4E4(0xE);
     DrawTextList_8002A310(dialogLines_800BE134, 0xE);
     DrawWindowBackground_800429F8((int)dialogWindowRect_800BE7C4, 0xE);
     DrawWindowBorder_80042B38((int)dialogWindowRect_800BE7C4, 0xE);
-    if (o->state_0 < 0x11)
+    if (store->state_0 < 0x11)
     {
-        if (o->state_0 >= 0xC)
+        if (store->state_0 >= 0xC)
         {
-            DrawStoreMainCursor_800BC210(o);
+            DrawStoreMainCursor_800BC210(store);
         }
     }
 }
 
 // Matched
-void DrawStore_800BB950(StoreMenu* o)
+void DrawStore_800BB950(StoreMenu* store)
 {
-    WpnPos_wpnshop pos;
+    StorePos pos;
     char* p;
     int r;
     int s;
     short i;
     p = 0;
-    if (o->windows_8 & 1)
+    if (store->windows_8 & 1)
     {
-        DrawStoreMainMenu_800BC194(o);
+        DrawStoreMainMenu_800BC194(store);
     }
-    if (o->windows_8 & 2)
+    if (store->windows_8 & 2)
     {
-        DrawItemHeldCount_800BC2E4(o);
+        DrawItemHeldCount_800BC2E4(store);
     }
-    if (o->windows_8 & 4)
+    if (store->windows_8 & 4)
     {
-        DrawMoneyWindow_800BBED0(o, moneyWindowPosL_800BEBC4);
+        DrawMoneyWindow_800BBED0(store, moneyWindowPosL_800BEBC4);
     }
-    if (o->windows_8 & 8)
+    if (store->windows_8 & 8)
     {
-        DrawMoneyWindow_800BBED0(o, moneyWindowPosR_800BEBC8);
+        DrawMoneyWindow_800BBED0(store, moneyWindowPosR_800BEBC8);
     }
-    if (o->windows_8 & 0x10)
+    if (store->windows_8 & 0x10)
     {
-        DrawStoreList_800BC374(o, 4);
+        DrawStoreList_800BC374(store, 4);
     }
-    if (o->windows_8 & 0x20)
+    if (store->windows_8 & 0x20)
     {
-        DrawStoreList_800BC374(o, 5);
+        DrawStoreList_800BC374(store, 5);
     }
-    if (o->windows_8 & 0x80)
+    if (store->windows_8 & 0x80)
     {
-        DrawEquipHeldCount_800BCC4C(o);
+        DrawEquipHeldCount_800BCC4C(store);
     }
-    if (o->windows_8 & 0x400)
+    if (store->windows_8 & 0x400)
     {
-        DrawEquipStatCompare_800BCCE8(o);
-        DrawStoreList_800BC374(o, 0xA);
+        DrawEquipStatCompare_800BCCE8(store);
+        DrawStoreList_800BC374(store, 0xA);
     }
-    if (o->windows_8 & 0x800)
+    if (store->windows_8 & 0x800)
     {
-        DrawStoreList_800BC374(o, 0xB);
+        DrawStoreList_800BC374(store, 0xB);
     }
-    if (o->windows_8 & 0x40)
+    if (store->windows_8 & 0x40)
     {
-        DrawStoreMainMenu_800BC194(o);
+        DrawStoreMainMenu_800BC194(store);
     }
-    if (o->windows_8 & 0x2000)
+    if (store->windows_8 & 0x2000)
     {
-        DrawEquipQuantity_800BD174(o);
+        DrawEquipQuantity_800BD174(store);
     }
-    if (o->windows_8 & 0x4000)
+    if (store->windows_8 & 0x4000)
     {
-        DrawEquipQuantity_800BD174(o);
+        DrawEquipQuantity_800BD174(store);
     }
-    if (o->windows_8 & 0x20000)
+    if (store->windows_8 & 0x20000)
     {
-        DrawItemQuantity_800BCC18(o);
+        DrawItemQuantity_800BCC18(store);
     }
-    if (o->windows_8 & 0x40000)
+    if (store->windows_8 & 0x40000)
     {
-        DrawItemQuantity_800BCC18(o);
+        DrawItemQuantity_800BCC18(store);
     }
-    if (o->windows_8 & 0x200)
+    if (store->windows_8 & 0x200)
     {
-        DrawEquipKindMenu_800BC268(o);
+        DrawEquipKindMenu_800BC268(store);
     }
-    if (o->windows_8 & 0x800000)
+    if (store->windows_8 & 0x800000)
     {
-        SetStoreDialogText_800BCED4(o);
+        SetStoreDialogText_800BCED4(store);
     }
-    if (o->windows_8 & 0x2000000)
+    if (store->windows_8 & 0x2000000)
     {
-        DrawTotalPrice_800BCFCC(o);
+        DrawTotalPrice_800BCFCC(store);
     }
-    if ((unsigned short)(o->state_0 - 2) < 4)
+    if ((unsigned short)(store->state_0 - 2) < 4)
     {
         p = (char*)1;
     }
@@ -933,14 +938,14 @@ void DrawStore_800BB950(StoreMenu* o)
         {
             pos.x = 0xA;
             pos.y = 0x12;
-            s = (unsigned short)o->cursorScroll_32 + (unsigned short)o->cursorIndex_30;
+            s = (unsigned short)store->cursorScroll_32 + (unsigned short)store->cursorIndex_30;
             r = 0xFF;
-            switch (o->panel_34)
+            switch (store->panel_34)
             {
             case 4:
-                if ((short)s < o->stockCounts_20[3])
+                if ((short)s < store->stockCounts_20[3])
                 {
-                    r = GetStockItem_800BDDB0((short)s, o->stockMask_1E);
+                    r = GetStockItem_800BDDB0((short)s, store->stockMask_1E);
                 }
                 if (r != 0xFF)
                 {
@@ -955,13 +960,13 @@ void DrawStore_800BB950(StoreMenu* o)
                 }
                 break;
             case 10:
-                if ((short)s < o->stockCounts_20[o->equipKind_10])
+                if ((short)s < store->stockCounts_20[store->equipKind_10])
                 {
-                    r = GetStockEquipment_800BDD2C((short)s, o->equipKind_10, o->stockMask_1E);
+                    r = GetStockEquipment_800BDD2C((short)s, store->equipKind_10, store->stockMask_1E);
                 }
                 if (r != 0xFF)
                 {
-                    switch (o->equipKind_10)
+                    switch (store->equipKind_10)
                     {
                     case 0:
                         p = weaponDescLines_800BEE7C + r * 16;
@@ -976,10 +981,10 @@ void DrawStore_800BB950(StoreMenu* o)
                 }
                 break;
             case 11:
-                r = GetInventorySlotId_800AD288((short)s, o->equipKind_10 + 1);
+                r = GetInventorySlotId_800AD288((short)s, store->equipKind_10 + 1);
                 if (r != 0xFF)
                 {
-                    switch (o->equipKind_10)
+                    switch (store->equipKind_10)
                     {
                     case 0:
                         p = weaponDescLines_800BEE7C + r * 16;
@@ -1005,215 +1010,215 @@ void DrawStore_800BB950(StoreMenu* o)
     }
     else
     {
-        DrawStoreDialog_800BB8CC(o);
+        DrawStoreDialog_800BB8CC(store);
     }
     for (i = 0; i < 0x1D; i++)
     {
         int bit = 1 << i;
-        if ((o->windows_8 & bit) && i != 0x18)
+        if ((store->windows_8 & bit) && i != 0x18)
         {
-            int c = o->windowsOpen_C;
-            if (o->openTimer_48 == 8)
+            int c = store->windowsOpen_C;
+            if (store->openTimer_48 == 8)
             {
-                o->windowsOpen_C = c | bit;
+                store->windowsOpen_C = c | bit;
             }
         }
     }
 }
 
 // Matched
-void UpdateStoreCursor_800BBDD0(StoreMenu* o)
+void UpdateStoreCursor_800BBDD0(StoreMenu* store)
 {
     short s;
-    if (!(o->flags_4 & 1) && o->panel_34 != -1 && o->nextState_2 == -1)
+    if (!(store->flags_4 & 1) && store->panel_34 != -1 && store->nextState_2 == -1)
     {
-        s = o->state_0;
+        s = store->state_0;
         if ((unsigned short)(s - 10) >= 2 && s != 8 && s != 9)
         {
-            UpdateMenuCursor_8003D794(o->cursor_28, 0);
+            UpdateMenuCursor_8003D794(store->cursor_28, 0);
         }
     }
 }
 
 // Matched
-void SetStoreErrorText_800BBE54(StoreMenu* o)
+void SetStoreErrorText_800BBE54(StoreMenu* store)
 {
-    switch (o->panel_34)
+    switch (store->panel_34)
     {
     case 4:
-        if (o->errorId_4E == 1)
+        if (store->errorId_4E == 1)
         {
-            o->textId_3A = 0x11;
+            store->textId_3A = 0x11;
         }
-        else if (o->errorId_4E == 2)
+        else if (store->errorId_4E == 2)
         {
-            o->textId_3A = 0x12;
+            store->textId_3A = 0x12;
         }
         break;
     case 10:
-        if (o->errorId_4E == 1)
+        if (store->errorId_4E == 1)
         {
-            o->textId_3A = 0x10;
+            store->textId_3A = 0x10;
         }
-        else if (o->errorId_4E == 2)
+        else if (store->errorId_4E == 2)
         {
-            o->textId_3A = 0x13;
+            store->textId_3A = 0x13;
         }
         break;
     }
 }
 
 // Matched
-void DrawMoneyWindow_800BBED0(void* unused, WpnPos_wpnshop* p)
+void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
 {
-    WpnRect_wpnshop r;
-    WpnBox_wpnshop b;
-    r.x = p->x;
-    r.y = p->y;
-    r.w = 0x79;
-    r.h = 0x10;
-    b.col_8 = uiColor_8008B590;
-    b.c_A = 0;
-    b.c_B = 1;
-    b.x_0 = p->x + 4;
-    b.y_2 = p->y + 3;
-    DrawUiTiySprt_8002C06C(&b, 0x7A, 0xE);
-    b.x_0 = p->x + 0x60;
-    b.y_2 = p->y + 6;
-    DrawSmallNumber9_8002C414(&b, GetMoney_800AD02C(), 0xE);
-    b.x_0 = p->x + 0x61;
-    b.y_2 = p->y + 4;
-    DrawUiTiySprt_8002C06C(&b, 0xEA, 0xE);
-    DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+    StoreRect rect;
+    StoreSprtBox box;
+    rect.x = pos->x;
+    rect.y = pos->y;
+    rect.w = 0x79;
+    rect.h = 0x10;
+    box.col_8 = uiColor_8008B590;
+    box.state_A = 0;
+    box.frame_B = 1;
+    box.x_0 = pos->x + 4;
+    box.y_2 = pos->y + 3;
+    DrawUiTiySprt_8002C06C(&box, 0x7A, 0xE);
+    box.x_0 = pos->x + 0x60;
+    box.y_2 = pos->y + 6;
+    DrawSmallNumber9_8002C414(&box, GetMoney_800AD02C(), 0xE);
+    box.x_0 = pos->x + 0x61;
+    box.y_2 = pos->y + 4;
+    DrawUiTiySprt_8002C06C(&box, 0xEA, 0xE);
+    DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 
 #if 0
 // register allocation: original keeps &box in s0, 0x4d in s1, 0x77 in s2
-void DrawHeldCountWindow_800BBFD4(int a)
+void DrawHeldCountWindow_800BBFD4(int count)
 {
-    WpnRect_wpnshop r;
-    WpnBox_wpnshop b;
-    r.w = 0x45;
-    r.h = 0x10;
-    b.c_B = 1;
-    b.x_0 = 0x7B;
-    b.col_8 = uiColor_8008B590;
-    r.x = 0x77;
-    r.y = 0x4D;
-    b.c_A = 0;
-    b.y_2 = 0x50;
-    DrawUiTiySprt_8002C06C(&b, 0x93, 0xE);
-    b.x_0 = 0xB8;
-    b.y_2 = 0x52;
-    DrawSmallNumber9_8002C414(&b, a, 0xE);
-    b.x_0 = 0x77;
-    b.y_2 = 0x4D;
-    DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+    StoreRect rect;
+    StoreSprtBox box;
+    rect.w = 0x45;
+    rect.h = 0x10;
+    box.frame_B = 1;
+    box.x_0 = 0x7B;
+    box.col_8 = uiColor_8008B590;
+    rect.x = 0x77;
+    rect.y = 0x4D;
+    box.state_A = 0;
+    box.y_2 = 0x50;
+    DrawUiTiySprt_8002C06C(&box, 0x93, 0xE);
+    box.x_0 = 0xB8;
+    box.y_2 = 0x52;
+    DrawSmallNumber9_8002C414(&box, count, 0xE);
+    box.x_0 = 0x77;
+    box.y_2 = 0x4D;
+    DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
 #endif
 INCLUDE_OVERLAY_ASM(wpnshop, DrawHeldCountWindow_800BBFD4);
 
 // Matched
-void DrawQuantityWindow_800BC0AC(StoreMenu* o, int k)
+void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
 {
-    WpnRect_wpnshop r;
-    WpnBox_wpnshop b;
-    r.x = 0x77;
-    r.y = 0x5E;
-    r.w = 0x45;
-    r.h = 0x10;
-    if (o->panel_34 == k)
+    StoreRect rect;
+    StoreSprtBox box;
+    rect.x = 0x77;
+    rect.y = 0x5E;
+    rect.w = 0x45;
+    rect.h = 0x10;
+    if (store->panel_34 == panel)
     {
-        b.c_A = 1;
+        box.state_A = 1;
     }
     else
     {
-        b.c_A = 2;
+        box.state_A = 2;
     }
-    b.c_B = 1;
-    b.x_0 = 0x7B;
-    b.col_8 = uiColor_8008B590;
-    b.y_2 = 0x61;
-    DrawUiTiySprt_8002C06C(&b, 0x53, 0xE);
-    b.x_0 = 0xB8;
-    b.y_2 = 0x63;
-    DrawSmallNumber9_8002C414(&b, o->quantity_18, 0xE);
-    b.x_0 = 0x77;
-    b.y_2 = 0x5E;
-    DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, frameCount_8008D3FC);
+    box.frame_B = 1;
+    box.x_0 = 0x7B;
+    box.col_8 = uiColor_8008B590;
+    box.y_2 = 0x61;
+    DrawUiTiySprt_8002C06C(&box, 0x53, 0xE);
+    box.x_0 = 0xB8;
+    box.y_2 = 0x63;
+    DrawSmallNumber9_8002C414(&box, store->quantity_18, 0xE);
+    box.x_0 = 0x77;
+    box.y_2 = 0x5E;
+    DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, frameCount_8008D3FC);
 }
 
 
 // Matched
-void DrawStoreMainMenu_800BC194(StoreMenu* o)
+void DrawStoreMainMenu_800BC194(StoreMenu* store)
 {
     StoreMenuWindows cfg;
     cfg = menuWindow_800BADF0;
     cfg.time_4 = GetTime30Hz_8002C64C();
-    cfg.cursor_C = o->cursorIndex_30;
+    cfg.cursor_C = store->cursorIndex_30;
     cfg.items_10 = (int)mainMenuItems_800BEAFC;
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
 // Matched
-void DrawStoreMainCursor_800BC210(StoreMenu* o)
+void DrawStoreMainCursor_800BC210(StoreMenu* store)
 {
-    WpnRect_wpnshop r;
+    StoreRect r;
     r.x = 0x56;
-    r.y = o->cursorIndex_30 * 16 + 0x25;
+    r.y = store->cursorIndex_30 * 16 + 0x25;
     r.w = 0x1E;
     r.h = 0x10;
-    DrawStoreWindowFrame_800BB868(o, &r, o->panel_34, o->panel_34, 0x17);
+    DrawStoreWindowFrame_800BB868(store, &r, store->panel_34, store->panel_34, 0x17);
 }
 
 // Matched
-void DrawEquipKindMenu_800BC268(StoreMenu* o)
+void DrawEquipKindMenu_800BC268(StoreMenu* store)
 {
     StoreMenuWindows cfg;
     cfg = menuWindow_800BADF0;
     cfg.time_4 = GetTime30Hz_8002C64C();
-    cfg.cursor_C = o->cursorIndex_30;
+    cfg.cursor_C = store->cursorIndex_30;
     cfg.items_10 = (int)equipKindItems_800BEBB4;
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
 // Matched
-void DrawItemHeldCount_800BC2E4(StoreMenu* o)
+void DrawItemHeldCount_800BC2E4(StoreMenu* store)
 {
     int r = 0;
-    if (o->sell_12 == 1)
+    if (store->sell_12 == 1)
     {
-        r = GetInventorySlotCount_800AD2C8(GetStoreListPos_800BE00C(o, 5), 0);
+        r = GetInventorySlotCount_800AD2C8(GetStoreListPos_800BE00C(store, 5), 0);
     }
-    else if (o->sell_12 == 0)
+    else if (store->sell_12 == 0)
     {
-        r = GetInventoryCount_800AD254(GetStockItem_800BDDB0(GetStoreListPos_800BE00C(o, 4), o->stockMask_1E), 0);
+        r = GetInventoryCount_800AD254(GetStockItem_800BDDB0(GetStoreListPos_800BE00C(store, 4), store->stockMask_1E), 0);
     }
     DrawHeldCountWindow_800BBFD4(r);
 }
 
 // a cell of the shop list rows (DrawMenuWindows_8002A5A4)
 extern int GetEquipmentName_8001D128(int idx, unsigned int kind);
-extern short GetStoreListCursor_800BE058(StoreMenu* o, short i);
-extern void DrawEquippedMark_800BCABC(StoreMenu* o, short k);
+extern short GetStoreListCursor_800BE058(StoreMenu* store, short panel);
+extern void DrawEquippedMark_800BCABC(StoreMenu* store, short panel);
 
 // Matched
-void DrawStoreList_800BC374(StoreMenu* o, short k)
+void DrawStoreList_800BC374(StoreMenu* store, short panel)
 {
     StoreMenuWindows cfg;
-    WpnRect_wpnshop r28;
+    StoreRect r28;
     union
     {
-        WpnBox_wpnshop b;
-        WpnRect_wpnshop r;
-        WpnPair_wpnshop p;
+        StoreSprtBox b;
+        StoreRect r;
+        StoreArrow p;
     } u30;
     union
     {
-        WpnRect_wpnshop r;
-        WpnPair_wpnshop p;
+        StoreRect r;
+        StoreArrow p;
     } u40;
-    WpnBox_wpnshop b48;
+    StoreSprtBox b48;
     int name = 0;
     int icon;
     int price;
@@ -1223,25 +1228,25 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
     short top;
     short i;
 
-    top = GetStoreListCursor_800BE058(o, k);
+    top = GetStoreListCursor_800BE058(store, panel);
     icon = 0;
     price = 0;
     for (i = 0; i < 4; i++)
     {
-        if (k == o->panel_34)
+        if (panel == store->panel_34)
         {
-            s = o->cursorScroll_32 + i;
+            s = store->cursorScroll_32 + i;
         }
         else
         {
-            s = o->savedScroll_38 + i;
+            s = store->savedScroll_38 + i;
         }
-        switch (k)
+        switch (panel)
         {
         case 4:
-            if (s < o->stockCounts_20[3])
+            if (s < store->stockCounts_20[3])
             {
-                r = GetStockItem_800BDDB0(s, o->stockMask_1E);
+                r = GetStockItem_800BDDB0(s, store->stockMask_1E);
             }
             else
             {
@@ -1252,9 +1257,9 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
             r = GetInventorySlotId_800AD288(s, 0);
             break;
         case 10:
-            if (s < o->stockCounts_20[o->equipKind_10])
+            if (s < store->stockCounts_20[store->equipKind_10])
             {
-                r = GetStockEquipment_800BDD2C(s, o->equipKind_10, o->stockMask_1E);
+                r = GetStockEquipment_800BDD2C(s, store->equipKind_10, store->stockMask_1E);
             }
             else
             {
@@ -1262,7 +1267,7 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
             }
             break;
         case 11:
-            r = GetInventorySlotId_800AD288(s, o->equipKind_10 + 1);
+            r = GetInventorySlotId_800AD288(s, store->equipKind_10 + 1);
             break;
         default:
             r = 0xFF;
@@ -1270,7 +1275,7 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
         }
         if (r != 0xFF)
         {
-            switch (k)
+            switch (panel)
             {
             case 4:
                 name = GetItemName_8001CE20(r);
@@ -1283,14 +1288,14 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
                 price = GETINT_8001CE54(r) * 3 / 4;
                 break;
             case 10:
-                name = GetEquipmentName_8001D128(r, o->equipKind_10);
-                icon = GetEquipmentIcon_8001D2D4(r, o->equipKind_10);
-                price = GetEquipmentPrice_8001D1F8(r, o->equipKind_10);
+                name = GetEquipmentName_8001D128(r, store->equipKind_10);
+                icon = GetEquipmentIcon_8001D2D4(r, store->equipKind_10);
+                price = GetEquipmentPrice_8001D1F8(r, store->equipKind_10);
                 break;
             case 11:
-                name = GetEquipmentName_8001D128(r, o->equipKind_10);
-                icon = GetEquipmentIcon_8001D2D4(r, o->equipKind_10);
-                price = GetEquipmentPrice_8001D1F8(r, o->equipKind_10) * 3 / 4;
+                name = GetEquipmentName_8001D128(r, store->equipKind_10);
+                icon = GetEquipmentIcon_8001D2D4(r, store->equipKind_10);
+                price = GetEquipmentPrice_8001D1F8(r, store->equipKind_10) * 3 / 4;
                 break;
             }
         }
@@ -1302,7 +1307,7 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
             storeListRows_800BEA40[i][0].value_4 = icon;
             storeListRows_800BEA40[i][1].value_4 = name;
             storeListRows_800BEA40[i][2].value_4 = price;
-            if (GetMoney_800AD02C() < price && (k == 4 || k == 10))
+            if (GetMoney_800AD02C() < price && (panel == 4 || panel == 10))
             {
                 storeListRows_800BEA40[i][0].flags_0 |= 2;
                 storeListRows_800BEA40[i][1].flags_0 |= 2;
@@ -1326,7 +1331,7 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
     cfg.time_4 = GetTime30Hz_8002C64C();
     cfg.cursor_C = top;
     cfg.items_10 = (int)storeListRows_800BEA40;
-    if (k == o->panel_34)
+    if (panel == store->panel_34)
     {
         cfg.flags_0 = (cfg.flags_0 & ~7) | 2;
     }
@@ -1341,34 +1346,34 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
     r28.y = 0xC5;
     r28.w = 0x37;
     r28.h = 0x10;
-    u30.b.c_B = 1;
+    u30.b.frame_B = 1;
     u30.b.x_0 = 0x9B;
     u30.b.col_8 = uiColor_8008B590;
-    u30.b.c_A = 0;
+    u30.b.state_A = 0;
     u30.b.y_2 = 0xC8;
     DrawUiTiySprt_8002C06C(&u30.b, 0x80, 0xE);
     DrawWindow_80042460(&r28, &u30.b.col_8, dword_8008D454 + 0x38, 0);
-    if (k == o->panel_34)
+    if (panel == store->panel_34)
     {
-        if (o->cursorScroll_32 != 0)
+        if (store->cursorScroll_32 != 0)
         {
-            u30.p.a = 2;
-            u30.p.b = 3;
+            u30.p.kind_0 = 2;
+            u30.p.dir_2 = 3;
             r28.x = 0x4F;
             r28.y = 0x68;
             DrawScrollArrow_8002B3DC(u30.p, frameCount_8008D3FC, &r28, 0xE);
         }
-        if (o->cursorScroll_32 != (unsigned short)o->cursor_28[2] - 4 && (unsigned short)o->cursor_28[2] >= 4)
+        if (store->cursorScroll_32 != (unsigned short)store->cursor_28[2] - 4 && (unsigned short)store->cursor_28[2] >= 4)
         {
-            u40.p.a = 2;
-            u40.p.b = 1;
+            u40.p.kind_0 = 2;
+            u40.p.dir_2 = 1;
             u30.r.x = 0x4F;
             u30.r.y = 0xC9;
             DrawScrollArrow_8002B3DC(u40.p, frameCount_8008D3FC, &u30.r, 0xE);
         }
     }
     sprt = 0;
-    switch (k)
+    switch (panel)
     {
     case 4:
     case 5:
@@ -1378,8 +1383,8 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
         break;
     case 10:
     case 11:
-        sprt = equipKindSprites_800BE874[o->equipKind_10];
-        switch (o->equipKind_10)
+        sprt = equipKindSprites_800BE874[store->equipKind_10];
+        switch (store->equipKind_10)
         {
         case 0:
         case 1:
@@ -1393,17 +1398,17 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
         }
         break;
     }
-    if (o->storeKind_1C == 0 && (unsigned short)(o->state_0 - 0x10) >= 3)
+    if (store->storeKind_1C == 0 && (unsigned short)(store->state_0 - 0x10) >= 3)
     {
-        DrawEquippedMark_800BCABC(o, k);
+        DrawEquippedMark_800BCABC(store, panel);
     }
     u30.r.x = 0xA;
     u30.r.y = 0x4D;
     u30.r.w = 0x2F;
     u30.r.h = 0x12;
     b48.col_8 = uiColor_8008B590;
-    b48.c_B = 1;
-    b48.c_A = 0;
+    b48.frame_B = 1;
+    b48.state_A = 0;
     b48.x_0 = r28.x + 0xD;
     b48.y_2 = r28.y + 0x4F;
     DrawUiTiySprt_8002C06C(&b48, sprt, 0xE);
@@ -1411,103 +1416,103 @@ void DrawStoreList_800BC374(StoreMenu* o, short k)
 }
 
 // Matched
-void DrawEquippedMark_800BCABC(StoreMenu* o, short k)
+void DrawEquippedMark_800BCABC(StoreMenu* store, short panel)
 {
-    WpnRect_wpnshop rect;
-    WpnA384_wpnshop d;
-    WpnBox2_wpnshop box;
-    int cur = GetEquippedId_800AD990(o->equipKind_10);
-    int s;
-    int r = 0xFF;
-    if (k == o->panel_34)
+    StoreRect rect;
+    StoreUiWindow win;
+    StoreXY box;
+    int cur = GetEquippedId_800AD990(store->equipKind_10);
+    int idx;
+    int itemId = 0xFF;
+    if (panel == store->panel_34)
     {
-        s = o->cursorIndex_30 + o->cursorScroll_32;
+        idx = store->cursorIndex_30 + store->cursorScroll_32;
     }
     else
     {
-        s = o->savedIndex_36 + o->savedScroll_38;
+        idx = store->savedIndex_36 + store->savedScroll_38;
     }
-    if (k == 0xA)
+    if (panel == 0xA)
     {
-        if (s < o->stockCounts_20[o->equipKind_10])
+        if (idx < store->stockCounts_20[store->equipKind_10])
         {
-            r = GetStockEquipment_800BDD2C(s, o->equipKind_10, o->stockMask_1E);
+            itemId = GetStockEquipment_800BDD2C(idx, store->equipKind_10, store->stockMask_1E);
         }
         else
         {
-            r = 0xFF;
+            itemId = 0xFF;
         }
     }
-    else if (k == 0xB)
+    else if (panel == 0xB)
     {
-        r = GetInventorySlotId_800AD288(s, o->equipKind_10 + 1);
+        itemId = GetInventorySlotId_800AD288(idx, store->equipKind_10 + 1);
     }
-    if (r != 0xFF && r == cur)
+    if (itemId != 0xFF && itemId == cur)
     {
         rect.x = 0x50;
         rect.y = 0x4D;
         rect.w = 0x26;
         rect.h = 0x10;
-        d.a = 1;
-        d.rect = &rect;
-        d.frame = frameCount_8008D3FC;
-        d.b = 0xE;
+        win.highlight = 1;
+        win.rect = &rect;
+        win.frame = frameCount_8008D3FC;
+        win.ot = 0xE;
         box.x = 0x54;
         box.y = 0x50;
         DrawUiTiySprt_8002C06C(&box, 0xB6, 0xE);
-        DrawUiWindow_8002A384(&d);
+        DrawUiWindow_8002A384(&win);
     }
 }
 
 // Matched
-void DrawItemQuantity_800BCC18(StoreMenu* o)
+void DrawItemQuantity_800BCC18(StoreMenu* store)
 {
-    DrawQuantityWindow_800BC0AC(o, o->sell_12 == 1 ? 0x12 : 0x11);
+    DrawQuantityWindow_800BC0AC(store, store->sell_12 == 1 ? 0x12 : 0x11);
 }
 
 // Matched
-void DrawEquipHeldCount_800BCC4C(StoreMenu* o)
+void DrawEquipHeldCount_800BCC4C(StoreMenu* store)
 {
     int r = 0;
-    if (o->sell_12 == 1)
+    if (store->sell_12 == 1)
     {
-        r = GetInventorySlotCount_800AD2C8(GetStoreListPos_800BE00C(o, 0xB), o->equipKind_10 + 1);
+        r = GetInventorySlotCount_800AD2C8(GetStoreListPos_800BE00C(store, 0xB), store->equipKind_10 + 1);
     }
-    else if (o->sell_12 == 0)
+    else if (store->sell_12 == 0)
     {
-        r = GetInventoryCount_800AD254(GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(o, 0xA), o->equipKind_10, o->stockMask_1E), o->equipKind_10 + 1);
+        r = GetInventoryCount_800AD254(GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(store, 0xA), store->equipKind_10, store->stockMask_1E), store->equipKind_10 + 1);
     }
     DrawHeldCountWindow_800BBFD4(r);
 }
 
 // Matched
-void DrawEquipStatCompare_800BCCE8(StoreMenu* o)
+void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
 {
-    unsigned char buf10[0x18];
-    unsigned char buf28[0x18];
-    WpnRect_wpnshop r40;
-    WpnRect_wpnshop r48;
-    WpnSmall_wpnshop s50;
+    unsigned char curStats[0x18];
+    unsigned char newStats[0x18];
+    StoreRect r40;
+    StoreRect r48;
+    StoreWinColor s50;
     union
     {
-        WpnPair_wpnshop p;
-        WpnSmall_wpnshop s;
+        StoreArrow p;
+        StoreWinColor s;
     } u;
-    WpnRect_wpnshop r60;
-    int r;
-    CalcEquippedStats_80033624(buf10, &levantStatus_8008BD38);
-    r = GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(o, 0xA), o->equipKind_10, o->stockMask_1E);
-    if (r != 0xFF)
+    StoreRect r60;
+    int itemId;
+    CalcEquippedStats_80033624(curStats, &levantStatus_8008BD38);
+    itemId = GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(store, 0xA), store->equipKind_10, store->stockMask_1E);
+    if (itemId != 0xFF)
     {
-        if (o->state_0 != 0x11)
+        if (store->state_0 != 0x11)
         {
-            if (o->nextState_2 != 0x11)
+            if (store->nextState_2 != 0x11)
             {
-                CalcStatsWithEquip_8002E288(&levantStatus_8008BD38, r, o->equipKind_10, buf28);
+                CalcStatsWithEquip_8002E288(&levantStatus_8008BD38, itemId, store->equipKind_10, newStats);
 
                 r40.x = 0x119;
                 r40.y = 0x73;
-                DrawStatCompare_8002E188(buf10, buf28, &r40, 0xE);
+                DrawStatCompare_8002E188(curStats, newStats, &r40, 0xE);
             }
         }
     }
@@ -1518,26 +1523,26 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* o)
     r48.y = 0x70;
     r48.w = 0x4B;
     r48.h = 0x4D;
-    s50.b = 0;
-    s50.c = 1;
-    s50.a = saveData_8008B570.uiColor_20.h;
+    s50.state_2 = 0;
+    s50.frame_3 = 1;
+    s50.color_0 = saveData_8008B570.uiColor_20.h;
     DrawWindow_80042460(&r48, &s50, dword_8008D454 + 0x38, 0);
-    if (o->state_0 != 0x11)
+    if (store->state_0 != 0x11)
     {
-        u.p.a = 2;
-        u.p.b = 0;
+        u.p.kind_0 = 2;
+        u.p.dir_2 = 0;
         r48.x = 0x112;
         r48.y = 0x95;
         DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &r48, 0xE);
-        if (o->state_0 != 0x11)
+        if (store->state_0 != 0x11)
         {
             r60.x = 0x119;
             r60.y = 0x70;
             r60.w = 0x1D;
             r60.h = 0x4D;
-            u.s.b = 0;
-            u.s.c = 1;
-            u.s.a = saveData_8008B570.uiColor_20.h;
+            u.s.state_2 = 0;
+            u.s.frame_3 = 1;
+            u.s.color_0 = saveData_8008B570.uiColor_20.h;
             DrawWindow_80042460(&r60, &u.s, dword_8008D454 + 0x38, 0);
         }
     }
@@ -1545,10 +1550,10 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* o)
 
 #if 0
 // register allocation: original copies the ctx pointer to a1 (move a1,a0) and keeps the table in a0
-void SetStoreDialogText_800BCED4(StoreMenu* o)
+void SetStoreDialogText_800BCED4(StoreMenu* store)
 {
     int** tbl;
-    switch (o->keeperId_4C)
+    switch (store->keeperId_4C)
     {
     case 2:
         tbl = storeTextsB_800BE3D8;
@@ -1560,17 +1565,17 @@ void SetStoreDialogText_800BCED4(StoreMenu* o)
         tbl = storeTextsA_800BE37C;
         break;
     }
-    dialogLines_800BE134[1] = tbl[o->textId_3A][0];
-    dialogLines_800BE134[3] = tbl[o->textId_3A][1];
-    dialogLines_800BE134[5] = tbl[o->textId_3A][2];
+    dialogLines_800BE134[1] = tbl[store->textId_3A][0];
+    dialogLines_800BE134[3] = tbl[store->textId_3A][1];
+    dialogLines_800BE134[5] = tbl[store->textId_3A][2];
 }
 #endif
 INCLUDE_OVERLAY_ASM(wpnshop, SetStoreDialogText_800BCED4);
 
 // Matched
-void DrawStoreButtonHelp_800BCF80(unsigned short* p)
+void DrawStoreButtonHelp_800BCF80(unsigned short* state)
 {
-    if ((unsigned int)(*p - 2) < 4)
+    if ((unsigned int)(*state - 2) < 4)
     {
         DrawButtonHelpBar_8002B004(name_800826B0, 0, 0xE);
     }
@@ -1580,45 +1585,45 @@ void DrawStoreButtonHelp_800BCF80(unsigned short* p)
     }
 }
 
-void DrawTotalPrice_800BCFCC(StoreMenu* o)
+void DrawTotalPrice_800BCFCC(StoreMenu* store)
 {
     int v = 0;
-    WpnRect_wpnshop r;
-    WpnBox_wpnshop b;
-    if (o->itemId_14 != 0xFF)
+    StoreRect r;
+    StoreSprtBox b;
+    if (store->itemId_14 != 0xFF)
     {
-        switch (o->panel_34)
+        switch (store->panel_34)
         {
         case 17:
         case 19:
-            v = GETINT_8001CE54(o->itemId_14);
+            v = GETINT_8001CE54(store->itemId_14);
             break;
         case 16:
         case 18:
-            v = GETINT_8001CE54(o->itemId_14) * 3 / 4;
+            v = GETINT_8001CE54(store->itemId_14) * 3 / 4;
             break;
         case 13:
         case 15:
-            v = GetEquipmentPrice_8001D1F8(o->itemId_14, o->equipKind_10);
+            v = GetEquipmentPrice_8001D1F8(store->itemId_14, store->equipKind_10);
             break;
         case 12:
         case 14:
-            v = GetEquipmentPrice_8001D1F8(o->itemId_14, o->equipKind_10) * 3 / 4;
+            v = GetEquipmentPrice_8001D1F8(store->itemId_14, store->equipKind_10) * 3 / 4;
             break;
         }
         r.x = 0xBD;
         r.y = 0x5E;
         r.w = 0x79;
         r.h = 0x10;
-        b.c_B = 1;
+        b.frame_B = 1;
         b.x_0 = 0xC1;
         b.col_8 = uiColor_8008B590;
-        b.c_A = 0;
+        b.state_A = 0;
         b.y_2 = 0x60;
         DrawUiTiySprt_8002C06C(&b, 0xCE, 0xE);
         b.x_0 = 0x11D;
         b.y_2 = 0x64;
-        DrawSmallNumber9_8002C414(&b, v * o->quantity_18, 0xE);
+        DrawSmallNumber9_8002C414(&b, v * store->quantity_18, 0xE);
         b.x_0 = 0x11E;
         b.y_2 = 0x62;
         DrawUiTiySprt_8002C06C(&b, 0xEA, 0xE);
@@ -1627,107 +1632,107 @@ void DrawTotalPrice_800BCFCC(StoreMenu* o)
 }
 
 // Matched
-void DrawEquipQuantity_800BD174(StoreMenu* o)
+void DrawEquipQuantity_800BD174(StoreMenu* store)
 {
-    DrawQuantityWindow_800BC0AC(o, o->sell_12 == 1 ? 0xE : 0xD);
+    DrawQuantityWindow_800BC0AC(store, store->sell_12 == 1 ? 0xE : 0xD);
 }
 
 // Matched
-void StoreMainInput_800BD1A8(StoreMenu* o)
+void StoreMainInput_800BD1A8(StoreMenu* store)
 {
-    if (o->confirm_40)
+    if (store->confirm_40)
     {
-        if (o->cursorIndex_30 != 2)
+        if (store->cursorIndex_30 != 2)
         {
-            if (o->storeKind_1C == 0)
+            if (store->storeKind_1C == 0)
             {
-                o->nextState_2 = equipModeStates_800BE868[o->cursorIndex_30];
+                store->nextState_2 = equipModeStates_800BE868[store->cursorIndex_30];
             }
-            else if (o->storeKind_1C == 1)
+            else if (store->storeKind_1C == 1)
             {
-                o->nextState_2 = itemModeStates_800BE86C[o->cursorIndex_30];
+                store->nextState_2 = itemModeStates_800BE86C[store->cursorIndex_30];
             }
             PlaySfx_80031494(0x7E);
-            o->sell_12 = o->cursorIndex_30;
+            store->sell_12 = store->cursorIndex_30;
         }
         else
         {
-            o->flags_4 |= 2;
+            store->flags_4 |= 2;
             PlaySfx_80031494(0x7D);
         }
     }
-    else if (o->cancel_44)
+    else if (store->cancel_44)
     {
-        if (o->cursorIndex_30 != 2)
+        if (store->cursorIndex_30 != 2)
         {
-            o->cursorIndex_30 = 2;
+            store->cursorIndex_30 = 2;
             PlaySfx_80031494(0x7F);
         }
     }
 }
 
 // Matched
-void ItemBuyListInput_800BD278(StoreMenu* o)
+void ItemBuyListInput_800BD278(StoreMenu* store)
 {
-    int s = o->cursorIndex_30 + o->cursorScroll_32;
+    int s = store->cursorIndex_30 + store->cursorScroll_32;
     int r;
-    if (o->confirm_40)
+    if (store->confirm_40)
     {
-        r = GetMaxBuyItemCount_800BDF68((short)GetStockItem_800BDDB0(s, o->stockMask_1E));
+        r = GetMaxBuyItemCount_800BDF68((short)GetStockItem_800BDDB0(s, store->stockMask_1E));
         if (r > 0)
         {
-            if (o->sell_12 == 0)
+            if (store->sell_12 == 0)
             {
-                o->nextState_2 = 0xA;
+                store->nextState_2 = 0xA;
             }
-            else if (o->sell_12 == 1)
+            else if (store->sell_12 == 1)
             {
-                o->nextState_2 = 0xB;
+                store->nextState_2 = 0xB;
             }
             PlaySfx_80031494(0x7E);
         }
         else if (r < 0)
         {
             PlaySfx_80031494(0x7C);
-            o->errorId_4E = 2;
-            o->flags_4 |= 1;
+            store->errorId_4E = 2;
+            store->flags_4 |= 1;
         }
         else
         {
             PlaySfx_80031494(0x7C);
-            o->errorId_4E = 1;
-            o->flags_4 |= 1;
+            store->errorId_4E = 1;
+            store->flags_4 |= 1;
         }
-        o->itemId_14 = GetStockItem_800BDDB0(s, o->stockMask_1E);
+        store->itemId_14 = GetStockItem_800BDDB0(s, store->stockMask_1E);
     }
-    else if (o->cancel_44)
+    else if (store->cancel_44)
     {
-        o->nextState_2 = 0;
-        o->savedIndex_36 = 0;
-        o->savedScroll_38 = 0;
+        store->nextState_2 = 0;
+        store->savedIndex_36 = 0;
+        store->savedScroll_38 = 0;
         PlaySfx_80031494(0x7D);
     }
 }
 
 // Matched
-void ItemSellListInput_800BD378(StoreMenu* o)
+void ItemSellListInput_800BD378(StoreMenu* store)
 {
-    int s = o->cursorIndex_30 + o->cursorScroll_32;
+    int s = store->cursorIndex_30 + store->cursorScroll_32;
     int r;
     GetInventorySlotId_800AD288(s, 0);
     r = GetInventorySlotCount_800AD2C8(s, 0);
-    if (o->confirm_40)
+    if (store->confirm_40)
     {
         if (r)
         {
-            o->itemId_14 = GetInventorySlotId_800AD288(s, 0);
-            if (o->sell_12 == 0)
+            store->itemId_14 = GetInventorySlotId_800AD288(s, 0);
+            if (store->sell_12 == 0)
             {
-                o->nextState_2 = 0xA;
+                store->nextState_2 = 0xA;
             }
-            else if (o->sell_12 == 1)
+            else if (store->sell_12 == 1)
             {
-                o->nextState_2 = 0xB;
+                store->nextState_2 = 0xB;
             }
             PlaySfx_80031494(0x7E);
         }
@@ -1736,108 +1741,108 @@ void ItemSellListInput_800BD378(StoreMenu* o)
             PlaySfx_80031494(0x7C);
         }
     }
-    else if (o->cancel_44)
+    else if (store->cancel_44)
     {
-        o->nextState_2 = 0;
-        o->savedIndex_36 = 0;
-        o->savedScroll_38 = 0;
+        store->nextState_2 = 0;
+        store->savedIndex_36 = 0;
+        store->savedScroll_38 = 0;
         PlaySfx_80031494(0x7D);
     }
 }
 
 // Matched
-void StoreConfirmInput_800BD444(StoreMenu* o)
+void StoreConfirmInput_800BD444(StoreMenu* store)
 {
-    if (o->confirm_40 && o->cursorIndex_30 == 0)
+    if (store->confirm_40 && store->cursorIndex_30 == 0)
     {
-        if (o->sell_12 == 0)
+        if (store->sell_12 == 0)
         {
-            if (o->storeKind_1C == 0)
+            if (store->storeKind_1C == 0)
             {
-                BuyEquipment_800BDC40(o->itemId_14, o->equipKind_10, o->quantity_18);
+                BuyEquipment_800BDC40(store->itemId_14, store->equipKind_10, store->quantity_18);
             }
-            else if (o->storeKind_1C == 1)
+            else if (store->storeKind_1C == 1)
             {
-                BuyItem_800BDB80(o->itemId_14, o->quantity_18);
+                BuyItem_800BDB80(store->itemId_14, store->quantity_18);
             }
         }
-        else if (o->sell_12 == 1)
+        else if (store->sell_12 == 1)
         {
-            if (o->storeKind_1C == 0)
+            if (store->storeKind_1C == 0)
             {
-                SellEquipment_800BDCB4(o->itemId_14, o->equipKind_10, o->quantity_18);
+                SellEquipment_800BDCB4(store->itemId_14, store->equipKind_10, store->quantity_18);
             }
-            else if (o->storeKind_1C == 1)
+            else if (store->storeKind_1C == 1)
             {
-                SellItem_800BDBDC(o->itemId_14, o->quantity_18);
+                SellItem_800BDBDC(store->itemId_14, store->quantity_18);
             }
         }
         PlaySfx_80031494(0x7E);
     }
-    else if ((o->confirm_40 && o->cursorIndex_30 == 1) || o->cancel_44)
+    else if ((store->confirm_40 && store->cursorIndex_30 == 1) || store->cancel_44)
     {
         PlaySfx_80031494(0x7D);
     }
-    if (o->confirm_40 || o->cancel_44)
+    if (store->confirm_40 || store->cancel_44)
     {
-        if (o->storeKind_1C == 0)
+        if (store->storeKind_1C == 0)
         {
-            if (o->confirm_40)
+            if (store->confirm_40)
             {
-                if (o->sell_12 == 0 && o->cursorIndex_30 == 0 && IsEquipped_800BD71C(o->itemId_14, o->equipKind_10) == 0)
+                if (store->sell_12 == 0 && store->cursorIndex_30 == 0 && IsEquipped_800BD71C(store->itemId_14, store->equipKind_10) == 0)
                 {
-                    o->nextState_2 = 0x10;
+                    store->nextState_2 = 0x10;
                 }
                 else
                 {
-                    o->nextState_2 = equipListStates_800BE870[o->sell_12];
+                    store->nextState_2 = equipListStates_800BE870[store->sell_12];
                 }
             }
-            else if (o->cancel_44)
+            else if (store->cancel_44)
             {
-                o->nextState_2 = equipListStates_800BE870[o->sell_12];
+                store->nextState_2 = equipListStates_800BE870[store->sell_12];
             }
         }
-        else if (o->storeKind_1C == 1)
+        else if (store->storeKind_1C == 1)
         {
-            o->nextState_2 = itemModeStates_800BE86C[o->sell_12];
+            store->nextState_2 = itemModeStates_800BE86C[store->sell_12];
         }
     }
 }
 
 // Matched
-void ReadyEquipInput_800BD61C(StoreMenu* o)
+void ReadyEquipInput_800BD61C(StoreMenu* store)
 {
-    if (o->confirm_40)
+    if (store->confirm_40)
     {
-        if (o->cursorIndex_30 == 0)
+        if (store->cursorIndex_30 == 0)
         {
             PlaySfx_80031494(0x7E);
-            SetEquipment_800AD9EC(o->itemId_14, o->equipKind_10);
-            o->nextState_2 = 0x11;
+            SetEquipment_800AD9EC(store->itemId_14, store->equipKind_10);
+            store->nextState_2 = 0x11;
             return;
         }
-        if (o->cursorIndex_30 == 1)
+        if (store->cursorIndex_30 == 1)
         {
             goto snd;
         }
     }
-    if (o->cancel_44)
+    if (store->cancel_44)
     {
     snd:
         PlaySfx_80031494(0x7D);
-        o->nextState_2 = 0x12;
+        store->nextState_2 = 0x12;
     }
 }
 
 // Matched
-void StoreWaitPrompt_800BD6A4(StoreMenu* o)
+void StoreWaitPrompt_800BD6A4(StoreMenu* store)
 {
     DrawNextPrompt_8003CF88(0x11E, 0x3C, 0xE);
-    if (o->confirm_40 || o->cancel_44)
+    if (store->confirm_40 || store->cancel_44)
     {
         PlaySfx_80031494(0x7D);
-        o->nextState_2 = equipListStates_800BE870[o->sell_12];
+        store->nextState_2 = equipListStates_800BE870[store->sell_12];
     }
 }
 
@@ -1853,144 +1858,144 @@ int IsEquipped_800BD71C(int id, int kind)
 }
 
 // Matched
-void StoreQuantityInput_800BD760(StoreMenu* o)
+void StoreQuantityInput_800BD760(StoreMenu* store)
 {
-    int prev = o->quantity_18;
+    int prev = store->quantity_18;
     int v = 0;
-    switch (o->state_0)
+    switch (store->state_0)
     {
     case 8:
-        v = GetMaxBuyEquipCount_800BDE38((short)o->itemId_14, o->equipKind_10);
+        v = GetMaxBuyEquipCount_800BDE38((short)store->itemId_14, store->equipKind_10);
         break;
     case 9:
-        v = GetInventorySlotCount_800AD2C8(o->savedIndex_36 + o->savedScroll_38, o->equipKind_10 + 1);
+        v = GetInventorySlotCount_800AD2C8(store->savedIndex_36 + store->savedScroll_38, store->equipKind_10 + 1);
         break;
     case 10:
-        v = GetMaxBuyItemCount_800BDF68((short)o->itemId_14);
+        v = GetMaxBuyItemCount_800BDF68((short)store->itemId_14);
         break;
     case 11:
-        v = GetInventorySlotCount_800AD2C8(o->savedIndex_36 + o->savedScroll_38, 0);
+        v = GetInventorySlotCount_800AD2C8(store->savedIndex_36 + store->savedScroll_38, 0);
         break;
     }
-    o->quantity_18 = AdjustBuyQuantity_800BE084(o->quantity_18, v);
-    if (o->quantity_18 != prev)
+    store->quantity_18 = AdjustBuyQuantity_800BE084(store->quantity_18, v);
+    if (store->quantity_18 != prev)
     {
         PlaySfx_80031494(0x7F);
     }
-    if (o->confirm_40)
+    if (store->confirm_40)
     {
         PlaySfx_80031494(0x7E);
-        switch (o->state_0)
+        switch (store->state_0)
         {
         case 8:
-            o->nextState_2 = 0xC;
+            store->nextState_2 = 0xC;
             break;
         case 9:
-            o->nextState_2 = 0xD;
+            store->nextState_2 = 0xD;
             break;
         case 10:
-            o->nextState_2 = 0xE;
+            store->nextState_2 = 0xE;
             break;
         case 11:
-            o->nextState_2 = 0xF;
+            store->nextState_2 = 0xF;
             break;
         }
     }
-    else if (o->cancel_44)
+    else if (store->cancel_44)
     {
         PlaySfx_80031494(0x7D);
-        switch (o->state_0)
+        switch (store->state_0)
         {
         case 8:
-            o->nextState_2 = 4;
+            store->nextState_2 = 4;
             break;
         case 9:
-            o->nextState_2 = 5;
+            store->nextState_2 = 5;
             break;
         case 10:
-            o->nextState_2 = 2;
+            store->nextState_2 = 2;
             break;
         case 11:
-            o->nextState_2 = 3;
+            store->nextState_2 = 3;
             break;
         }
     }
 }
 
 // Matched
-void EquipKindInput_800BD928(StoreMenu* o)
+void EquipKindInput_800BD928(StoreMenu* store)
 {
-    if (o->confirm_40)
+    if (store->confirm_40)
     {
         PlaySfx_80031494(0x7E);
-        o->equipKind_10 = o->cursorIndex_30;
-        o->nextState_2 = equipListStates_800BE870[o->sell_12];
+        store->equipKind_10 = store->cursorIndex_30;
+        store->nextState_2 = equipListStates_800BE870[store->sell_12];
     }
-    else if (o->cancel_44)
+    else if (store->cancel_44)
     {
         PlaySfx_80031494(0x7D);
-        o->nextState_2 = 1;
+        store->nextState_2 = 1;
     }
 }
 
 // Matched
-void EquipBuyListInput_800BD9A8(StoreMenu* o)
+void EquipBuyListInput_800BD9A8(StoreMenu* store)
 {
-    int s = o->cursorScroll_32 + o->cursorIndex_30;
+    int s = store->cursorScroll_32 + store->cursorIndex_30;
     int r;
-    if (o->confirm_40)
+    if (store->confirm_40)
     {
-        r = GetMaxBuyEquipCount_800BDE38((short)GetStockEquipment_800BDD2C(s, o->equipKind_10, o->stockMask_1E), o->equipKind_10);
+        r = GetMaxBuyEquipCount_800BDE38((short)GetStockEquipment_800BDD2C(s, store->equipKind_10, store->stockMask_1E), store->equipKind_10);
         if (r > 0)
         {
             PlaySfx_80031494(0x7E);
-            if (o->sell_12 == 0)
+            if (store->sell_12 == 0)
             {
-                o->nextState_2 = 8;
+                store->nextState_2 = 8;
             }
-            else if (o->sell_12 == 1)
+            else if (store->sell_12 == 1)
             {
-                o->nextState_2 = 9;
+                store->nextState_2 = 9;
             }
         }
         else if (r < 0)
         {
             PlaySfx_80031494(0x7C);
-            o->errorId_4E = 2;
-            o->flags_4 |= 1;
+            store->errorId_4E = 2;
+            store->flags_4 |= 1;
         }
         else
         {
             PlaySfx_80031494(0x7C);
-            o->errorId_4E = 1;
-            o->flags_4 |= 1;
+            store->errorId_4E = 1;
+            store->flags_4 |= 1;
         }
-        o->itemId_14 = GetStockEquipment_800BDD2C(s, o->equipKind_10, o->stockMask_1E);
+        store->itemId_14 = GetStockEquipment_800BDD2C(s, store->equipKind_10, store->stockMask_1E);
     }
-    else if (o->cancel_44)
+    else if (store->cancel_44)
     {
         PlaySfx_80031494(0x7D);
-        o->nextState_2 = 6;
+        store->nextState_2 = 6;
     }
 }
 
 // Matched
-void EquipSellListInput_800BDAB4(StoreMenu* o)
+void EquipSellListInput_800BDAB4(StoreMenu* store)
 {
-    int s = o->cursorIndex_30 + o->cursorScroll_32;
-    if (o->confirm_40)
+    int s = store->cursorIndex_30 + store->cursorScroll_32;
+    if (store->confirm_40)
     {
-        if (GetInventorySlotCount_800AD2C8(s, o->equipKind_10 + 1))
+        if (GetInventorySlotCount_800AD2C8(s, store->equipKind_10 + 1))
         {
             PlaySfx_80031494(0x7E);
-            o->itemId_14 = GetInventorySlotId_800AD288(s, o->equipKind_10 + 1);
-            if (o->sell_12 == 0)
+            store->itemId_14 = GetInventorySlotId_800AD288(s, store->equipKind_10 + 1);
+            if (store->sell_12 == 0)
             {
-                o->nextState_2 = 8;
+                store->nextState_2 = 8;
             }
-            else if (o->sell_12 == 1)
+            else if (store->sell_12 == 1)
             {
-                o->nextState_2 = 9;
+                store->nextState_2 = 9;
             }
         }
         else
@@ -1998,10 +2003,10 @@ void EquipSellListInput_800BDAB4(StoreMenu* o)
             PlaySfx_80031494(0x7C);
         }
     }
-    else if (o->cancel_44)
+    else if (store->cancel_44)
     {
         PlaySfx_80031494(0x7D);
-        o->nextState_2 = 7;
+        store->nextState_2 = 7;
     }
 }
 
@@ -2045,73 +2050,73 @@ void SellEquipment_800BDCB4(int id, int kind, int count)
 }
 
 // the n-th equipment of a kind this store stocks (stock bits & mask), 0xFF: none
-int GetStockEquipment_800BDD2C(int n, unsigned int kind, int mask)
+int GetStockEquipment_800BDD2C(int nth, unsigned int kind, int mask)
 {
-    int c = 0;
-    unsigned short* p;
-    n++;
+    int id = 0;
+    unsigned short* stock;
+    nth++;
     switch (kind)
     {
     case 0:
-        p = weaponStock_800BF244;
+        stock = weaponStock_800BF244;
         break;
     case 1:
-        p = armorStock_800BF274;
+        stock = armorStock_800BF274;
         break;
     case 2:
-        p = accessoryStock_800BF294;
+        stock = accessoryStock_800BF294;
         break;
     default:
         return 0;
     }
-    while (n != 0)
+    while (nth != 0)
     {
-        if (*p++ & mask)
+        if (*stock++ & mask)
         {
-            n--;
+            nth--;
         }
-        c++;
+        id++;
     }
-    if (c == 0)
+    if (id == 0)
     {
         return 0xFF;
     }
-    return c - 1;
+    return id - 1;
 }
 
 // Matched
-int GetStockItem_800BDDB0(int n, int mask)
+int GetStockItem_800BDDB0(int nth, int mask)
 {
-    int c = 0;
-    unsigned short* p = itemStock_800BF1EC;
-    n++;
-    while (n != 0)
+    int id = 0;
+    unsigned short* stock = itemStock_800BF1EC;
+    nth++;
+    while (nth != 0)
     {
-        if (*p++ & mask)
+        if (*stock++ & mask)
         {
-            n--;
+            nth--;
         }
-        c++;
+        id++;
     }
-    if (c == 0)
+    if (id == 0)
     {
         return 0xFF;
     }
-    return c - 1;
+    return id - 1;
 }
 
 // Matched
-short CountStock_800BDDF8(unsigned short* p, int n, int mask)
+short CountStock_800BDDF8(unsigned short* stock, int count, int mask)
 {
-    int c = 0;
-    while (n-- != 0)
+    int found = 0;
+    while (count-- != 0)
     {
-        if (*p++ & mask)
+        if (*stock++ & mask)
         {
-            c++;
+            found++;
         }
     }
-    return c;
+    return found;
 }
 
 int GetMaxBuyEquipCount_800BDE38(short id, short kind)
@@ -2167,41 +2172,41 @@ int GetMaxBuyItemCount_800BDF68(short id)
 }
 
 // Matched
-short GetStoreListPos_800BE00C(StoreMenu* o, short i)
+short GetStoreListPos_800BE00C(StoreMenu* store, short panel)
 {
-    if (i == o->panel_34)
+    if (panel == store->panel_34)
     {
-        return (short)(o->cursorIndex_30 + o->cursorScroll_32);
+        return (short)(store->cursorIndex_30 + store->cursorScroll_32);
     }
-    return (short)(o->savedIndex_36 + o->savedScroll_38);
+    return (short)(store->savedIndex_36 + store->savedScroll_38);
 }
 
 // Matched
-short GetStoreListCursor_800BE058(StoreMenu* o, short i)
+short GetStoreListCursor_800BE058(StoreMenu* store, short panel)
 {
-    if (i == o->panel_34)
+    if (panel == store->panel_34)
     {
-        return o->cursorIndex_30;
+        return store->cursorIndex_30;
     }
-    return o->savedIndex_36;
+    return store->savedIndex_36;
 }
 
-int AdjustBuyQuantity_800BE084(int n, int b)
+int AdjustBuyQuantity_800BE084(int count, int max)
 {
-    if ((padRepeat_800918CC & 0x1000) && n + 1 <= b)
+    if ((padRepeat_800918CC & 0x1000) && count + 1 <= max)
     {
-        n++;
+        count++;
     }
-    else if ((padRepeat_800918CC & 0x4000) && n - 1 > 0)
+    else if ((padRepeat_800918CC & 0x4000) && count - 1 > 0)
     {
-        n--;
+        count--;
     }
-    n = AdjustByShoulderButtons_8003D198(b + 1, n, 10, 0);
-    if (n == 0)
+    count = AdjustByShoulderButtons_8003D198(max + 1, count, 10, 0);
+    if (count == 0)
     {
-        n = 1;
+        count = 1;
     }
-    return n;
+    return count;
 }
 
 int dword_800BE110 = 0xA000D;

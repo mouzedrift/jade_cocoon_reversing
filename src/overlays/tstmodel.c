@@ -47,9 +47,9 @@ typedef struct TstModelWork
     int atX_184;
     int atY_188;
     int atZ_18C;
-    int i190;
-    int i194;
-    int i198;
+    int posX_190; // reset with the camera (TstCompoWork.pos_16C)
+    int posY_194;
+    int posZ_198;
     short s19C;
     short s19E;
     short s1A0;
@@ -68,7 +68,7 @@ typedef struct TstModelWork
 typedef struct GridCursor
 {
     int flags_0; // 1: wrap left/right, 2: wrap up/down
-    unsigned short s4;
+    unsigned short unused_4;
     short sel_6;
     short cols_8;
     short rows_A;
@@ -251,21 +251,21 @@ void TstModelTask_800A0A8C(EventEntry* task, TstModelWork* c)
 const TstModelBone dword_800A09B8 = { 0x8080, 128, 0x8080 };
 
 // Matched
-void TstModelResetCamera_800A0BC0(TstModelWork* a)
+void TstModelResetCamera_800A0BC0(TstModelWork* work)
 {
-    a->dist_174 = 0x4B0;
-    a->yaw_170 = 0;
-    a->i190 = 0;
-    a->i194 = 0;
-    a->i198 = 0;
-    a->s19C = 0;
-    a->s19E = 0;
-    a->s1A0 = 0;
-    a->rot_1F0.vx = 0;
-    a->rot_1F0.vy = 0;
-    a->rot_1F0.vz = 0;
-    a->atY_188 = -0xFA;
-    a->eyeY_17C = -0xFA;
+    work->dist_174 = 0x4B0;
+    work->yaw_170 = 0;
+    work->posX_190 = 0;
+    work->posY_194 = 0;
+    work->posZ_198 = 0;
+    work->s19C = 0;
+    work->s19E = 0;
+    work->s1A0 = 0;
+    work->rot_1F0.vx = 0;
+    work->rot_1F0.vy = 0;
+    work->rot_1F0.vz = 0;
+    work->atY_188 = -0xFA;
+    work->eyeY_17C = -0xFA;
 }
 
 void TstModelSelectModel_800A0C00(TstModelWork* c)
@@ -276,7 +276,7 @@ void TstModelSelectModel_800A0C00(TstModelWork* c)
     TstModelTbl* tbl;
     cur.cols_8 = 1;
     cur.flags_0 = 0;
-    cur.s4 = 0;
+    cur.unused_4 = 0;
     cur.rows_A = 0x12;
     cur.sel_6 = c->sel_4;
     cur.count_C = c->count_1C;
@@ -323,53 +323,53 @@ void TstModelSelectModel_800A0C00(TstModelWork* c)
     }
 }
 
-void TstModelLoadModel_800A0EC8(TstModelWork* a)
+void TstModelLoadModel_800A0EC8(TstModelWork* work)
 {
-    InitModelList_80024ADC(&a->models_14, modelLoaderVram_8007DC70, 1);
-    LoadModel_80025200(a->models_14, a->modelId_24, a->loadSel_20, 2, 0);
-    a->loadSel_20 = 0;
-    a->state_0 = 2;
+    InitModelList_80024ADC(&work->models_14, modelLoaderVram_8007DC70, 1);
+    LoadModel_80025200(work->models_14, work->modelId_24, work->loadSel_20, 2, 0);
+    work->loadSel_20 = 0;
+    work->state_0 = 2;
 }
 
-void TstModelWaitModel_800A0F20(TstModelWork* a)
+void TstModelWaitModel_800A0F20(TstModelWork* work)
 {
-    Model* m = AcquireModel_80024D70(a->models_14, a->modelId_24);
-    if (AreFileRequestsDone_80024DC4(m))
+    Model* model = AcquireModel_80024D70(work->models_14, work->modelId_24);
+    if (AreFileRequestsDone_80024DC4(model))
     {
-        if (a->modelId_24 == 0x28 && a->anim_1A8 == -1)
+        if (work->modelId_24 == 0x28 && work->anim_1A8 == -1)
         {
-            a->anim_1A8 = 0;
-            SaveModelFtgs_80024FFC(m, levantFtgs_800A37E8);
-            LoadModelAltFtgs_80025974(m, 5, 0);
+            work->anim_1A8 = 0;
+            SaveModelFtgs_80024FFC(model, levantFtgs_800A37E8);
+            LoadModelAltFtgs_80025974(model, 5, 0);
             return;
         }
-        if (a->animCount_1AC <= 0)
+        if (work->animCount_1AC <= 0)
         {
             int i = 0;
             int found = 0;
-            a->animCount_1AC = m->animCount_3E;
-            for (; i < a->animCount_1AC; i++)
+            work->animCount_1AC = model->animCount_3E;
+            for (; i < work->animCount_1AC; i++)
             {
-                if (m->animLoaded_44[i] != 0)
+                if (model->animLoaded_44[i] != 0)
                 {
-                    a->anim_1A8 = i;
+                    work->anim_1A8 = i;
                     found = 1;
                     break;
                 }
             }
             if (!found)
             {
-                a->nextAnim_1B0 = 0;
-                LoadModelAnim_80025440(m, 0, 0);
+                work->nextAnim_1B0 = 0;
+                LoadModelAnim_80025440(model, 0, 0);
                 return;
             }
         }
         else
         {
-            a->anim_1A8 = a->nextAnim_1B0;
+            work->anim_1A8 = work->nextAnim_1B0;
         }
-        ApplyModelFtgSwaps_80025C38(m, 1);
-        a->state_0 = 3;
+        ApplyModelFtgSwaps_80025C38(model, 1);
+        work->state_0 = 3;
     }
 }
 
@@ -382,7 +382,7 @@ extern MATRIX* MulMatrix0(MATRIX* m0, MATRIX* m1, MATRIX* m2);
 extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
 void TstModelCameraInput_800A104C(TstModelWork* c)
 {
-    MATRIX m;
+    MATRIX rot;
     if (padHeld_800918D0[1] & 0x8000)
     {
         c->rot_1F0.vy -= 0x20;
@@ -401,8 +401,8 @@ void TstModelCameraInput_800A104C(TstModelWork* c)
     }
     c->rot_1F0.vz = 0;
     PushMatrix();
-    RotMatrixZYX_8004D5CC(&c->rot_1F0, &m);
-    MulMatrix0(&lightDirs_800A1E84, &m, &lightMatrix_80087114);
+    RotMatrixZYX_8004D5CC(&c->rot_1F0, &rot);
+    MulMatrix0(&lightDirs_800A1E84, &rot, &lightMatrix_80087114);
     PopMatrix();
     colorMatrix_80087134 = lightColors_800A1EA4;
     if (padHeld_800918D0[0] & 0x8000)
@@ -487,12 +487,12 @@ void TstModelDrawModel_800A1428(TstModelWork* c)
     VECTOR pos;
     char z[8];
     VECTOR scale;
-    Model* m;
+    Model* model;
     ModelAnim* anim;
     memset(z, 0, 8);
-    m = AcquireModel_80024D70(c->models_14, c->modelId_24);
-    c->model_18 = m;
-    anim = &m->anims_54[c->anim_1A8];
+    model = AcquireModel_80024D70(c->models_14, c->modelId_24);
+    c->model_18 = model;
+    anim = &model->anims_54[c->anim_1A8];
     GetAnimRootMotion_8004D288(&pos, anim, (unsigned)c->frame_1A4 % anim->frameCount_0);
     pos.vx /= anim->divisor_8;
     pos.vy /= anim->divisor_8;
@@ -501,8 +501,8 @@ void TstModelDrawModel_800A1428(TstModelWork* c)
     scale.vx = (c->scaleStep_1BC + 1) << 12;
     scale.vy = (c->scaleStep_1BC + 1) << 12;
     scale.vz = (c->scaleStep_1BC + 1) << 12;
-    c->draw_1C0.anim_14 = &m->anims_54[c->anim_1A8];
-    c->draw_1C0.ftg_0 = m->ftg_50;
+    c->draw_1C0.anim_14 = &model->anims_54[c->anim_1A8];
+    c->draw_1C0.ftg_0 = model->ftg_50;
     c->draw_1C0.pos_4 = &pos;
     c->draw_1C0.rot_8 = z;
     c->draw_1C0.bones_C = c->bones_28;
@@ -512,9 +512,9 @@ void TstModelDrawModel_800A1428(TstModelWork* c)
     c->draw_1C0.bonePos_20 = modelBonePos_800A3804;
     c->draw_1C0.scale_24 = &scale;
     c->draw_1C0.ot_28 = pOT_8008D690;
-    PlayAnimFrameSfx_8001C364(m, c->anim_1A8, c->draw_1C0.frame_18);
+    PlayAnimFrameSfx_8001C364(model, c->anim_1A8, c->draw_1C0.frame_18);
     DrawAnimSkel_80046A58(&c->draw_1C0, modelLight_800A1EE8, 0);
-    DrawSpriteVtxQuadsGT4_800459E4(c->bones_28, &m->mats_5C, pOT_8008D690, 0);
+    DrawSpriteVtxQuadsGT4_800459E4(c->bones_28, &model->mats_5C, pOT_8008D690, 0);
 }
 
 void TstModelBoneEdit_800A1614(TstModelWork* c)
@@ -529,7 +529,7 @@ void TstModelBoneEdit_800A1614(TstModelWork* c)
     }
     cur.cols_8 = 1;
     cur.flags_0 = 0;
-    cur.s4 = 0;
+    cur.unused_4 = 0;
     cur.rows_A = 6;
     cur.sel_6 = c->boneSel_C;
     cur.count_C = n;
@@ -578,7 +578,7 @@ void TstModelBoneEdit_800A1614(TstModelWork* c)
 void TstModelAnimSelect_800A17B8(TstModelWork* c)
 {
     unsigned short pad;
-    Model* m;
+    Model* model;
     if (padRepeat_800918CC[0] & 0x4000)
     {
         c->nextAnim_1B0++;
@@ -594,13 +594,13 @@ void TstModelAnimSelect_800A17B8(TstModelWork* c)
     pad = padPressed_8009194C[0];
     if (pad & 0x20)
     {
-        m = AcquireModel_80024D70(c->models_14, c->modelId_24);
+        model = AcquireModel_80024D70(c->models_14, c->modelId_24);
         if (c->animLoaded_1B4)
         {
-            FreeModelAnim_8002556C(m, c->anim_1A8);
+            FreeModelAnim_8002556C(model, c->anim_1A8);
             c->animLoaded_1B4 = 0;
         }
-        if (m->animLoaded_44[c->nextAnim_1B0] == 0)
+        if (model->animLoaded_44[c->nextAnim_1B0] == 0)
         {
             c->animLoaded_1B4 = 1;
         }
@@ -610,7 +610,7 @@ void TstModelAnimSelect_800A17B8(TstModelWork* c)
         }
         if (c->animLoaded_1B4)
         {
-            LoadModelAnim_80025440(m, c->nextAnim_1B0, 0);
+            LoadModelAnim_80025440(model, c->nextAnim_1B0, 0);
         }
         c->paused_1B8 = 0;
         c->frame_1A4 = 0;
@@ -655,14 +655,14 @@ void TstModelFrameInput_800A18F4(TstModelWork* c)
     }
 }
 
-void TstModelFreeModel_800A19E4(TstModelWork* a)
+void TstModelFreeModel_800A19E4(TstModelWork* work)
 {
-    if (a->models_14)
+    if (work->models_14)
     {
-        FreeModelList_80024BB0(&a->models_14);
+        FreeModelList_80024BB0(&work->models_14);
     }
-    a->models_14 = 0;
-    a->state_0 = 0;
+    work->models_14 = 0;
+    work->state_0 = 0;
 }
 
 extern int cameraEye_8008D600[];
@@ -673,17 +673,17 @@ extern int geomScreenDistance_8008B548;
 extern void SetGteLightAndCamera_8004D0E8();
 void SetCameraLookAt_800A1A24(TstModelWork* c)
 {
-    int v[3];
+    int dir[3];
     int yaw;
     cameraEye_8008D600[0] = c->eyeX_178;
     cameraEye_8008D600[1] = c->eyeY_17C;
     cameraEye_8008D600[2] = c->eyeZ_180;
-    v[0] = c->atX_184 - c->eyeX_178;
-    v[1] = c->atY_188 - c->eyeY_17C;
-    v[2] = c->atZ_18C - c->eyeZ_180;
-    yaw = ratan2_8003B548(v[0], v[2]);
+    dir[0] = c->atX_184 - c->eyeX_178;
+    dir[1] = c->atY_188 - c->eyeY_17C;
+    dir[2] = c->atZ_18C - c->eyeZ_180;
+    yaw = ratan2_8003B548(dir[0], dir[2]);
     cameraRot_8008D4C8[1] = -yaw;
-    cameraRot_8008D4C8[0] = ratan2_8003B548(v[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(v[0], v[2])));
+    cameraRot_8008D4C8[0] = ratan2_8003B548(dir[1], ISqrt_8003B918(LengthSquared2D_8003B8BC(dir[0], dir[2])));
     cameraRot_8008D4C8[2] = 0;
     backColor_8008D460[0] = 0x40;
     backColor_8008D460[1] = 0x40;
@@ -701,59 +701,59 @@ int TstModelMain_800A1B24()
     return 6;
 }
 
-int MoveGridCursor_800A1B48(GridCursor* m)
+int MoveGridCursor_800A1B48(GridCursor* cursor)
 {
     int idx = 0;
-    if (m->sel_6 < 0)
+    if (cursor->sel_6 < 0)
     {
-        m->sel_6 = 0;
+        cursor->sel_6 = 0;
     }
     if (padRepeat_800918CC[idx] & 0x2000)
     {
-        if (m->sel_6 % m->cols_8 == m->cols_8 - 1)
+        if (cursor->sel_6 % cursor->cols_8 == cursor->cols_8 - 1)
         {
             return 1;
         }
-        m->sel_6++;
+        cursor->sel_6++;
     }
     if (padRepeat_800918CC[idx] & 0x8000)
     {
-        if (m->sel_6 % m->cols_8 == 0)
+        if (cursor->sel_6 % cursor->cols_8 == 0)
         {
             return 2;
         }
-        m->sel_6--;
+        cursor->sel_6--;
     }
     if (padRepeat_800918CC[idx] & 0x1000)
     {
-        if (m->sel_6 < m->cols_8)
+        if (cursor->sel_6 < cursor->cols_8)
         {
             return 3;
         }
-        m->sel_6 -= m->cols_8;
+        cursor->sel_6 -= cursor->cols_8;
     }
     if (padRepeat_800918CC[idx] & 0x4000)
     {
-        if (m->sel_6 > m->cols_8 * (m->rows_A - 1) - 1)
+        if (cursor->sel_6 > cursor->cols_8 * (cursor->rows_A - 1) - 1)
         {
             return 4;
         }
-        m->sel_6 = m->sel_6 + m->cols_8;
+        cursor->sel_6 = cursor->sel_6 + cursor->cols_8;
     }
     return 0;
 }
 
-void WrapGridCursor_800A1CAC(GridCursor* p, int k)
+void WrapGridCursor_800A1CAC(GridCursor* cursor, int dir)
 {
-    if (p->flags_0 & gridWrapMask_800A37F4[k - 1])
+    if (cursor->flags_0 & gridWrapMask_800A37F4[dir - 1])
     {
-        if ((p->flags_0 & 1) && (unsigned)(k - 1) < 2)
+        if ((cursor->flags_0 & 1) && (unsigned)(dir - 1) < 2)
         {
-            p->sel_6 += gridWrapSign_800A37FC[k - 1] * (p->cols_8 - 1);
+            cursor->sel_6 += gridWrapSign_800A37FC[dir - 1] * (cursor->cols_8 - 1);
         }
-        else if ((p->flags_0 & 2) && (unsigned)(k - 3) < 2)
+        else if ((cursor->flags_0 & 2) && (unsigned)(dir - 3) < 2)
         {
-            p->sel_6 += gridWrapSign_800A37FC[k - 1] * p->cols_8 * (p->rows_A - 1);
+            cursor->sel_6 += gridWrapSign_800A37FC[dir - 1] * cursor->cols_8 * (cursor->rows_A - 1);
         }
     }
 }
@@ -761,33 +761,33 @@ void WrapGridCursor_800A1CAC(GridCursor* p, int k)
 extern int MoveGridCursor_800A1B48();
 extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
 extern void PlaySfx_80031494();
-int UpdateGridCursor_800A1D70(GridCursor* p)
+int UpdateGridCursor_800A1D70(GridCursor* cursor)
 {
-    int old = p->sel_6;
-    int k = MoveGridCursor_800A1B48(p);
-    unsigned short t = p->scroll_E;
-    int ts = t << 16;
-    if (k == 3)
+    int prevSel = cursor->sel_6;
+    int dir = MoveGridCursor_800A1B48(cursor);
+    unsigned short scroll = cursor->scroll_E;
+    int ts = scroll << 16;
+    if (dir == 3)
     {
-        if ((ts >> 16) >= p->cols_8)
+        if ((ts >> 16) >= cursor->cols_8)
         {
-            p->scroll_E = t - p->cols_8;
+            cursor->scroll_E = scroll - cursor->cols_8;
             PlaySfx_80031494(0x7F);
             return 8;
         }
     }
-    else if (k == 4)
+    else if (dir == 4)
     {
-        if ((ts >> 16) < p->count_C - p->cols_8 * p->rows_A)
+        if ((ts >> 16) < cursor->count_C - cursor->cols_8 * cursor->rows_A)
         {
-            p->scroll_E = t + p->cols_8;
+            cursor->scroll_E = scroll + cursor->cols_8;
             PlaySfx_80031494(0x7F);
             return 7;
         }
     }
-    WrapGridCursor_800A1CAC(p, k);
-    p->scroll_E = AdjustByShoulderButtons_8003D198(p->count_C - p->cols_8 * p->rows_A + 1, (short)p->scroll_E, p->cols_8 * p->rows_A, 0);
-    if (old != p->sel_6)
+    WrapGridCursor_800A1CAC(cursor, dir);
+    cursor->scroll_E = AdjustByShoulderButtons_8003D198(cursor->count_C - cursor->cols_8 * cursor->rows_A + 1, (short)cursor->scroll_E, cursor->cols_8 * cursor->rows_A, 0);
+    if (prevSel != cursor->sel_6)
     {
         PlaySfx_80031494(0x7F);
     }

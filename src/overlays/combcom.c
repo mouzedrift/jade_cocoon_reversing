@@ -342,36 +342,36 @@ extern int MeasureTextWidth_8003E4C8(int);
 // One line message in a box beside the side's command menu
 void DrawCmdMessage_800CBB4C(int text)
 {
-    RECT a;
-    short b[2];
-    int d;
-    int w;
-    a.w = w = MeasureTextWidth_8003E4C8(text) + 4;
-    a.h = 0x12;
+    RECT rect;
+    short pos[2];
+    int line;
+    int width;
+    rect.w = width = MeasureTextWidth_8003E4C8(text) + 4;
+    rect.h = 0x12;
     if (side_800CD839 == 1)
     {
-        a.x = 0xDD - w;
+        rect.x = 0xDD - width;
     }
     else
     {
-        a.x = 0x5F;
+        rect.x = 0x5F;
     }
-    a.y = 0xC1;
-    b[1] = 0xC3;
-    b[0] = a.x + 2;
-    d = text;
-    DrawTextBox_8002AFA0((int)&d, (int)b, 0xF, &a, 1);
+    rect.y = 0xC1;
+    pos[1] = 0xC3;
+    pos[0] = rect.x + 2;
+    line = text;
+    DrawTextBox_8002AFA0((int)&line, (int)pos, 0xF, &rect, 1);
 }
 
 void DrawLargeMessage_800CBBE0(int text)
 {
-    short v[2] = {0xA, 0x14};
-    CombComDlg d;
-    d.line0_0 = text;
-    d.line1_4 = 0;
-    d.line2_8 = 0;
-    d.line3_C = 0;
-    DrawLargeTextBox_8002AF10((int)&d, (int)v, 0xF);
+    short pos[2] = {0xA, 0x14};
+    CombComDlg dlg;
+    dlg.line0_0 = text;
+    dlg.line1_4 = 0;
+    dlg.line2_8 = 0;
+    dlg.line3_C = 0;
+    DrawLargeTextBox_8002AF10((int)&dlg, (int)pos, 0xF);
 }
 
 int GetSelectedSkill_800CBC28()
@@ -381,46 +381,47 @@ int GetSelectedSkill_800CBC28()
 
 int GetSelectedMagic_800CBC58()
 {
-    int r = GetSlotMagicBits_800A11BC(side_800CD839);
-    return FindNthMagicBit_8001AEC0(r, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4));
+    int bits = GetSlotMagicBits_800A11BC(side_800CD839);
+    return FindNthMagicBit_8001AEC0(bits, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4));
 }
 
+// the window colour DrawWindow_80042460 takes (CombSelBox)
 typedef struct CombComColor
 {
     unsigned short color;
-    unsigned char a;
-    unsigned char b;
+    unsigned char state_2;
+    unsigned char frame_3;
 } CombComColor;
 extern unsigned short uiColor_8008B590;
 extern void* memset(void* p, int c, unsigned int n);
-extern void DrawMenuItemWithWindow_8002ADB4(void* a, void* b, int c, int d);
+extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* col, int ot, int time);
 extern void DrawMenuWindows_8002A5A4(void* p);
 void DrawPauseMenu_800CBCA0()
 {
     CombComColor col;
-    CombComItem a;
-    CombComItem b;
-    CombComItem c;
-    CombComItem d;
+    CombComItem title;
+    CombComItem start;
+    CombComItem giveUp;
+    CombComItem ret;
     void* list[4];
-    CombComMenu m;
-    a = pauseTitleItem_800CB4F0;
-    b = pauseItemStart_800CB528;
-    c = pauseItemGiveUp_800CB560;
-    d = pauseItemReturn_800CB598;
+    CombComMenu menu;
+    title = pauseTitleItem_800CB4F0;
+    start = pauseItemStart_800CB528;
+    giveUp = pauseItemGiveUp_800CB560;
+    ret = pauseItemReturn_800CB598;
     memset(list, 0, 0x10);
-    m = menuWinTmpl_800CB5D0;
-    list[0] = &b;
-    list[1] = &c;
-    list[2] = &d;
+    menu = menuWinTmpl_800CB5D0;
+    list[0] = &start;
+    list[1] = &giveUp;
+    list[2] = &ret;
     col.color = uiColor_8008B590;
-    col.a = 0;
-    col.b = 1;
-    DrawMenuItemWithWindow_8002ADB4(&a, &col, 0, GetTime30Hz_8002C64C());
-    m.time_4 = GetTime30Hz_8002C64C();
-    m.items_10 = list;
-    m.sel_C = pauseCursorSel_800CD2D0;
-    DrawMenuWindows_8002A5A4(&m);
+    col.state_2 = 0;
+    col.frame_3 = 1;
+    DrawMenuItemWithWindow_8002ADB4(&title, &col, 0, GetTime30Hz_8002C64C());
+    menu.time_4 = GetTime30Hz_8002C64C();
+    menu.items_10 = list;
+    menu.sel_C = pauseCursorSel_800CD2D0;
+    DrawMenuWindows_8002A5A4(&menu);
 }
 
 extern unsigned char exchangeFlags_800A84A8;
@@ -434,10 +435,10 @@ extern void PreviewCmdEffect_800CC40C();
 // Matched
 void DrawCmdMenu_800CBEA4()
 {
-    short w[2];
+    short target[2];
     int shown;
     int k;
-    int f;
+    int listSel;
     shown = 0;
     previewHp_800A82D0 = 0;
     previewMp_800A82D2 = 0;
@@ -450,30 +451,30 @@ void DrawCmdMenu_800CBEA4()
         }
         else if (menuState_800CD83A == 1)
         {
-            short p[2];
-            Minion* m;
+            short pos[2];
+            Minion* minion;
             shown = 1;
-            m = GetSlotMinion_800A11D8(side_800CD839);
-            p[0] = 10;
-            p[1] = 0x14;
-            DrawAbilityDescription_8002C670(m, p, skillDescs_800CD718, (short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298), 0xF);
+            minion = GetSlotMinion_800A11D8(side_800CD839);
+            pos[0] = 10;
+            pos[1] = 0x14;
+            DrawAbilityDescription_8002C670(minion, pos, skillDescs_800CD718, (short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298), 0xF);
         }
         else if (menuState_800CD83A == 2)
         {
             if (GetSelectedMagic_800CBC58() < 0x1E)
             {
-                short p[2];
-                p[0] = 10;
-                p[1] = 0x14;
-                DrawLargeTextBox_8002AF10((int)&magicDescs_800CD538[GetSelectedMagic_800CBC58()], (int)p, 0xF);
+                short pos[2];
+                pos[0] = 10;
+                pos[1] = 0x14;
+                DrawLargeTextBox_8002AF10((int)&magicDescs_800CD538[GetSelectedMagic_800CBC58()], (int)pos, 0xF);
                 shown = 1;
             }
         }
         else if (menuState_800CD83A == 5)
         {
-            CombComMsgs3 t;
-            t = pauseOptionDescs_800CB674;
-            DrawCmdMessage_800CBB4C(t.m[(short)GetMenuCursorIndex_8003DA54(pauseCursor_800CD2C8)]);
+            CombComMsgs3 descs;
+            descs = pauseOptionDescs_800CB674;
+            DrawCmdMessage_800CBB4C(descs.m[(short)GetMenuCursorIndex_8003DA54(pauseCursor_800CD2C8)]);
             shown = 1;
         }
     }
@@ -485,23 +486,23 @@ void DrawCmdMenu_800CBEA4()
     {
         k = msgShown_800CD838;
     }
-    w[0] = cmd_800CD840->arg_4;
-    w[1] = side_800CD839;
+    target[0] = cmd_800CD840->arg_4;
+    target[1] = side_800CD839;
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x10))
     {
         if (targetFlags_800CD844 & 1)
         {
-            f = -1;
+            listSel = -1;
         }
         else
         {
-            f = (short)GetMenuCursorIndex_8003DA54(activeCursor_800CD854);
+            listSel = (short)GetMenuCursorIndex_8003DA54(activeCursor_800CD854);
         }
         if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 3)
         {
             if (targetFlags_800CD844 & 2)
             {
-                targetSlot_800CD83C = DrawTargetList_800CC674(w, 1, f, 0xF);
+                targetSlot_800CD83C = DrawTargetList_800CC674(target, 1, listSel, 0xF);
             }
             PreviewCmdEffect_800CC40C();
         }
@@ -511,7 +512,7 @@ void DrawCmdMenu_800CBEA4()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 4)
         {
-            targetSlot_800CD83C = DrawTargetList_800CC674(w, 3, f, 0xF);
+            targetSlot_800CD83C = DrawTargetList_800CC674(target, 3, listSel, 0xF);
         }
     }
     if (stateDrawFlags_800CD820[menuState_800CD83A][k] & 1)
@@ -528,33 +529,33 @@ void DrawCmdMenu_800CBEA4()
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x40))
     {
-        struct_minion_ref r;
-        CombComPos2 p;
-        p = skillListPos_800CB680;
-        r.field_4 = 2;
-        r.ot_6 = 0xF;
-        r.field_8 = -1;
-        r.cursor_0 = skillCursor_800CD298[4];
-        r.scroll_2 = skillCursor_800CD298[5];
-        r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
-        r.field_A = 0;
-        DrawAbilityList_8002CE28(&r, p.xy[side_800CD839]);
-        previewMp_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
+        struct_minion_ref ref;
+        CombComPos2 pos;
+        pos = skillListPos_800CB680;
+        ref.field_4 = 2;
+        ref.ot_6 = 0xF;
+        ref.field_8 = -1;
+        ref.cursor_0 = skillCursor_800CD298[4];
+        ref.scroll_2 = skillCursor_800CD298[5];
+        ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
+        ref.field_A = 0;
+        DrawAbilityList_8002CE28(&ref, pos.xy[side_800CD839]);
+        previewMp_800A82D2 = -GetSkillMpCost_80031A04(&ref.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x80))
     {
-        struct_minion_ref r;
-        CombComPos2 p;
-        p = magicListPos_800CB688;
-        r.field_4 = 2;
-        r.ot_6 = 0xF;
-        r.field_8 = -1;
-        r.cursor_0 = magicCursor_800CD2A4[4];
-        r.scroll_2 = magicCursor_800CD2A4[5];
-        r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
-        r.field_A = 0;
-        DrawMagicList_8002CAC8(&r, p.xy[side_800CD839]);
-        previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
+        struct_minion_ref ref;
+        CombComPos2 pos;
+        pos = magicListPos_800CB688;
+        ref.field_4 = 2;
+        ref.ot_6 = 0xF;
+        ref.field_8 = -1;
+        ref.cursor_0 = magicCursor_800CD2A4[4];
+        ref.scroll_2 = magicCursor_800CD2A4[5];
+        ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
+        ref.field_A = 0;
+        DrawMagicList_8002CAC8(&ref, pos.xy[side_800CD839]);
+        previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&ref.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
     }
     if (menuState_800CD83A == 5)
     {
@@ -571,7 +572,7 @@ extern int IsDrainAction_80013228(void* a, void* b, void* c, int* d);
 extern int CheckMagicUsable_80034068(short* p);
 void PreviewCmdEffect_800CC40C()
 {
-    short arg[4];
+    short check[4];
     int out[10];
     unsigned int i;
     UnitStatus* src;
@@ -612,15 +613,15 @@ void PreviewCmdEffect_800CC40C()
                 }
             }
         }
-        arg[0] = cmd_800CD840->arg_4;
-        arg[1] = side_800CD839 + 8;
-        arg[2] = targetSlot_800CD83C;
-        arg[3] = 0;
+        check[0] = cmd_800CD840->arg_4;
+        check[1] = side_800CD839 + 8;
+        check[2] = targetSlot_800CD83C;
+        check[3] = 0;
         if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 6)
         {
-            ((int (*)(short*))CheckUsableStub_80034124)(arg);
+            ((int (*)(short*))CheckUsableStub_80034124)(check);
         }
-        else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(arg))
+        else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(check))
         {
             previewHp_800A82D0 = 0;
         }
@@ -639,52 +640,52 @@ extern Minion teams_800A3AA0[][3];
 extern int IsMinionSlotEmpty_800A1934(Minion* p);
 extern int IsMinionFainted_800A1958(Minion* p);
 extern int CheckMagicUsable_80034068(short* p);
-int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
+int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
 {
-    CombComItem w[3];
+    CombComItem rows[3];
     CombComItem* list[4];
     CombComItem* items[3];
-    CombComMenu m;
-    short q[2];
+    CombComMenu menu;
+    short check[2];
     int res;
     int i;
     int k;
-    short x;
-    Minion* u;
+    short rowX;
+    Minion* minion;
     CombComItem* p0;
     CombComItem* it;
     CombComItem** pk;
     CombComItem** pi;
-    w[0] = targetItem0_800CB690;
-    w[1] = targetItem1_800CB6C8;
-    w[2] = targetItem2_800CB700;
+    rows[0] = targetItem0_800CB690;
+    rows[1] = targetItem1_800CB6C8;
+    rows[2] = targetItem2_800CB700;
     pk = list;
     memset(pk, 0, 0x10);
     memset(items, 0, 0xC);
-    p0 = &w[0];
-    m = menuWinTmpl_800CB5D0;
-    items[1] = &w[1];
+    p0 = &rows[0];
+    menu = menuWinTmpl_800CB5D0;
+    items[1] = &rows[1];
     items[0] = p0;
-    items[2] = &w[2];
-    m.ot_14 = f;
-    x = side_800CD839 * 62 + 100;
-    w[0].x_10 = x;
-    w[1].x_10 = x;
-    w[2].x_10 = x;
-    m.time_4 = GetTime30Hz_8002C64C();
-    m.sel_C = sel;
-    m.items_10 = pk;
-    q[0] = arg[0];
+    items[2] = &rows[2];
+    menu.ot_14 = ot;
+    rowX = side_800CD839 * 62 + 100;
+    rows[0].x_10 = rowX;
+    rows[1].x_10 = rowX;
+    rows[2].x_10 = rowX;
+    menu.time_4 = GetTime30Hz_8002C64C();
+    menu.sel_C = sel;
+    menu.items_10 = pk;
+    check[0] = target[0];
     res = 0;
     if (mode == 1)
     {
         {
-            UnitStatus* s = GetUnitStatus_80014390((unsigned char)(((unsigned char*)arg)[2] + 8));
+            UnitStatus* status = GetUnitStatus_80014390((unsigned char)(((unsigned char*)target)[2] + 8));
             list[0] = p0;
-            p0->text_4 = s->name_10;
+            p0->text_4 = status->name_10;
         }
-        q[1] = arg[1] + 8;
-        if (CheckMagicUsable_80034068(q) == 0)
+        check[1] = target[1] + 8;
+        if (CheckMagicUsable_80034068(check) == 0)
         {
             list[0]->flags &= ~2;
         }
@@ -692,20 +693,20 @@ int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
         {
             list[0]->flags |= 2;
         }
-        res = ((int*)sideSlot_800A4078)[arg[1]];
+        res = ((int*)sideSlot_800A4078)[target[1]];
     }
     else
     {
         pi = pk;
         for (k = i = 0; i < 3; i++)
         {
-            u = &teams_800A3AA0[arg[1]][i];
-            if (i != ((int*)sideSlot_800A4078)[side_800CD839] && IsMinionSlotEmpty_800A1934(u) == 0)
+            minion = &teams_800A3AA0[target[1]][i];
+            if (i != ((int*)sideSlot_800A4078)[side_800CD839] && IsMinionSlotEmpty_800A1934(minion) == 0)
             {
                 it = items[k];
                 *pk = it;
-                it->text_4 = u->status_84.name_10;
-                if (IsMinionFainted_800A1958(u))
+                it->text_4 = minion->status_84.name_10;
+                if (IsMinionFainted_800A1958(minion))
                 {
                     (*pk)->flags |= 2;
                 }
@@ -727,7 +728,7 @@ int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
             pi++;
         }
     }
-    DrawMenuWindows_8002A5A4(&m);
+    DrawMenuWindows_8002A5A4(&menu);
     return res;
 }
 #endif
@@ -764,31 +765,31 @@ extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
 // 1 when the highlighted entry can be chosen, else 0 with errorMsg_800CD84C set to the reason (or 0)
 int CheckCmdSelectable_800CCA94()
 {
-    struct_minion_ref a;
-    short b[4];
+    struct_minion_ref ref;
+    short check[4];
     int idx = GetMenuCursorIndex_8003DA54(activeCursor_800CD854);
-    int* p;
-    a.cursor_0 = activeCursor_800CD854[4];
+    int* error;
+    ref.cursor_0 = activeCursor_800CD854[4];
     errorMsg_800CD84C = 0;
-    a.scroll_2 = activeCursor_800CD854[5];
-    a.field_A = 0;
-    b[3] = 0;
-    b[0] = cmd_800CD840->arg_4;
-    b[1] = side_800CD839 + 8;
-    b[2] = targetSlot_800CD83C;
+    ref.scroll_2 = activeCursor_800CD854[5];
+    ref.field_A = 0;
+    check[3] = 0;
+    check[0] = cmd_800CD840->arg_4;
+    check[1] = side_800CD839 + 8;
+    check[2] = targetSlot_800CD83C;
     switch (menuState_800CD83A)
     {
     case 0:
-        p = cmdInfo_800CD46C[(short)idx].error_4;
-        if (p == 0)
+        error = cmdInfo_800CD46C[(short)idx].error_4;
+        if (error == 0)
         {
             return 1;
         }
-        errorMsg_800CD84C = *p;
+        errorMsg_800CD84C = *error;
         return 0;
     case 1:
-        a.minion_C = GetSlotMinion_800A11D8(side_800CD839);
-        switch (CheckSkillUsable_80033C98(&a))
+        ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
+        switch (CheckSkillUsable_80033C98(&ref))
         {
         case 0:
         case 1:
@@ -805,8 +806,8 @@ int CheckCmdSelectable_800CCA94()
         }
         break;
     case 2:
-        a.minion_C = GetSlotMinion_800A11D8(side_800CD839);
-        switch (CheckMagicCastable_80033C08(&a))
+        ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
+        switch (CheckMagicCastable_80033C08(&ref))
         {
         case 0:
         case 1:
@@ -825,7 +826,7 @@ int CheckCmdSelectable_800CCA94()
     case 3:
         if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 2)
         {
-            switch ((unsigned int)((int (*)(short*))CheckUsableStub_80034124)(b))
+            switch ((unsigned int)((int (*)(short*))CheckUsableStub_80034124)(check))
             {
             case 0:
                 return 1;
@@ -840,7 +841,7 @@ int CheckCmdSelectable_800CCA94()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 3)
         {
-            switch ((unsigned int)CheckMagicUsable_80034068(b))
+            switch ((unsigned int)CheckMagicUsable_80034068(check))
             {
             case 0:
                 return 1;
@@ -885,7 +886,7 @@ extern int GetMagicTargetFlags_8001ACE4(int);
 // Confirm: takes the highlighted entry and moves to the next menu state
 void AdvanceCmdMenu_800CCDD0()
 {
-    int v;
+    int skills;
     prevState_800CD850 = menuState_800CD83A;
     switch (menuState_800CD83A)
     {
@@ -895,8 +896,8 @@ void AdvanceCmdMenu_800CCDD0()
         cmd_800CD840->kind_0 = cmdKinds_800CD524[(short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C)];
         break;
     case 1:
-        v = GetSlotSkills_800A11A0(side_800CD839);
-        targetFlags_800CD844 = GetSkillTargetFlags_80031B0C(v, GetSelectedSkill_800CBC28());
+        skills = GetSlotSkills_800A11A0(side_800CD839);
+        targetFlags_800CD844 = GetSkillTargetFlags_80031B0C(skills, GetSelectedSkill_800CBC28());
         menuState_800CD83A = 4;
         cmd_800CD840->arg_4 = GetSelectedSkill_800CBC28();
         break;
@@ -1004,9 +1005,9 @@ extern void DrawCmdMenu_800CBEA4();
 // The menu event: state 4 = command complete, Start opens the pause menu (state 5)
 void CmdMenuTask_800CD16C(EventEntry* e, void* buf)
 {
-    short* m = GetStateCursor_800CB974(menuState_800CD83A);
-    activeCursor_800CD854 = m;
-    UpdateMenuCursor_8003D794(m, padIndex_800CD848);
+    short* cursor = GetStateCursor_800CB974(menuState_800CD83A);
+    activeCursor_800CD854 = cursor;
+    UpdateMenuCursor_8003D794(cursor, padIndex_800CD848);
     if (padPressed_8009194C[padIndex_800CD848] & 0x800)
     {
         menuState_800CD83A = 5;

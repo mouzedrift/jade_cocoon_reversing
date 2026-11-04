@@ -5,24 +5,24 @@
 #include "sound.h"
 #include "equip.h"
 
-struct EquipCtx_equip;
-typedef struct EquipTask_equip
+struct EquipCtx;
+typedef struct EquipTask
 {
     unsigned int flags_0;
     int field_4;
     void (*next_8)();
     int field_C;
     int field_10;
-    struct EquipCtx_equip* ctx_14;
-} EquipTask_equip;
+    struct EquipCtx* ctx_14;
+} EquipTask;
 
-typedef struct EquipTaskOuter_equip
+typedef struct EquipTaskHolder
 {
     char pad_0[0x10];
-    EquipTask_equip t;
-} EquipTaskOuter_equip;
+    EquipTask task_10;
+} EquipTaskHolder;
 
-typedef struct EquipCtx_equip
+typedef struct EquipCtx
 {
     short stepCursor_0[6];
     short stepScroll_C[6];
@@ -45,67 +45,70 @@ typedef struct EquipCtx_equip
     short openTimer_42;
     unsigned short flags_44;
     short msgTimer_46;
-} EquipCtx_equip;
+} EquipCtx;
 
-extern EquipTaskOuter_equip* equipTask_8008D4C4;
+extern EquipTaskHolder* equipTask_8008D4C4;
 extern unsigned short padPressed_8009194C;
-extern int UpdateMenuCursor_8003D794(void* p, int a1);
+extern int UpdateMenuCursor_8003D794(void* cursor, int pad);
 extern void DrawMenuBackground_8002BE10();
-extern void CompactInventory_800AD3F0(int a0);
-extern int GetLastInventorySlot_800AD308(int a0);
-extern int GetInventorySlotId_800AD288(int a0, int a1);
-extern int SetEquipment_800AD9EC(int a0, int a1);
-extern void DrawEquipMenu_800C4A94(EquipCtx_equip* c);
-extern void HandleEquipCursorInput_800C4D50(EquipCtx_equip* c);
-extern void ChangeEquipMenuStep_800C4DF4(EquipCtx_equip* c);
-extern void UpdateEquipSelection_800C51B0(EquipCtx_equip* c);
-extern void SetEquipCursorArea_800C497C(EquipCtx_equip* c);
-extern void EquipMenuTask_800C48B4(EquipTask_equip* t, EquipCtx_equip* c);
-extern void CannotUnequipTask_800C50F0(EquipTask_equip* t, EquipCtx_equip* c);
-extern void TryEquipItem_800C5064(EquipCtx_equip* c);
+extern void CompactInventory_800AD3F0(int category);
+extern int GetLastInventorySlot_800AD308(int category);
+extern int GetInventorySlotId_800AD288(int slot, int category);
+extern int SetEquipment_800AD9EC(int itemId, int category);
+extern void DrawEquipMenu_800C4A94(EquipCtx* c);
+extern void HandleEquipCursorInput_800C4D50(EquipCtx* c);
+extern void ChangeEquipMenuStep_800C4DF4(EquipCtx* c);
+extern void UpdateEquipSelection_800C51B0(EquipCtx* c);
+extern void SetEquipCursorArea_800C497C(EquipCtx* c);
+extern void EquipMenuTask_800C48B4(EquipTask* t, EquipCtx* c);
+extern void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c);
+extern void TryEquipItem_800C5064(EquipCtx* c);
 typedef struct
 {
     short x;
     short y;
     short w;
     short h;
-} Rect8_equip;
+} EquipRect;
 
+// DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
 typedef struct
 {
-    short a;
-    short b;
-} ShortPair_equip;
+    short kind_0;
+    short dir_2;
+} EquipArrow;
 
+// the window colour DrawWindow_80042460 takes (CombSelBox)
 typedef struct
 {
-    short a;
-    char b;
-    char c;
-} Small_equip;
+    short color_0;
+    char state_2;
+    char frame_3;
+} EquipBox;
 
 extern short uiColor_8008B590;
 
-extern void DrawLevantStats_8002F7D0(void* p, int a1);
-extern void CalcStatsWithEquip_8002E288(UnitStatus* a0, int a1, int a2, unsigned char* p);
-extern void DrawStatCompare_8002E188(void* a0, void* a1, void* a2, int a3);
-extern void DrawScrollArrow_8002B3DC(ShortPair_equip p, int b, void* c, int d);
-extern void DrawWindow_80042460(void* a0, void* a1, void* a2, unsigned int a3);
-extern void DrawEquipDescription_800C5440(short a0, short a1, int a2);
+extern void DrawLevantStats_8002F7D0(void* pos, int ot);
+extern void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out);
+extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot);
+extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
+extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
+extern void DrawEquipDescription_800C5440(short itemId, short category, int pos);
+// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
 typedef struct
 {
-    int a;
-    int b;
-    int c;
-    int d;
-    void* e;
-    int f;
-} Params5510_equip;
+    int flags_0;
+    int time_4;
+    int anim_8;
+    int cursor_C;
+    void* rows_10;
+    int ot_14;
+} EquipMenuWin;
 
-extern int GetEquipmentName_8001D128(int a0, int a1);
-extern int GetInventorySlotCount_800AD2C8(int a0, int a1);
+extern int GetEquipmentName_8001D128(int id, int category);
+extern int GetInventorySlotCount_800AD2C8(int slot, int category);
 extern void DrawMenuWindows_8002A5A4(void* p);
-extern void DrawScrollArrow_8002C6DC(int a0, short a1, short a2);
+extern void DrawScrollArrow_8002C6DC(int pos, short dir, short ot);
 
 typedef struct
 {
@@ -116,13 +119,13 @@ typedef struct
     short e;
     int f;
 } EquipListParams;
-extern void DrawEquipItemList_800C5510(EquipListParams* q, Rect8_equip* r, short sel);
+extern void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short category);
 
 extern char name_800826B0[];
-extern void DrawButtonHelpBar_8002B004(void* a0, int a1, int a2);
+extern void DrawButtonHelpBar_8002B004(void* entries, int pos, int ot);
 extern void AddClipDrawAreaPrim_80033308(void* p);
 extern void DrawEquipmentWindow_800C0E04(void* a0, void* a1, int a2);
-extern void DrawEquipStats_800C5314(EquipCtx_equip* c);
+extern void DrawEquipStats_800C5314(EquipCtx* c);
 
 
 int equipOverlayId_800C29D0 SDATA = 37;
@@ -253,11 +256,11 @@ const char aCannotUnequip_800C4788[32] = { 130, 98, 130, 129, 130, 142, 130, 142
 // Matched
 void StartEquipMenu_800C47A8(void)
 {
-    EquipTask_equip* t = &equipTask_8008D4C4->t;
-    EquipCtx_equip* c;
+    EquipTask* task = &equipTask_8008D4C4->task_10;
+    EquipCtx* c;
     short i;
-    t->flags_0 = (t->flags_0 | 1) & 0xFFFF7FFF;
-    c = t->ctx_14;
+    task->flags_0 = (task->flags_0 | 1) & 0xFFFF7FFF;
+    c = task->ctx_14;
     for (i = 0; i < 6; i++)
     {
         c->stepScroll_C[i] = 0;
@@ -282,13 +285,13 @@ void StartEquipMenu_800C47A8(void)
     SetEquipCursorArea_800C497C(c);
     c->cursor_3C = 0;
     c->scroll_3E = 0;
-    t->next_8 = EquipMenuTask_800C48B4;
+    task->next_8 = EquipMenuTask_800C48B4;
     unknownFlags_8008D678 |= 0x80000000;
 }
 
 
 // Matched
-void EquipMenuTask_800C48B4(EquipTask_equip* t, EquipCtx_equip* c)
+void EquipMenuTask_800C48B4(EquipTask* t, EquipCtx* c)
 {
     DrawMenuBackground_8002BE10();
     if (unknownFlags_8008D678 >= 0)
@@ -313,27 +316,27 @@ void EquipMenuTask_800C48B4(EquipTask_equip* t, EquipCtx_equip* c)
 
 
 // Matched
-void SetEquipCursorArea_800C497C(EquipCtx_equip* c)
+void SetEquipCursorArea_800C497C(EquipCtx* c)
 {
     short i;
     for (i = 0; i < 4; i++)
     {
         if ((modeCursorAreaMasks_800C59B8[c->mode_1C] >> i) & 1)
         {
-            short* e = &cursorAreas_800C59C0[i * 4];
-            int v;
-            c->cols_34 = e[0];
-            c->rows_36 = e[1];
-            c->count_38 = e[2];
-            c->cursorFlags_3A = e[3];
+            short* area = &cursorAreas_800C59C0[i * 4];
+            int last;
+            c->cols_34 = area[0];
+            c->rows_36 = area[1];
+            c->count_38 = area[2];
+            c->cursorFlags_3A = area[3];
             if (c->mode_1C == 1)
             {
-                v = GetLastInventorySlot_800AD308(c->category_18 + 1);
-                if (v < 2)
+                last = GetLastInventorySlot_800AD308(c->category_18 + 1);
+                if (last < 2)
                 {
-                    v = 2;
+                    last = 2;
                 }
-                c->count_38 = v + 1;
+                c->count_38 = last + 1;
                 if (c->category_18 == 2)
                 {
                     if (GetLastInventorySlot_800AD308(3) >= 2)
@@ -350,18 +353,18 @@ void SetEquipCursorArea_800C497C(EquipCtx_equip* c)
 
 #if 0
 // Not matched: register allocation of the hoisted constants differs ($19/$20 swapped)
-void DrawEquipMenu_800C4A94(EquipCtx_equip* c)
+void DrawEquipMenu_800C4A94(EquipCtx* c)
 {
     short i;
     int ofs = 0x38;
     int k;
-    Rect8_equip r;
+    EquipRect rect;
     union
     {
         EquipListParams q;
-        Small_equip s;
+        EquipBox s;
     } u;
-    EquipListParams q28;
+    EquipListParams equipList;
     if (unknownFlags_8008D678 < 0)
     {
         DrawButtonHelpBar_8002B004(name_800826B0, 0, 0xe);
@@ -380,8 +383,8 @@ void DrawEquipMenu_800C4A94(EquipCtx_equip* c)
                 }
                 else if (!(c->flags_44 & 8))
                 {
-                    r.x = 0x53;
-                    r.y = 0x89;
+                    rect.x = 0x53;
+                    rect.y = 0x89;
                     u.q.cursor = c->stepCursor_0[c->category_18 + 1];
                     u.q.scroll = c->stepScroll_C[c->category_18 + 1];
                     k = 2;
@@ -393,31 +396,31 @@ void DrawEquipMenu_800C4A94(EquipCtx_equip* c)
                     u.q.ot = 0xe;
                     u.q.e = 0;
                     u.q.f = 0;
-                    DrawEquipItemList_800C5510(&u.q, &r, c->category_18);
+                    DrawEquipItemList_800C5510(&u.q, &rect, c->category_18);
                 }
                 AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
                 break;
             case 1:
                 if (!(c->flags_44 & 2))
                 {
-                    r.x = 0xa;
-                    r.y = 0x3d;
-                    q28.cursor = c->category_18;
-                    q28.scroll = 0;
+                    rect.x = 0xa;
+                    rect.y = 0x3d;
+                    equipList.cursor = c->category_18;
+                    equipList.scroll = 0;
                     k = 4;
                     if (c->mode_1C == 0)
                     {
                         k = 2;
                     }
-                    q28.mode = k;
-                    q28.ot = 0xe;
-                    q28.e = 0;
-                    q28.f = 0;
-                    DrawEquipmentWindow_800C0E04(&q28, &r, 8);
+                    equipList.mode = k;
+                    equipList.ot = 0xe;
+                    equipList.e = 0;
+                    equipList.f = 0;
+                    DrawEquipmentWindow_800C0E04(&equipList, &rect, 8);
                     DrawEquipStats_800C5314(c);
-                    u.s.a = uiColor_8008B590;
-                    u.s.b = 0;
-                    u.s.c = 1;
+                    u.s.color_0 = uiColor_8008B590;
+                    u.s.state_2 = 0;
+                    u.s.frame_3 = 1;
                     DrawWindow_80042460(statsWindowRect_800C59A8, &u.s, pOT_8008D454 + 14, 0);
                 }
                 else
@@ -439,18 +442,18 @@ INCLUDE_OVERLAY_ASM(equip, DrawEquipMenu_800C4A94);
 
 
 // Matched
-void HandleEquipCursorInput_800C4D50(EquipCtx_equip* c)
+void HandleEquipCursorInput_800C4D50(EquipCtx* c)
 {
-    int v;
+    int nextMode;
     UpdateMenuCursor_8003D794(&c->cols_34, 0);
     if (c->openTimer_42 >= 8)
     {
         if (IsConfirmPressedP1_8003D380(0))
         {
-            v = equipMenuStepModes_800C59B0[c->step_1A + 1];
-            if (v != -1)
+            nextMode = equipMenuStepModes_800C59B0[c->step_1A + 1];
+            if (nextMode != -1)
             {
-                if (v != 2)
+                if (nextMode != 2)
                 {
                     PlaySfx_80031494(0x7e);
                 }
@@ -466,7 +469,7 @@ void HandleEquipCursorInput_800C4D50(EquipCtx_equip* c)
 
 
 // Matched
-void ChangeEquipMenuStep_800C4DF4(EquipCtx_equip* c)
+void ChangeEquipMenuStep_800C4DF4(EquipCtx* c)
 {
     if (c->confirmed_28)
     {
@@ -520,9 +523,9 @@ void ChangeEquipMenuStep_800C4DF4(EquipCtx_equip* c)
 
 
 // Matched
-void TryEquipItem_800C5064(EquipCtx_equip* c)
+void TryEquipItem_800C5064(EquipCtx* c)
 {
-    EquipTask_equip* t;
+    EquipTask* task;
     if (SetEquipment_800AD9EC(c->item_40, c->category_18))
     {
         PlaySfx_80031494(0x7e);
@@ -531,21 +534,21 @@ void TryEquipItem_800C5064(EquipCtx_equip* c)
     }
     else
     {
-        t = &equipTask_8008D4C4->t;
+        task = &equipTask_8008D4C4->task_10;
         PlaySfx_80031494(0x7c);
         c->flags_44 |= 8;
-        t->next_8 = CannotUnequipTask_800C50F0;
+        task->next_8 = CannotUnequipTask_800C50F0;
     }
 }
 
 
 // Matched
-void CannotUnequipTask_800C50F0(EquipTask_equip* t, EquipCtx_equip* c)
+void CannotUnequipTask_800C50F0(EquipTask* t, EquipCtx* c)
 {
-    char* p = cannotUnequipBox_800C5D50;
+    char* box = cannotUnequipBox_800C5D50;
     DrawMenuBackground_8002BE10();
     DrawEquipMenu_800C4A94(c);
-    DrawLargeTextBox_8002AF10((int)p, 0, 0xe);
+    DrawLargeTextBox_8002AF10((int)box, 0, 0xe);
     if (c->msgTimer_46 < 0x96)
     {
         c->msgTimer_46++;
@@ -562,7 +565,7 @@ void CannotUnequipTask_800C50F0(EquipTask_equip* t, EquipCtx_equip* c)
 
 
 // Matched
-void UpdateEquipSelection_800C51B0(EquipCtx_equip* c)
+void UpdateEquipSelection_800C51B0(EquipCtx* c)
 {
     short v;
     switch (c->mode_1C)
@@ -601,114 +604,114 @@ void UpdateEquipSelection_800C51B0(EquipCtx_equip* c)
 
 
 // Matched
-void DrawEquipStats_800C5314(EquipCtx_equip* c)
+void DrawEquipStats_800C5314(EquipCtx* c)
 {
-    unsigned char buf10[0x18];
-    unsigned char buf28[0x18];
-    Rect8_equip r40;
-    UnitStatus* h;
+    unsigned char baseStats[0x18];
+    unsigned char newStats[0x18];
+    EquipRect pos;
+    UnitStatus* levant;
     int mode;
-    h = GetUnitStatus_80014390(0);
-    CalcEquippedStats_80033624(buf10, h);
-    r40.x = 0xc2;
-    r40.y = 0x31;
-    DrawLevantStats_8002F7D0(&r40, 0xe);
+    levant = GetUnitStatus_80014390(0);
+    CalcEquippedStats_80033624(baseStats, levant);
+    pos.x = 0xc2;
+    pos.y = 0x31;
+    DrawLevantStats_8002F7D0(&pos, 0xe);
     mode = c->mode_1C;
     if (mode == 1 && c->item_40 != 0xff)
     {
         union
         {
-            ShortPair_equip p;
-            Small_equip s;
+            EquipArrow p;
+            EquipBox s;
         } u;
-        Rect8_equip r50;
-        CalcStatsWithEquip_8002E288(h, c->item_40, c->category_18, buf28);
-        r40.x = 0x119;
-        r40.y = 0x34;
-        DrawStatCompare_8002E188(buf10, buf28, &r40, 0xe);
-        u.p.a = 2;
-        u.p.b = 0;
-        r50.x = 0x112;
-        r50.y = 0x57;
-        DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &r50, 0xe);
-        u.s.a = uiColor_8008B590;
-        u.s.b = 0;
-        u.s.c = mode;
+        EquipRect arrowPos;
+        CalcStatsWithEquip_8002E288(levant, c->item_40, c->category_18, newStats);
+        pos.x = 0x119;
+        pos.y = 0x34;
+        DrawStatCompare_8002E188(baseStats, newStats, &pos, 0xe);
+        u.p.kind_0 = 2;
+        u.p.dir_2 = 0;
+        arrowPos.x = 0x112;
+        arrowPos.y = 0x57;
+        DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &arrowPos, 0xe);
+        u.s.color_0 = uiColor_8008B590;
+        u.s.state_2 = 0;
+        u.s.frame_3 = mode;
         DrawWindow_80042460(statCompareWindowRect_800C59A0, &u.s, pOT_8008D454 + 14, 0);
     }
 }
 
 
-void DrawEquipDescription_800C5440(short a0, short a1, int a2)
+void DrawEquipDescription_800C5440(short itemId, short category, int pos)
 {
-    int e = 0;
-    switch (a1)
+    int desc = 0;
+    switch (category)
     {
     case 0:
-        if (a0 < 0x17)
+        if (itemId < 0x17)
         {
-            e = (int)weaponDescs_800C59E0 + a0 * 16;
+            desc = (int)weaponDescs_800C59E0 + itemId * 16;
         }
         break;
     case 1:
-        if (a0 < 0xf)
+        if (itemId < 0xf)
         {
-            e = (int)armorDescs_800C5B50 + a0 * 16;
+            desc = (int)armorDescs_800C5B50 + itemId * 16;
         }
         break;
     case 2:
-        if (a0 < 0x11)
+        if (itemId < 0x11)
         {
-            e = (int)accessoryDescs_800C5C40 + a0 * 16;
+            desc = (int)accessoryDescs_800C5C40 + itemId * 16;
         }
         break;
     default:
-        e = 0;
+        desc = 0;
         break;
     }
-    if (e)
+    if (desc)
     {
-        DrawLargeTextBox_8002AF10(e, a2, 0xe);
+        DrawLargeTextBox_8002AF10(desc, pos, 0xe);
     }
 }
 
 
 // Matched
-void DrawEquipItemList_800C5510(EquipListParams* q, Rect8_equip* r, short sel)
+void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short category)
 {
     short i;
     int v;
-    int a;
-    int flag;
-    Params5510_equip prm;
+    int icon;
+    int count;
+    EquipMenuWin win;
     short k = 8;
     for (i = 0; i < 3; i++)
     {
-        v = GetInventorySlotId_800AD288(i + q->scroll, sel + 1);
+        v = GetInventorySlotId_800AD288(i + list->scroll, category + 1);
         if (v != 0xff)
         {
-            a = GetEquipmentIcon_8001D2D4(v, sel);
-            v = GetEquipmentName_8001D128(v, sel);
-            flag = GetInventorySlotCount_800AD2C8(i + q->scroll, sel + 1);
+            icon = GetEquipmentIcon_8001D2D4(v, category);
+            v = GetEquipmentName_8001D128(v, category);
+            count = GetInventorySlotCount_800AD2C8(i + list->scroll, category + 1);
         }
         else
         {
-            a = -1;
+            icon = -1;
             v = (int)emptyText_800C4784;
-            flag = 0;
+            count = 0;
         }
-        equipListRows_800C598C[i]->icon_4 = a;
+        equipListRows_800C598C[i]->icon_4 = icon;
         equipListRows_800C598C[i]->name_20 = v;
-        equipListRows_800C598C[i]->count_3C = flag;
+        equipListRows_800C598C[i]->count_3C = count;
         equipListRows_800C598C[i]->sprts_8 = &publicTiySprts_8008D434;
         equipListRows_800C598C[i]->tpages_C = &publicTiyTPages_8008D440;
-        equipListRows_800C598C[i]->x_10 = r->x;
-        equipListRows_800C598C[i]->y_12 = r->y + i * 22;
-        equipListRows_800C598C[i]->nameX_2C = r->x + 0x15;
-        equipListRows_800C598C[i]->nameY_2E = r->y + i * 22;
-        equipListRows_800C598C[i]->countX_48 = r->x + 0x85;
-        equipListRows_800C598C[i]->countY_4A = r->y + i * 22;
-        if (flag == 0)
+        equipListRows_800C598C[i]->x_10 = rect->x;
+        equipListRows_800C598C[i]->y_12 = rect->y + i * 22;
+        equipListRows_800C598C[i]->nameX_2C = rect->x + 0x15;
+        equipListRows_800C598C[i]->nameY_2E = rect->y + i * 22;
+        equipListRows_800C598C[i]->countX_48 = rect->x + 0x85;
+        equipListRows_800C598C[i]->countY_4A = rect->y + i * 22;
+        if (count == 0)
         {
             equipListRows_800C598C[i]->flags_0 |= 0x40;
             equipListRows_800C598C[i]->nameFlags_1C |= 0x40;
@@ -721,26 +724,26 @@ void DrawEquipItemList_800C5510(EquipListParams* q, Rect8_equip* r, short sel)
             equipListRows_800C598C[i]->countFlags_38 &= ~0x40;
         }
     }
-    prm.a = q->mode;
-    prm.b = frameCount_8008D3FC;
-    prm.c = k;
-    prm.d = q->cursor;
-    prm.e = equipListRows_800C598C;
-    prm.f = q->ot;
-    DrawMenuWindows_8002A5A4(&prm);
+    win.flags_0 = list->mode;
+    win.time_4 = frameCount_8008D3FC;
+    win.anim_8 = k;
+    win.cursor_C = list->cursor;
+    win.rows_10 = equipListRows_800C598C;
+    win.ot_14 = list->ot;
+    DrawMenuWindows_8002A5A4(&win);
     SetFontClutOffset_8003F900(2, 0);
-    v = GetLastInventorySlot_800AD308(sel + 1) + 1;
+    v = GetLastInventorySlot_800AD308(category + 1) + 1;
     if (v < 3)
     {
         v = 3;
     }
-    if (q->scroll != 0)
+    if (list->scroll != 0)
     {
-        DrawScrollArrow_8002C6DC((int)scrollUpArrowPos_800C5834, 3, q->ot);
+        DrawScrollArrow_8002C6DC((int)scrollUpArrowPos_800C5834, 3, list->ot);
     }
-    if (q->scroll < v - 3 && v >= 4)
+    if (list->scroll < v - 3 && v >= 4)
     {
-        DrawScrollArrow_8002C6DC((int)scrollDownArrowPos_800C5838, 1, q->ot);
+        DrawScrollArrow_8002C6DC((int)scrollDownArrowPos_800C5838, 1, list->ot);
     }
 }
 

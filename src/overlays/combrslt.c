@@ -14,8 +14,8 @@ typedef struct CombRsltTask
 typedef struct CombRsltBox
 {
     short col_0;
-    char c_2;
-    char c_3;
+    char state_2;
+    char frame_3;
 } CombRsltBox;
 
 // DrawMenuItemWithWindow_8002ADB4's text window (0x1C bytes)
@@ -40,12 +40,12 @@ const CombRsltText minionHpItem_800A40C4 = { 10, 1, 64, { (int)&uiTiySprts_8008D
 void VersusResultTask_800A40E0(CombRsltTask* task)
 {
     CombRsltBox box;
-    CombRsltText str = resultTitleItem_800A408C;
+    CombRsltText title = resultTitleItem_800A408C;
     int i;
-    box.c_2 = 0;
-    box.c_3 = 1;
+    box.state_2 = 0;
+    box.frame_3 = 1;
     box.col_0 = uiColor_8008B590;
-    DrawMenuItemWithWindow_8002ADB4(&str, &box, 0xF, 0);
+    DrawMenuItemWithWindow_8002ADB4(&title, &box, 0xF, 0);
     for (i = 0; i < 2; i++)
     {
         DrawPlayerResult_800A4240(i);
@@ -79,25 +79,25 @@ void DrawPlayerResult_800A4240(int player)
     CombRsltBox box;
     short pos[2];
     int j;
-    int u;
+    int res;
     int result = sideResult_800A3A98[player];
     switch (result)
     {
     case 0:
         resultItems_800A4870[player][1] = 0xE6;
-        box.c_2 = 1;
+        box.state_2 = 1;
         break;
     case 1:
         resultItems_800A4870[player][1] = 0x68;
-        box.c_2 = 2;
+        box.state_2 = 2;
         break;
     case 2:
         resultItems_800A4870[player][1] = 0x41;
-        box.c_2 = 2;
+        box.state_2 = 2;
         break;
     }
     box.col_0 = uiColor_8008B590;
-    box.c_3 = 1;
+    box.frame_3 = 1;
     DrawMenuItemWithWindow_8002ADB4(playerLabelItems_800A4830[player], &box, 0xF, GetTime30Hz_8002C64C());
     DrawMenuItemWithWindow_8002ADB4(resultItems_800A4870[player], &box, 0xF, GetTime30Hz_8002C64C());
     pos[0] = scoreWindows_800A48B0[player][8];
@@ -105,60 +105,60 @@ void DrawPlayerResult_800A4240(int player)
     DrawScorePair_800A444C(pos, 0xF, sideWins_800A3A90[player ^ 1], sideWins_800A3A90[player]);
     DrawMenuItemWithWindow_8002ADB4(scoreWindows_800A48B0[player], &box, 0xF, GetTime30Hz_8002C64C());
     j = 0;
-    u = sideResult_800A3A98[player];
-    if (u < 3 && u != 0)
-        box.c_2 = 0;
+    res = sideResult_800A3A98[player];
+    if (res < 3 && res != 0)
+        box.state_2 = 0;
     for (j = 0; j < 3; j++)
-        DrawResultMinion_800A4554(player, j + slotCursor_800A47E8[0].idx_A, &box);
+        DrawResultMinion_800A4554(player, j + slotCursor_800A47E8[0].scroll_A, &box);
 }
 
 // Near miss: scheduling of the repeated x/y stores
 // Draws the two numbers of a player's score box, each followed by a UI sprite (0xAE, 0x4D)
 // Matched
-void DrawScorePair_800A444C(unsigned short* p, int ot, int b, int c)
+void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWins)
 {
-    short v[2];
+    short xy[2];
     {
         unsigned int x;
         unsigned int y;
-        x = p[0];
-        v[0] = x + 0x1C;
-        y = p[1];
-        v[1] = y + 4;
-        v[0] = x + 0x12;
-        v[1] = y + 7;
-        DrawSmallNumber3_8002C290(v, b, ot);
+        x = pos[0];
+        xy[0] = x + 0x1C;
+        y = pos[1];
+        xy[1] = y + 4;
+        xy[0] = x + 0x12;
+        xy[1] = y + 7;
+        DrawSmallNumber3_8002C290(xy, oppWins, ot);
     }
     {
         unsigned int x;
         unsigned int y;
-        x = p[0];
-        v[0] = x + 0x1C;
-        y = p[1];
-        v[0] = x + 0x14;
-        v[1] = y + 5;
-        DrawUiTiySprt_8002C06C(v, 0xAE, ot);
+        x = pos[0];
+        xy[0] = x + 0x1C;
+        y = pos[1];
+        xy[0] = x + 0x14;
+        xy[1] = y + 5;
+        DrawUiTiySprt_8002C06C(xy, 0xAE, ot);
     }
     {
         unsigned int x;
         unsigned int y;
-        x = p[0];
-        v[0] = x + 0x43;
-        y = p[1];
-        v[1] = y + 4;
-        v[0] = x + 0x39;
-        v[1] = y + 7;
-        DrawSmallNumber3_8002C290(v, c, ot);
+        x = pos[0];
+        xy[0] = x + 0x43;
+        y = pos[1];
+        xy[1] = y + 4;
+        xy[0] = x + 0x39;
+        xy[1] = y + 7;
+        DrawSmallNumber3_8002C290(xy, ownWins, ot);
     }
     {
         unsigned int x;
         unsigned int y;
-        x = p[0];
-        v[0] = x + 0x43;
-        y = p[1];
-        v[0] = x + 0x3B;
-        v[1] = y + 5;
-        DrawUiTiySprt_8002C06C(v, 0x4D, ot);
+        x = pos[0];
+        xy[0] = x + 0x43;
+        y = pos[1];
+        xy[0] = x + 0x3B;
+        xy[1] = y + 5;
+        DrawUiTiySprt_8002C06C(xy, 0x4D, ot);
     }
 }
 
@@ -174,48 +174,48 @@ extern void DrawWindow_80042460();
 #if 0
 void DrawResultMinion_800A4554(int player, int slot, void* box)
 {
-    CombRsltText a = minionLabelItem_800A40A8;
-    CombRsltText b;
+    CombRsltText label = minionLabelItem_800A40A8;
+    CombRsltText hp;
     CombRsltPos r1;
     CombRsltPos r2;
     CombRsltPos r3[2];
-    CombRsltPos* q;
-    Minion* e;
-    int on;
+    CombRsltPos* pos;
+    Minion* minion;
+    int fainted;
     if (IsMinionFainted_800A1958(&teams_800A3AA0[player][slot]))
     {
-        a.flags_0 |= 2;
-        on = 1;
+        label.flags_0 |= 2;
+        fainted = 1;
     }
     else
     {
-        on = 0;
-        a.flags_0 &= ~2;
+        fainted = 0;
+        label.flags_0 &= ~2;
     }
-    e = &teams_800A3AA0[player][slot];
-    if (IsMinionSlotEmpty_800A1934(e) != 1)
+    minion = &teams_800A3AA0[player][slot];
+    if (IsMinionSlotEmpty_800A1934(minion) != 1)
     {
-        a.text_4 = slotLabelSprites_800A48B8[slot];
-        q = minionSlotPos_800A48C4 + slot + player * 3;
-        a.x_10 = q->x;
-        a.y_12 = q->y;
-        DrawMenuItemWithWindow_8002ADB4(&a, box, 0xF, GetTime30Hz_8002C64C());
-        b = minionHpItem_800A40C4;
-        b.x_10 = q->x + 0x32;
-        b.y_12 = q->y;
-        if (!on)
+        label.text_4 = slotLabelSprites_800A48B8[slot];
+        pos = minionSlotPos_800A48C4 + slot + player * 3;
+        label.x_10 = pos->x;
+        label.y_12 = pos->y;
+        DrawMenuItemWithWindow_8002ADB4(&label, box, 0xF, GetTime30Hz_8002C64C());
+        hp = minionHpItem_800A40C4;
+        hp.x_10 = pos->x + 0x32;
+        hp.y_12 = pos->y;
+        if (!fainted)
         {
-            r1.x = q->x + 0x2F;
-            r1.y = q->y;
-            DrawHpGauge_8002F078(&e->status_84, &r1, 0, 0xF);
-            b.type_2 = 0;
+            r1.x = pos->x + 0x2F;
+            r1.y = pos->y;
+            DrawHpGauge_8002F078(&minion->status_84, &r1, 0, 0xF);
+            hp.type_2 = 0;
         }
-        DrawMenuItemWithWindow_8002ADB4(&b, box, 0xF, GetTime30Hz_8002C64C());
-        r2.x = q->x;
-        r2.y = q->y + 0x14;
-        DrawMinionNameLevel_800A1844(e, &r2, a.flags_0);
-        r3[0].x = q->x;
-        r3[0].y = q->y + 0x14;
+        DrawMenuItemWithWindow_8002ADB4(&hp, box, 0xF, GetTime30Hz_8002C64C());
+        r2.x = pos->x;
+        r2.y = pos->y + 0x14;
+        DrawMinionNameLevel_800A1844(minion, &r2, label.flags_0);
+        r3[0].x = pos->x;
+        r3[0].y = pos->y + 0x14;
         r3[1].x = 0x90;
         r3[1].y = 0x13;
         DrawWindow_80042460(r3, box, pOT_8008D454 + 15, GetTime30Hz_8002C64C());
@@ -224,7 +224,7 @@ void DrawResultMinion_800A4554(int player, int slot, void* box)
 #endif
 INCLUDE_OVERLAY_ASM(combrslt, DrawResultMinion_800A4554);
 
-CombRsltEnt slotCursor_800A47E8[1] = { { { 1, 0, 1, 0, 1, 0, 64 } } };
+CombRsltCursor slotCursor_800A47E8[1] = { { { 1, 0, 1, 0, 1, 0, 64 } } };
 int dword_800A47F4 = 0;
 int playerLabelItemP1_800A47F8[7] = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x14000A, 0x140032, 0x40002 };
 int playerLabelItemP2_800A4814[7] = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x140104, 0x140032, 0x40002 };

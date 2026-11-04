@@ -104,7 +104,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     }
     {
         CombSelBox col;
-        RECT r;
+        RECT rect;
         short xs[2];
         unsigned short pos[2];
         xs[0] = 0x100;
@@ -112,18 +112,18 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         col.state_2 = 0;
         col.frame_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;
-        r.x = xs[curPlayer_800A38D9];
-        r.y = 0x3B;
-        r.w = 0x2F;
-        r.h = 0xE;
-        pos[0] = r.x + 0x13;
+        rect.x = xs[curPlayer_800A38D9];
+        rect.y = 0x3B;
+        rect.w = 0x2F;
+        rect.h = 0xE;
+        pos[0] = rect.x + 0x13;
         pos[1] = 0x3E;
         DrawSmallNumber3_8002C290(pos, (short)GetMenuCursorIndex_8003DA54(&listCursor_800A596C) + 1, 10);
         pos[0] += 1;
         DrawUiTiySprt_8002C06C(pos, 0xDA, 10);
         pos[0] += 0x16;
         DrawSmallNumber3_8002C290(pos, 15, 10);
-        DrawWindow_80042460(&r, &col, pOT_8008D454 + 15, 0);
+        DrawWindow_80042460(&rect, &col, pOT_8008D454 + 15, 0);
     }
     {
         CombSelItem item;
@@ -185,23 +185,23 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             break;
         case 1:
         {
-            const char* s = 0;
+            const char* prompt = 0;
             switch (combatMenuChoice_800A1BC4)
             {
             case 1:
-                s = aSelectSpaceToEn_800A42A8;
+                prompt = aSelectSpaceToEn_800A42A8;
                 break;
             case 2:
-                s = aSelectMinionToD_800A42E4;
+                prompt = aSelectMinionToD_800A42E4;
                 break;
             }
-            DrawSmallTextBox_8002AF58((int)&s, 0, 15);
+            DrawSmallTextBox_8002AF58((int)&prompt, 0, 15);
             break;
         }
         case 2:
         {
-            const char* s = aSelectMinionToE_800A4318;
-            DrawSmallTextBox_8002AF58((int)&s, 0, 15);
+            const char* prompt = aSelectMinionToE_800A4318;
+            DrawSmallTextBox_8002AF58((int)&prompt, 0, 15);
             break;
         }
         case 3:
@@ -253,42 +253,42 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
 
 void PlaceSideWindows_800A4C74()
 {
-    short v[2];
+    short xs[2];
     int i;
     for (i = 0; i < 3; i++)
     {
-        v[0] = 0xA;
-        v[1] = 0xA6;
-        teamRows_800A566C[i]->x_10 = v[*(volatile unsigned char*)&curPlayer_800A38D9];
+        xs[0] = 0xA;
+        xs[1] = 0xA6;
+        teamRows_800A566C[i]->x_10 = xs[*(volatile unsigned char*)&curPlayer_800A38D9];
     }
     for (i = 0; i < 6; i++)
     {
-        v[0] = 0x9B;
-        v[1] = 0x15;
-        listRows_800A57E4[i]->x_10 = v[*(volatile unsigned char*)&curPlayer_800A38D9];
+        xs[0] = 0x9B;
+        xs[1] = 0x15;
+        listRows_800A57E4[i]->x_10 = xs[*(volatile unsigned char*)&curPlayer_800A38D9];
     }
     for (i = 0; i < 5; i++)
     {
-        v[0] = 0xA;
-        v[1] = 0xCA;
-        mainRows_800A5930[i]->x_10 = v[*(volatile unsigned char*)&curPlayer_800A38D9];
+        xs[0] = 0xA;
+        xs[1] = 0xCA;
+        mainRows_800A5930[i]->x_10 = xs[*(volatile unsigned char*)&curPlayer_800A38D9];
     }
 }
 
-void CompactTeam_800A4D64(Minion* base)
+void CompactTeam_800A4D64(Minion* team)
 {
     int i;
     int j;
     for (i = 0; i < 2; i++)
     {
-        if (IsMinionSlotEmpty_800A1934(&base[i]) == 1)
+        if (IsMinionSlotEmpty_800A1934(&team[i]) == 1)
         {
             for (j = i + 1; j < 3; j++)
             {
-                if (IsMinionSlotEmpty_800A1934(&base[j]) == 0)
+                if (IsMinionSlotEmpty_800A1934(&team[j]) == 0)
                 {
-                    MemCopy_800403E8(&base[i], &base[j], 0xF8);
-                    ClearMinionSlot_800A197C(&base[j]);
+                    MemCopy_800403E8(&team[i], &team[j], 0xF8);
+                    ClearMinionSlot_800A197C(&team[j]);
                     break;
                 }
             }
@@ -411,9 +411,9 @@ void TeamSlotInput_800A5188()
         {
         case 1:
         {
-            Minion* a = &teams_800A3AA0[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)];
-            Minion* b = &rosters_800A1BC8[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&listCursor_800A596C)];
-            MemCopy_800403E8(a, b, 0xF8);
+            Minion* dst = &teams_800A3AA0[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&teamCursor_800A5960)];
+            Minion* src = &rosters_800A1BC8[curPlayer_800A38D9][(short)GetMenuCursorIndex_8003DA54(&listCursor_800A596C)];
+            MemCopy_800403E8(dst, src, 0xF8);
             selMode_800A38DB = 2;
             PlaySfx_80031494(0x7E);
             break;
@@ -448,14 +448,14 @@ void TeamSlotInput_800A5188()
 
 void ListInput_800A53B0()
 {
-    short s;
+    short choice;
     if (IsConfirmPressed_8003D288(0, curPad_800A3A94))
     {
-        s = combatMenuChoice_800A1BC4;
-        if (s == 1)
+        choice = combatMenuChoice_800A1BC4;
+        if (choice == 1)
         {
-            short r = GetMenuCursorIndex_8003DA54(&listCursor_800A596C);
-            if (IsMinionSlotEmpty_800A1934(&rosters_800A1BC8[curPlayer_800A38D9][r]) == 1)
+            short row = GetMenuCursorIndex_8003DA54(&listCursor_800A596C);
+            if (IsMinionSlotEmpty_800A1934(&rosters_800A1BC8[curPlayer_800A38D9][row]) == 1)
             {
                 PlaySfx_80031494(0x7C);
             }
@@ -503,12 +503,12 @@ void QuitToTitle_800A5538(CombSelTask* t)
     t->next_8(t);
 }
 
-int AllSlotsEmpty_800A5560(Minion* p, int n)
+int AllSlotsEmpty_800A5560(Minion* team, int count)
 {
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        if (IsMinionSlotEmpty_800A1934(p + i) == 0)
+        if (IsMinionSlotEmpty_800A1934(team + i) == 0)
         {
             return 0;
         }

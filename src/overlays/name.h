@@ -32,7 +32,7 @@ typedef struct
 {
     int mode_0;
     int time_4;
-    int f8;
+    int anim_8;
     int cursor_C;
 } NameMenu;
 

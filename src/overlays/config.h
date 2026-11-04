@@ -7,11 +7,12 @@
 #include "globals.h"
 #include "sound.h"
 
-typedef struct { char b[8]; } Bytes8Config;
+// the first 8 bytes of a menu cursor (CombSelCursor: cols, rows, count, flags)
+typedef struct { char b[8]; } CfgCursorHead;
 
 typedef struct CfgDlgConfig
 {
-    int mode_0, time_4, f8, cursor_C, items_10, ot_14; // a DrawMenuWindows_8002A5A4 menu
+    int mode_0, time_4, anim_8, cursor_C, items_10, ot_14; // a DrawMenuWindows_8002A5A4 menu
 } CfgDlgConfig;
 
 extern int configOverlayId_800C29D0;
@@ -44,7 +45,7 @@ extern int subtitlePageHelp_800C4C9C[7];
 extern int screenColorPageHelp_800C4CB8[1];
 extern int vibrationPageHelp_800C4CBC[1];
 extern int *pageHelpTexts_800C4CC0[5];
-extern Bytes8Config pageCursors_800C4CD4[5];
+extern CfgCursorHead pageCursors_800C4CD4[5];
 extern int topItemAudio_800C4CFC[14];
 extern int topItemSubtitle_800C4D34[14];
 extern int topItemScreenColor_800C4D6C[14];
