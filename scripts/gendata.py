@@ -465,6 +465,7 @@ class Gen:
         self.arrays = set(defined)   # names that are arrays (no & needed)
         self.local = {}              # name -> T of the objects being defined here
         self.int_refs = False        # ints that hold the address of a symbol become references (overlays)
+        self.outside = set()         # address names for places outside the images (overlays)
 
     @staticmethod
     def chunk_of(name):
@@ -507,6 +508,13 @@ class Gen:
         if self.int_refs and v < 0x80000000:
             # (overlays) a number in a pointer member: the member is used for both
             return "(%s)%s" % (getattr(t, "cast", None) or "void *", intstr(v))
+        if self.int_refs and (hit is None or not in_image(v)):
+            # (overlays) an address outside the overlay and the executable (another overlay's, a buffer behind it):
+            # an address name, equated by the overlay's link script
+            name = "name_%08X" % v
+            self.refs.add(name)
+            self.outside.add(name)
+            return "(%s)%s" % (getattr(t, "cast", None) or "void *", name)
         if hit is None or not in_image(v):
             raise GenError("pointer %08X outside the image" % v)
         a, names = hit

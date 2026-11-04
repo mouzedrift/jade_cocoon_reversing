@@ -336,14 +336,31 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
         texts[p] = t
     # symbols of the executable the initialisers use that the overlay doesn't see: the header that declares them
     hdrs = []
+    extra = []
     for src, d, types, gen in all_defs:
         for r in sorted(d.refs):
             if r in defined or r in types.decls or r in types.funcs:
                 continue
-            hs = [p for p, _ in gendata.find_extern(r) if p.endswith(".h")] or [p for p, _ in gendata.find_proto(r)]
-            hs = [h for h in hs if os.sep + "overlays" + os.sep not in h]
+            if r in gen.outside or (r in syms.addr and base <= syms.addr[r] < end and ovldata.is_data(r)):
+                # a place outside the images, or one of the overlay's chunks that stays assembly
+                t = gen.type_of(r)
+                line = "extern char %s[];" % r if r in gen.outside or (t is not None and t.kind == "array") else \
+                    "extern int %s;" % r
+                if line not in extra:
+                    extra.append(line)
+                continue
+            hs = [x for x in gendata.find_extern(r) if x[0].endswith(".h")] or gendata.find_proto(r)
+            hs = [x for x in hs if os.sep + "overlays" + os.sep not in x[0]] or [
+                x for x in gendata.find_extern(r) if os.sep + "overlays" + os.sep not in x[0]]
             if hs:
-                h = os.path.relpath(hs[0], os.path.join(REPO, "src"))
+                # the declaration itself when the overlay knows its types, else the header
+                line = hs[0][1].split("//")[0].strip()
+                words = re.findall(r"[A-Za-z_]\w*", re.split(r"\b%s\b" % re.escape(r), line)[0])
+                if all(w in gendata.C_WORDS or w in types.typedefs for w in words):
+                    if line not in extra:
+                        extra.append(line)
+                    continue
+                h = os.path.relpath(hs[0][0], os.path.join(REPO, "src"))
                 if h not in hdrs:
                     hdrs.append(h)
             elif r not in protos:
@@ -366,13 +383,16 @@ def main(name, exe, data, base, osyms, lib_ranges, only, write):
             node.args = None    # (the parameter types may be the .c file's own)
         ptext.append(("extern %s;" % gendata.decl_text(gendata.named(node, r), r)) if node is not None
                      else "extern void %s();" % r)
-    write_header(name, texts, exts, list(zip(protos, ptext)), hdrs)
+    write_header(name, texts, extra + exts, list(zip(protos, ptext)), hdrs)
     for p, t in texts.items():
         open(p, "w").write(t)
     # the .sym file names every definition (the link script equates the other address names of the source)
     path = ovldata.sym_path(name)
     st = open(path).read()
     for old, new in renames.items():
+        if not re.search(r"^%s=" % re.escape(old), st, re.M):
+            new_syms[new] = syms.addr.get(new, None) or next(a for a, x in sym_list if x == old)
+            continue
         st = re.sub(r"^%s=(0x[0-9a-fA-F]+;)(.*)$" % re.escape(old), lambda m: new + "=" + m.group(1) + (
             m.group(2) if ovldata.is_data(new) or "data" in m.group(2) else (m.group(2) + " // data" if m.group(2) else " // data")),
             st, flags=re.M)

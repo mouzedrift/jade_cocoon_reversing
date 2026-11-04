@@ -3,55 +3,67 @@
 #include "funcs.h"
 #include "globals.h"
 #include "model.h"
+#include "tstcompo.h"
 
 extern unsigned short padPressed_8009194C;
 extern unsigned short padRepeat_800918CC;
 
-INCLUDE_OVERLAY_ASM(tstcompo, dword_800A05A0);
+int dword_800A05A0 SDATA = 17;
+const char a9_800A05A4[] = "\202X"; // 9
+const char a8_800A05A8[] = "\202W"; // 8
+const char a7_800A05AC[] = "\202V"; // 7
+const char a6_800A05B0[] = "\202U"; // 6
+const char a5_800A05B4[] = "\202T"; // 5
+const char a4_800A05B8[] = "\202S"; // 4
+const char a3_800A05BC[] = "\202R"; // 3
+const char a2_800A05C0[] = "\202Q"; // 2
+const char a1_800A05C4[] = "\202P"; // 1
+const char a0_800A05C8[] = "\202O"; // 0
+const char asc_800A05CC[] = "\203p\203h\203\213\203J"; // パドルカ
+const char asc_800A05D8[] = "\203A\203\213\203p\203^\203\215\203\223"; // アルパタロン
+const char asc_800A05E8[] = "\203V\203F\203\212\203N"; // シェリク
+const char asc_800A05F4[] = "\203\211\203V\203\203\203o\203o"; // ラシャババ
+const char asc_800A0600[] = "\203g\203D\203C\203\223\203S"; // トゥインゴ
+const char asc_800A060C[] = "\203G\203X\203v"; // エスプ
+const char asc_800A0614[] = "\203W\203\211\203\213"; // ジラル
+const char asc_800A061C[] = "\203\210\203\213\203N"; // ヨルク
+const char asc_800A0624[] = "\203E\203O\203\211\203\200"; // ウグラム
+const char asc_800A0630[] = "\203X\203\212\203J\201[\203^"; // スリカータ
+const char asc_800A063C[] = "\203\212\203O"; // リグ
+const char asc_800A0644[] = "\203I\203W\203F"; // オジェ
+const char asc_800A064C[] = "\203l\201[\203u\203C"; // ネーブイ
+const char asc_800A0658[] = "\203\200\203O\201["; // ムグー
+const char asc_800A0660[] = "\203}\201[\203C\203F\203\223"; // マーイェン
+const char asc_800A066C[] = "\203M\203k\203C"; // ギヌイ
+const char asc_800A0674[] = "\203A\203V\203\203"; // アシャ
+const char asc_800A067C[] = "\203\200\203c\203L\203V\203\203\203u"; // ムツキシャブ
+const char asc_800A068C[] = "\203\211\203V\203\203\203u"; // ラシャブ
+const char asc_800A0698[] = "\203k\203V\203\203\203u"; // ヌシャブ
+const char asc_800A06A4[] = "\203h\203O\203\213\203`\203\205\201["; // ドグルチュー
+const char asc_800A06B4[] = "\203\211\203h\203\213\203`\203\205"; // ラドルチュ
+const char asc_800A06C0[] = "\203p\203^\203\213\203`\203\205\203E"; // パタルチュウ
+const char asc_800A06D0[] = "\203\211\203h\203C\203\201\203\213"; // ラドイメル
+const char asc_800A06DC[] = "\203X\203N\203C\203\201\203\213"; // スクイメル
+const char asc_800A06E8[] = "\203p\203^\203C\203\201\203\213"; // パタイメル
+const char asc_800A06F4[] = "\203q\203\211\203T\203O"; // ヒラサグ
+const char asc_800A0700[] = "\203}\203X\203R\203q\203\211"; // マスコヒラ
+const char asc_800A070C[] = "\203q\203\211\203\213\203R"; // ヒラルコ
+const char asc_800A0718[] = "\203e\203\211\203n\203\223\203u\201["; // テラハンブー
+const char asc_800A0728[] = "\203h\203O\203n\203\223\203u\201["; // ドグハンブー
+const char asc_800A0738[] = "\203\200\203J\203n\203\223\203u\201["; // ムカハンブー
+const char asc_800A0748[] = "\203x\203\211\203o\203\223\203T"; // ベラバンサ
+const char asc_800A0754[] = "\203h\203\223\203O\203\213"; // ドングル
+const char asc_800A0760[] = "\203\211\203M\203h\203O\203\213"; // ラギドグル
+const char asc_800A076C[] = "\203p\203^\203h\203\214\203b\203N"; // パタドレック
+const char asc_800A077C[] = "\203\211\203h\203\214\203b\203O"; // ラドレッグ
+const char asc_800A0788[] = "\203}\203A\203h\203\214\203b\203O"; // マアドレッグ
+const char aNAMERATE_800A0798[] = "\202m\202`\202l\202d\201@\201@\201@\201@\201@\201@\202q\202`\202s\202d"; // NAME      RATE
+const char aTEXHANGL_800A07B8[] = "\202s\202d\202w\201@\201@\201@\201@\201@\201@\202g\202`\202m\202f\202k"; // TEX      HANGL
+const char aENEMY_800A07D8[] = "\202d\202m\202d\202l\202x"; // ENEMY
 
-typedef struct TstCompoBlk8 { char b[8]; } TstCompoBlk8;
 // a menu layout of the TSTCOMPO pages: the cursor head (copied into the work cursor), then the grid geometry
-typedef struct TstCompoMenu
-{
-    union
-    {
-        TstCompoBlk8 blk;
-        struct
-        {
-            short cols_0;
-            short count_2;
-            short f4;
-            short f6;
-        } f;
-    } head_0;
-    short dx_8;
-    short dy_A;
-    short x_C;
-    short y_E;
-} TstCompoMenu;
-typedef struct TstCompoEnt
-{
-    unsigned short a;
-    unsigned short b;
-    int p;
-} TstCompoEnt;
 // a TSTCOMPO page (name_800A250C[3])
-typedef struct TstCompoPage
-{
-    TstCompoMenu* menu_0;
-    TstCompoEnt* texts_4;
-    short rect_8[4];
-    int f10;
-} TstCompoPage;
 // a selectable part / colour of the compound test (dword_800A20EC[])
-typedef struct TstCompoPart
-{
-    int text_0;
-    int id_4;
-    int angle_8;
-    int fC;
-    int f10;
-} TstCompoPart;
 typedef struct TstCompoBone
 {
     short s0;
@@ -124,7 +136,6 @@ typedef struct TstCompoWork
     int f22C;
 } TstCompoWork;
 extern void TstCompoTask_800A097C();
-extern TstCompoPage name_800A250C[];
 void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 {
     c->anim_184 = 3;
@@ -163,19 +174,6 @@ void TstCompoInit_800A0800(EventEntry* task, TstCompoWork* c)
 }
 
 // parameters of StartModelTask_80010850 (0x34 bytes)
-typedef struct TstCompoModelParams
-{
-    int f0;
-    int part_4[3];  // the compounded minions' part ids (TstCompoPart.id_4)
-    int ratio_10[3]; // their shares, 0x1000 in all
-    int modelId_1C;
-    int f20;
-    int f24;
-    int f28;
-    int f2C;
-    int f30;
-} TstCompoModelParams;
-extern TstCompoModelParams name_800A2768;
 extern int dword_8007DC74;
 void sub_800A0918()
 {
@@ -246,7 +244,6 @@ void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)
     }
 }
 
-extern TstCompoPart dword_800A20EC[];
 extern int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx);
 extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
 extern int UpdateMenuCursor_8003D794(void* p, int idx);
@@ -489,8 +486,6 @@ void sub_800A13B8(TstCompoWork* a)
 extern void* memset(void* p, int c, unsigned int n);
 extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
-extern char name_800A2588[];
-extern char name_800A2570[];
 void sub_800A1468(TstCompoWork* c)
 {
     VECTOR pos;
@@ -810,7 +805,6 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
     name_8004D0E8();
 }
 
-extern char name_800A2560[];
 // Matched
 int sub_800A200C()
 {
@@ -854,4 +848,69 @@ void DrawTextListWindow_800A2030(short* p, TstCompoEnt* e, int idx)
     }
 }
 
-INCLUDE_OVERLAY_ASM(tstcompo, dword_800A20EC);
+TstCompoPart dword_800A20EC[48] = {
+    { (int)asc_800A0788, 12, 0, 29 },
+    { (int)asc_800A077C, 13, 0, 192, 1 },
+    { (int)asc_800A076C, 14, 0, 0x162, 2 },
+    { (int)asc_800A0760, 18, 0, 118, 3 },
+    { (int)asc_800A0754, 19, 0, 14, 4 },
+    { (int)asc_800A0748, 20, 0, 200, 5 },
+    { (int)asc_800A0738, 24, 0, 0x121, 6 },
+    { (int)asc_800A0728, 25, 0, 31, 7 },
+    { (int)asc_800A0718, 26, 0, 136, 8 },
+    { (int)asc_800A070C, 27, 0, 72, 9 },
+    { (int)asc_800A0700, 28, 0, 0x11E, 10 },
+    { (int)asc_800A06F4, 29, 0, 230, 11 },
+    { (int)asc_800A06E8, 31, 0, 56, 12 },
+    { (int)asc_800A06DC, 32, 0, 56, 13 },
+    { (int)asc_800A06D0, 33, 0, 56, 14 },
+    { (int)asc_800A06C0, 41, 0, 15, 15 },
+    { (int)asc_800A06B4, 42, 0, 100, 16 },
+    { (int)asc_800A06A4, 43, 0, 218, 17 },
+    { (int)asc_800A0698, 76, 0, 234, 18 },
+    { (int)asc_800A068C, 77, 0, 53, 19 },
+    { (int)asc_800A067C, 78, 0, 184, 20 },
+    { (int)asc_800A0674, 1, 0, 36, 21 },
+    { (int)asc_800A066C, 23, 0, 0x105, 22 },
+    { (int)asc_800A0660, 52, 0, 72, 23 },
+    { (int)asc_800A0658, 61, 0, 144, 24 },
+    { (int)asc_800A064C, 64, 0, 111, 25 },
+    { (int)asc_800A0644, 67, 0, 211, 26 },
+    { (int)asc_800A063C, 70, 0, 43, 27 },
+    { (int)asc_800A0630, 81, 0, 186, 28 },
+    { (int)asc_800A0624, 93, 0, 0x103, 29 },
+    { (int)asc_800A061C, 98, 0, 61, 30 },
+    { (int)asc_800A0614, 101, 0, 183, 31 },
+    { (int)asc_800A060C, 34, 0, 206, 32 },
+    { (int)asc_800A0600, 35, 0, 227, 34 },
+    { (int)asc_800A05F4, 68, 0, 28, 33 },
+    { (int)asc_800A05E8, 82, 0, 80, 35 },
+    { (int)asc_800A05D8, 0, 0, 0, 36 },
+    { (int)asc_800A05CC, 69, 0, 0, 37 },
+    { (int)a0_800A05C8, 83, 0, 0, 201 },
+    { (int)a1_800A05C4, 84, 0, 0, 202 },
+    { (int)a2_800A05C0, 85, 0, 0, 203 },
+    { (int)a3_800A05BC, 86, 0, 0, 204 },
+    { (int)a4_800A05B8, 87, 0, 0, 205 },
+    { (int)a5_800A05B4, 88, 0, 0, 206 },
+    { (int)a6_800A05B0, 89, 0, 0, 207 },
+    { (int)a7_800A05AC, 90, 0, 0, 208 },
+    { (int)a8_800A05A8, 91, 0, 0, 209 },
+    { (int)a9_800A05A4, 92, 0, 0, 210 },
+};
+int dword_800A24AC[4] = { 0x120022, (int)aNAMERATE_800A0798 };
+int dword_800A24BC[4] = { 0x3C0022, (int)aTEXHANGL_800A07B8 };
+int dword_800A24CC[4] = { 0x1200CA, (int)aENEMY_800A07D8 };
+int dword_800A24DC[4] = { 0x30001, 0x200003, 0xA0000, 0x1A0022 };
+int dword_800A24EC[4] = { 0x10001, 0x100001, 0xA0000, 0x440022 };
+int dword_800A24FC[4] = { 0x140001, 0x400030, 0xA0000, 0x1A00CA };
+TstCompoPage name_800A250C[3] = {
+    { (void *)dword_800A24DC, (void *)dword_800A24AC, { 32, 16, 114, 42 } },
+    { (void *)dword_800A24EC, (void *)dword_800A24BC, { 32, 58, 114, 22 } },
+    { (void *)dword_800A24FC, (void *)dword_800A24CC, { 200, 16, 64, 212 } },
+};
+int dword_800A2548[6] = { 1, 1, 0x230, 0, (int)TstCompoInit_800A0800 };
+char name_800A2560[16] = { 184, 142, 7, 128, 128, 144, 7, 128, 72, 37, 10, 128 };
+char name_800A2570[24] = { 0 };
+char name_800A2588[480] = { 0 };
+TstCompoModelParams name_800A2768 = { 0 };

@@ -1,7 +1,14 @@
 // GAME.BIN, source file 1 of 3
 #include "game.h"
 
-INCLUDE_OVERLAY_ASM(game, dword_800A05A0);
+const int dword_800A05A0 = 12;
+const char aAssertionFaile_800A05A4[] = "Assertion failed: file \"%s\", line %d\n";
+const char aEnmbatleC_800A05CC[12] = "ENMBATLE.C\000a";
+
+void GameFn_800A094C(void)
+{
+    unknownFlags_8008D678 &= ~0x8000;
+}
 
 // Matched
 void sub_800A096C(void)
