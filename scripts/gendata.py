@@ -530,6 +530,8 @@ class Gen:
                     if fn is None:
                         self.protos[name] = None
                     return name
+                if name not in self.types.funcnodes and name not in self.types.decls:
+                    self.protos[name] = None
                 return "(void *)%s" % name
             return "(void *)((char *)%s + %d)" % (name, v - a)
         nt = self.type_of(name)

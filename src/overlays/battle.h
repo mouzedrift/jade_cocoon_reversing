@@ -14,7 +14,6 @@
 #include "model.h"
 #include "camera.h"
 
-extern unsigned char dword_800C8B30;
 
 extern int sub_800A2AB4();
 
@@ -32,25 +31,19 @@ extern unsigned short padPressed_8009194C;
 
 extern int MeasureTextWidth_8003E4C8();
 
-extern int dword_800C9E38;
 
-extern unsigned char dword_800C9E68;
 
-extern unsigned char dword_800C9E40;
 
 extern unsigned char dword_800C9E72[];
 
 extern unsigned char dword_800C9E80[];
 
-extern unsigned char dword_800C9E4A;
 
-extern int dword_800C9E4C;
 
 extern int dword_800C9E78;
 
 
 
-extern unsigned char dword_800C9E49;
 
 typedef struct BatMenu_a
 {
@@ -62,23 +55,14 @@ typedef struct BatMenu_a
     short scroll_A;
 } BatMenu_a; // same layout as the exe's MenuCursor
 
-extern BatMenu_a dword_800C92D8[1];
 
-extern BatMenu_a dword_800C92E4[1];
 
-extern BatMenu_a dword_800C92F0[1];
 
-extern BatMenu_a dword_800C9308[1];
 
-extern BatMenu_a dword_800C9314[1];
 
-extern BatMenu_a dword_800C9320[1];
 
-extern BatMenu_a dword_800C932C[1];
 
-extern int dword_800C8B34;
 
-extern int dword_800C9DD0[];
 
 // a battle command (dword_800C9C88 is the current one, dword_800C9CC8 holds each unit's reaction)
 typedef struct BatCmd_a
@@ -101,19 +85,13 @@ typedef struct BatTask
     int f1C;
 } BatTask;
 
-extern BatCmd_a dword_800C9E58;
 
 extern void sub_800C6AFC(BatTask* t, int a, int b);
 
-extern int dword_800C9E54;
 
-extern int dword_800C9E3C;
 
-extern unsigned char dword_800C9E51;
 
-extern unsigned char dword_800C9E48;
 
-extern unsigned char dword_800C9E50;
 
 extern int dword_800C9E7C;
 
@@ -130,13 +108,10 @@ extern void FadeOutSeqSlot_800313C8(int);
 
 extern EventNode* dword_8008D624;
 
-extern signed char dword_800C9D82;
 
-extern char dword_800C9D83;
 
 extern char dword_800C9D56;
 
-extern int dword_800C9C58;
 
 extern int sub_800A5354();
 
@@ -150,7 +125,6 @@ extern void sub_800A096C();
 
 extern void sub_800BAC4C();
 
-extern char dword_800C912C[];
 
 extern int sub_800A2C28();
 
@@ -204,7 +178,6 @@ extern int dword_80091C74;
 
 extern int dword_8007DC74;
 
-extern Minion* dword_800C9188;
 
 extern short dword_80091CE0[];
 
@@ -281,37 +254,21 @@ extern int dword_800B1230;
 
 extern BatEnt_a dword_800B1238[];
 
-extern short dword_800C9C68[];
 
-extern unsigned char dword_800C9C82;
 
-extern unsigned char dword_800C9C99;
 
-extern short dword_800C9D38[];
 
-extern short dword_800C9D48[];
 
-extern char dword_800C9CBC[];
 
-extern int dword_800C9D58[];
 
-extern int dword_800C9CA0[];
 
-extern short dword_800C9D78;
 
-extern short dword_800C9D80;
 
-extern short dword_800C9C7E;
 
-extern short dword_800C9C80;
 
-extern int dword_800C9D90;
 
-extern short dword_800C9DBC;
 
-extern short dword_800C9DC0[];
 
-extern short dword_800C9D8C[2];
 
 extern EventNode* dword_8008B4C0;
 
@@ -333,7 +290,6 @@ typedef struct BatStage_a
     unsigned short* models_C;
 } BatStage_a;
 
-extern BatStage_a dword_800C8EAC[];
 
 extern int IsMsgWindowAlive_80034AB8();
 
@@ -434,7 +390,6 @@ typedef struct BatPair_a
     short b;
 } BatPair_a;
 
-extern BatPair_a dword_800C9DA0[];
 
 extern EventNode* dword_8008B568;
 
@@ -446,9 +401,7 @@ extern EventNode* dword_8008D63C;
 
 extern EventNode* hitNumberTasks_8008D778;
 
-extern int dword_800C9D74;
 
-extern int dword_800C9D7C;
 
 extern short effectOutcomeFlag_8008D780;
 
@@ -503,7 +456,6 @@ typedef struct BatCtx_a
     int f10;
 } BatCtx_a;
 
-extern BatCtx_a dword_800C9190;
 
 // an animated window rect (sub_800C0254, sub_800C04A4)
 typedef struct BatWin_b
@@ -513,35 +465,21 @@ typedef struct BatWin_b
     short rect_C[4];
 } BatWin_b;
 
-extern int dword_800C918C;
 
-extern signed char dword_800C9D84;
 
-extern short dword_800C9D94;
 
 extern short dword_800C9D9A;
 
-extern short dword_800C9D98[];
 
-extern int dword_800C9170;
 
-extern int dword_800C9174[3];
 
-extern char dword_800C9DFC;
 
-extern char dword_800C9DFD;
 
-extern BatCmd_a dword_800C9C88;
 
-extern unsigned char dword_800C9C7C;
 
-extern unsigned char dword_800C9C98;
 
-extern int dword_800C8B54[];
 
-extern char dword_800C8B38[];
 
-extern BatCmd_a dword_800C9CC8[7];
 
 extern int IsSceneFadeDone_8001AB94(void*);
 
@@ -638,7 +576,6 @@ extern int sub_800B41D0(BatChain_a* p);
 
 extern int* sub_800B41A8(BatChain_a* p);
 
-extern int* dword_800C9C78;
 
 extern void sub_800BB100();
 
@@ -718,7 +655,6 @@ extern void StartCameraShake_80037BFC(int a);
 
 extern void StartPadVibration_80036528(int a, int b);
 
-extern unsigned char dword_800C9134[];
 
 
 
@@ -753,11 +689,8 @@ typedef struct BatXY_a
     short y;
 } BatXY_a;
 
-extern int dword_800C9DF8;
 
-extern int dword_800C9E24;
 
-extern BatXY_a dword_800C9140[]; // 3 per captured count; indexed by byte offset to match
 
 // sub_800BFC40: one unit's window (sub_800C0074)
 typedef struct BatUnitWin_a
@@ -768,17 +701,13 @@ typedef struct BatUnitWin_a
     short rect_10[4];
 } BatUnitWin_a;
 
-extern BatUnitWin_a* dword_800C9E28[];
 
-extern BatXY_a dword_800C9E18[];
 
-extern EventEntry* dword_800C9E08[];
 
 extern void sub_800BFDEC();
 
 extern void sub_800C0074();
 
-extern unsigned int dword_800C9E00;
 
 extern int sub_800C0904(unsigned char* p);
 
@@ -907,7 +836,6 @@ extern void DrawFtgObjectAt_80044D0C();
 
 extern void DrawSpriteVtxQuadsGT4_800459E4();
 
-extern char dword_800C91A4[];
 
 
 extern void sub_800C33E4();
@@ -1029,7 +957,6 @@ extern int sub_800C6CFC();
 
 extern EventNode* battleMenuTask_8008D468;
 
-extern unsigned char dword_800C9E4B;
 
 extern unsigned char dword_800C9E70;
 
@@ -1041,17 +968,11 @@ extern int sub_800AD308(int a);
 
 extern int CountMagicBits_8001AE54(unsigned int* h);
 
-extern int dword_800C9628[];
 
-extern int dword_800C9640;
 
-extern char dword_800C9378[];
 
-extern char dword_800C9384[];
 
-extern char dword_800C9388[];
 
-extern char dword_800C938C[];
 
 typedef struct BatMenuItem_a
 {
@@ -1059,21 +980,13 @@ typedef struct BatMenuItem_a
     int* data_4;
 } BatMenuItem_a;
 
-extern BatMenuItem_a dword_800C93A4[];
 
-extern BatMenuItem_a dword_800C93D4[];
 
-extern char* dword_800C93B8[];
 
-extern unsigned short dword_800C946C;
 
-extern unsigned short dword_800C94A4;
 
-extern unsigned short dword_800C9514;
 
-extern BatMenuItem_a* dword_800C9E6C;
 
-extern BatMenu_a* dword_800C9338[];
 
 
 
@@ -1085,23 +998,15 @@ typedef struct BatTgtQ_a
     short f6;
 } BatTgtQ_a;
 
-extern BatMenu_a* dword_800C9E44;
 
-extern BatMenuItem_a* dword_800C9E6C;
 
 extern int dword_800C9E5C;
 
-extern int dword_800C93A0;
 
-extern int dword_800C9380;
 
-extern int dword_800C939C;
 
-extern int dword_800C9398;
 
-extern int dword_800C9390;
 
-extern int dword_800C937C;
 
 extern int GetMenuCursorIndex_8003DA54(void*);
 
@@ -1117,17 +1022,12 @@ extern int CheckMagicUsable_80034068(BatTgtQ_a* q);
 
 extern unsigned char sub_800C78D0();
 
-extern unsigned char dword_800C9648[];
 
 extern int GetMenuCursorIndex_8003DA54(void*);
 
-extern unsigned char dword_800C9C7C;
 
-extern unsigned char dword_800C9660[];
 
-extern unsigned char dword_800C9654[];
 
-extern int dword_800C96A4[];
 
 extern unsigned int dword_800C9E64;
 
@@ -1149,28 +1049,20 @@ struct BatState
     int fC;
 };
 
-extern struct BatState dword_800C9630;
 
 extern short dword_800C92E0;
 
-extern int dword_800C9E54;
-
-extern unsigned char dword_800C9C99;
 
 
 
 
-extern int dword_800C96C8[][4];
 
-extern int dword_800C9978[][4];
 
-extern char dword_800C9B58[];
+
 
 extern int dword_800C9E5C;
 
-extern unsigned short dword_800C968C[][2];
 
-extern int dword_800C9674[];
 
 extern int IsCircleHeldP1_8003D480(void);
 
@@ -1196,40 +1088,532 @@ extern void DrawButtonHelpBar_8002B004(int a0, int a1, int a2);
 
 extern void sub_800C8828(int a);
 
-extern BatMenu_a* dword_800C9E44;
 
-extern short dword_800C9180;
 
-extern short dword_800C9182;
 
-extern short dword_800C9180;
 
-extern short dword_800C9182;
 
 extern int sub_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
 extern unsigned char dword_800C9E72[];
 
-extern int dword_800C9E3C;
 
-extern unsigned char dword_800C9E51;
 
-extern unsigned char dword_800C9E48;
 
-extern unsigned char dword_800C9E50;
 
 extern int dword_800C9E7C;
 
 extern unsigned int dword_800C9E64;
 
-extern BatMenu_a* dword_800C9E44;
 
 extern void (*dword_800C966C[])(EventEntry* t, int a);
 
-extern short dword_800C9180;
 
-extern short dword_800C9182;
 
 extern void UpdateMenuCursor_8003D794();
 
 extern void sub_800C83B0();
+
+typedef void (*BatFxFn)(BatTask* t);
+
+extern void sub_800BBBF4();
+extern void sub_800BBA24();
+extern void sub_800BBBA8();
+extern void sub_800BBEFC();
+extern void sub_800BBFFC();
+extern void sub_800BC0FC();
+
+extern int dword_800B66C0;
+extern const int dword_800B6700[4];
+extern const char dword_800B68AC[];
+extern const char aDefendToReduceD_800B68E4[];
+extern const char aSummonDivineMin_800B6914[];
+extern const char aCaptureMinionIn_800B6940[];
+extern const char aUseItem_800B6984[];
+extern const char aFleeFromCombat_800B6998[];
+extern const char aUseNormalAttack_800B69BC[];
+extern const char aUseSpecialAttac_800B69E0[];
+extern const char aUseMagicSpell_800B6A08[];
+extern const char aChangeCurrentFi_800B6A28[];
+extern const char aNoDivineMinions_800B6A58[];
+extern const char aCannotSummonInt_800B6A88[];
+extern const char aNotEnoughMana_800B6ABC[];
+extern const char aCannotCapture_800B6ADC[];
+extern const char aNoEmptyCocoons_800B6AFC[];
+extern const char aCannotEscape_800B6B20[];
+extern const char aNoNeedToUseItem_800B6B3C[];
+extern const char aCannotSelect_800B6B64[];
+extern const char aThisItemIsForDi_800B6B80[];
+extern const char aDivineMinionsCa_800B6BC0[];
+extern const char aCannotUseHere_800B6C08[];
+extern const char aAttractsNearbyM_800B6C28[];
+extern const char aTreeSporesWithA_800B6C5C[];
+extern const char aCausesSurroundi_800B6CA8[];
+extern const char aSweetSmellingSl_800B6D00[];
+extern const char aTreeSpores_800B6D68[];
+extern const char aBendsAndBecomes_800B6D80[];
+extern const char aMultipurposeKey_800B6DD8[];
+extern const char aKeyToTreasureCh_800B6E3C[];
+extern const char aHighestGradeBes_800B6E6C[];
+extern const char aSoftThreadThatG_800B6EB0[];
+extern const char aSecondHighestGr_800B6F04[];
+extern const char aGivesOffAnUnear_800B6F40[];
+extern const char aThirdHighestGra_800B6F90[];
+extern const char aGivesOffAPhosph_800B6FCC[];
+extern const char aFourthHighestGr_800B701C[];
+extern const char aGivesOffAModera_800B7058[];
+extern const char aFifthHighestGra_800B70A0[];
+extern const char aGivesOffADazzli_800B70DC[];
+extern const char aSixthHighestGra_800B7114[];
+extern const char aEmitsVagueInsta_800B7150[];
+extern const char aSeventhHighestG_800B71AC[];
+extern const char aGivesOffAShineT_800B71EC[];
+extern const char aSilkThreadSpunF_800B7248[];
+extern const char aInflictsAWindBa_800B7294[];
+extern const char aAttackMultipleE_800B72F8[];
+extern const char aInflictsAWindBa_800B733C[];
+extern const char aSealWithTheMark_800B739C[];
+extern const char aAttackSingleEne_800B7404[];
+extern const char aInflictsAFireBa_800B7440[];
+extern const char aAttackAllEnemie_800B749C[];
+extern const char aInflictsAFireBa_800B74D8[];
+extern const char aSealWithTheMark_800B7538[];
+extern const char aAttackSingleEne_800B759C[];
+extern const char aInflictsAWaterB_800B75D8[];
+extern const char aAttackAllEnemie_800B7634[];
+extern const char aInflictsAWaterB_800B7670[];
+extern const char aSealWithTheMark_800B76D4[];
+extern const char aAttackSingleEne_800B773C[];
+extern const char aInflictsAnEarth_800B777C[];
+extern const char aAttackAllEnemie_800B77DC[];
+extern const char aInflictsAnEarth_800B7818[];
+extern const char aSealWithTheMark_800B787C[];
+extern const char aAttackSingleEne_800B78E4[];
+extern const char aChangesAreaProp_800B7924[];
+extern const char aACharmBlessedBy_800B7988[];
+extern const char aChangesAreaProp_800B79E8[];
+extern const char aACharmBlessedBy_800B7A4C[];
+extern const char aChangesAreaProp_800B7AAC[];
+extern const char aACharmBlessedBy_800B7B14[];
+extern const char aChangesAreaProp_800B7B74[];
+extern const char aACharmBlessedBy_800B7BDC[];
+extern const char aChangeAreaPrope_800B7C3C[];
+extern const char aAllAbnormalStat_800B7C6C[];
+extern const char aReflectsAllUncl_800B7CD4[];
+extern const char aProtectionFromA_800B7D34[];
+extern const char aInstantlyCauses_800B7D5C[];
+extern const char aReleasesADeathM_800B7DB8[];
+extern const char aCauseDeath_800B7E00[];
+extern const char aCausesBodyHarde_800B7E18[];
+extern const char aReleasesAFleshT_800B7E74[];
+extern const char aFleshToStone_800B7ECC[];
+extern const char aCausesADeepSlum_800B7EEC[];
+extern const char aReleasesASleepM_800B7F58[];
+extern const char aInduceSleep_800B7FA0[];
+extern const char aInstantlyCauses_800B7FBC[];
+extern const char aReleasesPoisonM_800B8004[];
+extern const char aSprayPoison_800B8048[];
+extern const char aInnerStrengthTo_800B8064[];
+extern const char aPowderMadeFromS_800B80C0[];
+extern const char aStoneToFlesh_800B8124[];
+extern const char aSoothesTheSpiri_800B8144[];
+extern const char aPowderedFormOfD_800B8198[];
+extern const char aPoisonAntidote_800B81E4[];
+extern const char aAdjustsTheVisce_800B8204[];
+extern const char aAlsoCalledTheIm_800B8230[];
+extern const char aDriedRootOfAGre_800B8274[];
+extern const char aTotalRestoratio_800B82DC[];
+extern const char aRestoresAllMini_800B8300[];
+extern const char aSpecialLiquorMa_800B8344[];
+extern const char aRestoresAGreatD_800B83A0[];
+extern const char aExcellentLiquor_800B83FC[];
+extern const char aRestoresMinionH_800B845C[];
+extern const char aFineLiquorMadeF_800B84C0[];
+extern const char aRestoresSomeMin_800B8518[];
+extern const char aLiquorMadeFromP_800B855C[];
+extern const char aRestoreMinionHP_800B85A8[];
+extern const char aStrengthensMini_800B85E0[];
+extern const char aOilFromAPlantWi_800B861C[];
+extern const char aIncreaseMinionM_800B8664[];
+extern const char aStrengthensMini_800B86A0[];
+extern const char aOilFromTreeWith_800B86D8[];
+extern const char aIncreaseMinionM_800B8720[];
+extern const char aHardensMinionSS_800B875C[];
+extern const char aOilFromAPlantWi_800B878C[];
+extern const char aIncreaseMinionD_800B87D8[];
+extern const char aStrengthensMini_800B8818[];
+extern const char aOilFromAVeryPot_800B8850[];
+extern const char aIncreasesMinion_800B888C[];
+extern const char aSharpensMinionS_800B88BC[];
+extern const char aOilFromATreeWit_800B88F0[];
+extern const char aIncreaseMinionA_800B8938[];
+extern const char aStrengthensTheB_800B8974[];
+extern const char aANutPackingEner_800B89D8[];
+extern const char aIncreaseMaxHeal_800B8A38[];
+extern const char aBitterTasteThat_800B8A60[];
+extern const char aATypeOfMugwortW_800B8ACC[];
+extern const char aCuresBleedingAn_800B8B30[];
+extern const char aSweeterSmelling_800B8B74[];
+extern const char aATypeOfMugwortB_800B8BCC[];
+extern const char aGrindLeavesInto_800B8C0C[];
+extern const char aIncreasesHealth_800B8C68[];
+extern const char aGrowsInOpenArea_800B8CB4[];
+extern const char aRestoreHealth_800B8CFC[];
+extern const char aEffectivenessOf_800B8D1C[];
+extern const char aIncreasesWindAt_800B8D7C[];
+extern const char aEnhanceWind_800B8DD0[];
+extern const char aEffectivenessOf_800B8DEC[];
+extern const char aIncreasesEarthA_800B8E4C[];
+extern const char aEnhanceEarth_800B8EA4[];
+extern const char aEffectivenessOf_800B8EC0[];
+extern const char aIncreasesWaterA_800B8F1C[];
+extern const char aEnhanceWater_800B8F74[];
+extern const char aEffectivenessOf_800B8F90[];
+extern const char aIncreasesFireAt_800B8FEC[];
+extern const char aEnhanceFire_800B9040[];
+extern const char aCausesAnEnemyTo_800B905C[];
+extern const char aDeath_800B90B0[];
+extern const char aTurnsAnEnemyInt_800B90BC[];
+extern const char aPutsAnEnemyToSl_800B90F4[];
+extern const char aSleep_800B9124[];
+extern const char aPoisonsAnEnemy_800B9130[];
+extern const char aPoison_800B9154[];
+extern const char aEndsOnceItProte_800B9164[];
+extern const char aProtectsAgainst_800B91B8[];
+extern const char aProtection_800B9220[];
+extern const char aCuresPoisonAndT_800B9238[];
+extern const char aReturnToNormal_800B9290[];
+extern const char aRestoresAllHP_800B92B4[];
+extern const char aRestoreAllHP_800B92D8[];
+extern const char aRestoresSomeHP_800B92F8[];
+extern const char aRestoreHP_800B931C[];
+extern const char aCuresPoison_800B9334[];
+extern const char aCurePoison_800B9350[];
+extern const char aAdvancedWindAtt_800B9368[];
+extern const char aWindAttackAllEn_800B9394[];
+extern const char aHigherWindEleme_800B93C8[];
+extern const char aExtraDamageVsEa_800B9424[];
+extern const char aWindAttackOneEn_800B9454[];
+extern const char aAdvancedEarthAt_800B9484[];
+extern const char aEarthAttackAllE_800B94B0[];
+extern const char aHigherEarthElem_800B94E8[];
+extern const char aExtraDamageVsWa_800B9548[];
+extern const char aEarthAttackOneE_800B9578[];
+extern const char aAdvancedWaterAt_800B95AC[];
+extern const char aWaterAttackAllE_800B95D8[];
+extern const char aHigherWaterElem_800B9610[];
+extern const char aExtraDamageVsFi_800B9670[];
+extern const char aWaterAttackOneE_800B969C[];
+extern const char aAdvancedFireAtt_800B96D0[];
+extern const char aFireAttackAllEn_800B96FC[];
+extern const char aHigherFireEleme_800B9730[];
+extern const char aExtraDamageVsAi_800B978C[];
+extern const char aFireAttackOneEn_800B97B8[];
+extern const char aMakesItEasierTo_800B97E8[];
+extern const char aSpecialAttackBr_800B9840[];
+extern const char aSlightlyMoreDif_800B987C[];
+extern const char aMakesItEasierTo_800B98E0[];
+extern const char aSpecialAttackBr_800B9940[];
+extern const char aItMoreDifficult_800B9978[];
+extern const char aReducesAnEnemie_800B99D0[];
+extern const char aSpecialAttackCr_800B9A1C[];
+extern const char aBringsEnemiesTo_800B9A58[];
+extern const char aAttacksAllEnemi_800B9AA4[];
+extern const char aSpecialAttackAl_800B9AE0[];
+extern const char aUsesItToRestore_800B9B1C[];
+extern const char aStealsSomeManaF_800B9B64[];
+extern const char aSpecialAttackAb_800B9BAC[];
+extern const char aAnEnemyToRestor_800B9BE8[];
+extern const char aTakesSomeOfTheD_800B9C38[];
+extern const char aSpecialAttackAb_800B9C84[];
+extern const char aMoreDifficultFo_800B9CBC[];
+extern const char aCausesAnEnemyTo_800B9D0C[];
+extern const char aSpecialAttackDe_800B9D74[];
+extern const char aPhysicallyDamag_800B9DB0[];
+extern const char aSpecialFleshToS_800B9E1C[];
+extern const char aPhysicallyDamag_800B9E58[];
+extern const char aSpecialSleepAtt_800B9EC0[];
+extern const char aPhysicallyDamag_800B9EEC[];
+extern const char aSpecialPoisonAt_800B9F40[];
+extern const char aVeryEffectiveAg_800B9F6C[];
+extern const char aSpecialWindAtta_800B9FC4[];
+extern const char aVeryEffectiveAg_800B9FEC[];
+extern const char aSpecialFireAtta_800BA044[];
+extern const char aVeryEffectiveAg_800BA06C[];
+extern const char aSpecialWaterAtt_800BA0C4[];
+extern const char aVeryEffectiveAg_800BA0F0[];
+extern const char aSpecialEarthAtt_800BA148[];
+extern const int dword_800BA174[2];
+extern int dword_800C8B2C;
+extern unsigned char dword_800C8B30;
+extern int dword_800C8B34;
+extern char dword_800C8B38[28];
+extern int dword_800C8B54[7];
+extern unsigned short dword_800C8B70[8];
+extern unsigned short dword_800C8B80[8];
+extern unsigned short dword_800C8B90[8];
+extern unsigned short dword_800C8BA0[8];
+extern unsigned short dword_800C8BB0[8];
+extern unsigned short dword_800C8BC0[10];
+extern unsigned short dword_800C8BD4[10];
+extern unsigned short dword_800C8BE8[8];
+extern unsigned short dword_800C8BF8[10];
+extern unsigned short dword_800C8C0C[8];
+extern unsigned short dword_800C8C1C[8];
+extern unsigned short dword_800C8C2C[8];
+extern unsigned short dword_800C8C3C[10];
+extern unsigned short dword_800C8C50[8];
+extern unsigned short dword_800C8C60[8];
+extern unsigned short dword_800C8C70[6];
+extern unsigned short dword_800C8C7C[6];
+extern unsigned short dword_800C8C88[8];
+extern unsigned short dword_800C8C98[2];
+extern unsigned short dword_800C8C9C[6];
+extern unsigned short dword_800C8CA8[6];
+extern unsigned short dword_800C8CB4[6];
+extern unsigned short dword_800C8CC0[6];
+extern unsigned short dword_800C8CCC[8];
+extern unsigned short dword_800C8CDC[8];
+extern unsigned short dword_800C8CEC[8];
+extern unsigned short dword_800C8CFC[8];
+extern unsigned short dword_800C8D0C[8];
+extern unsigned short dword_800C8D1C[10];
+extern unsigned short dword_800C8D30[10];
+extern unsigned short dword_800C8D44[8];
+extern unsigned short dword_800C8D54[10];
+extern unsigned short dword_800C8D68[8];
+extern unsigned short dword_800C8D78[8];
+extern unsigned short dword_800C8D88[8];
+extern unsigned short dword_800C8D98[6];
+extern unsigned short dword_800C8DA4[8];
+extern unsigned short dword_800C8DB4[8];
+extern unsigned short dword_800C8DC4[8];
+extern unsigned short dword_800C8DD4[12];
+extern unsigned short dword_800C8DEC[12];
+extern unsigned short dword_800C8E04[12];
+extern unsigned short dword_800C8E1C[12];
+extern unsigned short dword_800C8E34[12];
+extern unsigned short dword_800C8E4C[12];
+extern unsigned short dword_800C8E64[12];
+extern unsigned short dword_800C8E7C[12];
+extern unsigned short dword_800C8E94[12];
+extern BatStage_a dword_800C8EAC[39];
+extern int dword_800C911C[2];
+extern int dword_800C9124[2];
+extern char dword_800C912C[8];
+extern unsigned char dword_800C9134[4];
+extern int dword_800C9138[2];
+extern BatXY_a dword_800C9140[9];
+extern int dword_800C9164[3];
+extern int dword_800C9170;
+extern int dword_800C9174[3];
+extern short dword_800C9180;
+extern short dword_800C9182;
+extern int dword_800C9184;
+extern Minion *dword_800C9188;
+extern int dword_800C918C;
+extern BatCtx_a dword_800C9190;
+extern char dword_800C91A4[56];
+extern BatFxFn dword_800C91DC[10];
+extern BatFxFn dword_800C9204[53];
+extern BatMenu_a dword_800C92D8[1];
+extern BatMenu_a dword_800C92E4[1];
+extern BatMenu_a dword_800C92F0[1];
+extern int dword_800C92FC[3];
+extern BatMenu_a dword_800C9308[1];
+extern BatMenu_a dword_800C9314[1];
+extern BatMenu_a dword_800C9320[1];
+extern BatMenu_a dword_800C932C[1];
+extern BatMenu_a *dword_800C9338[6];
+extern int dword_800C9350[1];
+extern int dword_800C9354[1];
+extern const char *dword_800C9358[1];
+extern char dword_800C935C[4];
+extern const char *dword_800C9360[1];
+extern const char *dword_800C9364[1];
+extern int dword_800C9368[1];
+extern int dword_800C936C[1];
+extern int dword_800C9370[1];
+extern int dword_800C9374[1];
+extern char dword_800C9378[4];
+extern int dword_800C937C;
+extern int dword_800C9380;
+extern char dword_800C9384[4];
+extern char dword_800C9388[4];
+extern char dword_800C938C[4];
+extern int dword_800C9390;
+extern const char *dword_800C9394[1];
+extern int dword_800C9398;
+extern int dword_800C939C;
+extern int dword_800C93A0;
+extern BatMenuItem_a dword_800C93A4[2];
+extern void *dword_800C93B4[1];
+extern char *dword_800C93B8[2];
+extern void *dword_800C93C0[4];
+extern int dword_800C93D0;
+extern BatMenuItem_a dword_800C93D4[5];
+extern int dword_800C93FC[14];
+extern int dword_800C9434[14];
+extern unsigned short dword_800C946C;
+extern short word_800C946E;
+extern short word_800C9470;
+extern short word_800C9472;
+extern short word_800C9474;
+extern short word_800C9476;
+extern short word_800C9478;
+extern short word_800C947A;
+extern short word_800C947C;
+extern short word_800C947E;
+extern short word_800C9480;
+extern short word_800C9482;
+extern short word_800C9484;
+extern short word_800C9486;
+extern short word_800C9488;
+extern short word_800C948A;
+extern short word_800C948C;
+extern short word_800C948E;
+extern short word_800C9490;
+extern short word_800C9492;
+extern short word_800C9494;
+extern short word_800C9496;
+extern short word_800C9498;
+extern short word_800C949A;
+extern short word_800C949C;
+extern short word_800C949E;
+extern short word_800C94A0;
+extern short word_800C94A2;
+extern unsigned short dword_800C94A4;
+extern short word_800C94A6;
+extern short word_800C94A8;
+extern short word_800C94AA;
+extern short word_800C94AC;
+extern short word_800C94AE;
+extern short word_800C94B0;
+extern short word_800C94B2;
+extern short word_800C94B4;
+extern short word_800C94B6;
+extern short word_800C94B8;
+extern short word_800C94BA;
+extern short word_800C94BC;
+extern short word_800C94BE;
+extern short word_800C94C0;
+extern short word_800C94C2;
+extern short word_800C94C4;
+extern short word_800C94C6;
+extern short word_800C94C8;
+extern short word_800C94CA;
+extern short word_800C94CC;
+extern short word_800C94CE;
+extern short word_800C94D0;
+extern short word_800C94D2;
+extern short word_800C94D4;
+extern short word_800C94D6;
+extern short word_800C94D8;
+extern short word_800C94DA;
+extern int dword_800C94DC[14];
+extern unsigned short dword_800C9514;
+extern short word_800C9516;
+extern short word_800C9518;
+extern short word_800C951A;
+extern short word_800C951C;
+extern short word_800C951E;
+extern short word_800C9520;
+extern short word_800C9522;
+extern short word_800C9524;
+extern short word_800C9526;
+extern short word_800C9528;
+extern short word_800C952A;
+extern short word_800C952C;
+extern short word_800C952E;
+extern short word_800C9530;
+extern short word_800C9532;
+extern short word_800C9534;
+extern short word_800C9536;
+extern short word_800C9538;
+extern short word_800C953A;
+extern short word_800C953C;
+extern short word_800C953E;
+extern short word_800C9540;
+extern short word_800C9542;
+extern short word_800C9544;
+extern short word_800C9546;
+extern short word_800C9548;
+extern short word_800C954A;
+extern int dword_800C954C[14];
+extern int dword_800C9584[14];
+extern int dword_800C95BC[14];
+extern void *dword_800C95F4[7];
+extern void *dword_800C9610[6];
+extern int dword_800C9628[2];
+extern struct BatState dword_800C9630;
+extern int dword_800C9640;
+extern int dword_800C9644;
+extern unsigned char dword_800C9648[12];
+extern unsigned char dword_800C9654[12];
+extern unsigned char dword_800C9660[12];
+extern void (*dword_800C966C[2])(EventEntry *t, int a);
+extern int dword_800C9674[6];
+extern unsigned short dword_800C968C[6][2];
+extern int dword_800C96A4[9];
+extern int dword_800C96C8[43][4];
+extern int dword_800C9978[30][4];
+extern char dword_800C9B58[256];
+extern int dword_800C9C58;
+extern int dword_800C9C5C[3];
+extern short dword_800C9C68[8];
+extern int *dword_800C9C78;
+extern unsigned char dword_800C9C7C;
+extern short dword_800C9C7E;
+extern short dword_800C9C80;
+extern unsigned char dword_800C9C82;
+extern int dword_800C9C84;
+extern BatCmd_a dword_800C9C88;
+extern unsigned char dword_800C9C98;
+extern unsigned char dword_800C9C99;
+extern int dword_800C9C9C;
+extern int dword_800C9CA0[7];
+extern char dword_800C9CBC[12];
+extern BatCmd_a dword_800C9CC8[7];
+extern short dword_800C9D38[8];
+extern short dword_800C9D48[8];
+extern int dword_800C9D58[7];
+extern int dword_800C9D74;
+extern short dword_800C9D78;
+extern int dword_800C9D7C;
+extern short dword_800C9D80;
+extern signed char dword_800C9D82;
+extern char dword_800C9D83;
+extern signed char dword_800C9D84;
+extern int dword_800C9D88;
+extern short dword_800C9D8C[2];
+extern int dword_800C9D90;
+extern short dword_800C9D94;
+extern short dword_800C9D98[4];
+extern BatPair_a dword_800C9DA0[7];
+extern short dword_800C9DBC;
+extern short dword_800C9DC0[8];
+extern int dword_800C9DD0[10];
+extern int dword_800C9DF8;
+extern char dword_800C9DFC;
+extern char dword_800C9DFD;
+extern unsigned int dword_800C9E00;
+extern int dword_800C9E04;
+extern EventEntry *dword_800C9E08[4];
+extern BatXY_a dword_800C9E18[3];
+extern int dword_800C9E24;
+extern BatUnitWin_a *dword_800C9E28[4];
+extern int dword_800C9E38;
+extern int dword_800C9E3C;
+extern unsigned char dword_800C9E40;
+extern BatMenu_a *dword_800C9E44;
+extern unsigned char dword_800C9E48;
+extern unsigned char dword_800C9E49;
+extern unsigned char dword_800C9E4A;
+extern unsigned char dword_800C9E4B;
+extern int dword_800C9E4C;
+extern unsigned char dword_800C9E50;
+extern unsigned char dword_800C9E51;
+extern int dword_800C9E54;
+extern BatCmd_a dword_800C9E58;
+extern unsigned char dword_800C9E68;
+extern BatMenuItem_a *dword_800C9E6C;

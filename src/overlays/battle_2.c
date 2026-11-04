@@ -1,7 +1,8 @@
 // BATTLE.BIN, source file 2 of 3 from 0x800BC90C (.rdata from 0x800B6700)
 #include "battle.h"
 
-INCLUDE_OVERLAY_ASM(battle, dword_800B6700);
+const int dword_800B6700[4] = { 0x1000, 0x1000, 0x1000 };
+INCLUDE_OVERLAY_ASM(battle, dword_800B6710);
 
 #if 0 // Not matched: ~900 of 1095 instructions identical; control flow, stack frame and most blocks match; left are
       // register allocation / loop-invariant hoisting differences (light, saveData and 1/240 constant bases) in every block.
