@@ -23,7 +23,7 @@ extern unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx);
 typedef struct
 {
     unsigned short modelId_0;
-    unsigned char field_2; // angles in units of 2 degrees (sub_800C064C)
+    unsigned char field_2; // angles in units of 2 degrees (BuildMinionModelReq_800C064C)
     unsigned char field_3;
 } MinionModelDesc;
 extern MinionModelDesc speciesModelDescs_8007BD30[];

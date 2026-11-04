@@ -159,7 +159,7 @@ void InitCameraTask_800368F8(EventEntry* p, CameraCtrl* q)
 }
 extern void PlaceBattleIntroCamera_80037C74(CameraCtrl* q);
 extern void TrackCameraTarget_8003891C(CameraCtrl* p, struct_v3* v);
-extern void sub_800BC90C(CameraCtrl* q);
+extern void DrawBattleStage_800BC90C(CameraCtrl* q);
 extern void CameraBattleTask_80036AB4(EventEntry* p, CameraCtrl* q);
 extern void StartSceneFadeIn_8001AA04(int a);
 
@@ -185,7 +185,7 @@ void CameraBattleIntroTask_800369E0(EventEntry* p, CameraCtrl* q)
             p->cb_8 = (EventEntryFn)CameraBattleTask_80036AB4;
         }
         TrackCameraTarget_8003891C(q, &levantPos_8008BD18.pos);
-        sub_800BC90C(q);
+        DrawBattleStage_800BC90C(q);
         break;
     }
 }
@@ -220,7 +220,7 @@ void CameraBattleTask_80036AB4(EventEntry* p, CameraCtrl* q)
     p->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
     return;
 run:
-    sub_800BC90C(r);
+    DrawBattleStage_800BC90C(r);
     if (r->flags_4 & 8)
     {
         r->mode_8 = 5;
@@ -290,7 +290,7 @@ void CameraSplineTask_80036BB0(EventEntry* p, CameraCtrl* r)
         cameraState_8008D4F0.field_2E = SPLINE(sp[i].c[7]);
     }
     TrackCameraTarget_8003891C(q, &levantPos_8008BD18.pos);
-    sub_800BC90C(q);
+    DrawBattleStage_800BC90C(q);
 }
 #undef SPLINE
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
@@ -513,7 +513,7 @@ void SetCameraTarget_80037AC8(int a0)
     ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = a0;
 }
 extern int* sub_800A1E3C(void);
-extern BattleObj_800C0FAC* sub_800C0FAC(void);
+extern BattleObj_800C0FAC* GetSummonedMinionBonePos_800C0FAC(void);
 extern unsigned char byte_800C9C7C;
 extern void MoveCameraToFocusPreset_80038E2C(CameraCtrl* p, int a, int b);
 extern void CameraBattleTask_80036AB4();
@@ -547,7 +547,7 @@ void FocusBattleCamera_80037AE0(unsigned short mask)
         }
         else
         {
-            v = sub_800C0FAC()->field_7C + 0xF5;
+            v = GetSummonedMinionBonePos_800C0FAC()->field_7C + 0xF5;
         }
         MoveCameraToFocusPreset_80038E2C(p, battleCamFocusIndex_80083CE8[r[0] - 1][sel], v);
         *(unsigned short*)&p->mode_8 = 4;
