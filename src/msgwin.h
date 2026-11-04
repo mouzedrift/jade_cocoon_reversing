@@ -1,7 +1,7 @@
 #ifndef MSGWIN_H
 #define MSGWIN_H
 
-/* message windows (tu_80034068.c): the buffer of a messageWindowTask_8008D640 entry */
+/* message windows (msg_window.c): the buffer of a messageWindowTask_8008D640 entry */
 
 typedef struct
 {

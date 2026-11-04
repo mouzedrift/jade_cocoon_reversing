@@ -2,7 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
-#include "tu_80036528.h"
+#include "camera.h"
 
 typedef struct CombBtlTask
 {

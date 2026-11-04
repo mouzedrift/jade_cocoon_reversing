@@ -1,7 +1,7 @@
 #ifndef _MAIN_H_
 #define _MAIN_H_
 #include "globals.h"
-#include "tu_8001EA48.h"
+#include "model.h"
 
 extern int dword_8008B484;
 extern int startSavedRa_8008B488[2];

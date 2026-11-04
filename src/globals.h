@@ -18,7 +18,7 @@ typedef struct
     short field_E_h; // word_8008B4E6
 } DisplayConfig;
 
-// Event list nodes (event.c / tu_80043AF8.c). The list head has the same layout as a node.
+// Event list nodes (event.c / skel_draw.c). The list head has the same layout as a node.
 struct EventEntry;
 typedef void (*EventEntryFn)(struct EventEntry* entry, void* buffer);
 typedef struct EventEntry
@@ -31,7 +31,7 @@ typedef struct EventEntry
     void* buffer;
 } EventEntry;
 
-// model and model list (defined in tu_8001EA48.h)
+// model and model list (defined in model.h)
 typedef struct Model Model;
 typedef struct ModelList ModelList;
 
@@ -53,7 +53,7 @@ typedef union Settings
     unsigned int word;
     struct
     {
-        unsigned int a_0 : 3; // 3 = ... (compared by eventfnc / combbtl / tu_8003D198)
+        unsigned int a_0 : 3; // 3 = ... (compared by eventfnc / combbtl / pad_text)
         unsigned int b_3 : 1;
         unsigned int c_4 : 1;
         unsigned int d_5 : 1;
@@ -66,7 +66,7 @@ typedef union Settings
         unsigned int k_24 : 1;
         unsigned int l_25 : 7;
     } bits;
-    unsigned char bytes[4]; // tested bytewise (tu_80034068)
+    unsigned char bytes[4]; // tested bytewise (msg_window)
 } Settings;
 
 typedef struct

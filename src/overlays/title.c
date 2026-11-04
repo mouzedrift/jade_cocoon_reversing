@@ -568,7 +568,7 @@ typedef struct
 {
     short x, y, w, h;
 } TitleRectM;
-// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in tu_8002CE28.c)
+// a menu window item of DrawMenuWindows_8002A5A4 (MenuItem_1C in ability_menu.c)
 typedef struct TitleMenuItem
 {
     unsigned short flags_0;
@@ -627,7 +627,7 @@ void sub_800A1760(TitleCtxB* p, int x, int y)
     sub_800A1780(p, x);
 }
 
-// struct_A5A4 in tu_8002CE28.c
+// struct_A5A4 in ability_menu.c
 typedef struct
 {
     int f0, f4, f8, fC;

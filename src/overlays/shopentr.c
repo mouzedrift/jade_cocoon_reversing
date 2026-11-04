@@ -276,7 +276,7 @@ void sub_800B72D4(CtxShopentr* c)
 }
 
 // Matched
-// what DrawGauge_8002BA54 takes (struct_BA54 in tu_8002B2A4.c)
+// what DrawGauge_8002BA54 takes (struct_BA54 in ui_gauge.c)
 typedef struct GaugeShopentr
 {
     int state_0;

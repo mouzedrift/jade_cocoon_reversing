@@ -1,11 +1,11 @@
 #ifndef EFFECT_OBJ_H
 #define EFFECT_OBJ_H
 
-#include "tu_8001EA48.h"
+#include "model.h"
 
 /* battle/spell effects: the effect task (effectTask_8008D3F8), the effect objects
    (buffers of effectObjects_8008B4A8 entries) and the effect file (effectFile_80091BD0).
-   Used by tu_80014954.c, tu_80016BF4.c, tu_800174F8.c and tu_80018430.c. */
+   Used by effect_data.c, effect_light.c, effect_model.c and effect_cmd.c. */
 
 
 /* the buffer of the effect task (effectTask_8008D3F8->entry.buffer) */
@@ -92,7 +92,7 @@ typedef struct EffectTarget
     int hitFlags_34; // EffectTaskState.hitFlags_44[slot]
 } EffectTarget;
 
-/* effect request: built by TriggerActorEffect_8001E28C (tu_80019BF0.c) from an actor, filled by CollectEffectTargets_800182B8,
+/* effect request: built by TriggerActorEffect_8001E28C (engine.c) from an actor, filled by CollectEffectTargets_800182B8,
    played by PlayActorEffect_800184DC / SpawnActorEffects_8001852C */
 typedef struct ActorEffectReq
 {

@@ -3,7 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "tiy.h"
-#include "tu_80019BF0.h"
+#include "engine.h"
 #include "minion_menu.h"
 
 typedef struct MenuTask

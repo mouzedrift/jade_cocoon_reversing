@@ -303,7 +303,7 @@ typedef struct MapWin
 {
     int w[14];
 } MapWin;
-// what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in tu_8002CE28.c)
+// what DrawMenuWindows_8002A5A4 takes (struct_A5A4 in ability_menu.c)
 typedef struct MapMenu
 {
     int f0;

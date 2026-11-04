@@ -2,7 +2,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
-#include "tu_8001EA48.h"
+#include "model.h"
 
 extern unsigned short padPressed_8009194C;
 extern unsigned short padRepeat_800918CC;

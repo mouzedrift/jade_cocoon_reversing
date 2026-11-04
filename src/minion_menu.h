@@ -1,7 +1,7 @@
 #ifndef MINION_MENU_H
 #define MINION_MENU_H
 
-/* cursor/state of the item/magic/ability list menus (tu_8002BE10.c, tu_8002CE28.c, tu_80031A94.c) */
+/* cursor/state of the item/magic/ability list menus (ui_sprites.c, ability_menu.c, unit_query.c) */
 typedef struct
 {
     short cursor_0; // cursor row

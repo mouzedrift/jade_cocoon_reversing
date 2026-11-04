@@ -17,8 +17,8 @@
 #include "data_decls.h"
 #include "unit.h"
 #include "common_tu.h"
-#include "tu_80019BF0.h"
-#include "tu_800318C8.h"
+#include "engine.h"
+#include "skills.h"
 
 const ActionData defaultActionData_80071F58 = { 0, 0, 100, 255, 115, 0, 0, 10, { 0, 3 } };
 const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";
@@ -516,5 +516,5 @@ int sub_80013228(int a0, int a1, int* p)
     return q->c8 == 8;
 }
 
-// zero word at the end of this TU's .rdata, in front of the jump table of UseItemOnUnit_80013C28 (tu_80013358)
+// zero word at the end of this TU's .rdata, in front of the jump table of UseItemOnUnit_80013C28 (battle_damage)
 const int dword_800720E4 = 0;

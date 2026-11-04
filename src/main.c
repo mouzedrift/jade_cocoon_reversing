@@ -15,10 +15,10 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
-#include "tu_8001EA48.h"
+#include "model.h"
 #include "unit.h"
 #include "tiy.h"
-#include "tu_80036528.h"
+#include "camera.h"
 #include "main.h"
 
 const char name[] = "cdrom:\\SLUS_008.54;1";

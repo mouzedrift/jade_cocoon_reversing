@@ -4,8 +4,8 @@
 #include "globals.h"
 
 #include "actor.h"
-#include "tu_80019BF0.h"
-#include "tu_80018E5C.h"
+#include "engine.h"
+#include "minion_init.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by sub_800A05E0
 typedef struct CombatModelParams

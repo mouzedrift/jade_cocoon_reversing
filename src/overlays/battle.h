@@ -8,11 +8,11 @@
 
 #include "actor.h"
 #include "minion_menu.h"
-#include "tu_80019BF0.h"
-#include "tu_80018E5C.h"
+#include "engine.h"
+#include "minion_init.h"
 
-#include "tu_8001EA48.h"
-#include "tu_80036528.h"
+#include "model.h"
+#include "camera.h"
 
 extern unsigned char dword_800C8B30;
 

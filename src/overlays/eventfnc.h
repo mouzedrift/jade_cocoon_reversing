@@ -5,9 +5,9 @@
 #include "funcs.h"
 
 #include "globals.h"
-#include "tu_8001EA48.h"
-#include "tu_80019BF0.h"
-#include "tu_80018E5C.h"
+#include "model.h"
+#include "engine.h"
+#include "minion_init.h"
 
 typedef struct EvInsEventfnc
 {
