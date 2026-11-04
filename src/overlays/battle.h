@@ -14,6 +14,7 @@
 #include "model.h"
 #include "camera.h"
 #include "sound.h"
+#include "pad_text.h"
 
 
 
@@ -46,15 +47,6 @@ extern int partyMinionMask_800C9E78;
 
 
 
-typedef struct BatMenuCursor
-{
-    short cols_0;
-    short rows_2;
-    unsigned short count_4;
-    unsigned short flags_6;
-    short cursor_8;
-    short scroll_A;
-} BatMenuCursor; // same layout as the exe's MenuCursor
 
 
 
@@ -1010,7 +1002,6 @@ typedef struct BatTargetQuery
 
 
 
-extern int GetMenuCursorIndex_8003DA54(void*);
 
 extern int CheckItemUsable_80033AFC(ListMenuState* q);
 
@@ -1083,7 +1074,6 @@ typedef struct BatMenuWindows
 
 extern int IsCircleHeldP1_8003D480(void);
 
-extern int GetMenuCursorIndex_8003DA54();
 
 extern void DrawAbilityDescription_8002C670(void* a0, int a1, void* a2, int a3, int a4);
 
@@ -1124,7 +1114,6 @@ extern void (*menuStateFns_800C966C[])(EventEntry* task, int buffer);
 
 
 
-extern void UpdateMenuCursor_8003D794();
 
 extern void PreviewCommandResult_800C83B0();
 
@@ -1437,15 +1426,15 @@ extern BatSummonedActor summonedActor_800C9190;
 extern char defaultBoneSlots_800C91A4[56];
 extern EnemyAiFn enemyAiHigh_800C91DC[10];
 extern EnemyAiFn enemyAi_800C9204[53];
-extern BatMenuCursor commandMenu_800C92D8[1];
-extern BatMenuCursor skillMenu_800C92E4[1];
-extern BatMenuCursor magicMenu_800C92F0[1];
+extern MenuCursor commandMenu_800C92D8[1];
+extern MenuCursor skillMenu_800C92E4[1];
+extern MenuCursor magicMenu_800C92F0[1];
 extern int dword_800C92FC[3];
-extern BatMenuCursor itemMenu_800C9308[1];
-extern BatMenuCursor enemyTargetMenu_800C9314[1];
-extern BatMenuCursor targetMenu_800C9320[1];
-extern BatMenuCursor allTargetsMenu_800C932C[1];
-extern BatMenuCursor *pageMenus_800C9338[6];
+extern MenuCursor itemMenu_800C9308[1];
+extern MenuCursor enemyTargetMenu_800C9314[1];
+extern MenuCursor targetMenu_800C9320[1];
+extern MenuCursor allTargetsMenu_800C932C[1];
+extern MenuCursor *pageMenus_800C9338[6];
 extern int helpAttack_800C9350[1];
 extern int helpDefend_800C9354[1];
 extern int helpSummon_800C9358[1];
@@ -1539,7 +1528,7 @@ extern BatEnemyWindow *enemyWindows_800C9E28[4];
 extern int cameraFocus_800C9E38;
 extern int newCameraFocus_800C9E3C;
 extern unsigned char prevMenuPage_800C9E40;
-extern BatMenuCursor *pageCursor_800C9E44;
+extern MenuCursor *pageCursor_800C9E44;
 extern unsigned char menuState_800C9E48;
 extern unsigned char menuForMinion_800C9E49;
 extern unsigned char enemyCount_800C9E4A;

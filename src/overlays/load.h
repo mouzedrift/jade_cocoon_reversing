@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "sound.h"
+#include "pad_text.h"
 
 typedef struct
 {
@@ -510,7 +511,6 @@ extern void DrawLoadingIcon_8003CD5C(void);
 extern void DrawMenuBackground_8002BE10(void);
 extern void LoadUiTiy_8002BF74(void);
 extern int dword_8008BD80;
-extern int UpdateMenuCursor_8003D794(short* cursor, int b);
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
 extern void FreeActiveOverlay_8002C014(void);
 extern void DrawText_8003E91C(int mode, char* text, void* pos, short ot);

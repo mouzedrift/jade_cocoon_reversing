@@ -597,7 +597,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
 
 void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* work)
 {
-    short cursor[6];
+    MenuCursor cursor;
     int move;
     if (work->nextScreen_24 != -1)
     {
@@ -633,19 +633,19 @@ void UpdateLoadMenuCursor_800B80F8(LoadMenuWork* work)
     }
     if (work->screen_30 >= 0)
     {
-        cursor[4] = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
-        cursor[5] = loadMenuRows_800BDF4C[work->screen_30].scroll_D;
-        cursor[0] = loadMenuRows_800BDF4C[work->screen_30].cols_6;
-        cursor[1] = loadMenuRows_800BDF4C[work->screen_30].rows_7;
-        cursor[2] = loadMenuRows_800BDF4C[work->screen_30].count_8;
-        cursor[3] = loadMenuRows_800BDF4C[work->screen_30].flags_B;
-        move = UpdateMenuCursor_8003D794(cursor, (work->flags_54 >> 6) & 1);
-        if (loadMenuRows_800BDF4C[work->screen_30].cursor_C != cursor[4] || move == 8 || move == 7)
+        cursor.cursor_8 = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
+        cursor.scroll_A = loadMenuRows_800BDF4C[work->screen_30].scroll_D;
+        cursor.columns_0 = loadMenuRows_800BDF4C[work->screen_30].cols_6;
+        cursor.rows_2 = loadMenuRows_800BDF4C[work->screen_30].rows_7;
+        cursor.count_4 = loadMenuRows_800BDF4C[work->screen_30].count_8;
+        cursor.flags_6 = loadMenuRows_800BDF4C[work->screen_30].flags_B;
+        move = UpdateMenuCursor_8003D794(&cursor, (work->flags_54 >> 6) & 1);
+        if (loadMenuRows_800BDF4C[work->screen_30].cursor_C != cursor.cursor_8 || move == 8 || move == 7)
         {
             PlaySfx_80031494(0x7F);
         }
-        loadMenuRows_800BDF4C[work->screen_30].cursor_C = cursor[4];
-        loadMenuRows_800BDF4C[work->screen_30].scroll_D = cursor[5];
+        loadMenuRows_800BDF4C[work->screen_30].cursor_C = cursor.cursor_8;
+        loadMenuRows_800BDF4C[work->screen_30].scroll_D = cursor.scroll_A;
     }
 }
 const LoadWinRect cardSlotWin_800B69F4 = { { 93, 0, 18, 0, 124, 0, 18 } };

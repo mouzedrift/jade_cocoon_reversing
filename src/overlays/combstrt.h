@@ -91,7 +91,6 @@ extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, in
 extern void DrawMenuWindows_8002A5A4(void* list);            // -> menu_draw.h
 extern void DrawButtonHelpBar_8002B004(void* entries, void* origin, int ot); // -> menu_window.h
 extern void DrawMenuBackground_8002BE10(void);
-extern void UpdateMenuCursor_8003D794(void* cursor, int pad); // -> pad_text.h (a1 passes through to MenuCursorInput_8003D830)
 extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, int time); // -> event.h
 

@@ -254,14 +254,12 @@ int MoveGridCursorP1_8003D630(short* grid)
     return 0;
 }
 
-extern int MenuCursorInput_8003D830();
-
 // Matched
-int UpdateMenuCursor_8003D794(MenuCursor* menu)
+int UpdateMenuCursor_8003D794(MenuCursor* menu, int pad)
 {
     unsigned short prevCursor = menu->cursor_8;
     unsigned short prevScroll = menu->scroll_A;
-    int result = MenuCursorInput_8003D830(menu);
+    int result = MenuCursorInput_8003D830(menu, pad);
     if (result == 0)
     {
         int last = menu->count_4 - 1;

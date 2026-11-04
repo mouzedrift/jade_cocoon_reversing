@@ -190,15 +190,15 @@ EnemyAiFn enemyAi_800C9204[53] = {
     (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C, (EnemyAiFn)EnemyAiDefault_800C473C,
     (EnemyAiFn)EnemyAiDefault_800C473C,
 };
-BatMenuCursor commandMenu_800C92D8[1] = { { 2, 3 } };
-BatMenuCursor skillMenu_800C92E4[1] = { { 1, 5, 5 } };
-BatMenuCursor magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
+MenuCursor commandMenu_800C92D8[1] = { { 2, 3 } };
+MenuCursor skillMenu_800C92E4[1] = { { 1, 5, 5 } };
+MenuCursor magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
 int dword_800C92FC[3] = { 0x10001, 1 };
-BatMenuCursor itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
-BatMenuCursor enemyTargetMenu_800C9314[1] = { { 0, 1 } };
-BatMenuCursor targetMenu_800C9320[1] = { { 1 } };
-BatMenuCursor allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
-BatMenuCursor *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
+MenuCursor itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
+MenuCursor enemyTargetMenu_800C9314[1] = { { 0, 1 } };
+MenuCursor targetMenu_800C9320[1] = { { 1 } };
+MenuCursor allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
+MenuCursor *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
 int helpAttack_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
 int helpDefend_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
 int helpSummon_800C9358[1] = { (int)aSummonDivineMin_800B6914 };
@@ -411,7 +411,7 @@ BatEnemyWindow *enemyWindows_800C9E28[4] = { 0 };
 int cameraFocus_800C9E38 = 0;
 int newCameraFocus_800C9E3C = 0;
 unsigned char prevMenuPage_800C9E40 = 0;
-BatMenuCursor *pageCursor_800C9E44 = 0;
+MenuCursor *pageCursor_800C9E44 = 0;
 unsigned char menuState_800C9E48 = 0;
 unsigned char menuForMinion_800C9E49 = 0;
 unsigned char enemyCount_800C9E4A = 0;
@@ -2285,7 +2285,7 @@ void InitMenuCursors_800C7088()
     {
         savedEnemyCursor_800C9D56 = 0;
     }
-    enemyTargetMenu_800C9314->cols_0 = enemyCount_800C9E4A;
+    enemyTargetMenu_800C9314->columns_0 = enemyCount_800C9E4A;
     enemyTargetMenu_800C9314->count_4 = enemyCount_800C9E4A;
     enemyTargetMenu_800C9314->cursor_8 = (unsigned char)savedEnemyCursor_800C9D56;
 }
@@ -2363,7 +2363,7 @@ int CanCapture_800C7334()
     return 1;
 }
 
-BatMenuCursor* GetPageCursor_800C73B8(unsigned char page)
+MenuCursor* GetPageCursor_800C73B8(unsigned char page)
 {
     if (page == 4)
     {

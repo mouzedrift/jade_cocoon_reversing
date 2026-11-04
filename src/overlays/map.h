@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "main.h"
+#include "pad_text.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem
@@ -47,16 +48,6 @@ typedef struct MapXY
     short y;
 } MapXY;
 
-// a menu cursor (UpdateMenuCursor_8003D794 / GetMenuCursorIndex_8003DA54)
-typedef struct MapSel
-{
-    short cols_0;
-    short rows_2;
-    short count_4;
-    short flags_6; // 0x40: scrolls
-    short index_8; // on screen
-    short scroll_A;
-} MapSel;
 
 typedef struct MapSelState
 {
@@ -178,7 +169,7 @@ extern SPRT *areaBgSprts_800B9314;
 extern DR_TPAGE *areaBgTPages_800B9318;
 extern SPRT *areaSprts_800B931C;
 extern DR_TPAGE *areaTPages_800B9320;
-extern MapSel confirmCursor_800B9324;
+extern MenuCursor confirmCursor_800B9324;
 extern unsigned char villageDestMaps_800B9330[16];
 extern unsigned char forestDestMaps_800B9340[8];
 extern unsigned char *destMaps_800B9348[6];
@@ -250,14 +241,13 @@ extern int dword_800B0624[];
 extern void ResetLevantActorToIdle_800A8DEC();
 extern void RequestGameMode_800A6D30(int);
 extern int SetEventVar_800AD16C(int var, int value);
-extern MapSel mapSelectCursors_800AEBFC[];
+extern MenuCursor mapSelectCursors_800AEBFC[];
 extern int GetEventVar_800AD154(int);
 extern MapDest mapSelect_800AEBF8;  // the selected destination (GAME data)
 extern void StartMapOverlay_800A75F8();
 
 /* exe-side, to move to an exe header */
 extern void DrawCursorHand_8003D034(void*, int);
-extern int GetMenuCursorIndex_8003DA54(void*);
 extern void DrawText_8003E91C(int, void*, void*, int);
 extern void DrawNumber_8003EF74(void*, int, int);
 extern void PlayMusic_800300E0(int, int);
@@ -268,11 +258,10 @@ extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
                                 int half);
 extern void SetSemiTrans(void* p, int abe);
-extern void DrawScrollArrows_8002B8DC(MapXY arrow, MapSel* sel, MapXY* pos, int ot);
+extern void DrawScrollArrows_8002B8DC(MapXY arrow, MenuCursor* sel, MapXY* pos, int ot);
 extern int MeasureTextWidth_8003E4C8(void* p);
 extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
 extern void* memset(void* p, int c, unsigned int n);
-extern void UpdateMenuCursor_8003D794(void* p, int a);
 extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
 
 #endif

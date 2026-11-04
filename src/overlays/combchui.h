@@ -41,8 +41,6 @@ extern CombChuiPos dword_80082740;   // -> menu data (its "no" item)
 extern int MeasureTextWidth_8003E4C8(const char* str);  // -> pad_text.h
 extern void AlignMenuItem_8002AC88(int flags, void* rect, int width, void* out); // -> menu_window.h
 extern void DrawText_8003E91C(int idx, const char* str, void* pos, int ot);       // -> font.h
-extern void UpdateMenuCursor_8003D794(void* cursor, int pad); // -> pad_text.h (a1 passes through to MenuCursorInput_8003D830)
-extern int GetMenuCursorIndex_8003DA54(void* cursor);        // -> pad_text.h (MenuCursor*)
 extern void DrawMenuWindows_8002A5A4(void* list);            // -> menu_draw.h
 extern void DrawMenuBackground_8002BE10(void);
 

@@ -24,4 +24,8 @@ typedef struct MenuCursor
     short scroll_A;         // first shown item
 } MenuCursor;
 
+int UpdateMenuCursor_8003D794(MenuCursor* menu, int pad);
+int MenuCursorInput_8003D830(MenuCursor* menu, int pad);
+int GetMenuCursorIndex_8003DA54(MenuCursor* menu);
+
 #endif

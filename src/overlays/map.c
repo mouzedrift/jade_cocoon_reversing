@@ -85,7 +85,7 @@ SPRT *areaBgSprts_800B9314 = 0;
 DR_TPAGE *areaBgTPages_800B9318 = 0;
 SPRT *areaSprts_800B931C = 0;
 DR_TPAGE *areaTPages_800B9320 = 0;
-MapSel confirmCursor_800B9324 = { 2, 1, 2, 1 };
+MenuCursor confirmCursor_800B9324 = { 2, 1, 2, 1 };
 unsigned char villageDestMaps_800B9330[16] = { 0, 1, 2, 3, 6, 4, 5, 9, 10, 11, 7, 8, 255 };
 unsigned char forestDestMaps_800B9340[8] = { 254, 0, 240, 241, 242, 243 };
 unsigned char *destMaps_800B9348[6] = { villageDestMaps_800B9330, villageDestMaps_800B9330, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340 };
@@ -428,7 +428,7 @@ void DestinationSelect_800B7044(MapTask* task, int work)
                     list[openDestCount_800B8CA4] = 0;
                 }
                 menu.time_4 = GetTime30Hz_8002C64C();
-                menu.sel_C = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].index_8;
+                menu.sel_C = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].cursor_8;
                 DrawMenuWindows_8002A5A4(&menu);
             }
         }
@@ -635,7 +635,7 @@ void ConfirmDestination_800B7A90(MapTask* task, int work)
     list[1] = &w1;
     menu.time_4 = GetTime30Hz_8002C64C();
     menu.windows_10 = list;
-    menu.sel_C = confirmCursor_800B9324.index_8;
+    menu.sel_C = confirmCursor_800B9324.cursor_8;
     DrawMenuWindows_8002A5A4(&menu);
     if (IsConfirmPressedP1_8003D380(1))
     {
@@ -694,7 +694,7 @@ void InitDestCursor_800B7EE0(void)
     SEL.count_4 = openDestCount_800B8CA4;
     if (mapSelect_800AEBF8.area != lastDest_800B8C94.area || mapSelect_800AEBF8.dest != lastDest_800B8C94.dest)
     {
-        SEL.index_8 = 0;
+        SEL.cursor_8 = 0;
         SEL.scroll_A = 0;
     }
     else
@@ -703,7 +703,7 @@ void InitDestCursor_800B7EE0(void)
         GetNthOpenDest_800B8128((short)idx, mapSelect_800AEBF8.area, &sel);
         if (!IsDestOpen_800B8290(&sel))
         {
-            SEL.index_8 = 0;
+            SEL.cursor_8 = 0;
             SEL.scroll_A = 0;
         }
         else
@@ -711,7 +711,7 @@ void InitDestCursor_800B7EE0(void)
             rank = GetOpenDestRank_800B81D0(&mapSelect_800AEBF8);
             if (openDestCount_800B8CA4 < 4)
             {
-                SEL.index_8 = rank;
+                SEL.cursor_8 = rank;
                 SEL.scroll_A = 0;
             }
             else
@@ -719,7 +719,7 @@ void InitDestCursor_800B7EE0(void)
                 maxScroll = (unsigned short)openDestCount_800B8CA4 - 3;
                 if ((short)maxScroll < SEL.scroll_A)
                 {
-                    SEL.index_8 = rank - maxScroll;
+                    SEL.cursor_8 = rank - maxScroll;
                     SEL.scroll_A = maxScroll;
                 }
             }

@@ -100,7 +100,6 @@ extern void QuitToTitle_800A5538(CombSelTask* t);
 extern int AllSlotsEmpty_800A5560(Minion* team, int count);
 
 /* exe-side, to move to <exe header> */
-extern int GetMenuCursorIndex_8003DA54(void* cursor);
 extern void PlaySfx_80031494(int id);
 extern void DrawSmallNumber3_8002C290(void* pos, int value, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
@@ -110,7 +109,6 @@ extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* po
 extern void DrawMenuWindows_8002A5A4(void* menu);
 extern void DrawButtonHelpBar_8002B004(void* e, void* pos, int ot);
 extern void DrawMenuBackground_8002BE10(void);
-extern int UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.h defines it (MenuCursor*): a1 passes through to MenuCursorInput_8003D830
 
 extern int dword_800A4088;
 extern const CombSelItem titleItem_800A4238;
