@@ -2409,10 +2409,8 @@ int GetChoiceMask_800BC58C(int* p);
 int IsActorLeftOf_800BC5C8(int a, int b);
 void SetupItemMsgSlots_800BC6C4(EvItemMsgCfg* cfg, EvItemMsgSrc* src, int n);
 
-#if 0
-// Not matched (register allocation): list/bc/c0/c4/c8/cc are spilled scalars as in the original, but here list keeps
-// $fp and mask is spilled, so mask/ret/pos/skip sit one callee-saved register off (orig s5/s6/s7/fp) and list's stack
-// slot moves; control flow, the double store of c8 and the call sequence match
+// Opens the message/item window for the current say/ask instruction (ops 0x37-0x3E) and resets the per-message options
+// Matched
 int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
 {
     EvMsgWindowCfg cfg;
@@ -2431,16 +2429,17 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     int str;
     int mask;
     int ret;
-    unsigned short* pos;
+    short* pos;
     int skip;
     EvVoiceCue* voice;
     int srcArg;
     int fl;
     ret = 0;
     str = ret;
-    mask = ret;
     list = 0;
     bc = 1;
+    mask = ret;
+    pos = (short*)ret;
     c0 = 0;
     c4 = 0;
     cc = 1;
@@ -2448,7 +2447,6 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     c8 = settingsFlags_8008B58C.word & 0x18;
     pc = ctx->pc_8;
     c8 = c8 == 0x18;
-    pos = (unsigned short*)ret;
     if (pc->op_0 == 0x3E)
     {
         mode = 2;
@@ -2475,23 +2473,28 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         mode = 0;
         str = GetEventString_800A6738(pc->c_C);
         list = FindMsgChoiceList_800BC560((int*)str);
-        mask = GetChoiceMask_800BC58C(list) & ~ctx->choiceMask_114;
+        mask = GetChoiceMask_800BC58C(list);
+        mask &= ~ctx->choiceMask_114;
     }
     else
     {
+        mask = 0;
         mode = mask;
         list = 0;
         str = GetEventString_800A6738(pc->c_C);
     }
-    if (*(short*)&ctx->msgX_100 != -1 && *(short*)&ctx->msgY_102 != -1)
+    if (ctx->msgX_100 != -1 && ctx->msgY_102 != -1)
     {
         posMode = 0;
         pos = &ctx->msgX_100;
     }
     else
     {
-        posMode = ctx->msgPosMode_104;
-        if (posMode < 0)
+        if (ctx->msgPosMode_104 >= 0)
+        {
+            posMode = ctx->msgPosMode_104;
+        }
+        else
         {
             posMode = !(pc->op_0 == 0x39 || pc->op_0 == 0x3A) << 1;
         }
@@ -2569,12 +2572,14 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         it.f8 = 0;
         it.f48 = pc->b_8;
         it.f4C = 0;
-        srcArg = pc->c_C;
-        if (srcArg == 0)
         {
-            srcArg = GetOwnEntityParam_800BBDF4(ctx);
+            int arg = pc->c_C;
+            if (arg == 0)
+            {
+                arg = GetOwnEntityParam_800BBDF4(ctx);
+            }
+            SetupItemMsgSlots_800BC6C4(&it, (EvItemMsgSrc*)arg, pc->a_4);
         }
-        SetupItemMsgSlots_800BC6C4(&it, (EvItemMsgSrc*)srcArg, pc->a_4);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
     else if (mode == 2)
@@ -2605,21 +2610,18 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         SetupItemMsgSlots_800BC6C4(&it, 0, 0);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
-    if (ret == 0)
+    if (ret != 0)
     {
-        return 0;
+        ctx->msgOpen_118 = 1;
+        ctx->msgX_100 = -1;
+        ctx->msgY_102 = -1;
+        ctx->msgWindow_11C = ret;
+        ctx->msgPosMode_104 = -1;
+        ctx->msgOptions_108 = 0;
+        return 1;
     }
-    ctx->msgOpen_118 = 1;
-    ctx->msgX_100 = -1;
-    ctx->msgY_102 = -1;
-    ctx->msgWindow_11C = ret;
-    ctx->msgPosMode_104 = -1;
-    ctx->msgOptions_108 = 0;
-    return 1;
+    return 0;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, OpenEventMessage_800BBE3C);
 
 int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx)
 {
