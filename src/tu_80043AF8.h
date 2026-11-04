@@ -31,6 +31,36 @@ typedef struct
     WireTri* items;
 } WireTriList;
 
+// a VECTOR without the pad word (the scratch layouts pack them)
+typedef struct
+{
+    long vx;
+    long vy;
+    long vz;
+} LVec3;
+
+// rotated / scaled sprite (sub_80044010), in the scratchpad at 0x1F800214
+typedef struct
+{
+    POLY_FT4 prim_0;
+    short x_28; // projected centre
+    short y_2A;
+    SVECTOR rel_2C;  // position relative to the camera eye
+    LVec3 ofs_34;    // sprite offset (model space)
+    LVec3 wofs_40;   // sprite offset rotated (returned; ApplyMatrixLV output)
+    long otz_4C;
+    int pad_50[3];
+    int x0_5C; // corner offsets on screen
+    int y0_60;
+    int x1_64;
+    int y1_68;
+    int cos_6C;
+    int sin_70;
+    int pad_74;
+    MATRIX rot_78; // the caller's rotation matrix
+} RotSpriteScratch;
+#define ROT_SPRITE_SCRATCH ((RotSpriteScratch*)getScratchAddr(0x85))
+
 // polygons strung between projected sprite vertices (dword_800987D8[slot][idx], sub_800459E4 / sub_80045E48)
 typedef struct
 {

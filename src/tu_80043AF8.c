@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#define ABS_80043AF8(x) ((x) < 0 ? -(x) : (x))
 #include "tu_80036528.h"
 #include "tu_80043AF8.h"
 #include "tu_80019BF0.h"
@@ -121,6 +122,179 @@ int sub_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned char* rgb)
     }
     return 0;
 }
+/* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
+extern short asc_80084350[];
+#define SIN_TABLE (asc_80084350 + 0xF8)
+#if 0
+// Not matched: code layout right; register allocation differs throughout (the original never uses $t0 in the screen-aligned branch, keeps &geomScreenDistance in $t0 for the last extent), 1 instruction short
+#define ROT_SPRITE_UV(s, src, uv, size)                       \
+    {                                                         \
+        (s)->prim_0.u0 = (src)->u0 + (uv)[0];                 \
+        (s)->prim_0.v0 = (src)->v0 + (uv)[1];                 \
+        (s)->prim_0.u1 = (src)->u0 + (uv)[0] + (size)[0];     \
+        (s)->prim_0.v1 = (src)->v0 + (uv)[1];                 \
+        (s)->prim_0.u2 = (src)->u0 + (uv)[0];                 \
+        (s)->prim_0.v2 = (src)->v0 + (uv)[1] + (size)[1];     \
+        (s)->prim_0.u3 = (src)->u0 + (uv)[0] + (size)[0];     \
+        (s)->prim_0.v3 = (src)->v0 + (uv)[1] + (size)[1];     \
+    }
+#define ROT_SPRITE_EXTENT(v, piv, sc) (((v) * (sc) * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4)
+VECTOR* sub_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short* size, short* pivot, short* scale,
+                     SVECTOR* ofs, unsigned char* rgb, short flags, int abr, unsigned long* ot)
+{
+    RotSpriteScratch* s = ROT_SPRITE_SCRATCH;
+    short min;
+    short max;
+    if (flags & 1)
+    {
+        MATRIX m;
+        s->rel_2C.vx = pos->vx - dword_8008D600.vx + ofs->vx;
+        s->rel_2C.vy = pos->vy - dword_8008D600.vy + ofs->vy;
+        s->rel_2C.vz = pos->vz - dword_8008D600.vz + ofs->vz;
+        gte_ReadRotMatrix(&s->rot_78);
+        m.m[0][0] = m.m[1][1] = m.m[2][2] = 0x1000;
+        m.m[0][1] = m.m[0][2] = m.m[1][0] = m.m[1][2] = m.m[2][0] = m.m[2][1] = 0;
+        gte_SetRotMatrix(&m);
+        gte_ldv0(&s->rel_2C);
+        gte_rtps();
+        gte_stsxy(&s->x_28);
+        gte_stszotz(&s->otz_4C);
+        gte_SetRotMatrix(&s->rot_78);
+        s->prim_0 = *src;
+        ROT_SPRITE_UV(s, src, uv, size);
+    }
+    else
+    {
+        gte_ReadRotMatrix(&s->rot_78);
+        RotMatrixZXY_8004668C(rot, (MATRIX*)getScratchAddr(0));
+        s->ofs_34.vx = ofs->vx;
+        s->ofs_34.vy = ofs->vy;
+        s->ofs_34.vz = ofs->vz;
+        ApplyMatrixLV((MATRIX*)getScratchAddr(0), (VECTOR*)&s->ofs_34, (VECTOR*)&s->wofs_40);
+        gte_SetRotMatrix(&s->rot_78);
+        s->prim_0 = *src;
+        ROT_SPRITE_UV(s, src, uv, size);
+        s->rel_2C.vx = pos->vx - dword_8008D600.vx + s->wofs_40.vx;
+        s->rel_2C.vy = pos->vy - dword_8008D600.vy + s->wofs_40.vy;
+        s->rel_2C.vz = pos->vz - dword_8008D600.vz + s->wofs_40.vz;
+        gte_ldv0(&s->rel_2C);
+        gte_rtps();
+        gte_stsxy(&s->x_28);
+        gte_stszotz(&s->otz_4C);
+    }
+    if (s->otz_4C - 1 < 0xFFFU)
+    {
+        s->prim_0.r0 = (rgb[0] * dword_8008D40C) >> 12;
+        s->prim_0.g0 = (rgb[1] * dword_8008D40C) >> 12;
+        s->prim_0.b0 = (rgb[2] * dword_8008D40C) >> 12;
+        if ((scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4 * dword_8008B4F8 / 4096 >= 9)
+        {
+            return (VECTOR*)&s->wofs_40;
+        }
+        s->x0_5C = (-pivot[0] * scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
+        s->x1_64 = ((ABS_80043AF8(size[0]) - pivot[0]) * scale[0] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
+        s->y0_60 = (-pivot[1] * scale[1] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
+        s->y1_68 = ((ABS_80043AF8(size[1]) - pivot[1]) * scale[1] * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4;
+        if (ofs->pad == 0)
+        {
+            s->prim_0.x0 = s->x_28 + s->x0_5C;
+            s->prim_0.y0 = s->y_2A + s->y0_60;
+            s->prim_0.x1 = s->x_28 + s->x1_64;
+            s->prim_0.y1 = s->y_2A + s->y0_60;
+            s->prim_0.x2 = s->x_28 + s->x0_5C;
+            s->prim_0.y2 = s->y_2A + s->y1_68;
+            s->prim_0.x3 = s->x_28 + s->x1_64;
+            s->prim_0.y3 = s->y_2A + s->y1_68;
+        }
+        else
+        {
+            s->sin_70 = SIN_TABLE[ofs->pad & 0xFFF];
+            s->cos_6C = SIN_TABLE[(ofs->pad + 0x400) & 0xFFF];
+            s->prim_0.x0 = s->x_28 + (s->x0_5C * s->cos_6C + s->y0_60 * s->sin_70) / 4096;
+            s->prim_0.y0 = s->y_2A + (-s->x0_5C * s->sin_70 + s->y0_60 * s->cos_6C) / 4096;
+            s->prim_0.x1 = s->x_28 + (s->x1_64 * s->cos_6C + s->y0_60 * s->sin_70) / 4096;
+            s->prim_0.y1 = s->y_2A + (-s->x1_64 * s->sin_70 + s->y0_60 * s->cos_6C) / 4096;
+            s->prim_0.x2 = s->x_28 + (s->x0_5C * s->cos_6C + s->y1_68 * s->sin_70) / 4096;
+            s->prim_0.y2 = s->y_2A + (-s->x0_5C * s->sin_70 + s->y1_68 * s->cos_6C) / 4096;
+            s->prim_0.x3 = s->x_28 + (s->x1_64 * s->cos_6C + s->y1_68 * s->sin_70) / 4096;
+            s->prim_0.y3 = s->y_2A + (-s->x1_64 * s->sin_70 + s->y1_68 * s->cos_6C) / 4096;
+        }
+        if (s->prim_0.x1 < s->prim_0.x0)
+        {
+            max = s->prim_0.x0;
+            min = s->prim_0.x1;
+        }
+        else
+        {
+            max = s->prim_0.x1;
+            min = s->prim_0.x0;
+        }
+        if (max < s->prim_0.x2)
+        {
+            max = s->prim_0.x2;
+        }
+        else if (s->prim_0.x2 < min)
+        {
+            min = s->prim_0.x2;
+        }
+        if (max < s->prim_0.x3)
+        {
+            max = s->prim_0.x3;
+        }
+        else if (s->prim_0.x3 < min)
+        {
+            min = s->prim_0.x3;
+        }
+        if (min >= 320 || max < 0)
+        {
+            return (VECTOR*)&s->wofs_40;
+        }
+        if (s->prim_0.y1 < s->prim_0.y0)
+        {
+            max = s->prim_0.y0;
+            min = s->prim_0.y1;
+        }
+        else
+        {
+            max = s->prim_0.y1;
+            min = s->prim_0.y0;
+        }
+        if (max < s->prim_0.y2)
+        {
+            max = s->prim_0.y2;
+        }
+        else if (s->prim_0.y2 < min)
+        {
+            min = s->prim_0.y2;
+        }
+        if (max < s->prim_0.y3)
+        {
+            max = s->prim_0.y3;
+        }
+        else if (s->prim_0.y3 < min)
+        {
+            min = s->prim_0.y3;
+        }
+        if (min >= 240 || max < 0)
+        {
+            return (VECTOR*)&s->wofs_40;
+        }
+        if (abr & 0x10)
+        {
+            setSemiTrans(&s->prim_0, 1);
+            s->prim_0.tpage = (s->prim_0.tpage & ~0x60) | (abr & 0x60);
+        }
+        if (flags & 2)
+        {
+            s->otz_4C = 0;
+        }
+        *(POLY_FT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->prim_0;
+        addPrim(ot + ((s->otz_4C >> 2) & 0x3FF), primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(POLY_FT4);
+    }
+    return (VECTOR*)&s->wofs_40;
+}
+#endif
 INCLUDE_ASM(sub_80044010);
 extern MATRIX dword_80087114; // light matrix
 // Matched
@@ -498,9 +672,6 @@ void sub_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
         *out++ = *t;
     }
 }
-/* 4096-entry sine table at 0x80084540 (inside the asc_80084350 data chunk) */
-extern short asc_80084350[];
-#define SIN_TABLE (asc_80084350 + 0xF8)
 // Matched
 void RotMatrixZXY_8004668C(SVECTOR* r, MATRIX* m)
 {
