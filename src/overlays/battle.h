@@ -841,7 +841,6 @@ typedef struct BatDropSrc_a
     EffectSprite* animB_90;
 } BatDropSrc_a;
 
-extern char dword_800795D4[];
 
 extern int* DrawRotSprite_80044010();
 
@@ -947,7 +946,6 @@ typedef struct BatGlow_a
     int* scale_A0;
 } BatGlow_a;
 
-extern char dword_800795D4[];
 
 extern void sub_800C3B50(int* p, int id);
 

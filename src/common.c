@@ -16,16 +16,150 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "unit.h"
+#include "common_tu.h"
 #include "tu_80019BF0.h"
 #include "tu_800318C8.h"
 
-INCLUDE_DATA(dword_80071F58);
-INCLUDE_DATA(dword_80071F5C);
-INCLUDE_DATA(dword_80071F60);
-INCLUDE_DATA(aAssertionFaile_2);
-INCLUDE_DATA(aCommonC);
-INCLUDE_DATA(byte_800793C4);
-INCLUDE_DATA(dword_800793C8);
+const ActionData dword_80071F58 = { 0, 0, 100, 255, 115, 0, 0, 10, { 0, 3 } };
+const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";
+const char aCommonC[] = "COMMON.C";
+int dword_80079320[10] = {
+    1, 0, 1, 0, 5, 7, 11, 13,
+    9, 15,
+};
+unsigned short dword_80079348[0x15] = {
+    0x11D, 0x140, 0x163, 0x186, 0x1A9, 0x1CC, 0x1EF, 0x212,
+    0x235, 0x258, 0x27B, 0x29E, 0x2C1, 0x2E4, 0x307, 0x32A,
+    0x34D, 0x370, 0x393, 0x3B6, 0x3E7,
+};
+unsigned short word_80079374[40] = {
+    190, 19, 180, 18, 170, 17, 160, 16,
+    150, 15, 140, 14, 130, 13, 120, 12,
+    110, 11, 100, 10, 90, 9, 80, 8,
+    70, 7, 60, 6, 50, 5, 40, 4,
+    30, 3, 20, 2, 10, 1,
+};
+unsigned char byte_800793C4[4] = { 2, 3, 5, 10 };
+unsigned char dword_800793C8[118][4] = {
+    { 0, 0, 4, 16 },
+    { 5, 8, 12, 16 },
+    { 8, 10, 14, 16 },
+    { 14, 16, 16, 16 },
+    { 15, 16, 16, 16 },
+    { 0, 31, 7, 128 },
+    { 240, 30, 7, 128 },
+    { 208, 30, 7, 128 },
+    { 192, 30, 7, 128 },
+    { 172, 30, 7, 128 },
+    { 156, 30, 7, 128 },
+    { 128, 30, 7, 128 },
+    { 104, 30, 7, 128 },
+    { 88, 30, 7, 128 },
+    { 68, 30, 7, 128 },
+    { 44, 30, 7, 128 },
+    { 28, 30, 7, 128 },
+    { 8, 30, 7, 128 },
+    { 244, 29, 7, 128 },
+    { 224, 29, 7, 128 },
+    { 200, 29, 7, 128 },
+    { 172, 29, 7, 128 },
+    { 144, 29, 7, 128 },
+    { 120, 29, 7, 128 },
+    { 92, 29, 7, 128 },
+    { 64, 29, 7, 128 },
+    { 36, 29, 7, 128 },
+    { 8, 29, 7, 128 },
+    { 236, 28, 7, 128 },
+    { 212, 28, 7, 128 },
+    { 192, 28, 7, 128 },
+    { 160, 28, 7, 128 },
+    { 140, 28, 7, 128 },
+    { 116, 28, 7, 128 },
+    { 92, 28, 7, 128 },
+    { 72, 28, 7, 128 },
+    { 48, 28, 7, 128 },
+    { 28, 28, 7, 128 },
+    { 8, 28, 7, 128 },
+    { 236, 27, 7, 128 },
+    { 216, 27, 7, 128 },
+    { 196, 27, 7, 128 },
+    { 168, 27, 7, 128 },
+    { 152, 27, 7, 128 },
+    { 136, 27, 7, 128 },
+    { 120, 27, 7, 128 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 0, 1 },
+    { 200 },
+    { 69, 1 },
+    { 194, 1 },
+    { 219, 1 },
+    { 244, 1 },
+    { 219, 1 },
+    { 194, 1 },
+    { 119, 1 },
+    { 44, 1 },
+    { 250 },
+    { 200 },
+    { 150 },
+    { 100 },
+    { 80 },
+    { 55 },
+    { 0 },
+    { 206, 255, 255, 255 },
+    { 181, 255, 255, 255 },
+    { 156, 255, 255, 255 },
+    { 186, 255, 255, 255 },
+    { 216, 255, 255, 255 },
+    { 231, 255, 255, 255 },
+    { 246, 255, 255, 255 },
+    { 251, 255, 255, 255 },
+    { 20 },
+    { 30 },
+    { 40 },
+    { 50 },
+    { 59 },
+    { 79 },
+    { 98 },
+    { 128 },
+    { 157 },
+    { 177 },
+    { 197 },
+    { 206 },
+    { 216 },
+    { 226 },
+    { 236 },
+    { 238 },
+    { 236 },
+    { 226 },
+    { 216 },
+    { 206 },
+    { 197 },
+    { 177 },
+    { 157 },
+    { 128 },
+    { 98 },
+    { 79 },
+    { 59 },
+    { 50 },
+    { 40 },
+    { 30 },
+    { 20 },
+    { 10 },
+};
 
 // Matched
 void sub_80012794(UnitStatus* p, int a1)
@@ -152,11 +286,11 @@ typedef struct
     short field_24;
     short field_26;
 } ActionResult;
-extern char aAssertionFaile_2[];
-extern char aCommonC[];
+extern const char aAssertionFaile_2[];
+extern const char aCommonC[];
 extern unsigned char byte_800793C4[];
 extern unsigned char dword_800793C8[][4];
-extern ActionData dword_80071F58; // an empty action
+extern const ActionData dword_80071F58; // an empty action
 extern int sub_80031B30(int a0);
 extern int sub_80031A04(int a0, int a1);
 extern void sub_800335D0(UnitStatus* src, UnitStatus* out);
@@ -383,4 +517,4 @@ int sub_80013228(int a0, int a1, int* p)
 }
 
 // zero word at the end of this TU's .rdata, in front of the jump table of sub_80013C28 (tu_80013358)
-INCLUDE_DATA(dword_800720E4);
+const int dword_800720E4 = 0;

@@ -19,10 +19,6 @@
 #include "tu_8004B0A8.h"
 #include "tu_80043AF8.h"
 
-INCLUDE_DATA(dword_8008713C);
-INCLUDE_DATA(dword_80087140);
-INCLUDE_DATA(dword_80087144);
-
 #define ABS_8004B0A8(x) ((x) < 0 ? -(x) : (x))
 // Matched
 void sub_8004B0A8(VECTOR* v, MATRIX* m)
@@ -950,3 +946,14 @@ void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
     }
     out->vz = (a->vz + d * t / 4096) & 0xFFF;
 }
+
+FtgSpriteVtx *dword_80098180 BSS = 0;
+int dword_80098184 BSS = 0;
+MATRIX dword_80098188[40] BSS = { 0 };
+int dword_80098688 BSS = 0;
+int dword_8009868C BSS = 0;
+SVECTOR dword_80098690[2] BSS = { 0 };
+int dword_800986A0[78] BSS = { 0 };
+FtgSpriteVtx *dword_800987D8[40][56] BSS = { 0 };
+FtgTPageClut dword_8009AAD8 BSS = { 0 };
+int dword_8009AADC BSS = 0;

@@ -17,8 +17,10 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "effect_obj.h"
+#include "tu_80016BF4.h"
 
-INCLUDE_DATA(dword_80072270);
+const struct_u8x4 dword_80072270 = { { 255, 128, 0, 0 } };
+const int dword_80072274 = 0;
 
 // Matched
 void sub_80016BF4(EventEntry* p, EffectObj* q)
@@ -30,7 +32,6 @@ void sub_80016BF4(EventEntry* p, EffectObj* q)
     }
 }
 extern void PlayMusic_800300E0(int a, int b);
-extern int dword_800795D4;
 // Matched
 void sub_80016C3C(int* a0, void* buf)
 {

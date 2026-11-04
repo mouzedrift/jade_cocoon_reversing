@@ -17,8 +17,9 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "effect_obj.h"
+#include "tu_800174F8.h"
 
-INCLUDE_DATA(off_80072278);
+const int off_80072278[0] = {  };
 
 void sub_8001761C(int* a0, EffectObj* a1);
 // Matched
@@ -228,7 +229,6 @@ void sub_80017CE4(EventEntry* e, void* buf)
         *a0 = (*a0 & ~1) | 0x8000;
     }
 }
-extern int dword_800795D4;
 void sub_80017FF8(EventEntry* e, void* buf);
 // Matched
 void sub_80017E30(EventEntry* e, void* buf)

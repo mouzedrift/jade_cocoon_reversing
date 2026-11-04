@@ -15,14 +15,10 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8003D198.h"
 
 extern int dword_80086898[][12];
 
-INCLUDE_DATA(dword_8007499C);
-INCLUDE_DATA(dword_800749A0);
-INCLUDE_DATA(dword_800749A4);
-INCLUDE_DATA(dword_800749A8);
-INCLUDE_DATA(word_800749AC);
 
 // Matched
 int GetCharWidth_8003E884(int idx, short n)
@@ -172,3 +168,6 @@ void sub_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
+
+CharTable_8003E91C charTables_8008685C[1] = { { 0 } };
+void *dword_80086868[1] = { (void *)((char *)&dword_800865B8 + 4) };

@@ -17,15 +17,17 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "cd.h"
+#include "tu_8003C6C8.h"
+#include "main.h"
 #include "gte.h"
 
-extern int dword_80086568;
 extern void RemoveFileRequest_8003BF18(FileRequest* n);
 
-
-INCLUDE_DATA(aDataData0011);
-INCLUDE_DATA(aAssertionFaile_1);
-INCLUDE_DATA(aCdC);
+const char aDataData0011[] = "\\DATA\\DATA.001;1";
+const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
+const char aCdC[] = "CD.C";
+const int dword_800748DC = 0;
 
 // Matched
 void sub_80039FA4(int a0)
@@ -506,7 +508,6 @@ int FindFreeFileRequest_8003BC44(void)
     }
     return -1;
 }
-extern unsigned char fileRequestParams_800954C0[][0x64];
 typedef struct
 {
     int count;
@@ -704,7 +705,6 @@ struct FileTask
     int sectors;
     int retry;
 };
-extern EventNode* fileRequestTask_8008B544;
 // Matched
 int sub_8003C0A4(int a0)
 {
@@ -942,3 +942,8 @@ void AssertFileRequestQueueEmpty_8003C684(void)
         exit(1);
     }
 }
+
+int fileRequestQueue_80086540 = 0;
+int dword_80086544 = 0;
+FileRequest *dword_80086548 = 0;
+FileRequest *dword_8008654C = 0;

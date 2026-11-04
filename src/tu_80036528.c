@@ -16,30 +16,12 @@
 #include "sound.h"
 #include "data_decls.h"
 
-
 #include "tu_80036528.h"
+#include "tu_80014954.h"
+#include "main.h"
 
-typedef struct
-{
-    short x0;
-    short y0;
-    short z0;
-    short pad_6;
-    int field_8;
-    short x1;
-    short y1;
-    short z1;
-    short pad_12;
-} CamOffset;
 extern Block104 cameraState_8008D4F0;
 extern ShortPair dword_8008D474;
-typedef struct
-{
-    unsigned short field_0;
-    unsigned char field_2;
-    unsigned char field_3;
-} PadVibEntry;
-extern PadVibEntry* vibrationPatterns_80083B30[];
 typedef struct
 {
     unsigned char idx;
@@ -48,7 +30,6 @@ typedef struct
     unsigned char pad;
     short field_4;
 } struct_buf_80036528;
-extern EventNode* vibrationTasks_8008D4B8;
 extern void UpdatePadVibration_800366A0(EventEntry* e, struct_buf_80036528* o);
 // Matched
 void StartPadVibration_80036528(int idx, int b)
@@ -117,7 +98,6 @@ void StopPadVibrationTask_800367F0(int a0, unsigned char* a1)
     padVibration_80095460[*a1].motor_2[0] = 0;
     padVibration_80095460[*a1].motor_2[1] = 0;
 }
-extern unsigned char dword_80083844[];
 
 // Matched
 void UpdatePadVibration_80036820(int port)
@@ -146,7 +126,6 @@ extern void sub_80037F44(CameraCtrl* p);
 extern void sub_800374E0();
 extern int sub_800B8184(int a, int b);
 extern void sub_800369E0(EventEntry* p, CameraCtrl* q);
-
 
 // Matched
 void InitCameraTask_800368F8(EventEntry* p, CameraCtrl* q)
@@ -183,8 +162,6 @@ extern void sub_8003891C(CameraCtrl* p, struct_v3* v);
 extern void sub_800BC90C(CameraCtrl* q);
 extern void sub_80036AB4(EventEntry* p, CameraCtrl* q);
 extern void sub_8001AA04(int a);
-
-
 
 // Matched
 void sub_800369E0(EventEntry* p, CameraCtrl* q)
@@ -382,7 +359,6 @@ void nullsub_5(void)
 }
 extern void sub_80039E14(void);
 extern int geomScreenDistance_8008B548;
-extern short word_8008D51E;
 // Matched
 void ResetCameraToLevant_800376A8(void)
 {
@@ -416,8 +392,6 @@ void sub_80037770(void)
     p->flags_4 &= ~0x2000;
     RestoreCameraState_80039698(p);
 }
-extern int dword_80083D00[];
-extern int dword_80084330[];
 extern void sub_8003970C(int a, int* b);
 extern void sub_8003983C(int a, int* b);
 // Matched
@@ -538,7 +512,6 @@ void SetCameraTarget_80037AC8(int a0)
 {
     ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = a0;
 }
-extern unsigned short dword_80083CE8[][4];
 extern int* sub_800A1E3C(void);
 extern BattleObj_800C0FAC* sub_800C0FAC(void);
 extern unsigned char byte_800C9C7C;
@@ -600,7 +573,6 @@ void sub_80037C4C(void)
     CameraCtrl* p = cameraTask_8008D4A0->entry.buffer;
     p->flags_4 &= ~0x100;
 }
-extern CamOffset dword_80083BE4[];
 // Matched
 void sub_80037C74(CameraCtrl* q)
 {
@@ -699,8 +671,6 @@ void sub_80038230(CameraCtrl* p)
     sub_8003891C(p, &levantPos_8008BD18.pos);
 }
 extern double pow(double, double);
-extern int dword_8008D4BC;
-extern int dword_8008D66C;
 // Matched
 void sub_8003856C(CameraCtrl* p)
 {
@@ -852,7 +822,6 @@ void sub_80038CA8(CameraCtrl* p)
     p->field2EDst_180 = cameraState_8008D4F0.field_2E;
     sub_80038D64(o, &saveData_8008B570.levant_7A8.pos.x);
 }
-extern int stru_8008D504[];
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 
 // Matched
@@ -873,7 +842,6 @@ void sub_80038D64(CameraCtrl* p, int* a1)
         p->angDst_152 = *(unsigned short*)&p->angDst_152 + 0x1000;
     }
 }
-extern CamOffset dword_80083C70[];
 // Matched
 void sub_80038E2C(CameraCtrl* p, int a, int b)
 {
@@ -895,7 +863,6 @@ void sub_80038E2C(CameraCtrl* p, int a, int b)
     p->field2EDst_180 = dword_80083C70[(unsigned short)a].field_8;
     sub_80038D64(o, (int*)&p->pos_38);
 }
-extern CamOffset dword_80083C0C[];
 extern int dword_800A85B8;
 extern int DistanceSquared3D_8003B80C(int* a, int* b);
 // Matched
@@ -1054,7 +1021,6 @@ typedef struct
 } ShortRect;
 extern ShortRect stru_8008D420;
 extern short* dword_8008D654;
-extern signed char dword_80083BD4[];
 extern DRAWENV drawEnv_8008D698[2];
 #define CLAMP_HALF(v, lim) ((v) < -(lim) / 2 ? -(lim) / 2 : ((lim) / 2 < (v) ? (lim) / 2 : (v)))
 // Matched

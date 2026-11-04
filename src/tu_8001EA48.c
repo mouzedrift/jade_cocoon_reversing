@@ -17,15 +17,12 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80014954.h"
+#include "tu_80019BF0.h"
+#include "main.h"
 
 extern short dword_8008D474[2];
 extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
-typedef struct
-{
-    int fileIdx;
-    unsigned int** ppDest;
-} OverlayEntry;
-extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr);
@@ -246,7 +243,7 @@ void sub_8001EA48(void* arg0)
         cmd = (ActorScriptCmd*)((unsigned int*)cmd + cmd->len_1);
     }
 }
-INCLUDE_DATA(dword_8007411C);
+INCLUDE_DATA(dword_8007411C); // the jump table of sub_80022B84 (asm)
 // Matched
 void sub_8001EFC4(Actor* p)
 {
@@ -1775,10 +1772,6 @@ void sub_800221DC(FtgPolyFT4* p, SPRT* d, DR_TPAGE* tp)
     d->clut = p->clut;
     SetDrawTPage(tp, 0, 1, p->tpage);
 }
-typedef void (*fn_80022458_a)(unsigned char* body, int a3);
-typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
-extern fn_80022458_a ftgPrimRelocators_8007DB08[];
-extern fn_80022458_b ftgPrimLoaders_8007DAE0[];
 void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y);
 int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h);
 int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p, FtgSpriteGroups8* a, int k, int h);
@@ -3814,15 +3807,6 @@ void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
         s += 4;
     }
 }
-extern struct_8008D648 dword_8008D648;
-extern int* dword_80082674;
-extern int dword_80091C98;
-extern int dword_80091C94;
-extern int dword_80091C5C;
-extern int dword_80091C58;
-extern int dword_80091C90;
-extern int dword_80091C9C;
-extern int dword_80091C8C;
 typedef struct
 {
     int pos[3];
@@ -3830,11 +3814,7 @@ typedef struct
 } struct_80091C78;
 extern struct_80091C78 stru_80091C78;
 extern int dword_800B1DC8;
-extern int dword_80091C54;
-extern short word_80091CB8[];
-extern int dword_80091C10;
 extern int dword_80091C68;
-extern int dword_80091C48;
 // Matched
 void sub_80026FAC(void)
 {
@@ -3887,16 +3867,8 @@ void sub_80026FAC(void)
     dword_80082678 = 0;
     InitActors_8001D378();
 }
-extern int dword_80091C74;
 extern int dword_80091CB4;
-extern int dword_80082668;
-extern int dword_8008266C;
 extern EventNode* dword_800B1DA8;
-extern EventNode* dword_8008D400;
-extern EventNode* messageWindowTask_8008D640;
-extern EventNode* dword_8008D49C;
-extern EventNode* dword_8008D674;
-extern EventNode* fileRequestTasks_8008D488;
 extern void FreeActors_8001D3C4(int a0);
 extern void sub_800AC73C(void);
 extern void sub_800A54A0(void);
@@ -4297,7 +4269,6 @@ typedef struct
 extern MapEntry16** dword_800B0608[];
 #define MAP_ENTRY_CF8(i) dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
 extern int dword_800B0EC0;
-extern int dword_80091CB0;
 extern void sub_800ADDAC(void);
 extern int sub_800A683C(int a0);
 extern void sub_800AD124(int a0);
@@ -4602,7 +4573,7 @@ typedef struct
 extern void sub_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
 extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
-extern unsigned int* dword_80073210;
+extern int* sub_80027A88();
 extern short dword_80091CA8[];
 extern EventNode* dword_8008B4A4; // the GAME overlay task
 // Matched

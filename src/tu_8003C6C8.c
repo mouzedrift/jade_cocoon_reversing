@@ -17,9 +17,12 @@
 #include "data_decls.h"
 #include "tiy.h"
 #include "tu_8003C6C8.h"
+#include "cd.h"
 
-INCLUDE_DATA(dword_8007490C);
-INCLUDE_DATA(dword_8007493C);
+const Ints14_8003CD5C dword_8007490C = { {
+        7, 8, 9, 10, 11, 12, 13, 14,
+        13, 12, 11, 10, 9, 8,
+    } };
 
 extern EventNode* fileRequestTasks_8008D488;
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
@@ -257,11 +260,6 @@ int LoadData001File_8003CD1C(void)
 
     return 1;
 }
-typedef struct
-{
-    int v[14];
-} Ints14_8003CD5C;
-extern Ints14_8003CD5C dword_8007490C;
 extern void DrawPublicTiySprt_80033080(unsigned short* a, int i, int j);
 // Matched
 void DrawLoadingIcon_8003CD5C(void)
@@ -316,4 +314,10 @@ void sub_8003CE18(short x, short y)
         break;
     }
 }
-INCLUDE_DATA(dword_80074960);
+const int dword_80074960 = 0;
+
+CdReadState cdReadState_80086550 = { 1 };
+int fileBufferInUse_80086564 = 0;
+int dword_80086568 = 0;
+void *fileBuffer_8008656C = 0;
+char *data001Path_80086570 = aDataData0011;

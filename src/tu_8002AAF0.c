@@ -15,8 +15,10 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8002AAF0.h"
+#include "tu_80014954.h"
 
-INCLUDE_DATA(dword_800741C4);
+const Block16 dword_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
 typedef struct
 {
@@ -207,11 +209,6 @@ void sub_8002ADB4(char* a0, int a1, int a2, int a3)
 }
 typedef struct
 {
-    unsigned short x;
-    unsigned short y;
-} Pos16;
-typedef struct
-{
     unsigned short color;
     unsigned char b;
     unsigned char c;
@@ -327,11 +324,6 @@ void DrawButtonHelpBar_8002B004(struct_B004_entry* e, Pos16* a1, int ot)
     t.color = uiColor_8008B590;
     DrawWindow_80042460(&r, (int)&t, &pOT_8008D454[ot], 0);
 }
-typedef struct
-{
-    short s[8];
-} Block16;
-extern Block16 dword_800741C4;
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched
 void sub_8002B1B0(short a, int b, int c)

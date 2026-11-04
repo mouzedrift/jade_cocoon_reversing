@@ -57,16 +57,26 @@ def read_lib_commons():
 
 
 def game_bss_end():
-    """end of the game's .bss: all of it is INCLUDE_DATA pieces (asm/d) behind the bss head"""
+    """end of the game's .bss (the PSY-Q modules' .bss follows); the game's variables are C (BSS) and INCLUDE_DATA pieces"""
     import layout
-    pos = layout.BSS_START
-    for c_file in c_files:
-        text = open(os.path.join(CURRENT_DIR, "src", c_file)).read()
-        for n in re.findall(r"INCLUDE_DATA\((\w+)\)", text):
-            s = open(os.path.join(CURRENT_DIR, "asm", "d", n + ".s")).read()
-            if "\t.section\t.bss" in s:
-                pos += sum(int(x) for x in re.findall(r"\t\.space\t(\d+)", s))
-    return pos
+    return layout.BSS_GAME_END
+
+
+def read_aliases():
+    """config/aliases.txt: names of places inside data objects that are C, [(name, address)] (the address is the
+    one in symbol_addrs.txt, or the name's _XXXXXXXX suffix)"""
+    addrs = {}
+    for line in open(os.path.join(CURRENT_DIR, "symbol_addrs.txt")):
+        m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
+        if m:
+            addrs[m.group(1)] = int(m.group(2), 16)
+    out = []
+    path = os.path.join(CURRENT_DIR, "config", "aliases.txt")
+    for line in open(path) if os.path.exists(path) else ():
+        f = line.split("#")[0].split()
+        if f:
+            out.append((f[0], addrs[f[0]] if f[0] in addrs else int(f[0][-8:], 16)))
+    return out
 
 
 def write_if_changed(path, text):
@@ -262,6 +272,9 @@ def generate_ninja():
                 a = int(m.group(2), 16)
                 if a >= 0x800A05A0 or (lib_objs is not None and m.group(1) not in lib_syms and in_lib(a)):
                     f.write("%s\tequ\t$%s\n" % (m.group(1), m.group(2)))
+            # names the code has for a place inside a C object (playerYan_8008B594 == saveData_8008B570.inv_24)
+            for name, a in read_aliases():
+                f.write("%s\tequ\t$%08X\n" % (name, a))
             f.write("\tregs\tpc=start\n")
 
         ninja.build(cpe_path, "link", implicit=linker_deps + [link_path])

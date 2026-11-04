@@ -1,3 +1,2 @@
 # data symbols that are defined in C (src/*.c) instead of by asm/d: name, size of the C object in bytes.
 # The bytes of the original symbol behind the C object (symbols not named yet) are kept as <name>_tail.
-Data001Files_80075AA0 13296

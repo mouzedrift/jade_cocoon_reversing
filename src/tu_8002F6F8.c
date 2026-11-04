@@ -15,10 +15,10 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8002F6F8.h"
+#include "tu_80014954.h"
 
-INCLUDE_DATA(dword_8007442C);
-INCLUDE_DATA(dword_80074430);
-INCLUDE_DATA(dword_80074434);
+const NameBuf dword_80074434 = { { 0xFFFF } };
 
 
 typedef struct
@@ -60,7 +60,6 @@ void sub_8002F6F8(int a0, int* st)
     DrawUiWindow_8002A384(&s);
 }
 
-extern unsigned char dword_80082F04[];
 extern unsigned char dword_80082EBC[];
 extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
@@ -92,7 +91,6 @@ typedef struct
     short pad_E;
     unsigned int field_10;
 } struct_F8E4;
-extern RECT* off_80082E90[];
 extern void sub_8002ECE0(int a0, unsigned short* pos, int a2, short ot);
 extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
 extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
@@ -143,11 +141,6 @@ short sub_8002FA70(void)
 {
     return sub_80033514(GetLevantStatus_80033ABC(&saveData_8008B570));
 }
-typedef struct
-{
-    unsigned short s[11];
-} NameBuf;
-extern NameBuf dword_80074434;
 extern void DecodeText_8003F748(int a, NameBuf* b);
 extern short MeasureTextWidth_8003E4C8(NameBuf* b);
 extern void DrawText_8003E91C(int mode, NameBuf* a, unsigned short* b, int c);
@@ -198,8 +191,6 @@ void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, in
     loc[1] = pos[1];
     DrawText_8003E91C(2, &buf, loc, a3);
 }
-extern char* rankNames_80082EC4[];
-extern char* off_80082EE4;
 // Matched
 char* GetRankName_8002FCD8(int idx)
 {

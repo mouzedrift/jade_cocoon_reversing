@@ -712,5 +712,23 @@ typedef struct
 } MapList16;
 extern MapList16 dword_80091C60;
 
+
+// the loaders / relocators of the primitive kinds of an FTG model (sub_80022458)
+typedef void (*fn_80022458_a)(unsigned char* body, int a3);
+typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
+extern fn_80022458_a ftgPrimRelocators_8007DB08[];
+extern fn_80022458_b ftgPrimLoaders_8007DAE0[];
+
+int sub_8002348C(FtgPrimHeader *a0, FtgPolyF3 *a1, FtgObject *a2, int a3);
+int sub_80023624(FtgPrimHeader *a0, FtgSrcPolyG3 *a1, FtgObject *a2, int a3);
+int sub_800238AC(FtgPrimHeader *a0, FtgSrcPolyFT3 *a1, FtgObject *a2, int a3);
+int sub_80023B48(FtgPrimHeader *a0, FtgSrcPolyGT3 *a1, FtgObject *a2, int a3);
+int sub_80023EA4(FtgPrimHeader *a0, FtgPolyF4 *a1, FtgObject *a2, int a3);
+int sub_8002407C(FtgPrimHeader *a0, FtgSrcPolyG4 *a1, FtgObject *a2, int a3);
+int sub_80024394(FtgPrimHeader *a0, FtgSrcPolyFT4 *a1, FtgObject *a2, int a3);
+int sub_800246A0(FtgPrimHeader *a0, FtgSrcPolyGT4 *a1, FtgObject *a2, int a3);
+
+void InitOverlayLoaderTask_80020CB8();
+
 #endif
 

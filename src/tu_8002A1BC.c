@@ -16,11 +16,18 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_8002A1BC.h"
+#include "tu_80014954.h"
+#include "main.h"
 
-INCLUDE_DATA(dword_8007415C);
+const char dword_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
+const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
+const char aDescription_80074178[] = "\202c\202\205\202\223\202\203\202\222\202\211\202\220\202\224\202\211\202\217\202\216"; // Description
+const char aYes_80074190[] = "\202x\202\205\202\223"; // Yes
+const char aNo_80074198[] = "\202m\202\217"; // No
+const int dword_800741A0 = 0;
 
 
-extern SpuReverbAttr reverbAttr_80091CC8;
 extern void UpdateReverb_8002A218(void);
 // Matched
 void InitReverbTask_8002A1BC(int* p)
@@ -122,7 +129,6 @@ typedef struct
     int field_4;
     int field_8;
 } struct_12_c;
-extern int elementIcons_800827BC[];
 // Matched
 short GetMagicElementIcon_8002A3E0(int a)
 {
@@ -149,8 +155,6 @@ void sub_8002A42C(unsigned short* pos, short a1, int a2, short a3)
         AddDrawAreaPrim_8003326C(a2, &pOT_8008D454[a3]);
     }
 }
-extern char aFb[];
-extern unsigned short dword_800827EC[];
 // Matched
 void sub_8002A4E4(short a0)
 {

@@ -22,11 +22,6 @@
 #include "tu_8004B0A8.h"
 #include "spadstack.h"
 
-INCLUDE_DATA(dword_80098690);
-INCLUDE_DATA(dword_800986A0);
-INCLUDE_DATA(dword_800987D8);
-INCLUDE_DATA(dword_8009AAD8);
-
 // Matched
 EventEntry* AllocEventEntry_80043AF8(EventNode* n)
 {
@@ -719,7 +714,6 @@ void RotMatrixYXZ_80046874(SVECTOR* r, MATRIX* m)
     m->m[2][2] = (cy * cx) >> 12;
     m->m[2][1] = ((sy * sz) >> 12) + ((b * cz) >> 12);
 }
-extern SVECTOR dword_80098690[];
 
 /* inlined helpers: the original keeps the bone index in a copy of the argument */
 static inline void GetRot(SVECTOR* o, AnimPose* p, int j)
@@ -831,7 +825,6 @@ static inline void AddTrans(long* a, long* b)
     a[1] += b[1];
     a[2] += b[2];
 }
-extern MATRIX dword_80096120[]; // per-bone draw matrices
 #if 0
 // Not matched: same shape and length (1274 vs 1268 words); register allocation / scheduling differ in the alt matrix, the 5-word matrix copies and the translation adds
 // draws a skeleton: bone matrices from the pose (alt: bone rotations about x added from another pose), then
@@ -1196,8 +1189,6 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
 #endif
 INCLUDE_ASM(sub_80047E28);
 
-
-
 // Matched
 void sub_8004A4FC(AnimSkel* sk, SVECTOR* v1, AnimPose* a1, int t1, SVECTOR* v2, AnimPose* a2, int t2,
                   AnimPose* r0, AnimPose* p0, AnimPose* out, SVECTOR* vout)
@@ -1373,3 +1364,7 @@ void sub_8004AD44(MATRIX* in, VECTOR* out)
     OuterProduct12((VECTOR*)&v[0], (VECTOR*)&v[3], &r);
     VectorNormal(&r, out);
 }
+
+MATRIX dword_80096120[40] BSS = { 0 };
+int dword_80096620[2] BSS = { 0 };
+int dword_80096628[1750] BSS = { 0 };

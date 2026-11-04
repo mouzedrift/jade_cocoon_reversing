@@ -10,4 +10,10 @@ typedef struct
     int field_8;
 } MenuDrawArgs;
 
+typedef struct
+{
+    unsigned char c[4];
+} Color_EACC;
+extern const Color_EACC dword_800743D0;
+
 #endif

@@ -103,4 +103,6 @@ typedef struct
     int b;
 } struct_pair8;
 
+void InitCameraTask_800368F8();
+
 #endif

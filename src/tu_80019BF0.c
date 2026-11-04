@@ -18,85 +18,49 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "tu_80014954.h"
+#include "effect.h"
+#include "event.h"
+#include "main.h"
 
-INCLUDE_DATA(dword_80073044);
-INCLUDE_DATA(dword_80073048);
-INCLUDE_DATA(dword_8007304C);
-INCLUDE_DATA(dword_80073064);
-INCLUDE_DATA(dword_800730C8);
-INCLUDE_DATA(dword_800730DC);
-INCLUDE_DATA(dword_800730F0);
-INCLUDE_DATA(dword_80073108);
-INCLUDE_DATA(dword_80073118);
-INCLUDE_DATA(dword_80073138);
-INCLUDE_DATA(dword_80073154);
-INCLUDE_DATA(dword_80073164);
-INCLUDE_DATA(dword_80073174);
-INCLUDE_DATA(dword_800731A4);
-INCLUDE_DATA(dword_800731B4);
-INCLUDE_DATA(dword_800731C4);
-INCLUDE_DATA(dword_800731EC);
-INCLUDE_DATA(overlayAdrr1_800731F8);
-INCLUDE_DATA(overlayAddr2_800731FC);
-INCLUDE_DATA(overlayAddr3_80073200);
-INCLUDE_DATA(overlayAddr4_80073204);
-INCLUDE_DATA(overlayAddr5_80073208);
-INCLUDE_DATA(overlayAddr6_8007320C);
-INCLUDE_DATA(dword_80073210);
-INCLUDE_DATA(fileRequestQueue_80086540);
-INCLUDE_DATA(dword_80086544);
-INCLUDE_DATA(dword_80086548);
-INCLUDE_DATA(dword_8008654C);
-INCLUDE_DATA(cdReadState_80086550);
-INCLUDE_DATA(dword_80086554);
-INCLUDE_DATA(dword_80086558);
-INCLUDE_DATA(dword_8008655C);
-INCLUDE_DATA(dword_80086560);
-INCLUDE_DATA(fileBufferInUse_80086564);
-INCLUDE_DATA(dword_80086568);
-INCLUDE_DATA(fileBuffer_8008656C);
+// the bit masks sub_80019B14 (tu_80018E5C.c) copies: the first .rdata of this file, which has to start at 4 mod 8
+// for its switch tables (.align 3), so sub_80019B14 is probably the first function of this TU
+const struct_int3 dword_8007303C = { { 0x1F8, 0xF000, 0x7E0000 } };
+const int dword_80073048 = 0;
+const char dword_8007304C[] = "\202c\202\205\202\226\202\201\201@\202l\202\201\202\214\202\224\202\211"; // Deva Malti
+const char dword_80073064[] = "\202c\202\205\202\226\202\201\201@\202t\202\214\202\226\202\211"; // Deva Ulvi
+const char aDevaVali_80073078[] = "\202c\202\205\202\226\202\201\201@\202u\202\201\202\214\202\211"; // Deva Vali
+const char aDevaAgni_8007308C[] = "\202c\202\205\202\226\202\201\201@\202`\202\207\202\216\202\211"; // Deva Agni
+const char aAdMumuls_800730A0[] = "\202`\202\204\201@\202l\202\225\202\215\202\225\202\214\202\223"; // Ad Mumuls
+const char aAdRoqua_800730B4[] = "\202`\202\204\201@\202q\202\217\202\221\202\225\202\201"; // Ad Roqua
+const char dword_800730C8[] = "\202`\202\204\201@\202r\202\214\202\201\202\210\202\215"; // Ad Slahm
+const char dword_800730DC[] = "\202`\202\204\201@\202u\202\205\202\216\202\217\202\216"; // Ad Venon
+const char dword_800730F0[] = "\202r\202\205\202\214\201@\202r\202\205\202\214\202\201\202\210\202\215"; // Sel Selahm
+const char dword_80073108[] = "\202r\202\205\202\214\202\201\202\210\202\215"; // Selahm
+const char dword_80073118[] = "\202l\202\205\202\204\202\211\202\216\202\211\202\201"; // Medinia
+const char aMedina_80073128[] = "\202l\202\205\202\204\202\211\202\216\202\201"; // Medina
+const char dword_80073138[] = "\202r\202\205\202\214\202\201\202\210\202\215\201@\202u\202\205\202\216\202\217\202\216"; // Selahm Venon
+const char dword_80073154[] = "\202l\202\201\202\214\202\224\202\211\202\201"; // Maltia
+const char dword_80073164[] = "\202l\202\201\202\214\202\224\202\211\202\223"; // Maltis
+const char dword_80073174[] = "\202l\202\201\202\214\202\224\202\211"; // Malti
+const char aUlvia_80073180[] = "\202t\202\214\202\226\202\211\202\201"; // Ulvia
+const char aUlvis_8007318C[] = "\202t\202\214\202\226\202\211\202\223"; // Ulvis
+const char aUlvi_80073198[] = "\202t\202\214\202\226\202\211"; // Ulvi
+const char dword_800731A4[] = "\202u\202\201\202\210\202\214\202\211\202\201"; // Vahlia
+const char dword_800731B4[] = "\202u\202\201\202\210\202\214\202\211\202\223"; // Vahlis
+const char dword_800731C4[] = "\202u\202\201\202\210\202\214\202\211"; // Vahli
+const char aAgnia_800731D0[] = "\202`\202\207\202\216\202\211\202\201"; // Agnia
+const char aAgnis_800731DC[] = "\202`\202\207\202\216\202\211\202\223"; // Agnis
+const int dword_800731E8 = 0;
+const char dword_800731EC[] = "\202`\202\207\202\216\202\211"; // Agni
+const int overlayAdrr1_800731F8 = 0x800C9E88;
+const int overlayAddr2_800731FC = 0x800A4088;
+const int overlayAddr3_80073200 = 0x800A05A0;
+const int overlayAddr4_80073204 = 0x800B66C0;
+const int overlayAddr5_80073208 = 0x800C29D0;
+const int overlayAddr6_8007320C = 0x800B6D00;
+unsigned int *const dword_80073210 = (unsigned int *)0x800B22C0;
 /* char* data001Path_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
-INCLUDE_DATA(data001Path_80086570);
-INCLUDE_DATA(fontDefs_80086574);
-INCLUDE_DATA(dword_800865B8);
-INCLUDE_DATA(charTables_8008685C);
-INCLUDE_DATA(dword_8008686C);
-INCLUDE_DATA(dword_80086878);
-INCLUDE_DATA(dword_80086898);
-INCLUDE_DATA(copyrightData_80086930);
-INCLUDE_DATA(copyright_80086948);
-INCLUDE_DATA(genkiMovieData_80086950);
-INCLUDE_DATA(genkiMovie_80086968);
-INCLUDE_DATA(craveEntertainmentData_80086970);
-INCLUDE_DATA(craveEntertainmentMovie_80086988);
-INCLUDE_DATA(demoDisclaimerData_80086990);
-INCLUDE_DATA(demoDisclaimer_800869A8);
-INCLUDE_DATA(introAnimeData_800869B0);
-INCLUDE_DATA(introAnime_800869C8);
-INCLUDE_DATA(overlayCallbacks_800869D0);
-INCLUDE_DATA(strMovies_80086A4C);
-INCLUDE_DATA(mdecVLCBuffer_80086F94);
-INCLUDE_DATA(movieWidth_80086F98);
-INCLUDE_DATA(movieHeight_80086F9A);
-INCLUDE_DATA(byte_80086F9C);
-INCLUDE_DATA(dword_80086FB0);
-INCLUDE_DATA(byte_80086FEC);
-INCLUDE_DATA(byte_80086FED);
-INCLUDE_DATA(byte_80086FEE);
-INCLUDE_DATA(dword_80086FF0);
-INCLUDE_DATA(dword_80087014);
-INCLUDE_DATA(off_80087028);
-INCLUDE_DATA(off_8008703C);
-INCLUDE_DATA(off_80087050);
-INCLUDE_DATA(off_80087064);
-INCLUDE_DATA(dword_80087070);
-INCLUDE_DATA(dword_80087114);
-INCLUDE_DATA(dword_80087118);
-INCLUDE_DATA(dword_8008711C);
-INCLUDE_DATA(dword_80087120);
-INCLUDE_DATA(dword_80087124);
-INCLUDE_DATA(dword_80087134);
-INCLUDE_DATA(dword_80087138);
 
 // Matched
 signed char GetMinionElement_80019BF0(int idx)
@@ -135,16 +99,7 @@ int sub_80019C84(void)
     return v;
 }
 extern CameraState cameraState_8008D4F0;
-extern MATRIX dword_80087114; // light matrix
-extern MATRIX dword_80087134; // light colour matrix
 extern short dword_8008D474[2];
-extern short asc_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
-typedef struct
-{
-    int fileIdx;
-    unsigned int** ppDest;
-} OverlayEntry;
-extern OverlayEntry overlays_8007D9E8[];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 void OnEffectFileLoaded_80020F5C();
@@ -184,8 +139,6 @@ int sub_80019CC4(int* pos)
     return found;
 }
 extern int dword_8008D3F0;      // range of the global point light (0: none)
-extern int dword_8008D680[3];   // position of the global point light
-extern SVECTOR word_8008D418;   // colour of the global point light
 // Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (dword_80087114 row 0,
 // colour from cameraState), the global point light and the given point light; m is the model's rotation.
 // Matched
@@ -306,7 +259,6 @@ void sub_8001A38C(void)
     dword_80087134.m[1][2] = g->lightColor_3C[1] / 4;
     dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
 }
-extern unsigned char byte_8008D460[3];
 // Matched
 void sub_8001A41C(EventEntry* e, Fade_8001A41C* f)
 {
@@ -721,8 +673,6 @@ extern void* CreateEventList_800435B4(void* list);
 extern void RunEventList_80043898(void* n);
 extern void RunEventListFreeCallbacks_800438F8(void* n);
 extern int FreeEventList_80043A5C(void* head);
-extern DRAWENV drawEnv_8008D698[2];
-extern DISPENV dispEnv_8008D750[2];
 extern void InitMovie_8001B1B0(void);
 extern void sub_8001B714(void);
 extern void sub_8001B540(void);
@@ -958,7 +908,6 @@ void sub_8001B714(void)
         unknownFlags_8008D678 |= 0x10;
     }
 }
-extern short dword_8007C728[][2];
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
 extern DRAWENV* SetDefDrawEnv(DRAWENV* env, int x, int y, int w, int h);
@@ -1341,7 +1290,6 @@ struct_8_id* sub_8001C314(struct_8_list* p, int id)
     }
     return r;
 }
-extern SoundCue_8007C750 dword_8007C750[];
 // Matched
 void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
 {
@@ -1364,8 +1312,6 @@ void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
         }
     }
 }
-extern short dword_8007CAC0[];
-extern short dword_8007CACC[];
 extern int PlayMusic_800300E0(int idx, int a1);
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
 // Matched
@@ -1614,75 +1560,151 @@ void ProcessPad_8001C8E8(int port)
     }
 }
 // .rdata that follows the jump table of ProcessPad_8001C8E8 (the compiler's table is emitted between)
-INCLUDE_DATA(dword_80073234);
-INCLUDE_DATA(dword_80073238);
-INCLUDE_DATA(dword_8007324C);
-INCLUDE_DATA(dword_8007327C);
-INCLUDE_DATA(dword_800732A8);
-INCLUDE_DATA(dword_800732D8);
-INCLUDE_DATA(dword_800732F4);
-INCLUDE_DATA(dword_80073310);
-INCLUDE_DATA(dword_80073330);
-INCLUDE_DATA(dword_80073350);
-INCLUDE_DATA(dword_80073388);
-INCLUDE_DATA(dword_800733B8);
-INCLUDE_DATA(dword_800733D0);
-INCLUDE_DATA(dword_800733F0);
-INCLUDE_DATA(dword_80073410);
-INCLUDE_DATA(dword_800734DC);
-INCLUDE_DATA(dword_8007355C);
-INCLUDE_DATA(dword_800735EC);
-INCLUDE_DATA(dword_80073628);
-INCLUDE_DATA(dword_80073648);
-INCLUDE_DATA(dword_8007366C);
-INCLUDE_DATA(dword_800736D0);
-INCLUDE_DATA(dword_800736EC);
-INCLUDE_DATA(dword_80073724);
-INCLUDE_DATA(dword_80073740);
-INCLUDE_DATA(dword_80073760);
-INCLUDE_DATA(dword_8007377C);
-INCLUDE_DATA(dword_800737A0);
-INCLUDE_DATA(dword_800737B4);
-INCLUDE_DATA(dword_800737C8);
-INCLUDE_DATA(dword_80073910);
-INCLUDE_DATA(dword_8007393C);
-INCLUDE_DATA(dword_800739F4);
-INCLUDE_DATA(dword_80073A14);
-INCLUDE_DATA(dword_80073A28);
-INCLUDE_DATA(dword_80073A48);
-INCLUDE_DATA(dword_80073A84);
-INCLUDE_DATA(dword_80073AAC);
-INCLUDE_DATA(dword_80073ACC);
-INCLUDE_DATA(dword_80073B00);
-INCLUDE_DATA(dword_80073B20);
-INCLUDE_DATA(dword_80073B44);
-INCLUDE_DATA(dword_80073B68);
-INCLUDE_DATA(dword_80073B78);
-INCLUDE_DATA(dword_80073BB0);
-INCLUDE_DATA(dword_80073BC4);
-INCLUDE_DATA(dword_80073BDC);
-INCLUDE_DATA(dword_80073C14);
-INCLUDE_DATA(dword_80073C58);
-INCLUDE_DATA(dword_80073C80);
-INCLUDE_DATA(dword_80073CB0);
-INCLUDE_DATA(dword_80073CCC);
-INCLUDE_DATA(dword_80073CE0);
-INCLUDE_DATA(dword_80073CF8);
-INCLUDE_DATA(dword_80073D18);
-INCLUDE_DATA(dword_80073D34);
-INCLUDE_DATA(dword_80073D54);
-INCLUDE_DATA(dword_80073DD0);
-INCLUDE_DATA(dword_80073E18);
-INCLUDE_DATA(dword_80073ED8);
-INCLUDE_DATA(dword_80073F24);
-INCLUDE_DATA(dword_80073F40);
-INCLUDE_DATA(dword_80073F5C);
-INCLUDE_DATA(dword_80073FA4);
-INCLUDE_DATA(dword_80073FC0);
-INCLUDE_DATA(dword_80073FF8);
-INCLUDE_DATA(dword_8007400C);
-INCLUDE_DATA(dword_8007403C);
-INCLUDE_DATA(dword_8007408C);
+const int dword_80073234 = 0;
+const char dword_80073238[] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
+const char dword_8007324C[] = "\202x\202\217\202\214\202\207\202\201"; // Yolga
+const char aTimaios_80073258[] = "\202s\202\211\202\215\202\201\202\211\202\217\202\223"; // Timaios
+const char aSicanjal_80073268[] = "\202r\202\211\202\203\202\201\202\216\202\212\202\201\202\214"; // Sicanjal
+const char dword_8007327C[] = "\202j\202\217\202\214\202\216\202\201"; // Kolna
+const char aJeechwo_80073288[] = "\202i\202\205\202\205\202\203\202\210\202\227\202\217"; // Jeechwo
+const char aTicker_80073298[] = "\202s\202\211\202\203\202\213\202\205\202\222"; // Ticker
+const char dword_800732A8[] = "\202o\202\201\202\214\202\217\202\217\202\212\202\201"; // Palooja
+const char aAttractSpores_800732B8[] = "\202`\202\224\202\224\202\222\202\201\202\203\202\224\201@\202r\202\220\202\217\202\222\202\205\202\223"; // Attract Spores
+const char dword_800732D8[] = "\202r\202\214\202\205\202\205\202\220\201@\202r\202\220\202\217\202\222\202\205\202\223"; // Sleep Spores
+const char dword_800732F4[] = "\202r\202\213\202\205\202\214\202\205\202\224\202\217\202\216\201@\202j\202\205\202\231"; // Skeleton Key
+const char dword_80073310[] = "\202l\202\217\202\217\202\216\202\214\202\211\202\207\202\210\202\224\201@\202r\202\211\202\214\202\213"; // Moonlight Silk
+const char dword_80073330[] = "\202`\202\216\202\207\202\205\202\214\202\227\202\211\202\216\202\207\201@\202r\202\211\202\214\202\213"; // Angelwing Silk
+const char dword_80073350[] = "\202e\202\211\202\222\202\223\202\224\201@\202r\202\216\202\217\202\227\201@\202r\202\211\202\214\202\213"; // First Snow Silk
+const char aPearlSilk_80073370[] = "\202o\202\205\202\201\202\222\202\214\201@\202r\202\211\202\214\202\213"; // Pearl Silk
+const char dword_80073388[] = "\202k\202\211\202\214\202\231\201@\202r\202\211\202\214\202\213"; // Lily Silk
+const char aThunderSilk_8007339C[] = "\202s\202\210\202\225\202\216\202\204\202\205\202\222\201@\202r\202\211\202\214\202\213"; // Thunder Silk
+const char dword_800733B8[] = "\202b\202\214\202\217\202\225\202\204\201@\202r\202\211\202\214\202\213"; // Cloud Silk
+const char dword_800733D0[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Malty's Seal 2
+const char dword_800733F0[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Malty's Seal 1
+const char dword_80073410[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Agni's Seal 2
+const char aAgniSSeal1_8007342C[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Agni's Seal 1
+const char aVarySSeal2_80073448[] = "\202u\202\201\202\222\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Vary's Seal 2
+const char aVarySSeal1_80073464[] = "\202u\202\201\202\222\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Vary's Seal 1
+const char aUrvySSeal2_80073480[] = "\202t\202\222\202\226\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202Q"; // Urvy's Seal 2
+const char aUrvySSeal1_8007349C[] = "\202t\202\222\202\226\202\231\201f\202\223\201@\202r\202\205\202\201\202\214\201@\202P"; // Urvy's Seal 1
+const char aMaltySBlessing_800734B8[] = "\202l\202\201\202\214\202\224\202\231\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Malty's Blessing
+const char dword_800734DC[] = "\202`\202\207\202\216\202\211\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Agni's Blessing
+const char aVarySBlessing_800734FC[] = "\202u\202\201\202\222\202\231\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Vary's Blessing
+const char aUrvySBlessing_8007351C[] = "\202t\202\222\202\226\202\231\201f\202\223\201@\202a\202\214\202\205\202\223\202\223\202\211\202\216\202\207"; // Urvy's Blessing
+const char aMirrorOfDeva_8007353C[] = "\202l\202\211\202\222\202\222\202\217\202\222\201@\202\217\202\206\201@\202c\202\205\202\226\202\201"; // Mirror of Deva
+const char dword_8007355C[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202c\202\205\202\201\202\224\202\210"; // Ring of Death
+const char aRingOfStoning_80073578[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202r\202\224\202\217\202\216\202\211\202\216\202\207"; // Ring of Stoning
+const char aRingOfSleep_80073598[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202r\202\214\202\205\202\205\202\220"; // Ring of Sleep
+const char aRingOfVenom_800735B4[] = "\202q\202\211\202\216\202\207\201@\202\217\202\206\201@\202u\202\205\202\216\202\217\202\215"; // Ring of Venom
+const char aIkariPowder_800735D0[] = "\202h\202\213\202\201\202\222\202\211\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Ikari Powder
+const char dword_800735EC[] = "\202u\202\201\202\214\202\205\202\222\202\211\202\201\202\216\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Valerian Powder
+const char aTendaiUyaku_8007360C[] = "\202s\202\205\202\216\202\204\202\201\202\211\201@\202t\202\231\202\201\202\213\202\225"; // Tendai Uyaku
+const char dword_80073628[] = "\202r\202\220\202\205\202\203\202\211\202\201\202\214\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Special Liquor
+const char dword_80073648[] = "\202d\202\230\202\203\202\205\202\214\202\214\202\205\202\216\202\224\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Excellent Liquor
+const char dword_8007366C[] = "\202e\202\211\202\216\202\205\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Fine Liquor
+const char aShabLiquor_80073684[] = "\202r\202\210\202\201\202\202\201@\202k\202\211\202\221\202\225\202\217\202\222"; // Shab Liquor
+const char aIchishiOil_8007369C[] = "\202h\202\203\202\210\202\211\202\223\202\210\202\211\201@\202n\202\211\202\214"; // Ichishi Oil
+const char aBletillaOil_800736B4[] = "\202a\202\214\202\205\202\224\202\211\202\214\202\214\202\201\201@\202n\202\211\202\214"; // Bletilla Oil
+const char dword_800736D0[] = "\202j\202\225\202\213\202\225\202\215\202\211\202\222\202\201\201@\202n\202\211\202\214"; // Kukumira Oil
+const char dword_800736EC[] = "\202r\202\210\202\211\202\223\202\210\202\211\202\225\202\204\202\217\201@\202n\202\211\202\214"; // Shishiudo Oil
+const char aChestnutOil_80073708[] = "\202b\202\210\202\205\202\223\202\224\202\216\202\225\202\224\201@\202n\202\211\202\214"; // Chestnut Oil
+const char dword_80073724[] = "\202f\202\222\202\205\202\201\202\224\201@\202v\202\201\202\214\202\216\202\225\202\224"; // Great Walnut
+const char dword_80073740[] = "\202a\202\211\202\224\202\224\202\205\202\222\201@\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Bitter Mugwort
+const char dword_80073760[] = "\202l\202\205\202\224\202\201\201|\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Meta-Mugwort
+const char dword_8007377C[] = "\202l\202\225\202\207\202\227\202\217\202\222\202\224"; // Mugwort
+const char aSecret3_8007378C[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202R"; // Secret 3
+const char dword_800737A0[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202Q"; // Secret 2
+const char dword_800737B4[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202P"; // Secret 1
+const char dword_800737C8[] = "\202l\202\205\202\222\202\207\202\211\202\216\202\207\201@\202R"; // Merging 3
+const char aMerging2_800737DC[] = "\202l\202\205\202\222\202\207\202\211\202\216\202\207\201@\202Q"; // Merging 2
+const char aMerging1_800737F0[] = "\202l\202\205\202\222\202\207\202\211\202\216\202\207\201@\202P"; // Merging 1
+const char aMagicUsage2_80073804[] = "\202l\202\201\202\207\202\211\202\203\201@\202t\202\223\202\201\202\207\202\205\201@\202Q"; // Magic Usage 2
+const char aMagicUsage1_80073820[] = "\202l\202\201\202\207\202\211\202\203\201@\202t\202\223\202\201\202\207\202\205\201@\202P"; // Magic Usage 1
+const char aKnowledge5_8007383C[] = "\202j\202\216\202\217\202\227\202\214\202\205\202\204\202\207\202\205\201@\202T"; // Knowledge 5
+const char aKnowledge4_80073854[] = "\202j\202\216\202\217\202\227\202\214\202\205\202\204\202\207\202\205\201@\202S"; // Knowledge 4
+const char aKnowledge3_8007386C[] = "\202j\202\216\202\217\202\227\202\214\202\205\202\204\202\207\202\205\201@\202R"; // Knowledge 3
+const char aKnowledge2_80073884[] = "\202j\202\216\202\217\202\227\202\214\202\205\202\204\202\207\202\205\201@\202Q"; // Knowledge 2
+const char aKnowledge1_8007389C[] = "\202j\202\216\202\217\202\227\202\214\202\205\202\204\202\207\202\205\201@\202P"; // Knowledge 1
+const char aSecretOfKilling_800738B4[] = "\202r\202\205\202\203\202\222\202\205\202\224\201@\202\217\202\206\201@\202j\202\211\202\214\202\214\202\211\202\216\202\207"; // Secret of Killing
+const char aSpiderWarp_800738D8[] = "\202r\202\220\202\211\202\204\202\205\202\222\201@\202v\202\201\202\222\202\220"; // Spider Warp
+const char aDragonflyWarp_800738F0[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\206\202\214\202\231\201@\202v\202\201\202\222\202\220"; // Dragonfly Warp
+const char dword_80073910[] = "\202a\202\205\202\205\202\224\202\214\202\205\201@\202v\202\201\202\222\202\220"; // Beetle Warp
+const char aPupaKey_80073928[] = "\202o\202\225\202\220\202\201\201@\202j\202\205\202\231"; // Pupa Key
+const char dword_8007393C[] = "\202k\202\201\202\222\202\226\202\201\201@\202j\202\205\202\231"; // Larva Key
+const char aMinionFang_80073950[] = "\202l\202\211\202\216\202\211\202\217\202\216\201@\202e\202\201\202\216\202\207"; // Minion Fang
+const char aKickleberry_80073968[] = "\202j\202\211\202\203\202\213\202\214\202\205\202\202\202\205\202\222\202\222\202\231"; // Kickleberry
+const char aDivineTablet_80073980[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202s\202\201\202\202\202\214\202\205\202\224"; // Divine Tablet
+const char aJewelOfWind_8007399C[] = "\202i\202\205\202\227\202\205\202\214\201@\202\217\202\206\201@\202v\202\211\202\216\202\204"; // Jewel of Wind
+const char aJewelOfFire_800739B8[] = "\202i\202\205\202\227\202\205\202\214\201@\202\217\202\206\201@\202e\202\211\202\222\202\205"; // Jewel of Fire
+const char aJewelOfWater_800739D4[] = "\202i\202\205\202\227\202\205\202\214\201@\202\217\202\206\201@\202v\202\201\202\224\202\205\202\222"; // Jewel of Water
+const char dword_800739F4[] = "\202l\202\201\202\210\202\202\202\225\201f\202\223\201@\202b\202\217\202\203\202\217\202\217\202\216"; // Mahbu's Cocoon
+const char dword_80073A14[] = "\202l\202\217\202\224\202\210\201@\202j\202\205\202\231"; // Moth Key
+const char dword_80073A28[] = "\202b\202\201\202\220\202\224\202\225\202\222\202\205\201@\202`\202\215\202\225\202\214\202\205\202\224"; // Capture Amulet
+const char dword_80073A48[] = "\202b\202\210\202\201\202\215\202\220\202\211\202\217\202\216\201f\202\223\201@\202a\202\205\202\214\202\224"; // Champion's Belt
+const char aCalabasHerb_80073A68[] = "\202b\202\201\202\214\202\201\202\202\202\201\202\223\201@\202g\202\205\202\222\202\202"; // Calabas Herb
+const char dword_80073A84[] = "\202n\202\203\202\201\202\222\202\211\202\216\202\201"; // Ocarina
+const char aSpiderKey_80073A94[] = "\202r\202\220\202\211\202\204\202\205\202\222\201@\202j\202\205\202\231"; // Spider Key
+const char dword_80073AAC[] = "\202b\202\201\202\214\202\201\202\202\202\201\202\223\201@\202o\202\217\202\227\202\204\202\205\202\222"; // Calabas Powder
+const char dword_80073ACC[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\206\202\214\202\231\201@\202j\202\205\202\231"; // Dragonfly Key
+const char aBeetleKey_80073AE8[] = "\202a\202\205\202\205\202\224\202\214\202\205\201@\202j\202\205\202\231"; // Beetle Key
+const char dword_80073B00[] = "\202s\202\205\202\201\202\222\202\223\201@\202\217\202\206\201@\202q\202\205\202\205\202\223\202\205"; // Tears of Reese
+const char dword_80073B20[] = "\202e\202\214\202\225\202\224\202\205\201@\202\217\202\206\201@\202b\202\201\202\220\202\224\202\225\202\222\202\205"; // Flute of Capture
+const char dword_80073B44[] = "\202g\202\225\202\216\202\224\202\205\202\222\201f\202\223\201@\202d\202\201\202\222\202\222\202\211\202\216\202\207"; // Hunter's Earring
+const char dword_80073B68[] = "\202h\202\203\202\211\202\203\202\214\202\205"; // Icicle
+const char dword_80073B78[] = "\202`\202\225\202\224\202\225\202\215\202\216\201@\202l\202\217\202\217\202\216"; // Autumn Moon
+const char aDrainer_80073B90[] = "\202c\202\222\202\201\202\211\202\216\202\205\202\222"; // Drainer
+const char aReaper_80073BA0[] = "\202q\202\205\202\201\202\220\202\205\202\222"; // Reaper
+const char dword_80073BB0[] = "\202o\202\201\202\214\202\205\202\215\202\217\202\217\202\216"; // Palemoon
+const char dword_80073BC4[] = "\202b\202\214\202\217\202\225\202\204\202\203\202\217\202\226\202\205\202\222"; // Cloudcover
+const char dword_80073BDC[] = "\202c\202\222\202\201\202\207\202\217\202\216\202\203\202\222\202\205\202\223\202\224"; // Dragoncrest
+const char aSpringBlossom_80073BF4[] = "\202r\202\220\202\222\202\211\202\216\202\207\201@\202a\202\214\202\217\202\223\202\223\202\217\202\215"; // Spring Blossom
+const char dword_80073C14[] = "\202s\202\223\202\225\202\216\202\201\202\215\202\211"; // Tsunami
+const char aThunderbolt_80073C24[] = "\202s\202\210\202\225\202\216\202\204\202\205\202\222\202\202\202\217\202\214\202\224"; // Thunderbolt
+const char aBluePhantom_80073C3C[] = "\202a\202\214\202\225\202\205\201@\202o\202\210\202\201\202\216\202\224\202\217\202\215"; // Blue Phantom
+const char dword_80073C58[] = "\202m\202\211\202\207\202\210\202\224\202\207\202\214\202\217\202\227"; // Nightglow
+const char aWhistler_80073C6C[] = "\202v\202\210\202\211\202\223\202\224\202\214\202\205\202\222"; // Whistler
+const char dword_80073C80[] = "\202k\202\211\202\224\202\224\202\214\202\205\201@\202a\202\211\202\222\202\204"; // Little Bird
+const char aWhiteHorn_80073C98[] = "\202v\202\210\202\211\202\224\202\205\201@\202g\202\217\202\222\202\216"; // White Horn
+const char dword_80073CB0[] = "\202k\202\211\202\206\202\205\201@\202r\202\224\202\205\202\201\202\214\202\205\202\222"; // Life Stealer
+const char dword_80073CCC[] = "\202h\202\222\202\217\202\216\201@\202`\202\230\202\205"; // Iron Axe
+const char dword_80073CE0[] = "\202h\202\222\202\217\202\216\201@\202r\202\227\202\217\202\222\202\204"; // Iron Sword
+const char dword_80073CF8[] = "\202r\202\227\202\217\202\222\202\204\201@\202\217\202\206\201@\202r\202\220\202\205\202\205\202\204"; // Sword of Speed
+const char dword_80073D18[] = "\202a\202\222\202\217\202\216\202\232\202\205\201@\202r\202\227\202\217\202\222\202\204"; // Bronze Sword
+const char dword_80073D34[] = "\202`\202\221\202\225\202\201\202\232\202\217\202\222"; // Aquazor
+const char aDagger_80073D44[] = "\202c\202\201\202\207\202\207\202\205\202\222"; // Dagger
+const char dword_80073D54[] = "\202j\202\216\202\211\202\206\202\205"; // Knife
+const char aDivineGarb2_80073D60[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202f\202\201\202\222\202\202\201@\202Q"; // Divine Garb 2
+const char aDivineGarb1_80073D7C[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202f\202\201\202\222\202\202\201@\202P"; // Divine Garb 1
+const char aForestGarb_80073D98[] = "\202e\202\217\202\222\202\205\202\223\202\224\201@\202f\202\201\202\222\202\202"; // Forest Garb
+const char aNavyBlueGarb_80073DB0[] = "\202m\202\201\202\226\202\231\201@\202a\202\214\202\225\202\205\201@\202f\202\201\202\222\202\202"; // Navy Blue Garb
+const char dword_80073DD0[] = "\202a\202\214\202\217\202\217\202\204\202\231\201@\202f\202\201\202\222\202\202"; // Bloody Garb
+const char aNagiGarb_80073DE8[] = "\202m\202\201\202\207\202\211\201@\202f\202\201\202\222\202\202"; // Nagi Garb
+const char aRiketzGarb_80073DFC[] = "\202q\202\211\202\213\202\205\202\224\202\232\201f\201@\202f\202\201\202\222\202\202"; // Riketz' Garb
+const char dword_80073E18[] = "\202c\202\211\202\226\202\211\202\216\202\205\201@\202u\202\205\202\223\202\224"; // Divine Vest
+const char aSilverVest_80073E30[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202u\202\205\202\223\202\224"; // Silver Vest
+const char aReflectingVest_80073E48[] = "\202q\202\205\202\206\202\214\202\205\202\203\202\224\202\211\202\216\202\207\201@\202u\202\205\202\223\202\224"; // Reflecting Vest
+const char aPlateMailVest_80073E68[] = "\202o\202\214\202\201\202\224\202\205\201@\202l\202\201\202\211\202\214\201@\202u\202\205\202\223\202\224"; // Plate Mail Vest
+const char aWireVest_80073E88[] = "\202v\202\211\202\222\202\205\201@\202u\202\205\202\223\202\224"; // Wire Vest
+const char aChainMailVest_80073E9C[] = "\202b\202\210\202\201\202\211\202\216\201@\202l\202\201\202\211\202\214\201@\202u\202\205\202\223\202\224"; // Chain Mail Vest
+const char aLeatherVest_80073EBC[] = "\202k\202\205\202\201\202\224\202\210\202\205\202\222\201@\202u\202\205\202\223\202\224"; // Leather Vest
+const char dword_80073ED8[] = "\202g\202\225\202\216\202\224\202\205\202\222\201f\202\223\201@\202u\202\205\202\223\202\224"; // Hunter's Vest
+const char aNagiBelt_80073EF4[] = "\202m\202\201\202\207\202\211\201@\202a\202\205\202\214\202\224"; // Nagi Belt
+const char aSuperChoker_80073F08[] = "\202r\202\225\202\220\202\205\202\222\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Super Choker
+const char dword_80073F24[] = "\202r\202\224\202\217\202\216\202\205\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Stone Choker
+const char dword_80073F40[] = "\202r\202\214\202\205\202\205\202\220\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Sleep Choker
+const char dword_80073F5C[] = "\202o\202\217\202\211\202\223\202\217\202\216\201@\202b\202\210\202\217\202\213\202\205\202\222"; // Poison Choker
+const char aHawkRuff_80073F78[] = "\202g\202\201\202\227\202\213\201@\202q\202\225\202\206\202\206"; // Hawk Ruff
+const char aHollyRuff_80073F8C[] = "\202g\202\217\202\214\202\214\202\231\201@\202q\202\225\202\206\202\206"; // Holly Ruff
+const char dword_80073FA4[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202b\202\222\202\217\202\227\202\216"; // Silver Crown
+const char dword_80073FC0[] = "\202h\202\222\202\217\202\216\201@\202a\202\222\202\201\202\203\202\205\202\214\202\205\202\224"; // Iron Bracelet
+const char aSparrowRuff_80073FDC[] = "\202r\202\220\202\201\202\222\202\222\202\217\202\227\201@\202q\202\225\202\206\202\206"; // Sparrow Ruff
+const char dword_80073FF8[] = "\202q\202\205\202\204\201@\202a\202\205\202\201\202\204"; // Red Bead
+const char dword_8007400C[] = "\202x\202\205\202\214\202\214\202\217\202\227\201@\202a\202\205\202\201\202\204"; // Yellow Bead
+const char aGreenBead_80074024[] = "\202f\202\222\202\205\202\205\202\216\201@\202a\202\205\202\201\202\204"; // Green Bead
+const char dword_8007403C[] = "\202a\202\214\202\225\202\205\201@\202a\202\205\202\201\202\204"; // Blue Bead
+const char aSilverHeadband_80074050[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Silver Headband
+const char aIronHeadband_80074070[] = "\202h\202\222\202\217\202\216\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Iron Headband
+const char dword_8007408C[] = "\202k\202\205\202\201\202\224\202\210\202\205\202\222\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Leather Headband
 // Matched
 void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate)
 {
@@ -2697,10 +2719,6 @@ void sub_8001E28C(Actor* o)
         sub_8001EFC4(o);
     }
 }
-extern ActorScriptCmd dword_8007D95C[];
-extern ActorScriptCmd dword_8007D980[];
-extern ActorScriptCmd dword_8007D9A4[];
-extern ActorScriptCmd dword_8007D9C0[];
 // Matched
 int sub_8001E34C(Actor* o, ActorActionDesc* d)
 {
@@ -2778,9 +2796,6 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
     o->flags_4 = g;
     return r;
 }
-extern unsigned short word_8007DC8C[];
-extern unsigned short word_8007DC94[];
-extern int dword_800795A0[];
 #if 0
 // Not matched (18 lines): the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block (with a
 // register copy of the anim index for 0xA4), here they are scheduled right after the d->animIdx_20 load. Tried: separate
@@ -2953,3 +2968,6 @@ void sub_8001EA28(void* arg0)
 {
     sub_8001EA48(arg0);
 }
+
+int primBufferStart_800960A0[2] BSS = { 0 };
+int primAllocPtr_800960A8[2] BSS = { 0 };

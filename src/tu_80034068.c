@@ -16,13 +16,20 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "msgwin.h"
+#include "tu_80034068.h"
+#include "tu_80014954.h"
 
-INCLUDE_DATA(dword_8007474C);
-INCLUDE_DATA(dword_80074780);
-INCLUDE_DATA(dword_80074794);
-INCLUDE_DATA(dword_800747D0);
-INCLUDE_DATA(dword_800747E8);
-INCLUDE_DATA(dword_80074800);
+const char dword_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
+const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
+const char dword_80074780[] = "\201@\202\216\202\205\202\205\202\204\202\205\202\204\201D"; //  needed.
+const char dword_80074794[] = "\201@\202\207\202\211\202\226\202\205\202\216\201D"; //  given.
+const char aHandedOver_800747A4[] = "\201@\202\210\202\201\202\216\202\204\202\205\202\204\201@\202\217\202\226\202\205\202\222\201D"; //  handed over.
+const char aUsed_800747C0[] = "\201@\202\225\202\223\202\205\202\204\201D"; //  used.
+const char dword_800747D0[] = "\201@\202\222\202\205\202\224\202\225\202\222\202\216\202\205\202\204\201D"; //  returned.
+const char dword_800747E8[] = "\201@\202\222\202\205\202\203\202\205\202\211\202\226\202\205\202\204\201D"; //  received.
+const char dword_80074800[] = "\201@\202\220\202\211\202\203\202\213\202\205\202\204\201@\202\225\202\220\201D"; //  picked up.
+const int dword_80074818 = 0;
+INCLUDE_DATA(jpt_8007481C); // the jump table of sub_80034C18 (asm)
 
 // Matched
 int sub_80034068(short* p)
@@ -62,8 +69,6 @@ int sub_8003412C(UnitStatus* p)
     }
     return 0;
 }
-extern unsigned char** off_80083800[];
-extern unsigned char* off_800837D8;
 // Matched
 int sub_80034140(void)
 {
@@ -525,7 +530,7 @@ extern void sub_80035900();
 extern void sub_800355EC();
 #define PI(off) (*(int*)((char*)p + (off)))
 #if 0
-// Not matched: control flow and jump tables right (needs dword_80074800 cut to 0x1C in config/c_rodata.txt), register allocation of the flag temporaries and the reset block differ
+// Not matched: control flow and jump tables right (needs INCLUDE_DATA(jpt_8007481C) removed), register allocation of the flag temporaries and the reset block differ
 void sub_80034C18(int* p)
 {
     short r[4];
@@ -825,9 +830,10 @@ void sub_80034C18(int* p)
 #endif
 INCLUDE_ASM(sub_80034C18);
 
-INCLUDE_DATA(dword_80074850);
-INCLUDE_DATA(dword_8007485C);
-INCLUDE_DATA(dword_80074864);
+const int dword_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
+const int dword_8007485C[2] = { 0x9A96F38B };
+const int dword_80074864[2] = { 0x7782 };
+INCLUDE_DATA(jpt_8007486C); // the jump table of UpdateItemMessageWindow_80035BD8 (asm)
 
 extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
@@ -1105,12 +1111,9 @@ typedef struct
     int a;
     int b;
 } TPage_35BD8;
-extern int dword_80074850[];
-extern int dword_8007485C[];
-extern int dword_80074864[];
-extern char* (*nameGetters_8007CB08[])(int id);
-extern char* itemMessageSuffixes_80083818[];
-extern char* off_80083820;
+extern const int dword_80074850[];
+extern const int dword_8007485C[];
+extern const int dword_80074864[];
 extern void sub_8003F264(void* pos, int val, int ot);
 extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPage_35BD8* tp);
@@ -1123,7 +1126,7 @@ extern void sub_800AD184(int a, int b, int c);
 // MeasureTextLines returns the 2 shorts as Size_8003422C in the code above; this near-miss reads them as x/y
 extern Pos2_35BD8 MeasureTextLines_8003E3B4(int* list);
 // Not matched: only the loop strength-reduction registers for o->entries[i] and the row y (line * 16 + y) are swapped ($s1/$s2).
-// Needs dword_80074864 cut to 0x8 in config/c_rodata.txt (tu_800353A0 is merged into this TU for it: the jump table sits at
+// Needs INCLUDE_DATA(jpt_8007486C) (and its config/c_rodata.txt line) removed (tu_800353A0 is merged into this TU for it: the jump table sits at
 // 0x8007486C, which is 8-aligned only relative to this TU's .rdata start 0x8007474C; psylink packs objects on 4 bytes).
 void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 {

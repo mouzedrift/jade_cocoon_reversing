@@ -23,4 +23,10 @@ enum foo
 #define INCLUDE_OVERLAY_ASM(dir, name) __asm__(".include \"asm/overlays/" #dir "/" #name ".s\"")
 #define INCLUDE_DATA(name) __asm__(".include \"asm/d/" #name ".s\"")
 
+/* uninitialised variables are defined straight into .bss, with a zero initialiser: `int x BSS = 0;`. A tentative
+   definition would be a common symbol (also with the attribute, once the file declares the variable extern too), and
+   psylink aligns every .bss contribution to 8 bytes as soon as there are commons (the game's .bss is packed, see
+   docs/full_build.md). With the initialiser the compiler emits it in place, in definition order. */
+#define BSS __attribute__((section(".bss")))
+
 #endif

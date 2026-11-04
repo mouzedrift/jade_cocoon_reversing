@@ -17,13 +17,8 @@
 #include "soundtask.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_80074438);
-INCLUDE_DATA(dword_8007443C);
-INCLUDE_DATA(dword_80074440);
-INCLUDE_DATA(dword_80074444);
-INCLUDE_DATA(word_80074448);
-INCLUDE_DATA(aAssertionFaile_0);
-INCLUDE_DATA(aSoundC);
+const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
+const char aSoundC[] = "SOUND.C";
 
 typedef struct
 {
