@@ -1514,11 +1514,11 @@ void sub_800A4940(int a, int b)
     unsigned short* p;
     if (unknownFlags_8008D678 & 0x20000)
     {
-        p = (unsigned short*)sub_800B322C();
+        p = sub_800B322C();
     }
     else
     {
-        p = (unsigned short*)sub_800A53CC();
+        p = sub_800A53CC();
         if (p)
         {
             p += b;
@@ -1575,7 +1575,7 @@ int sub_800A49CC(int a, int b, MapList16* c, int* e)
     f = 0;
     if (unknownFlags_8008D678 & 0x20000)
     {
-        f = (unsigned short*)sub_800B322C();
+        f = sub_800B322C();
     }
     else
     {

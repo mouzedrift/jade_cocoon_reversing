@@ -456,7 +456,7 @@ extern char dword_80091CE0[];
 
 extern int FindActorInFront_8001DECC(Actor* a, int b, int c);
 
-extern short* sub_800B322C();
+extern unsigned short* sub_800B322C();
 
 extern unsigned short* sub_800A53CC();
 
