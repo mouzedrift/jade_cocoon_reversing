@@ -7,6 +7,7 @@
 #include "engine.h"
 #include "minion_init.h"
 #include "combat.h"
+#include "tim.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by BuildMinionModelParams_800A05E0
 
@@ -85,22 +86,6 @@ typedef struct CombatShortPair_combat
     unsigned short a;
     unsigned short b;
 } CombatShortPair_combat;
-typedef struct CombatReq2Combat
-{
-    int field_0;
-    int field_4;
-    char pad_8[4];
-    unsigned short field_C;
-    unsigned short field_E;
-    unsigned short field_10;
-    unsigned short field_12;
-    char pad_14[8];
-    unsigned short field_1C;
-    unsigned short field_1E;
-    unsigned short field_20;
-    unsigned short field_22;
-    char pad_24[4];
-} CombatReq2Combat;
 extern CombatShortPair_combat dword_8007DCAC[];
 extern CombatShortPair_combat dword_8007DCBC[];
 extern short dword_80084540[];
@@ -112,27 +97,6 @@ extern void LoadModelTexToVram_800A0D64(int a, int b);
 extern void CombatWaitUiTiy_800A14AC();
 extern void CombatReq_8001E34C(void* p, void* q);
 
-typedef struct CombatReqCombat
-{
-    int field_0;
-    int field_4;
-    void* field_8;
-    short field_C;
-    short field_E;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    short field_20;
-    short field_22;
-    short field_24;
-    short field_26;
-    short field_28;
-    short field_2A;
-    int field_2C;
-    int field_30;
-    char pad_34[0x2C];
-} CombatReqCombat;
 extern void BuildMinionModelParams_800A05E0(Minion* a, CombatModelParams* o, int c);
 extern int GetElementHueAngle_800A0898(unsigned char* a);
 
@@ -426,29 +390,29 @@ void LoadModelTexToVram_800A0D64(int i, int id)
 void MoveSlotActorTo_800A0E1C(int i, int* src)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    CombatReqCombat r;
-    r.field_0 = 0;
-    r.field_4 = 0;
-    r.field_8 = 0;
-    r.field_C = 0;
-    r.field_E = -1;
-    r.field_10 = -1;
-    r.field_18 = 0;
+    ActorActionDesc r;
+    r.flags_0 = 0;
+    r.script_4 = 0;
+    r.target_8 = 0;
+    r.turnStep_C = 0;
+    r.hitAnim_E = -1;
+    r.effect_10 = -1;
+    r.effectKinds_18 = 0;
     r.field_1C = 1;
-    r.field_20 = 0;
-    r.field_22 = 0;
-    r.field_24 = -1;
-    r.field_26 = -1;
+    r.loopCount_20 = 0;
+    r.scaleTarget_22 = 0;
+    r.nextAnim_24 = -1;
+    r.nextAnim_26 = -1;
     r.field_28 = -1;
-    r.field_2A = -1;
+    r.queuedAnim_2A = -1;
     r.field_2C = 0;
-    r.field_30 = 0;
+    r.path_30 = 0;
     s->actor_3C->target_70.vx = src[0];
     s->actor_3C->target_70.vy = src[1];
     s->actor_3C->target_70.vz = src[2];
-    r.field_8 = (int*)&s->actor_3C->target_70;
-    r.field_C = 0x100;
-    r.field_26 = 2;
+    r.target_8 = (int*)&s->actor_3C->target_70;
+    r.turnStep_C = 0x100;
+    r.nextAnim_26 = 2;
     CombatReq_8001E34C(s->actor_3C, &r);
 }
 
@@ -906,17 +870,17 @@ int CountRosterMinions_800A1AEC(int i)
 // Matched
 void GetCombatPortraitPoly_800A1B2C(int i, void* p)
 {
-    CombatReq2Combat r;
-    r.field_0 = 1;
-    r.field_4 = 1;
-    r.field_1C = dword_8007DCAC[i].a;
-    r.field_1E = dword_8007DCAC[i].b;
-    r.field_20 = 0x20;
-    r.field_22 = 0x40;
-    r.field_C = dword_8007DCBC[i].a;
-    r.field_E = dword_8007DCBC[i].b;
-    r.field_10 = 0x100;
-    r.field_12 = 1;
+    TimInfo r;
+    r.mode_valid = 1;
+    r.mode = 1;
+    r.prect.x = dword_8007DCAC[i].a;
+    r.prect.y = dword_8007DCAC[i].b;
+    r.prect.w = 0x20;
+    r.prect.h = 0x40;
+    r.crect.x = dword_8007DCBC[i].a;
+    r.crect.y = dword_8007DCBC[i].b;
+    r.crect.w = 0x100;
+    r.crect.h = 1;
     InitPolyFT4_80029A10(p, &r);
 }
 

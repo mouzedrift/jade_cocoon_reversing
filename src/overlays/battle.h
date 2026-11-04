@@ -677,7 +677,7 @@ typedef struct BatResult_a
     int hpDamage_1C;      // the target's hp/mp damage
     int mpDamage_20;
     short areaElement_24; // in: the area element, out: the new one
-    short f26;
+    short fixedElement_26; // the stage's fixed element (-1: magic can change the area element)
 } BatResult_a; // the exe's ActionResult (common.c)
 
 extern void ResolveBattleAction_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);

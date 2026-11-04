@@ -13,13 +13,13 @@ typedef struct TstModelDraw
 {
     FtgObject* ftg_0;
     VECTOR* pos_4;
-    char* f8;
+    char* rot_8;
     TstModelBone* bones_C;
-    char* f10;
+    char* base_10;
     ModelAnim* anim_14;
     int frame_18;
-    int f1C;
-    char* f20;
+    int drawMode_1C;
+    char* bonePos_20;
     VECTOR* scale_24;
     unsigned long* ot_28;
 } TstModelDraw;
@@ -504,12 +504,12 @@ void TstModelDrawModel_800A1428(TstModelWork* c)
     c->draw_1C0.anim_14 = &m->anims_54[c->anim_1A8];
     c->draw_1C0.ftg_0 = m->ftg_50;
     c->draw_1C0.pos_4 = &pos;
-    c->draw_1C0.f8 = z;
+    c->draw_1C0.rot_8 = z;
     c->draw_1C0.bones_C = c->bones_28;
-    c->draw_1C0.f10 = boneScales_800A3268;
+    c->draw_1C0.base_10 = boneScales_800A3268;
     c->draw_1C0.frame_18 = (unsigned)c->frame_1A4 % c->draw_1C0.anim_14->frameCount_0;
-    c->draw_1C0.f1C = 0;
-    c->draw_1C0.f20 = modelBonePos_800A3804;
+    c->draw_1C0.drawMode_1C = 0;
+    c->draw_1C0.bonePos_20 = modelBonePos_800A3804;
     c->draw_1C0.scale_24 = &scale;
     c->draw_1C0.ot_28 = pOT_8008D690;
     PlayAnimFrameSfx_8001C364(m, c->anim_1A8, c->draw_1C0.frame_18);

@@ -76,13 +76,13 @@ typedef struct TstCompoDraw
 {
     FtgObject* ftg_0;
     VECTOR* pos_4;
-    char* f8;
+    char* rot_8;
     TstCompoBone* bones_C;
-    char* f10;
+    char* base_10;
     ModelAnim* anim_14;
     int frame_18;
-    int f1C;
-    char* f20;
+    int drawMode_1C;
+    char* bonePos_20;
     VECTOR* scale_24;
     unsigned long* ot_28;
 } TstCompoDraw;
@@ -113,7 +113,7 @@ typedef struct TstCompoWork
     int scaleStep_198;
     int scaleId_19C;
     int* scale_1A0;
-    char* f1A4;
+    char* boneScale_1A4;
     TstCompoDraw draw_1A8;
     int pad_1D4;
     TstCompoBlk8 cursor_1D8;
@@ -498,16 +498,16 @@ void TstCompoDrawModel_800A1468(TstCompoWork* c)
     scale.vx = c->scale_1A0[0] + (c->scaleStep_198 << 12);
     scale.vy = c->scale_1A0[1] + (c->scaleStep_198 << 12);
     scale.vz = c->scale_1A0[2] + (c->scaleStep_198 << 12);
-    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
+    c->boneScale_1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[c->anim_184];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
-    c->draw_1A8.f8 = z;
+    c->draw_1A8.rot_8 = z;
     c->draw_1A8.bones_C = c->bones_C;
-    c->draw_1A8.f10 = c->f1A4;
+    c->draw_1A8.base_10 = c->boneScale_1A4;
     c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frameCount_0;
-    c->draw_1A8.f1C = 0;
-    c->draw_1A8.f20 = compoBonePos_800A2588;
+    c->draw_1A8.drawMode_1C = 0;
+    c->draw_1A8.bonePos_20 = compoBonePos_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
     DrawAnimSkel_80046A58(&c->draw_1A8, compoLight_800A2570, c->model_4->anims_54);
@@ -530,16 +530,16 @@ void TstCompoDrawBlend_800A15F4(TstCompoWork* c)
     scale.vx = c->scale_1A0[0] + (c->scaleStep_198 << 12);
     scale.vy = c->scale_1A0[1] + (c->scaleStep_198 << 12);
     scale.vz = c->scale_1A0[2] + (c->scaleStep_198 << 12);
-    c->f1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
+    c->boneScale_1A4 = GetModelBoneScale_80024EC8(c->model_4, c->scaleId_19C);
     c->draw_1A8.anim_14 = &c->model_4->anims_54[3];
     c->draw_1A8.ftg_0 = c->model_4->ftg_50;
     c->draw_1A8.pos_4 = &pos;
-    c->draw_1A8.f8 = z;
+    c->draw_1A8.rot_8 = z;
     c->draw_1A8.bones_C = c->bones_C;
-    c->draw_1A8.f10 = c->f1A4;
+    c->draw_1A8.base_10 = c->boneScale_1A4;
     c->draw_1A8.frame_18 = (unsigned)c->frame_180 % c->draw_1A8.anim_14->frameCount_0;
-    c->draw_1A8.f1C = 0;
-    c->draw_1A8.f20 = compoBonePos_800A2588;
+    c->draw_1A8.drawMode_1C = 0;
+    c->draw_1A8.bonePos_20 = compoBonePos_800A2588;
     c->draw_1A8.scale_24 = &scale;
     c->draw_1A8.ot_28 = pOT_8008D690;
     c->blend_1FC += 0x88;
@@ -552,7 +552,7 @@ void TstCompoDrawBlend_800A15F4(TstCompoWork* c)
     else
     {
         anim = &c->model_4->anims_54[c->blendAnim_204];
-        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.f10, anim, (unsigned)c->blendFrame_200 % anim->frameCount_0, 0x1000 - c->blend_1FC,
+        DrawAnimSkelBlend_80047E28(&c->draw_1A8, c->draw_1A8.base_10, anim, (unsigned)c->blendFrame_200 % anim->frameCount_0, 0x1000 - c->blend_1FC,
                      compoLight_800A2570, c->model_4->anims_54);
         DrawSpriteVtxQuadsGT4_800459E4(c->bones_C, &c->model_4->mats_5C, pOT_8008D690, 0);
     }

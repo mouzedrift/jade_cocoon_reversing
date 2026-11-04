@@ -166,7 +166,7 @@ void ApplyBattleCommand_800BEBB8()
         {
             m = GetUnitStatus_80014390(i & 0xFF);
             res.areaElement_24 = shownAreaElement_800C9D82;
-            res.f26 = (signed char)fixedStageElement_800C9D83;
+            res.fixedElement_26 = (signed char)fixedStageElement_800C9D83;
             cmd.targets_C = bit;
             ResolveBattleAction_80012BB0(actor, m, &cmd, &res);
             if (encounterRecord_800ADE78.f0 == 1)
@@ -4880,7 +4880,7 @@ void PreviewCommandResult_800C83B0()
                 m = GetUnitStatus_80014390(i & 0xFF);
 
                 d.areaElement_24 = shownAreaElement_800C9D82;
-                d.f26 = (signed char)fixedStageElement_800C9D83;
+                d.fixedElement_26 = (signed char)fixedStageElement_800C9D83;
                 a.targets_C = bit;
                 ResolveBattleAction_80012BB0(self, m, &a, &d);
                 if (sub_80013228(self, m, &a, &d) == 0 && (menuCommand_800C9E58.mask_8 & bit))
