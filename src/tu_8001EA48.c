@@ -625,7 +625,7 @@ extern int sub_80019CC4();
 extern void sub_8001C440();
 extern void sub_80047E28();
 extern void sub_80046A58();
-extern void sub_800459E4();
+extern void DrawSpriteVtxQuadsGT4_800459E4();
 // Matched
 void sub_8001FD08(void* a0)
 {
@@ -682,7 +682,7 @@ void sub_8001FD08(void* a0)
         {
             ot2 = pOT_8008D690;
         }
-        sub_800459E4(o->bones_134, &o->model_15C->mats_5C, ot2, o->drawMode_8);
+        DrawSpriteVtxQuadsGT4_800459E4(o->bones_134, &o->model_15C->mats_5C, ot2, o->drawMode_8);
         sub_8001C440(o->model_15C, o->anim_9C, o->frame_90 % o->draw_164.anim_14->frameCount_0);
     }
 }

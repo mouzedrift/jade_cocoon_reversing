@@ -21,6 +21,7 @@ extern MinionModelDesc dword_8007BD30[];
 extern MinionModelDesc* sub_80019C70(int idx);
 
 
+
 // sound cue table dword_8007C750 (ModelAnimCue.arg_4 indexes it)
 typedef struct
 {
@@ -53,7 +54,7 @@ typedef struct
     SVECTOR color_C;   // only vx/vy/vz used
     int range_14;
 } PointLight;
-extern void SetModelLighting_80019D84(int* pos, int* ofs, PointLight* light, MATRIX* m);
+extern void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m);
 
 // screen fade task state (the dword_8008D628 task buffer, run by sub_8001A41C)
 typedef struct Fade_8001A41C

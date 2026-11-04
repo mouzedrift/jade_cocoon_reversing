@@ -557,7 +557,7 @@ typedef struct
     short field_2E;
 } CamView;
 extern CamView cameraState_8008D4F0;
-extern void sub_80044010(POLY_FT4* a0, int* pos, void* a2, short* uv, short* wh, short* a5, short* sz, short* col,
+extern void DrawRotSprite_80044010(POLY_FT4* a0, int* pos, void* a2, short* uv, short* wh, short* a5, short* sz, short* col,
                          unsigned char* rgb, int a9, int a10, unsigned long* ot);
 // Matched
 void sub_80014CCC(int* a0, void* buf)
@@ -599,7 +599,7 @@ void sub_80014CCC(int* a0, void* buf)
     col[1] = sp->pos_10[1];
     col[2] = sp->pos_10[2];
     col[3] = a1->field_4 * 32;
-    sub_80044010(&e1->poly_C, a1->pos_44, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz, col, sp->rgb_18, 2, 0x30,
+    DrawRotSprite_80044010(&e1->poly_C, a1->pos_44, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz, col, sp->rgb_18, 2, 0x30,
                  pOT_8008D690);
     c = cameraState_8008D4F0.pos_14;
     rgb[0] = sp->rgb_18[0] >> 3;
@@ -621,7 +621,7 @@ void sub_80014CCC(int* a0, void* buf)
     {
         sz2[0] = sz[0] / 4;
         sz2[1] = sz[1] / 4;
-        sub_80044010(&e2->poly_C, pos, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     d[0] = a1->pos_44[0] - pos[0];
@@ -634,7 +634,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] + d[2] / 2;
         sz2[0] = sz[0];
         sz2[1] = sz[1];
-        sub_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.field_2E * 2 < dot)
@@ -644,7 +644,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] - d[2] / 2;
         sz2[0] = sz[0] / 2;
         sz2[1] = sz[1] / 2;
-        sub_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
@@ -654,7 +654,7 @@ void sub_80014CCC(int* a0, void* buf)
         pos2[2] = pos[2] - d[2] / 4;
         sz2[0] = sz[0] * 2;
         sz2[1] = sz[1] * 2;
-        sub_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &a1->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (effectOutcomeFlag_8008D780 == 1)

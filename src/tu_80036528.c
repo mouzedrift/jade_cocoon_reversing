@@ -1131,7 +1131,7 @@ void sub_800398B4(CameraCtrl* p, void* q_)
     }
 }
 extern SVECTOR word_8008D4C8;
-extern void sub_8004D0E8(void);
+extern void SetGteLightAndCamera_8004D0E8(void);
 // Matched
 void sub_80039E14(void)
 {
@@ -1147,7 +1147,7 @@ void sub_80039E14(void)
     word_8008D4C8.vy = -a;
     word_8008D4C8.vx = ratan2_8003B548(d.vy, ISqrt_8003B918(LengthSquared2D_8003B8BC(d.vx, d.vz)));
     word_8008D4C8.vz = cameraState_8008D4F0.field_2C;
-    sub_8004D0E8();
+    SetGteLightAndCamera_8004D0E8();
 }
 // stru_8008D534[0].rot.vx/vy/vz through the CamEntry type changes the scheduling, so the short view stays
 // Matched

@@ -1325,12 +1325,12 @@ int ModelTaskDraw_80010DB0(ModelTaskState* p)
         if (p->count_4 >= 2 && w1 != 0)
         {
             sub_80039FE4(&a6[i], &t[i], &a6[i]);
-            sub_8003A6C4(w1, &t[i], &t[i], &a6[i]);
+            LerpFtgObject_8003A6C4(w1, &t[i], &t[i], &a6[i]);
         }
         if (p->count_4 >= 3 && w2 != 0)
         {
             sub_80039FE4(&a4[i], &t[i], &a4[i]);
-            sub_8003A6C4(w2, &t[i], &t[i], &a4[i]);
+            LerpFtgObject_8003A6C4(w2, &t[i], &t[i], &a4[i]);
         }
     }
     m[0]->ftg_50 = 0;

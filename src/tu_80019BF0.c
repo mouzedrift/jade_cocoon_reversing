@@ -189,7 +189,7 @@ extern SVECTOR word_8008D418;   // colour of the global point light
 // Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (dword_80087114 row 0,
 // colour from cameraState), the global point light and the given point light; m is the model's rotation.
 // Matched
-void SetModelLighting_80019D84(int* pos, int* ofs, PointLight* light, MATRIX* m)
+void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m)
 {
     MATRIX* sm;
     int* d;
@@ -215,9 +215,9 @@ void SetModelLighting_80019D84(int* pos, int* ofs, PointLight* light, MATRIX* m)
     dword_80087134.m[2][2] = g->lightColor_3C[2] / 4;
     if (dword_8008D3F0 != 0)
     {
-        d[0] = dword_8008D680[0] - (ofs[0] + pos[0]);
-        d[1] = dword_8008D680[1] - (ofs[1] + pos[1]);
-        d[2] = dword_8008D680[2] - (ofs[2] + pos[2]);
+        d[0] = dword_8008D680[0] - (ofs->vx + pos->vx);
+        d[1] = dword_8008D680[1] - (ofs->vy + pos->vy);
+        d[2] = dword_8008D680[2] - (ofs->vz + pos->vz);
         if (abs(d[0]) < dword_8008D3F0 && abs(d[1]) < dword_8008D3F0 && abs(d[2]) < dword_8008D3F0)
         {
             gte_ldlvl(d);
@@ -244,9 +244,9 @@ void SetModelLighting_80019D84(int* pos, int* ofs, PointLight* light, MATRIX* m)
             }
         }
     }
-    d[0] = light->pos_0[0] - (ofs[0] + pos[0]);
-    d[1] = light->pos_0[1] - (ofs[1] + pos[1]);
-    d[2] = light->pos_0[2] - (ofs[2] + pos[2]);
+    d[0] = light->pos_0[0] - (ofs->vx + pos->vx);
+    d[1] = light->pos_0[1] - (ofs->vy + pos->vy);
+    d[2] = light->pos_0[2] - (ofs->vz + pos->vz);
     gte_ldlvl(d);
     gte_sqr0();
     gte_stlvnl(sq);

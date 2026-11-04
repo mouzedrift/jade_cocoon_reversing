@@ -407,7 +407,7 @@ extern void* memset(void* p, int c, unsigned int n);
 extern void sub_8004D288(VECTOR* out, ModelAnim* anim, int frame);
 extern void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2);
 extern void sub_80046A58(void* a, void* b, int c);
-extern void sub_800459E4(void* a, void* b, void* c, int d);
+extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 extern char name_800A3268[];
 extern char name_800A3804[];
 extern char name_800A1EE8[];
@@ -443,7 +443,7 @@ void sub_800A1428(TstModelD* c)
     c->draw_1C0.ot_28 = pOT_8008D690;
     PlayAnimFrameSfx_8001C364(m, c->f1A8, c->draw_1C0.frame_18);
     sub_80046A58(&c->draw_1C0, name_800A1EE8, 0);
-    sub_800459E4(c->bones, &m->mats_5C, pOT_8008D690, 0);
+    DrawSpriteVtxQuadsGT4_800459E4(c->bones, &m->mats_5C, pOT_8008D690, 0);
 }
 
 void sub_800A1614(TstModelD* c)
