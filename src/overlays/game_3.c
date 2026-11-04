@@ -3712,9 +3712,9 @@ void FreeLevantAnimById_800AC6A8(int anim)
     FreeModelAnim_8002556C(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set));
 }
 
-void LoadLevantAnimSet_800AC708(int a, int b)
+void LoadLevantAnimSet_800AC708(int set, int flag)
 {
-    LoadModelAnimSet_80025780(dword_8007DC60->items_8, a, b);
+    LoadModelAnimSet_80025780(dword_8007DC60->items_8, set, flag);
 }
 
 void FreeLevantAnimSet_800AC73C()

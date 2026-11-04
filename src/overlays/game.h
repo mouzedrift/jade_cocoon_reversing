@@ -289,7 +289,7 @@ extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
 extern void SetActorAnim_8001D760(Actor* a, int b, int c, int d);
 
-extern int FindInLists_800A52EC(short** tab, int n, int key);
+extern int FindInLists_800A52EC(short** tab, int count, int key);
 
 extern void* LoadOverlayIfChanged_80020D1C(int a, int b);
 

@@ -840,36 +840,31 @@ int EnemyChooseCommand_800A2618(void* cmd, int idx)
 
 #if 0
 // Not matched: hidden return pointer gets $s6 instead of $s3 (and 'move $v0' is placed before the final struct copy); tried explicit out pointer, void, do-while, goto
-typedef struct GamePair_1
-{
-    short a;
-    short b;
-} GamePair_1;
-typedef struct GameCtxA_1
+typedef struct GameEncounterIntView // GameEncounter with int actors / anims
 {
     char pad_0[0x7c];
     int obj_7c[3];
     char pad_88[0x70c - 0x88];
-    int f70c[3];
-} GameCtxA_1;
+    int anims_70C[3];
+} GameEncounterIntView;
 extern void* memset(void* p, int c, unsigned int n);
-extern GamePair_1 StartCommandAction_80018A4C(int obj, int* p, int a2, int c);
-GamePair_1 StartEnemyCommandAction_800A2684(int* cmd, int arg)
+extern GameActionFrames StartCommandAction_80018A4C(int obj, int* p, int a2, int c);
+GameActionFrames StartEnemyCommandAction_800A2684(int* cmd, int arg)
 {
-    GamePair_1 r;
+    GameActionFrames frames;
     int i;
-    memset(&r, 0, 4);
+    memset(&frames, 0, 4);
     if (cmd[0] != 0x14)
     {
         for (i = 4; i < 7; i++)
         {
             if (((unsigned)cmd[2] & (1 << i)) != 0)
             {
-                r = StartCommandAction_80018A4C(((GameCtxA_1*)&gCtx_800B1260)->obj_7c[i - 4], cmd, ((GameCtxA_1*)&gCtx_800B1260)->f70c[i - 4], arg);
+                frames = StartCommandAction_80018A4C(((GameEncounterIntView*)&gCtx_800B1260)->obj_7c[i - 4], cmd, ((GameEncounterIntView*)&gCtx_800B1260)->anims_70C[i - 4], arg);
             }
         }
     }
-    return r;
+    return frames;
 }
 #endif
 
@@ -1838,7 +1833,7 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     unsigned short* flagTbl;
     int i;
     GameSpawnEntry* tbl;
-    int r;
+    int idx;
     int bits;
     int j;
     int k;
@@ -1875,10 +1870,10 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     }
     else
     {
-        r = FindInLists_800A52EC(name_800AE9DC, 0x49, entrance);
-        if (r >= 0)
+        idx = FindInLists_800A52EC(name_800AE9DC, 0x49, entrance);
+        if (idx >= 0)
         {
-            tbl = name_800AE524[r];
+            tbl = name_800AE524[idx];
         }
     }
     if (tbl == 0)
@@ -2092,11 +2087,11 @@ void SetBattleStageForMap_800A52AC(int entrance)
 }
 
 // Matched
-int FindInLists_800A52EC(short** tab, int n, int key)
+int FindInLists_800A52EC(short** tab, int count, int key)
 {
     int found = -1;
     int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
         short* list = tab[i];
         while (*list != -1)
