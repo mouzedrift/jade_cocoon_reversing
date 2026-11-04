@@ -28,7 +28,7 @@ typedef struct
 } MinionModelDesc;
 extern MinionModelDesc speciesModelDescs_8007BD30[];
 extern MinionModelDesc* GetSpeciesModelDesc_80019C70(int idx);
-extern Actor* CloneActor_8001D4DC(Actor* o, int a1, int a2, int a3);
+extern Actor* CloneActor_8001D4DC(Actor* src, int kind, int clutRow, int hasMatrices);
 
 
 

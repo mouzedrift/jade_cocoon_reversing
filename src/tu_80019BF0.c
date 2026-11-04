@@ -247,10 +247,10 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
 // Matched
 void InitSceneFade_8001A38C(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
     CameraState* g;
-    p->flags = 0;
-    p->count = 0;
+    f->flags = 0;
+    f->count = 0;
     g = &cameraState_8008D4F0;
     lightMatrix_80087114.m[2][0] = -(unsigned short)g->lightDir_34.vx;
     lightMatrix_80087114.m[2][1] = -(unsigned short)g->lightDir_34.vy;
@@ -265,10 +265,10 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
     unsigned long* ot;
     POLY_F4 poly;
     DR_TPAGE tp;
-    int v;
+    int shade;
     SVECTOR* sv;
     CameraState* c;
-    unsigned char b;
+    unsigned char flash;
     if (f->flags & 0x20)
     {
         ot = pOT_8008D4AC;
@@ -279,11 +279,11 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
     }
     if (f->flags & 0x10)
     {
-        b = f->count * 255 / 8;
+        flash = f->count * 255 / 8;
         SetPolyF4(&poly);
-        poly.r0 = b;
-        poly.g0 = b;
-        poly.b0 = b;
+        poly.r0 = flash;
+        poly.g0 = flash;
+        poly.b0 = flash;
         poly.x0 = 0;
         poly.y0 = 0;
         poly.x1 = display_8008B4D8.field_C_w;
@@ -323,9 +323,9 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
     }
     else if (f->flags & 4)
     {
-        v = f->count << 8;
-        v -= f->count;
-        v /= f->duration;
+        shade = f->count << 8;
+        shade -= f->count;
+        shade /= f->duration;
         SetPolyF4(&poly);
         poly.x0 = 0;
         poly.y0 = 0;
@@ -335,9 +335,9 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
         poly.y2 = display_8008B4D8.field_E_h;
         poly.x3 = display_8008B4D8.field_C_w;
         poly.y3 = display_8008B4D8.field_E_h;
-        poly.r0 = v;
-        poly.g0 = v;
-        poly.b0 = v;
+        poly.r0 = shade;
+        poly.g0 = shade;
+        poly.b0 = shade;
         SetSemiTrans(&poly, 1);
         AddPrimCopy_80040298(&ot[3], &poly, 6);
         setlen(&tp, 1);
@@ -350,9 +350,9 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
     }
     else if (f->flags & 8)
     {
-        v = (f->duration - f->count) << 8;
-        v -= f->duration - f->count;
-        v /= f->duration;
+        shade = (f->duration - f->count) << 8;
+        shade -= f->duration - f->count;
+        shade /= f->duration;
         SetPolyF4(&poly);
         poly.x0 = 0;
         poly.y0 = 0;
@@ -362,9 +362,9 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
         poly.y2 = display_8008B4D8.field_E_h;
         poly.x3 = display_8008B4D8.field_C_w;
         poly.y3 = display_8008B4D8.field_E_h;
-        poly.r0 = v;
-        poly.g0 = v;
-        poly.b0 = v;
+        poly.r0 = shade;
+        poly.g0 = shade;
+        poly.b0 = shade;
         SetSemiTrans(&poly, 1);
         AddPrimCopy_80040298(&ot[3], &poly, 6);
         setlen(&tp, 1);
@@ -422,14 +422,14 @@ void SceneFadeTask_8001A41C(EventEntry* e, Fade_8001A41C* f)
 // Matched
 void ResetSceneFade_8001A9A4(void)
 {
-    Fade_8001A41C* p;
-    unsigned short v;
+    Fade_8001A41C* f;
+    unsigned short flags;
     sceneBrightness_8008D40C = 0x1000;
-    p = dword_8008D628->entry.buffer;
-    v = p->flags;
+    f = dword_8008D628->entry.buffer;
+    flags = f->flags;
     unknownFlags_8008D678 &= ~0x400;
-    p->count = 0;
-    p->flags = v & 0xFFF0;
+    f->count = 0;
+    f->flags = flags & 0xFFF0;
 }
 // Matched
 void SetSceneDark_8001A9E4(void)
@@ -438,89 +438,89 @@ void SetSceneDark_8001A9E4(void)
     sceneBrightness_8008D40C = 0;
 }
 // Matched
-void StartSceneFadeIn_8001AA04(short a0)
+void StartSceneFadeIn_8001AA04(short duration)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
-    EventEntry* q;
-    p->duration = a0;
-    q = &cameraTask_8008D4A0->entry;
-    p->count = 0;
-    p->flags |= 1;
-    SceneFadeTask_8001A41C(q, p);
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    EventEntry* task;
+    f->duration = duration;
+    task = &cameraTask_8008D4A0->entry;
+    f->count = 0;
+    f->flags |= 1;
+    SceneFadeTask_8001A41C(task, f);
 }
 // Matched
-void StartSceneFadeOut_8001AA50(short a0)
+void StartSceneFadeOut_8001AA50(short duration)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
-    EventEntry* q;
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    EventEntry* task;
     unknownFlags_8008D678 |= 0x400;
-    p->duration = a0;
-    q = &cameraTask_8008D4A0->entry;
-    p->count = 0;
-    p->flags |= 2;
-    SceneFadeTask_8001A41C(q, p);
+    f->duration = duration;
+    task = &cameraTask_8008D4A0->entry;
+    f->count = 0;
+    f->flags |= 2;
+    SceneFadeTask_8001A41C(task, f);
 }
 // Matched
-void StartSceneDarken_8001AAA8(short a0)
+void StartSceneDarken_8001AAA8(short duration)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
-    EventEntry* q;
-    p->duration = a0;
-    q = &cameraTask_8008D4A0->entry;
-    p->count = 0;
-    p->flags |= 4;
-    SceneFadeTask_8001A41C(q, p);
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    EventEntry* task;
+    f->duration = duration;
+    task = &cameraTask_8008D4A0->entry;
+    f->count = 0;
+    f->flags |= 4;
+    SceneFadeTask_8001A41C(task, f);
 }
 // Matched
 void StopSceneDarken_8001AAF4(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
-    p->flags &= ~4;
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    f->flags &= ~4;
 }
 // Matched
-void StartSceneBrighten_8001AB1C(short a0)
+void StartSceneBrighten_8001AB1C(short duration)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
-    EventEntry* q;
-    p->duration = a0;
-    q = &cameraTask_8008D4A0->entry;
-    p->count = 0;
-    p->flags |= 8;
-    SceneFadeTask_8001A41C(q, p);
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    EventEntry* task;
+    f->duration = duration;
+    task = &cameraTask_8008D4A0->entry;
+    f->count = 0;
+    f->flags |= 8;
+    SceneFadeTask_8001A41C(task, f);
 }
 // Matched
 void StartSceneFlash_8001AB68(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
-    p->count = 8;
-    p->flags |= 0x10;
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    f->count = 8;
+    f->flags |= 0x10;
 }
 // Matched
 int IsSceneFadeDone_8001AB94(void)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
-    unsigned short v = p->flags;
-    if (v & 0x1B)
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
+    unsigned short flags = f->flags;
+    if (flags & 0x1B)
     {
         return 0;
     }
-    if (v & 4)
+    if (flags & 4)
     {
-        return p->count == p->duration;
+        return f->count == f->duration;
     }
     return 1;
 }
 // Matched
 void SetSceneFadeFrontOT_8001ABEC(int on)
 {
-    Fade_8001A41C* p = dword_8008D628->entry.buffer;
+    Fade_8001A41C* f = dword_8008D628->entry.buffer;
     if (on)
     {
-        p->flags |= 0x20;
+        f->flags |= 0x20;
     }
     else
     {
-        p->flags &= ~0x20;
+        f->flags &= ~0x20;
     }
 }
 // Matched
@@ -558,13 +558,13 @@ int sub_8001ACC0(int idx)
 // Matched
 int GetMagicTargetFlags_8001ACE4(int idx)
 {
-    unsigned int v = magicData_8007C438[idx].field_0;
-    int r = (v >> 5) & 2;
-    if (v & 0x80)
+    unsigned int flags = magicData_8007C438[idx].field_0;
+    int r = (flags >> 5) & 2;
+    if (flags & 0x80)
     {
         r |= 4;
     }
-    if (v & 4)
+    if (flags & 4)
     {
         r |= 1;
     }
@@ -625,13 +625,13 @@ int TestMagicBit_8001AE2C(unsigned int* bits, unsigned int idx)
     return (*p & (1 << (idx & 0x1F))) != 0;
 }
 // Matched
-int CountMagicBits_8001AE54(unsigned int* a0)
+int CountMagicBits_8001AE54(unsigned int* bits)
 {
     int i = 0;
     int n = i;
     for (; i < 0x1E; i++)
     {
-        if (TestMagicBit_8001AE2C(a0, i))
+        if (TestMagicBit_8001AE2C(bits, i))
         {
             n++;
         }
@@ -1061,9 +1061,9 @@ void FadeToWhiteStep_8001BC00(void)
     }
 }
 // Matched
-void SetMotionBlur_8001BCD8(int a0)
+void SetMotionBlur_8001BCD8(int on)
 {
-    motionBlurOn_800918C4 = a0;
+    motionBlurOn_800918C4 = on;
 }
 // Matched
 void DrawMotionBlur_8001BCE4(int buffer)
@@ -1161,7 +1161,7 @@ void InitPrimBuffers_8001BF90(void)
     }
 }
 // Matched
-void StartScreenFlash_8001C02C(unsigned char* a0)
+void StartScreenFlash_8001C02C(unsigned char* rgb)
 {
     EventEntry* r = AllocEventEntry_80043AF8(screenFlashTasks_8008D61C);
     if (r != 0)
@@ -1169,25 +1169,25 @@ void StartScreenFlash_8001C02C(unsigned char* a0)
         unsigned char* p = (unsigned char*)r->buffer;
         r->flags = (r->flags | 1) & ~0x8000;
         *(int*)p = 0;
-        p[4] = a0[0];
-        p[5] = a0[1];
-        p[6] = a0[2];
+        p[4] = rgb[0];
+        p[5] = rgb[1];
+        p[6] = rgb[2];
         r->cb_8 = (EventEntryFn)ScreenFlashTask_8001C0B4;
     }
 }
 // Matched
-void ScreenFlashTask_8001C0B4(EventEntry* p, int* q)
+void ScreenFlashTask_8001C0B4(EventEntry* e, int* state)
 {
     POLY_F4 poly;
     DR_TPAGE dr;
     unsigned short* s;
     unsigned short w;
     unsigned short h;
-    unsigned char* c = (unsigned char*)q;
-    q[0]++;
-    if (q[0] >= 4)
+    unsigned char* c = (unsigned char*)state;
+    state[0]++;
+    if (state[0] >= 4)
     {
-        p->flags = (p->flags & ~1) | 0x8000;
+        e->flags = (e->flags & ~1) | 0x8000;
         return;
     }
     SetPolyF4(&poly);
@@ -1212,10 +1212,10 @@ void ScreenFlashTask_8001C0B4(EventEntry* p, int* q)
     AddPrimCopy_80040298(pOT_8008D5F4, &dr, 2);
 }
 // Matched
-void SetFadeMode_8001C19C(a0)
-unsigned int a0;
+void SetFadeMode_8001C19C(mode)
+unsigned int mode;
 {
-    switch (a0)
+    switch (mode)
     {
     case 0:
         BeginFade_8001C260();
@@ -1277,30 +1277,30 @@ int IsFadeDone_8001C2FC()
     return (fadeFlags_800918B0 & 3) == 0;
 }
 // Matched
-struct_8_id* FindItemById_8001C314(struct_8_list* p, int id)
+struct_8_id* FindItemById_8001C314(struct_8_list* list, int id)
 {
     struct_8_id* r = 0;
     int i;
-    for (i = 0; i < p->count; i++)
+    for (i = 0; i < list->count; i++)
     {
-        if (id == p->items[i].id)
+        if (id == list->items[i].id)
         {
-            r = &p->items[i];
+            r = &list->items[i];
         }
     }
     return r;
 }
 // Matched
-void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
+void PlayAnimFrameSfx_8001C364(Model* model, int idx, int frame)
 {
-    ModelAnim* e = &a0->anims_54[idx];
+    ModelAnim* anim = &model->anims_54[idx];
     int i;
-    for (i = 0; i < e->cueCount_C; i++)
+    for (i = 0; i < anim->cueCount_C; i++)
     {
-        ModelAnimCue* q = (ModelAnimCue*)(i * sizeof(ModelAnimCue) + (int)e->cues_10); // integer sum: the original adds the base second
-        if (a2 == q->frame_0 && q->kind_2 == 0)
+        ModelAnimCue* cue = (ModelAnimCue*)(i * sizeof(ModelAnimCue) + (int)anim->cues_10); // integer sum: the original adds the base second
+        if (frame == cue->frame_0 && cue->kind_2 == 0)
         {
-            unsigned int n = (unsigned short)q->arg_4;
+            unsigned int n = (unsigned short)cue->arg_4;
             if (n < 0x6E)
             {
                 SoundCue_8007C750* t = &soundCues_8007C750[(short)n];
@@ -1315,36 +1315,36 @@ void PlayAnimFrameSfx_8001C364(Model* a0, int idx, int a2)
 extern int PlayMusic_800300E0(int idx, int a1);
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops);
 // Matched
-void RunAnimFrameCues_8001C440(Model* a0, int idx, int key)
+void RunAnimFrameCues_8001C440(Model* model, int idx, int frame)
 {
-    ModelAnim* e = (ModelAnim*)(idx * 28 + (int)a0->anims_54); // integer sum: the original adds the base second
-    ModelAnimCue* q = e->cues_10;
-    int n = e->cueCount_C;
+    ModelAnim* anim = (ModelAnim*)(idx * 28 + (int)model->anims_54); // integer sum: the original adds the base second
+    ModelAnimCue* cue = anim->cues_10;
+    int n = anim->cueCount_C;
     int i;
     short arg;
-    for (i = 0; i < n; i++, q++)
+    for (i = 0; i < n; i++, cue++)
     {
-        if (key != q->frame_0)
+        if (frame != cue->frame_0)
         {
             continue;
         }
-        switch (q->kind_2)
+        switch (cue->kind_2)
         {
         case 0:
-            if ((unsigned short)q->arg_4 < 0x6E)
+            if ((unsigned short)cue->arg_4 < 0x6E)
             {
-                if (soundCues_8007C750[q->arg_4].kind == 0)
+                if (soundCues_8007C750[cue->arg_4].kind == 0)
                 {
-                    PlaySfx_80031494(soundCues_8007C750[q->arg_4].arg);
+                    PlaySfx_80031494(soundCues_8007C750[cue->arg_4].arg);
                 }
-                if (soundCues_8007C750[q->arg_4].kind == 1)
+                if (soundCues_8007C750[cue->arg_4].kind == 1)
                 {
-                    PlayMusic_800300E0(soundCues_8007C750[q->arg_4].arg, 1);
+                    PlayMusic_800300E0(soundCues_8007C750[cue->arg_4].arg, 1);
                 }
-                if (soundCues_8007C750[q->arg_4].kind == 2)
+                if (soundCues_8007C750[cue->arg_4].kind == 2)
                 {
-                    arg = soundCues_8007C750[q->arg_4].arg;
-                    if (soundCues_8007C750[q->arg_4].arg == 3)
+                    arg = soundCues_8007C750[cue->arg_4].arg;
+                    if (soundCues_8007C750[cue->arg_4].arg == 3)
                     {
                         arg = (char)saveData_8008B570.levantStatus_7C8.level_44 >> 2;
                         if (arg > 4)
@@ -1353,7 +1353,7 @@ void RunAnimFrameCues_8001C440(Model* a0, int idx, int key)
                         }
                         arg = levelSeqsCue3_8007CACC[arg];
                     }
-                    else if (soundCues_8007C750[q->arg_4].arg == 2)
+                    else if (soundCues_8007C750[cue->arg_4].arg == 2)
                     {
                         arg = (char)saveData_8008B570.levantStatus_7C8.level_44 >> 2;
                         if (arg > 4)
@@ -1364,7 +1364,7 @@ void RunAnimFrameCues_8001C440(Model* a0, int idx, int key)
                     }
                     PlaySeqSlot_80031160(arg, 1);
                 }
-                if (soundCues_8007C750[q->arg_4].kind == 3)
+                if (soundCues_8007C750[cue->arg_4].kind == 3)
                 {
                     if (systemSound_80091D40.field_4_seq_num >= 0)
                     {
@@ -1375,7 +1375,7 @@ void RunAnimFrameCues_8001C440(Model* a0, int idx, int key)
             }
             break;
         case 1:
-            sub_80025B5C(a0, q->arg_4, q->arg_6);
+            sub_80025B5C(model, cue->arg_4, cue->arg_6);
             break;
         }
     }
@@ -1402,26 +1402,26 @@ void ResetButtonConfig_8001C6C8(void)
     }
 }
 // Matched
-int TestAnyBits_8001C72C(unsigned int a0, unsigned int a1)
+int TestAnyBits_8001C72C(unsigned int value, unsigned int mask)
 {
-    return (a0 & (unsigned short)a1) != 0;
+    return (value & (unsigned short)mask) != 0;
 }
 // Matched
-int TestAllBits_8001C73C(unsigned int a0, unsigned int a1)
+int TestAllBits_8001C73C(unsigned int value, unsigned int mask)
 {
-    a1 = (unsigned short)a1;
-    if (a1 == 0)
+    mask = (unsigned short)mask;
+    if (mask == 0)
     {
         return 0;
     }
-    return (a0 & a1) == a1;
+    return (value & mask) == mask;
 }
 // Matched
-int FindButtonConfig_8001C75C(unsigned int a0)
+int FindButtonConfig_8001C75C(unsigned int button)
 {
     unsigned short* p = buttonConfig_8008B578;
     int i = 0;
-    unsigned int v = (unsigned short)a0;
+    unsigned int v = (unsigned short)button;
     for (; i < 10; i++)
     {
         if (*p == v)
@@ -1433,25 +1433,25 @@ int FindButtonConfig_8001C75C(unsigned int a0)
     return -1;
 }
 // Matched
-void SwapButtonConfig_8001C79C(int a0, int a1)
+void SwapButtonConfig_8001C79C(int i, int j)
 {
     unsigned short* base = buttonConfig_8008B578;
-    unsigned short* p = &base[a0];
-    unsigned short r1 = GetButtonConfigEntry_8001C818(p);
-    unsigned short* q = &base[a1];
-    unsigned short r2 = GetButtonConfigEntry_8001C818(q);
-    SetButtonConfigEntry_8001C810((short*)p, r2);
-    SetButtonConfigEntry_8001C810((short*)q, r1);
+    unsigned short* p = &base[i];
+    unsigned short bi = GetButtonConfigEntry_8001C818(p);
+    unsigned short* q = &base[j];
+    unsigned short bj = GetButtonConfigEntry_8001C818(q);
+    SetButtonConfigEntry_8001C810((short*)p, bj);
+    SetButtonConfigEntry_8001C810((short*)q, bi);
 }
 // Matched
-void SetButtonConfigEntry_8001C810(short* p, unsigned short v)
+void SetButtonConfigEntry_8001C810(short* entry, unsigned short button)
 {
-    *p = v;
+    *entry = button;
 }
 // Matched
-unsigned short GetButtonConfigEntry_8001C818(unsigned short* p)
+unsigned short GetButtonConfigEntry_8001C818(unsigned short* entry)
 {
-    return *p;
+    return *entry;
 }
 // Matched
 int GetButtonConfigBitIndex_8001C824(void)
@@ -1468,11 +1468,11 @@ int GetButtonConfigBitIndex_8001C824(void)
     return i;
 }
 // Matched
-unsigned int GetButtonConfig_8001C874(int a0)
+unsigned int GetButtonConfig_8001C874(int idx)
 {
     unsigned short* p = buttonConfig_8008B578;
     int i;
-    for (i = 0; i < a0; i++)
+    for (i = 0; i < idx; i++)
     {
         p++;
     }
@@ -1882,13 +1882,13 @@ unsigned short GetItemFlags_8001CE70(int idx)
 // Matched
 int GetItemTargetFlags_8001CE8C(int idx)
 {
-    unsigned short v = itemFlags_8007CC50[idx];
-    int r = (v >> 5) & 2;
-    if (v & 0x80)
+    unsigned short flags = itemFlags_8007CC50[idx];
+    int r = (flags >> 5) & 2;
+    if (flags & 0x80)
     {
         r |= 4;
     }
-    if (v & 4)
+    if (flags & 4)
     {
         r |= 1;
     }
@@ -2018,57 +2018,57 @@ EquipmentData* GetAccessoryData_8001D0FC(unsigned int idx)
     return &accessoryData_8007D6B0[idx];
 }
 // Matched
-int GetEquipmentName_8001D128(int a0, unsigned int a1)
+int GetEquipmentName_8001D128(int idx, unsigned int kind)
 {
     int r = 0;
-    switch (a1)
+    switch (kind)
     {
     case 0:
-        r = GetWeaponName_8001CF20(a0);
+        r = GetWeaponName_8001CF20(idx);
         break;
     case 1:
-        r = GetArmorName_8001CFDC(a0);
+        r = GetArmorName_8001CFDC(idx);
         break;
     case 2:
-        r = GetAccessoryName_8001D0A4(a0);
+        r = GetAccessoryName_8001D0A4(idx);
         break;
     }
     return r;
 }
 // Matched
-EquipmentData* GetEquipmentData_8001D190(a0, a1)
-unsigned int a0;
-unsigned int a1;
+EquipmentData* GetEquipmentData_8001D190(idx, kind)
+unsigned int idx;
+unsigned int kind;
 {
     EquipmentData* r = 0;
-    switch (a1)
+    switch (kind)
     {
     case 0:
-        r = GetWeaponData_8001CF84(a0);
+        r = GetWeaponData_8001CF84(idx);
         break;
     case 1:
-        r = GetArmorData_8001D034(a0);
+        r = GetArmorData_8001D034(idx);
         break;
     case 2:
-        r = GetAccessoryData_8001D0FC(a0);
+        r = GetAccessoryData_8001D0FC(idx);
         break;
     }
     return r;
 }
 // Matched
-int GetEquipmentPrice_8001D1F8(int a0, unsigned int a1)
+int GetEquipmentPrice_8001D1F8(int idx, unsigned int kind)
 {
     int r = 0;
-    switch (a1)
+    switch (kind)
     {
     case 0:
-        r = GetWeaponPrice_8001CF4C(a0);
+        r = GetWeaponPrice_8001CF4C(idx);
         break;
     case 1:
-        r = GetArmorPrice_8001D008(a0);
+        r = GetArmorPrice_8001D008(idx);
         break;
     case 2:
-        r = GetAccessoryPrice_8001D0D0(a0);
+        r = GetAccessoryPrice_8001D0D0(idx);
         break;
     }
     return r;
@@ -2135,9 +2135,9 @@ void InitActors_8001D378(void)
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
 }
 // Matched
-void FreeActors_8001D3C4(int a0)
+void FreeActors_8001D3C4(int freeModels)
 {
-    if (a0 != 0)
+    if (freeModels != 0)
     {
         StopModelLoader_800205F0();
         FreeModelLoaderList_8002052C();
@@ -2148,66 +2148,66 @@ void FreeActors_8001D3C4(int a0)
     ClearModelAnimRefs_800201A4();
 }
 // Matched
-void UpdateActorCb_8001D41C(EventEntry* e, void* a1)
+void UpdateActorCb_8001D41C(EventEntry* e, void* actor)
 {
-    UpdateActorScript_8001EA28(a1);
-    sub_8001F354(a1);
-    sub_8001F918(a1);
-    sub_8001F9AC(a1);
+    UpdateActorScript_8001EA28(actor);
+    sub_8001F354(actor);
+    sub_8001F918(actor);
+    sub_8001F9AC(actor);
 }
 // Matched
-Actor* CreateActor_8001D45C(ActorDesc* a0)
+Actor* CreateActor_8001D45C(ActorDesc* desc)
 {
-    EventEntry* r = AllocEventEntry_80043AF8(actorTasks_8008D43C);
-    Actor* p;
-    if (r != 0)
+    EventEntry* e = AllocEventEntry_80043AF8(actorTasks_8008D43C);
+    Actor* actor;
+    if (e != 0)
     {
-        p = r->buffer;
-        r->cb_8 = UpdateActorCb_8001D41C;
-        r->flags = (r->flags | 1) & ~0x8000;
-        p->task_0 = r;
-        InitActor_8001E574(p, a0);
-        return p;
+        actor = e->buffer;
+        e->cb_8 = UpdateActorCb_8001D41C;
+        e->flags = (e->flags | 1) & ~0x8000;
+        actor->task_0 = e;
+        InitActor_8001E574(actor, desc);
+        return actor;
     }
     return 0;
 }
 // Matched
-Actor* CloneActor_8001D4DC(Actor* o, int a1, int a2, int a3)
+Actor* CloneActor_8001D4DC(Actor* src, int kind, int clutRow, int hasMatrices)
 {
-    ActorDesc s;
+    ActorDesc desc;
     Actor* r;
-    s.model_48 = o->model_15C;
-    s.modelId_0 = -1;
-    s.kind_4 = a1;
-    s.pos_8[0] = o->pos_38[0];
-    s.pos_8[1] = o->pos_38[1];
-    s.pos_8[2] = o->pos_38[2];
-    s.rot_14[0] = o->rot_5C[0];
-    s.rot_14[1] = o->rot_5C[1];
-    s.rot_14[2] = o->rot_5C[2];
-    s.clutRow_1C = a2;
-    s.animIdx_20 = o->animIdx_C2;
-    s.frame_24 = o->frame_90;
-    s.frameSpeed_28 = o->frameSpeed_1E;
-    s.blendDiv_2C = o->blendDiv_24;
-    s.visible_30 = ((o->flags_4 >> 13) ^ 1) & 1;
-    s.bones_34 = o->bones_134;
-    s.baseScale_38 = o->baseScale_138;
-    s.boneScale_3C = o->boneScale_144;
-    s.anims_40 = o->anims_148;
-    s.effectTbl_44 = o->effectTbl_14C;
-    s.hasMatrices_4C = a3;
-    r = CreateActor_8001D45C(&s);
-    SetActorGroundMove_8001D68C(r, (o->flags_4 >> 18) & 1);
+    desc.model_48 = src->model_15C;
+    desc.modelId_0 = -1;
+    desc.kind_4 = kind;
+    desc.pos_8[0] = src->pos_38[0];
+    desc.pos_8[1] = src->pos_38[1];
+    desc.pos_8[2] = src->pos_38[2];
+    desc.rot_14[0] = src->rot_5C[0];
+    desc.rot_14[1] = src->rot_5C[1];
+    desc.rot_14[2] = src->rot_5C[2];
+    desc.clutRow_1C = clutRow;
+    desc.animIdx_20 = src->animIdx_C2;
+    desc.frame_24 = src->frame_90;
+    desc.frameSpeed_28 = src->frameSpeed_1E;
+    desc.blendDiv_2C = src->blendDiv_24;
+    desc.visible_30 = ((src->flags_4 >> 13) ^ 1) & 1;
+    desc.bones_34 = src->bones_134;
+    desc.baseScale_38 = src->baseScale_138;
+    desc.boneScale_3C = src->boneScale_144;
+    desc.anims_40 = src->anims_148;
+    desc.effectTbl_44 = src->effectTbl_14C;
+    desc.hasMatrices_4C = hasMatrices;
+    r = CreateActor_8001D45C(&desc);
+    SetActorGroundMove_8001D68C(r, (src->flags_4 >> 18) & 1);
     return r;
 }
 // Matched
-void DestroyActor_8001D600(Actor* a0)
+void DestroyActor_8001D600(Actor* actor)
 {
-    EventEntry* q = a0->task_0;
-    ReleaseModelAnimRef_80020278(a0->modelRef_16, q->field_4);
-    FreeActorBones_8001EA00(a0);
-    q->flags = (q->flags & ~1) | 0x8000;
+    EventEntry* e = actor->task_0;
+    ReleaseModelAnimRef_80020278(actor->modelRef_16, e->field_4);
+    FreeActorBones_8001EA00(actor);
+    e->flags = (e->flags & ~1) | 0x8000;
 }
 // Matched
 void SetActorActive_8001D658(Actor* a, int on)
@@ -2276,39 +2276,39 @@ void SetActorVisible_8001D730(Actor* p, int on)
     }
 }
 // Matched
-void SetActorAnim_8001D760(Actor* o, int idx, int mode, int a3)
+void SetActorAnim_8001D760(Actor* actor, int idx, int mode, int a3)
 {
     int base;
-    o->animIdx_C2 = idx;
-    o->prevAnim_A0 = o->anim_9C;
-    o->anim_9C = o->anims_148[idx].id_0;
-    o->loopFrame_18 = o->anims_148[idx].loop_4;
-    o->endFrame_1A = o->anims_148[idx].end_6;
-    o->prevFrame_94 = o->frame_90;
+    actor->animIdx_C2 = idx;
+    actor->prevAnim_A0 = actor->anim_9C;
+    actor->anim_9C = actor->anims_148[idx].id_0;
+    actor->loopFrame_18 = actor->anims_148[idx].loop_4;
+    actor->endFrame_1A = actor->anims_148[idx].end_6;
+    actor->prevFrame_94 = actor->frame_90;
     if (mode == -1)
     {
-        o->frame_90 = o->anims_148[idx].start_2;
+        actor->frame_90 = actor->anims_148[idx].start_2;
     }
     else if (mode == -2)
     {
-        o->frame_90 = o->anims_148[idx].loop_4;
+        actor->frame_90 = actor->anims_148[idx].loop_4;
     }
     else if (mode == -3)
     {
         int r = rand();
-        base = o->anims_148[idx].start_2;
-        o->frame_90 = base + r % (o->anims_148[idx].loop_4 - base);
+        base = actor->anims_148[idx].start_2;
+        actor->frame_90 = base + r % (actor->anims_148[idx].loop_4 - base);
     }
     else
     {
-        o->frame_90 = mode % o->endFrame_1A;
+        actor->frame_90 = mode % actor->endFrame_1A;
     }
-    o->frameFrac_1C = 0;
-    o->blend_AC = 0;
-    o->flags_4 |= 8;
+    actor->frameFrac_1C = 0;
+    actor->blend_AC = 0;
+    actor->flags_4 |= 8;
     if (a3)
     {
-        o->flags_4 |= 0x10;
+        actor->flags_4 |= 0x10;
     }
 }
 // Matched
@@ -2317,25 +2317,25 @@ int IsActorAnimLoadIdle_8001D8A8(Actor* p)
     return p->animLoadState_10 == 0;
 }
 // Matched
-void RequestActorAnim_8001D8B4(Actor* a0, int a1)
+void RequestActorAnim_8001D8B4(Actor* actor, int idx)
 {
-    if (a0->anims_148[a1].kind_1 == 0)
+    if (actor->anims_148[idx].kind_1 == 0)
     {
-        if (RequestModelAnim_8002032C(a0->modelRef_16, a0->task_0->field_4, a0->anims_148[a1].id_0))
+        if (RequestModelAnim_8002032C(actor->modelRef_16, actor->task_0->field_4, actor->anims_148[idx].id_0))
         {
-            a0->animLoading_14 = a1;
-            a0->animLoadState_10 = 2;
+            actor->animLoading_14 = idx;
+            actor->animLoadState_10 = 2;
         }
     }
 }
 // Matched
-void ReleaseActorAnim_8001D92C(Actor* obj, int idx)
+void ReleaseActorAnim_8001D92C(Actor* actor, int idx)
 {
     ActorAnim* e;
     int i;
     int key;
     int n;
-    e = obj->anims_148;
+    e = actor->anims_148;
     key = e[idx].id_0;
     n = ((int*)e)[-1];
     for (i = 0; i < n; i++)
@@ -2346,7 +2346,7 @@ void ReleaseActorAnim_8001D92C(Actor* obj, int idx)
         }
         e++;
     }
-    ReleaseModelAnim_800203B0(obj->modelRef_16, obj->task_0->field_4, key);
+    ReleaseModelAnim_800203B0(actor->modelRef_16, actor->task_0->field_4, key);
 }
 // Matched
 void SkipActorAnimToEnd_8001D9B0(Actor* p)
@@ -2359,21 +2359,21 @@ void SkipActorAnimToEnd_8001D9B0(Actor* p)
     }
 }
 // Matched
-void sub_8001D9E4(Actor* p, int a1, int a2)
+void sub_8001D9E4(Actor* p, int div, int flags)
 {
     p->fade_20 = 0;
-    p->fadeDiv_22 = a1;
+    p->fadeDiv_22 = div;
     p->flags_4 |= 0x20;
-    p->flags_4 |= a2;
+    p->flags_4 |= flags;
     p->flags_4 &= ~0x40;
 }
 // Matched
-void sub_8001DA08(Actor* p, int a1, int a2)
+void sub_8001DA08(Actor* p, int div, int flags)
 {
     p->fade_20 = 0;
-    p->fadeDiv_22 = a1;
+    p->fadeDiv_22 = div;
     p->flags_4 |= 0x40;
-    p->flags_4 |= a2;
+    p->flags_4 |= flags;
     p->flags_4 &= ~0x20;
 }
 // Matched
@@ -2406,12 +2406,12 @@ void StartActorScale_8001DA4C(Actor* p, int div, int from, int to)
     }
 }
 // Matched
-void SetActorTint_8001DAAC(Actor* o, int a1)
+void SetActorTint_8001DAAC(Actor* o, int tint)
 {
-    if (a1 != 0)
+    if (tint != 0)
     {
         o->flags_4 |= 0x800;
-        TintVramImage_800292D0(&o->image_150, o->clut_158, a1);
+        TintVramImage_800292D0(&o->image_150, o->clut_158, tint);
     }
     else
     {
@@ -2419,14 +2419,14 @@ void SetActorTint_8001DAAC(Actor* o, int a1)
     }
 }
 // Matched
-void SetActorTurnTarget_8001DB00(Actor* o, int* v, int a2)
+void SetActorTurnTarget_8001DB00(Actor* o, int* target, int step)
 {
-    if (v != 0)
+    if (target != 0)
     {
-        o->target_70.vx = v[0];
-        o->target_70.vy = v[1];
-        o->target_70.vz = v[2];
-        o->target_70.pad = a2;
+        o->target_70.vx = target[0];
+        o->target_70.vy = target[1];
+        o->target_70.vz = target[2];
+        o->target_70.pad = step;
         o->flags_4 |= 0x4000000;
     }
     else
@@ -2435,11 +2435,11 @@ void SetActorTurnTarget_8001DB00(Actor* o, int* v, int a2)
     }
 }
 // Matched
-void SetActorSpeedScale_8001DB58(Actor* p, int a1, int a2)
+void SetActorSpeedScale_8001DB58(Actor* p, int scale, int on)
 {
-    if (a2)
+    if (on)
     {
-        p->speedScale_8C = a1;
+        p->speedScale_8C = scale;
         p->flags_4 |= 0x20000000;
     }
     else
@@ -2473,17 +2473,17 @@ void SetActorScript_8001DB98(Actor* o, unsigned char* s)
 #endif
 INCLUDE_ASM(SetActorScript_8001DB98);
 // Matched
-void StartActorScript_8001DC34(void* p, void* s)
+void StartActorScript_8001DC34(void* actor, void* script)
 {
-    SetActorScript_8001DB98(p, s);
-    sub_8001EA48(p);
+    SetActorScript_8001DB98(actor, script);
+    sub_8001EA48(actor);
 }
 // Matched
-int ApproachActorTarget_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
+int ApproachActorTarget_8001DC60(Actor* actor, VECTOR* target, int turnStep, int range)
 {
     unsigned int dist;
-    int x = p->pos_38[2];
-    int y = p->prevPos_44[2];
+    int x = actor->pos_38[2];
+    int y = actor->prevPos_44[2];
     int d;
     int t;
     dist = 0xFFF;
@@ -2495,7 +2495,7 @@ int ApproachActorTarget_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
     {
         d = y - x;
     }
-    if (IsWithinDistance_8003B740(p->pos_38, a1, &dist))
+    if (IsWithinDistance_8003B740(actor->pos_38, target, &dist))
     {
         if (dist < d * d)
         {
@@ -2505,16 +2505,16 @@ int ApproachActorTarget_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
     t = d + 0x32;
     if (dist < t * t)
     {
-        if (IsActorNear_8001DFC8(p, a1, a3, 1))
+        if (IsActorNear_8001DFC8(actor, target, range, 1))
         {
             return 1;
         }
     }
-    TurnActorTowards_8001DDFC(p, a1, a2);
+    TurnActorTowards_8001DDFC(actor, target, turnStep);
     return 0;
 }
 // Matched
-int TurnActorBy_8001DD44(Actor* o, int mode, int a, int b)
+int TurnActorBy_8001DD44(Actor* o, int dir, int a, int b)
 {
     int m;
     int r;
@@ -2523,7 +2523,7 @@ int TurnActorBy_8001DD44(Actor* o, int mode, int a, int b)
     {
         m = b;
     }
-    if (mode == 1)
+    if (dir == 1)
     {
         o->turn_194.input_8 = m;
     }
@@ -2690,10 +2690,10 @@ int sub_8001E1DC(Actor* p)
     return 1;
 }
 // Matched
-int StartActorAction_8001E254(Actor* p, void* desc)
+int StartActorAction_8001E254(Actor* actor, void* desc)
 {
-    p->flags_4 = (p->flags_4 & 0xFFFDFFFF) | 0x600000;
-    return SetActorAction_8001E34C(p, desc);
+    actor->flags_4 = (actor->flags_4 & 0xFFFDFFFF) | 0x600000;
+    return SetActorAction_8001E34C(actor, desc);
 }
 // Matched
 void TriggerActorEffect_8001E28C(Actor* o)
@@ -2720,177 +2720,177 @@ void TriggerActorEffect_8001E28C(Actor* o)
     }
 }
 // Matched
-int SetActorAction_8001E34C(Actor* o, ActorActionDesc* d)
+int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* d)
 {
     int r;
     int f;
     int g;
-    o->flags_D4 = d->flags_0;
-    o->fE0 = d->turnStep_C;
-    o->effectMask_E8 = d->effectMask_14;
-    o->effectKinds_EC = d->effectKinds_18;
-    o->loopCount_F4 = d->loopCount_20;
-    o->scaleTarget_F6 = d->scaleTarget_22;
-    o->fFC = d->field_28;
-    o->queuedAnim_FE = d->queuedAnim_2A;
-    o->fE0 = d->turnStep_C;
-    o->f100 = d->field_2C;
+    actor->flags_D4 = d->flags_0;
+    actor->fE0 = d->turnStep_C;
+    actor->effectMask_E8 = d->effectMask_14;
+    actor->effectKinds_EC = d->effectKinds_18;
+    actor->loopCount_F4 = d->loopCount_20;
+    actor->scaleTarget_F6 = d->scaleTarget_22;
+    actor->fFC = d->field_28;
+    actor->queuedAnim_FE = d->queuedAnim_2A;
+    actor->fE0 = d->turnStep_C;
+    actor->f100 = d->field_2C;
     r = 0;
     if (d->script_4)
     {
-        StartActorScript_8001DC34(o, d->script_4);
+        StartActorScript_8001DC34(actor, d->script_4);
     }
     if (d->hitAnim_E >= 0)
     {
-        r = sub_8001F268(o, o->hitTimes_108, (int)o->script_D0, d->hitAnim_E);
+        r = sub_8001F268(actor, actor->hitTimes_108, (int)actor->script_D0, d->hitAnim_E);
     }
     f = d->effect_10;
     if (f >= 0)
     {
-        o->effect_130 = f;
+        actor->effect_130 = f;
         RequestEffect_800148F4(f);
     }
     if (d->target_8)
     {
-        o->pathTarget_DC = d->target_8;
-        o->target_70.vx = d->target_8[0];
-        o->target_70.vy = d->target_8[1];
-        o->target_70.vz = d->target_8[2];
+        actor->pathTarget_DC = d->target_8;
+        actor->target_70.vx = d->target_8[0];
+        actor->target_70.vy = d->target_8[1];
+        actor->target_70.vz = d->target_8[2];
         f = d->turnStep_C;
-        o->flags_4 |= 0x80000;
-        o->target_70.pad = f;
+        actor->flags_4 |= 0x80000;
+        actor->target_70.pad = f;
         if (d->nextAnim_24 >= 0)
         {
-            o->nextAnim_A4 = d->nextAnim_24;
-            StartActorScript_8001DC34(o, moveToScript_8007D95C);
+            actor->nextAnim_A4 = d->nextAnim_24;
+            StartActorScript_8001DC34(actor, moveToScript_8007D95C);
         }
         else
         {
-            o->nextAnim_A4 = d->nextAnim_26;
-            StartActorScript_8001DC34(o, moveToScriptAlt_8007D980);
+            actor->nextAnim_A4 = d->nextAnim_26;
+            StartActorScript_8001DC34(actor, moveToScriptAlt_8007D980);
         }
     }
     if (d->path_30)
     {
-        o->pathStep_98 = 0;
-        o->flags_4 |= 0x2000000;
-        o->path_160 = d->path_30;
+        actor->pathStep_98 = 0;
+        actor->flags_4 |= 0x2000000;
+        actor->path_160 = d->path_30;
     }
     if (d->queuedAnim_2A >= 0)
     {
-        o->nextAnim_A4 = d->field_28;
-        o->startMode_A8 = d->turnStep_C;
-        StartActorScript_8001DC34(o, playQueuedAnimScript_8007D9C0);
+        actor->nextAnim_A4 = d->field_28;
+        actor->startMode_A8 = d->turnStep_C;
+        StartActorScript_8001DC34(actor, playQueuedAnimScript_8007D9C0);
     }
     else if (d->field_28 >= 0)
     {
-        o->nextAnim_A4 = d->field_28;
-        o->startMode_A8 = d->turnStep_C;
-        StartActorScript_8001DC34(o, playAnimScript_8007D9A4);
+        actor->nextAnim_A4 = d->field_28;
+        actor->startMode_A8 = d->turnStep_C;
+        StartActorScript_8001DC34(actor, playAnimScript_8007D9A4);
     }
-    g = o->flags_4;
+    g = actor->flags_4;
     if (d->field_1C)
     {
         g |= 0x800000;
     }
-    o->flags_4 = g;
+    actor->flags_4 = g;
     return r;
 }
 #if 0
 // Not matched (18 lines): the original keeps the 0x9C..0xA4 and 0x130/0x15C stores after the 0xA8..0xCE block (with a
 // register copy of the anim index for 0xA4), here they are scheduled right after the d->animIdx_20 load. Tried: separate
 // anim variable, reading d->animIdx_20 directly / late, chained assignments, 0xA4 from f / 0x9C
-void InitActor_8001E574(Actor* o, ActorDesc* d)
+void InitActor_8001E574(Actor* actor, ActorDesc* desc)
 {
     Model* m;
     int v;
     int f;
-    if (d->modelId_0 >= 0)
+    if (desc->modelId_0 >= 0)
     {
-        m = AcquireLoaderModel_80020734(d->modelId_0);
+        m = AcquireLoaderModel_80020734(desc->modelId_0);
     }
     else
     {
-        m = d->model_48;
+        m = desc->model_48;
     }
     v = AddModelAnimRef_800201EC(m);
-    o->flags_4 = 0x40000;
-    f = o->flags_4;
-    if (d->visible_30 != 1)
+    actor->flags_4 = 0x40000;
+    f = actor->flags_4;
+    if (desc->visible_30 != 1)
     {
         f |= 0x2000;
     }
-    o->flags_4 = f;
-    if (d->kind_4 == 2)
+    actor->flags_4 = f;
+    if (desc->kind_4 == 2)
     {
         f |= 0x1000;
-        o->flags_4 = f;
+        actor->flags_4 = f;
     }
-    o->drawMode_8 = 0;
-    o->kind_C = d->kind_4;
-    o->animLoadState_10 = 0;
-    o->animRequest_12 = -1;
-    o->animLoading_14 = -1;
-    o->modelRef_16 = v;
-    o->loopFrame_18 = 0;
-    o->endFrame_1A = 0;
-    o->frameFrac_1C = 0;
-    o->frameSpeed_1E = *(short*)&d->frameSpeed_28;
-    o->scale_26 = 0x1000;
-    o->fade_20 = 0;
-    o->fadeDiv_22 = 0;
-    o->scaleStep_28 = 0;
-    o->scaleTarget_2A = 0x1000;
-    o->blendDiv_24 = *(short*)&d->blendDiv_2C;
-    o->prevPos_44[0] = o->basePos_50[0] = o->pos_38[0] = d->pos_8[0];
-    o->prevPos_44[1] = o->basePos_50[1] = o->pos_38[1] = d->pos_8[1];
-    o->prevPos_44[2] = o->basePos_50[2] = o->pos_38[2] = d->pos_8[2];
-    o->rot_5C[0] = d->rot_14[0];
-    o->rot_5C[1] = d->rot_14[1];
-    o->rot_5C[2] = d->rot_14[2];
-    o->animDelta_64[0] = 0;
-    o->animDelta_64[1] = 0;
-    o->animDelta_64[2] = 0;
-    o->ground_80 = 0;
-    o->prevGround_84 = 0;
-    o->f88 = 0;
-    o->speedScale_8C = 0x1000;
-    o->frame_90 = 0;
-    o->prevFrame_94 = 0;
-    o->pathStep_98 = 0;
-    f = d->animIdx_20;
-    o->startMode_A8 = -1;
-    o->blend_AC = 0;
-    o->waitCount_B0 = 0;
-    o->fB4 = 0;
-    o->fB8 = 0;
-    o->scriptPos_C4 = 0;
-    o->scriptLen_C6 = 0;
-    o->wait_C8 = 0;
-    o->waitLen_CA = 0;
-    o->fCC = -1;
-    o->fCE = -1;
-    o->anim_9C = f;
-    o->prevAnim_A0 = f;
-    o->nextAnim_A4 = o->prevAnim_A0;
-    o->animIdx_C2 = o->prevAnimIdx_C0 = *(short*)&o->anim_9C;
-    o->effect_130 = -1;
-    o->model_15C = m;
-    o->image_150.x = actorImageRect_8007DC8C[0];
-    o->image_150.y = actorImageRect_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
-    o->image_150.w = actorImageRect_8007DC8C[2];
-    o->image_150.h = actorImageRect_8007DC8C[3];
-    o->clut_158[0] = actorClutPos_8007DC94[0];
-    o->clut_158[1] = actorClutPos_8007DC94[1] + *(short*)&d->clutRow_1C;
-    o->path_160 = 0;
-    AllocActorBones_8001E7F0(o, d);
-    FirFilterInit_8001450C(o->turnFilterBuf_1A4, &o->turn_194, dword_800795A0, 8);
-    SetActorAnim_8001D760(o, d->animIdx_20, d->frame_24, 0);
+    actor->drawMode_8 = 0;
+    actor->kind_C = desc->kind_4;
+    actor->animLoadState_10 = 0;
+    actor->animRequest_12 = -1;
+    actor->animLoading_14 = -1;
+    actor->modelRef_16 = v;
+    actor->loopFrame_18 = 0;
+    actor->endFrame_1A = 0;
+    actor->frameFrac_1C = 0;
+    actor->frameSpeed_1E = *(short*)&desc->frameSpeed_28;
+    actor->scale_26 = 0x1000;
+    actor->fade_20 = 0;
+    actor->fadeDiv_22 = 0;
+    actor->scaleStep_28 = 0;
+    actor->scaleTarget_2A = 0x1000;
+    actor->blendDiv_24 = *(short*)&desc->blendDiv_2C;
+    actor->prevPos_44[0] = actor->basePos_50[0] = actor->pos_38[0] = desc->pos_8[0];
+    actor->prevPos_44[1] = actor->basePos_50[1] = actor->pos_38[1] = desc->pos_8[1];
+    actor->prevPos_44[2] = actor->basePos_50[2] = actor->pos_38[2] = desc->pos_8[2];
+    actor->rot_5C[0] = desc->rot_14[0];
+    actor->rot_5C[1] = desc->rot_14[1];
+    actor->rot_5C[2] = desc->rot_14[2];
+    actor->animDelta_64[0] = 0;
+    actor->animDelta_64[1] = 0;
+    actor->animDelta_64[2] = 0;
+    actor->ground_80 = 0;
+    actor->prevGround_84 = 0;
+    actor->f88 = 0;
+    actor->speedScale_8C = 0x1000;
+    actor->frame_90 = 0;
+    actor->prevFrame_94 = 0;
+    actor->pathStep_98 = 0;
+    f = desc->animIdx_20;
+    actor->startMode_A8 = -1;
+    actor->blend_AC = 0;
+    actor->waitCount_B0 = 0;
+    actor->fB4 = 0;
+    actor->fB8 = 0;
+    actor->scriptPos_C4 = 0;
+    actor->scriptLen_C6 = 0;
+    actor->wait_C8 = 0;
+    actor->waitLen_CA = 0;
+    actor->fCC = -1;
+    actor->fCE = -1;
+    actor->anim_9C = f;
+    actor->prevAnim_A0 = f;
+    actor->nextAnim_A4 = actor->prevAnim_A0;
+    actor->animIdx_C2 = actor->prevAnimIdx_C0 = *(short*)&actor->anim_9C;
+    actor->effect_130 = -1;
+    actor->model_15C = m;
+    actor->image_150.x = actorImageRect_8007DC8C[0];
+    actor->image_150.y = actorImageRect_8007DC8C[1] + m->list_0->vram_C[m->slot_30].reloc_4[5];
+    actor->image_150.w = actorImageRect_8007DC8C[2];
+    actor->image_150.h = actorImageRect_8007DC8C[3];
+    actor->clut_158[0] = actorClutPos_8007DC94[0];
+    actor->clut_158[1] = actorClutPos_8007DC94[1] + *(short*)&desc->clutRow_1C;
+    actor->path_160 = 0;
+    AllocActorBones_8001E7F0(actor, desc);
+    FirFilterInit_8001450C(actor->turnFilterBuf_1A4, &actor->turn_194, dword_800795A0, 8);
+    SetActorAnim_8001D760(actor, desc->animIdx_20, desc->frame_24, 0);
 }
 #endif
 INCLUDE_ASM(InitActor_8001E574);
 // Matched
-void AllocActorBones_8001E7F0(Actor* o, ActorDesc* d)
+void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc)
 {
     short* p;
     int n;
@@ -2900,7 +2900,7 @@ void AllocActorBones_8001E7F0(Actor* o, ActorDesc* d)
     SVECTOR* src;
     int sz0;
     int sz1;
-    p = d->bones_34;
+    p = desc->bones_34;
     n = 0;
     while (p[n * 4] != -1)
     {
@@ -2911,62 +2911,62 @@ void AllocActorBones_8001E7F0(Actor* o, ActorDesc* d)
     size = sz0;
     size += sz1;
     size += n * 12;
-    if (d->hasMatrices_4C)
+    if (desc->hasMatrices_4C)
     {
         size += n * 32;
     }
     mem = ListAlloc_8003FDC0(actorHeap_80091990, size);
-    o->bones_134 = (short*)mem;
-    MemCopy_800403E8(mem, d->bones_34, sz0);
-    o->baseScale_138[0] = d->baseScale_38[0];
-    o->baseScale_138[1] = d->baseScale_38[1];
-    o->baseScale_138[2] = d->baseScale_38[2];
+    actor->bones_134 = (short*)mem;
+    MemCopy_800403E8(mem, desc->bones_34, sz0);
+    actor->baseScale_138[0] = desc->baseScale_38[0];
+    actor->baseScale_138[1] = desc->baseScale_38[1];
+    actor->baseScale_138[2] = desc->baseScale_38[2];
     mem += sz0;
     {
         SVECTOR def = {0x1000, 0x1000, 0x1000, 0};
-        o->boneScale_144 = (SVECTOR*)mem;
+        actor->boneScale_144 = (SVECTOR*)mem;
         mem += sz1;
-        o->flags_4 |= 0x8000000;
+        actor->flags_4 |= 0x8000000;
         for (i = 0; i < n; i++)
         {
-            if (d->boneScale_3C)
+            if (desc->boneScale_3C)
             {
-                src = &d->boneScale_3C[i];
+                src = &desc->boneScale_3C[i];
             }
             else
             {
                 src = &def;
             }
-            o->boneScale_144[i].vx = src->vx;
-            o->boneScale_144[i].vy = src->vy;
-            o->boneScale_144[i].vz = src->vz;
-            o->boneScale_144[i].pad = src->pad;
+            actor->boneScale_144[i].vx = src->vx;
+            actor->boneScale_144[i].vy = src->vy;
+            actor->boneScale_144[i].vz = src->vz;
+            actor->boneScale_144[i].pad = src->pad;
         }
     }
-    o->anims_148 = d->anims_40;
-    o->effectTbl_14C = d->effectTbl_44;
-    o->bonePos_1C4 = (int*)mem;
+    actor->anims_148 = desc->anims_40;
+    actor->effectTbl_14C = desc->effectTbl_44;
+    actor->bonePos_1C4 = (int*)mem;
     mem += n * 12;
-    if (d->hasMatrices_4C)
+    if (desc->hasMatrices_4C)
     {
-        o->boneMatrices_1C8 = (MATRIX*)mem;
-        o->flags_4 |= 0x10000000;
+        actor->boneMatrices_1C8 = (MATRIX*)mem;
+        actor->flags_4 |= 0x10000000;
     }
     else
     {
-        o->boneMatrices_1C8 = 0;
+        actor->boneMatrices_1C8 = 0;
     }
 }
 // Matched
-void FreeActorBones_8001EA00(Actor* p)
+void FreeActorBones_8001EA00(Actor* actor)
 {
-    int v = (int)p->bones_134;
+    int v = (int)actor->bones_134;
     ListFree_8003FE38(actorHeap_80091990, (void*)v);
 }
 // Matched
-void UpdateActorScript_8001EA28(void* arg0)
+void UpdateActorScript_8001EA28(void* actor)
 {
-    sub_8001EA48(arg0);
+    sub_8001EA48(actor);
 }
 
 int primBufferStart_800960A0[2] BSS = { 0 };
