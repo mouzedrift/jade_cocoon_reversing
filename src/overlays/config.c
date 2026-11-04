@@ -40,7 +40,7 @@ typedef struct CfgHolderConfig
     char pad_0[0x10];
     CfgTaskConfig t_10;
 } CfgHolderConfig;
-extern CfgHolderConfig* dword_8008B4B8;
+extern CfgHolderConfig* configTask_8008B4B8;
 extern void DrawTextLinesWindow_8002AE38(void* a0, void* a1, int a2, void* a3, int a4);
 extern int IsConfirmPressedP1_8003D380(int a);
 extern int IsCancelPressedP1_8003D41C(int a);
@@ -114,7 +114,7 @@ const char aSelect_800C2C5C[] = "\202r\202\205\202\214\202\205\202\203\202\224";
 // Matched
 void StartConfigMenu_800C2EB4(void)
 {
-    CfgHolderConfig* h = dword_8008B4B8;
+    CfgHolderConfig* h = configTask_8008B4B8;
     CfgTaskConfig* t = &h->t_10;
     CfgCtxConfig* c = t->ctx_14;
     h->t_10.flags_0 = (h->t_10.flags_0 | 1) & 0xFFFF7FFF;
@@ -348,7 +348,7 @@ void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
         {
             if (IsConfirmPressedP1_8003D380(1))
             {
-                dword_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
+                configTask_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
                 c->editing_38 = 1;
             }
             else if (IsCancelPressedP1_8003D41C(1))
@@ -366,19 +366,19 @@ void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
             {
                 if (c->subtitles_14 == 0 && (unsigned short)(c->cursorPos_44 - 2) < 2)
                 {
-                    dword_8008B4B8->t_10.next_8 = ConfigNoticeTask_800C4B34;
+                    configTask_8008B4B8->t_10.next_8 = ConfigNoticeTask_800C4B34;
                     c->notice_30 = 1;
                     PlaySfx_80031494(0x7C);
                 }
                 else if (c->speech_11 == 0 && c->cursorPos_44 == 3)
                 {
-                    dword_8008B4B8->t_10.next_8 = ConfigNoticeTask_800C4B34;
+                    configTask_8008B4B8->t_10.next_8 = ConfigNoticeTask_800C4B34;
                     c->notice_30 = 2;
                     PlaySfx_80031494(0x7C);
                 }
                 else
                 {
-                    dword_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
+                    configTask_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
                     c->editing_38 = 1;
                     PlaySfx_80031494(0x7E);
                 }
@@ -412,7 +412,7 @@ void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
         {
             if (IsConfirmPressedP1_8003D380(1))
             {
-                dword_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
+                configTask_8008B4B8->t_10.next_8 = EditConfigSettingTask_800C45E8;
                 c->editing_38 = 1;
             }
             else if (IsCancelPressedP1_8003D41C(1))

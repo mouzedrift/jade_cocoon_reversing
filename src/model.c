@@ -2790,7 +2790,7 @@ void GetModelFtg_800251A0(void* dst, Model* src, int a2, int idx)
     MemCopy_800403E8(dst, &src->ftg_50[idx], sizeof(FtgObject));
 }
 // Matched
-void nullsub_4(void)
+void EmptyCallback_800251DC(void)
 {
 }
 // Matched
@@ -3835,15 +3835,15 @@ void InitMapState_80026FAC(void)
     dword_80091C8C = 0;
     savedLevantPos_80091C78.mapIdx = -1;
     mapStartMode_80091C54 = gameStartMode_800B1DC8;
-    word_80091CB8[7] = -1;
-    word_80091CB8[6] = -1;
-    word_80091CB8[5] = -1;
-    word_80091CB8[4] = -1;
-    word_80091CB8[3] = -1;
-    word_80091CB8[2] = -1;
-    word_80091CB8[1] = -1;
+    areaLoadIds_80091CB8[7] = -1;
+    areaLoadIds_80091CB8[6] = -1;
+    areaLoadIds_80091CB8[5] = -1;
+    areaLoadIds_80091CB8[4] = -1;
+    areaLoadIds_80091CB8[3] = -1;
+    areaLoadIds_80091CB8[2] = -1;
+    areaLoadIds_80091CB8[1] = -1;
     areaPreload_80091C40[0] = -1;
-    word_80091CB8[0] = -1;
+    areaLoadIds_80091CB8[0] = -1;
     areaPreload_80091C40[1] = -1;
     areaPreloading_80082678 = 0;
     InitActors_8001D378();
@@ -3860,15 +3860,15 @@ extern void ClearEnemySlots_800A1794(void);
 // Matched
 void UnloadMap_80027118(void)
 {
-    word_80091CB8[7] = -1;
-    word_80091CB8[6] = -1;
-    word_80091CB8[5] = -1;
-    word_80091CB8[4] = -1;
-    word_80091CB8[3] = -1;
-    word_80091CB8[2] = -1;
-    word_80091CB8[1] = -1;
+    areaLoadIds_80091CB8[7] = -1;
+    areaLoadIds_80091CB8[6] = -1;
+    areaLoadIds_80091CB8[5] = -1;
+    areaLoadIds_80091CB8[4] = -1;
+    areaLoadIds_80091CB8[3] = -1;
+    areaLoadIds_80091CB8[2] = -1;
+    areaLoadIds_80091CB8[1] = -1;
     areaPreload_80091C40[0] = -1;
-    word_80091CB8[0] = -1;
+    areaLoadIds_80091CB8[0] = -1;
     areaPreload_80091C40[1] = -1;
     CancelAreaPreload_8002741C();
     areaPreloading_80082678 = 0;
@@ -4487,8 +4487,8 @@ void AreaLoaderTask_800283C0(void* a0, int* state)
                 req2.callback_1C = OnRoomDataLoaded_80028C60;
                 st[1] = QueueFileRequest_8003BC84(&req2);
             }
-            word_80091CB8[7] = saveData_8008B570.mapId_2E4[3].field_0;
-            word_80091CB8[6] = saveData_8008B570.mapId_2E4[3].field_0;
+            areaLoadIds_80091CB8[7] = saveData_8008B570.mapId_2E4[3].field_0;
+            areaLoadIds_80091CB8[6] = saveData_8008B570.mapId_2E4[3].field_0;
             saveData_8008B570.mapId_2E4[3].field_2 = saveData_8008B570.mapId_2E4[3].field_0;
             if (wait)
             {
@@ -4501,17 +4501,17 @@ void AreaLoaderTask_800283C0(void* a0, int* state)
             }
             break;
         }
-        if (word_80091CB8[6] != word_80091CB8[7])
+        if (areaLoadIds_80091CB8[6] != areaLoadIds_80091CB8[7])
         {
             req3.flags_0 = 0x450;
             req3.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-            req3.offset_8 = mapAreas_80082674[word_80091CB8[6] * 3];
+            req3.offset_8 = mapAreas_80082674[areaLoadIds_80091CB8[6] * 3];
             req3.size_C = 0;
             req3.dest_10 = 0;
             req3.params_14 = 0;
             req3.paramsSize_18 = 0;
             req3.callback_1C = 0;
-            word_80091CB8[7] = word_80091CB8[6];
+            areaLoadIds_80091CB8[7] = areaLoadIds_80091CB8[6];
             st[1] = QueueFileRequest_8003BC84(&req3);
             st[0] = 2;
         }

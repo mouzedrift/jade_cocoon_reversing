@@ -8,7 +8,7 @@
 
 
 // a battle command (same layout as BATTLE.BIN's BatCmd_a)
-extern EventNode* dword_8008B564;
+extern EventNode* enemyWindowTasks_8008B564;
 extern int sideSlot_800A4078[2];
 extern unsigned char sideResult_800A3A98[2];
 extern void DestroySlotActor_800A0D1C(int);
@@ -1397,7 +1397,7 @@ int AreSideModelsReady_800A758C()
 
 void OpenSideWindow_800A75F8(int side)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B564);
+    EventEntry* e = AllocEventEntry_80043AF8(enemyWindowTasks_8008B564);
     CombBtlObj* p;
     if (e)
     {
@@ -1545,7 +1545,7 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
 
 void CloseSideWindows_800A7BE4()
 {
-    StopAllEventEntries_80043B40(dword_8008B564);
+    StopAllEventEntries_80043B40(enemyWindowTasks_8008B564);
 }
 
 extern unsigned char player2Pad_800A38D8;
@@ -1682,14 +1682,14 @@ void SetAnnouncerXa_800A8078(short a0, short a1, short a2)
     pendingXa_800A82E0[3] = a2;
 }
 
-extern EventNode* dword_8008D458;
+extern EventNode* announcerTasks_8008D458;
 extern unsigned int combatFlags_800A3A88;
 extern int OpenAnnouncerWindow_800A5408();
 extern void AnnouncerTask_800A816C();
 
 int StartAnnouncer_800A8098(int which, int lines, int side)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D458);
+    EventEntry* e = AllocEventEntry_80043AF8(announcerTasks_8008D458);
     if (e)
     {
         e->cb_8 = (EventEntryFn)AnnouncerTask_800A816C;

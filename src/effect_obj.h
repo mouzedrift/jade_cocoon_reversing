@@ -12,13 +12,13 @@
 typedef struct
 {
     struct_4s hitTimes_0[10]; // RepeatHitTimes_80018200's output
-    unsigned int flags_28; // 1: start, 2: file freed, 4: load requested, 8: sub_80018460
+    unsigned int flags_28; // 1: start, 2: file freed, 4: load requested, 8: SetEffectFlag8_80018460
     int state_2C;          // UpdateEffectTask_80014638: 0 idle, 1 loading, 2 loaded, 3 running
     int pad_30[2];
     int idx_38;            // effect file index (RequestEffect_800148F4)
     int timer_3C;
     short hitVariant_40;      // SetHitVariant_80018430; copied to EffectObj.hitVariant_A5
-    short field_42;
+    short hitParam_42;        // SetHitParam_80018448; copied to EffectObj.hitParam_A6 (never read)
     unsigned char hitFlags_44[12]; // per target slot (SetTargetHitFlag_800184A0); EffectTarget.hitFlags_34
 } EffectTaskState;
 
@@ -54,7 +54,7 @@ typedef struct EffectObj
     int* scale_A0; // scale (or 0)
     char field_A4;
     signed char hitVariant_A5; // EffectTaskState.hitVariant_40 (sprite choice for some kinds)
-    short field_A6;
+    short hitParam_A6;         // EffectTaskState.hitParam_42
     unsigned char rgb_A8[4];
     int hitFlags_AC; // EffectTarget.hitFlags_34
 } EffectObj;

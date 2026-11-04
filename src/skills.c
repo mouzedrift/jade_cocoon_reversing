@@ -24,7 +24,7 @@ ActionData* GetAbilityAction_800318C8(int idx)
     return &abilityActions_80083594[idx];
 }
 // Matched
-int sub_800318E4(unsigned int idx, int partySlot)
+int CheckMinionSkillStub_800318E4(unsigned int idx, int partySlot)
 {
     Minion* m = GetMinion_80010598(3, partySlot - 1);
     if (m && IsSkillLearned_80031954(&m->skills_DE, idx))

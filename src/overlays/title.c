@@ -719,7 +719,7 @@ void TitleExit_800A1AFC(TitleTaskM* t, int a)
     t->flags_0 &= ~1;
 }
 
-extern EventNode* dword_8008D638;
+extern EventNode* newGameTask_8008D638;
 
 // Matched
 // stops the title menu task and enables newGameTaskDesc_800A2790 (name entry + opening movies)
@@ -727,7 +727,7 @@ void StartNewGameTask_800A1B74(TitleTaskM* t)
 {
     EventEntry* e;
     t->flags_0 &= ~1;
-    e = AllocEventEntry_80043AF8(dword_8008D638);
+    e = AllocEventEntry_80043AF8(newGameTask_8008D638);
     if (e)
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
@@ -888,7 +888,7 @@ extern struct_v3 dword_800B069C; // Levant's start position
 extern int useMapStartPos_80091C94;
 extern SVECTOR dword_800B06A8; // Levant's start rotation
 
-extern int dword_8008B554;
+extern int encounterVariantToggle_8008B554;
 #define SDECL SaveData* s = &saveData_8008B570
 
 // Matched
@@ -1109,7 +1109,7 @@ void StoreAllPartyMinions_800A24E0(void)
 
 void InitFlagTables_800A2540(void)
 {
-    dword_8008B554 = 1;
+    encounterVariantToggle_8008B554 = 1;
     FILL(tbl_838, 12)
     FILL(tbl_850, 18)
     FILL(tbl_874, 44)
@@ -1161,7 +1161,7 @@ UnitStatus levantInitStatus_800A2730 = {
     1,
 };
 int titleMenuTaskDesc_800A2778[6] = { 1, 5, 52, 0, (int)TitleInit_800A0F6C, (int)TitleFree_800A10D0 };
-int newGameTaskDesc_800A2790[6] = { 1, 0x8000, 120, 0x8008D638, (int)NewGameInit_800A08C8 };
+int newGameTaskDesc_800A2790[6] = { 1, 0x8000, 120, (int)&newGameTask_8008D638, (int)NewGameInit_800A08C8 };
 int titleSoundTaskDesc_800A27A8[6] = { 1, 5, 64, (int)&soundTask_8008D4A4, (int)InitSoundTask_8002FF10, (int)FreeSoundTask_8003006C };
 int titleTaskList_800A27C0 = (int)&eventDescs_80078EB8;
 void *dword_800A27C4[9] = { (void *)titleMenuTaskDesc_800A2778, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312), (void *)((char *)&eventDescs_80078EB8 + 288), (void *)titleSoundTaskDesc_800A27A8, (void *)newGameTaskDesc_800A2790, (void *)((char *)&eventDescs_80078EB8 + 360), (void *)((char *)&eventDescs_80078EB8 + 264) };

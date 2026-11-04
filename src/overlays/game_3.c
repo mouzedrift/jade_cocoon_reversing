@@ -824,7 +824,7 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
         return;
     if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
         return;
-    if (word_80091CB8[6] != word_80091CB8[7])
+    if (areaLoadIds_80091CB8[6] != areaLoadIds_80091CB8[7])
         return;
     if (IsMapLoading_800272D0())
         return;
@@ -833,7 +833,7 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
     {
         q->f8 = fieldMode_800B0EC0;
         q->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0xb);
-        e = AllocEventEntry_80043AF8(dword_8008D498);
+        e = AllocEventEntry_80043AF8(fieldMenuTask_8008D498);
         e->flags = (e->flags | 1) & ~0x8000;
         q->f0 = 4;
     }
@@ -1520,7 +1520,7 @@ void sub_800A8138()
 
 void InitLevantControl_800A8140()
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     FirFilterInit_8001450C(p->turnBuf_5C, &p->turn_4C, dword_800795C0, 4);
     p->flags_0 = 0;
     p->f9C = 0;
@@ -1869,12 +1869,12 @@ int GetCameraTargetQuadrant_800A8930()
 
 void EnterLevantBattleMode_800A895C()
 {
-    dword_8008B4CC->f24->flags_0 |= 0x41;
+    levantControlTask_8008B4CC->f24->flags_0 |= 0x41;
 }
 
 void ExitLevantBattleMode_800A8984(int victoryPose)
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     p->flags_0 &= ~1;
     p->flags_0 &= ~0x10;
     ExitLevantActorBattle_800AB444(victoryPose, p);
@@ -1882,7 +1882,7 @@ void ExitLevantBattleMode_800A8984(int victoryPose)
 
 void UnlockLevantMovement_800A89C8()
 {
-    dword_8008B4CC->f24->flags_0 &= ~0x40;
+    levantControlTask_8008B4CC->f24->flags_0 &= ~0x40;
 }
 
 void IsLevantIdle_800A89F0()
@@ -1899,7 +1899,7 @@ G2Pair_1 StartLevantAction_800A8A30(int* cmd, int isReaction)
 {
     G2Pair_1 r;
     unsigned int u;
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     if (levantBattleActions_800B1084[cmd[0]].a == 0x10)
     {
         p->state_C6 = 5;
@@ -1950,12 +1950,12 @@ G2Pair_1 StartLevantAction_800A8A30(int* cmd, int isReaction)
 
 int IsLevantReady_800A8BE4()
 {
-    return dword_8008B4CC->f24->state_C6 == 4;
+    return levantControlTask_8008B4CC->f24->state_C6 == 4;
 }
 
 void TriggerLevantAction_800A8C0C()
 {
-    dword_8008B4CC->f24->flags_0 |= 4;
+    levantControlTask_8008B4CC->f24->flags_0 |= 4;
 }
 
 UnitStatus* GetLevantStatus_800A8C34()
@@ -1996,12 +1996,12 @@ void DamageLevantMp_800A8CA0(int a)
 
 void ResetLevantControlState_800A8CF4()
 {
-    dword_8008B4CC->f24->state_C6 = 0;
+    levantControlTask_8008B4CC->f24->state_C6 = 0;
 }
 
 void StartLevantBattle_800A8D0C(int* pos)
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     p->state_C6 = 7;
     p->targetX_A4 = pos[0];
     p->targetY_A8 = pos[1];
@@ -2010,7 +2010,7 @@ void StartLevantBattle_800A8D0C(int* pos)
 
 void TurnLevantToward_800A8D48(int* pos)
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     p->state_C6 = 8;
     p->targetX_A4 = pos[0];
     p->targetY_A8 = pos[1];
@@ -2019,7 +2019,7 @@ void TurnLevantToward_800A8D48(int* pos)
 
 int IsLevantBattleIdle_800A8D84()
 {
-    return dword_8008B4CC->f24->state_C6 == 1;
+    return levantControlTask_8008B4CC->f24->state_C6 == 1;
 }
 
 void IsLevantActionFinished_800A8DAC()
@@ -2039,14 +2039,14 @@ void ResetLevantActorToIdle_800A8DEC()
 
 void HoldLevantControl_800A8E0C()
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     p->state_C6 = 9;
     p->flags_0 |= 0x20;
 }
 
 void ReleaseLevantControl_800A8E38()
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     p->flags_0 &= ~0x20;
     StopLevantScriptMove_800A913C();
     EndLevantPath_800ABAD4();
@@ -2054,7 +2054,7 @@ void ReleaseLevantControl_800A8E38()
 
 int IsLevantControlHeld_800A8E7C()
 {
-    return dword_8008B4CC->f24->state_C6 == 9;
+    return levantControlTask_8008B4CC->f24->state_C6 == 9;
 }
 
 void SkipLevantAnim_800A8EA4()
@@ -2064,7 +2064,7 @@ void SkipLevantAnim_800A8EA4()
 
 void LevantCommand_800A8EC4(G2Cmd_1* c)
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     int b;
     switch (c->kind_4)
     {
@@ -2115,12 +2115,12 @@ void LevantCommand_800A8EC4(G2Cmd_1* c)
 
 int IsLevantCmdDone_800A8FE0()
 {
-    return dword_8008B4CC->f24->state_C6 == 9;
+    return levantControlTask_8008B4CC->f24->state_C6 == 9;
 }
 
 void FinishLevantCommand_800A9008(G2Cmd_1* c)
 {
-    G2Inner* p = dword_8008B4CC->f24;
+    G2Inner* p = levantControlTask_8008B4CC->f24;
     p->flags_0 &= ~0x80;
     switch (c->kind_4)
     {
@@ -2172,7 +2172,7 @@ void FireEventTriggerById_800A911C(int id)
 
 void StopLevantScriptMove_800A913C()
 {
-    dword_8008B4CC->f24->flags_0 |= 0x80;
+    levantControlTask_8008B4CC->f24->flags_0 |= 0x80;
 }
 
 int FindFacingFieldMinion_800A9164(int* out)
@@ -5186,15 +5186,15 @@ int modelLoaderTaskDef_800B0714[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008
 int actorTasksDef_800B072C[6] = { 7, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
 int tileAnimTaskDef_800B0744[6] = { 1, 1, 4, (int)&tileAnimTask_800B1DBC, (int)TileAnimTaskInit_800A09D8 };
 int eventScriptsDef_800B075C[6] = { 10, 0x8000, 0x124, (int)&eventScripts_8008D410 };
-int encounterWatchTaskDef_800B0774[6] = { 1, 5, 16, 0x8008B4D0, (int)EncounterWatchTask_800A1314, (int)FreeBattleResources_800A1444 };
-int battleTaskDef_800B078C[6] = { 1, 0x8000, 16, (int)&dword_8008D624 };
+int encounterWatchTaskDef_800B0774[6] = { 1, 5, 16, (int)&encounterWatchTask_8008B4D0, (int)EncounterWatchTask_800A1314, (int)FreeBattleResources_800A1444 };
+int battleTaskDef_800B078C[6] = { 1, 0x8000, 16, (int)&battleTask_8008D624 };
 int battleMenuTaskDef_800B07A4[6] = { 1, 0x8000, 12, (int)&battleMenuTask_8008D468 };
 int dword_800B07BC[6] = { 1, 0x8000, 0, (int)&dword_8008D444 };
-int enemyWindowsTaskDef_800B07D4[6] = { 1, 0x8000, 48, 0x8008B568 };
-int enemyWindowTaskDef_800B07EC[6] = { 3, 0x8000, 24, (int)&dword_8008B564 };
-int actorWindowTaskDef_800B0804[6] = { 1, 0x8000, 20, (int)&dword_8008D4B0 };
-int helpWindowTaskDef_800B081C[6] = { 1, 0x8000, 20, 0x8008D63C };
-int levantControlTaskDef_800B0834[6] = { 1, 1, 0x9D0, (int)&dword_8008B4CC, (int)LevantControlTask_800A818C };
+int enemyWindowsTaskDef_800B07D4[6] = { 1, 0x8000, 48, (int)&enemyWindowsLayoutTask_8008B568 };
+int enemyWindowTaskDef_800B07EC[6] = { 3, 0x8000, 24, (int)&enemyWindowTasks_8008B564 };
+int actorWindowTaskDef_800B0804[6] = { 1, 0x8000, 20, (int)&actorWindowTask_8008D4B0 };
+int helpWindowTaskDef_800B081C[6] = { 1, 0x8000, 20, (int)&helpWindowTask_8008D63C };
+int levantControlTaskDef_800B0834[6] = { 1, 1, 0x9D0, (int)&levantControlTask_8008B4CC, (int)LevantControlTask_800A818C };
 int dword_800B084C[6] = { 1, 0x8000, 0x2E0, 0x8008D490 };
 int levantActorTaskDef_800B0864[6] = { 1, 5, 0x7C0, (int)&gameTask_8008B4A4, (int)LevantActorTask_800A9564, (int)LevantActorTaskExit_800A955C };
 int encounterTaskDef_800B087C[6] = { 1, 0x8000, 24, (int)&encounterTask_8008D674 };
@@ -5203,11 +5203,11 @@ int dword_800B08AC[6] = { 1, 0x8000, 12, (int)dword_800B1DA8 };
 int eventEntitiesDef_800B08C4[6] = { 25, 0x8000, 148, (int)&eventEntities_8008D400 };
 int prevModeTaskDef_800B08DC[6] = { 1, 1, 4, (int)prevModeTask_800B1DC0, (int)ReturnToPrevGameMode_800A8108 };
 int mapOverlayTaskDef_800B08F4[6] = { 1, 1, 0x100, (int)mapOverlayTask_800B1DA4, (int)StartMapOverlay_800A75F8, 0x800B6F60 };
-int fieldMenuTaskDef_800B090C[6] = { 1, 0x8000, 124, 0x8008D498, 0x800BD40C };
-int shopCtrlTaskDef_800B0924[6] = { 1, 0x8000, 0, (int)&dword_8008D438, 0x800B67C0 };
-int shopMenuTaskDef_800B093C[6] = { 1, 0x8000, 156, (int)&dword_8008D670, 0x800BB444 };
-int shelfMenuTaskDef_800B0954[6] = { 1, 0x8000, 24, (int)&dword_8008D4A8, 0x800B7000 };
-int storeTaskDef_800B096C[6] = { 1, 0x8000, 84, (int)&dword_8008D3E0, 0x800BB1F4 };
+int fieldMenuTaskDef_800B090C[6] = { 1, 0x8000, 124, (int)&fieldMenuTask_8008D498, 0x800BD40C };
+int shopCtrlTaskDef_800B0924[6] = { 1, 0x8000, 0, (int)&shopCtrlTask_8008D438, 0x800B67C0 };
+int shopMenuTaskDef_800B093C[6] = { 1, 0x8000, 156, (int)&shopMenuTask_8008D670, 0x800BB444 };
+int shelfMenuTaskDef_800B0954[6] = { 1, 0x8000, 24, (int)&shelfMenuTask_8008D4A8, 0x800B7000 };
+int storeTaskDef_800B096C[6] = { 1, 0x8000, 84, (int)&storeTask_8008D3E0, 0x800BB1F4 };
 int dword_800B0984[6] = { 1, 0x8000, 0, 0x8008D478 };
 int chapterOverlayTaskDef_800B099C[6] = { 1, 1, 8, (int)chapterOverlayTask_800B1DB0, (int)StartChapterOverlay_800A7690 };
 int sporeTaskDef_800B09B4[6] = { 1, 1, 8, (int)&sporeTask_8008D464, (int)InitSporeTask_80011ADC };
@@ -5235,9 +5235,9 @@ GameLst_1 gameModeFieldTasks_800B0A2C[26] = {
     { &fadeTask_8008D628 },
     { &tileAnimTask_800B1DBC },
     { &cameraTask_8008D4A0 },
-    { (void *)((char *)&dword_8008B4CC + 4) },
+    { (void *)&encounterWatchTask_8008B4D0 },
     { &eventEntities_8008D400 },
-    { (void *)&dword_8008B4CC },
+    { (void *)&levantControlTask_8008B4CC },
     { (void *)&gameTask_8008B4A4 },
     { (void *)&encounterTask_8008D674 },
     { &enemyAiTasks_8008D49C },
@@ -5252,27 +5252,27 @@ GameLst_1 gameModeBattleTasks_800B0AFC[35] = {
     { &overlayLoaderTask_8008D4C0 },
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
     { &fadeTask_8008D628 },
-    { (void *)((char *)&dword_8008B4CC + 4) },
+    { (void *)&encounterWatchTask_8008B4D0 },
     { subOverlayTask_800B1DB4 },
     { &modelTasks_8008D618 },
     { &tileAnimTask_800B1DBC },
     { &cameraTask_8008D4A0 },
-    { (void *)&dword_8008D624 },
-    { (void *)&dword_8008B4C0 },
+    { (void *)&battleTask_8008D624 },
+    { (void *)&actionTask_8008B4C0 },
     { (void *)&battleMenuTask_8008D468 },
     { (void *)&dword_8008D444 },
-    { (void *)&dword_8008D614 },
+    { (void *)&cmdMenuTask_8008D614 },
     { (void *)&messageWindowTask_8008D640 },
     { (void *)((char *)&dword_8008B4AC + 4) },
     { &screenFlashTasks_8008D61C },
-    { (void *)((char *)&dword_8008B564 + 4) },
-    { (void *)&dword_8008B564 },
-    { (void *)&dword_8008D4B0 },
-    { (void *)((char *)&dword_8008D634 + 8) },
+    { (void *)&enemyWindowsLayoutTask_8008B568 },
+    { (void *)&enemyWindowTasks_8008B564 },
+    { (void *)&actorWindowTask_8008D4B0 },
+    { (void *)&helpWindowTask_8008D63C },
     { (void *)&dword_8008B4AC },
     { (void *)&hitNumberTasks_8008D778 },
     { (void *)&vibrationTasks_8008D4B8 },
-    { (void *)&dword_8008B4CC },
+    { (void *)&levantControlTask_8008B4CC },
     { (void *)&gameTask_8008B4A4 },
     { &enemyAiTasks_8008D49C },
     { &actorTasks_8008D43C },
@@ -5290,27 +5290,27 @@ GameLst_1 gameModeBattleEndTasks_800B0C14[4] = {
 };
 GameLst_1 gameModeEquipTasks_800B0C34[3] = {
     { &overlayLoaderTask_8008D4C0 },
-    { (void *)&dword_8008D4C4 },
+    { (void *)&equipTask_8008D4C4 },
 };
 GameLst_1 gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
-    { (void *)((char *)&dword_8008D48C + 12) },
-    { (void *)&dword_8008D4C4 },
-    { (void *)&dword_8008B4B8 },
+    { (void *)&fieldMenuTask_8008D498 },
+    { (void *)&equipTask_8008D4C4 },
+    { (void *)&configTask_8008B4B8 },
     { (void *)&messageWindowTask_8008D640 },
 };
 GameLst_1 gameModeShopTasks_800B0C84[12] = {
     { (void *)((char *)&battleMenuTask_8008D468 + 8) },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
-    { (void *)&dword_8008D438 },
-    { (void *)&dword_8008D670 },
+    { (void *)&shopCtrlTask_8008D438 },
+    { (void *)&shopMenuTask_8008D670 },
     { (void *)((char *)&loadMenuTask_8008D480 + 4) },
     { &modelTasks_8008D618 },
-    { (void *)&dword_8008D3E0 },
+    { (void *)&storeTask_8008D3E0 },
     { &actorTasks_8008D43C },
-    { (void *)&dword_8008D4A8 },
+    { (void *)&shelfMenuTask_8008D4A8 },
     { &fadeTask_8008D628 },
 };
 GameLst_1 gameModeSaveTasks_800B0CE4[4] = {

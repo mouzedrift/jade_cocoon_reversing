@@ -2047,7 +2047,7 @@ int* SelectEncounterSpecies_800A5030(int a, int b, int c)
                 {
                     for (j = 0; j < 3; j++)
                     {
-                        if (ELEM(src[j]) != -1 && dword_8008B554 == 0)
+                        if (ELEM(src[j]) != -1 && encounterVariantToggle_8008B554 == 0)
                         {
                             m = (ELEM(src[j]) + 1) % 4;
                             encounterSpecies_800AEB6C[j] = src[j] * 4 + m + 0x39;
@@ -2058,7 +2058,7 @@ int* SelectEncounterSpecies_800A5030(int a, int b, int c)
                         }
                     }
                     encounterSpecies_800AEB6C[3] = 0xd3;
-                    dword_8008B554 = dword_8008B554 == 0;
+                    encounterVariantToggle_8008B554 = encounterVariantToggle_8008B554 == 0;
                 }
             }
         }

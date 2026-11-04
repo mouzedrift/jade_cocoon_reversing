@@ -304,7 +304,7 @@ void RecoverPartyAfterBattle_800BA97C()
 
 EventEntry* StartBattle_800BA9E4()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D624);
+    EventEntry* e = AllocEventEntry_80043AF8(battleTask_8008D624);
     char buf[0x10];
     int r;
     if (e)
@@ -1156,7 +1156,7 @@ int NeedsStatusReaction_800BC1A8(unsigned int mask)
 
 int StartActionTask_800BC28C()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B4C0);
+    EventEntry* e = AllocEventEntry_80043AF8(actionTask_8008B4C0);
     if (e)
     {
         e->flags = (e->flags | 1) & 0xFFFF7FFF;

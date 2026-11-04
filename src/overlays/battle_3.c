@@ -755,10 +755,10 @@ void StartBattleWindows_800BFB80()
 
 void StopBattleWindows_800BFBB8()
 {
-    StopAllEventEntries_80043B40(dword_8008B568);
-    StopAllEventEntries_80043B40(dword_8008B564);
-    StopAllEventEntries_80043B40(dword_8008D4B0);
-    StopAllEventEntries_80043B40(dword_8008D63C);
+    StopAllEventEntries_80043B40(enemyWindowsLayoutTask_8008B568);
+    StopAllEventEntries_80043B40(enemyWindowTasks_8008B564);
+    StopAllEventEntries_80043B40(actorWindowTask_8008D4B0);
+    StopAllEventEntries_80043B40(helpWindowTask_8008D63C);
 }
 
 void ResetWindowHighlights_800BFC10()
@@ -773,7 +773,7 @@ void ResetWindowHighlights_800BFC10()
 
 void StartEnemyWindows_800BFC40()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008B568);
+    EventEntry* e = AllocEventEntry_80043AF8(enemyWindowsLayoutTask_8008B568);
     int m;
     int n;
     int i;
@@ -795,7 +795,7 @@ void StartEnemyWindows_800BFC40()
             b = m & (1 << (i + 4));
             if (b != 0)
             {
-                e = AllocEventEntry_80043AF8(dword_8008B564);
+                e = AllocEventEntry_80043AF8(enemyWindowTasks_8008B564);
                 if (e)
                 {
                     BatXY_a* pp = (BatXY_a*)((char*)enemyWindowLayouts_800C9140 + ((n - 1) * 12 + i * 4));
@@ -926,7 +926,7 @@ void EnemyWindowTask_800C0074(EventEntry* t, void* arg)
 
 void StartActorWindow_800C01D8()
 {
-    EventEntry* r = AllocEventEntry_80043AF8(dword_8008D4B0);
+    EventEntry* r = AllocEventEntry_80043AF8(actorWindowTask_8008D4B0);
     if (r != 0)
     {
         BatWin_b* p = r->buffer;
@@ -1004,7 +1004,7 @@ void ActorWindowTask_800C0254(EventEntry* t, void* arg)
 
 void StartHelpWindow_800C0440()
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D63C);
+    EventEntry* e = AllocEventEntry_80043AF8(helpWindowTask_8008D63C);
     if (e)
     {
         helpWindowText_800C9D74 = 0;

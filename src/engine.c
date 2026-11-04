@@ -88,7 +88,7 @@ MinionModelDesc* GetSpeciesModelDesc_80019C70(int idx)
     return &speciesModelDescs_8007BD30[idx];
 }
 // Matched
-int sub_80019C84(void)
+int PickArpatronOrVatolka_80019C84(void)
 {
     int v = 0x24;
     int c = minionVariantSeed_8008D4DC & 0xFF;
@@ -639,7 +639,8 @@ int CountMagicBits_8001AE54(unsigned int* bits)
     return n;
 }
 // Matched
-void nullsub_3(void)
+// called by MENU's OnMinionLevelUp_800BCF74 with the minion's dominant species, status and magic bits
+void MinionLevelUpHook_8001AEB8(int species, UnitStatus* status, int magicBits)
 {
 }
 // Matched
@@ -1795,7 +1796,7 @@ void ResetPadHoldFrames_8001CD04(int port)
     }
 }
 // Matched
-int sub_8001CD34(void)
+int ReturnZero_8001CD34(void)
 {
     return 0;
 }
@@ -1860,7 +1861,7 @@ int GetItemName_8001CE20(unsigned int idx)
     return itemNames_8007CB78[idx];
 }
 // Matched
-int sub_8001CE4C(void)
+int ReturnZero_8001CE4C(void)
 {
     return 0;
 }
@@ -1895,7 +1896,7 @@ unsigned char GetItemFlagsLow_8001CED0(int idx)
     return *(unsigned char*)&itemFlags_8007CC50[idx];
 }
 // Matched
-int sub_8001CEEC(void)
+int ReturnOne_8001CEEC(void)
 {
     return 1;
 }

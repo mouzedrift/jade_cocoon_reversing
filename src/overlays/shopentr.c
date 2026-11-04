@@ -18,7 +18,7 @@ typedef struct
 
 
 
-extern EventNode* dword_8008D4A8;
+extern EventNode* shelfMenuTask_8008D4A8;
 extern void DrawMenuBackground_8002BE10(void);
 extern void DrawGauge_8002BA54(void* a0, int a1, void* a2, int a3);
 extern void DrawText_8003E91C(int a0, char* a1, void* a2, short a3);
@@ -74,7 +74,7 @@ void StartShelfMenu_800B6F1C(void)
 {
     EventEntry* t;
     ShelfMenu* c;
-    t = AllocEventEntry_80043AF8(dword_8008D4A8);
+    t = AllocEventEntry_80043AF8(shelfMenuTask_8008D4A8);
     if (t)
     {
         t->flags = (t->flags | 1) & 0xFFFF7FFF;

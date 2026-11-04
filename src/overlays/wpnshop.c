@@ -109,7 +109,7 @@ extern void DrawEquipKindMenu_800BC268();
 extern void SetStoreDialogText_800BCED4();
 extern void DrawTotalPrice_800BCFCC();
 extern void DrawStoreDialog_800BB8CC();
-extern int** dword_8008D3E0;
+extern int** storeTask_8008D3E0;
 extern void SuspendFieldMinions_800A7B00(int a);
 extern void StoreWaitUiTiy_800BB130();
 extern short CountStock_800BDDF8();
@@ -475,7 +475,7 @@ const int dword_800BAD50 = 0;
 void StartStore_800BAE2C(int kind, short keeper)
 {
     StoreMenu* o;
-    EventEntry* t = AllocEventEntry_80043AF8((EventNode*)dword_8008D3E0);
+    EventEntry* t = AllocEventEntry_80043AF8((EventNode*)storeTask_8008D3E0);
     if (t)
     {
         t->flags = (t->flags | 1) & ~0x8000;

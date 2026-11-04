@@ -872,7 +872,7 @@ done:
     return res;
 }
 // Matched
-void* sub_80033A60(void* p)
+void* GetStatsStatus_80033A60(void* p)
 {
     return p;
 }
@@ -1023,7 +1023,7 @@ int CheckMagicHasEffect_80033D20(struct_minion_ref* p)
     return 0;
 }
 // Matched
-int sub_80033DEC(void)
+int ReturnZero_80033DEC(void)
 {
     return 0;
 }

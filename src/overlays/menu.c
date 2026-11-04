@@ -191,7 +191,7 @@ extern void DrawUiTiySprt_8002C06C();
 extern unsigned short uiColor_8008B590;
 extern void ResumeFieldMenu_800BFF84();
 extern void SetLoadFadeFlag_80027478();
-extern EventNode* name_8008D498;
+extern EventNode* fieldMenuTask_8008D498;
 extern int GetWindowOpenStep_800C0990();
 extern void DrawMenuWindows_8002A5A4();
 extern void EnterPrevMenuState_800BE25C();
@@ -701,7 +701,7 @@ void BattleResultTask_800BBF48(MenuTask* t, MenuMain* c)
         {
             MenuTask* g;
             name_8008D678 |= 0x800000;
-            g = (MenuTask*)&name_8008D498->entry;
+            g = (MenuTask*)&fieldMenuTask_8008D498->entry;
             g->flags_0 = (g->flags_0 | 1) & ~0x8000;
             RequestGameMode_800A6D30(4);
             eventDispatchHalt_8008B540 = 1;
@@ -1101,14 +1101,14 @@ void DrawMinionLevelUpStatus_800BCEA0(MenuMain* a, int b, void* c, short d)
     DrawWindow_80042460(levelUpStatusRect_800C1060, &col, &pOT_8008D454[b], 0);
 }
 
-extern void sub_8001AEB8();
+// GetDominantSpecies_800338B0 under a second name: declared returning int here (no zero-extension of the result)
 extern int name_800338B0();
 void OnMinionLevelUp_800BCF74(short a)
 {
     int x = a - 1;
     int r17 = (int)GetMinionMagicBits_80010824(3, x);
     Minion* r16 = GetMinion_80010598(3, x);
-    sub_8001AEB8(name_800338B0(r16), &r16->status_84, r17);
+    MinionLevelUpHook_8001AEB8(name_800338B0(r16), &r16->status_84, r17);
 }
 
 typedef struct MenuMsgEnt
@@ -2725,7 +2725,7 @@ extern void ConfigMenuWaitTask_800BFF38();
 extern void EquipMenuWaitTask_800BFEC0();
 void OpenSubMenuOverlay_800BFE18(MenuCtx* c)
 {
-    MenuTask* t = (MenuTask*)&name_8008D498->entry;
+    MenuTask* t = (MenuTask*)&fieldMenuTask_8008D498->entry;
     switch (c->state_2)
     {
     case 8:
@@ -2811,7 +2811,7 @@ extern void RequestAreaReload_80027314();
 extern void MenuReloadAreaTask_800BFFFC();
 void CloseMenuReloadArea_800C0084(void)
 {
-    MenuTask* t = (MenuTask*)&name_8008D498->entry;
+    MenuTask* t = (MenuTask*)&fieldMenuTask_8008D498->entry;
     SetLoadFadeFlag_80027478(0x40, 1);
     FreeActiveOverlay_8002C014();
     RequestAreaReload_80027314();

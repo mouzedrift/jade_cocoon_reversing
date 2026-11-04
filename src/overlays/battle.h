@@ -118,7 +118,7 @@ extern int GetUnitPos_800BC6CC();
 
 extern void FadeOutSeqSlot_800313C8(int);
 
-extern EventNode* dword_8008D624;
+extern EventNode* battleTask_8008D624;
 
 
 
@@ -283,7 +283,7 @@ extern BatEnt_a dword_800B1238[];
 
 
 
-extern EventNode* dword_8008B4C0;
+extern EventNode* actionTask_8008B4C0;
 
 extern int dword_800ADE88;
 
@@ -405,13 +405,13 @@ typedef struct BatPair_a
 } BatPair_a;
 
 
-extern EventNode* dword_8008B568;
+extern EventNode* enemyWindowsLayoutTask_8008B568;
 
-extern EventNode* dword_8008B564;
+extern EventNode* enemyWindowTasks_8008B564;
 
-extern EventNode* dword_8008D4B0;
+extern EventNode* actorWindowTask_8008D4B0;
 
-extern EventNode* dword_8008D63C;
+extern EventNode* helpWindowTask_8008D63C;
 
 extern EventNode* hitNumberTasks_8008D778;
 

@@ -571,7 +571,7 @@ int QueueFileRequest_8003BC84(FileRequestDesc* req)
     return n->key;
 }
 // Matched
-void nullsub_6(void)
+void EmptyCallback_8003BE28(void)
 {
 }
 // Matched

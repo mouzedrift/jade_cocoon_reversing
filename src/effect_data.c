@@ -4039,7 +4039,7 @@ void SpawnEffectObject_800149A4(EffectArgs* args)
         obj->boneScales_9C = args->boneScales_28;
         obj->scale_A0 = args->scale_2C;
         *(unsigned char*)&obj->hitVariant_A5 = *(unsigned char*)&state->hitVariant_40;
-        obj->field_A6 = state->field_42;
+        obj->hitParam_A6 = state->hitParam_42;
         obj->hitFlags_AC = args->hitFlags_30;
         obj->offset_24.vx = args->offset_14[0] * args->boneScales_28[obj->bone_98].vx / 4096;
         obj->offset_24.vy = args->offset_14[1] * args->boneScales_28[obj->bone_98].vy / 4096;
@@ -4070,9 +4070,9 @@ typedef struct
 {
     int pad_0[5];
     int pos_14[3];
-    int field_20[3];
-    short field_2C;
-    short field_2E;
+    int lookAt_20[3];
+    short roll_2C;
+    short geomScreen_2E;
 } CamView;
 extern CamView cameraState_8008D4F0;
 extern void DrawRotSprite_80044010(POLY_FT4* a0, int* pos, void* a2, short* uv, short* wh, short* a5, short* sz, short* col,
@@ -4135,7 +4135,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
     pos[0] = cameraState_8008D4F0.pos_14[0] + dir[0] * dot / 8192;
     pos[1] = cameraState_8008D4F0.pos_14[1] + dir[1] * dot / 8192;
     pos[2] = cameraState_8008D4F0.pos_14[2] + dir[2] * dot / 8192;
-    if (cameraState_8008D4F0.field_2E < dot)
+    if (cameraState_8008D4F0.geomScreen_2E < dot)
     {
         sz2[0] = sz[0] / 4;
         sz2[1] = sz[1] / 4;
@@ -4145,7 +4145,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
     d[0] = obj->pos_44[0] - pos[0];
     d[1] = obj->pos_44[1] - pos[1];
     d[2] = obj->pos_44[2] - pos[2];
-    if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
+    if (cameraState_8008D4F0.geomScreen_2E * 4 / 3 < dot)
     {
         pos2[0] = pos[0] + d[0] / 2;
         pos2[1] = pos[1] + d[1] / 2;
@@ -4155,7 +4155,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
-    if (cameraState_8008D4F0.field_2E * 2 < dot)
+    if (cameraState_8008D4F0.geomScreen_2E * 2 < dot)
     {
         pos2[0] = pos[0] - d[0] / 2;
         pos2[1] = pos[1] - d[1] / 2;
@@ -4165,7 +4165,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
-    if (cameraState_8008D4F0.field_2E * 4 / 3 < dot)
+    if (cameraState_8008D4F0.geomScreen_2E * 4 / 3 < dot)
     {
         pos2[0] = pos[0] - d[0] / 4;
         pos2[1] = pos[1] - d[1] / 4;

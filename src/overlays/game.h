@@ -630,7 +630,7 @@ extern void EnemyAiFleeTurnStep_800A44C0();
 extern int* sub_800B3198(void);
 
 
-extern int dword_8008B554;
+extern int encounterVariantToggle_8008B554;
 
 #define ELEM(x) ((short)((int (*)(int))GetMinionElement_80019BF0)(x))
 
@@ -701,9 +701,9 @@ typedef struct GameD_1
 
 extern unsigned short padPressed_8009194C;
 
-extern short word_80091CB8[];
+extern short areaLoadIds_80091CB8[];
 
-extern EventNode* dword_8008D498;
+extern EventNode* fieldMenuTask_8008D498;
 
 extern EventNode* loadMenuTask_8008D480;
 
@@ -866,7 +866,8 @@ typedef struct G2Ctx2
     G2Act* f24;
 } G2Ctx2;
 
-extern G2Ctx* dword_8008B4CC;
+extern G2Ctx* levantControlTask_8008B4CC;
+extern EventNode* encounterWatchTask_8008B4D0;
 
 extern G2Ctx2* gameTask_8008B4A4;
 
@@ -1220,27 +1221,28 @@ extern void EnemyAiWanderMid_800A3FC0();
 extern void TileAnimTaskInit_800A09D8();
 extern void FreeBattleResources_800A1444();
 
-extern int dword_8008D624;
+extern int battleTask_8008D624;
 extern int battleMenuTask_8008D468[3];
 extern int dword_8008D444;
-extern int dword_8008B564[3];
-extern int dword_8008D4B0;
+extern EventNode* enemyWindowTasks_8008B564;
+extern EventNode* enemyWindowsLayoutTask_8008B568;
+extern int actorWindowTask_8008D4B0;
 extern EventNode* encounterTask_8008D674;
-extern int dword_8008D438;
-extern int dword_8008D670;
-extern int dword_8008D4A8;
-extern int dword_8008D3E0;
+extern int shopCtrlTask_8008D438;
+extern int shopMenuTask_8008D670;
+extern int shelfMenuTask_8008D4A8;
+extern int storeTask_8008D3E0;
 extern EventNode* messageWindowTask_8008D640;
 extern EventNode* vibrationTasks_8008D4B8;
 extern int dword_8008B4AC[2];
-extern int dword_8008B4C0[2];
-extern int dword_8008D48C[4];
+extern int actionTask_8008B4C0[2];
+extern int dword_8008D48C[3];
 extern int dword_8008D5F8[2];
-extern int dword_8008D614;
-extern int dword_8008D634[3];
+extern int cmdMenuTask_8008D614;
+extern EventNode* helpWindowTask_8008D63C;
 extern int hitNumberTasks_8008D778[2];
-extern int dword_8008D4C4;
-extern int dword_8008B4B8;
+extern int equipTask_8008D4C4;
+extern int configTask_8008B4B8;
 extern int dword_8008D62C;
 extern ShortPair screenOffset_8008D474;
 extern char name_800BCB00[];

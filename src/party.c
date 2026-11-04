@@ -94,8 +94,8 @@ void __main(void)
 {
 }
 INCLUDE_ASM(start);
-INCLUDE_ASM(dword_80010528);
-INCLUDE_ASM(dword_8001052C);
+INCLUDE_ASM(ramSize_80010528);
+INCLUDE_ASM(stackTop_8001052C);
 // start-up code (start, its data words, GetHeapStart_80010538) is hand-written assembly:
 // GetHeapStart_80010538 leaves its jr delay slot empty, which the compiler never does
 INCLUDE_ASM(GetHeapStart_80010538);

@@ -22,7 +22,7 @@ extern void StartSceneBrighten_8001AB1C(int a);
 extern void PlaySfx_80031494(int a);
 extern void ResetFormModel_800BF474();
 extern void LoadFormModel_800BF4B8();
-extern EventNode* name_8008D670; // the shop menu task list
+extern EventNode* shopMenuTask_8008D670; // the shop menu task list
 // work area of the shop menu task (EventEntry.buffer)
 typedef struct ShopMenu
 {
@@ -1322,7 +1322,7 @@ INCLUDE_OVERLAY_ASM(shop, ExchangeMinions_800BAF54);
 extern void ShopFadeIn_800BB0F8();
 void StartShop_800BB058(int shopId)
 {
-    EventEntry* t = AllocEventEntry_80043AF8(name_8008D670);
+    EventEntry* t = AllocEventEntry_80043AF8(shopMenuTask_8008D670);
     ShopMenu* u;
     if (t)
     {
@@ -2915,8 +2915,8 @@ void SetupShopCursor_800BD854(ShopMenu* u)
 }
 
 #if 0
-// Not matched (8 words): the two blocks that set tk = name_8008D670 + 0x10 before a call load
-// name_8008D670 straight into s0 and add 0x10 in place; here the load goes to a temporary.
+// Not matched (8 words): the two blocks that set tk = shopMenuTask_8008D670 + 0x10 before a call load
+// shopMenuTask_8008D670 straight into s0 and add 0x10 in place; here the load goes to a temporary.
 // (When writing this in C, delete the jpt_800B96F4 line behind the function.)
 extern void ShopWaitAreaReload_800BDD74();
 extern void ShopWaitDarken_800BDE44();
@@ -2965,7 +2965,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
             u->flags_24 |= 1;
             if (saveData_8008B570.settings_1C.bits.d_5 == 1)
             {
-                tk = &name_8008D670->entry;
+                tk = &shopMenuTask_8008D670->entry;
                 fn_80027478(0x40, 1);
                 fn_8002C014();
                 RequestAreaReload_80027314();
@@ -2975,7 +2975,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         }
         u->fadeAction_94 = 1;
         u->flags_24 |= 0x800;
-        tk = &name_8008D670->entry;
+        tk = &shopMenuTask_8008D670->entry;
         fn_8001ABEC(1);
         tk->cb_8 = ShopWaitDarken_800BDE44;
         StartSceneDarken_8001AAA8(0x20);
@@ -3005,7 +3005,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         u->flags_24 |= 1;
         if (saveData_8008B570.settings_1C.bits.d_5 == 1)
         {
-            tk = &name_8008D670->entry;
+            tk = &shopMenuTask_8008D670->entry;
             fn_80027478(0x40, 1);
             fn_8002C014();
             RequestAreaReload_80027314();
@@ -3015,7 +3015,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         {
             u->fadeAction_94 = 2;
             u->flags_24 |= 0x800;
-            tk = &name_8008D670->entry;
+            tk = &shopMenuTask_8008D670->entry;
             fn_8001ABEC(1);
             tk->cb_8 = ShopWaitDarken_800BDE44;
             StartSceneDarken_8001AAA8(0x20);
@@ -3032,7 +3032,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* u)
         SetShopHelpText_800BBB54(u, 0);
         break;
     case 10:
-        tk = &name_8008D670->entry;
+        tk = &shopMenuTask_8008D670->entry;
         tk->cb_8 = ShopResumeAfterNameEntry_800BE128;
         tk->flags = (tk->flags & ~1) | 0x8000;
         ShopCtrlRequestNameEntry_800B6C6C(u->base_4C->status_84.name_10
@@ -3105,7 +3105,7 @@ void ShopWaitBrighten_800BDEA8(int dummy, ShopMenu* u)
     DrawShopMenu_800BC380(u);
     if (IsSceneFadeDone_8001AB94())
     {
-        tk = &name_8008D670->entry;
+        tk = &shopMenuTask_8008D670->entry;
         if (u->fadeAction_94 == 1)
         {
             tk->cb_8 = ShopResumeAfterNameEntry_800BE128;
@@ -3240,7 +3240,7 @@ void ShopFadeInMenu_800BE264(EventEntry* t, int a)
 extern void FormViewLoadTask_800BE4D0();
 void StartFormView_800BE2B4(Minion* m)
 {
-    EventEntry* g = &name_8008D670->entry;
+    EventEntry* g = &shopMenuTask_8008D670->entry;
     PlaySfx_80031494(0x7E);
     ResetFormModel_800BF474();
     unknownFlags_8008D678 |= 0x10000;

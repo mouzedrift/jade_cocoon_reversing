@@ -204,7 +204,7 @@ const int targetItem2_800CB700[15] = {
     0, 0, 0, -1, -1, -1,
 };
 
-extern EventNode* dword_8008D614;
+extern EventNode* cmdMenuTask_8008D614;
 extern unsigned char player2Pad_800A38D8;
 extern unsigned char battleResult_800A38DC;
 extern unsigned short padPressed_8009194C[];
@@ -220,7 +220,7 @@ void DisableChangeIfAlone_800CB924();
 // Versus battle command menu of one side: starts the menu event that fills *cmd (COMBBTL's command)
 EventEntry* CombComStart_800CB7AC(int cmd, int side)
 {
-    EventEntry* e = AllocEventEntry_80043AF8(dword_8008D614);
+    EventEntry* e = AllocEventEntry_80043AF8(cmdMenuTask_8008D614);
     if (e)
     {
         e->cb_8 = (EventEntryFn)CmdMenuTask_800CD16C;

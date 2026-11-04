@@ -287,7 +287,7 @@ void CameraSplineTask_80036BB0(EventEntry* p, CameraCtrl* r)
         cameraState_8008D4F0.lookAt_20.x = q->splinePos_1BC->vx + x * sinTable_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096 + z * sinTable_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096;
         cameraState_8008D4F0.lookAt_20.y = q->splinePos_1BC->vy + y;
         cameraState_8008D4F0.lookAt_20.z = q->splinePos_1BC->vz - x * sinTable_80084540[q->splineRot_1C0->vy & 0xFFF] / 4096 + z * sinTable_80084540[(q->splineRot_1C0->vy + 0x400) & 0xFFF] / 4096;
-        cameraState_8008D4F0.field_2E = SPLINE(sp[i].c[7]);
+        cameraState_8008D4F0.geomScreen_2E = SPLINE(sp[i].c[7]);
     }
     TrackCameraTarget_8003891C(q, &levantPos_8008BD18.pos);
     DrawBattleStage_800BC90C(q);
@@ -321,8 +321,8 @@ void CameraOrbitTask_800374E0(EventEntry* p, CameraCtrl* q)
         o->lookDst_198 = o->saved_48.lookAt_20;
         o->eyeSrc_1A4 = o->saved_48.eye_14;
         o->eyeDst_18C = o->saved_48.eye_14;
-        q->field2ESrc_17C = cameraState_8008D4F0.field_2E;
-        q->field2EDst_180 = cameraState_8008D4F0.field_2E;
+        q->field2ESrc_17C = cameraState_8008D4F0.geomScreen_2E;
+        q->field2EDst_180 = cameraState_8008D4F0.geomScreen_2E;
         ComputeCameraMoveAngles_80038D64(o, &levantPos_8008BD18.pos.x);
         p->cb_8 = (EventEntryFn)CameraOrbitReturnTask_800375F8;
     }
@@ -582,7 +582,7 @@ void PlaceBattleIntroCamera_80037C74(CameraCtrl* q)
     q->t_C = 0;
     screenOffset_8008D474.a = 0;
     screenOffset_8008D474.b = 0;
-    cameraState_8008D4F0.r_30 = cameraState_8008D4F0.g_31 = cameraState_8008D4F0.b_32 = 0x40;
+    cameraState_8008D4F0.ambientR_30 = cameraState_8008D4F0.ambientG_31 = cameraState_8008D4F0.ambientB_32 = 0x40;
     cameraState_8008D4F0.roll_2C = 0;
     if (unknownFlags_8008D678 & 0x2000000)
     {
@@ -598,9 +598,9 @@ void PlaceBattleIntroCamera_80037C74(CameraCtrl* q)
     cameraState_8008D4F0.eye_14.x = q->pos_38.x + (sinTable_80084540[(q->rotY_44 + 0x400) & 0xFFF] * battleCamIntroPresets_80083BE4[sel].x0 / 4096 + sinTable_80084540[q->rotY_44 & 0xFFF] * battleCamIntroPresets_80083BE4[sel].z0 / 4096);
     cameraState_8008D4F0.eye_14.y = levantPos_8008BD18.pos.y + battleCamIntroPresets_80083BE4[sel].y0;
     cameraState_8008D4F0.eye_14.z = q->pos_38.z + (-sinTable_80084540[q->rotY_44 & 0xFFF] * battleCamIntroPresets_80083BE4[sel].x0 / 4096 + sinTable_80084540[(q->rotY_44 + 0x400) & 0xFFF] * battleCamIntroPresets_80083BE4[sel].z0 / 4096);
-    cameraState_8008D4F0.field_2E = battleCamIntroPresets_80083BE4[sel].field_8;
-    setVector(&cameraState_8008D4F0.rot_34, q->rot_164.vx, q->rot_164.vy, q->rot_164.vz);
-    setVector(&cameraState_8008D4F0.rot_3C, q->rot_174.vx, q->rot_174.vy, q->rot_174.vz);
+    cameraState_8008D4F0.geomScreen_2E = battleCamIntroPresets_80083BE4[sel].field_8;
+    setVector(&cameraState_8008D4F0.lightDir_34, q->rot_164.vx, q->rot_164.vy, q->rot_164.vz);
+    setVector(&cameraState_8008D4F0.lightColor_3C, q->rot_174.vx, q->rot_174.vy, q->rot_174.vz);
     cameraState_8008D4F0.ent_44[0].color_C.vx = 0x800;
     cameraState_8008D4F0.ent_44[0].color_C.vy = 0x800;
     cameraState_8008D4F0.ent_44[0].color_C.vz = 0x800;
@@ -612,7 +612,7 @@ void SetupBattleIntroCamera_80037F44(CameraCtrl* q)
     int i;
 
     SaveCameraState_80039620(q);
-    q->field2ESrc_17C = cameraState_8008D4F0.field_2E;
+    q->field2ESrc_17C = cameraState_8008D4F0.geomScreen_2E;
     q->field2EDst_180 = 0xA0;
     q->lookSrc_1B0 = cameraState_8008D4F0.lookAt_20;
     q->lookDst_198.x = saveData_8008B570.levant_7A8.pos.x;
@@ -634,11 +634,11 @@ void SetupBattleIntroCamera_80037F44(CameraCtrl* q)
     setVector(&cameraState_8008D4F0.ent_44[0].color_C, 0, 0, 0);
     cameraState_8008D4F0.ent_44[0].range_14 = 0xEA6;
     cameraState_8008D4F0.ent_44[0].pos_0.y -= 1000;
-    q->rot_15C = cameraState_8008D4F0.rot_34;
+    q->rot_15C = cameraState_8008D4F0.lightDir_34;
     q->rot_164.vx = 0x7FC;
     q->rot_164.vy = -0xAA6;
     q->rot_164.vz = 0x8DE;
-    q->rot_16C = cameraState_8008D4F0.rot_3C;
+    q->rot_16C = cameraState_8008D4F0.lightColor_3C;
     q->rot_174.vx = 0x1000;
     q->rot_174.vy = 0x1000;
     q->rot_174.vz = 0x1000;
@@ -663,7 +663,7 @@ void UpdateCameraMove_80038230(CameraCtrl* p)
     cameraState_8008D4F0.eye_14.x = p->pos_38.x + r * sinTable_80084540[ang & 0xFFF] / 4096;
     cameraState_8008D4F0.eye_14.y = p->eyeDst_18C.y + (p->eyeSrc_1A4.y - p->eyeDst_18C.y) * EASE(p) / 4096;
     cameraState_8008D4F0.eye_14.z = p->pos_38.z + r * sinTable_80084540[(ang + 0x400) & 0xFFF] / 4096;
-    cameraState_8008D4F0.field_2E = *(unsigned short*)&p->field2EDst_180 + (p->field2ESrc_17C - p->field2EDst_180) * EASE(p) / 4096;
+    cameraState_8008D4F0.geomScreen_2E = *(unsigned short*)&p->field2EDst_180 + (p->field2ESrc_17C - p->field2EDst_180) * EASE(p) / 4096;
     if (p->t_C == 0)
     {
         cameraState_8008D4F0.eye_14 = p->eyeDst_18C;
@@ -818,8 +818,8 @@ void SetupCameraOrbit_80038CA8(CameraCtrl* p)
     o->lookDst_198 = saveData_8008B570.levant_7A8.pos;
     o->eyeSrc_1A4 = cameraState_8008D4F0.eye_14;
     o->eyeDst_18C = cameraState_8008D4F0.eye_14;
-    p->field2ESrc_17C = cameraState_8008D4F0.field_2E;
-    p->field2EDst_180 = cameraState_8008D4F0.field_2E;
+    p->field2ESrc_17C = cameraState_8008D4F0.geomScreen_2E;
+    p->field2EDst_180 = cameraState_8008D4F0.geomScreen_2E;
     ComputeCameraMoveAngles_80038D64(o, &saveData_8008B570.levant_7A8.pos.x);
 }
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
@@ -859,7 +859,7 @@ void MoveCameraToFocusPreset_80038E2C(CameraCtrl* p, int a, int b)
     o->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y + battleCamFocusPresets_80083C70[(unsigned short)a].y0 + b;
     o->eyeDst_18C.z += -sinTable_80084540[p->rotY_44 & 0xFFF] * battleCamFocusPresets_80083C70[(unsigned short)a].x0 / 4096 + sinTable_80084540[(p->rotY_44 + 0x400) & 0xFFF] * battleCamFocusPresets_80083C70[(unsigned short)a].z0 / 4096;
     o->eyeDst_18C.x += sinTable_80084540[(p->rotY_44 + 0x400) & 0xFFF] * battleCamFocusPresets_80083C70[(unsigned short)a].x0 / 4096 + sinTable_80084540[p->rotY_44 & 0xFFF] * battleCamFocusPresets_80083C70[(unsigned short)a].z0 / 4096;
-    p->field2ESrc_17C = cameraState_8008D4F0.field_2E;
+    p->field2ESrc_17C = cameraState_8008D4F0.geomScreen_2E;
     p->field2EDst_180 = battleCamFocusPresets_80083C70[(unsigned short)a].field_8;
     ComputeCameraMoveAngles_80038D64(o, (int*)&p->pos_38);
 }
@@ -926,7 +926,7 @@ void MoveBattleCamera_800390F4(CameraCtrl* p_, int arg1)
     p_->eyeDst_18C.y = saveData_8008B570.levant_7A8.pos.y + battleCamPresets_80083C0C[sel].y0;
     p_->eyeDst_18C.z += -sinTable_80084540[p_->rotY_44 & 0xFFF] * battleCamPresets_80083C0C[sel].x0 / 4096 + sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * battleCamPresets_80083C0C[sel].z0 / 4096;
     p_->eyeDst_18C.x += sinTable_80084540[(p_->rotY_44 + 0x400) & 0xFFF] * battleCamPresets_80083C0C[sel].x0 / 4096 + sinTable_80084540[p_->rotY_44 & 0xFFF] * battleCamPresets_80083C0C[sel].z0 / 4096;
-    p_->field2ESrc_17C = cameraState_8008D4F0.field_2E;
+    p_->field2ESrc_17C = cameraState_8008D4F0.geomScreen_2E;
     p_->field2EDst_180 = battleCamPresets_80083C0C[sel].field_8;
     ComputeCameraMoveAngles_80038D64(p_, (int*)&p_->pos_38);
 }

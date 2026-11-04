@@ -319,12 +319,12 @@ void FadeOutSfxSeq_80031638(void)
     }
 }
 // Matched
-int sub_800316DC(void)
+int ReturnZero_800316DC(void)
 {
     return 0;
 }
 // Matched
-int sub_800316E4(void)
+int ReturnZero_800316E4(void)
 {
     return 0;
 }

@@ -13,13 +13,13 @@ typedef struct
     struct_v3 eye_14; // eye (copied to cameraEye_8008D600)
     struct_v3 lookAt_20; // look-at
     short roll_2C;     // roll
-    short field_2E;
-    unsigned char r_30;
-    unsigned char g_31;
-    unsigned char b_32;
+    short geomScreen_2E; // projection distance (geomScreenBase_8008D51E)
+    unsigned char ambientR_30; // scene ambient colour (sceneAmbient_8008D520)
+    unsigned char ambientG_31;
+    unsigned char ambientB_32;
     unsigned char pad_33;
-    SVECTOR rot_34;
-    SVECTOR rot_3C;
+    SVECTOR lightDir_34;   // scene light direction (sceneLightDir_8008D524)
+    SVECTOR lightColor_3C; // scene light colour (sceneLightColor_8008D52C)
     PointLight ent_44[8]; // 0x8008D534 == ent_44[0]
 } Block104;
 

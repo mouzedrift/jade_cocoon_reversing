@@ -41,13 +41,13 @@ void SetHitVariant_80018430(short variant)
     state->hitVariant_40 = variant;
 }
 // Matched
-void sub_80018448(short v)
+void SetHitParam_80018448(short v)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
-    state->field_42 = v;
+    state->hitParam_42 = v;
 }
 // Matched
-void sub_80018460(int on)
+void SetEffectFlag8_80018460(int on)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     if (on)
