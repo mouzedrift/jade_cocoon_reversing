@@ -276,7 +276,7 @@ typedef struct
     int f40_LOAD;
     char pad44_LOAD[0x10];
     unsigned f54_LOAD;
-    int f58_LOAD;
+    char* place_58_LOAD; // the save place text of the summary (sub_800B78B8)
     int f5C_LOAD;
     int f60_LOAD;
     void* rows_LOAD[6];
@@ -425,9 +425,9 @@ void sub_800B7894(Task_LOAD* t)
     }
 }
 
-void sub_800B78B8(int v)
+void sub_800B78B8(char* place)
 {
-    ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->f58_LOAD = v;
+    ((LoadTask_LOAD*)dword_8008D480->entry.buffer)->place_58_LOAD = place;
 }
 
 void sub_800B78D0(void)
@@ -1521,7 +1521,192 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadTask_LOAD* s)
 #endif
 INCLUDE_OVERLAY_ASM(load, WriteSaveTask_800B98C4);
 
-INCLUDE_OVERLAY_ASM(load, sub_800B9A8C);
+// the title of the save file being written (Shift-JIS "<name>/Level 99/<place>", name_800BDFAC)
+typedef union
+{
+    char str[0x42];
+    struct
+    {
+        unsigned short text_0[0x12];
+        unsigned char level_24[4]; // the two level digits
+        unsigned short slash_28;
+        unsigned short place_2A[0xC];
+    } f;
+} SaveTitle_LOAD;
+extern SaveTitle_LOAD* name_800BDFAC;
+extern unsigned short name_800B6C18[]; // "Latest Game"
+extern unsigned short name_800B6C30[]; // "End of Game"
+extern unsigned short name_800B6C48[]; // "Corridor"
+extern char name_800B6BF0[];
+extern char name_800B6C04[];
+extern void* memcpy(void* dst, const void* src, unsigned int n);
+extern void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title);
+extern void IntToText_8003F610(unsigned short* buf, int val);
+extern int PlayTimeHours_800BAC14(int n);
+extern int PlayTimeMinutes_800BAC68(int n);
+
+// packs saveData_8008B570 into the save file to write, with its summary and title
+// Matched
+void sub_800B9A8C(LoadTask_LOAD* s)
+{
+    unsigned short buf[12];
+    SaveSummary_LOAD* sm;
+    SaveSummary_LOAD* sm2;
+    SaveBody_LOAD* body;
+    SaveTitle_LOAD* t;
+    unsigned int n;
+    int i;
+    int j;
+    int k;
+    int l;
+    int idx;
+    int lv;
+    Minion* m;
+    SaveMinion_LOAD* pm;
+    UnitStats* u;
+    SaveStats_LOAD* pu;
+
+    sm = &s->fileBuf_LOAD->summary_280;
+    sm->vals_28[0] = saveData_8008B570.levantStatus_7C8.level_44;
+    sm->vals_28[1] = saveData_8008B570.levantStatus_7C8.hp_8.cur_0;
+    sm->vals_28[2] = saveData_8008B570.levantStatus_7C8.hp_8.max_2;
+    sm->vals_28[3] = PlayTimeHours_800BAC14(saveData_8008B570.playTime_4);
+    sm->vals_28[4] = PlayTimeMinutes_800BAC68(saveData_8008B570.playTime_4);
+    sm->vals_28[5] = saveData_8008B570.inv_24.yan_0;
+    MemCopy_800403E8(sm->name_0, saveData_8008B570.levantStatus_7C8.name_10, 0xC);
+    sm->f26 = saveData_8008B570.field_810;
+    if (saveData_8008B570.field_810 == -2)
+    {
+        sm->icon_24 = 0;
+    }
+    else if (saveData_8008B570.field_810 == -1)
+    {
+        sm->icon_24 = 1;
+    }
+    else
+    {
+        sm->icon_24 = 2;
+    }
+    if (sm->icon_24 == 2)
+    {
+        MemCopy_800403E8(sm->text_C, name_800B6BF0, 0x18);
+    }
+    else if (sm->icon_24 == 1)
+    {
+        MemCopy_800403E8(sm->text_C, name_800B6C04, 0x18);
+    }
+    else
+    {
+        MemCopy_800403E8(sm->text_C, s->place_58_LOAD, 0x18);
+    }
+    body = &s->fileBuf_LOAD->body_300;
+    MemCopy_800403E8(body, &saveData_8008B570, 0x988);
+    for (i = 0; i < 15; i++)
+    {
+        m = &saveData_8008B570.minions[i];
+        pm = &body->minions_988[i];
+        pm->id_0 = m->id;
+        pm->species_2 = m->species_2;
+        pm->field_3 = m->field_3;
+        for (j = 0; j < 0x30; j++)
+        {
+            pm->species_4[j] = m->species_4C[j];
+        }
+        for (j = 0; j < 8; j++)
+        {
+            pm->field_34[j] = m->field_7C[j];
+        }
+        pm->field_74 = m->field_CC;
+        pm->skills_86 = m->skills_DE;
+        pm->magicBits_9C = m->magicBits_F4;
+        pm->status_3C.status_0 = m->status_84.status_0;
+        pm->status_3C.exp_4 = m->status_84.exp_4;
+        pm->status_3C.hp_8 = m->status_84.hp_8;
+        pm->status_3C.mp_C = m->status_84.mp_C;
+        for (j = 0; j < 0xC; j++)
+        {
+            pm->status_3C.field_10[j] = m->status_84.field_20[j];
+        }
+        pm->status_3C.stats_1C = m->status_84.stats_2C;
+        for (j = 0; j < 4; j++)
+        {
+            pm->status_3C.element_2E[j] = m->status_84.element_3E[j];
+        }
+        pm->status_3C.elementMask_32 = m->status_84.elementMask_42;
+        pm->status_3C.level_34 = m->status_84.level_44;
+        pm->status_3C.field_35 = m->status_84.field_45;
+        for (j = 0; j < 6; j++)
+        {
+            for (k = 0; k < 10; k++)
+            {
+                body->ancestorNames_17F8[i][j][k] = m->ancestors_4[j][k];
+            }
+        }
+        for (k = 0; k < 10; k++)
+        {
+            body->minionNames_1B7C[i][k] = m->status_84.name_10[k];
+        }
+    }
+    for (l = 0; l < 12; l++)
+    {
+        u = &saveData_8008B570.items[l];
+        pu = &body->items_12E8[l];
+        pu->species_4C = u->species_5C;
+        pu->status_0.status_0 = u->st_0.status_0;
+        pu->status_0.exp_4 = u->st_0.exp_4;
+        pu->status_0.hp_8 = u->st_0.hp_8;
+        pu->status_0.mp_C = u->st_0.mp_C;
+        for (j = 0; j < 0xC; j++)
+        {
+            pu->status_0.field_10[j] = u->st_0.field_20[j];
+        }
+        pu->status_0.stats_1C = u->st_0.stats_2C;
+        for (j = 0; j < 4; j++)
+        {
+            pu->status_0.element_2E[j] = u->st_0.element_3E[j];
+        }
+        pu->status_0.elementMask_32 = u->st_0.elementMask_42;
+        pu->status_0.level_34 = u->st_0.level_44;
+        pu->status_0.field_35 = u->st_0.field_45;
+        for (k = 0; k < 10; k++)
+        {
+            body->itemNames_1C30[l][k] = u->st_0.name_10[k];
+        }
+    }
+    sm->sum_40 = 0;
+    for (n = 0x300; n < 0x1FC0; n++)
+    {
+        sm->sum_40 += ((unsigned char*)s->fileBuf_LOAD)[n];
+    }
+    sm2 = &s->fileBuf_LOAD->summary_280;
+    idx = stru_800BDF4C[3].fD_LOAD + stru_800BDF4C[3].fC_LOAD;
+    IntToText_8003F610(buf, sm2->vals_28[0]);
+    lv = sm2->vals_28[0];
+    t = name_800BDFAC;
+    if (lv > 100)
+    {
+        lv = 99;
+    }
+    t->f.level_24[0] = 0x82;
+    t->f.level_24[1] = lv / 10 + 0x4F;
+    lv %= 10;
+    t->f.level_24[2] = 0x82;
+    t->f.level_24[3] = lv % 10 + 0x4F;
+    switch (sm2->icon_24)
+    {
+    case 0:
+        memcpy(name_800BDFAC->f.place_2A, name_800B6C18, 23);
+        break;
+    case 1:
+        memcpy(name_800BDFAC->f.place_2A, name_800B6C30, 23);
+        break;
+    case 2:
+    default:
+        memcpy(name_800BDFAC->f.place_2A, name_800B6C48, 17);
+        break;
+    }
+    BuildCardHeader_800BB2AC(&s->fileBuf_LOAD->header_0, idx, name_800BDFAC->str);
+}
 
 #if 0
 // Not matched: prologue scheduling only: the original sets $a0 = 1 before saving $s1 / copying the second argument
