@@ -52,8 +52,7 @@ typedef struct
 } AttackResult;
 extern double sqrt(double);
 extern int Rand100_80013E30(void);
-#if 0
-// Not matched (11 lines): the copy of the first __fixdfsi result sits in the second call's delay slot in the original, and statusChance (Rand chance) is in $v1 instead of $v0. Also tried: dead/used second conversion into another var (deathChance/statusChance: call deleted), (int)dmg in the test, statusChance = 100 hoisted, if/else and nested ternary for it, statusRoll < statusChance, statusChance renamed to other locals
+// Matched
 void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, int* cmd, AttackResult* out)
 {
     int crit0;
@@ -71,6 +70,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
     int deathChance;
     int statusRoll;
     int ch;
+    int statusPower;
     double root;
     double dmg;
 
@@ -135,9 +135,9 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
                 }
                 dmg = dmg * (signed char)targetStatus->modifiers_20[action->element_8];
                 dmg = dmg / 32.0;
+                ch = dmg;
                 damage = dmg;
-                damage = dmg;
-                if (damage == 0 || (damage += frameCount_8008D3FC & 1) == 0)
+                if (ch == 0 || (damage += frameCount_8008D3FC & 1) == 0)
                 {
                     damage = 1;
                 }
@@ -209,7 +209,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
     }
     if (action->power_2 == 0 || out->kind_0 != 5)
     {
-        damage = (action->c6 + actorStats[8]) * targetStats[9] / 100;
+        statusPower = (action->c6 + actorStats[8]) * targetStats[9] / 100;
         if (action->statusMode_A == 3)
         {
             statusRoll = Rand100_80013E30();
@@ -219,7 +219,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
             }
             else
             {
-                statusChance = (damage * (signed char)targetStatus->modifiers_20[action->element_8]) ? damage * (signed char)targetStatus->modifiers_20[action->element_8] / 32 : 0;
+                statusChance = (statusPower * (signed char)targetStatus->modifiers_20[action->element_8]) ? statusPower * (signed char)targetStatus->modifiers_20[action->element_8] / 32 : 0;
             }
             if (statusChance > statusRoll)
             {
@@ -285,8 +285,6 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
         out->status_8 &= ~2;
     }
 }
-#endif
-INCLUDE_ASM(CalcActionDamage_80013374);
 extern void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cmd, int result);
 // Matched
 void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, int* cmd, int result)
