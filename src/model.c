@@ -375,7 +375,7 @@ short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script
     return out[0].field_0;
 }
 extern void GetAnimRootMotion_8004D288(int* out, ModelAnim* s, int k);
-extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
+extern int CollideWithMap_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
 // Matched
 void UpdateActorMotion_8001F354(void* actor)
 {
@@ -476,7 +476,7 @@ void UpdateActorMotion_8001F354(void* actor)
     if (o->flags_4 & 0x40000)
     {
         o->prevGround_84 = o->ground_80;
-        o->ground_80 = sub_800B716C((VECTOR*)o->pos_38, (VECTOR*)o->prevPos_44, (SVECTOR*)o->rot_5C, &o->fB4);
+        o->ground_80 = CollideWithMap_800B716C((VECTOR*)o->pos_38, (VECTOR*)o->prevPos_44, (SVECTOR*)o->rot_5C, &o->fB4);
     }
 }
 // Matched
@@ -4571,8 +4571,8 @@ typedef struct
     int fC;
 } MapEntry16b;
 extern void LoadEventData_800A5628(int a0, int* a1, int a2);
-extern void sub_800B73C0(MapMesh* a0, int a1);
-extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
+extern void MarkSharedEdges_800B73C0(MapMesh* a0, int a1);
+extern int FindTriAtXZ_800B76B8(MapMesh* a0, struct_v3* a1);
 extern int* LoadMapMeshes_80027A88();
 extern short savedLevantRot_80091CA8[];
 extern EventNode* gameTask_8008B4A4; // the GAME overlay task
@@ -4612,17 +4612,17 @@ void OnMapFileLoaded_80028808(void* a0, int* data)
     mapState_8008B500.f8_8 = *p++;
     MemCopy_800403E8(&hdr, p, sizeof(hdr));
     p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes_C, &mapState_8008B500.nMeshes_4, &mapHeap_80091C68, (char*)p + 0x104);
-    sub_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
+    MarkSharedEdges_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
+    MarkSharedEdges_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10, (int)&mapHeap_80091C68);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
+    MarkSharedEdges_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
+    MarkSharedEdges_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C, (int)&mapHeap_80091C68);
     p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, p);
-    sub_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
+    MarkSharedEdges_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
     cnt = p[0];
     LoadMapFtg_80027708(p, (int)&mapHeap_80091C68);
     p = (int*)((char*)p + cnt);
@@ -4666,7 +4666,7 @@ void OnMapFileLoaded_80028808(void* a0, int* data)
     {
         for (i = 0; i < (int)mapState_8008B500.nMeshes_4; i++)
         {
-            if (sub_800B76B8(&mapState_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
+            if (FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
             {
                 saveData_8008B570.mapId_2E4[3].field_0 = i;
                 saveData_8008B570.mapId_2E4[3].field_2 = -1;

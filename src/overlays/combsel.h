@@ -85,10 +85,10 @@ extern CombSelMenu dword_80082784;
 extern CombSelCursor combatCursor_800A1BBC; // the main menu cursor
 extern short combatMenuChoice_800A1BC4;          // == combatCursor_800A1BBC.index_8
 extern Minion rosters_800A1BC8[2][15];
-extern unsigned char byte_800A38D8;
+extern unsigned char player2Pad_800A38D8;
 extern unsigned char curPlayer_800A38D9;
-extern unsigned char byte_800A38DB;
-extern int dword_800A3A94;
+extern unsigned char selMode_800A38DB;
+extern int curPad_800A3A94;
 extern Minion teams_800A3AA0[2][3];
 extern void CombatNextStage_800A16FC();
 extern void DrawMinionNameLevel_800A1844(Minion* m, unsigned short* pt, unsigned int flags);

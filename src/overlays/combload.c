@@ -18,15 +18,15 @@ typedef struct CombLoadBox
     char c_3;
 } CombLoadBox;
 
-extern int sub_800BAE24(int);
-extern void sub_800BB4A8(int);
+extern int IsCardReady_800BAE24(int);
+extern void DrawCardSlotMenu_800BB4A8(int);
 extern void UpdateMenuCursor_8003D794(void*, int);
 extern int IsConfirmPressedP1_8003D380(int);
 extern void DrawMenuWindows_8002A5A4(void*);
 extern void DrawTitleWindow_800A4364();
 extern void DrawTitleWindow2_800A4420();
 extern void DrawDataHeaderWindows_800A44DC();
-extern int dword_800A3A94;
+extern int curPad_800A3A94;
 extern unsigned short uiColor_8008B590;
 extern void CombLoadWaitOverlay_800A4140();
 extern void CombLoadWaitMenu_800A41A8();
@@ -55,7 +55,7 @@ void CombLoadWaitOverlay_800A4140(CombLoadTask* task)
 {
     if (GetFileRequestStatus_8003BE30(loadOvlRequest_800A47F4) == 0)
     {
-        LoadMenuInit_800B7674(dword_800A3A94 == 0 ? 2 : 3, 0);
+        LoadMenuInit_800B7674(curPad_800A3A94 == 0 ? 2 : 3, 0);
         task->next_8 = CombLoadWaitMenu_800A41A8;
     }
     DrawMenuBackground_8002BE10();
@@ -82,7 +82,7 @@ void CardSelectScreen_800A41FC(CombLoadTask* task)
     int i;
     for (i = 0; i < 2; i++)
     {
-        if (sub_800BAE24(i) == 0)
+        if (IsCardReady_800BAE24(i) == 0)
         {
             busy = 1;
         }
@@ -108,7 +108,7 @@ void CardSelectScreen_800A41FC(CombLoadTask* task)
         DrawTitleWindow_800A4364();
         if (!busy)
         {
-            sub_800BB4A8(cardSlotCursor_800A468C[0].f8);
+            DrawCardSlotMenu_800BB4A8(cardSlotCursor_800A468C[0].f8);
             UpdateMenuCursor_8003D794(&cardSlotCursor_800A468C[0], 0);
             if (IsConfirmPressedP1_8003D380(1))
             {

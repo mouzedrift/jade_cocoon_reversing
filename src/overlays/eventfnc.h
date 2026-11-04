@@ -270,7 +270,7 @@ extern void UpdateCameraFollow_80037918(void* p);
 
 extern void SetGeomOffset(long ofx, long ofy);
 
-extern short name_80084540[];
+extern short sinTable_80084540[];
 
 extern int TestEventFlag_800AD0D4(int a);
 
@@ -529,7 +529,7 @@ extern int dword_80091C8C;
 extern void EvCmdBeginScene_800B8BE8();
 extern void EvCmdWaitTrigger_800B9B98();
 extern void EvCmdSetChapter_800BA82C();
-extern void sub_800BAB5C();
+extern void EvCmdOpenMapSelect_800BAB5C();
 extern void EvCmdBattle_800BB27C();
 extern int EvCmdNop_800B89A8();
 extern int EvCmdWaitButton_800B89C0();
@@ -611,9 +611,9 @@ extern int EvCmdSetCameraZoom_800BAEBC();
 extern int EvCmdSetCameraTarget_800BAF08();
 extern int EvCmdSetMapMesh_800BAF68();
 extern int EvCmdWaitTalk_800BAFAC();
-extern int sub_800BB180();
+extern int EvCmdSetIdleAnim_800BB180();
 extern int EvCmdWaitActorInRegion_800BB214();
-extern int sub_800BB45C();
+extern int EvCmdIfBattleResult_800BB45C();
 extern int EvCmdFadeSound_800BB4A4();
 extern int EvCmdPadVibration_800BB7D8();
 

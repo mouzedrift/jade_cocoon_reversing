@@ -7,6 +7,7 @@
 #include "engine.h"
 #include "minion_init.h"
 #include "combat.h"
+#include "tim.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by BuildMinionModelParams_800A05E0
 
@@ -85,22 +86,6 @@ typedef struct CombatShortPair_combat
     unsigned short a;
     unsigned short b;
 } CombatShortPair_combat;
-typedef struct CombatReq2Combat
-{
-    int field_0;
-    int field_4;
-    char pad_8[4];
-    unsigned short field_C;
-    unsigned short field_E;
-    unsigned short field_10;
-    unsigned short field_12;
-    char pad_14[8];
-    unsigned short field_1C;
-    unsigned short field_1E;
-    unsigned short field_20;
-    unsigned short field_22;
-    char pad_24[4];
-} CombatReq2Combat;
 extern CombatShortPair_combat dword_8007DCAC[];
 extern CombatShortPair_combat dword_8007DCBC[];
 extern short dword_80084540[];
@@ -112,27 +97,6 @@ extern void LoadModelTexToVram_800A0D64(int a, int b);
 extern void CombatWaitUiTiy_800A14AC();
 extern void CombatReq_8001E34C(void* p, void* q);
 
-typedef struct CombatReqCombat
-{
-    int field_0;
-    int field_4;
-    void* field_8;
-    short field_C;
-    short field_E;
-    int field_10;
-    int field_14;
-    int field_18;
-    int field_1C;
-    short field_20;
-    short field_22;
-    short field_24;
-    short field_26;
-    short field_28;
-    short field_2A;
-    int field_2C;
-    int field_30;
-    char pad_34[0x2C];
-} CombatReqCombat;
 extern void BuildMinionModelParams_800A05E0(Minion* a, CombatModelParams* o, int c);
 extern int GetElementHueAngle_800A0898(unsigned char* a);
 
@@ -426,48 +390,48 @@ void LoadModelTexToVram_800A0D64(int i, int id)
 void MoveSlotActorTo_800A0E1C(int i, int* src)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    CombatReqCombat r;
-    r.field_0 = 0;
-    r.field_4 = 0;
-    r.field_8 = 0;
-    r.field_C = 0;
-    r.field_E = -1;
-    r.field_10 = -1;
-    r.field_18 = 0;
+    ActorActionDesc r;
+    r.flags_0 = 0;
+    r.script_4 = 0;
+    r.target_8 = 0;
+    r.turnStep_C = 0;
+    r.hitAnim_E = -1;
+    r.effect_10 = -1;
+    r.effectKinds_18 = 0;
     r.field_1C = 1;
-    r.field_20 = 0;
-    r.field_22 = 0;
-    r.field_24 = -1;
-    r.field_26 = -1;
+    r.loopCount_20 = 0;
+    r.scaleTarget_22 = 0;
+    r.nextAnim_24 = -1;
+    r.nextAnim_26 = -1;
     r.field_28 = -1;
-    r.field_2A = -1;
+    r.queuedAnim_2A = -1;
     r.field_2C = 0;
-    r.field_30 = 0;
+    r.path_30 = 0;
     s->actor_3C->target_70.vx = src[0];
     s->actor_3C->target_70.vy = src[1];
     s->actor_3C->target_70.vz = src[2];
-    r.field_8 = (int*)&s->actor_3C->target_70;
-    r.field_C = 0x100;
-    r.field_26 = 2;
+    r.target_8 = (int*)&s->actor_3C->target_70;
+    r.turnStep_C = 0x100;
+    r.nextAnim_26 = 2;
     CombatReq_8001E34C(s->actor_3C, &r);
 }
 
 // Matched
-void sub_800A0EE8(int i)
+void IsSlotActorIdle_800A0EE8(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     IsActorIdle_8001E1C8(s->actor_3C);
 }
 
 // Matched
-void sub_800A0F1C(int i)
+void IsSlotActorReady_800A0F1C(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     IsActorActionReady_8001E1DC(s->actor_3C);
 }
 
 // Matched
-CombatColor sub_800A0F50(int i, int* p, int x)
+CombatColor StartSlotAction_800A0F50(int i, int* p, int x)
 {
     CombatColor c;
     CombatSlot* s;
@@ -693,12 +657,12 @@ void CombatWaitStageOvl_800A1554(CombatTask* t, int x)
     }
 }
 
-extern void sub_800A4394();
+extern void VersusIntroTask_800A4394();
 extern void CombSelMain_800A4360();
-extern void sub_800A40FC();
-extern void sub_800A4170();
+extern void CombLoadStart_800A40FC();
+extern void VersusSetupTask_800A4170();
 extern void CombBtlStart_800A4B8C();
-extern void sub_800A40E0();
+extern void VersusResultTask_800A40E0();
 extern int CountRosterMinions_800A1AEC(int i);
 
 void CombatEnterStage_800A15B4(CombatTask* t, int x)
@@ -707,7 +671,7 @@ void CombatEnterStage_800A15B4(CombatTask* t, int x)
     switch (stage_800A3A8C)
     {
     case 0:
-        t->next_8 = sub_800A4394;
+        t->next_8 = VersusIntroTask_800A4394;
         break;
     case 1:
         v = prevStage_800A4070;
@@ -715,35 +679,35 @@ void CombatEnterStage_800A15B4(CombatTask* t, int x)
         {
         case 0:
         case 3:
-            byte_800A38DB = 0;
+            selMode_800A38DB = 0;
             curPlayer_800A38D9 = 0;
             combatMenuChoice_800A1BC4 = 0;
             break;
         case 2:
             if (CountRosterMinions_800A1AEC(curPlayer_800A38D9))
             {
-                byte_800A38DB = v;
+                selMode_800A38DB = v;
                 combatMenuChoice_800A1BC4 = 1;
             }
             else
             {
-                byte_800A38DB = 0;
+                selMode_800A38DB = 0;
             }
             break;
         }
         t->next_8 = CombSelMain_800A4360;
         break;
     case 2:
-        t->next_8 = sub_800A40FC;
+        t->next_8 = CombLoadStart_800A40FC;
         break;
     case 3:
-        t->next_8 = sub_800A4170;
+        t->next_8 = VersusSetupTask_800A4170;
         break;
     case 4:
         t->next_8 = CombBtlStart_800A4B8C;
         break;
     case 5:
-        t->next_8 = sub_800A40E0;
+        t->next_8 = VersusResultTask_800A40E0;
         break;
     case 6:
         break;
@@ -783,7 +747,7 @@ void CombatNextStage_800A16FC(CombatTask* t)
         stage_800A3A8C = 1;
         break;
     case 3:
-        if (dword_800A3A88 & 1)
+        if (combatFlags_800A3A88 & 1)
         {
             stage_800A3A8C = 4;
         }
@@ -853,7 +817,7 @@ int IsMinionSlotEmpty_800A1934(Minion* p)
 }
 
 // Matched
-void sub_800A1958(Minion* p)
+void IsMinionFainted_800A1958(Minion* p)
 {
     HasStatusFlag_80033548(&p->status_84, 0x400);
 }
@@ -904,19 +868,19 @@ int CountRosterMinions_800A1AEC(int i)
 }
 
 // Matched
-void sub_800A1B2C(int i, void* p)
+void GetCombatPortraitPoly_800A1B2C(int i, void* p)
 {
-    CombatReq2Combat r;
-    r.field_0 = 1;
-    r.field_4 = 1;
-    r.field_1C = dword_8007DCAC[i].a;
-    r.field_1E = dword_8007DCAC[i].b;
-    r.field_20 = 0x20;
-    r.field_22 = 0x40;
-    r.field_C = dword_8007DCBC[i].a;
-    r.field_E = dword_8007DCBC[i].b;
-    r.field_10 = 0x100;
-    r.field_12 = 1;
+    TimInfo r;
+    r.mode_valid = 1;
+    r.mode = 1;
+    r.prect.x = dword_8007DCAC[i].a;
+    r.prect.y = dword_8007DCAC[i].b;
+    r.prect.w = 0x20;
+    r.prect.h = 0x40;
+    r.crect.x = dword_8007DCBC[i].a;
+    r.crect.y = dword_8007DCBC[i].b;
+    r.crect.w = 0x100;
+    r.crect.h = 1;
     InitPolyFT4_80029A10(p, &r);
 }
 
@@ -958,10 +922,10 @@ Minion rosters_800A1BC8[2][15] = {
         { 4 },
     },
 };
-unsigned char byte_800A38D8 = 0;
+unsigned char player2Pad_800A38D8 = 0;
 unsigned char curPlayer_800A38D9 = 0;
 unsigned char rosterFill_800A38DA = 0;
-unsigned char byte_800A38DB = 0;
+unsigned char selMode_800A38DB = 0;
 unsigned char battleResult_800A38DC = 0;
 int dword_800A38E0 = 0xDF0033;
 int combatTaskDesc_800A38E4[6] = { 1, 5, 0, 0, (int)CombatInit_800A13A0, (int)CombatFree_800A148C };
@@ -981,7 +945,7 @@ void *combatTaskList_800A398C[25] = {
 };
 int stageOverlays_800A39F0[6] = { 22, 23, 24, 26, 27, 28 };
 CombatSlot combatSlots_800A3A08[2] = { { 0 } };
-int dword_800A3A88 = 0;
+int combatFlags_800A3A88 = 0;
 int stage_800A3A8C = 0;
 int dword_800A3A90[4] = { 0 };
 Minion teams_800A3AA0[2][3] = { { { 0 } } };

@@ -314,7 +314,7 @@ EventEntry* StartBattle_800BA9E4()
         r = GetSpecialStageIndex_800A5354();
         shownAreaElement_800C9D82 = r;
         areaElement_800C9D84 = r;
-        dword_800C9D83 = r;
+        fixedStageElement_800C9D83 = r;
         InitTurnGauges_800BF648(turnGauges_800C9C68, GetEncounterAdvantage_800BAAD8());
         battleFlags_800B1228 = 0;
         SetBattleFlag_800BC838(0x80000);
@@ -568,7 +568,7 @@ void BattleNextTurn_800BAE74(BatTask_a* t, BatObj_a* u)
             curCommand_800C9C88.mask_8 = 0x10;
             curCommand_800C9C88.targets_C = 0;
             SetBattleFlag_800BC838(0x10000);
-            t->next_8 = sub_800BC05C;
+            t->next_8 = CmdEnemySwapJoin_800BC05C;
             v->next_8 = (void (*)())(v->f4 = (int)BattleNextTurn_800BAE74);
             return;
         }
@@ -714,7 +714,7 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
             break;
         case 2:
             SetBattleFlag_800BC838(0x40);
-            if (sub_800BF9B4(GetEnemySpecies_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
+            if (IsBossSpecies_800BF9B4(GetEnemySpecies_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
             {
                 SetBattleFlag_800BC838(0x100000);
                 deathSfx_800C9D80 = 0x1C;
@@ -751,7 +751,7 @@ void BeginUnitTurn_800BB380(BatTask_a* t, BatObj_a* u)
             break;
         case 2:
             SetBattleFlag_800BC838(0x40);
-            if (sub_800BF9B4(GetEnemySpecies_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
+            if (IsBossSpecies_800BF9B4(GetEnemySpecies_800A2BE4(actingUnit_800C9C7C - 4)) == 1)
             {
                 SetBattleFlag_800BC838(0x100000);
                 deathSfx_800C9D80 = 0x1C;
@@ -1080,16 +1080,16 @@ void CmdEnemyCallJoin_800BBF64(BatTask_a* t, BatObj_a* u)
 
 INCLUDE_OVERLAY_ASM(battle, CmdEnemyCallJoin_800BBF64);
 
-void sub_800BBFFC(BatTask_a* t, BatObj_a* u)
+void CmdEnemySwap_800BBFFC(BatTask_a* t, BatObj_a* u)
 {
     u->fc = StartActionTask_800BC28C(t);
-    u->next_8 = sub_800BC05C;
+    u->next_8 = CmdEnemySwapJoin_800BC05C;
     commandUnit_800C9C98 = curCommand_800C9C88.arg_4 + 4;
     t->next_8 = WaitActionTask_800BC144;
 }
 
 #if 0
-void sub_800BC05C(BatTask_a* t, BatObj_a* u)
+void CmdEnemySwapJoin_800BC05C(BatTask_a* t, BatObj_a* u)
 {
     curCommand_800C9C88.kind_0 = 0x16;
     actingUnit_800C9C7C = commandUnit_800C9C98;
@@ -1103,7 +1103,7 @@ void sub_800BC05C(BatTask_a* t, BatObj_a* u)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(battle, sub_800BC05C);
+INCLUDE_OVERLAY_ASM(battle, CmdEnemySwapJoin_800BC05C);
 
 void CmdSimple_800BC0FC(BatTask_a* t, BatTask_a* u)
 {

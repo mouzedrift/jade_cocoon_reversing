@@ -479,7 +479,7 @@ extern int IsEffectTaskIdle_800148D4(void);
 
 extern int sub_80019C84(void);
 
-extern Minion* sub_800A11D8(int a0);
+extern Minion* GetSlotMinion_800A11D8(int a0);
 extern int GetInventorySlotId_800AD288(int a0, int a1);
 extern int GetInventorySlotCount_800AD2C8(int a0, int a1);
 extern void GetPortraitSprt_800A61CC(int a0, void* a1, void* a2);

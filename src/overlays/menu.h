@@ -407,7 +407,7 @@ extern char levantStatsRect_800C18C4[8];
 extern char menuTitleRect_800C18CC[8];
 extern char configLabelRect_800C18D4[8];
 extern char rankRect_800C18DC[8];
-extern char name_800C18E4[8];
+extern char moneyWindowRect_800C18E4[8];
 extern MenuCell itemGridCell_800C18EC;
 extern char statusWindowRect_800C18F4[8];
 extern int menuMessages_800C18FC[16];

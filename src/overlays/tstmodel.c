@@ -13,13 +13,13 @@ typedef struct TstModelDraw
 {
     FtgObject* ftg_0;
     VECTOR* pos_4;
-    char* f8;
+    char* rot_8;
     TstModelBone* bones_C;
-    char* f10;
+    char* base_10;
     ModelAnim* anim_14;
     int frame_18;
-    int f1C;
-    char* f20;
+    int drawMode_1C;
+    char* bonePos_20;
     VECTOR* scale_24;
     unsigned long* ot_28;
 } TstModelDraw;
@@ -504,16 +504,16 @@ void TstModelDrawModel_800A1428(TstModelWork* c)
     c->draw_1C0.anim_14 = &m->anims_54[c->anim_1A8];
     c->draw_1C0.ftg_0 = m->ftg_50;
     c->draw_1C0.pos_4 = &pos;
-    c->draw_1C0.f8 = z;
+    c->draw_1C0.rot_8 = z;
     c->draw_1C0.bones_C = c->bones_28;
-    c->draw_1C0.f10 = boneScales_800A3268;
+    c->draw_1C0.base_10 = boneScales_800A3268;
     c->draw_1C0.frame_18 = (unsigned)c->frame_1A4 % c->draw_1C0.anim_14->frameCount_0;
-    c->draw_1C0.f1C = 0;
-    c->draw_1C0.f20 = name_800A3804;
+    c->draw_1C0.drawMode_1C = 0;
+    c->draw_1C0.bonePos_20 = modelBonePos_800A3804;
     c->draw_1C0.scale_24 = &scale;
     c->draw_1C0.ot_28 = pOT_8008D690;
     PlayAnimFrameSfx_8001C364(m, c->anim_1A8, c->draw_1C0.frame_18);
-    DrawAnimSkel_80046A58(&c->draw_1C0, name_800A1EE8, 0);
+    DrawAnimSkel_80046A58(&c->draw_1C0, modelLight_800A1EE8, 0);
     DrawSpriteVtxQuadsGT4_800459E4(c->bones_28, &m->mats_5C, pOT_8008D690, 0);
 }
 
@@ -804,7 +804,7 @@ MATRIX lightDirs_800A1E84 = {
 TstModelMat lightColors_800A1EA4 = { { 0x8001000, 0x10000800, 0x8000800, 0x8001000, 0x800 } };
 int tstModelTaskDesc_800A1EC4[6] = { 1, 1, 0x1F8, 0, (int)TstModelInit_800A09C0 };
 char tstModelTaskList_800A1EDC[12] = { 184, 142, 7, 128, 196, 30, 10, 128 };
-char name_800A1EE8[24] = { 0 };
+char modelLight_800A1EE8[24] = { 0 };
 int minionBones_800A1F00[52] = {
     0, 0x20000, 0x10001, 1, 0x1020002, 0xB0002, 0x2030003, 0xB0003,
     0x3040004, 0xB0004, 0x4050005, 0xB0005, 0x2060003, 0xB0006, 0x6070004, 0xB0007,
@@ -1114,4 +1114,4 @@ TstModelTbl tstModels_800A33B0[90] = {
 int levantFtgs_800A37E8[3] = { 2, 7, -1 };
 short gridWrapMask_800A37F4[4] = { 1, 1, 2, 2 };
 short gridWrapSign_800A37FC[4] = { -1, 1, 1, -1 };
-char name_800A3804[480] = { 0 };
+char modelBonePos_800A3804[480] = { 0 };

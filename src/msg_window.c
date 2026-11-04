@@ -117,7 +117,7 @@ extern Size_8003422C MeasureTextLines_8003E3B4(int* list);
 extern Size_8003422C MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
 extern int MeasureTextWidth_8003E4C8(int str);
 extern void GetPortraitPoly_800A6308(int a, void* b);
-extern void sub_800A1B2C(int a, void* b);
+extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
 extern short** FindTextResumePage_80034900(short** list);
 extern void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1);
 typedef struct
@@ -209,7 +209,7 @@ EventEntry* OpenMessageWindow_8003422C(int* cfg)
     }
     else if (cfg[0x20 / 4] == 7)
     {
-        sub_800A1B2C(cfg[0x24 / 4], (char*)w + 0x88);
+        GetCombatPortraitPoly_800A1B2C(cfg[0x24 / 4], (char*)w + 0x88);
         WI(0x84) = 1;
     }
     list = (int**)cfg[0x8 / 4];

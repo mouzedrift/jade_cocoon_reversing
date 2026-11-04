@@ -1,5 +1,5 @@
 dword_800A05A0=0x800a05a0; // overlay header / data
-asc_800A05A4=0x800a05a4; // data
+nameCursorPulseColor_800A05A4=0x800a05a4; // data
 aCaution_800A05A8=0x800a05a8; // data
 str_800A05BC=0x800a05bc; // data
 str_800A0604=0x800a0604; // data
@@ -66,7 +66,7 @@ ClearInventory_800A2358=0x800a2358;
 InitStub_800A2424=0x800a2424;
 ResetMapIds_800A242C=0x800a242c;
 ClearMinionSlots_800A2450=0x800a2450;
-sub_800A24E0=0x800a24e0;
+StoreAllPartyMinions_800A24E0=0x800a24e0;
 InitFlagTables_800A2540=0x800a2540;
 SetNewGameStartMap_800A2650=0x800a2650;
 levantName_800A2718=0x800a2718; // data behind the code

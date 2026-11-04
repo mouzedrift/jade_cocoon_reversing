@@ -1118,9 +1118,9 @@ int EvCmdMoveToActor_800B942C(EvCtxEventfnc* c)
     ang = ratan2_8003B548(d.x_0, d.z_8);
     m.actor_0 = c->pc_8->a_4;
     m.kind_4 = c->pc_8->op_0 != 0x15;
-    m.x_18 = b->x_0 + name_80084540[ang & 0xFFF] * 200 / 4096;
+    m.x_18 = b->x_0 + sinTable_80084540[ang & 0xFFF] * 200 / 4096;
     m.y_1C = b->y_4;
-    m.z_20 = b->z_8 + name_80084540[(ang + 0x400) & 0xFFF] * 200 / 4096;
+    m.z_20 = b->z_8 + sinTable_80084540[(ang + 0x400) & 0xFFF] * 200 / 4096;
     m.field_14 = c->pc_8->c_C;
     return SendActorCmd_800BB840(c, &m, 1, 1);
 }
@@ -1817,7 +1817,7 @@ int EvCmdSetReturnPoint_800BAB14(EvCtxEventfnc* c)
 
 #if 0
 extern int SetFadeMode_8001C19C(int a, int b);
-int sub_800BAB5C(EvCtxEventfnc* c)
+int EvCmdOpenMapSelect_800BAB5C(EvCtxEventfnc* c)
 {
     SetFadeMode_8001C19C(1, 0x20);
     RequestGameMode_800A6D30(8);
@@ -1827,7 +1827,7 @@ int sub_800BAB5C(EvCtxEventfnc* c)
 }
 #endif
 
-INCLUDE_OVERLAY_ASM(eventfnc, sub_800BAB5C);
+INCLUDE_OVERLAY_ASM(eventfnc, EvCmdOpenMapSelect_800BAB5C);
 
 // opens a shop (GAME loads WPNSHOP / SHOPCTRL / SHOP by b's high half) and waits for it to close
 int EvCmdOpenShop_800BABB0(EvCtxEventfnc* c)
@@ -2007,7 +2007,7 @@ int EvCmdWaitTalk_800BAFAC(EvCtxEventfnc* c)
     return 0;
 }
 
-int sub_800BB180(EvCtxEventfnc* c)
+int EvCmdSetIdleAnim_800BB180(EvCtxEventfnc* c)
 {
     EvActorCmdEventfnc m;
     int r;
@@ -2133,7 +2133,7 @@ int EvCmdBattle_800BB27C(EvCtxEventfnc* c)
 
 INCLUDE_OVERLAY_ASM(eventfnc, EvCmdBattle_800BB27C);
 
-int sub_800BB45C(EvCtxEventfnc* c)
+int EvCmdIfBattleResult_800BB45C(EvCtxEventfnc* c)
 {
     if (c->pc_8->b_8 == dword_800B1230)
     {
@@ -2497,9 +2497,9 @@ EvVecEventfnc* GetSavedActorFront_800BBC80(EvCtxEventfnc* c, int idx, int mode)
     {
         EvVecEventfnc* v = GetActorPos_800BBBA0(idx);
         SVECTOR* r = GetActorRot_800BBBD0(idx);
-        c->savedFront_78[idx].x_0 = v->x_0 + name_80084540[r->vy & 0xFFF] * 100 / 4096;
+        c->savedFront_78[idx].x_0 = v->x_0 + sinTable_80084540[r->vy & 0xFFF] * 100 / 4096;
         c->savedFront_78[idx].y_4 = r->vy;
-        c->savedFront_78[idx].z_8 = v->z_8 + name_80084540[(r->vy + 0x400) & 0xFFF] * 100 / 4096;
+        c->savedFront_78[idx].z_8 = v->z_8 + sinTable_80084540[(r->vy + 0x400) & 0xFFF] * 100 / 4096;
     }
     return &c->savedFront_78[idx];
 }

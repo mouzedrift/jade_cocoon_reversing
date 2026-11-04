@@ -1532,7 +1532,6 @@ void WriteSaveTask_800B98C4(Task_LOAD* t, LoadMenuWork* s)
 INCLUDE_OVERLAY_ASM(load, WriteSaveTask_800B98C4);
 
 // the title of the save file being written (Shift-JIS "<name>/Level 99/<place>", saveTitle_800BDFAC)
-extern unsigned short name_800B6C48[]; // "Corridor"
 extern void* memcpy(void* dst, const void* src, unsigned int n);
 extern void BuildCardHeader_800BB2AC(CardHeader_LOAD* h, int idx, char* title);
 extern void IntToText_8003F610(unsigned short* buf, int val);
@@ -1696,7 +1695,7 @@ void PackSaveFile_800B9A8C(LoadMenuWork* s)
         break;
     case 2:
     default:
-        memcpy(saveTitle_800BDFAC->f.place_2A, name_800B6C48, 17);
+        memcpy(saveTitle_800BDFAC->f.place_2A, aCorridor_800B6C48, 17);
         break;
     }
     BuildCardHeader_800BB2AC(&s->fileBuf_4->header_0, idx, saveTitle_800BDFAC->str);
@@ -2052,7 +2051,7 @@ void WaitCardSync_800BADF4(void)
     MemCardSync(0, &b, &a);
 }
 
-int sub_800BAE24(void)
+int IsCardReady_800BAE24(void)
 {
     return 1;
 }

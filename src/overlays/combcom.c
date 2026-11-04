@@ -17,8 +17,8 @@ typedef struct CombComTask
 // DrawMenuWindows_8002A5A4's argument
 extern unsigned char targetSlotLo_800CD83C; // low byte of targetSlot_800CD83C
 extern unsigned char actorSlot_800A85BD;
-extern unsigned char dword_800A4078[];
-extern int dword_800A3A88;
+extern unsigned char sideSlot_800A4078[];
+extern int combatFlags_800A3A88;
 extern int GetSlotMagicBits_800A11BC(int);
 extern int CountTeamMinions_800A1AAC(int);
 extern int GetMenuCursorIndex_8003DA54(void*);
@@ -205,13 +205,13 @@ const int targetItem2_800CB700[15] = {
 };
 
 extern EventNode* dword_8008D614;
-extern unsigned char byte_800A38D8;
+extern unsigned char player2Pad_800A38D8;
 extern unsigned char battleResult_800A38DC;
 extern unsigned short padPressed_8009194C[];
 extern void CmdMenuTask_800CD16C();
-extern unsigned char byte_800A85BC;
-extern short word_800A82D0;
-extern short word_800A82D2;
+extern unsigned char swapSlot_800A85BC;
+extern short previewHp_800A82D0;
+extern short previewMp_800A82D2;
 extern // Magic list rows from the number of spells; adds the Change command when minion changing is allowed
 void SetupCmdMenu_800CB88C();
 extern // Change is greyed out (with a message) when the side has a single minion
@@ -233,7 +233,7 @@ EventEntry* CombComStart_800CB7AC(int cmd, int side)
         }
         else
         {
-            padIndex_800CD848 = byte_800A38D8;
+            padIndex_800CD848 = player2Pad_800A38D8;
         }
         battleResult_800A38DC = 0;
         menuState_800CD83A = 0;
@@ -253,7 +253,7 @@ void SetupCmdMenu_800CB88C()
     {
         magicCursorCount_800CD2A8 = CountMagicBits_8001AE54(GetSlotMagicBits_800A11BC(side_800CD839));
     }
-    if (dword_800A3A88 & 2)
+    if (combatFlags_800A3A88 & 2)
     {
         cmdCursor_800CD28C[1] = 3;
         cmdCursor_800CD28C[2] = 5;
@@ -325,11 +325,11 @@ void SetFocusedMinion_800CBAD4(int state)
 {
     if ((state & 0xFF) != 3)
     {
-        actorSlot_800A85BD = dword_800A4078[side_800CD839 * 4];
+        actorSlot_800A85BD = sideSlot_800A4078[side_800CD839 * 4];
     }
     else if (targetFlags_800CD844 & 5)
     {
-        actorSlot_800A85BD = dword_800A4078[side_800CD839 * 4];
+        actorSlot_800A85BD = sideSlot_800A4078[side_800CD839 * 4];
     }
     else
     {
@@ -439,8 +439,8 @@ void DrawCmdMenu_800CBEA4()
     int k;
     int f;
     shown = 0;
-    word_800A82D0 = 0;
-    word_800A82D2 = 0;
+    previewHp_800A82D0 = 0;
+    previewMp_800A82D2 = 0;
     if (IsCircleHeld_8003D45C(padIndex_800CD848))
     {
         if (menuState_800CD83A == 0)
@@ -539,7 +539,7 @@ void DrawCmdMenu_800CBEA4()
         r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         r.field_A = 0;
         DrawAbilityList_8002CE28(&r, p.xy[side_800CD839]);
-        word_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
+        previewMp_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x80))
     {
@@ -554,7 +554,7 @@ void DrawCmdMenu_800CBEA4()
         r.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         r.field_A = 0;
         DrawMagicList_8002CAC8(&r, p.xy[side_800CD839]);
-        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
+        previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(magicCursor_800CD2A4)));
     }
     if (menuState_800CD83A == 5)
     {
@@ -564,7 +564,7 @@ void DrawCmdMenu_800CBEA4()
 }
 
 #if 0
-// Not matched: scheduling of the three word_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
+// Not matched: scheduling of the three previewHp_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
 
 extern int ResolveBattleAction_80012BB0(void* a, void* b, void* c, int* d);
 extern int IsDrainAction_80013228(void* a, void* b, void* c, int* d);
@@ -578,8 +578,8 @@ void PreviewCmdEffect_800CC40C()
     UnitStatus* t;
     if (menuState_800CD83A == 3)
     {
-        word_800A82D0 = 0;
-        word_800A82D2 = 0;
+        previewHp_800A82D0 = 0;
+        previewMp_800A82D2 = 0;
         src = GetUnitStatus_80014390((unsigned char)(side_800CD839 + 8));
         for (i = 0; i < 2; i++)
         {
@@ -593,19 +593,19 @@ void PreviewCmdEffect_800CC40C()
                     bit = 1 << i;
                     if (cmd_800CD840->mask_8 & bit)
                     {
-                    word_800A82D0 -= out[3];
-                    word_800A82D2 -= out[4];
-                    word_800A82D0 -= out[5];
-                    word_800A82D2 -= out[6];
-                    word_800A82D0 -= out[7];
-                    word_800A82D2 -= out[8];
-                    if (t->hp_8.max_2 - t->hp_8.cur_0 < word_800A82D0)
+                    previewHp_800A82D0 -= out[3];
+                    previewMp_800A82D2 -= out[4];
+                    previewHp_800A82D0 -= out[5];
+                    previewMp_800A82D2 -= out[6];
+                    previewHp_800A82D0 -= out[7];
+                    previewMp_800A82D2 -= out[8];
+                    if (t->hp_8.max_2 - t->hp_8.cur_0 < previewHp_800A82D0)
                     {
-                        word_800A82D0 = t->hp_8.max_2 - t->hp_8.cur_0;
+                        previewHp_800A82D0 = t->hp_8.max_2 - t->hp_8.cur_0;
                     }
-                    if (t->mp_C.max_2 - t->mp_C.cur_0 < word_800A82D2)
+                    if (t->mp_C.max_2 - t->mp_C.cur_0 < previewMp_800A82D2)
                     {
-                        word_800A82D2 = t->mp_C.max_2 - t->mp_C.cur_0;
+                        previewMp_800A82D2 = t->mp_C.max_2 - t->mp_C.cur_0;
 
                     }
                     }
@@ -622,12 +622,12 @@ void PreviewCmdEffect_800CC40C()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(arg))
         {
-            word_800A82D0 = 0;
+            previewHp_800A82D0 = 0;
         }
     }
 }
 #endif
-// HP/MP change preview of the chosen action on the target (word_800A82D0 / word_800A82D2)
+// HP/MP change preview of the chosen action on the target (previewHp_800A82D0 / previewMp_800A82D2)
 INCLUDE_OVERLAY_ASM(combcom, PreviewCmdEffect_800CC40C);
 
 #if 0
@@ -637,7 +637,7 @@ extern CombComItem targetItem1_800CB6C8;
 extern CombComItem targetItem2_800CB700;
 extern Minion teams_800A3AA0[][3];
 extern int IsMinionSlotEmpty_800A1934(Minion* p);
-extern int sub_800A1958(Minion* p);
+extern int IsMinionFainted_800A1958(Minion* p);
 extern int CheckMagicUsable_80034068(short* p);
 int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
 {
@@ -692,7 +692,7 @@ int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
         {
             list[0]->flags |= 2;
         }
-        res = ((int*)dword_800A4078)[arg[1]];
+        res = ((int*)sideSlot_800A4078)[arg[1]];
     }
     else
     {
@@ -700,12 +700,12 @@ int DrawTargetList_800CC674(short* arg, int mode, int sel, int f)
         for (k = i = 0; i < 3; i++)
         {
             u = &teams_800A3AA0[arg[1]][i];
-            if (i != ((int*)dword_800A4078)[side_800CD839] && IsMinionSlotEmpty_800A1934(u) == 0)
+            if (i != ((int*)sideSlot_800A4078)[side_800CD839] && IsMinionSlotEmpty_800A1934(u) == 0)
             {
                 it = items[k];
                 *pk = it;
                 it->text_4 = u->status_84.name_10;
-                if (sub_800A1958(u))
+                if (IsMinionFainted_800A1958(u))
                 {
                     (*pk)->flags |= 2;
                 }
@@ -737,7 +737,7 @@ INCLUDE_OVERLAY_ASM(combcom, DrawTargetList_800CC674);
 // Stores the chosen target; Defend marks the unit defending, Change has no target unit
 void FinishCmd_800CC9FC()
 {
-    byte_800A85BC = targetSlot_800CD83C;
+    swapSlot_800A85BC = targetSlot_800CD83C;
     if (cmd_800CD840->kind_0 == 0x12)
     {
         cmd_800CD840->targets_C = 0;
@@ -758,7 +758,7 @@ void FinishCmd_800CC9FC()
 
 
 extern Minion teams_800A3AA0[][3];
-extern int sub_800A1958(Minion* p);
+extern int IsMinionFainted_800A1958(Minion* p);
 extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
 extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
 // 1 when the highlighted entry can be chosen, else 0 with errorMsg_800CD84C set to the reason (or 0)
@@ -855,7 +855,7 @@ int CheckCmdSelectable_800CCA94()
         }
         else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 4)
         {
-            if (sub_800A1958(&teams_800A3AA0[side_800CD839][targetSlot_800CD83C]))
+            if (IsMinionFainted_800A1958(&teams_800A3AA0[side_800CD839][targetSlot_800CD83C]))
             {
                 errorMsg_800CD84C = errCannotSummon_800CD454;
                 return 0;
@@ -1019,8 +1019,8 @@ void CmdMenuTask_800CD16C(EventEntry* e, void* buf)
     {
         exchangeFlags_800A84A8 &= 0xF3;
         FinishCmd_800CC9FC();
-        word_800A82D0 = 0;
-        word_800A82D2 = 0;
+        previewHp_800A82D0 = 0;
+        previewMp_800A82D2 = 0;
         e->flags = (e->flags & ~1) | 0x8000;
     }
 }

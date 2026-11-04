@@ -124,7 +124,7 @@ extern void SaveCameraState_80039620(CameraCtrl* o);
 extern void SetupCameraOrbit_80038CA8(CameraCtrl* p);
 extern void SetupBattleIntroCamera_80037F44(CameraCtrl* p);
 extern void CameraOrbitTask_800374E0();
-extern int sub_800B8184(int a, int b);
+extern int FindMeshAtPos_800B8184(int a, int b);
 extern void CameraBattleIntroTask_800369E0(EventEntry* p, CameraCtrl* q);
 
 // Matched
@@ -142,7 +142,7 @@ void InitCameraTask_800368F8(EventEntry* p, CameraCtrl* q)
     }
     else if (!(q->flags_4 & 0x2000))
     {
-        int r = sub_800B8184(q->target_0, saveData_8008B570.mapId_2E4[3].field_0);
+        int r = FindMeshAtPos_800B8184(q->target_0, saveData_8008B570.mapId_2E4[3].field_0);
         if (r >= 0)
         {
             saveData_8008B570.mapId_2E4[3].field_0 = r;
@@ -514,7 +514,7 @@ void SetCameraTarget_80037AC8(int target)
 }
 extern int* GetBattleSelection_800A1E3C(void);
 extern BattleObj_800C0FAC* GetSummonedMinionBonePos_800C0FAC(void);
-extern unsigned char byte_800C9C7C;
+extern unsigned char actingUnit_800C9C7C;
 extern void MoveCameraToFocusPreset_80038E2C(CameraCtrl* p, int a, int b);
 extern void CameraBattleTask_80036AB4();
 // Matched
@@ -541,7 +541,7 @@ void FocusBattleCamera_80037AE0(unsigned short mask)
     if (*(unsigned short*)&p->mode_8 == 4 || *(unsigned short*)&p->mode_8 == 5)
     {
         r = GetBattleSelection_800A1E3C();
-        if (byte_800C9C7C == 0)
+        if (actingUnit_800C9C7C == 0)
         {
             v = 0;
         }
