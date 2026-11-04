@@ -82,10 +82,10 @@ EventEntry* StartEventScript_800A59D0(int v)
         q->pc_8 = v;
         q->ret_C = v;
         q->id_10 = nextScriptId_800AEBDC;
-        q->f114 = 0;
+        q->choiceMask_114 = 0;
         for (i = 7; i >= 0; i--)
         {
-            q->fCC[i] = 0;
+            q->vars_CC[i] = 0;
         }
         ResetEventCtx_800A5B54(q);
         p->cb_8 = RunEventScript_800A6060;
@@ -101,7 +101,7 @@ EventEntry* StartEventScriptForEntity_800A5AA0(int a, int b)
 {
     EventEntry* r = StartEventScript_800A59D0(a);
     GameEvCtx* t = r->buffer;
-    t->f120 = b;
+    t->ent_120 = b;
     return r;
 }
 
@@ -137,30 +137,30 @@ int FindEventScript_800A5AE4(int a)
 void ResetEventCtx_800A5B54(GameEvCtx* p)
 {
     int i;
-    p->f14 = 0;
-    p->f18 = 0;
-    p->f1C = 0;
+    p->heldActors_14 = 0;
+    p->busyActors_18 = 0;
+    p->animActors_1C = 0;
     p->f20 = 0;
     p->flags_0 = 0;
-    p->fB4 = 0;
-    p->fB8 = 0;
-    p->fBC = 0;
-    p->fC0 = 0;
-    p->fC4 = 0;
-    p->fC8 = -1;
-    p->fEC = 0;
-    p->f110 = 0;
-    p->f118 = 0;
-    p->f100 = -1;
-    p->f102 = -1;
-    p->f104 = -1;
-    p->f108 = 0;
-    p->f11C = 0;
-    p->f120 = 0;
-    p->fF0 = 0;
+    p->msgStep_B4 = 0;
+    p->step_B8 = 0;
+    p->maskStep_BC = 0;
+    p->cmdStep_C0 = 0;
+    p->waitCount_C4 = 0;
+    p->trigger_C8 = -1;
+    p->branch_EC = 0;
+    p->lastMsg_110 = 0;
+    p->msgOpen_118 = 0;
+    p->msgX_100 = -1;
+    p->msgY_102 = -1;
+    p->msgPosMode_104 = -1;
+    p->msgOptions_108 = 0;
+    p->msgWindow_11C = 0;
+    p->ent_120 = 0;
+    p->callArg_F0 = 0;
     for (i = 4; i >= 0; i--)
     {
-        p->f24[i] = 0;
+        p->idleAnims_24[i] = 0;
     }
 }
 
@@ -177,7 +177,7 @@ void ClearScriptActorBusy_800A5BCC(int a)
         {
             GameEvCtx* q = o->buffer;
             int m = 1 << a;
-            q->f18 &= ~m;
+            q->busyActors_18 &= ~m;
             q->f20 &= ~m;
         }
         n = n->next;
@@ -201,7 +201,7 @@ int FireEventTrigger_800A5C40(int a)
         if ((e->flags & 0x8001) == 1)
         {
             o = e->buffer;
-            if (r == 0 && (o->flags_0 & 8) && o->fC8 == a)
+            if (r == 0 && (o->flags_0 & 8) && o->trigger_C8 == a)
             {
                 o->flags_0 |= 4;
                 r = 1;
@@ -312,7 +312,7 @@ int IsTriggerWaited_800A5E80(int a)
         if ((o->flags & 0x8001) == 1)
         {
             GameEvCtx* q = o->buffer;
-            if (q->fC8 == a)
+            if (q->trigger_C8 == a)
                 return 1;
         }
         n = n->next;
@@ -828,7 +828,7 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
         return;
     if (IsMapLoading_800272D0())
         return;
-    if (IsSceneHeld_800A5E68() == 0 && fieldMode_800B0EC0 == 1 && gCtx_800B1260.f0 == 0 &&
+    if (IsSceneHeld_800A5E68() == 0 && fieldMode_800B0EC0 == 1 && gCtx_800B1260.active_0 == 0 &&
         !(padPressed_8009194C & saveData_8008B570.buttonConfig_8[6]) && (padPressed_8009194C & saveData_8008B570.buttonConfig_8[4]))
     {
         q->f8 = fieldMode_800B0EC0;
@@ -837,7 +837,7 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
         e->flags = (e->flags | 1) & ~0x8000;
         q->f0 = 4;
     }
-    else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.f0 == 0 && fieldMode_800B0EC0 != 1)
+    else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && fieldMode_800B0EC0 != 1)
     {
         p->f8 = 1;
         p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x1d);
@@ -869,7 +869,7 @@ void CheckSubOverlayRequests_800A6DAC(GameTask_1* t, GameD_1* q)
         p->f18 = (int)shopRequest_800B06B0;
         p->f1C = (void (*)(int))StartShopRequest_800A7204;
     }
-    else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.f0 == 0 && saveRequest_800B06BC)
+    else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && saveRequest_800B06BC)
     {
         p->f8 = 1;
         p->f4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
@@ -5419,7 +5419,7 @@ int battleHitEnemies_800B122C[13] = {
     0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0xB00,
 };
-GameCtx_1 gCtx_800B1260 = { 0 };
+GameEncounter gCtx_800B1260 = { 0 };
 int dword_800B1CAC[3] = { 0 };
 GameEnemy eventEnemy_800B1CB8 = { 0 };
 int eventHook_800B1D98 = 0;

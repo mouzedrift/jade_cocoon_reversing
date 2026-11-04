@@ -318,18 +318,18 @@ void ResetEncounter_800A170C(void)
     v.b = 0;
     v.c = 0;
     SetEncounterRecord_800A16DC((GameV3_1*)&v);
-    gCtx_800B1260.f0 = 0;
-    gCtx_800B1260.f8 = 0;
-    gCtx_800B1260.f40 = 0;
-    gCtx_800B1260.f44 = 0;
+    gCtx_800B1260.active_0 = 0;
+    gCtx_800B1260.otherCount_8 = 0;
+    gCtx_800B1260.count_40 = 0;
+    gCtx_800B1260.remaining_44 = 0;
     for (i = 11; i >= 0; i--)
     {
         gCtx_800B1260.actors_7c[i] = 0;
     }
-    gCtx_800B1260.f76c = 0;
-    gCtx_800B1260.f770 = 0;
-    gCtx_800B1260.f774 = 0;
-    gCtx_800B1260.f778 = 0;
+    gCtx_800B1260.activeCount_76C = 0;
+    gCtx_800B1260.memberCount_770 = 0;
+    gCtx_800B1260.fixed_774 = 0;
+    gCtx_800B1260.reused_778 = 0;
     gCtx_800B1260.f77c = 0;
     gCtx_800B1260.f780 = 1;
     gCtx_800B1260.f784 = 1;
@@ -342,7 +342,7 @@ void ClearEnemySlots_800A1794(void)
     int i;
     for (i = 2; i >= 0; i--)
     {
-        enemySlots_800B19F0[i].f0 = 0;
+        enemySlots_800B19F0[i].used_0 = 0;
     }
 }
 
@@ -352,7 +352,7 @@ GameSlot_1* FindFreeEnemySlot_800A17BC(void)
     int i;
     for (i = 0; i < 3; i++)
     {
-        if (enemySlots_800B19F0[i].f0 == 0)
+        if (enemySlots_800B19F0[i].used_0 == 0)
         {
             return &enemySlots_800B19F0[i];
         }
@@ -364,8 +364,8 @@ GameSlot_1* FindFreeEnemySlot_800A17BC(void)
 GameSlot_1* AddEnemySlot_800A17F4(unsigned int* src, GameAi* b)
 {
     GameSlot_1* r = FindFreeEnemySlot_800A17BC();
-    r->f0 = 1;
-    r->f4 = b;
+    r->used_0 = 1;
+    r->ai_4 = b;
     MemCopy_800403E8(&r->data_8, src, 0xe0);
     return r;
 }
@@ -373,9 +373,9 @@ GameSlot_1* AddEnemySlot_800A17F4(unsigned int* src, GameAi* b)
 // Matched
 void RemoveEnemySlot_800A1850(GameSlot_1* p)
 {
-    GameAi* q = p->f4;
+    GameAi* q = p->ai_4;
     Actor* v = q->actor_8;
-    p->f0 = 0;
+    p->used_0 = 0;
     FreeEnemyAi_800A2D28(q);
     DestroyActor_8001D600(v);
 }
@@ -383,7 +383,7 @@ void RemoveEnemySlot_800A1850(GameSlot_1* p)
 // Matched
 void SuspendEnemySlot_800A188C(GameSlot_1* p)
 {
-    GameAi* q = p->f4;
+    GameAi* q = p->ai_4;
     Actor* v = q->actor_8;
     SuspendEnemyAi_800A2EC8(q);
     SetActorActive_8001D658(v, 0);
@@ -392,7 +392,7 @@ void SuspendEnemySlot_800A188C(GameSlot_1* p)
 // Matched
 void ResumeEnemySlot_800A18C8(GameSlot_1* p)
 {
-    GameAi* q = p->f4;
+    GameAi* q = p->ai_4;
     Actor* v = q->actor_8;
     ResumeEnemyAi_800A2D48(q);
     SetActorActive_8001D658(v, 1);
@@ -404,9 +404,9 @@ void SuspendAllEnemySlots_800A1904(void)
     int i;
     for (i = 0; i < 3; i++)
     {
-        if (enemySlots_800B19F0[i].f0)
+        if (enemySlots_800B19F0[i].used_0)
         {
-            GameAi* q = enemySlots_800B19F0[i].f4;
+            GameAi* q = enemySlots_800B19F0[i].ai_4;
             SuspendEnemyAi_800A2EC8(q);
             SetActorAnimPaused_8001D6EC(q->actor_8, 1);
         }
@@ -419,9 +419,9 @@ void ResumeAllEnemySlots_800A1974(void)
     int i;
     for (i = 0; i < 3; i++)
     {
-        if (enemySlots_800B19F0[i].f0)
+        if (enemySlots_800B19F0[i].used_0)
         {
-            GameAi* q = enemySlots_800B19F0[i].f4;
+            GameAi* q = enemySlots_800B19F0[i].ai_4;
             ResumeEnemyAi_800A2D48(q);
             SetActorAnimPaused_8001D6EC(q->actor_8, 0);
         }
@@ -457,9 +457,9 @@ int CheckEnemyContact_800A19E4(void)
     }
     for (i = 0, s = enemySlots_800B19F0; i < 3; i++, s++)
     {
-        if (s->f0)
+        if (s->used_0)
         {
-            o = s->f4;
+            o = s->ai_4;
             d = 0xfff;
             if (IsWithinDistance_8003B740(o->actor_8->pos_38, &levantPos_8008BD18.pos.x, &d) == 1)
             {
@@ -479,9 +479,9 @@ int CheckEnemyContact_800A19E4(void)
 int AreAllEncounterEnemiesGone_800A1B2C(void)
 {
     int i;
-    for (i = 0; i < gCtx_800B1260.f40; i++)
+    for (i = 0; i < gCtx_800B1260.count_40; i++)
     {
-        if (gCtx_800B1260.f4c[i] == 0)
+        if (gCtx_800B1260.gone_4C[i] == 0)
         {
             return 0;
         }
@@ -520,13 +520,13 @@ void SetupEncounter_800A1BD0(void)
     int n;
     GameSlot_1* p;
     GameSlot_1* q;
-    GameCtx_1* g;
+    GameEncounter* g;
     if (e)
     {
         o = e->actors_A4[0];
         e->actors_A4[0] = CloneActor_8001D4DC(o, 0, 0, 0);
         slot = AddEnemySlot_800A17F4((unsigned int*)e, 0);
-        slot->f4 = CreateEnemyAiEvent_800A2D90(e->actors_A4[0], &slot->data_8.minion_1C, 0);
+        slot->ai_4 = CreateEnemyAiEvent_800A2D90(e->actors_A4[0], &slot->data_8.minion_1C, 0);
         SetActorVisible_8001D730(o, 0);
         SetActorGroundMove_8001D68C(o, 0);
         encounterSlot_800B1264 = (int*)slot;
@@ -534,33 +534,33 @@ void SetupEncounter_800A1BD0(void)
     found = 0;
     for (i = 0; i < 3; i++)
     {
-        if (enemySlots_800B19F0[i].f0)
+        if (enemySlots_800B19F0[i].used_0)
         {
             s = &enemySlots_800B19F0[i];
             slot = s;
             done = 0;
             t = s->data_8.anims_C8[0];
-            obj = s->f4;
+            obj = s->ai_4;
             t = t ? t : name_8007A024;
-            if (!found && gCtx_800B1260.f4 == s)
+            if (!found && gCtx_800B1260.leader_4 == s)
             {
                 SuspendEnemyAi_800A2EC8(obj);
                 StartActorScript_8001DC34(obj->actor_8, (void*)t[0]);
                 found = 1;
                 done = found;
-                gCtx_800B1260.f4 = s;
+                gCtx_800B1260.leader_4 = s;
             }
             if (!done)
             {
                 SuspendEnemyAi_800A2EC8(obj);
                 StartActorScript_8001DC34(obj->actor_8, (void*)t[1]);
-                gCtx_800B1260.fc[gCtx_800B1260.f8] = slot;
-                gCtx_800B1260.f8++;
+                gCtx_800B1260.others_C[gCtx_800B1260.otherCount_8] = slot;
+                gCtx_800B1260.otherCount_8++;
             }
         }
     }
     g = &gCtx_800B1260;
-    p = (GameSlot_1*)g->f4;
+    p = (GameSlot_1*)g->leader_4;
     for (i = 0; i < 3; i++)
     {
         if ((unsigned)p->data_8.members_B0[i].species_0 >= 0xd3)
@@ -573,18 +573,18 @@ void SetupEncounter_800A1BD0(void)
     {
         n = i;
     }
-    g->f76c = n;
-    g->f770 = i;
-    q = (GameSlot_1*)g->f4;
-    g->f774 = q->data_8.kind_0 == 0;
+    g->activeCount_76C = n;
+    g->memberCount_770 = i;
+    q = (GameSlot_1*)g->leader_4;
+    g->fixed_774 = q->data_8.kind_0 == 0;
     g->f77c = 0;
-    g->f778 = q->data_8.kind_0 == 1;
+    g->reused_778 = q->data_8.kind_0 == 1;
     g->f780 = q->data_8.f8;
     g->f784 = q->data_8.fC;
     g->f788 = q->data_8.f10;
     dword_800B1CA8 = 0;
-    gCtx_800B1260.f0 = 1;
-    g->f48 = q->data_8.f14;
+    gCtx_800B1260.active_0 = 1;
+    g->groupIndex_48 = q->data_8.f14;
 }
 #endif
 INCLUDE_OVERLAY_ASM(game, SetupEncounter_800A1BD0);
@@ -604,13 +604,13 @@ char* GetBattleSelection_800A1E3C(void)
 // Matched
 int* GetEncounterLeaderPos_800A1E48(void)
 {
-    return gCtx_800B1260.f4->f4->actor_8->pos_38;
+    return gCtx_800B1260.leader_4->ai_4->actor_8->pos_38;
 }
 
 // Matched
 short* GetEncounterLeaderRot_800A1E68(void)
 {
-    return gCtx_800B1260.f4->f4->actor_8->rot_5C;
+    return gCtx_800B1260.leader_4->ai_4->actor_8->rot_5C;
 }
 
 // Matched
@@ -628,9 +628,9 @@ int sub_800A1E90(void)
 void SuspendOtherEnemies_800A1E98(void)
 {
     int i;
-    for (i = 0; i < gCtx_800B1260.f8; i++)
+    for (i = 0; i < gCtx_800B1260.otherCount_8; i++)
     {
-        SuspendEnemySlot_800A188C(gCtx_800B1260.fc[i]);
+        SuspendEnemySlot_800A188C(gCtx_800B1260.others_C[i]);
     }
     SuspendFieldMinions_800A7B00(-1);
 }
@@ -639,9 +639,9 @@ void SuspendOtherEnemies_800A1E98(void)
 void ResumeOtherEnemies_800A1F0C(void)
 {
     int i;
-    for (i = 0; i < gCtx_800B1260.f8; i++)
+    for (i = 0; i < gCtx_800B1260.otherCount_8; i++)
     {
-        ResumeEnemySlot_800A18C8(gCtx_800B1260.fc[i]);
+        ResumeEnemySlot_800A18C8(gCtx_800B1260.others_C[i]);
     }
     ResumeFieldMinions_800A7BF0(-1);
 }
@@ -651,7 +651,7 @@ void SpawnEncounterEnemies_800A1F80(void)
 {
     ActorDesc s;
     int v[3];
-    GameCtx_1* g;
+    GameEncounter* g;
     GameSlot_1* h;
     int n;
     short* offs;
@@ -664,11 +664,11 @@ void SpawnEncounterEnemies_800A1F80(void)
     int* p1;
     int f;
     g = &gCtx_800B1260;
-    n = g->f770;
-    h = g->f4;
-    if (g->f76c < n)
+    n = g->memberCount_770;
+    h = g->leader_4;
+    if (g->activeCount_76C < n)
     {
-        offs = encounterFormations_800ADE9C[g->f76c - 1];
+        offs = encounterFormations_800ADE9C[g->activeCount_76C - 1];
     }
     else
     {
@@ -680,11 +680,11 @@ void SpawnEncounterEnemies_800A1F80(void)
         k = 0;
         if (i == 0 && h->data_8.useMinion_18 == 1)
         {
-            MemCopy_800403E8((unsigned int*)&gCtx_800B1260.ents_ac[gCtx_800B1260.f40], (unsigned int*)&h->data_8.minion_1C, sizeof(UnitStats));
+            MemCopy_800403E8((unsigned int*)&gCtx_800B1260.ents_ac[gCtx_800B1260.count_40], (unsigned int*)&h->data_8.minion_1C, sizeof(UnitStats));
         }
         else
         {
-            k = InitMinionData_8001900C(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40], &h->data_8.members_B0[i].species_0);
+            k = InitMinionData_8001900C(&gCtx_800B1260.ents_ac[gCtx_800B1260.count_40], &h->data_8.members_B0[i].species_0);
         }
         if (h->data_8.kind_0 == 0 || h->data_8.actors_A4[i] != 0)
         {
@@ -721,7 +721,7 @@ void SpawnEncounterEnemies_800A1F80(void)
             {
                 p0 = (int*)GetModelBaseScale_80024E90(m, k);
                 p1 = (int*)GetModelBaseScale_80024E90(m, k + 1);
-                f = GetUnitRank_80019AD0(&gCtx_800B1260.ents_ac[gCtx_800B1260.f40]);
+                f = GetUnitRank_80019AD0(&gCtx_800B1260.ents_ac[gCtx_800B1260.count_40]);
                 f = ((p1[0] - p0[0]) * f) / 4096;
                 v[0] = p0[0] + f;
                 v[1] = p0[1] + f;
@@ -735,9 +735,9 @@ void SpawnEncounterEnemies_800A1F80(void)
             a = CreateActor_8001D45C(&s);
             SetBoneGroupFlags_80019B14(a->bones_134, (unsigned short*)sub_80024F00(m, k), (unsigned short*)sub_80024F38(m, k));
         }
-        a->pos_38[0] = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.f76c]) & 0xfff] * 1000 / 4096;
+        a->pos_38[0] = saveData_8008B570.levant_7A8.pos.x + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.activeCount_76C]) & 0xfff] * 1000 / 4096;
         a->pos_38[1] = saveData_8008B570.levant_7A8.pos.y;
-        a->pos_38[2] = saveData_8008B570.levant_7A8.pos.z + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.f76c] + 0x400) & 0xfff] * 1000 / 4096;
+        a->pos_38[2] = saveData_8008B570.levant_7A8.pos.z + sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + offs[i % gCtx_800B1260.activeCount_76C] + 0x400) & 0xfff] * 1000 / 4096;
         a->rot_5C[0] = 0;
         a->prevPos_44[0] = a->pos_38[0];
         a->prevPos_44[1] = a->pos_38[1];
@@ -748,13 +748,13 @@ void SpawnEncounterEnemies_800A1F80(void)
         a->rot_5C[1] = ratan2_8003B548(saveData_8008B570.levant_7A8.pos.x - a->pos_38[0], saveData_8008B570.levant_7A8.pos.z - a->pos_38[2]);
         a->rot_5C[2] = 0;
         SetActorGroundMove_8001D68C(a, 0);
-        gCtx_800B1260.actors_7c[gCtx_800B1260.f40] = a;
-        gCtx_800B1260.f4c[gCtx_800B1260.f40] = i >= gCtx_800B1260.f76c;
-        gCtx_800B1260.f70c[gCtx_800B1260.f40] = (int)h->data_8.anims_C8[i];
-        gCtx_800B1260.f73c[gCtx_800B1260.f40] = h->data_8.fD4[i];
+        gCtx_800B1260.actors_7c[gCtx_800B1260.count_40] = a;
+        gCtx_800B1260.gone_4C[gCtx_800B1260.count_40] = i >= gCtx_800B1260.activeCount_76C;
+        gCtx_800B1260.anims_70C[gCtx_800B1260.count_40] = (int)h->data_8.anims_C8[i];
+        gCtx_800B1260.f73c[gCtx_800B1260.count_40] = h->data_8.fD4[i];
         i++;
-        gCtx_800B1260.f40++;
-        gCtx_800B1260.f44++;
+        gCtx_800B1260.count_40++;
+        gCtx_800B1260.remaining_44++;
     } while (i < n);
     RemoveEnemySlot_800A1850(h);
 }
@@ -764,9 +764,9 @@ int GetEnemyAliveMask_800A248C(void)
 {
     int mask = 0;
     int i;
-    for (i = 0; i < gCtx_800B1260.f40; i++)
+    for (i = 0; i < gCtx_800B1260.count_40; i++)
     {
-        if (gCtx_800B1260.actors_7c[i] && gCtx_800B1260.f4c[i] == 0)
+        if (gCtx_800B1260.actors_7c[i] && gCtx_800B1260.gone_4C[i] == 0)
         {
             mask |= 1 << (i + 4);
         }
@@ -780,7 +780,7 @@ int IsEnemyAlive_800A24F4(int a)
     AssertEnemyIndex_800A2CA8(a, 0);
     if (gCtx_800B1260.actors_7c[a] != 0)
     {
-        if (gCtx_800B1260.f4c[a] == 0)
+        if (gCtx_800B1260.gone_4C[a] == 0)
         {
             return 1;
         }
@@ -921,10 +921,10 @@ int sub_800A28FC(int a)
 void RemoveEnemy_800A2924(int a)
 {
     AssertEnemyIndex_800A2CA8(a, 0);
-    gCtx_800B1260.f4c[a] = 1;
-    if (--gCtx_800B1260.f44 == 0)
+    gCtx_800B1260.gone_4C[a] = 1;
+    if (--gCtx_800B1260.remaining_44 == 0)
     {
-        int x = gCtx_800B1260.f48;
+        int x = gCtx_800B1260.groupIndex_48;
         if (x >= 0)
         {
             SaveData* sd = &saveData_8008B570;
@@ -968,8 +968,8 @@ int GetEnemyMagicBits_800A2A70(int a)
 // Matched
 int sub_800A2AB4(void)
 {
-    GameCtx_1* c = &gCtx_800B1260;
-    if (c->f774 != 0)
+    GameEncounter* c = &gCtx_800B1260;
+    if (c->fixed_774 != 0)
     {
         if (c->f3c == 0)
         {
@@ -985,14 +985,14 @@ void sub_800A2AE8(void)
 {
     if (gCtx_800B1260.f3c == 0)
     {
-        gCtx_800B1260.f4c[0] = 1;
-        gCtx_800B1260.f4c[1] = 0;
+        gCtx_800B1260.gone_4C[0] = 1;
+        gCtx_800B1260.gone_4C[1] = 0;
         gCtx_800B1260.f3c = 1;
     }
     else
     {
-        gCtx_800B1260.f4c[0] = 0;
-        gCtx_800B1260.f4c[1] = 1;
+        gCtx_800B1260.gone_4C[0] = 0;
+        gCtx_800B1260.gone_4C[1] = 1;
         gCtx_800B1260.f3c = 0;
     }
 }
@@ -1048,7 +1048,7 @@ int* GetEnemyBonePos_800A2C68(int a)
 int AssertEnemyIndex_800A2CA8(int a, int b)
 {
     int ok = 0;
-    if (a < 0 || a >= gCtx_800B1260.f40 || gCtx_800B1260.f4c[a] != 0)
+    if (a < 0 || a >= gCtx_800B1260.count_40 || gCtx_800B1260.gone_4C[a] != 0)
     {
         ok = 1;
     }
@@ -1090,9 +1090,9 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c)
         q->flags_0 = &e->flags;
         q->minion_4 = b;
         q->actor_8 = a;
-        q->f28 = 0;
+        q->turnDir_28 = 0;
         q->timer_24 = 0;
-        q->f2c = 0;
+        q->turnLeft_2C = 0;
         q->anim_20 = -1;
         q->state_c = -1;
         q->f10 = -1;
@@ -1567,23 +1567,23 @@ void SetEnemyAiState_800A433C(GameAi* p, int state, int anim, int timer, int mod
     SetActorAnim_8001D760(p->actor_8, anim, mode, flag);
     if (state == 0xe)
     {
-        p->f2c = 0x1000 / (rand() % 16) / div;
-        p->f28 = (rand() & 1) ? 1 : 2;
+        p->turnLeft_2C = 0x1000 / (rand() % 16) / div;
+        p->turnDir_28 = (rand() & 1) ? 1 : 2;
     }
 }
 
 void RandomizeEnemyTurn_800A43FC(GameAi* p)
 {
-    p->f2c = 0x1000 / (rand() % 16) / 2;
-    p->f28 = (rand() & 1) ? 1 : 2;
+    p->turnLeft_2C = 0x1000 / (rand() % 16) / 2;
+    p->turnDir_28 = (rand() & 1) ? 1 : 2;
 }
 
 // Matched
 int EnemyAiTurnStep_800A4470(GameAi* p)
 {
-    if (p->f2c)
+    if (p->turnLeft_2C)
     {
-        p->f2c = TurnActorBy_8001DD44(p->actor_8, p->f28, p->f2c, 0x20);
+        p->turnLeft_2C = TurnActorBy_8001DD44(p->actor_8, p->turnDir_28, p->turnLeft_2C, 0x20);
         RestartActorMotion_8001D71C(p->actor_8);
         return 1;
     }
@@ -1625,12 +1625,12 @@ void EnemyAiChaseStep_800A45F8(GameAi* p)
 {
     int r;
     int step;
-    if (p->f2c)
+    if (p->turnLeft_2C)
     {
-        p->f2c = TurnActorBy_8001DD44(p->actor_8, p->f28, p->f2c, 0x80);
+        p->turnLeft_2C = TurnActorBy_8001DD44(p->actor_8, p->turnDir_28, p->turnLeft_2C, 0x80);
     }
     r = FindActorInFront_8001DECC(p->actor_8, 0x190, 0);
-    p->f28 = r;
+    p->turnDir_28 = r;
     if (r != 3)
     {
         if (r != 0)
@@ -1638,19 +1638,19 @@ void EnemyAiChaseStep_800A45F8(GameAi* p)
             goto turn;
         }
         r = p->actor_8->ground_80;
-        p->f28 = r;
+        p->turnDir_28 = r;
         if (r != 3)
         {
             goto check;
         }
     }
-    p->f28 = 2;
-    p->f2c = 0x745;
+    p->turnDir_28 = 2;
+    p->turnLeft_2C = 0x745;
 check:
-    if (p->f28)
+    if (p->turnDir_28)
     {
     turn:
-        TurnActorBy_8001DD44(p->actor_8, p->f28, 0x800, 0x40);
+        TurnActorBy_8001DD44(p->actor_8, p->turnDir_28, 0x800, 0x40);
         return;
     }
     step = 0x40;
@@ -1664,35 +1664,35 @@ check:
 void EnemyAiWanderStep_800A46FC(GameAi* p)
 {
     int r;
-    if (p->f2c)
+    if (p->turnLeft_2C)
     {
-        p->f2c = TurnActorBy_8001DD44(p->actor_8, p->f28, p->f2c, 0x20);
+        p->turnLeft_2C = TurnActorBy_8001DD44(p->actor_8, p->turnDir_28, p->turnLeft_2C, 0x20);
     }
     else
     {
         r = FindActorInFront_8001DECC(p->actor_8, 0x190, 0);
-        p->f28 = r;
+        p->turnDir_28 = r;
         if (r == 3)
         {
-            p->f28 = 2;
-            p->f2c = 0x745;
+            p->turnDir_28 = 2;
+            p->turnLeft_2C = 0x745;
         }
         else if ((unsigned)(r - 1) < 2)
         {
-            p->f2c = 0x1e1;
+            p->turnLeft_2C = 0x1e1;
         }
         else
         {
             r = p->actor_8->ground_80;
-            p->f28 = r;
+            p->turnDir_28 = r;
             if (r == 3)
             {
-                p->f28 = 2;
-                p->f2c = 0x745;
+                p->turnDir_28 = 2;
+                p->turnLeft_2C = 0x745;
             }
             else if ((unsigned)(r - 1) < 2)
             {
-                p->f2c = 0x100;
+                p->turnLeft_2C = 0x100;
             }
         }
     }
@@ -1721,11 +1721,11 @@ int EnemyAiCheckBlocked_800A4804(GameAi* p)
     {
         if (r == 1)
         {
-            p->f28 = 1;
+            p->turnDir_28 = 1;
         }
         else
         {
-            p->f28 = 2;
+            p->turnDir_28 = 2;
         }
         if (r == 3)
         {

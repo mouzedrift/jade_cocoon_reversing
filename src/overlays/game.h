@@ -28,8 +28,8 @@ typedef struct GameAi
     char pad_14[0xC];
     int anim_20;
     int timer_24;
-    int f28; // turn direction (FindActorInFront_8001DECC)
-    int f2c; // turn amount
+    int turnDir_28; // turn direction (FindActorInFront_8001DECC: 1 / 2)
+    int turnLeft_2C; // turn amount
 } GameAi;
 
 typedef struct GameRec_1
@@ -67,8 +67,8 @@ typedef struct GameEnemy
 
 typedef struct GameSlot_1
 {
-    int f0;
-    GameAi* f4;
+    int used_0;
+    GameAi* ai_4;
     GameEnemy data_8;
 } GameSlot_1;
 
@@ -97,35 +97,35 @@ typedef struct GameEvCtx
     int pc_8;
     int ret_C;
     int id_10;
-    int f14;
-    int f18;
-    int f1C;
+    int heldActors_14;
+    int busyActors_18;
+    int animActors_1C;
     int f20;
-    int f24[6];
-    int vec3C[5][3];
-    int vec78[5][3];
-    int fB4;
-    int fB8;
-    int fBC;
-    int fC0;
-    unsigned int fC4;
-    int fC8;
-    int fCC[8];
-    int fEC;
-    int fF0;
-    int fF4;
-    int fF8;
-    int fFC;
-    short f100;
-    short f102;
-    int f104;
-    int f108;
+    int idleAnims_24[6];
+    int savedPos_3C[5][3];
+    int savedFront_78[5][3];
+    int msgStep_B4;
+    int step_B8;
+    int maskStep_BC;
+    int cmdStep_C0;
+    unsigned int waitCount_C4;
+    int trigger_C8;
+    int vars_CC[8];
+    int branch_EC;
+    int callArg_F0;
+    int callArg0_F4;
+    int callArg1_F8;
+    int callArg2_FC;
+    short msgX_100;
+    short msgY_102;
+    int msgPosMode_104;
+    int msgOptions_108;
     int pad_10C;
-    int f110;
-    int f114;
-    int f118;
-    int f11C;
-    int f120;
+    int lastMsg_110;
+    int choiceMask_114;
+    int msgOpen_118;
+    int msgWindow_11C;
+    int ent_120;
 } GameEvCtx;
 
 // an event entity (list eventEntities_8008D400); same layout as EvEntEventfnc in eventfnc.h
@@ -298,32 +298,32 @@ extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int a);
 
 
 
-typedef struct GameCtx_1
+typedef struct GameEncounter
 {
-    int f0;
-    GameSlot_1* f4;     // the enemy slot that started the encounter
-    int f8;             // number of fc entries
-    GameSlot_1* fc[12]; // the other enemy slots
+    int active_0;
+    GameSlot_1* leader_4;     // the enemy slot that started the encounter
+    int otherCount_8;             // number of others_C entries
+    GameSlot_1* others_C[12]; // the other enemy slots
     int f3c;
-    int f40;
-    int f44;
-    int f48;
-    int f4c[12];
+    int count_40;
+    int remaining_44;
+    int groupIndex_48;
+    int gone_4C[12];
     Actor* actors_7c[12];
     UnitStats ents_ac[12]; // the encounter's minions (minion data)
-    int f70c[12];
+    int anims_70C[12];
     int f73c[12];
-    int f76c;
-    int f770;
-    int f774;
-    int f778;
+    int activeCount_76C;
+    int memberCount_770;
+    int fixed_774;
+    int reused_778;
     int f77c;
     int f780;
     int f784;
     int f788;
     char pad_78c[0xa48 - 0x78c];
     int fa48;
-} GameCtx_1;
+} GameEncounter;
 
 
 typedef struct GameJ_1
@@ -1534,7 +1534,7 @@ extern int dword_800B11CC[4];
 extern int levantAnimSets_800B11DC[19];
 extern int battleFlags_800B1228;
 extern int battleHitEnemies_800B122C[13];
-extern GameCtx_1 gCtx_800B1260;
+extern GameEncounter gCtx_800B1260;
 extern int dword_800B1CAC[3];
 extern GameEnemy eventEnemy_800B1CB8;
 extern int eventHook_800B1D98;
