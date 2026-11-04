@@ -23,7 +23,7 @@ extern unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx);
 typedef struct
 {
     unsigned short modelId_0;
-    unsigned char field_2; // angles in units of 2 degrees (sub_800C064C)
+    unsigned char field_2; // angles in units of 2 degrees (BuildMinionModelReq_800C064C)
     unsigned char field_3;
 } MinionModelDesc;
 extern MinionModelDesc speciesModelDescs_8007BD30[];
@@ -58,9 +58,10 @@ typedef struct
 } CameraState;
 
 // a point light passed to SetModelLighting_80019D84
+// (also the camera's light list cameraState_8008D4F0.ent_44 / pointLights_8008D534)
 typedef struct
 {
-    int pos_0[3];
+    struct_v3 pos_0;
     SVECTOR color_C;   // only vx/vy/vz used
     int range_14;
 } PointLight;

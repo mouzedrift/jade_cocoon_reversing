@@ -34,13 +34,13 @@ extern int MeasureTextWidth_8003E4C8();
 
 
 
-extern unsigned char dword_800C9E72[];
+extern unsigned char enemyBits_800C9E72[];
 
-extern unsigned char dword_800C9E80[];
+extern unsigned char enemyUnits_800C9E80[];
 
 
 
-extern int dword_800C9E78;
+extern int partyMinionMask_800C9E78;
 
 
 
@@ -64,45 +64,48 @@ typedef struct BatMenu_a
 
 
 
-// a battle command (dword_800C9C88 is the current one, dword_800C9CC8 holds each unit's reaction)
+// a battle command (curCommand_800C9C88 is the current one, unitReactions_800C9CC8 holds each unit's reaction).
+// Units: 0 Levant, 1..3 his minions (one is summoned at a time), 4..6 the enemies.
 typedef struct BatCmd_a
 {
-    int kind_0; // 0x14: none
+    int kind_0; // 0 attack, 1 magic, 2 summon, 3 recall, 4 item, 5 capture, 6 special attack, 7 flee,
+                // 8 change fighter, 0xB killed, 0x12 defend, 0x14 none, 0x15 an enemy calls an ally, 0x1A capture of the last enemy
     int arg_4;
     int mask_8; // acting unit bits
     int targets_C; // target unit bits
 } BatCmd_a;
 
+// the enemy AI's context (ChooseEnemyCommand_800C4118)
 typedef struct BatTask
 {
-    unsigned int* f0;  // &f10->magicBits_80
-    UnitSkills* f4;    // &f10->skills_6C
-    BatCmd_a* f8;
-    int fC;
-    UnitStats* f10;    // the acting encounter minion
-    UnitStatus* f14;   // its target: Levant or one of his minions
-    int f18;
+    unsigned int* magicBits_0; // &self_10->magicBits_80
+    UnitSkills* skills_4;      // &self_10->skills_6C
+    BatCmd_a* cmd_8;           // the command to fill in
+    int slot_C;                // the enemy's slot (unit slot_C + 4)
+    UnitStats* self_10;        // the acting encounter minion
+    UnitStatus* target_14;     // its target: Levant or the summoned minion
+    int targetMask_18;         // the target's unit bit
     int f1C;
 } BatTask;
 
 
-extern void sub_800C6AFC(BatTask* t, int a, int b);
+extern void AiSetCommand_800C6AFC(BatTask* t, int a, int b);
 
 
 
 
 
 
-extern int dword_800C9E7C;
+extern int menuErrorText_800C9E7C;
 
-extern int sub_800BE364();
+extern int GetLatestHitFrame_800BE364();
 
-extern void sub_800BE3C0();
+extern void UpdateAction_800BE3C0();
 
-extern int sub_800BEA94();
+extern int IsActionDone_800BEA94();
 
 
-extern int sub_800BC6CC();
+extern int GetUnitPos_800BC6CC();
 
 extern void FadeOutSeqSlot_800313C8(int);
 
@@ -110,12 +113,12 @@ extern EventNode* dword_8008D624;
 
 
 
-extern char dword_800C9D56;
+extern char savedEnemyCursor_800C9D56;
 
 
 extern int sub_800A5354();
 
-extern int sub_800BAAD8();
+extern int GetEncounterAdvantage_800BAAD8();
 
 extern void sub_800A1F80();
 
@@ -123,18 +126,18 @@ extern void sub_800A8D0C();
 
 extern void sub_800A096C();
 
-extern void sub_800BAC4C();
+extern void BattleLoad_800BAC4C();
 
 
 extern int sub_800A2C28();
 
-extern int sub_800BEB50();
+extern int IsActorActionDone_800BEB50();
 
-extern int sub_800BEB68();
+extern int AreReactionsDone_800BEB68();
 
-extern int sub_800BF47C();
+extern int AnyHitNumberActive_800BF47C();
 
-extern int sub_800BC784();
+extern int IsUnitInBattle_800BC784();
 
 typedef struct BatV12_a
 {
@@ -147,7 +150,7 @@ extern unsigned int dword_800B122C;
 
 extern int dword_800ADE88;
 
-extern int sub_800C0D60();
+extern int IsSummonedMinionIdle_800C0D60();
 
 extern int sub_800A89F0();
 
@@ -155,15 +158,15 @@ extern int sub_800A2550();
 
 extern int IsEffectTaskIdle_800148D4();
 
-extern int sub_800C09D4();
+extern int CalcElementAngle_800C09D4();
 
 extern int sub_800B4318();
 
 extern void Midpoint3D_8003B95C();
 
-extern void sub_800BAE74();
+extern void BattleNextTurn_800BAE74();
 
-extern void sub_800BC850(unsigned int);
+extern void ClearBattleFlag_800BC850(unsigned int);
 
 extern char dword_80091D40[];
 
@@ -187,7 +190,7 @@ extern void sub_800A2618();
 
 extern int StartBattleMenu_800C6EFC();
 
-extern void sub_800BB940();
+extern void WaitBattleMenu_800BB940();
 
 extern void sub_800A1B78();
 
@@ -205,11 +208,11 @@ extern int sub_800A1B2C();
 
 extern void SsSepSetDecrescendo();
 
-extern void sub_800BA848();
+extern void BattleEndReturnToField_800BA848();
 
-extern void sub_800BA4F4();
+extern void BattleEndWaitFade_800BA4F4();
 
-// sub_800C064C: what StartModelTask_80010850 builds a minion's model from
+// BuildMinionModelReq_800C064C: what StartModelTask_80010850 builds a minion's model from
 typedef struct BatModelReq_a
 {
     int count_0; // distinct parts
@@ -225,21 +228,22 @@ typedef struct BatModelReq_a
 } BatModelReq_a;
 
 
-extern void sub_800C064C();
+extern void BuildMinionModelReq_800C064C();
 
 extern void StartModelTask_80010850();
 
-extern int sub_800BF784();
+extern int GetUnitTurnSpeed_800BF784();
 
-extern void sub_800BC468();
+extern void TurnUnitsToward_800BC468();
 
+// GAME's record of one enemy for the battle result (dword_800B1238)
 typedef struct BatEnt_a
 {
-    int a;
-    short b;
-    short c;
-    short d;
-    short e;
+    int exp_0;
+    short species_4; // -1: no enemy in the slot
+    short killer_6;  // the unit that defeated or captured it
+    short level_8;
+    short kind_A;    // the command that ended it (7: none)
 } BatEnt_a;
 
 typedef struct BatCol_a
@@ -326,53 +330,53 @@ extern void sub_800A25D8();
 
 extern int sub_800A2BE4();
 
-extern int sub_800BF6BC();
+extern int AdvanceTurnGauges_800BF6BC();
 
-extern int sub_800BC378();
+extern int GetUnitsCenter_800BC378();
 
-extern int sub_800BDE04();
+extern int AreUnitsReady_800BDE04();
 
-extern int sub_800BC570();
+extern int IsUnitOnField_800BC570();
 
-extern int sub_800BC7DC();
+extern int GetUnitSide_800BC7DC();
 
-extern void sub_800BC4D4();
+extern void TurnUnitToward_800BC4D4();
 
-extern void sub_800BF770();
+extern void ResetTurnGauge_800BF770();
 
-extern void sub_800BC838();
+extern void SetBattleFlag_800BC838();
 
-extern void sub_800BA624();
+extern void BattleEndFadeOut_800BA624();
 
-extern void sub_800BA6A0();
+extern void BattleEndFled_800BA6A0();
 
-extern void sub_800BA788();
+extern void BattleEndUnload_800BA788();
 
-extern void sub_800BA720();
+extern void RemoveAliveEnemies_800BA720();
 
-extern void sub_800BAE74();
+extern void BattleNextTurn_800BAE74();
 
-extern void sub_800BB1B0();
+extern void BattleFinish_800BB1B0();
 
-extern void sub_800BB168();
+extern void WaitChainMessageClosed_800BB168();
 
-extern void sub_800BB380();
+extern void BeginUnitTurn_800BB380();
 
-extern void sub_800BBC84();
+extern void CmdSwapMinionLoad_800BBC84();
 
-extern void sub_800BDC3C();
+extern void ActionRun_800BDC3C();
 
-extern void sub_800BF4D0();
+extern void HitNumberTask_800BF4D0();
 
-extern void sub_800C0254();
+extern void ActorWindowTask_800C0254();
 
-extern void sub_800BBDB4();
+extern void CmdRecall_800BBDB4();
 
-extern void sub_800C0DB0();
+extern void TurnSummonedMinionToward_800C0DB0();
 
-extern void sub_800BC324();
+extern void WaitBtlExecLoaded_800BC324();
 
-extern void sub_800BBE7C();
+extern void CmdRecallEnd_800BBE7C();
 
 
 
@@ -384,10 +388,11 @@ typedef struct BatObj_a
     int fc;
 } BatObj_a;
 
+// when a unit's action hits and when it ends (frames of the action timeline)
 typedef struct BatPair_a
 {
-    short a;
-    short b;
+    short hit_0;
+    short end_2;
 } BatPair_a;
 
 
@@ -405,35 +410,35 @@ extern EventNode* hitNumberTasks_8008D778;
 
 extern short effectOutcomeFlag_8008D780;
 
-extern void sub_800BBA70();
+extern void CmdActionReactions_800BBA70();
 
-extern void sub_800BBE00();
+extern void CmdRecallDone_800BBE00();
 
 extern void sub_800BC05C();
 
-extern void sub_800BBF64();
+extern void CmdEnemyCallJoin_800BBF64();
 
-extern void sub_800BDA28();
+extern void ActionStart_800BDA28();
 
-extern void sub_800BDBB0();
+extern void ActionWaitReady_800BDBB0();
 
-extern void sub_800C04A4();
+extern void HelpWindowTask_800C04A4();
 
-extern int sub_800BDD3C();
+extern int AreUnitsIdle_800BDD3C();
 
-extern void sub_800BF2E8();
+extern void UpdateWindowsHidden_800BF2E8();
 
-extern void sub_800BDEBC();
+extern void FaceActorAndTargets_800BDEBC();
 
-extern void sub_800BDF74();
+extern void StartActorAction_800BDF74();
 
-extern void sub_800BDFAC();
+extern void StartReactions_800BDFAC();
 
-extern void sub_800BE2C8();
+extern void AlignActionTimings_800BE2C8();
 
-extern int sub_800C0A9C();
+extern int GetPartyMinionMask_800C0A9C();
 
-extern int sub_800C0D50();
+extern int GetSummonedMinionSlot_800C0D50();
 
 typedef struct BatTask_a
 {
@@ -447,17 +452,18 @@ typedef struct BatTask_a
 
 extern unsigned int dword_800B1228;
 
-typedef struct BatCtx_a
+// the summoned minion's actor and where it appears (LoadSummonedMinion_800C0AEC)
+typedef struct BatSummon_a
 {
-    Actor* obj;
-    int f4;
-    int f8;
-    int fc;
-    int f10;
-} BatCtx_a;
+    Actor* actor_0;
+    int x_4;
+    int y_8;
+    int z_C;
+    int rotY_10;
+} BatSummon_a;
 
 
-// an animated window rect (sub_800C0254, sub_800C04A4)
+// an animated window rect (ActorWindowTask_800C0254, HelpWindowTask_800C04A4)
 typedef struct BatWin_b
 {
     unsigned int frame_0;
@@ -468,7 +474,6 @@ typedef struct BatWin_b
 
 
 
-extern short dword_800C9D9A;
 
 
 
@@ -485,37 +490,37 @@ extern int IsSceneFadeDone_8001AB94(void*);
 
 extern int sub_800A89F0();
 
-extern void sub_800BA624();
+extern void BattleEndFadeOut_800BA624();
 
-extern void sub_800BB894();
+extern void InputCommand_800BB894();
 
-extern void sub_800BBCC8();
+extern void CmdSummonWait_800BBCC8();
 
-extern void sub_800BC144();
+extern void WaitActionTask_800BC144();
 
-extern void sub_800BC850(unsigned int);
+extern void ClearBattleFlag_800BC850(unsigned int);
 
-extern int sub_800BC28C();
+extern int StartActionTask_800BC28C();
 
-extern int sub_800BC1A8();
+extern int NeedsStatusReaction_800BC1A8();
 
-extern struct BatPair_a* sub_800BE058();
+extern struct BatPair_a* StartUnitAction_800BE058();
 
-extern void sub_800BFC10();
+extern void ResetWindowHighlights_800BFC10();
 
-extern void sub_800BFC40();
+extern void StartEnemyWindows_800BFC40();
 
-extern void sub_800C01D8();
+extern void StartActorWindow_800C01D8();
 
-extern void sub_800C0440();
+extern void StartHelpWindow_800C0440();
 
-extern int sub_800C0BA0();
+extern int FreeSummonedMinion_800C0BA0();
 
-extern int sub_800C0AEC();
+extern int LoadSummonedMinion_800C0AEC();
 
-extern void sub_800BB794();
+extern void ResetUnitReactions_800BB794();
 
-extern UnitStatus* sub_800C0F78(int);
+extern UnitStatus* GetPartyMinionStatus_800C0F78(int);
 
 extern void StartScreenFlash_8001C02C(void*);
 
@@ -526,7 +531,7 @@ extern void GetActorHitFrame_80018E5C(Actor*, int);
 extern void SetActorStatusTint_80018EBC(Actor*, UnitStatus*);
 
 
-extern int sub_800C0D88();
+extern int IsSummonedMinionReady_800C0D88();
 
 extern int sub_800A8BE4();
 
@@ -568,7 +573,7 @@ extern void StartBattleCamera_80037748();
 
 extern void LoadUiTiy_8002BF74();
 
-extern void sub_800BFB80();
+extern void StartBattleWindows_800BFB80();
 
 extern int sub_800B4200(BatChain_a* p);
 
@@ -577,23 +582,23 @@ extern int sub_800B41D0(BatChain_a* p);
 extern int* sub_800B41A8(BatChain_a* p);
 
 
-extern void sub_800BB100();
+extern void WaitChainMessage_800BB100();
 
-extern void sub_800BB314();
+extern void SelectActingUnit_800BB314();
 
-extern void sub_800BB74C();
+extern void ResetCurrentCommand_800BB74C();
 
-extern void sub_800BB7D4();
+extern void ResetTurnResults_800BB7D4();
 
-extern void sub_800BB860();
+extern void PrepareCommandInput_800BB860();
 
-extern BatV12_a* sub_800BC5EC();
+extern BatV12_a* AveragePositions_800BC5EC();
 
 extern void ApplyBattleCommand_800BEBB8();
 
 extern void MoveBattleCameraForAction_80037828(int a, int b, int c);
 
-extern void sub_800BDB4C();
+extern void ActionWaitIdle_800BDB4C();
 
 extern void sub_800A8A30();
 
@@ -623,11 +628,11 @@ extern void sub_80039ED8(int a);
 
 extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
-extern void sub_800BF3DC(int a, int b, int c, int d, int e);
+extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int f14);
 
-extern void sub_800BE834(int a, int b);
+extern void ShowUnitHitResult_800BE834(int unit, int pos);
 
-extern void sub_800C0F1C();
+extern void UpdateMinionStatusTint_800C0F1C();
 
 typedef struct BatSettingsBits
 {
@@ -635,11 +640,11 @@ typedef struct BatSettingsBits
     unsigned int b21 : 1;
 } BatSettingsBits;
 
-extern void sub_800BF3DC(int a, int b, int c, int d, int e);
+extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int f14);
 
-extern void sub_800BF3AC();
+extern void FlashScreenWhite_800BF3AC();
 
-// sub_800BF3DC: the hp/mp change shown over a unit
+// StartHitNumber_800BF3DC: the hp/mp change shown over a unit
 typedef struct BatHitNum_a
 {
     int kind_0; // 0 hp, 1 mp
@@ -663,23 +668,23 @@ typedef struct BatResult_a
 {
     unsigned short kind_0;
     unsigned short arg_2;
-    int f4;
-    int f8;
-    int fC;
-    int f10;
-    int f14;
-    int f18;
-    int f1C;
-    int f20;
-    short f24;
+    int flags_4;
+    int status_8;         // status bits inflicted on the target
+    int actorHpCost_C;
+    int actorMpCost_10;
+    int actorHpDamage_14; // hp/mp the actor takes from the target (counter, drain)
+    int actorMpDamage_18;
+    int hpDamage_1C;      // the target's hp/mp damage
+    int mpDamage_20;
+    short areaElement_24; // in: the area element, out: the new one
     short f26;
-} BatResult_a;
+} BatResult_a; // the exe's ActionResult (common.c)
 
 extern void ResolveBattleAction_80012BB0(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
 extern void sub_800B4390(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r, BatChain_a* e);
 
-extern void sub_800BF9F0(int a);
+extern void MarkSpeciesCaptured_800BF9F0(int a);
 
 extern void AdjustUnitStatById_800127D0(int a0, int a1, int a2, int a3);
 
@@ -692,7 +697,7 @@ typedef struct BatXY_a
 
 
 
-// sub_800BFC40: one unit's window (sub_800C0074)
+// StartEnemyWindows_800BFC40: one unit's window (EnemyWindowTask_800C0074)
 typedef struct BatUnitWin_a
 {
     int slot_0;
@@ -704,12 +709,12 @@ typedef struct BatUnitWin_a
 
 
 
-extern void sub_800BFDEC();
+extern void EnemyWindowsLayoutTask_800BFDEC();
 
-extern void sub_800C0074();
+extern void EnemyWindowTask_800C0074();
 
 
-extern int sub_800C0904(unsigned char* p);
+extern int GetElementModelAngle_800C0904(unsigned char* p);
 
 
 
@@ -718,14 +723,14 @@ extern short defaultBones_80079140[]; // default bone table
 
 extern EventNode* dword_8008D60C;
 
-// sub_800C10B8: stops a seq slot after a delay
+// PlayTimedSeq_800C10B8: stops a seq slot after a delay
 typedef struct BatSeqStop_a
 {
     int slot_0;
     int timer_4;
 } BatSeqStop_a;
 
-// sub_800C1190: keys an sfx voice off after a delay
+// PlayTimedSfx_800C1190: keys an sfx voice off after a delay
 typedef struct BatSfxStop_a
 {
     union
@@ -737,7 +742,7 @@ typedef struct BatSfxStop_a
     short voice_8;
 } BatSfxStop_a;
 
-extern void sub_800C17EC();
+extern void HomingSparkTask_800C17EC();
 
 typedef struct BatSpark_a
 {
@@ -755,8 +760,8 @@ typedef struct BatSpark_a
     int* offset_44;
 } BatSpark_a;
 
-// buffer of the sub_800C1450 task: walks along path_88 (one frame per 4096 of time_4) and drops
-// three sub_800C1220 sprites every fourth frame
+// buffer of the DropTrailTask_800C1450 task: walks along path_88 (one frame per 4096 of time_4) and drops
+// three DropSpriteTask_800C1220 sprites every fourth frame
 typedef struct BatDropSrc_a
 {
     int count_0;
@@ -773,11 +778,11 @@ typedef struct BatDropSrc_a
 
 extern int* DrawRotSprite_80044010();
 
-extern void sub_800C1B2C();
+extern void SpriteAnimTask_800C1B2C();
 
-extern void sub_800C1DA4();
+extern void BounceSparkTask_800C1DA4();
 
-extern void sub_800C2170();
+extern void RisingSparkTask_800C2170();
 
 typedef struct BatShard_a
 {
@@ -796,11 +801,11 @@ typedef struct BatShard_a
 extern void PlaySfx_80031494(int id);
 
 
-extern void sub_800C273C();
+extern void ShardTask_800C273C();
 
-extern void sub_800C2CD8();
+extern void ImplodeShardTask_800C2CD8();
 
-extern void sub_800C23D0();
+extern void ShatterTask_800C23D0();
 
 typedef struct BatSrc_a
 {
@@ -810,7 +815,7 @@ typedef struct BatSrc_a
 
 extern void VectorToAngles_8003B5D4(int* v, short* rot);
 
-extern void sub_800C2FC8();
+extern void SpriteTrailTask_800C2FC8();
 
 typedef struct BatVec_a
 {
@@ -838,7 +843,7 @@ extern void DrawSpriteVtxQuadsGT4_800459E4();
 
 
 
-extern void sub_800C33E4();
+extern void ModelAnimTask_800C33E4();
 
 typedef struct BatAnim_a
 {
@@ -875,13 +880,13 @@ typedef struct BatGlow_a
 } BatGlow_a;
 
 
-extern void sub_800C3B50(int* p, int id);
+extern void SpawnOrb_800C3B50(int* p, int id);
 
 
 
 extern void free3_8003FC6C(void* p);
 
-extern void sub_800C4090(int a0, int a1, int c, int a3);
+extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
 
 
 
@@ -929,38 +934,38 @@ extern int pointLightRange_8008D3F0;
 
 extern int pointLightRange_8008D3F0;
 
-extern void sub_800C6AFC();
+extern void AiSetCommand_800C6AFC();
 
-extern int sub_800C473C();
+extern int EnemyAiDefault_800C473C();
 
-extern int sub_800C6BD0();
+extern int AiCastMagic_800C6BD0();
 
-extern int sub_800C6EC8();
+extern int TargetHasStatus_800C6EC8();
 
-extern int sub_800C6DF8();
+extern int AiHealWeakAlly_800C6DF8();
 
-extern int sub_800C6A8C();
+extern int AiUseSkill_800C6A8C();
 
-extern int sub_800C6A68();
+extern int AiAttack_800C6A68();
 
-extern int sub_800C6BD0();
+extern int AiCastMagic_800C6BD0();
 
 extern int rand();
 
-extern void sub_800C66B4(unsigned char* buf, unsigned int b);
+extern void SetElementAffinity_800C66B4(unsigned char* buf, unsigned int b);
 
-extern void sub_800C6B24(BatTask* t, int a, int b);
+extern void AiSetCommandOnSelf_800C6B24(BatTask* t, int a, int b);
 
-extern int sub_800C6D6C();
+extern int FindUsableSkill_800C6D6C();
 
-extern int sub_800C6CFC();
+extern int CanCastMagic_800C6CFC();
 
 extern EventNode* battleMenuTask_8008D468;
 
 
 extern unsigned char dword_800C9E70;
 
-extern void sub_800C71A0();
+extern void SelectMenuWindows_800C71A0();
 
 extern void BattleMenuTask_800C8A08();
 
@@ -1000,7 +1005,6 @@ typedef struct BatTgtQ_a
 
 
 
-extern int dword_800C9E5C;
 
 
 
@@ -1020,7 +1024,7 @@ extern int CheckItemOnTarget_80033DF4(BatTgtQ_a* q);
 
 extern int CheckMagicUsable_80034068(BatTgtQ_a* q);
 
-extern unsigned char sub_800C78D0();
+extern unsigned char GetSelectedCommand_800C78D0();
 
 
 extern int GetMenuCursorIndex_8003DA54(void*);
@@ -1029,7 +1033,6 @@ extern int GetMenuCursorIndex_8003DA54(void*);
 
 
 
-extern unsigned int dword_800C9E64;
 
 extern int GetItemTargetFlags_8001CE8C(int a);
 
@@ -1041,16 +1044,34 @@ extern int FindNthMagicBit_8001AEC0(unsigned int* h, int n);
 
 extern int GetMagicTargetFlags_8001ACE4(int a);
 
-struct BatState
+// one window of a menu's window list (the exe's DrawMenuWindowContents_8002A710 view); a list ends with flags_0 bit 0
+typedef struct BatMenuWin_a
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-};
+    unsigned short flags_0; // bit 1: greyed out
+    unsigned short type_2;  // 1: a uiTiy sprite
+    int text_4;             // sprite index for type 1
+    SPRT** sprts_8;
+    DR_TPAGE** tpages_C;
+    short x_10;
+    short y_12;
+    short w_14;
+    short h_16;
+    short mx_18;
+    short my_1A;
+} BatMenuWin_a;
+
+// what DrawMenuWindows_8002A5A4 draws: the command menu's windows
+typedef struct BatMenuWins_a
+{
+    int mode_0;                // 2: the command page, 4: a sub page
+    int time_4;
+    unsigned int frame_8;      // open animation frame (0..8)
+    int cursor_C;              // the command menu's cursor
+    BatMenuWin_a** windows_10; // NULL-terminated list of window lists
+    int ot_14;
+} BatMenuWins_a;
 
 
-extern short dword_800C92E0;
 
 
 
@@ -1060,7 +1081,6 @@ extern short dword_800C92E0;
 
 
 
-extern int dword_800C9E5C;
 
 
 
@@ -1086,7 +1106,7 @@ extern int FindNthMagicBit_8001AEC0();
 
 extern void DrawButtonHelpBar_8002B004(int a0, int a1, int a2);
 
-extern void sub_800C8828(int a);
+extern void DrawMenuHelpText_800C8828(int a);
 
 
 
@@ -1095,33 +1115,32 @@ extern void sub_800C8828(int a);
 
 extern int sub_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
-extern unsigned char dword_800C9E72[];
+extern unsigned char enemyBits_800C9E72[];
 
 
 
 
 
-extern int dword_800C9E7C;
-
-extern unsigned int dword_800C9E64;
+extern int menuErrorText_800C9E7C;
 
 
-extern void (*dword_800C966C[])(EventEntry* t, int a);
+
+extern void (*menuStateFns_800C966C[])(EventEntry* t, int a);
 
 
 
 extern void UpdateMenuCursor_8003D794();
 
-extern void sub_800C83B0();
+extern void PreviewCommandResult_800C83B0();
 
 typedef void (*BatFxFn)(BatTask* t);
 
-extern void sub_800BBBF4();
-extern void sub_800BBA24();
-extern void sub_800BBBA8();
-extern void sub_800BBEFC();
+extern void CmdSwapMinion_800BBBF4();
+extern void CmdAction_800BBA24();
+extern void CmdSummon_800BBBA8();
+extern void CmdEnemyCall_800BBEFC();
 extern void sub_800BBFFC();
-extern void sub_800BC0FC();
+extern void CmdSimple_800BC0FC();
 
 extern int dword_800B66C0;
 extern const int dword_800B6700[4];
@@ -1345,275 +1364,188 @@ extern const char aVeryEffectiveAg_800BA0F0[];
 extern const char aSpecialEarthAtt_800BA148[];
 extern const int dword_800BA174[2];
 extern int dword_800C8B2C;
-extern unsigned char dword_800C8B30;
-extern int dword_800C8B34;
-extern char dword_800C8B38[28];
-extern int dword_800C8B54[7];
-extern unsigned short dword_800C8B70[8];
-extern unsigned short dword_800C8B80[8];
-extern unsigned short dword_800C8B90[8];
-extern unsigned short dword_800C8BA0[8];
-extern unsigned short dword_800C8BB0[8];
-extern unsigned short dword_800C8BC0[10];
-extern unsigned short dword_800C8BD4[10];
-extern unsigned short dword_800C8BE8[8];
-extern unsigned short dword_800C8BF8[10];
-extern unsigned short dword_800C8C0C[8];
-extern unsigned short dword_800C8C1C[8];
-extern unsigned short dword_800C8C2C[8];
-extern unsigned short dword_800C8C3C[10];
-extern unsigned short dword_800C8C50[8];
-extern unsigned short dword_800C8C60[8];
-extern unsigned short dword_800C8C70[6];
-extern unsigned short dword_800C8C7C[6];
-extern unsigned short dword_800C8C88[8];
-extern unsigned short dword_800C8C98[2];
-extern unsigned short dword_800C8C9C[6];
-extern unsigned short dword_800C8CA8[6];
-extern unsigned short dword_800C8CB4[6];
-extern unsigned short dword_800C8CC0[6];
-extern unsigned short dword_800C8CCC[8];
-extern unsigned short dword_800C8CDC[8];
-extern unsigned short dword_800C8CEC[8];
-extern unsigned short dword_800C8CFC[8];
-extern unsigned short dword_800C8D0C[8];
-extern unsigned short dword_800C8D1C[10];
-extern unsigned short dword_800C8D30[10];
-extern unsigned short dword_800C8D44[8];
-extern unsigned short dword_800C8D54[10];
-extern unsigned short dword_800C8D68[8];
-extern unsigned short dword_800C8D78[8];
-extern unsigned short dword_800C8D88[8];
-extern unsigned short dword_800C8D98[6];
-extern unsigned short dword_800C8DA4[8];
-extern unsigned short dword_800C8DB4[8];
-extern unsigned short dword_800C8DC4[8];
-extern unsigned short dword_800C8DD4[12];
-extern unsigned short dword_800C8DEC[12];
-extern unsigned short dword_800C8E04[12];
-extern unsigned short dword_800C8E1C[12];
-extern unsigned short dword_800C8E34[12];
-extern unsigned short dword_800C8E4C[12];
-extern unsigned short dword_800C8E64[12];
-extern unsigned short dword_800C8E7C[12];
-extern unsigned short dword_800C8E94[12];
-extern BatStage_a dword_800C8EAC[39];
-extern int dword_800C911C[2];
-extern int dword_800C9124[2];
-extern char dword_800C912C[8];
-extern unsigned char dword_800C9134[4];
-extern int dword_800C9138[2];
-extern BatXY_a dword_800C9140[9];
-extern int dword_800C9164[3];
-extern int dword_800C9170;
-extern int dword_800C9174[3];
-extern short dword_800C9180;
-extern short dword_800C9182;
+extern unsigned char aiCounter_800C8B30;
+extern int aiAllyCalled_800C8B34;
+extern char commandHandlerIdx_800C8B38[28];
+extern int commandHandlers_800C8B54[7];
+extern unsigned short stage00Sprites_800C8B70[8];
+extern unsigned short stage01Sprites_800C8B80[8];
+extern unsigned short stage02Sprites_800C8B90[8];
+extern unsigned short stage03Sprites_800C8BA0[8];
+extern unsigned short stage04Sprites_800C8BB0[8];
+extern unsigned short stage05Sprites_800C8BC0[10];
+extern unsigned short stage06Sprites_800C8BD4[10];
+extern unsigned short stage07Sprites_800C8BE8[8];
+extern unsigned short stage08Sprites_800C8BF8[10];
+extern unsigned short stage09Sprites_800C8C0C[8];
+extern unsigned short stage0ASprites_800C8C1C[8];
+extern unsigned short stage0BSprites_800C8C2C[8];
+extern unsigned short stage0CSprites_800C8C3C[10];
+extern unsigned short stage0DSprites_800C8C50[8];
+extern unsigned short stage0ESprites_800C8C60[8];
+extern unsigned short stage0FSprites_800C8C70[6];
+extern unsigned short stage10Sprites_800C8C7C[6];
+extern unsigned short stage11Sprites_800C8C88[8];
+extern unsigned short stage12Sprites_800C8C98[2];
+extern unsigned short stage13Sprites_800C8C9C[6];
+extern unsigned short stage14Sprites_800C8CA8[6];
+extern unsigned short stage15Sprites_800C8CB4[6];
+extern unsigned short stage16Sprites_800C8CC0[6];
+extern unsigned short stage17Sprites_800C8CCC[8];
+extern unsigned short stage18Sprites_800C8CDC[8];
+extern unsigned short stage19Sprites_800C8CEC[8];
+extern unsigned short stage1ASprites_800C8CFC[8];
+extern unsigned short stage1BSprites_800C8D0C[8];
+extern unsigned short stage1CSprites_800C8D1C[10];
+extern unsigned short stage1DSprites_800C8D30[10];
+extern unsigned short stage1ESprites_800C8D44[8];
+extern unsigned short stage1FSprites_800C8D54[10];
+extern unsigned short stage20Sprites_800C8D68[8];
+extern unsigned short stage21Sprites_800C8D78[8];
+extern unsigned short stage22Sprites_800C8D88[8];
+extern unsigned short stage23Sprites_800C8D98[6];
+extern unsigned short stage24Sprites_800C8DA4[8];
+extern unsigned short stage25Sprites_800C8DB4[8];
+extern unsigned short stage26Sprites_800C8DC4[8];
+extern unsigned short stage10Models_800C8DD4[12];
+extern unsigned short stage12Models_800C8DEC[12];
+extern unsigned short stage13Models_800C8E04[12];
+extern unsigned short stage0AModels_800C8E1C[12];
+extern unsigned short stage0EModels_800C8E34[12];
+extern unsigned short stage21Models_800C8E4C[12];
+extern unsigned short stage14Models_800C8E64[12];
+extern unsigned short stage15Models_800C8E7C[12];
+extern unsigned short stage16Models_800C8E94[12];
+extern BatStage_a battleStages_800C8EAC[39];
+extern int stageAnimPhases_800C911C[2];
+extern int stageRot_800C9124[2];
+extern char handlerWaitsReactions_800C912C[8];
+extern unsigned char captureVibrations_800C9134[4];
+extern int statusCureChances_800C9138[2];
+extern BatXY_a enemyWindowLayouts_800C9140[9];
+extern int enemyGaugePreview_800C9164[3];
+extern int actorHighlightTime_800C9170;
+extern int enemyHighlightTimes_800C9174[3];
+extern short previewHpChange_800C9180;
+extern short previewMpChange_800C9182;
 extern int dword_800C9184;
-extern Minion *dword_800C9188;
-extern int dword_800C918C;
-extern BatCtx_a dword_800C9190;
-extern char dword_800C91A4[56];
-extern BatFxFn dword_800C91DC[10];
-extern BatFxFn dword_800C9204[53];
-extern BatMenu_a dword_800C92D8[1];
-extern BatMenu_a dword_800C92E4[1];
-extern BatMenu_a dword_800C92F0[1];
+extern Minion *summonedMinion_800C9188;
+extern int summonedMinionSlot_800C918C;
+extern BatSummon_a summonedActor_800C9190;
+extern char defaultBoneSlots_800C91A4[56];
+extern BatFxFn enemyAiHigh_800C91DC[10];
+extern BatFxFn enemyAi_800C9204[53];
+extern BatMenu_a commandMenu_800C92D8[1];
+extern BatMenu_a skillMenu_800C92E4[1];
+extern BatMenu_a magicMenu_800C92F0[1];
 extern int dword_800C92FC[3];
-extern BatMenu_a dword_800C9308[1];
-extern BatMenu_a dword_800C9314[1];
-extern BatMenu_a dword_800C9320[1];
-extern BatMenu_a dword_800C932C[1];
-extern BatMenu_a *dword_800C9338[6];
-extern int dword_800C9350[1];
-extern int dword_800C9354[1];
-extern const char *dword_800C9358[1];
-extern char dword_800C935C[4];
-extern const char *dword_800C9360[1];
-extern const char *dword_800C9364[1];
-extern int dword_800C9368[1];
-extern int dword_800C936C[1];
-extern int dword_800C9370[1];
-extern int dword_800C9374[1];
-extern char dword_800C9378[4];
-extern int dword_800C937C;
-extern int dword_800C9380;
-extern char dword_800C9384[4];
-extern char dword_800C9388[4];
-extern char dword_800C938C[4];
-extern int dword_800C9390;
-extern const char *dword_800C9394[1];
-extern int dword_800C9398;
-extern int dword_800C939C;
-extern int dword_800C93A0;
-extern BatMenuItem_a dword_800C93A4[2];
-extern void *dword_800C93B4[1];
-extern char *dword_800C93B8[2];
-extern void *dword_800C93C0[4];
-extern int dword_800C93D0;
-extern BatMenuItem_a dword_800C93D4[5];
-extern int dword_800C93FC[14];
-extern int dword_800C9434[14];
-extern unsigned short dword_800C946C;
-extern short word_800C946E;
-extern short word_800C9470;
-extern short word_800C9472;
-extern short word_800C9474;
-extern short word_800C9476;
-extern short word_800C9478;
-extern short word_800C947A;
-extern short word_800C947C;
-extern short word_800C947E;
-extern short word_800C9480;
-extern short word_800C9482;
-extern short word_800C9484;
-extern short word_800C9486;
-extern short word_800C9488;
-extern short word_800C948A;
-extern short word_800C948C;
-extern short word_800C948E;
-extern short word_800C9490;
-extern short word_800C9492;
-extern short word_800C9494;
-extern short word_800C9496;
-extern short word_800C9498;
-extern short word_800C949A;
-extern short word_800C949C;
-extern short word_800C949E;
-extern short word_800C94A0;
-extern short word_800C94A2;
-extern unsigned short dword_800C94A4;
-extern short word_800C94A6;
-extern short word_800C94A8;
-extern short word_800C94AA;
-extern short word_800C94AC;
-extern short word_800C94AE;
-extern short word_800C94B0;
-extern short word_800C94B2;
-extern short word_800C94B4;
-extern short word_800C94B6;
-extern short word_800C94B8;
-extern short word_800C94BA;
-extern short word_800C94BC;
-extern short word_800C94BE;
-extern short word_800C94C0;
-extern short word_800C94C2;
-extern short word_800C94C4;
-extern short word_800C94C6;
-extern short word_800C94C8;
-extern short word_800C94CA;
-extern short word_800C94CC;
-extern short word_800C94CE;
-extern short word_800C94D0;
-extern short word_800C94D2;
-extern short word_800C94D4;
-extern short word_800C94D6;
-extern short word_800C94D8;
-extern short word_800C94DA;
-extern int dword_800C94DC[14];
-extern unsigned short dword_800C9514;
-extern short word_800C9516;
-extern short word_800C9518;
-extern short word_800C951A;
-extern short word_800C951C;
-extern short word_800C951E;
-extern short word_800C9520;
-extern short word_800C9522;
-extern short word_800C9524;
-extern short word_800C9526;
-extern short word_800C9528;
-extern short word_800C952A;
-extern short word_800C952C;
-extern short word_800C952E;
-extern short word_800C9530;
-extern short word_800C9532;
-extern short word_800C9534;
-extern short word_800C9536;
-extern short word_800C9538;
-extern short word_800C953A;
-extern short word_800C953C;
-extern short word_800C953E;
-extern short word_800C9540;
-extern short word_800C9542;
-extern short word_800C9544;
-extern short word_800C9546;
-extern short word_800C9548;
-extern short word_800C954A;
-extern int dword_800C954C[14];
-extern int dword_800C9584[14];
-extern int dword_800C95BC[14];
-extern void *dword_800C95F4[7];
-extern void *dword_800C9610[6];
-extern int dword_800C9628[2];
-extern struct BatState dword_800C9630;
-extern int dword_800C9640;
-extern int dword_800C9644;
-extern unsigned char dword_800C9648[12];
-extern unsigned char dword_800C9654[12];
-extern unsigned char dword_800C9660[12];
-extern void (*dword_800C966C[2])(EventEntry *t, int a);
-extern int dword_800C9674[6];
-extern unsigned short dword_800C968C[6][2];
-extern int dword_800C96A4[9];
-extern int dword_800C96C8[43][4];
-extern int dword_800C9978[30][4];
-extern char dword_800C9B58[256];
-extern int dword_800C9C58;
+extern BatMenu_a itemMenu_800C9308[1];
+extern BatMenu_a enemyTargetMenu_800C9314[1];
+extern BatMenu_a targetMenu_800C9320[1];
+extern BatMenu_a allTargetsMenu_800C932C[1];
+extern BatMenu_a *pageMenus_800C9338[6];
+extern int helpAttack_800C9350[1];
+extern int helpDefend_800C9354[1];
+extern int helpSummon_800C9358[1];
+extern int helpCapture_800C935C[1];
+extern int helpItem_800C9360[1];
+extern int helpFlee_800C9364[1];
+extern int helpMinionAttack_800C9368[1];
+extern int helpSpecialAttack_800C936C[1];
+extern int helpMagic_800C9370[1];
+extern int helpChangeFighter_800C9374[1];
+extern int msgNoDivineMinions_800C9378[1];
+extern int msgCannotSummon_800C937C;
+extern int msgNotEnoughMana_800C9380;
+extern int msgCannotCapture_800C9384[1];
+extern int msgNoEmptyCocoons_800C9388[1];
+extern int msgCannotEscape_800C938C[1];
+extern int msgNoNeedToUseItem_800C9390;
+extern int msgCannotSelect_800C9394[1];
+extern int msgItemForDivineMinions_800C9398;
+extern int msgDivineMinionsCannot_800C939C;
+extern int msgCannotUseHere_800C93A0;
+extern BatMenuItem_a levantMenuItems_800C93A4[6];
+extern BatMenuItem_a minionMenuItems_800C93D4[5];
+extern BatMenuWin_a winAttack_800C93FC[2];
+extern BatMenuWin_a winDefend_800C9434[2];
+extern BatMenuWin_a winSummon_800C946C[2];
+extern BatMenuWin_a winCapture_800C94A4[2];
+extern BatMenuWin_a winItem_800C94DC[2];
+extern BatMenuWin_a winFlee_800C9514[2];
+extern BatMenuWin_a winSpecialAttack_800C954C[2];
+extern BatMenuWin_a winMagic_800C9584[2];
+extern BatMenuWin_a winChangeFighter_800C95BC[2];
+extern BatMenuWin_a *levantMenuWindows_800C95F4[7];
+extern BatMenuWin_a *minionMenuWindows_800C9610[6];
+extern BatMenuWin_a **menuWindowSets_800C9628[2];
+extern BatMenuWins_a menuWindows_800C9630;
+extern unsigned char commandByCursor_800C9648[12];
+extern unsigned char commandNextPage_800C9654[12];
+extern unsigned char commandTargetFlags_800C9660[12];
+extern void (*menuStateFns_800C966C[2])(EventEntry *t, int a);
+extern int pageButtonHelp_800C9674[6];
+extern unsigned short pageHideFlags_800C968C[6][2];
+extern int commandKinds_800C96A4[9];
+extern int itemDescriptions_800C96C8[43][4];
+extern int magicDescriptions_800C9978[30][4];
+extern char skillDescriptions_800C9B58[256];
+extern int battleLoadState_800C9C58;
 extern int dword_800C9C5C[3];
-extern short dword_800C9C68[8];
-extern int *dword_800C9C78;
-extern unsigned char dword_800C9C7C;
-extern short dword_800C9C7E;
-extern short dword_800C9C80;
-extern unsigned char dword_800C9C82;
+extern short turnGauges_800C9C68[8];
+extern int *chainEntry_800C9C78;
+extern unsigned char actingUnit_800C9C7C;
+extern short actorHpChange_800C9C7E;
+extern short actorMpChange_800C9C80;
+extern unsigned char summonedUnit_800C9C82;
 extern int dword_800C9C84;
-extern BatCmd_a dword_800C9C88;
-extern unsigned char dword_800C9C98;
-extern unsigned char dword_800C9C99;
+extern BatCmd_a curCommand_800C9C88;
+extern unsigned char commandUnit_800C9C98;
+extern unsigned char shownUnit_800C9C99;
 extern int dword_800C9C9C;
-extern int dword_800C9CA0[7];
-extern char dword_800C9CBC[12];
-extern BatCmd_a dword_800C9CC8[7];
-extern short dword_800C9D38[8];
-extern short dword_800C9D48[8];
-extern int dword_800C9D58[7];
-extern int dword_800C9D74;
-extern short dword_800C9D78;
-extern int dword_800C9D7C;
-extern short dword_800C9D80;
-extern signed char dword_800C9D82;
+extern int unitStatusInflicted_800C9CA0[7];
+extern char unitHitKinds_800C9CBC[12];
+extern BatCmd_a unitReactions_800C9CC8[7];
+extern short unitHpDamage_800C9D38[8];
+extern short unitMpDamage_800C9D48[8];
+extern int unitResultFlags_800C9D58[7];
+extern int helpWindowText_800C9D74;
+extern short hitSfx_800C9D78;
+extern int btlExecLoad_800C9D7C;
+extern short deathSfx_800C9D80;
+extern signed char shownAreaElement_800C9D82;
 extern char dword_800C9D83;
-extern signed char dword_800C9D84;
+extern signed char areaElement_800C9D84;
 extern int dword_800C9D88;
-extern short dword_800C9D8C[2];
-extern int dword_800C9D90;
-extern short dword_800C9D94;
-extern short dword_800C9D98[4];
-extern BatPair_a dword_800C9DA0[7];
-extern short dword_800C9DBC;
-extern short dword_800C9DC0[8];
-extern int dword_800C9DD0[10];
-extern int dword_800C9DF8;
-extern char dword_800C9DFC;
-extern char dword_800C9DFD;
-extern unsigned int dword_800C9E00;
+extern short stageAnimUv_800C9D8C[2];
+extern int removedEnemyCount_800C9D90;
+extern short actionFrame_800C9D94;
+extern short actorTiming_800C9D98[4];
+extern BatPair_a reactionTimings_800C9DA0[7];
+extern short actorHitShift_800C9DBC;
+extern short reactionHitFrames_800C9DC0[8];
+extern int removedEnemies_800C9DD0[10];
+extern int enemyWindowFlags_800C9DF8;
+extern char enemyWindowsHighlight_800C9DFC;
+extern char actorWindowHighlight_800C9DFD;
+extern unsigned int enemyWindowSlide_800C9E00;
 extern int dword_800C9E04;
-extern EventEntry *dword_800C9E08[4];
-extern BatXY_a dword_800C9E18[3];
-extern int dword_800C9E24;
-extern BatUnitWin_a *dword_800C9E28[4];
-extern int dword_800C9E38;
-extern int dword_800C9E3C;
-extern unsigned char dword_800C9E40;
-extern BatMenu_a *dword_800C9E44;
-extern unsigned char dword_800C9E48;
-extern unsigned char dword_800C9E49;
-extern unsigned char dword_800C9E4A;
-extern unsigned char dword_800C9E4B;
-extern int dword_800C9E4C;
-extern unsigned char dword_800C9E50;
-extern unsigned char dword_800C9E51;
-extern int dword_800C9E54;
-extern BatCmd_a dword_800C9E58;
-extern unsigned char dword_800C9E68;
-extern BatMenuItem_a *dword_800C9E6C;
+extern EventEntry *enemyWindowTasks_800C9E08[4];
+extern BatXY_a enemyWindowPos_800C9E18[3];
+extern int enemyWindowMask_800C9E24;
+extern BatUnitWin_a *enemyWindows_800C9E28[4];
+extern int cameraFocus_800C9E38;
+extern int newCameraFocus_800C9E3C;
+extern unsigned char prevMenuPage_800C9E40;
+extern BatMenu_a *pageCursor_800C9E44;
+extern unsigned char menuState_800C9E48;
+extern unsigned char menuForMinion_800C9E49;
+extern unsigned char enemyCount_800C9E4A;
+extern unsigned char partyMinionCount_800C9E4B;
+extern int enemyMask_800C9E4C;
+extern unsigned char menuPage_800C9E50;
+extern unsigned char menuErrorTimer_800C9E51;
+extern int menuTarget_800C9E54;
+extern BatCmd_a menuCommand_800C9E58;
+extern unsigned char targetFlags_800C9E68;
+extern BatMenuItem_a *menuItems_800C9E6C;

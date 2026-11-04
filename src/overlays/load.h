@@ -8,75 +8,75 @@
 
 typedef struct
 {
-    char c_LOAD[5];
+    char c[5];
 } Bytes5_LOAD;
 
 typedef struct
 {
-    int poly_LOAD;
-    short clutX_LOAD;
-    short clutY_LOAD;
+    int poly_0; // index into publicTiyPolyFT4s_8008D430
+    short clutX_4;
+    short clutY_6;
 } IconSrc_LOAD;
 
 typedef struct
 {
-    unsigned short flags_LOAD;
-    short pad2_LOAD;
-    int f4_LOAD;
-    int f8_LOAD;
-    int fC_LOAD;
-    short x_LOAD;
-    short y_LOAD;
-    char pad14_LOAD[8];
+    unsigned short flags_0;
+    short kind_2;  // 1: a UI TIY sprite, 3: a text
+    int data_4;    // the sprite index or the text
+    int sprts_8;   // the sprite set (uiTiySprts_8008D620)
+    int tpages_C;  // its texture pages (uiTiyTPages_8008D3F4)
+    short x_10;
+    short y_12;
+    char window_14[8]; // the window around it
 } MenuItem_LOAD;
 
 typedef struct
 {
-    MenuItem_LOAD item_LOAD[2];
+    MenuItem_LOAD items_0[2];
 } MenuItems2_LOAD;
 
 typedef struct
 {
-    int f0_LOAD;
-    int f4_LOAD;
-    int f8_LOAD;
-    int fC_LOAD;
-    MenuItem_LOAD** items_LOAD;
-    int f14_LOAD;
+    int field_0;
+    int time_4;   // blink timer (GetTime30Hz_8002C64C), 0 = no highlight
+    int field_8;
+    int cursor_C; // the highlighted item
+    MenuItem_LOAD** items_10;
+    int field_14;
 } MenuWin_LOAD;
 
 typedef struct
 {
-    short x_LOAD;
-    short y_LOAD;
+    short x_0;
+    short y_2;
 } Pos_LOAD;
 
 typedef struct
 {
-    char c_LOAD[8];
-} Bytes8_LOAD;
+    char c[8];
+} WinRect_LOAD;
 
 typedef struct
 {
-    short f0_LOAD;
-    short f2_LOAD;
-    short f4_LOAD;
-    short f6_LOAD;
-} Row8_LOAD;
+    short x_0;
+    short y_2;
+    short sprite_4; // UI TIY sprite index (DrawUiTiySprt_8002C06C)
+    short ot_6;
+} UiSprite_LOAD;
 
 typedef struct
 {
-    unsigned char pad0_LOAD[6];
-    unsigned char f6_LOAD;
-    unsigned char f7_LOAD;
-    unsigned char f8_LOAD;
-    unsigned char f9_LOAD;
-    unsigned char fA_LOAD;
-    unsigned char fB_LOAD;
-    unsigned char fC_LOAD;
-    unsigned char fD_LOAD;
-    unsigned char padE_LOAD[2];
-} Row16_LOAD;
+    unsigned char pad_0[6];
+    unsigned char field_6; // field_6..8 and B: the UpdateMenuCursor_8003D794 grid parameters
+    unsigned char field_7;
+    unsigned char field_8;
+    unsigned char initCursor_9;
+    unsigned char initScroll_A;
+    unsigned char field_B;
+    unsigned char cursor_C;
+    unsigned char scroll_D;
+    unsigned char pad_E[2];
+} MenuRow_LOAD;
 
 typedef union
 {
@@ -107,52 +107,52 @@ extern const char aMEMORYCARDNotFo_800B682C[56];
 extern const char aFormattingFaile_800B6864[40];
 extern const char aSaveFailed_800B688C[28];
 extern const char aLoadFailed_800B68A8[28];
-extern const char byte_800B68E0[];
-extern const char byte_800B68F8[];
-extern const char byte_800B6918[];
-extern const Bytes8_LOAD dword_800B6930;
-extern const char byte_800B6938[];
-extern const Bytes8_LOAD dword_800B6968;
+extern const char aLoadGame_800B68E0[];
+extern const char aOverwriteGame_800B68F8[];
+extern const char aSaveGame_800B6918[];
+extern const WinRect_LOAD confirmTextWin_800B6930;
+extern const char aReturnToTitle_800B6938[];
+extern const WinRect_LOAD titlePromptWin_800B6968;
 extern const int dword_800B6970;
-extern const Bytes8_LOAD dword_800B69F4;
-extern const char byte_800B69FC[];
-extern const Bytes8_LOAD dword_800B6A24;
-extern const char byte_800B6A2C[];
-extern const char byte_800B6A54[4];
-extern const char byte_800B6A58[];
-extern const char byte_800B6AA4[];
-extern const char byte_800B6ADC[];
-extern const char byte_800B6B0C[];
-extern const Bytes8_LOAD dword_800B6B3C;
-extern const Bytes8_LOAD dword_800B6B8C;
-extern const Bytes8_LOAD dword_800B6B94;
-extern const char byte_800B6B9C[];
-extern const Bytes8_LOAD dword_800B6BA0;
-extern const char byte_800B6BA8[];
+extern const WinRect_LOAD cardSlotWin_800B69F4;
+extern const char aFormatMemoryCard_800B69FC[];
+extern const WinRect_LOAD formatPromptWin_800B6A24;
+extern const char aSelectMemoryCard_800B6A2C[];
+extern const char emptyText_800B6A54[4];
+extern const char aNoEmptyBlocks_800B6A58[];
+extern const char aDamagedData_800B6AA4[];
+extern const char aNoMemoryCardInSlot_800B6ADC[];
+extern const char aCheckingMemoryCard_800B6B0C[];
+extern const WinRect_LOAD helpTextWin_800B6B3C;
+extern const WinRect_LOAD modeTitleWin_800B6B8C;
+extern const WinRect_LOAD cardSlotLabelWin_800B6B94;
+extern const char aSlash_800B6B9C[];
+extern const WinRect_LOAD listPositionWin_800B6BA0;
+extern const char aMiddleDot_800B6BA8[];
 extern const char aJadeCocoonLevel_800B6BAC[];
-extern const char name_800B6BF0[];
-extern const char name_800B6C04[];
+extern const char aCORRIDOR_800B6BF0[];
+extern const char aEND_800B6C04[];
 extern const int dword_800B6C0C;
 extern const int dword_800B6C10;
 extern const int dword_800B6C14;
-extern const unsigned short name_800B6C18[12];
-extern const unsigned short name_800B6C30[12];
+extern const unsigned short aLatestGame_800B6C18[12];
+extern const unsigned short aEndOfGame_800B6C30[12];
 extern const char aCorridor_800B6C48[20];
-extern const char asc_800B6C5C[28];
-extern const char asc_800B6C78[28];
-extern const char asc_800B6C94[28];
-extern const char asc_800B6CB0[28];
-extern const char asc_800B6CCC[28];
-extern const char asc_800B6CE8[28];
-extern const char asc_800B6D04[28];
-extern const char asc_800B6D20[28];
-extern const char asc_800B6D3C[28];
-extern const char asc_800B6D58[28];
-extern const char asc_800B6D74[28];
-extern const char asc_800B6D90[28];
-extern const char asc_800B6DAC[28];
-extern const char asc_800B6DC8[28];
-extern const char asc_800B6DE4[28];
+extern const char aCombDataTitle15_800B6C5C[28];
+extern const char aCombDataTitle14_800B6C78[28];
+extern const char aCombDataTitle13_800B6C94[28];
+extern const char aCombDataTitle12_800B6CB0[28];
+extern const char aCombDataTitle11_800B6CCC[28];
+extern const char aCombDataTitle10_800B6CE8[28];
+extern const char aCombDataTitle09_800B6D04[28];
+extern const char aCombDataTitle08_800B6D20[28];
+extern const char aCombDataTitle07_800B6D3C[28];
+extern const char aCombDataTitle06_800B6D58[28];
+extern const char aCombDataTitle05_800B6D74[28];
+extern const char aCombDataTitle04_800B6D90[28];
+extern const char aCombDataTitle03_800B6DAC[28];
+extern const char aCombDataTitle02_800B6DC8[28];
+extern const char aCombDataTitle01_800B6DE4[28];
 extern const char aJadeCocoon15_800B6E00[28];
 extern const char aJadeCocoon14_800B6E1C[28];
 extern const char aJadeCocoon13_800B6E38[28];
@@ -198,76 +198,76 @@ extern const char aBASLUS00854GAME_800B7214[];
 extern const char aBASLUS00854GAME_800B722C[];
 extern const char aBASLUS00854GAME_800B7244[];
 extern const char aBASLUS00854GAME_800B725C[];
-extern const char asc_800B7274[];
-extern const char asc_800B7290[];
-extern const char asc_800B72A8[];
-extern const char asc_800B72C0[];
-extern const char asc_800B72D8[];
-extern const char byte_800B72FC[4];
-extern const Bytes5_LOAD dword_800B7300;
-extern const char asc_800B7308[];
-extern const MenuItems2_LOAD dword_800B731C;
-extern const char asc_800B7354[];
-extern const MenuItems2_LOAD dword_800B7368;
-extern Pos_LOAD dword_800BD93C[9];
-extern Row8_LOAD dword_800BD960[7];
-extern Row8_LOAD dword_800BD998[2];
-extern int dword_800BD9A8[16];
-extern Row8_LOAD dword_800BD9E8[4];
-extern char *dword_800BDA08[2];
-extern RECT dword_800BDA10;
-extern MenuItem_LOAD dword_800BDA18[2];
-extern MenuItem_LOAD dword_800BDA50[2];
-extern MenuItem_LOAD dword_800BDA88[2];
-extern MenuItem_LOAD dword_800BDAC0[2];
-extern MenuItem_LOAD *dword_800BDAF8[5];
-extern MenuWin_LOAD dword_800BDB0C;
-extern int dword_800BDB24[14];
-extern void *dword_800BDB5C[2];
-extern int dword_800BDB64;
-extern int dword_800BDB68[5];
-extern int dword_800BDB7C[14];
-extern void *dword_800BDBB4[2];
-extern int dword_800BDBBC;
-extern int dword_800BDBC0[5];
-extern int *dword_800BDBD4[2];
-extern MenuItem_LOAD dword_800BDBDC[2];
-extern MenuItem_LOAD dword_800BDC14[2];
-extern MenuItem_LOAD dword_800BDC4C[2];
-extern MenuItem_LOAD dword_800BDC84[2];
-extern MenuItem_LOAD *dword_800BDCBC[5];
-extern MenuWin_LOAD dword_800BDCD0;
-extern MenuItem_LOAD dword_800BDCE8[2];
-extern MenuItem_LOAD dword_800BDD20[2];
-extern MenuItem_LOAD *dword_800BDD58[3];
-extern MenuWin_LOAD dword_800BDD64;
-extern MenuItem_LOAD dword_800BDD7C[2];
-extern MenuItem_LOAD dword_800BDDB4[2];
-extern MenuItem_LOAD *dword_800BDDEC[3];
-extern MenuWin_LOAD dword_800BDDF8;
-extern MenuItem_LOAD dword_800BDE10[2];
-extern MenuItem_LOAD dword_800BDE48[2];
-extern MenuItem_LOAD *dword_800BDE80[3];
-extern MenuWin_LOAD dword_800BDE8C;
-extern char dword_800BDEA4[24];
-extern char *dword_800BDEBC[4];
-extern char *dword_800BDECC[4];
-extern char *dword_800BDEDC[4];
-extern char *dword_800BDEEC[4];
-extern char *dword_800BDEFC[8];
-extern char *dword_800BDF1C[4];
-extern char *dword_800BDF2C[4];
-extern char *dword_800BDF3C[4];
-extern Row16_LOAD stru_800BDF4C[2];
-extern int dword_800BDF6C[4];
-extern int dword_800BDF7C[4];
-extern int dword_800BDF8C[4];
-extern int dword_800BDF9C[4];
-extern SaveTitle_LOAD *name_800BDFAC;
-extern char *dword_800BDFB0[30];
+extern const char aNoMemoryCardJp_800B7274[];
+extern const char aCardSlotJp_800B7290[];
+extern const char aCardSlot1Jp_800B72A8[];
+extern const char aCardSlot2Jp_800B72C0[];
+extern const char aInsertMemoryCardJp_800B72D8[];
+extern const char aDirWildcard_800B72FC[4];
+extern const Bytes5_LOAD aCRD0_800B7300;
+extern const char aMemoryCard1Jp_800B7308[];
+extern const MenuItems2_LOAD cardSlotMenuItem1_800B731C;
+extern const char aMemoryCard2Jp_800B7354[];
+extern const MenuItems2_LOAD cardSlotMenuItem2_800B7368;
+extern Pos_LOAD saveSlotFieldPos_800BD93C[9];
+extern UiSprite_LOAD saveSlotSprites_800BD960[7];
+extern UiSprite_LOAD modeTitleSprites_800BD998[2];
+extern int cardSlotSprites_800BD9A8[16];
+extern UiSprite_LOAD saveIconSprites_800BD9E8[4];
+extern char *saveListPrompts_800BDA08[2];
+extern RECT saveListClip_800BDA10;
+extern MenuItem_LOAD saveListRow0_800BDA18[2];
+extern MenuItem_LOAD saveListRow1_800BDA50[2];
+extern MenuItem_LOAD saveListRow2_800BDA88[2];
+extern MenuItem_LOAD saveListRow3_800BDAC0[2];
+extern MenuItem_LOAD *saveListRows_800BDAF8[5];
+extern MenuWin_LOAD saveListWin_800BDB0C;
+extern int cardSlot1Item_800BDB24[14];
+extern void *cardSlot1Items_800BDB5C[2];
+extern int cardSlot1Win_800BDB64;
+extern int cardSlot1WinRest_800BDB68[5];
+extern int cardSlot2Item_800BDB7C[14];
+extern void *cardSlot2Items_800BDBB4[2];
+extern int cardSlot2Win_800BDBBC;
+extern int cardSlot2WinRest_800BDBC0[5];
+extern int *cardSlotWins_800BDBD4[2];
+extern MenuItem_LOAD topMenuSave_800BDBDC[2];
+extern MenuItem_LOAD topMenuLoad_800BDC14[2];
+extern MenuItem_LOAD topMenuExit_800BDC4C[2];
+extern MenuItem_LOAD topMenuTitle_800BDC84[2];
+extern MenuItem_LOAD *topMenuItems_800BDCBC[5];
+extern MenuWin_LOAD topMenuWin_800BDCD0;
+extern MenuItem_LOAD formatYes_800BDCE8[2];
+extern MenuItem_LOAD formatNo_800BDD20[2];
+extern MenuItem_LOAD *formatItems_800BDD58[3];
+extern MenuWin_LOAD formatWin_800BDD64;
+extern MenuItem_LOAD confirmYes_800BDD7C[2];
+extern MenuItem_LOAD confirmNo_800BDDB4[2];
+extern MenuItem_LOAD *confirmItems_800BDDEC[3];
+extern MenuWin_LOAD confirmWin_800BDDF8;
+extern MenuItem_LOAD titleYes_800BDE10[2];
+extern MenuItem_LOAD titleNo_800BDE48[2];
+extern MenuItem_LOAD *titleItems_800BDE80[3];
+extern MenuWin_LOAD titleWin_800BDE8C;
+extern char loadMenuButtonHelp_800BDEA4[24];
+extern char *msgCardFull_800BDEBC[4];
+extern char *msgFormatting_800BDECC[4];
+extern char *msgLoading_800BDEDC[4];
+extern char *msgSaving_800BDEEC[4];
+extern char *msgNoSaveData_800BDEFC[8];
+extern char *msgFormatFailed_800BDF1C[4];
+extern char *msgSaveFailed_800BDF2C[4];
+extern char *msgLoadFailed_800BDF3C[4];
+extern MenuRow_LOAD loadMenuRows_800BDF4C[2];
+extern int loadMenuRow2_800BDF6C[4];
+extern int loadMenuRow3_800BDF7C[4];
+extern int loadMenuRow4_800BDF8C[4];
+extern int loadMenuRow5_800BDF9C[4];
+extern SaveTitle_LOAD *saveTitle_800BDFAC;
+extern char *cardTitles_800BDFB0[30];
 extern char *saveFileNames_800BE028[2][15];
-extern IconSrc_LOAD dword_800BE0A0[3];
-extern char dword_800BE0B8[148];
+extern IconSrc_LOAD saveIconSrc_800BE0A0[3];
+extern char cardHeaderTail_800BE0B8[148];
 extern int cardFreeBlocks_800BE14C;
 extern int cardSaveCount_800BE150;
 extern int loadMenuActive_800BE184;

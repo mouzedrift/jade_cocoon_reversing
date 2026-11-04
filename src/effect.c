@@ -246,7 +246,7 @@ UnitStatus* GetUnitStatus_80014390(int a0)
     if (v >= 8)
     {
         w = a0 - 8;
-        r = sub_800A10C0(w & 0xFF);
+        r = GetSlotStatus_800A10C0(w & 0xFF);
     }
     else if (v >= 4)
     {

@@ -23,14 +23,14 @@ typedef struct TitleMenuItem
 typedef struct
 {
     TitleMenuItem items[2];
-} TitleBlk38M;
+} TitleMenuWindow;
 
 typedef struct
 {
     int f0, f4, f8, fC;
-    TitleBlk38M** windows_10;
+    TitleMenuWindow** windows_10;
     int f14;
-} TitleCfgM;
+} TitleMenuCfg;
 
 typedef struct { char c[4]; } Blk4_;
 
@@ -42,33 +42,33 @@ extern const char str_800A0604[];
 extern const char str_800A0640[];
 extern const char aThereAreNoFreeB_800A0658[];
 extern const char aTheMEMORYCARDIn_800A069C[];
-extern const TitleBlk38M dword_800A06D8;
-extern const TitleBlk38M dword_800A0710;
-extern const TitleBlk38M dword_800A0748;
-extern const TitleBlk38M dword_800A0780;
-extern const TitleBlk38M dword_800A07B8;
-extern const TitleBlk38M dword_800A07F0;
-extern const TitleBlk38M dword_800A0828;
-extern const TitleBlk38M dword_800A0860;
-extern const TitleCfgM dword_800A0898;
-extern const Blk4_ dword_800A08B0;
-extern const char byte_800A08B4[];
+extern const TitleMenuWindow titleMenuWin0_800A06D8;
+extern const TitleMenuWindow titleMenuWin1_800A0710;
+extern const TitleMenuWindow titleMenuWin2_800A0748;
+extern const TitleMenuWindow titleMenuWin3_800A0780;
+extern const TitleMenuWindow titleMenuWin4_800A07B8;
+extern const TitleMenuWindow titleMenuWin5_800A07F0;
+extern const TitleMenuWindow titleMenuWin6_800A0828;
+extern const TitleMenuWindow titleMenuWin7_800A0860;
+extern const TitleMenuCfg titleMenuCfg_800A0898;
+extern const Blk4_ logoPulseColor_800A08B0;
+extern const char debugLevantName_800A08B4[];
 extern const int dword_800A08C0[2];
 extern char levantName_800A2718[];
 extern int dword_800A2728;
 extern int dword_800A272C;
-extern int dword_800A2778[6];
-extern int dword_800A2790[6];
-extern int dword_800A27A8[6];
-extern int dword_800A27C0;
+extern int titleMenuTaskDesc_800A2778[6];
+extern int newGameTaskDesc_800A2790[6];
+extern int titleSoundTaskDesc_800A27A8[6];
+extern int titleTaskList_800A27C0;
 extern void *dword_800A27C4[9];
-extern void (*off_800A27E8[8])();
-extern int dword_800A2808;
-extern int dword_800A280C;
-extern int dword_800A2810;
-extern unsigned int dword_800A2814;
-extern int dword_800A2818;
+extern void (*titleMenuHandlers_800A27E8[8])();
+extern int nameOvlRequest_800A2808;
+extern int pulseMax_800A280C;
+extern int pulseMin_800A2810;
+extern unsigned int titleIdleTimer_800A2814;
+extern int titleResult_800A2818;
 
-extern UnitStatus dword_800A2730;
+extern UnitStatus levantInitStatus_800A2730;
 
 #endif

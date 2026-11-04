@@ -197,9 +197,9 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
             }
         }
     }
-    d[0] = light->pos_0[0] - (ofs->vx + pos->vx);
-    d[1] = light->pos_0[1] - (ofs->vy + pos->vy);
-    d[2] = light->pos_0[2] - (ofs->vz + pos->vz);
+    d[0] = light->pos_0.x - (ofs->vx + pos->vx);
+    d[1] = light->pos_0.y - (ofs->vy + pos->vy);
+    d[2] = light->pos_0.z - (ofs->vz + pos->vz);
     gte_ldlvl(d);
     gte_sqr0();
     gte_stlvnl(sq);

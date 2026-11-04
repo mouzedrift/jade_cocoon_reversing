@@ -472,7 +472,7 @@ extern void StopAllEventEntries_80043B40(EventNode* p);
 extern void* ListAlloc_8003FDC0();
 extern void AdjustUnitStat_80012614(UnitStatus* a0, int a1, int a2, int a3);
 extern unsigned int GetButtonConfig_8001C874();
-extern void sub_800BFAF8(int a0);
+extern void SetHitVariantForCommand_800BFAF8(int a0);
 extern struct_8_id* FindItemById_8001C314(struct_8_list* p, int id);
 extern void StartEffect_8001497C(void);
 extern int IsEffectTaskIdle_800148D4(void);
@@ -502,8 +502,8 @@ extern void LoadModelAnimsMasked_800268E8(struct ModelAnim* a0, int a1, int a2, 
 
 extern void sub_800A5BCC(int a0);
 
-extern void sub_800C4090(int a0, int a1, int a2, int a3);
-extern void sub_800C410C(void);
+extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
+extern void ClearPointLight_800C410C(void);
 
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
 extern void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest);
@@ -521,7 +521,7 @@ extern void InitActor_8001E574();
 
 extern void KillUnit_800127B8(UnitStatus* p);
 extern UnitStatus* sub_800A2B60(int a0);
-extern UnitStatus* sub_800A10C0(int a0);
+extern UnitStatus* GetSlotStatus_800A10C0(int a0);
 extern Minion* GetUnitMinion_80014444(int a0);
 extern UnitStats* GetUnitStats_8001449C(int a0);
 extern int CombinedExpDelta_80012204(int a, int b, int c, int d);
@@ -530,7 +530,7 @@ extern int TotalExpToPacked_8001247C(double x);
 extern int LoadModelListTextures_800255F0(ModelList* a0, int idx, int a2);
 extern int LoadAllModelAnims_800256B8(ModelList* a0, int id);
 extern void StopSoundSeqById_800306FC(int a0);
-extern int sub_800C32DC(int* pos, int a1, int a2, int a3);
+extern int SpawnModelAnim_800C32DC(int* pos, int a1, int a2, int a3);
 extern void CopyFtgObject_800218A8(struct FtgObject* s, struct FtgObject* d, int a2);
 extern void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct FtgObject* out);
 extern void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale);

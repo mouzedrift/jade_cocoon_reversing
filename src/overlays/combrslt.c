@@ -23,23 +23,24 @@ extern unsigned short uiColor_8008B590;
 extern char dword_80082680[];
 extern void DrawMenuItemWithWindow_8002ADB4(void*, void*, int, int);
 extern void DrawButtonHelpBar_8002B004(void*, int, int);
-extern void sub_800A41E4();
+extern void VersusResultFadeOut_800A41E4();
 extern void DrawSmallNumber3_8002C290(void*, int, int);
 extern void DrawUiTiySprt_8002C06C(void*, int, int);
-extern void sub_800A16FC();
+extern void CombatNextStage_800A16FC();
 extern void SetFadeMode_8001C19C(int, int);
-extern void sub_800A4240(int);
+extern void DrawPlayerResult_800A4240(int);
 extern void DrawMenuBackground_8002BE10();
 
 int dword_800A4088 SDATA = 23;
-const CombRsltText dword_800A408C = { 8, 1, 159, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 122, 20, { 0x14004C, 0x40002 } };
-const CombRsltText dword_800A40A8 = { 8, 1, 0, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 0, 0, { 0x140032, 0x40002 } };
-const CombRsltText dword_800A40C4 = { 10, 1, 64, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 0, 0, { 0x14005E, 0x40002 } };
+const CombRsltText resultTitleItem_800A408C = { 8, 1, 159, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 122, 20, { 0x14004C, 0x40002 } };
+const CombRsltText minionLabelItem_800A40A8 = { 8, 1, 0, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 0, 0, { 0x140032, 0x40002 } };
+const CombRsltText minionHpItem_800A40C4 = { 10, 1, 64, { (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 }, 0, 0, { 0x14005E, 0x40002 } };
 
-void sub_800A40E0(CombRsltTask* t)
+// Versus mode result screen: per player result, score and minions; any button fades back to the versus task
+void VersusResultTask_800A40E0(CombRsltTask* task)
 {
     CombRsltBox box;
-    CombRsltText str = dword_800A408C;
+    CombRsltText str = resultTitleItem_800A408C;
     int i;
     box.c_2 = 0;
     box.c_3 = 1;
@@ -47,73 +48,74 @@ void sub_800A40E0(CombRsltTask* t)
     DrawMenuItemWithWindow_8002ADB4(&str, &box, 0xF, 0);
     for (i = 0; i < 2; i++)
     {
-        sub_800A4240(i);
+        DrawPlayerResult_800A4240(i);
     }
     DrawMenuBackground_8002BE10();
     DrawButtonHelpBar_8002B004(dword_80082680, 0, 0xF);
     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
     {
         SetFadeMode_8001C19C(1, 0x20);
-        t->next_8 = sub_800A41E4;
+        task->next_8 = VersusResultFadeOut_800A41E4;
     }
 }
 
-void sub_800A41E4(CombRsltTask* t, int a)
+void VersusResultFadeOut_800A41E4(CombRsltTask* task, int arg)
 {
     if (IsFadeDone_8001C2FC() == 1)
     {
         SetFadeMode_8001C19C(3, 0x20);
-        t->next_8 = sub_800A16FC;
-        t->next_8(t, a);
+        task->next_8 = CombatNextStage_800A16FC;
+        task->next_8(task, arg);
     }
 }
 
 extern unsigned char byte_800A3A98[];
 extern unsigned char byte_800A3A90[];
-extern void sub_800A444C();
-extern void sub_800A4554();
+extern void DrawScorePair_800A444C();
+extern void DrawResultMinion_800A4554();
 
-void sub_800A4240(int i)
+void DrawPlayerResult_800A4240(int player)
 {
     CombRsltBox box;
     short pos[2];
     int j;
     int u;
-    int t = byte_800A3A98[i];
-    switch (t)
+    int result = byte_800A3A98[player];
+    switch (result)
     {
     case 0:
-        dword_800A4870[i][1] = 0xE6;
+        resultItems_800A4870[player][1] = 0xE6;
         box.c_2 = 1;
         break;
     case 1:
-        dword_800A4870[i][1] = 0x68;
+        resultItems_800A4870[player][1] = 0x68;
         box.c_2 = 2;
         break;
     case 2:
-        dword_800A4870[i][1] = 0x41;
+        resultItems_800A4870[player][1] = 0x41;
         box.c_2 = 2;
         break;
     }
     box.col_0 = uiColor_8008B590;
     box.c_3 = 1;
-    DrawMenuItemWithWindow_8002ADB4(dword_800A4830[i], &box, 0xF, GetTime30Hz_8002C64C());
-    DrawMenuItemWithWindow_8002ADB4(dword_800A4870[i], &box, 0xF, GetTime30Hz_8002C64C());
-    pos[0] = dword_800A48B0[i][8];
-    pos[1] = dword_800A48B0[i][9];
-    sub_800A444C(pos, 0xF, byte_800A3A90[i ^ 1], byte_800A3A90[i]);
-    DrawMenuItemWithWindow_8002ADB4(dword_800A48B0[i], &box, 0xF, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(playerLabelItems_800A4830[player], &box, 0xF, GetTime30Hz_8002C64C());
+    DrawMenuItemWithWindow_8002ADB4(resultItems_800A4870[player], &box, 0xF, GetTime30Hz_8002C64C());
+    pos[0] = scoreWindows_800A48B0[player][8];
+    pos[1] = scoreWindows_800A48B0[player][9];
+    DrawScorePair_800A444C(pos, 0xF, byte_800A3A90[player ^ 1], byte_800A3A90[player]);
+    DrawMenuItemWithWindow_8002ADB4(scoreWindows_800A48B0[player], &box, 0xF, GetTime30Hz_8002C64C());
     j = 0;
-    u = byte_800A3A98[i];
+    u = byte_800A3A98[player];
     if (u < 3 && u != 0)
         box.c_2 = 0;
     for (j = 0; j < 3; j++)
-        sub_800A4554(i, j + dword_800A47E8[0].idx_A, &box);
+        DrawResultMinion_800A4554(player, j + slotCursor_800A47E8[0].idx_A, &box);
 }
 
 // Near miss: scheduling of the repeated x/y stores
 // Matched
-void sub_800A444C(unsigned short* p, int a, int b, int c)
+// Draws the two numbers of a player's score box, each followed by a UI sprite (0xAE, 0x4D)
+void DrawScorePair_800A444C(unsigned short* p, int ot, int b, int c)
 {
     short v[2];
     {
@@ -125,7 +127,7 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
         v[1] = y + 4;
         v[0] = x + 0x12;
         v[1] = y + 7;
-        DrawSmallNumber3_8002C290(v, b, a);
+        DrawSmallNumber3_8002C290(v, b, ot);
     }
     {
         unsigned int x;
@@ -135,7 +137,7 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
         y = p[1];
         v[0] = x + 0x14;
         v[1] = y + 5;
-        DrawUiTiySprt_8002C06C(v, 0xAE, a);
+        DrawUiTiySprt_8002C06C(v, 0xAE, ot);
     }
     {
         unsigned int x;
@@ -146,7 +148,7 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
         v[1] = y + 4;
         v[0] = x + 0x39;
         v[1] = y + 7;
-        DrawSmallNumber3_8002C290(v, c, a);
+        DrawSmallNumber3_8002C290(v, c, ot);
     }
     {
         unsigned int x;
@@ -156,23 +158,23 @@ void sub_800A444C(unsigned short* p, int a, int b, int c)
         y = p[1];
         v[0] = x + 0x3B;
         v[1] = y + 5;
-        DrawUiTiySprt_8002C06C(v, 0x4D, a);
+        DrawUiTiySprt_8002C06C(v, 0x4D, ot);
     }
 }
 
 extern char byte_800A3AA0[];
 
 extern int sub_800A1958();
-extern int sub_800A1934();
-extern void sub_800A1844();
+extern int IsMinionSlotEmpty_800A1934();
+extern void DrawMinionNameLevel_800A1844();
 extern void DrawHpGauge_8002F078();
 extern void DrawWindow_80042460();
 
 // Near miss: register allocation of the q / j*4 address computation
 #if 0
-void sub_800A4554(int i, int j, void* arg)
+void DrawResultMinion_800A4554(int player, int slot, void* box)
 {
-    CombRsltText a = dword_800A40A8;
+    CombRsltText a = minionLabelItem_800A40A8;
     CombRsltText b;
     CombRsltPos r1;
     CombRsltPos r2;
@@ -180,7 +182,7 @@ void sub_800A4554(int i, int j, void* arg)
     CombRsltPos* q;
     char* e;
     int on;
-    if (sub_800A1958(byte_800A3AA0 + i * 744 + j * 248))
+    if (sub_800A1958(byte_800A3AA0 + player * 744 + slot * 248))
     {
         a.flags_0 |= 2;
         on = 1;
@@ -190,15 +192,15 @@ void sub_800A4554(int i, int j, void* arg)
         on = 0;
         a.flags_0 &= ~2;
     }
-    e = byte_800A3AA0 + i * 744 + j * 248;
-    if (sub_800A1934(e) != 1)
+    e = byte_800A3AA0 + player * 744 + slot * 248;
+    if (IsMinionSlotEmpty_800A1934(e) != 1)
     {
-        a.ptr_4 = dword_800A48B8[j];
-        q = dword_800A48C4 + j + i * 3;
+        a.text_4 = slotLabelSprites_800A48B8[slot];
+        q = minionSlotPos_800A48C4 + slot + player * 3;
         a.x_10 = q->x;
         a.y_12 = q->y;
-        DrawMenuItemWithWindow_8002ADB4(&a, arg, 0xF, GetTime30Hz_8002C64C());
-        b = dword_800A40C4;
+        DrawMenuItemWithWindow_8002ADB4(&a, box, 0xF, GetTime30Hz_8002C64C());
+        b = minionHpItem_800A40C4;
         b.x_10 = q->x + 0x32;
         b.y_12 = q->y;
         if (!on)
@@ -206,41 +208,41 @@ void sub_800A4554(int i, int j, void* arg)
             r1.x = q->x + 0x2F;
             r1.y = q->y;
             DrawHpGauge_8002F078(e + 0x84, &r1, 0, 0xF);
-            b.s_2 = 0;
+            b.type_2 = 0;
         }
-        DrawMenuItemWithWindow_8002ADB4(&b, arg, 0xF, GetTime30Hz_8002C64C());
+        DrawMenuItemWithWindow_8002ADB4(&b, box, 0xF, GetTime30Hz_8002C64C());
         r2.x = q->x;
         r2.y = q->y + 0x14;
-        sub_800A1844(e, &r2, a.flags_0);
+        DrawMinionNameLevel_800A1844(e, &r2, a.flags_0);
         r3[0].x = q->x;
         r3[0].y = q->y + 0x14;
         r3[1].x = 0x90;
         r3[1].y = 0x13;
-        DrawWindow_80042460(r3, arg, pOT_8008D454 + 15, GetTime30Hz_8002C64C());
+        DrawWindow_80042460(r3, box, pOT_8008D454 + 15, GetTime30Hz_8002C64C());
     }
 }
 #endif
-INCLUDE_OVERLAY_ASM(combrslt, sub_800A4554);
+INCLUDE_OVERLAY_ASM(combrslt, DrawResultMinion_800A4554);
 
-CombRsltEnt dword_800A47E8[1] = { { { 1, 0, 1, 0, 1, 0, 64 } } };
+CombRsltEnt slotCursor_800A47E8[1] = { { { 1, 0, 1, 0, 1, 0, 64 } } };
 int dword_800A47F4 = 0;
-int dword_800A47F8[7] = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x14000A, 0x140032, 0x40002 };
-int dword_800A4814[7] = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x140104, 0x140032, 0x40002 };
-int *dword_800A4830[2] = { dword_800A47F8, dword_800A4814 };
-int dword_800A4838[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x29000A, 0x140032, 0x40002 };
-int dword_800A4854[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x290104, 0x140032, 0x40002 };
-int *dword_800A4870[2] = { dword_800A4838, dword_800A4854 };
-unsigned short dword_800A4878[14] = {
+int playerLabelItemP1_800A47F8[7] = { 0x10008, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x14000A, 0x140032, 0x40002 };
+int playerLabelItemP2_800A4814[7] = { 0x10008, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x140104, 0x140032, 0x40002 };
+int *playerLabelItems_800A4830[2] = { playerLabelItemP1_800A47F8, playerLabelItemP2_800A4814 };
+int resultItemP1_800A4838[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x29000A, 0x140032, 0x40002 };
+int resultItemP2_800A4854[7] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x290104, 0x140032, 0x40002 };
+int *resultItems_800A4870[2] = { resultItemP1_800A4838, resultItemP2_800A4854 };
+unsigned short scoreWindowP1_800A4878[14] = {
     8, 0, 0, 0, 0, 0, 0, 0,
     28, 193, 99, 21, 2, 4,
 };
-unsigned short dword_800A4894[14] = {
+unsigned short scoreWindowP2_800A4894[14] = {
     8, 0, 0, 0, 0, 0, 0, 0,
     184, 193, 99, 21, 2, 4,
 };
-unsigned short *dword_800A48B0[2] = { dword_800A4878, dword_800A4894 };
-int dword_800A48B8[3] = { 219, 115, 102 };
-CombRsltPos dword_800A48C4[6] = {
+unsigned short *scoreWindows_800A48B0[2] = { scoreWindowP1_800A4878, scoreWindowP2_800A4894 };
+int slotLabelSprites_800A48B8[3] = { 219, 115, 102 };
+CombRsltPos minionSlotPos_800A48C4[6] = {
     { 10, 64 },
     { 10, 109 },
     { 10, 154 },
