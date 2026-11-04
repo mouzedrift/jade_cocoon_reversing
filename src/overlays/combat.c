@@ -693,7 +693,7 @@ void sub_800A1554(CombatTaskCombat* t, int x)
 }
 
 extern void sub_800A4394();
-extern void sub_800A4360();
+extern void CombSelMain_800A4360();
 extern void sub_800A40FC();
 extern void sub_800A4170();
 extern void sub_800A4B8C();
@@ -730,7 +730,7 @@ void sub_800A15B4(CombatTaskCombat* t, int x)
             }
             break;
         }
-        t->next_8 = sub_800A4360;
+        t->next_8 = CombSelMain_800A4360;
         break;
     case 2:
         t->next_8 = sub_800A40FC;
