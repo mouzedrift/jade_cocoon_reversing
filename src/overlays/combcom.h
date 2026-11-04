@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "minion_menu.h"
 #include "effect_data.h"
+#include "common_tu.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
@@ -241,5 +242,9 @@ extern unsigned char prevState_800CD850;
 extern short *activeCursor_800CD854;
 
 extern CombComItem cmdItemChange_800CD3CC;
+
+extern int ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, CombComCmd* cmd, ActionResult* out);
+extern int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, CombComCmd* cmd, ActionResult* out);
+extern int CheckMagicUsable_80034068(short* p);
 
 #endif

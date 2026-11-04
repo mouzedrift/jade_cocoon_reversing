@@ -271,21 +271,6 @@ ActionData* GetAbilityActionData_800129B0(ActionData* out, unsigned char* skill,
     }
     return out;
 }
-typedef struct
-{
-    unsigned short kind_0;
-    short arg_2;
-    int flags_4;
-    int status_8;
-    int actorHpCost_C;
-    int actorMpCost_10;
-    int actorHpDamage_14;
-    int actorMpDamage_18;
-    int hpDamage_1C;
-    int mpDamage_20;
-    short areaElement_24;
-    short field_26;
-} ActionResult;
 extern const char aAssertionFaile_2[];
 extern const char aCommonC[];
 extern unsigned char sealRatioThresholds_800793C4[];
@@ -368,7 +353,7 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, int* cm
     {
         action->power_2 = (0xFFFF < action->power_2 + 60) ? -1 : (unsigned short)action->power_2 + 60;
     }
-    if (out->field_26 == -1)
+    if (out->fixedElement_26 == -1)
     {
         element = (signed char)action->areaElement_4;
         if (element != -1)

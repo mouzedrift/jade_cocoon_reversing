@@ -564,19 +564,17 @@ void DrawCmdMenu_800CBEA4()
     DrawButtonHelpBar_8002B004(stateHelpBars_800CD50C[menuState_800CD83A], 0, 0xF);
 }
 
-#if 0
-// Not matched: scheduling of the three previewHp_800A82D0/2 -= pairs (the original reloads the globals before the third pair) and the 1 constant hoist; masks need separate statements to keep sllv+and
-
-extern int ResolveBattleAction_80012BB0(void* a, void* b, void* c, int* d);
-extern int IsDrainAction_80013228(void* a, void* b, void* c, int* d);
-extern int CheckMagicUsable_80034068(short* p);
+// HP/MP change preview of the chosen action on the target (previewHp_800A82D0 / previewMp_800A82D2)
+// Matched
 void PreviewCmdEffect_800CC40C()
 {
     short check[4];
-    int out[10];
+    ActionResult out;
     unsigned int i;
     UnitStatus* src;
     UnitStatus* t;
+    int bit;
+    int targets;
     if (menuState_800CD83A == 3)
     {
         previewHp_800A82D0 = 0;
@@ -584,42 +582,45 @@ void PreviewCmdEffect_800CC40C()
         src = GetUnitStatus_80014390((unsigned char)(side_800CD839 + 8));
         for (i = 0; i < 2; i++)
         {
-            int bit = 1 << (i + 8);
-            if (cmd_800CD840->targets_C & bit)
+            targets = cmd_800CD840->targets_C;
+            bit = 1 << (i + 8);
+            if (targets & bit)
             {
                 t = GetUnitStatus_80014390((unsigned char)(i + 8));
-                ResolveBattleAction_80012BB0(src, t, cmd_800CD840, out);
-                if (!IsDrainAction_80013228(src, t, cmd_800CD840, out))
+                ResolveBattleAction_80012BB0(src, t, cmd_800CD840, &out);
+                if (!IsDrainAction_80013228(src, t, cmd_800CD840, &out))
                 {
                     bit = 1 << i;
                     if (cmd_800CD840->mask_8 & bit)
                     {
-                    previewHp_800A82D0 -= out[3];
-                    previewMp_800A82D2 -= out[4];
-                    previewHp_800A82D0 -= out[5];
-                    previewMp_800A82D2 -= out[6];
-                    previewHp_800A82D0 -= out[7];
-                    previewMp_800A82D2 -= out[8];
-                    if (t->hp_8.max_2 - t->hp_8.cur_0 < previewHp_800A82D0)
-                    {
-                        previewHp_800A82D0 = t->hp_8.max_2 - t->hp_8.cur_0;
+                        previewHp_800A82D0 -= out.actorHpCost_C;
+                        previewMp_800A82D2 -= out.actorMpCost_10;
+                        previewHp_800A82D0 -= out.actorHpDamage_14;
+                        previewMp_800A82D2 -= out.actorMpDamage_18;
                     }
-                    if (t->mp_C.max_2 - t->mp_C.cur_0 < previewMp_800A82D2)
-                    {
-                        previewMp_800A82D2 = t->mp_C.max_2 - t->mp_C.cur_0;
-
-                    }
-                    }
+                }
+                previewHp_800A82D0 -= out.hpDamage_1C;
+                previewMp_800A82D2 -= out.mpDamage_20;
+                if (previewHp_800A82D0 > t->hp_8.max_2 - t->hp_8.cur_0)
+                {
+                    previewHp_800A82D0 = t->hp_8.max_2 - t->hp_8.cur_0;
+                }
+                if (previewMp_800A82D2 > t->mp_C.max_2 - t->mp_C.cur_0)
+                {
+                    previewMp_800A82D2 = t->mp_C.max_2 - t->mp_C.cur_0;
                 }
             }
         }
+        check[3] = 0;
         check[0] = cmd_800CD840->arg_4;
         check[1] = side_800CD839 + 8;
         check[2] = targetSlot_800CD83C;
-        check[3] = 0;
         if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 6)
         {
-            ((int (*)(short*))CheckUsableStub_80034124)(check);
+            if (((int (*)(short*))CheckUsableStub_80034124)(check))
+            {
+                previewHp_800A82D0 = 0;
+            }
         }
         else if ((short)GetMenuCursorIndex_8003DA54(cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(check))
         {
@@ -627,9 +628,6 @@ void PreviewCmdEffect_800CC40C()
         }
     }
 }
-#endif
-// HP/MP change preview of the chosen action on the target (previewHp_800A82D0 / previewMp_800A82D2)
-INCLUDE_OVERLAY_ASM(combcom, PreviewCmdEffect_800CC40C);
 
 #if 0
 // Not matched: register allocation only (44 words): the original gives the list pointer s1 and mode/k s3, f/i s2
