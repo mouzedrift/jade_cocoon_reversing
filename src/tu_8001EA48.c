@@ -34,7 +34,7 @@ extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
 // Matched
-void sub_8001EA48(void* arg0)
+void RunActorScript_8001EA48(void* arg0)
 {
     Actor* o = arg0;
     int done;
@@ -128,19 +128,19 @@ void sub_8001EA48(void* arg0)
             o->waitLen_CA = o->loopCount_F4;
             break;
         case 6:
-            sub_8001D9E4(o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            sub_8001D9E4(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 7:
-            sub_8001DA08(o, sub_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            sub_8001DA08(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 8:
             sub_8001DA2C(o);
             break;
         case 9:
-            sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
+            sub_8001DA4C(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
             break;
         case 10:
-            sub_8001DA4C(o, sub_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
+            sub_8001DA4C(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
             break;
         case 11:
             sub_8001D730(o, cmd->arg_6);
@@ -181,7 +181,7 @@ void sub_8001EA48(void* arg0)
             o->flags_4 &= ~0x20000;
             break;
         case 16:
-            sub_8001EFC4(o);
+            StopActorScript_8001EFC4(o);
             break;
         case 17:
             if (o->animIdx_C2 != o->prevAnimIdx_C0)
@@ -243,9 +243,9 @@ void sub_8001EA48(void* arg0)
         cmd = (ActorScriptCmd*)((unsigned int*)cmd + cmd->len_1);
     }
 }
-INCLUDE_DATA(dword_8007411C); // the jump table of sub_80022B84 (asm)
+INCLUDE_DATA(dword_8007411C); // the jump table of CountFtgSprites_80022B84 (asm)
 // Matched
-void sub_8001EFC4(Actor* p)
+void StopActorScript_8001EFC4(Actor* p)
 {
     unsigned int f = p->flags_4;
     int n;
@@ -270,7 +270,7 @@ void sub_8001EFC4(Actor* p)
     p->flags_4 &= 0xFF17FFFF;
 }
 // Matched
-int sub_8001F03C(int a0, int a1, int a2, int a3)
+int GetActorScriptTime_8001F03C(int a0, int a1, int a2, int a3)
 {
     Actor* o = (Actor*)a0;
     ActorScriptCmd* s = (ActorScriptCmd*)a1;
@@ -355,7 +355,7 @@ int sub_8001F03C(int a0, int a1, int a2, int a3)
     return -1;
 }
 // Matched
-short sub_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script, int idx)
+short GetActorHitTimes_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script, int idx)
 {
     short* e = o->anims_148[idx].hitFrames_8[0];
     int i;
@@ -368,8 +368,8 @@ short sub_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script, int idx)
         }
         else
         {
-            out[i].field_0 = sub_8001F03C((int)o, (int)script, idx, e[i * 2]);
-            out[i].field_2 = sub_8001F03C((int)o, (int)script, idx, e[i * 2 + 1]);
+            out[i].field_0 = GetActorScriptTime_8001F03C((int)o, (int)script, idx, e[i * 2]);
+            out[i].field_2 = GetActorScriptTime_8001F03C((int)o, (int)script, idx, e[i * 2 + 1]);
         }
     }
     return out[0].field_0;
@@ -377,7 +377,7 @@ short sub_8001F268(Actor* o, struct_4s* out, ActorScriptCmd* script, int idx)
 extern void sub_8004D288(int* out, ModelAnim* s, int k);
 extern int sub_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
 // Matched
-void sub_8001F354(void* a0)
+void UpdateActorMotion_8001F354(void* a0)
 {
     Actor* o = a0;
     int save[3];
@@ -480,7 +480,7 @@ void sub_8001F354(void* a0)
     }
 }
 // Matched
-void sub_8001F918(void* a0)
+void UpdateActorAnimLoad_8001F918(void* a0)
 {
     Actor* p = a0;
     switch (p->animLoadState_10)
@@ -502,16 +502,16 @@ void sub_8001F918(void* a0)
     }
 }
 // Matched
-void sub_8001F9AC(void* p)
+void UpdateActor_8001F9AC(void* p)
 {
-    sub_8001F9F0(p);
-    sub_8001FB00(p);
-    sub_8001FD08(p);
-    sub_8001FF48(p);
-    sub_800200F8(p);
+    UpdateActorScale_8001F9F0(p);
+    UpdateActorDrawMode_8001FB00(p);
+    DrawActor_8001FD08(p);
+    AdvanceActorFrame_8001FF48(p);
+    CopyActorBoneMatrices_800200F8(p);
 }
 // Matched
-void sub_8001F9F0(Actor* o)
+void UpdateActorScale_8001F9F0(Actor* o)
 {
     unsigned int f = o->flags_4;
     if (f & 1)
@@ -540,7 +540,7 @@ void sub_8001F9F0(Actor* o)
     o->scale_2C[2] = o->baseScale_138[2] * o->scale_26 / 4096;
 }
 // Matched
-void sub_8001FB00(Actor* o)
+void UpdateActorDrawMode_8001FB00(Actor* o)
 {
     unsigned int f = o->flags_4;
     int r = 0;
@@ -603,7 +603,7 @@ void sub_8001FB00(Actor* o)
     }
 }
 // Matched
-int sub_8001FC90(Actor* a0)
+int IsActorOnScreen_8001FC90(Actor* a0)
 {
     SVECTOR v;
     long sxy;
@@ -612,9 +612,9 @@ int sub_8001FC90(Actor* a0)
     v.vx = *(unsigned short*)&a0->pos_38[0];
     v.vy = *(unsigned short*)&a0->pos_38[1];
     v.vz = *(unsigned short*)&a0->pos_38[2];
-    v.vx -= dword_8008D600.vx;
-    v.vy -= dword_8008D600.vy;
-    v.vz -= dword_8008D600.vz;
+    v.vx -= cameraEye_8008D600.vx;
+    v.vy -= cameraEye_8008D600.vy;
+    v.vz -= cameraEye_8008D600.vz;
     RotTransPers(&v, &sxy, &p, &flag);
     return flag >= 0;
 }
@@ -624,14 +624,14 @@ extern void sub_80047E28();
 extern void sub_80046A58();
 extern void DrawSpriteVtxQuadsGT4_800459E4();
 // Matched
-void sub_8001FD08(void* a0)
+void DrawActor_8001FD08(void* a0)
 {
     Actor* o = (Actor*)a0;
     int v;
     ModelAnim* t;
     unsigned long* ot;
     unsigned long* ot2;
-    if (!(o->flags_4 & 0x2000) && sub_8001FC90(o))
+    if (!(o->flags_4 & 0x2000) && IsActorOnScreen_8001FC90(o))
     {
         v = sub_80019CC4(o->pos_38);
         o->draw_164.anim_14 = &o->model_15C->anims_54[o->anim_9C];
@@ -684,7 +684,7 @@ void sub_8001FD08(void* a0)
     }
 }
 // Matched
-void sub_8001FF48(Actor* o)
+void AdvanceActorFrame_8001FF48(Actor* o)
 {
     int g;
     int f;
@@ -744,7 +744,7 @@ void sub_8001FF48(Actor* o)
     }
 }
 // Matched
-void sub_800200F8(void* a0)
+void CopyActorBoneMatrices_800200F8(void* a0)
 {
     Actor* o = a0;
     int i;
@@ -835,7 +835,7 @@ void ReleaseModelAnim_800203B0(int a0, int a1, int a2)
     }
 }
 // Matched
-int sub_80020410(int a0, int a1, int a2)
+int IsModelAnimUsed_80020410(int a0, int a1, int a2)
 {
     ModelAnimRef* e = &modelAnimRefs_800919A0[a0];
     int* list;
@@ -1089,7 +1089,7 @@ void LoadRequestedModels_80020A38(ModelLoader* p)
     int i;
     if (p->models_8 == 0)
     {
-        InitModelList_80024ADC(&p->models_8, off_8007DC70, 1);
+        InitModelList_80024ADC(&p->models_8, modelLoaderVram_8007DC70, 1);
     }
     e = p->slots_C;
     for (i = 0; i < 4; i++)
@@ -1193,7 +1193,7 @@ void ResetOverlayLoaderTask_80020D68(void)
     ((OverlayLoader*)overlayLoaderTask_8008D4C0->entry.buffer)->wanted_0 = 0x1D;
 }
 // Matched
-int sub_80020D84(void)
+int IsOverlayLoaderIdle_80020D84(void)
 {
     OverlayLoader* p = overlayLoaderTask_8008D4C0->entry.buffer;
     int r;
@@ -1251,7 +1251,7 @@ void FreeEffectFile_80020EE0(EffectFile* p)
     ListFreeAll_8003FEC8(p->list_4);
 }
 // Matched
-int sub_80020F00(EffectFile* p, int a, int b)
+int FindEffectIndex_80020F00(EffectFile* p, int a, int b)
 {
     int i;
     for (i = 0; i < p->pointCount_14; i++)
@@ -1263,11 +1263,11 @@ int sub_80020F00(EffectFile* p, int a, int b)
     }
     return -1;
 }
-void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap);
-void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap);
+void LoadEffectSprite_80021298(int* src, EffectSprite* out, int a2, int a3, int heap);
+void LoadEffectModel_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap);
 int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap);
-void sub_800216E8(EffectMdecBuffers* a0, int a1, int a2);
-void sub_80021E4C(int* a0, FtgMatList* a1, unsigned int n);
+void AllocMdecBuffers_800216E8(EffectMdecBuffers* a0, int a1, int a2);
+void LoadFtgMatList_80021E4C(int* a0, FtgMatList* a1, unsigned int n);
 // Matched
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
 {
@@ -1312,7 +1312,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
         for (i = 0; i < out->spriteCount_1C; i++)
         {
             EffectSprite* d = &out->sprites_20[i];
-            sub_80021298((int*)((char*)p3 + p3[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
+            LoadEffectSprite_80021298((int*)((char*)p3 + p3[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
         }
     }
     n = p4[0];
@@ -1323,7 +1323,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
         for (i = 0; i < out->modelCount_24; i++)
         {
             EffectModel* d = &out->models_28[i];
-            sub_80021464((int*)((char*)p4 + p4[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
+            LoadEffectModel_80021464((int*)((char*)p4 + p4[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
         }
     }
     n = p5[0];
@@ -1341,7 +1341,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
                 max = r;
             }
         }
-        sub_800216E8(&out->mdec_34, max, (int)out->list_4);
+        AllocMdecBuffers_800216E8(&out->mdec_34, max, (int)out->list_4);
     }
     if (GetTiyFileCount_80028E68(p6))
     {
@@ -1349,7 +1349,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     }
 }
 // Matched
-void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
+void LoadEffectSprite_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
 {
     POLY_FT4 buf;
     int i;
@@ -1384,7 +1384,7 @@ void sub_80021298(int* src, EffectSprite* out, int a2, int a3, int heap)
     InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
 // Matched
-void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
+void LoadEffectModel_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
 {
     int* models = (int*)((char*)hdr + hdr[1]);
     int* images = (int*)((char*)hdr + hdr[2]);
@@ -1394,10 +1394,10 @@ void sub_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap)
         AllocFtgObjects_80021744(&out->ftg_4, out->ftgCount_0, heap);
         LoadFtgObjects_80021824(models, out->ftg_4, out->ftgCount_0, heap, a2);
     }
-    if (sub_80021DE4(models))
+    if (GetFtgMatCount_80021DE4(models))
     {
-        sub_80021DF0(&out->mats_8, sub_80021DE4(models), heap);
-        sub_80021E4C(models, &out->mats_8, sub_80021DE4(models));
+        AllocFtgMatList_80021DF0(&out->mats_8, GetFtgMatCount_80021DE4(models), heap);
+        LoadFtgMatList_80021E4C(models, &out->mats_8, GetFtgMatCount_80021DE4(models));
     }
     else
     {
@@ -1442,7 +1442,7 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
     return max;
 }
 // Matched
-void sub_800216E8(EffectMdecBuffers* a0, int a1, int a2)
+void AllocMdecBuffers_800216E8(EffectMdecBuffers* a0, int a1, int a2)
 {
     a0->dct_0 = ListAlloc_8003FDC0(a2, (a1 + 1) * 4);
     a0->work_4 = ListAlloc_8003FDC0(a2, 0x2000);
@@ -1471,7 +1471,7 @@ void FreeFtgObjects_80021784(FtgObject** a0, unsigned int n, int heap)
     *a0 = 0;
 }
 // Matched
-void sub_80021804(FtgObject* p, int heap)
+void FreeFtgObjectData_80021804(FtgObject* p, int heap)
 {
     FreeFtgObject_800229B0(p, heap);
 }
@@ -1488,7 +1488,7 @@ void LoadFtgObjects_80021824(int* a0, FtgObject* a1, int a2, int a3, int a4)
     }
 }
 // Matched
-void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
+void CopyFtgObject_800218A8(FtgObject* s, FtgObject* d, int a2)
 {
     char* buf;
     int size;
@@ -1583,25 +1583,25 @@ void sub_800218A8(FtgObject* s, FtgObject* d, int a2)
     d->clut_4E = s->clut_4E;
 }
 // Matched
-int sub_80021DE4(int* p)
+int GetFtgMatCount_80021DE4(int* p)
 {
     return p[2];
 }
 // Matched
-void sub_80021DF0(FtgMatList* p, int a1, int a2)
+void AllocFtgMatList_80021DF0(FtgMatList* p, int a1, int a2)
 {
     p->count_0 = a1;
     p->items_4 = HeapAlloc_8003FC8C(a1 * 16, (struct Pool*)a2);
 }
 // p is volatile to keep the store before the load
 // Matched
-void sub_80021E24(volatile FtgMatList* p, int h)
+void FreeFtgMatList_80021E24(volatile FtgMatList* p, int h)
 {
     p->count_0 = 0;
     HeapFree_8003FD18(p->items_4);
 }
 // Matched
-void sub_80021E4C(int* a0, FtgMatList* a1, unsigned int n)
+void LoadFtgMatList_80021E4C(int* a0, FtgMatList* a1, unsigned int n)
 {
     unsigned short* src = (unsigned short*)((char*)a0 + a0[3]);
     unsigned int i;
@@ -1621,7 +1621,7 @@ void sub_80021E4C(int* a0, FtgMatList* a1, unsigned int n)
 }
 // r2 is unused (the original frame has room for it)
 // Matched
-void sub_80021EDC(FtgPolyFT4* p, POLY_FT4* d)
+void MakeFtgSpritePoly_80021EDC(FtgPolyFT4* p, POLY_FT4* d)
 {
     RECT r;
     RECT r2;
@@ -1703,7 +1703,7 @@ void sub_80021EDC(FtgPolyFT4* p, POLY_FT4* d)
     d->clut = p->clut;
 }
 // Matched
-void sub_800221DC(FtgPolyFT4* p, SPRT* d, DR_TPAGE* tp)
+void MakeFtgSprt_800221DC(FtgPolyFT4* p, SPRT* d, DR_TPAGE* tp)
 {
     RECT r;
     r.x = p->u0;
@@ -1772,11 +1772,11 @@ void sub_800221DC(FtgPolyFT4* p, SPRT* d, DR_TPAGE* tp)
     d->clut = p->clut;
     SetDrawTPage(tp, 0, 1, p->tpage);
 }
-void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y);
-int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h);
-int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p, FtgSpriteGroups8* a, int k, int h);
-int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p, FtgSpriteGroups9* b, int k, int h);
-void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h);
+void CountFtgSprites_80022B84(FtgSrcObjectHeader* c, int* x, int* y);
+int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h);
+int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p, FtgSpriteGroups8* a, int k, int h);
+int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p, FtgSpriteGroups9* b, int k, int h);
+void MergeFtgSpriteGroups_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h);
 // Matched
 int LoadFtgObject_80022458(FtgObject* a0, unsigned char* a1, int h, int a3)
 {
@@ -1796,8 +1796,8 @@ int LoadFtgObject_80022458(FtgObject* a0, unsigned char* a1, int h, int a3)
     }
     hdr = a1;
     a1 += 0x28;
-    n = sub_80022634(a0, (FtgSrcObjectHeader*)hdr, h);
-    sub_800228F8(&A, &B, (FtgSrcObjectHeader*)hdr, h);
+    n = AllocFtgObjectPrims_80022634(a0, (FtgSrcObjectHeader*)hdr, h);
+    AllocFtgSpriteGroups_800228F8(&A, &B, (FtgSrcObjectHeader*)hdr, h);
     for (i = 0; i < n; i++)
     {
         p = (FtgPrimHeader*)a1;
@@ -1822,19 +1822,19 @@ int LoadFtgObject_80022458(FtgObject* a0, unsigned char* a1, int h, int a3)
             a1 += ftgPrimLoaders_8007DAE0[type](p, a1, a0, k, h);
             break;
         case 8:
-            a1 += sub_8002300C(p, (FtgSrcSprites8*)a1, &A, k, h);
+            a1 += LoadFtgSprites_8002300C(p, (FtgSrcSprites8*)a1, &A, k, h);
             break;
         case 9:
-            a1 += sub_8002320C(p, (FtgSrcSprites9*)a1, &B, k, h);
+            a1 += LoadFtgTexSprites_8002320C(p, (FtgSrcSprites9*)a1, &B, k, h);
             break;
         }
     }
-    sub_80022CC4(a0, &A, &B, h);
-    sub_800229E0(&A, &B, h);
+    MergeFtgSpriteGroups_80022CC4(a0, &A, &B, h);
+    FreeFtgSpriteGroups_800229E0(&A, &B, h);
     return (int)a1;
 }
 // Matched
-int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
+int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
 {
     int x;
     int y;
@@ -1843,7 +1843,7 @@ int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     char* p;
     int* c = hdr->counts_0;
     p = 0;
-    sub_80022B84(hdr, &x, &y);
+    CountFtgSprites_80022B84(hdr, &x, &y);
     size = c[0] * 0x24 + c[1] * 0x3C;
     total = c[0] + c[1];
     size += c[2] * 0x30;
@@ -1898,7 +1898,7 @@ int sub_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     return total;
 }
 // Matched
-int sub_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader* a2, int heap)
+int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, FtgSrcObjectHeader* a2, int heap)
 {
     int n;
     int m;
@@ -1935,7 +1935,7 @@ void FreeFtgObject_800229B0(FtgObject* p, int heap)
     }
 }
 // Matched
-void sub_800229E0(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, int h)
+void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* a0, FtgSpriteGroups9* a1, int h)
 {
     int i;
     if (a0->groups != 0)
@@ -1985,7 +1985,7 @@ void RelocateTPageClut_80022AE8(unsigned short* a0, unsigned short* a1, short* a
 }
 #if 0
 // Not matched: the original copies c/q/k into extra registers (looks like inlined helpers; static inline sum / skip helpers tried, the pointer ones put q in memory) and keeps q+4/q+8 unfolded. Its jump table is dword_8007411C: drop that INCLUDE_DATA when this compiles
-void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
+void CountFtgSprites_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
 {
     int n;
     int i;
@@ -2045,12 +2045,12 @@ void sub_80022B84(FtgSrcObjectHeader* c, int* x, int* y)
     *y = b;
 }
 #endif
-INCLUDE_ASM(sub_80022B84);
+INCLUDE_ASM(CountFtgSprites_80022B84);
 #if 0
 // Not matched (2 words): the second loop has the j++ / n++ increments in the other order (j++, n++ in the for header
 // or in the body fixes them but then swaps the sprite pointer increments). A j of its own for the second loop fixed the
 // first loop's j/k registers
-void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h)
+void MergeFtgSpriteGroups_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h)
 {
     int j;
     int n;
@@ -2118,9 +2118,9 @@ void sub_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h
     }
 }
 #endif
-INCLUDE_ASM(sub_80022CC4);
+INCLUDE_ASM(MergeFtgSpriteGroups_80022CC4);
 // Matched
-int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, int k, int h)
+int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, int k, int h)
 {
     FtgSrcSprites8* p = p_in;
     int r = 4;
@@ -2148,7 +2148,7 @@ int sub_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, 
     return r;
 }
 // Matched
-int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, int k, int h)
+int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, int k, int h)
 {
     FtgSrcSprites9* p = p_in;
     int r;
@@ -2180,22 +2180,22 @@ int sub_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, 
     return r;
 }
 // Matched
-void sub_80023460(FtgSrcSprites9* p, int arg1)
+void RelocFtgTexSprites_80023460(FtgSrcSprites9* p, int arg1)
 {
     RelocateTPageClut_80022AE8(&p->tpage_4, &p->clut_6, arg1);
 }
 // Matched
-int sub_8002348C(FtgPrimHeader* a0, FtgPolyF3* a1, FtgObject* a2, int a3)
+int LoadFtgPolyF3_8002348C(FtgPrimHeader* a0, FtgPolyF3* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->f3_0.items[a3], 1);
     }
-    sub_80023514(&a2->f3_0, a1, a0->flags_3, a3);
+    CopyFtgPolyF3_80023514(&a2->f3_0, a1, a0->flags_3, a3);
     return 0x24;
 }
 // Matched
-void sub_80023514(FtgPolyF3List* a0, FtgPolyF3* s, int a2, int a3)
+void CopyFtgPolyF3_80023514(FtgPolyF3List* a0, FtgPolyF3* s, int a2, int a3)
 {
     a0->items[a3].c.r = s->c.r;
     a0->items[a3].c.g = s->c.g;
@@ -2215,17 +2215,17 @@ void sub_80023514(FtgPolyF3List* a0, FtgPolyF3* s, int a2, int a3)
     a0->items[a3].n.z = s->n.z;
 }
 // Matched
-int sub_80023624(FtgPrimHeader* a0, FtgSrcPolyG3* a1, FtgObject* a2, int a3)
+int LoadFtgPolyG3_80023624(FtgPrimHeader* a0, FtgSrcPolyG3* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->g3_8.items[a3], 1);
     }
-    sub_800236AC(&a2->g3_8, a1, a0->flags_3, a3);
+    CopyFtgPolyG3_800236AC(&a2->g3_8, a1, a0->flags_3, a3);
     return 0x3C;
 }
 // Matched
-void sub_800236AC(FtgPolyG3List* a0, FtgSrcPolyG3* s, int a2, int a3)
+void CopyFtgPolyG3_800236AC(FtgPolyG3List* a0, FtgSrcPolyG3* s, int a2, int a3)
 {
     a0->items[a3].c[0].r = s->c[0].r;
     a0->items[a3].c[0].g = s->c[0].g;
@@ -2260,17 +2260,17 @@ void sub_800236AC(FtgPolyG3List* a0, FtgSrcPolyG3* s, int a2, int a3)
     a0->items[a3].c[0].code = a2;
 }
 // Matched
-int sub_800238AC(FtgPrimHeader* a0, FtgSrcPolyFT3* a1, FtgObject* a2, int a3)
+int LoadFtgPolyFT3_800238AC(FtgPrimHeader* a0, FtgSrcPolyFT3* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->ft3_10.items[a3], 1);
     }
-    sub_80023934(&a2->ft3_10, a1, a0->flags_3, a3);
+    CopyFtgPolyFT3_80023934(&a2->ft3_10, a1, a0->flags_3, a3);
     return 0x24;
 }
 // Matched
-void sub_80023934(FtgPolyFT3List* a0, FtgSrcPolyFT3* s, int a2, int a3)
+void CopyFtgPolyFT3_80023934(FtgPolyFT3List* a0, FtgSrcPolyFT3* s, int a2, int a3)
 {
     a0->items[a3].tpage = s->tex.tpage;
     a0->items[a3].clut = s->tex.clut;
@@ -2301,22 +2301,22 @@ void sub_80023934(FtgPolyFT3List* a0, FtgSrcPolyFT3* s, int a2, int a3)
     a0->items[a3].n.z = s->n.z;
 }
 // Matched
-void sub_80023B24(FtgSrcPolyFT3* p, int arg1)
+void RelocFtgPolyFT3_80023B24(FtgSrcPolyFT3* p, int arg1)
 {
     RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
-int sub_80023B48(FtgPrimHeader* a0, FtgSrcPolyGT3* a1, FtgObject* a2, int a3)
+int LoadFtgPolyGT3_80023B48(FtgPrimHeader* a0, FtgSrcPolyGT3* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->gt3_18.items[a3], 1);
     }
-    sub_80023BD0(&a2->gt3_18, a1, a0->flags_3, a3);
+    CopyFtgPolyGT3_80023BD0(&a2->gt3_18, a1, a0->flags_3, a3);
     return 0x40;
 }
 // Matched
-void sub_80023BD0(FtgPolyGT3List* a0, FtgSrcPolyGT3* s, int a2, int a3)
+void CopyFtgPolyGT3_80023BD0(FtgPolyGT3List* a0, FtgSrcPolyGT3* s, int a2, int a3)
 {
     a0->items[a3].tpage = s->tex.tpage;
     a0->items[a3].clut = s->tex.clut;
@@ -2359,22 +2359,22 @@ void sub_80023BD0(FtgPolyGT3List* a0, FtgSrcPolyGT3* s, int a2, int a3)
     a0->items[a3].n[2].z = s->p[2].n.z;
 }
 // Matched
-void sub_80023E80(FtgSrcPolyGT3* p, int arg1)
+void RelocFtgPolyGT3_80023E80(FtgSrcPolyGT3* p, int arg1)
 {
     RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
-int sub_80023EA4(FtgPrimHeader* a0, FtgPolyF4* a1, FtgObject* a2, int a3)
+int LoadFtgPolyF4_80023EA4(FtgPrimHeader* a0, FtgPolyF4* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->f4_20.items[a3], 1);
     }
-    sub_80023F34(&a2->f4_20, a1, a0->flags_3, a3);
+    CopyFtgPolyF4_80023F34(&a2->f4_20, a1, a0->flags_3, a3);
     return 0x2C;
 }
 // Matched
-void sub_80023F34(FtgPolyF4List* a0, FtgPolyF4* s, int a2, int a3)
+void CopyFtgPolyF4_80023F34(FtgPolyF4List* a0, FtgPolyF4* s, int a2, int a3)
 {
     a0->items[a3].c.r = s->c.r;
     a0->items[a3].c.g = s->c.g;
@@ -2397,17 +2397,17 @@ void sub_80023F34(FtgPolyF4List* a0, FtgPolyF4* s, int a2, int a3)
     a0->items[a3].n.z = s->n.z;
 }
 // Matched
-int sub_8002407C(FtgPrimHeader* a0, FtgSrcPolyG4* a1, FtgObject* a2, int a3)
+int LoadFtgPolyG4_8002407C(FtgPrimHeader* a0, FtgSrcPolyG4* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->g4_28.items[a3], 1);
     }
-    sub_80024104(&a2->g4_28, a1, a0->flags_3, a3);
+    CopyFtgPolyG4_80024104(&a2->g4_28, a1, a0->flags_3, a3);
     return 0x50;
 }
 // Matched
-void sub_80024104(FtgPolyG4List* a0, FtgSrcPolyG4* s, int a2, int a3)
+void CopyFtgPolyG4_80024104(FtgPolyG4List* a0, FtgSrcPolyG4* s, int a2, int a3)
 {
     a0->items[a3].c[0].r = s->c[0].r;
     a0->items[a3].c[0].g = s->c[0].g;
@@ -2451,17 +2451,17 @@ void sub_80024104(FtgPolyG4List* a0, FtgSrcPolyG4* s, int a2, int a3)
     a0->items[a3].n[3].z = s->p[3].n.z;
 }
 // Matched
-int sub_80024394(FtgPrimHeader* a0, FtgSrcPolyFT4* a1, FtgObject* a2, int a3)
+int LoadFtgPolyFT4_80024394(FtgPrimHeader* a0, FtgSrcPolyFT4* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->ft4_30.items[a3], 1);
     }
-    sub_8002441C(&a2->ft4_30, a1, a0->flags_3, a3);
+    CopyFtgPolyFT4_8002441C(&a2->ft4_30, a1, a0->flags_3, a3);
     return 0x2C;
 }
 // Matched
-void sub_8002441C(FtgPolyFT4List* a0, FtgSrcPolyFT4* s, int a2, int a3)
+void CopyFtgPolyFT4_8002441C(FtgPolyFT4List* a0, FtgSrcPolyFT4* s, int a2, int a3)
 {
     a0->items[a3].tpage = s->tex.tpage;
     a0->items[a3].clut = s->tex.clut;
@@ -2498,22 +2498,22 @@ void sub_8002441C(FtgPolyFT4List* a0, FtgSrcPolyFT4* s, int a2, int a3)
     a0->items[a3].n.z = s->n.z;
 }
 // Matched
-void sub_8002467C(FtgSrcPolyFT4* p, int arg1)
+void RelocFtgPolyFT4_8002467C(FtgSrcPolyFT4* p, int arg1)
 {
     RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
 // Matched
-int sub_800246A0(FtgPrimHeader* a0, FtgSrcPolyGT4* a1, FtgObject* a2, int a3)
+int LoadFtgPolyGT4_800246A0(FtgPrimHeader* a0, FtgSrcPolyGT4* a1, FtgObject* a2, int a3)
 {
     if (a0->flags_3 & 2)
     {
         SetSemiTrans(&a2->gt4_38.items[a3], 1);
     }
-    sub_80024730(&a2->gt4_38, a1, a0->flags_3, a3);
+    CopyFtgPolyGT4_80024730(&a2->gt4_38, a1, a0->flags_3, a3);
     return 0x54;
 }
 // Matched
-void sub_80024730(FtgPolyGT4List* a0, FtgSrcPolyGT4* s, int a2, int a3)
+void CopyFtgPolyGT4_80024730(FtgPolyGT4List* a0, FtgSrcPolyGT4* s, int a2, int a3)
 {
     a0->items[a3].tpage = s->tex.tpage;
     a0->items[a3].clut = s->tex.clut;
@@ -2568,7 +2568,7 @@ void sub_80024730(FtgPolyGT4List* a0, FtgSrcPolyGT4* s, int a2, int a3)
     a0->items[a3].n[3].z = s->p[3].n.z;
 }
 // Matched
-void sub_80024AB8(FtgSrcPolyGT4* p, int arg1)
+void RelocFtgPolyGT4_80024AB8(FtgSrcPolyGT4* p, int arg1)
 {
     RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, arg1);
 }
@@ -2578,7 +2578,7 @@ void InitModelList_80024ADC(ModelList** a0, ModelVramSlot* a1, int heap)
     ModelList* l;
     int i;
     l = *a0 = HeapAlloc_8003FC8C(0x10, (struct Pool*)heap);
-    l->count_0 = sub_80026600(a1);
+    l->count_0 = CountModelVramSlots_80026600(a1);
     l->heap_4 = heap;
     l->items_8 = HeapAlloc_8003FC8C(l->count_0 * 0x70, (struct Pool*)heap);
     l->vram_C = a1;
@@ -2606,8 +2606,8 @@ void FreeModelList_80024BB0(ModelList** a0)
 void FreeModel_80024C48(Model* p)
 {
     int h;
-    sub_80025AB0(p);
-    sub_80025C38(p, 1);
+    FreeModelAltFtgs_80025AB0(p);
+    ApplyModelFtgSwaps_80025C38(p, 1);
     h = p->list_0->heap_4;
     if (p->animLoaded_44 != 0)
     {
@@ -2631,7 +2631,7 @@ void FreeModel_80024C48(Model* p)
     }
     if (p->mats_5C.items_4 != 0)
     {
-        sub_80021E24(&p->mats_5C, h);
+        FreeFtgMatList_80021E24(&p->mats_5C, h);
     }
     if (p->saved_64 != 0)
     {
@@ -2676,7 +2676,7 @@ int AreFileRequestsDone_80024DC4(Model* p)
     return 1;
 }
 // Matched
-void* sub_80024E38(Model* p)
+void* GetModelActorAnims_80024E38(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2687,7 +2687,7 @@ void* sub_80024E38(Model* p)
     return result;
 }
 // Matched
-void* sub_80024E64(Model* p)
+void* GetModelEffectTable_80024E64(Model* p)
 {
     char* result = 0;
     ModelHeaderData* hdr = p->header_4C;
@@ -2698,9 +2698,9 @@ void* sub_80024E64(Model* p)
     return result;
 }
 // Matched
-void* sub_80024E90(Model* p, int n)
+void* GetModelBaseScale_80024E90(Model* p, int n)
 {
-    char* r = sub_80024FA8(p, n);
+    char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
     {
         r += ((ModelHeaderRecord*)r)->offsets_0[0];
@@ -2708,9 +2708,9 @@ void* sub_80024E90(Model* p, int n)
     return r;
 }
 // Matched
-void* sub_80024EC8(Model* p, int n)
+void* GetModelBoneScale_80024EC8(Model* p, int n)
 {
-    char* r = sub_80024FA8(p, n);
+    char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
     {
         r += ((ModelHeaderRecord*)r)->offsets_0[1];
@@ -2720,7 +2720,7 @@ void* sub_80024EC8(Model* p, int n)
 // Matched
 void* sub_80024F00(Model* p, int n)
 {
-    char* r = sub_80024FA8(p, n);
+    char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
     {
         r += ((ModelHeaderRecord*)r)->offsets_0[2];
@@ -2730,7 +2730,7 @@ void* sub_80024F00(Model* p, int n)
 // Matched
 void* sub_80024F38(Model* p, int n)
 {
-    char* r = sub_80024FA8(p, n);
+    char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
     {
         r += ((ModelHeaderRecord*)r)->offsets_0[3];
@@ -2740,7 +2740,7 @@ void* sub_80024F38(Model* p, int n)
 // Matched
 void* sub_80024F70(Model* p, int n)
 {
-    char* r = sub_80024FA8(p, n);
+    char* r = GetModelHeaderRecord_80024FA8(p, n);
     if (r)
     {
         r += ((ModelHeaderRecord*)r)->offsets_0[4];
@@ -2748,7 +2748,7 @@ void* sub_80024F70(Model* p, int n)
     return r;
 }
 // Matched
-char* sub_80024FA8(Model* a0, int n)
+char* GetModelHeaderRecord_80024FA8(Model* a0, int n)
 {
     char* hdr = (char*)a0->header_4C;
     char* r = 0;
@@ -2770,7 +2770,7 @@ char* sub_80024FA8(Model* a0, int n)
     return r;
 }
 // Matched
-void sub_80024FFC(Model* p, int* ids)
+void SaveModelFtgs_80024FFC(Model* p, int* ids)
 {
     int n;
     int heap;
@@ -2790,7 +2790,7 @@ void sub_80024FFC(Model* p, int* ids)
     }
 }
 // Matched
-void sub_8002512C(unsigned int* a0, Model* a1, int a2)
+void GetSavedModelFtg_8002512C(unsigned int* a0, Model* a1, int a2)
 {
     int i;
     for (i = 0; i < a1->savedCount_40; i++)
@@ -2804,7 +2804,7 @@ void sub_8002512C(unsigned int* a0, Model* a1, int a2)
     }
 }
 // Matched
-void sub_800251A0(void* dst, Model* src, int a2, int idx)
+void GetModelFtg_800251A0(void* dst, Model* src, int a2, int idx)
 {
     MemCopy_800403E8(dst, &src->ftg_50[idx], sizeof(FtgObject));
 }
@@ -2979,7 +2979,7 @@ int IsModelAnimLoaded_800255D8(Model* p, int idx)
     return ((char*)p->animLoaded_44)[idx] != 0;
 }
 // Matched
-int sub_800255F0(ModelList* a0, int idx, int a2)
+int LoadModelListTextures_800255F0(ModelList* a0, int idx, int a2)
 {
     ModelLoadParams b;
     FileRequestDesc c;
@@ -3004,7 +3004,7 @@ int sub_800255F0(ModelList* a0, int idx, int a2)
     return 1;
 }
 // Matched
-int sub_800256B8(ModelList* a0, int id)
+int LoadAllModelAnims_800256B8(ModelList* a0, int id)
 {
     ModelLoadParams b;
     FileRequestDesc c;
@@ -3104,7 +3104,7 @@ int IsAnimInModelAnimSet_80025924(Model* p, int id)
     return 0;
 }
 // Matched
-int sub_80025974(Model* p, int idx, int flag)
+int LoadModelAltFtgs_80025974(Model* p, int idx, int flag)
 {
     ModelLoadParams b;
     FileRequestDesc c;
@@ -3113,7 +3113,7 @@ int sub_80025974(Model* p, int idx, int flag)
     int u;
     int v;
     ModelList* g;
-    sub_80025AB0(p);
+    FreeModelAltFtgs_80025AB0(p);
     e = modelDescs_800824CC[p->id_38];
     t = (char*)e + (e->animCount_12 * 6 + 0x14);
     t += *(unsigned short*)t * 4 + 2;
@@ -3146,7 +3146,7 @@ int sub_80025974(Model* p, int idx, int flag)
     return 1;
 }
 // Matched
-void sub_80025AB0(Model* p)
+void FreeModelAltFtgs_80025AB0(Model* p)
 {
     int h = p->list_0->heap_4;
     if (p->ftg2_68)
@@ -3163,43 +3163,43 @@ void sub_80025AB0(Model* p)
     }
 }
 // Matched
-void sub_80025B20(void* dst, Model* src, int idx)
+void GetModelAltFtg_80025B20(void* dst, Model* src, int idx)
 {
     MemCopy_800403E8(dst, &src->ftg2_68[idx], sizeof(FtgObject));
 }
 // Matched
-void sub_80025B5C(Model* p, int idx, int sel)
+void SetModelFtg_80025B5C(Model* p, int idx, int sel)
 {
     FtgObject tmp;
     if (idx == sel)
     {
-        sub_8002512C((unsigned int*)&tmp, p, idx);
+        GetSavedModelFtg_8002512C((unsigned int*)&tmp, p, idx);
     }
     else if (sel < p->ftgCount_3C)
     {
-        sub_800251A0(&tmp, p, idx, sel);
+        GetModelFtg_800251A0(&tmp, p, idx, sel);
     }
     else
     {
-        sub_80025B20(&tmp, p, sel - p->ftgCount_3C);
+        GetModelAltFtg_80025B20(&tmp, p, sel - p->ftgCount_3C);
     }
     p->ftg_50[idx] = tmp;
 }
 // Matched
-void sub_80025C38(Model* p, int flag)
+void ApplyModelFtgSwaps_80025C38(Model* p, int flag)
 {
     int i;
     for (i = 0; i < p->savedCount_40; i++)
     {
         ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)p->saved_64); // integer sum, as above
-        sub_80025B5C(p, e->id_0, e->id_0);
+        SetModelFtg_80025B5C(p, e->id_0, e->id_0);
     }
     if (flag)
     {
         for (i = 0; i < p->swapCount_43; i++)
         {
             ModelFtgSwap* s = (ModelFtgSwap*)(i * 4 + (int)p->swaps_6C);
-            sub_80025B5C(p, s->dst_0, s->src_2);
+            SetModelFtg_80025B5C(p, s->dst_0, s->src_2);
         }
     }
 }
@@ -3282,7 +3282,7 @@ void ParseModelFile_80025F14(ModelLoadParams* a0)
 {
     if (a0->flags_0 & 1)
     {
-        sub_80026014(a0);
+        LoadModelHeader_80026014(a0);
     }
     if (a0->flags_0 & 2)
     {
@@ -3306,15 +3306,15 @@ void ParseModelFile_80025F14(ModelLoadParams* a0)
     }
     if (a0->flags_0 & 0x40)
     {
-        sub_8002651C(a0);
+        LoadModelAltFtgSection_8002651C(a0);
     }
     if (a0->flags_0 & 0x80)
     {
-        sub_8002659C(a0);
+        LoadModelFtgSwaps_8002659C(a0);
     }
 }
 // Matched
-void sub_80026014(ModelLoadParams* a0)
+void LoadModelHeader_80026014(ModelLoadParams* a0)
 {
     ModelHeaderSection* q = a0->header_1C;
     Model* p = a0->model_14;
@@ -3346,10 +3346,10 @@ void LoadModelFtg_800260FC(ModelLoadParams* a0)
     p->ftgCount_3C = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&p->ftg_50, p->ftgCount_3C, h);
     LoadFtgObjects_80021824(a0->ftg_24, p->ftg_50, p->ftgCount_3C, h, (int)v->reloc_4);
-    if (sub_80021DE4(a0->ftg_24) != 0)
+    if (GetFtgMatCount_80021DE4(a0->ftg_24) != 0)
     {
-        sub_80021DF0(&p->mats_5C, sub_80021DE4(a0->ftg_24), h);
-        sub_80021E4C(a0->ftg_24, &p->mats_5C, sub_80021DE4(a0->ftg_24));
+        AllocFtgMatList_80021DF0(&p->mats_5C, GetFtgMatCount_80021DE4(a0->ftg_24), h);
+        LoadFtgMatList_80021E4C(a0->ftg_24, &p->mats_5C, GetFtgMatCount_80021DE4(a0->ftg_24));
     }
 }
 // Matched
@@ -3469,7 +3469,7 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* a0)
     }
 }
 // Matched
-void sub_8002651C(ModelLoadParams* a)
+void LoadModelAltFtgSection_8002651C(ModelLoadParams* a)
 {
     Model* p = a->model_14;
     int* list = a->ftg2_34;
@@ -3480,7 +3480,7 @@ void sub_8002651C(ModelLoadParams* a)
     LoadFtgObjects_80021824(a->ftg2_34, p->ftg2_68, p->ftg2Count_42, heap, (int)v->reloc_4);
 }
 // Matched
-void sub_8002659C(ModelLoadParams* a0)
+void LoadModelFtgSwaps_8002659C(ModelLoadParams* a0)
 {
     unsigned char* q = a0->extra_38;
     Model* p = a0->model_14;
@@ -3493,7 +3493,7 @@ void sub_8002659C(ModelLoadParams* a0)
     MemCopy_800403E8(r, q, p->swapCount_43 << 2);
 }
 // Matched
-int sub_80026600(ModelVramSlot* p)
+int CountModelVramSlots_80026600(ModelVramSlot* p)
 {
     int n = 0;
     if (p->id_2 != -1)
@@ -3557,7 +3557,7 @@ void ClearModel_800266CC(Model* p)
     p->swaps_6C = 0;
 }
 // Matched
-int sub_80026724(int* p)
+int GetModelAnimCount_80026724(int* p)
 {
     return p[0];
 }
@@ -3602,14 +3602,14 @@ void FreeModelAnims_8002679C(ModelAnim** a0, int n, int heap)
     }
 }
 // Matched
-void sub_80026870(ModelAnim** a0, int a1, int a2)
+void LoadModelAnimSection_80026870(ModelAnim** a0, int a1, int a2)
 {
-    int r = sub_80026724((int*)a1);
+    int r = GetModelAnimCount_80026724((int*)a1);
     AllocModelAnims_80026730(a0, r, a2);
-    sub_800268E8(a0[0], a1, r, a2, -1);
+    LoadModelAnimsMasked_800268E8(a0[0], a1, r, a2, -1);
 }
 // Matched
-void sub_800268E8(ModelAnim* a0, int a1, int n, int h, int mask)
+void LoadModelAnimsMasked_800268E8(ModelAnim* a0, int a1, int n, int h, int mask)
 {
     int* q = (int*)a1;
     int i;
@@ -3737,12 +3737,12 @@ void LoadModelAnimData_80026A8C(ModelAnim* a0, int a1, int a2)
     }
 }
 // Matched
-int sub_80026D6C(int* p)
+int GetRecordTableCount_80026D6C(int* p)
 {
     return p[0];
 }
 // Matched
-void sub_80026D78(struct_12** a0, int a1, int a2)
+void AllocRecordTables_80026D78(struct_12** a0, int a1, int a2)
 {
     struct_12* p = HeapAlloc_8003FC8C(a1 * 12, a2);
     int i;
@@ -3755,7 +3755,7 @@ void sub_80026D78(struct_12** a0, int a1, int a2)
     *a0 = p;
 }
 // Matched
-void sub_80026DE8(struct_12** a0, int n, int h)
+void FreeRecordTables_80026DE8(struct_12** a0, int n, int h)
 {
     struct_12* p = *a0;
     int i;
@@ -3770,12 +3770,12 @@ void sub_80026DE8(struct_12** a0, int n, int h)
     *a0 = 0;
 }
 // Matched
-void sub_80026E74(struct_12* a0, int* a1, int a2)
+void LoadRecordTables_80026E74(struct_12* a0, int* a1, int a2)
 {
     int i;
-    for (i = 0; i < sub_80026D6C(a1); i++)
+    for (i = 0; i < GetRecordTableCount_80026D6C(a1); i++)
     {
-        sub_80026EF8(a0, (unsigned short*)((char*)a1 + a1[i + 1]), a2);
+        LoadRecordTable_80026EF8(a0, (unsigned short*)((char*)a1 + a1[i + 1]), a2);
         a0++;
     }
 }
@@ -3787,7 +3787,7 @@ typedef struct
     unsigned short d;
 } struct_4h;
 // Matched
-void sub_80026EF8(struct_12* p, unsigned short* s, int a2)
+void LoadRecordTable_80026EF8(struct_12* p, unsigned short* s, int a2)
 {
     unsigned short* d;
     int i;
@@ -3812,26 +3812,26 @@ typedef struct
     int pos[3];
     int mapIdx;
 } struct_80091C78;
-extern struct_80091C78 stru_80091C78;
+extern struct_80091C78 savedLevantPos_80091C78;
 extern int dword_800B1DC8;
-extern int dword_80091C68;
+extern int mapHeap_80091C68;
 // Matched
-void sub_80026FAC(void)
+void InitMapState_80026FAC(void)
 {
-    ListInit_8003FDB0(&dword_80091C68);
-    ListInit_8003FDB0(&dword_80091C20);
-    ListInit_8003FDB0(&dword_80091C10);
+    ListInit_8003FDB0(&mapHeap_80091C68);
+    ListInit_8003FDB0(&areaHeap_80091C20);
+    ListInit_8003FDB0(&eventHeap_80091C10);
     ListInit_8003FDB0(&dword_80091C48);
-    dword_80091C30[0] = 0x3A;
-    dword_80091C30[1] = 0;
-    dword_80091C30[2] = 0;
-    dword_80091C30[3] = -1;
-    dword_8008B500.nMeshes_4 = 0;
-    dword_8008B500.f8_8 = 0;
-    dword_8008B500.meshes_C = 0;
-    dword_8008B500.mesh_28 = 0;
-    dword_8008B500.ftgCount_38 = 0;
-    dword_8008B500.ftg_3C = 0;
+    loadFade_80091C30[0] = 0x3A;
+    loadFade_80091C30[1] = 0;
+    loadFade_80091C30[2] = 0;
+    loadFade_80091C30[3] = -1;
+    mapState_8008B500.nMeshes_4 = 0;
+    mapState_8008B500.f8_8 = 0;
+    mapState_8008B500.meshes_C = 0;
+    mapState_8008B500.mesh_28 = 0;
+    mapState_8008B500.ftgCount_38 = 0;
+    mapState_8008B500.ftg_3C = 0;
     dword_8008D648.count_0 = 0;
     dword_8008D648.field_4 = 0;
     dword_8008D648.field_8 = 0;
@@ -3841,18 +3841,18 @@ void sub_80026FAC(void)
     dword_8008D648.listCount_10 = 0;
     dword_8008D648.lists_14 = 0;
     dword_8008D648.pairs_18 = 0;
-    dword_80091C88 = -1;
-    dword_80091C44 = -1;
-    dword_80082674 = 0;
-    dword_80091C98 = 0;
-    dword_80091C94 = 0;
+    currentAreaMap_80091C88 = -1;
+    currentArea_80091C44 = -1;
+    mapAreas_80082674 = 0;
+    useSavedLevantPos_80091C98 = 0;
+    useMapStartPos_80091C94 = 0;
     dword_80091C5C = 1;
     dword_80091C58 = 1;
     dword_80091C90 = 0;
     dword_80091CA0 = 0;
-    dword_80091C9C = 0;
+    forceMapReload_80091C9C = 0;
     dword_80091C8C = 0;
-    stru_80091C78.mapIdx = -1;
+    savedLevantPos_80091C78.mapIdx = -1;
     dword_80091C54 = dword_800B1DC8;
     word_80091CB8[7] = -1;
     word_80091CB8[6] = -1;
@@ -3861,13 +3861,13 @@ void sub_80026FAC(void)
     word_80091CB8[3] = -1;
     word_80091CB8[2] = -1;
     word_80091CB8[1] = -1;
-    word_80091C40[0] = -1;
+    areaPreload_80091C40[0] = -1;
     word_80091CB8[0] = -1;
-    word_80091C40[1] = -1;
-    dword_80082678 = 0;
+    areaPreload_80091C40[1] = -1;
+    areaPreloading_80082678 = 0;
     InitActors_8001D378();
 }
-extern int dword_80091CB4;
+extern int mapCallback_80091CB4;
 extern EventNode* dword_800B1DA8;
 extern void FreeActors_8001D3C4(int a0);
 extern void sub_800AC73C(void);
@@ -3877,7 +3877,7 @@ extern void sub_800A7784(void);
 extern void sub_800A170C(void);
 extern void sub_800A1794(void);
 // Matched
-void sub_80027118(void)
+void UnloadMap_80027118(void)
 {
     word_80091CB8[7] = -1;
     word_80091CB8[6] = -1;
@@ -3886,25 +3886,25 @@ void sub_80027118(void)
     word_80091CB8[3] = -1;
     word_80091CB8[2] = -1;
     word_80091CB8[1] = -1;
-    word_80091C40[0] = -1;
+    areaPreload_80091C40[0] = -1;
     word_80091CB8[0] = -1;
-    word_80091C40[1] = -1;
-    sub_8002741C();
-    dword_80082678 = 0;
+    areaPreload_80091C40[1] = -1;
+    CancelAreaPreload_8002741C();
+    areaPreloading_80082678 = 0;
     dword_80091C74 = -1;
-    dword_80091CB4 = 0;
-    dword_80091C88 = -1;
-    dword_80082668 = 0;
-    dword_8008266C = 0;
+    mapCallback_80091CB4 = 0;
+    currentAreaMap_80091C88 = -1;
+    mapJustLoaded_80082668 = 0;
+    mapHasCode_8008266C = 0;
     if (dword_80091C8C == 0)
     {
         StopAllEventEntries_80043B40(dword_800B1DA8);
-        StopAllEventEntries_80043B40(dword_8008D400);
+        StopAllEventEntries_80043B40(eventEntities_8008D400);
     }
     sub_800AC73C();
     StopAllEventEntries_80043B40(messageWindowTask_8008D640);
-    StopAllEventEntries_80043B40(dword_8008D49C);
-    StopAllEventEntries_80043B40(dword_8008D674);
+    StopAllEventEntries_80043B40(enemyAiTasks_8008D49C);
+    StopAllEventEntries_80043B40(encounterTask_8008D674);
     StopAllEventEntries_80043B40(fileRequestTasks_8008D488);
     sub_800A54A0();
     sub_800A58B4();
@@ -3912,31 +3912,31 @@ void sub_80027118(void)
     sub_800A7784();
     sub_800A170C();
     sub_800A1794();
-    ListFreeAll_8003FEC8(&dword_80091C10);
-    ListFreeAll_8003FEC8(&dword_80091C68);
+    ListFreeAll_8003FEC8(&eventHeap_80091C10);
+    ListFreeAll_8003FEC8(&mapHeap_80091C68);
     if (!(unknownFlags_8008D678 & 0x20000))
     {
         ListFreeAll_8003FEC8(&dword_80091C48);
     }
 }
 // Matched
-void sub_8002728C(void)
+void FreeMapArea_8002728C(void)
 {
-    dword_80091C44 = -1;
-    ListFreeAll_8003FEC8(&dword_80091C20);
+    currentArea_80091C44 = -1;
+    ListFreeAll_8003FEC8(&areaHeap_80091C20);
 }
 // Matched
-void sub_800272BC(int a0, int a1)
+void SetCurrentArea_800272BC(int a0, int a1)
 {
-    dword_80091C88 = a0;
-    dword_80091C44 = a1;
+    currentAreaMap_80091C88 = a0;
+    currentArea_80091C44 = a1;
 }
 #if 0
 // Not matched (close)
-int sub_800272D0(void)
+int IsMapLoading_800272D0(void)
 {
-    int* a = dword_800B1DC4[0x24 / 4];
-    int* b = dword_800B1DB8[0x24 / 4];
+    int* a = mapLoaderTask_800B1DC4[0x24 / 4];
+    int* b = areaLoaderTask_800B1DB8[0x24 / 4];
     if (*a != 0)
     {
         return 1;
@@ -3949,10 +3949,10 @@ int sub_800272D0(void)
 }
 #endif
 // Matched
-int sub_800272D0(void)
+int IsMapLoading_800272D0(void)
 {
-    int* a = dword_800B1DC4[9];
-    int* b = dword_800B1DB8[9];
+    int* a = mapLoaderTask_800B1DC4[9];
+    int* b = areaLoaderTask_800B1DB8[9];
     if (a[0] != 0 || b[0] != 0)
     {
         return 1;
@@ -3960,97 +3960,97 @@ int sub_800272D0(void)
     return 0;
 }
 // Matched
-void sub_80027314(void)
+void RequestAreaReload_80027314(void)
 {
-    dword_80082670 = 1;
+    areaReload_80082670 = 1;
     word_8008B862 = -1;
 }
 // Matched
-int sub_80027330(short a0)
+int RequestAreaPreload_80027330(short a0)
 {
-    if (dword_80082678 == 0)
+    if (areaPreloading_80082678 == 0)
     {
-        word_80091C40[0] = a0;
+        areaPreload_80091C40[0] = a0;
         return 1;
     }
     return 0;
 }
 // Matched
 // Matched
-int sub_80027358(int id)
+int UsePreloadedArea_80027358(int id)
 {
     int* p;
-    if (dword_80082678 == 1)
+    if (areaPreloading_80082678 == 1)
     {
-        if (word_80091C40[0] != id)
+        if (areaPreload_80091C40[0] != id)
         {
-            word_8008B860 = id;
+            pendingArea_8008B860 = id;
             return 0;
         }
-        p = dword_800B1DB8[9];
+        p = areaLoaderTask_800B1DB8[9];
         if (GetFileRequestStatus_8003BE30(p[1]) != 3)
         {
             return 0;
         }
-        sub_8002728C();
+        FreeMapArea_8002728C();
         ConsumeFileRequest_8003BFD0(p[1], 0);
         sub_80028DC0();
         saveData_8008B570.mapId_2E4[3].field_0 = id;
         saveData_8008B570.mapId_2E4[3].field_2 = id;
-        dword_80082678 = 0;
+        areaPreloading_80082678 = 0;
         return 1;
     }
-    word_8008B860 = id;
+    pendingArea_8008B860 = id;
     return 0;
 }
 // Matched
-void sub_8002741C(void)
+void CancelAreaPreload_8002741C(void)
 {
     int* p;
-    if (dword_80082678 == 1)
+    if (areaPreloading_80082678 == 1)
     {
-        p = dword_800B1DB8[9];
+        p = areaLoaderTask_800B1DB8[9];
         CancelFileRequest_8003C060(p[1]);
-        dword_80082678 = 0;
+        areaPreloading_80082678 = 0;
         p[0] = 0;
     }
 }
 // Matched
-void sub_80027478(int mask, int set)
+void SetLoadFadeFlag_80027478(int mask, int set)
 {
     int f;
     int code;
     if (set)
     {
-        dword_80091C30[2] |= mask;
+        loadFade_80091C30[2] |= mask;
     }
     else
     {
-        dword_80091C30[2] &= ~mask;
+        loadFade_80091C30[2] &= ~mask;
     }
-    f = dword_80091C30[2];
+    f = loadFade_80091C30[2];
     if (f && !(f & 1))
     {
         code = 0;
         if (!(f & 0x40))
         {
-            if (dword_80091C30[0] & f)
+            if (loadFade_80091C30[0] & f)
             {
                 code = 1;
             }
-            else if (dword_80091C30[1] & f)
+            else if (loadFade_80091C30[1] & f)
             {
                 code = 2;
             }
         }
-        dword_80091C30[2] |= 1;
+        loadFade_80091C30[2] |= 1;
         SetFadeMode_8001C19C(code, 0x20);
     }
 }
 // Matched
-int sub_80027540(void)
+int UpdateLoadFade_80027540(void)
 {
-    int* g = dword_80091C30;
+    int* g = loadFade_80091C30;
     if (g[2] & 0x40)
     {
         return 1;
@@ -4076,7 +4076,7 @@ int sub_80027540(void)
     return 1;
 }
 // Matched
-void sub_800275E8(unsigned char** a0, int a1, int a2)
+void AllocMapWallFlags_800275E8(unsigned char** a0, int a1, int a2)
 {
     unsigned char* p;
     unsigned char* q;
@@ -4093,13 +4093,13 @@ void sub_800275E8(unsigned char** a0, int a1, int a2)
     }
 }
 // Matched
-int* sub_80027650(int* a0, int a1, int h)
+int* LoadMapSpawns_80027650(int* a0, int a1, int h)
 {
     int* src;
     int (*d)[4];
     int n;
     int i;
-    MapList16* g = &dword_80091C60;
+    MapList16* g = &mapSpawns_80091C60;
     a0 += 1;
     n = *a0++;
     src = a0;
@@ -4121,14 +4121,14 @@ int* sub_80027650(int* a0, int a1, int h)
     return src;
 }
 // Matched
-void sub_80027708(int* a0, int a1)
+void LoadMapFtg_80027708(int* a0, int a1)
 {
     int r = GetFtgObjectCount_80021738(a0);
-    dword_8008B500.ftgCount_38 = r;
+    mapState_8008B500.ftgCount_38 = r;
     if (r != 0)
     {
-        AllocFtgObjects_80021744(&dword_8008B500.ftg_3C, r, a1);
-        LoadFtgObjects_80021824(a0, dword_8008B500.ftg_3C, dword_8008B500.ftgCount_38, a1, 0);
+        AllocFtgObjects_80021744(&mapState_8008B500.ftg_3C, r, a1);
+        LoadFtgObjects_80021824(a0, mapState_8008B500.ftg_3C, mapState_8008B500.ftgCount_38, a1, 0);
     }
 }
 // Matched
@@ -4197,7 +4197,7 @@ void sub_800278BC(int* a, int h)
 }
 #if 0
 // Not matched: $s1/$s2 (record pointer / arr + i) and $a1/$a2 swapped; the original source-triangle pointer is set up as rec + 0x48 and stepped +4 at the loop top, +0x24 at the bottom
-int* sub_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr)
+int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr)
 {
     MapMesh* arr;
     unsigned int i;
@@ -4247,14 +4247,14 @@ int* sub_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* h
     return (int*)((unsigned char*)hdr + hh->size_0);
 }
 #endif
-INCLUDE_ASM(sub_80027A88);
+INCLUDE_ASM(LoadMapMeshes_80027A88);
 // Matched
-void sub_80027CC0(EventEntry* p, int* q)
+void InitMapLoaderTask_80027CC0(EventEntry* p, int* q)
 {
     q[0] = 0;
     q[1] = 0;
-    sub_80027CF8(p, q);
-    p->cb_8 = (EventEntryFn)sub_80027CF8;
+    MapLoaderTask_80027CF8(p, q);
+    p->cb_8 = (EventEntryFn)MapLoaderTask_80027CF8;
 }
 typedef struct
 {
@@ -4266,8 +4266,8 @@ typedef struct
     short fA;
     char pad_C[4];
 } MapEntry16;
-extern MapEntry16** dword_800B0608[];
-#define MAP_ENTRY_CF8(i) dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
+extern MapEntry16** mapTable_800B0608[];
+#define MAP_ENTRY_CF8(i) mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
 extern int dword_800B0EC0;
 extern void sub_800ADDAC(void);
 extern int sub_800A683C(int a0);
@@ -4278,9 +4278,9 @@ extern Model* sub_800AC38C(void);
 extern int sub_800AD154(int a0);
 extern void sub_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
-extern void sub_80028808(void* a0, int* a1);
+extern void OnMapFileLoaded_80028808(void* a0, int* a1);
 // Matched
-void sub_80027CF8(void* a0, int* a)
+void MapLoaderTask_80027CF8(void* a0, int* a)
 {
     int* a1 = a;
     short v[2];
@@ -4294,13 +4294,13 @@ void sub_80027CF8(void* a0, int* a)
     {
     case 0:
         m = dword_800B0EC0;
-        if (m == 1 && sub_80020D84() == 0)
+        if (m == 1 && IsOverlayLoaderIdle_80020D84() == 0)
         {
             eventDispatchHalt_8008B540 = m;
         }
-        else if (sub_80027540() != 0)
+        else if (UpdateLoadFade_80027540() != 0)
         {
-            if (dword_80091C9C != 1 &&
+            if (forceMapReload_80091C9C != 1 &&
                 saveData_8008B570.mapId_2E4[0].field_2 == saveData_8008B570.mapId_2E4[0].field_0 &&
                 saveData_8008B570.mapId_2E4[1].field_2 == saveData_8008B570.mapId_2E4[1].field_0 &&
                 saveData_8008B570.mapId_2E4[2].field_2 == saveData_8008B570.mapId_2E4[2].field_0)
@@ -4316,8 +4316,8 @@ void sub_80027CF8(void* a0, int* a)
                 {
                     sub_800AD124(0);
                 }
-                e = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
-                for (dword_80091CB0 = 0; e[dword_80091CB0].f0 != -1; dword_80091CB0++)
+                e = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+                for (mapAreaCount_80091CB0 = 0; e[mapAreaCount_80091CB0].f0 != -1; mapAreaCount_80091CB0++)
                 {
                 }
                 v[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_2).f6;
@@ -4325,8 +4325,8 @@ void sub_80027CF8(void* a0, int* a)
                 t = sub_800A5030(v[0], v[1], dword_80091C90);
                 sub_800A52AC(v[0]);
                 dword_80091C54 = 1;
-                dword_80082670 = 0;
-                dword_80091C9C = 0;
+                areaReload_80082670 = 0;
+                forceMapReload_80091C9C = 0;
                 saveData_8008B570.mapId_2E4[0].field_2 = saveData_8008B570.mapId_2E4[0].field_0;
                 saveData_8008B570.mapId_2E4[1].field_2 = saveData_8008B570.mapId_2E4[1].field_0;
                 saveData_8008B570.mapId_2E4[2].field_2 = saveData_8008B570.mapId_2E4[2].field_0;
@@ -4338,15 +4338,15 @@ void sub_80027CF8(void* a0, int* a)
                 {
                     unknownFlags_8008D678 &= ~0x1000000;
                 }
-                sub_80025C38(sub_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
+                ApplyModelFtgSwaps_80025C38(sub_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 dword_80091CA0 = 0;
                 if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || t != 0)
                 {
                     dword_80091CA0 = 1;
                 }
                 dword_80091C90 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA;
-                sub_80027118();
-                sub_8002728C();
+                UnloadMap_80027118();
+                FreeMapArea_8002728C();
                 m = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f8;
                 if (m >= 0)
                 {
@@ -4368,7 +4368,7 @@ void sub_80027CF8(void* a0, int* a)
                     }
                     PlayMusic_800300E0(m, 1);
                     sub_800315D8(m);
-                    sub_80027478(0x20, 1);
+                    SetLoadFadeFlag_80027478(0x20, 1);
                 }
                 if (dword_80091C90 == 0 && dword_80091C58 != 0)
                 {
@@ -4377,7 +4377,7 @@ void sub_80027CF8(void* a0, int* a)
                     eventDispatchHalt_8008B540 = 1;
                     n = k;
                     a1[0] = n + 1;
-                    sub_80027478(0x10, 1);
+                    SetLoadFadeFlag_80027478(0x10, 1);
                     break;
                 }
                 a1[0] += 1;
@@ -4395,9 +4395,9 @@ void sub_80027CF8(void* a0, int* a)
         req.dest_10 = 0;
         req.params_14 = 0;
         req.paramsSize_18 = 0;
-        req.callback_1C = sub_80028808;
+        req.callback_1C = OnMapFileLoaded_80028808;
         a1[1] = QueueFileRequest_8003BC84(&req);
-        sub_80027478(2, 1);
+        SetLoadFadeFlag_80027478(2, 1);
         {
             int z = a1[0];
             eventDispatchHalt_8008B540 = 1;
@@ -4407,7 +4407,7 @@ void sub_80027CF8(void* a0, int* a)
     case 2:
         if (IsSoundTaskReady_800306B0() && IsModelLoaderDone_800205D0() && GetFileRequestStatus_8003BE30(a1[1]) == 0)
         {
-            sub_80027478(0x72, 0);
+            SetLoadFadeFlag_80027478(0x72, 0);
             a1[0] = 0;
         }
         else
@@ -4419,7 +4419,7 @@ void sub_80027CF8(void* a0, int* a)
 }
 // Matched
 // Matched
-void sub_8002830C(EventEntry* p)
+void ResetMapLoaderTask_8002830C(EventEntry* p)
 {
     saveData_8008B570.mapId_2E4[0].field_2 = -1;
     saveData_8008B570.mapId_2E4[1].field_2 = -1;
@@ -4427,23 +4427,23 @@ void sub_8002830C(EventEntry* p)
     saveData_8008B570.mapId_2E4[3].field_2 = -1;
     unknownFlags_8008D678 &= ~0x20000;
     dword_80091CA0 = 1;
-    sub_80027118();
-    sub_8002728C();
-    p->cb_8 = (EventEntryFn)sub_80027CC0;
+    UnloadMap_80027118();
+    FreeMapArea_8002728C();
+    p->cb_8 = (EventEntryFn)InitMapLoaderTask_80027CC0;
 }
 // Matched
-void sub_80028388(EventEntry* p, int* q)
+void InitAreaLoaderTask_80028388(EventEntry* p, int* q)
 {
     q[0] = 0;
     q[1] = 0;
-    sub_800283C0(p, q);
-    p->cb_8 = (EventEntryFn)sub_800283C0;
+    AreaLoaderTask_800283C0(p, q);
+    p->cb_8 = (EventEntryFn)AreaLoaderTask_800283C0;
 }
 extern int sub_800A6D50(int a0);
 extern int dword_800B1228;
 extern void sub_80028C60();
 // Matched
-void sub_800283C0(void* a0, int* a)
+void AreaLoaderTask_800283C0(void* a0, int* a)
 {
     int* a1 = a;
     FileRequestDesc req;
@@ -4456,7 +4456,7 @@ void sub_800283C0(void* a0, int* a)
     switch (s)
     {
     case 0:
-        if (sub_800A6D50(0) != 1 && dword_80082670 == 0)
+        if (sub_800A6D50(0) != 1 && areaReload_80082670 == 0)
         {
             break;
         }
@@ -4464,44 +4464,44 @@ void sub_800283C0(void* a0, int* a)
         {
             break;
         }
-        if (word_80091C40[1] != word_80091C40[0])
+        if (areaPreload_80091C40[1] != areaPreload_80091C40[0])
         {
             req.flags_0 = 0xC69;
-            req.fileId_4 = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-            req.offset_8 = dword_80082674[word_80091C40[0] * 3];
-            req.size_C = dword_80082674[word_80091C40[0] * 3 + (dword_80082670 ? 2 : 1)];
+            req.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req.offset_8 = mapAreas_80082674[areaPreload_80091C40[0] * 3];
+            req.size_C = mapAreas_80082674[areaPreload_80091C40[0] * 3 + (areaReload_80082670 ? 2 : 1)];
             req.dest_10 = 0;
             req.params_14 = 0;
             req.paramsSize_18 = 0;
             req.callback_1C = sub_80028C60;
             a1[1] = QueueFileRequest_8003BC84(&req);
-            dword_80082678 = 1;
-            word_80091C40[1] = word_80091C40[0];
+            areaPreloading_80082678 = 1;
+            areaPreload_80091C40[1] = areaPreload_80091C40[0];
             break;
         }
         if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
         {
             load = 1;
             wait = 2;
-            if (dword_80082670 == 0)
+            if (areaReload_80082670 == 0)
             {
-                sub_8002728C();
+                FreeMapArea_8002728C();
             }
-            if (dword_80082678)
+            if (areaPreloading_80082678)
             {
-                if (word_80091C40[0] == saveData_8008B570.mapId_2E4[3].field_0)
+                if (areaPreload_80091C40[0] == saveData_8008B570.mapId_2E4[3].field_0)
                 {
                     load = 0;
                 }
                 wait = ConsumeFileRequest_8003BFD0(a1[1], 1);
-                dword_80082678 = 0;
+                areaPreloading_80082678 = 0;
             }
             if (load)
             {
                 req2.flags_0 = 0x46C;
-                req2.fileId_4 = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-                req2.offset_8 = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3];
-                req2.size_C = dword_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3 + (dword_80082670 ? 2 : 1)];
+                req2.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+                req2.offset_8 = mapAreas_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3];
+                req2.size_C = mapAreas_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3 + (areaReload_80082670 ? 2 : 1)];
                 req2.dest_10 = 0;
                 req2.params_14 = 0;
                 req2.paramsSize_18 = 0;
@@ -4513,9 +4513,9 @@ void sub_800283C0(void* a0, int* a)
             saveData_8008B570.mapId_2E4[3].field_2 = saveData_8008B570.mapId_2E4[3].field_0;
             if (wait)
             {
-                if (dword_80082670 == 0)
+                if (areaReload_80082670 == 0)
                 {
-                    sub_80027478(4, 1);
+                    SetLoadFadeFlag_80027478(4, 1);
                 }
                 eventDispatchHalt_8008B540 = 1;
                 a1[0] = 1;
@@ -4525,8 +4525,8 @@ void sub_800283C0(void* a0, int* a)
         if (word_80091CB8[6] != word_80091CB8[7])
         {
             req3.flags_0 = 0x450;
-            req3.fileId_4 = dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-            req3.offset_8 = dword_80082674[word_80091CB8[6] * 3];
+            req3.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req3.offset_8 = mapAreas_80082674[word_80091CB8[6] * 3];
             req3.size_C = 0;
             req3.dest_10 = 0;
             req3.params_14 = 0;
@@ -4540,10 +4540,10 @@ void sub_800283C0(void* a0, int* a)
     case 1:
         if (GetFileRequestStatus_8003BE30(a1[1]) == 0)
         {
-            dword_80082670 = 0;
-            dword_80082668 = 0;
+            areaReload_80082670 = 0;
+            mapJustLoaded_80082668 = 0;
             sub_80028DC0();
-            sub_80027478(4, 0);
+            SetLoadFadeFlag_80027478(4, 0);
             a1[0] = 0;
         }
         else
@@ -4559,7 +4559,7 @@ void sub_800283C0(void* a0, int* a)
         break;
     }
 }
-// the 0x104-byte header of a map file (sub_80028808)
+// the 0x104-byte header of a map file (OnMapFileLoaded_80028808)
 typedef struct
 {
     LevantPos start_0; // where Levant starts
@@ -4573,11 +4573,11 @@ typedef struct
 extern void sub_800A5628(int a0, int* a1, int a2);
 extern void sub_800B73C0(MapMesh* a0, int a1);
 extern int sub_800B76B8(MapMesh* a0, struct_v3* a1);
-extern int* sub_80027A88();
-extern short dword_80091CA8[];
-extern EventNode* dword_8008B4A4; // the GAME overlay task
+extern int* LoadMapMeshes_80027A88();
+extern short savedLevantRot_80091CA8[];
+extern EventNode* gameTask_8008B4A4; // the GAME overlay task
 // Matched
-void sub_80028808(void* a0, int* a1)
+void OnMapFileLoaded_80028808(void* a0, int* a1)
 {
     MapFileHeader buf;
     int n;
@@ -4593,11 +4593,11 @@ void sub_80028808(void* a0, int* a1)
     if (n != 0 && dword_80091C8C == 0)
     {
         MemCopy_800403E8(dword_80073210, p, n);
-        dword_80091CB4 = ((MapEntry16b*)dword_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
+        mapCallback_80091CB4 = ((MapEntry16b*)mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
     }
     p = (int*)((char*)p + n);
-    dword_80082668 = 1;
-    dword_8008266C = n != 0;
+    mapJustLoaded_80082668 = 1;
+    mapHasCode_8008266C = n != 0;
     cnt = *p++;
     for (j = 0; j < cnt; j++)
     {
@@ -4607,45 +4607,45 @@ void sub_80028808(void* a0, int* a1)
         sub_800A5628(a, p, c);
         p = (int*)((char*)p + c2);
     }
-    dword_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
-    dword_8008B500.nMeshes_4 = *p++;
-    dword_8008B500.f8_8 = *p++;
+    mapState_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
+    mapState_8008B500.nMeshes_4 = *p++;
+    mapState_8008B500.f8_8 = *p++;
     MemCopy_800403E8(&buf, p, sizeof(buf));
-    p = sub_80027A88(&dword_8008B500.meshes_C, &dword_8008B500.nMeshes_4, &dword_80091C68, (char*)p + 0x104);
-    sub_800B73C0(dword_8008B500.meshes_C, dword_8008B500.nMeshes_4);
-    p = sub_80027A88(&dword_8008B500.ents_14, &dword_8008B500.nEnts_10, &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500.ents_14, dword_8008B500.nEnts_10);
-    sub_800275E8(&dword_8008B500.entFlags_18, dword_8008B500.nEnts_10, (int)&dword_80091C68);
-    p = sub_80027A88(&dword_8008B500.mesh_28, &dword_8008B500.nMesh_24, &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500.mesh_28, dword_8008B500.nMesh_24);
-    p = sub_80027A88(&dword_8008B500.ents_30, &dword_8008B500.nEnts_2C, &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500.ents_30, dword_8008B500.nEnts_2C);
-    sub_800275E8(&dword_8008B500.entFlags_34, dword_8008B500.nEnts_2C, (int)&dword_80091C68);
-    p = sub_80027A88(&dword_8008B500.meshes20_20, &dword_8008B500.nMeshes20_1C, &dword_80091C68, p);
-    sub_800B73C0(dword_8008B500.meshes20_20, dword_8008B500.nMeshes20_1C);
+    p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes_C, &mapState_8008B500.nMeshes_4, &mapHeap_80091C68, (char*)p + 0x104);
+    sub_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
+    p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, p);
+    sub_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
+    AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10, (int)&mapHeap_80091C68);
+    p = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, p);
+    sub_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
+    p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, p);
+    sub_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
+    AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C, (int)&mapHeap_80091C68);
+    p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, p);
+    sub_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
     cnt = p[0];
-    sub_80027708(p, (int)&dword_80091C68);
+    LoadMapFtg_80027708(p, (int)&mapHeap_80091C68);
     p = (int*)((char*)p + cnt);
     cnt = *p++;
-    LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&dword_80091C68);
-    p = sub_80027650((int*)((char*)p + cnt), 0, (int)&dword_80091C68);
-    dword_80082674 = ListAlloc_8003FDC0(&dword_80091C68, dword_8008B500.nMeshes_4 * 12);
-    MemCopy_800403E8(dword_80082674, p, dword_8008B500.nMeshes_4 * 12);
-    if (dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
+    LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&mapHeap_80091C68);
+    p = LoadMapSpawns_80027650((int*)((char*)p + cnt), 0, (int)&mapHeap_80091C68);
+    mapAreas_80082674 = ListAlloc_8003FDC0(&mapHeap_80091C68, mapState_8008B500.nMeshes_4 * 12);
+    MemCopy_800403E8(mapAreas_80082674, p, mapState_8008B500.nMeshes_4 * 12);
+    if (mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
     {
-        ((void (*)(int))dword_80091CB4)(0);
+        ((void (*)(int))mapCallback_80091CB4)(0);
     }
-    if (dword_80091C98)
+    if (useSavedLevantPos_80091C98)
     {
-        saveData_8008B570.levant_7A8.pos.x = stru_80091C78.pos[0];
-        saveData_8008B570.levant_7A8.pos.y = stru_80091C78.pos[1];
-        saveData_8008B570.levant_7A8.pos.z = stru_80091C78.pos[2];
-        saveData_8008B570.levant_7A8.rot.vx = dword_80091CA8[0];
-        saveData_8008B570.levant_7A8.rot.vy = dword_80091CA8[1];
-        saveData_8008B570.levant_7A8.rot.vz = dword_80091CA8[2];
+        saveData_8008B570.levant_7A8.pos.x = savedLevantPos_80091C78.pos[0];
+        saveData_8008B570.levant_7A8.pos.y = savedLevantPos_80091C78.pos[1];
+        saveData_8008B570.levant_7A8.pos.z = savedLevantPos_80091C78.pos[2];
+        saveData_8008B570.levant_7A8.rot.vx = savedLevantRot_80091CA8[0];
+        saveData_8008B570.levant_7A8.rot.vy = savedLevantRot_80091CA8[1];
+        saveData_8008B570.levant_7A8.rot.vz = savedLevantRot_80091CA8[2];
     }
-    dword_80091C98 = 0;
-    if (dword_80091C94)
+    useSavedLevantPos_80091C98 = 0;
+    if (useMapStartPos_80091C94)
     {
         saveData_8008B570.levant_7A8.pos.x = buf.start_0.pos.x;
         saveData_8008B570.levant_7A8.pos.y = buf.start_0.pos.y;
@@ -4654,19 +4654,19 @@ void sub_80028808(void* a0, int* a1)
         saveData_8008B570.levant_7A8.rot.vy = buf.start_0.rot.vy;
         saveData_8008B570.levant_7A8.rot.vz = buf.start_0.rot.vz;
     }
-    dword_80091C94 = 0;
-    // stays an int* view: stru_80091C78.mapIdx addresses the field as sym+12 and changes the code
-    if (((int*)&stru_80091C78)[3] >= 0)
+    useMapStartPos_80091C94 = 0;
+    // stays an int* view: savedLevantPos_80091C78.mapIdx addresses the field as sym+12 and changes the code
+    if (((int*)&savedLevantPos_80091C78)[3] >= 0)
     {
-        saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&stru_80091C78)[3];
+        saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&savedLevantPos_80091C78)[3];
         saveData_8008B570.mapId_2E4[3].field_2 = -1;
-        ((int*)&stru_80091C78)[3] = -1;
+        ((int*)&savedLevantPos_80091C78)[3] = -1;
     }
     else
     {
-        for (i = 0; i < (int)dword_8008B500.nMeshes_4; i++)
+        for (i = 0; i < (int)mapState_8008B500.nMeshes_4; i++)
         {
-            if (sub_800B76B8(&dword_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
+            if (sub_800B76B8(&mapState_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
             {
                 saveData_8008B570.mapId_2E4[3].field_0 = i;
                 saveData_8008B570.mapId_2E4[3].field_2 = -1;
@@ -4674,5 +4674,5 @@ void sub_80028808(void* a0, int* a1)
             }
         }
     }
-    ((GameTaskState*)dword_8008B4A4->entry.buffer)->mapPoint_84 = saveData_8008B570.mapId_2E4[3].field_0;
+    ((GameTaskState*)gameTask_8008B4A4->entry.buffer)->mapPoint_84 = saveData_8008B570.mapId_2E4[3].field_0;
 }

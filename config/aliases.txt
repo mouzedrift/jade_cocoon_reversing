@@ -1,8 +1,8 @@
 # names the C code uses for places inside data objects that are defined in C: build.py makes them link-time
 # equates of their address (the asm data used to define them as labels). name  # what it is
-dword_8008B518                   # == dword_8008B500.entFlags_18
-dword_8008B520                   # == dword_8008B500.meshes20_20
-dword_8008B534                   # == dword_8008B500.entFlags_34
+dword_8008B518                   # == mapState_8008B500.entFlags_18
+dword_8008B520                   # == mapState_8008B500.meshes20_20
+dword_8008B534                   # == mapState_8008B500.entFlags_34
 dword_8008B574                   # == saveData_8008B570.playTime_4
 buttonConfig_8008B578            # == saveData_8008B570.buttonConfig_8
 settingsFlags_8008B58C           # == saveData_8008B570.settings_1C
@@ -10,7 +10,7 @@ uiColor_8008B590                 # == saveData_8008B570.uiColor_20
 playerYan_8008B594               # == saveData_8008B570.inv_24
 levantEmptyCocoons_8008B818      # == saveData_8008B570.inv_24.emptyCocoons_284
 word_8008B858                    # == saveData_8008B570.mapId_2E4[1].field_0
-word_8008B860                    # == saveData_8008B570.mapId_2E4[3].field_0
+pendingArea_8008B860                    # == saveData_8008B570.mapId_2E4[3].field_0
 word_8008B862                    # == saveData_8008B570.mapId_2E4[3].field_2
 levantPos_8008BD18               # == saveData_8008B570.levant_7A8
 levantRot_8008BD24               # == saveData_8008B570.levant_7A8.rot
@@ -20,7 +20,7 @@ equippedWeaponId_8008BD54        # == saveData_8008B570.levantStatus_7C8.field_1
 equippedArmor_8008BD55           # == saveData_8008B570.levantStatus_7C8.field_1C[1]
 levantCaptureLevel_8008BD7C      # == saveData_8008B570.levantStatus_7C8.level_44
 allMinionsBitfields_8008BD84     # == saveData_8008B570.allMinionsBitfields_814
-dword_8008D60C                   # == dword_8008D600.pad
+dword_8008D60C                   # == cameraEye_8008D600.pad
 dword_8008D654                   # == dword_8008D648.items_C
 dword_80091BE0                   # == effectFile_80091BD0.data_10
 mdecEffectSchedule_80091C00      # == effectFile_80091BD0.imageSets_30

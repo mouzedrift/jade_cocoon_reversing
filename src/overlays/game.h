@@ -130,7 +130,7 @@ typedef struct GameEvCtx
     int f120;
 } GameEvCtx;
 
-// an event entity (list dword_8008D400); same layout as EvEntEventfnc in eventfnc.h
+// an event entity (list eventEntities_8008D400); same layout as EvEntEventfnc in eventfnc.h
 typedef struct GameEvEnt
 {
     int f0;
@@ -267,7 +267,7 @@ extern void sub_800AD0F8(unsigned a);
 
 extern int dword_80091C54;
 
-extern int dword_80091C9C;
+extern int forceMapReload_80091C9C;
 
 extern int dword_80091C8C;
 
@@ -517,7 +517,7 @@ extern char dword_800B0DA4[];
 
 extern void sub_8001E28C(Actor* a);
 
-extern void sub_80026FAC(void);
+extern void InitMapState_80026FAC(void);
 
 extern void GameFn_800A094C(void);
 
@@ -531,11 +531,11 @@ extern void sub_800A8140(void);
 
 extern void sub_800A94CC(void);
 
-extern EventNode* dword_8008D400;
+extern EventNode* eventEntities_8008D400;
 
 extern GameRect_1 stru_8008D420;
 
-extern int dword_80091C94;
+extern int useMapStartPos_80091C94;
 
 typedef struct GameMode2_1
 {
@@ -552,7 +552,7 @@ typedef struct GameMapEnt_1
     char pad_6[10];
 } GameMapEnt_1;
 
-extern GameMapEnt_1** dword_800B0608[];
+extern GameMapEnt_1** mapTable_800B0608[];
 
 extern void sub_800A4940(int a, int b);
 
@@ -616,7 +616,7 @@ extern int CheckEnemyContact_800A19E4();
 
 extern void StartPadVibration_80036528();
 
-extern EventNode* dword_8008D49C;
+extern EventNode* enemyAiTasks_8008D49C;
 
 extern unsigned char levantCaptureLevel_8008BD7C;
 
@@ -656,7 +656,7 @@ extern int name_800AEBCC[];
 
 extern char name_80091C10[];
 
-extern void sub_80026DE8(void* a, int b, void* c);
+extern void FreeRecordTables_80026DE8(void* a, int b, void* c);
 
 extern int name_800AEBD4;
 
@@ -810,7 +810,7 @@ typedef struct G2Path
     G2PathStep* steps_8;
 } G2Path;
 
-// Levant's controller object (dword_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
+// Levant's controller object (gameTask_8008B4A4->f24); the field reads disagree on signedness at 0x10/0x14
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
 typedef struct G2Act
 {
@@ -843,7 +843,7 @@ typedef struct G2Act
     G2V12 v6c; // root motion of the current animation frame (sub_800AA140)
     struct G2Path* path_78; // scripted walk (flag 0x400000, sub_800ABAA4)
     int f7c;    // step of path_78
-    int tri_80; // floor triangle under Levant (dword_8008B500.meshes_C[mesh_84].tris_4)
+    int tri_80; // floor triangle under Levant (mapState_8008B500.meshes_C[mesh_84].tris_4)
     int mesh_84;
     char pad_88[8];
     MATRIX mats_90[40];
@@ -860,7 +860,7 @@ typedef struct G2Ctx2
 
 extern G2Ctx* dword_8008B4CC;
 
-extern G2Ctx2* dword_8008B4A4;
+extern G2Ctx2* gameTask_8008B4A4;
 
 
 

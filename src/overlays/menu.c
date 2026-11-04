@@ -213,7 +213,7 @@ typedef struct MenuBox
 extern void DrawUiTiySprt_8002C06C();
 extern unsigned short uiColor_8008B590;
 extern void sub_800BFF84();
-extern void sub_80027478();
+extern void SetLoadFadeFlag_80027478();
 extern EventNode* name_8008D498;
 extern int sub_800C0990();
 typedef struct MenuDlg
@@ -422,7 +422,7 @@ void sub_800BBF48(MenuTask* t, MenuMain* c)
         SetFadeMode_8001C19C(0, 0x20);
         FreeActiveOverlay_8002C014();
         if (saveData_8008B570.mapId_2E4[3].field_2 == saveData_8008B570.mapId_2E4[3].field_0)
-            sub_80027314();
+            RequestAreaReload_80027314();
     }
     else if (padPressed_8009194C & 0x20)
     {
@@ -440,12 +440,12 @@ void sub_800BBF48(MenuTask* t, MenuMain* c)
     }
 }
 
-extern int sub_800272D0();
+extern int IsMapLoading_800272D0();
 extern void ResetOverlayLoaderTask_80020D68();
 extern void sub_800A6D30();
 void sub_800BC24C(MenuTask* t)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         ResetOverlayLoaderTask_80020D68();
         sub_800A6D30(1);
@@ -2572,11 +2572,11 @@ extern void sub_800A7714();
 extern void sub_800BD40C();
 void sub_800BFFFC(MenuTask* t)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         if (name_800C29BC)
             sub_800A7714(0);
-        sub_80027478(0x40, 0);
+        SetLoadFadeFlag_80027478(0x40, 0);
         sub_800A6D30(1);
         t->next_8 = sub_800BD40C;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
@@ -2584,15 +2584,15 @@ void sub_800BFFFC(MenuTask* t)
     eventDispatchHalt_8008B540 = 1;
 }
 
-extern void sub_80027478();
-extern void sub_80027314();
+extern void SetLoadFadeFlag_80027478();
+extern void RequestAreaReload_80027314();
 extern void sub_800BFFFC();
 void sub_800C0084(void)
 {
     MenuTask* t = (MenuTask*)&name_8008D498->entry;
-    sub_80027478(0x40, 1);
+    SetLoadFadeFlag_80027478(0x40, 1);
     FreeActiveOverlay_8002C014();
-    sub_80027314();
+    RequestAreaReload_80027314();
     t->next_8 = sub_800BFFFC;
 }
 

@@ -204,10 +204,10 @@ extern unsigned short name_800BE818[];
 extern unsigned short name_800BE840[];
 extern int sub_800AD308(int a);
 extern void sub_800BB298();
-extern void sub_80027478(int a, int b);
+extern void SetLoadFadeFlag_80027478(int a, int b);
 extern void sub_800A7BF0(int a);
 extern void sub_800A6D30(int a);
-extern int sub_800272D0(void);
+extern int IsMapLoading_800272D0(void);
 extern int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d);
 extern unsigned short padRepeat_800918CC;
 extern int eventDispatchHalt_8008B540;
@@ -351,9 +351,9 @@ void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
     }
     if (p->f_4 & 2)
     {
-        sub_80027478(0x40, 1);
+        SetLoadFadeFlag_80027478(0x40, 1);
         FreeActiveOverlay_8002C014();
-        sub_80027314();
+        RequestAreaReload_80027314();
         t->next_8 = sub_800BB298;
     }
 }
@@ -361,12 +361,12 @@ void sub_800BB1F4(WpnTask_wpnshop* t, WpnObj_wpnshop* o)
 // Matched
 void sub_800BB298(WpnTask_wpnshop* t)
 {
-    if (sub_800272D0() == 0)
+    if (IsMapLoading_800272D0() == 0)
     {
         sub_800A7BF0(-1);
         t->next_8 = sub_800BB1F4;
         t->flags_0 = (t->flags_0 & ~1) | 0x8000;
-        sub_80027478(0x40, 0);
+        SetLoadFadeFlag_80027478(0x40, 0);
         sub_800A6D30(1);
         eventDispatchHalt_8008B540 = 1;
     }

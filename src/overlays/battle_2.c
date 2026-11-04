@@ -39,14 +39,14 @@ void sub_800BC90C(BatStageObj_a* p)
     int i;
 
     unknownFlags_8008D678 &= ~0x10000;
-    idx = sub_80020F00(&dword_80095468, 1, dword_800C8EAC[dword_80083BD0].model_6);
-    sub_8004D1EC(dword_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, stru_8008D534, 1, scale);
+    idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, dword_800C8EAC[dword_80083BD0].model_6);
+    sub_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &p->x_38, dword_800C9124, stru_8008D534, 1, scale);
     {
         unsigned short* list = dword_800C8EAC[dword_80083BD0].list_0;
         SaveData* sd = &saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
-            EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, *list)];
+            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, *list)];
             int j;
             for (j = 0; j < g->count_0; j++)
             {
@@ -108,15 +108,15 @@ void sub_800BC90C(BatStageObj_a* p)
             a = -cam[1];
             v.vx += sinTable_80084540[a & 0xFFF];
             v.vy = levantPos_8008BD18.pos.y - 0x352;
-            v.vx -= dword_8008D600.vx;
-            v.vy -= dword_8008D600.vy;
+            v.vx -= cameraEye_8008D600.vx;
+            v.vy -= cameraEye_8008D600.vy;
             v.vz += sinTable_80084540[(a + 0x400) & 0xFFF];
-            v.vz -= dword_8008D600.vz;
+            v.vz -= cameraEye_8008D600.vz;
             sv.vx = v.vx;
             sv.vy = v.vy;
             sv.vz = v.vz;
             RotTransPers(&sv, (long*)&sxy, &pp, &flag);
-            poly = dword_80095468.sprites_20[dword_800C8EAC[dword_80083BD0].floor_8 + i % 4].poly_C;
+            poly = battleEffectFile_80095468.sprites_20[dword_800C8EAC[dword_80083BD0].floor_8 + i % 4].poly_C;
             x = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * word_8008D51E / 240;
             if ((unsigned int)(x + 0x60) < 0x1A0)
             {
@@ -161,7 +161,7 @@ void sub_800BC90C(BatStageObj_a* p)
         case 0x1C:
         case 0x1D:
         {
-            EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
+            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j;
             for (j = 0; j < g->count_0; j++)
             {
@@ -236,7 +236,7 @@ void sub_800BC90C(BatStageObj_a* p)
         }
         default:
         {
-            EffectSprite* g = &dword_80095468.sprites_20[sub_80020F00(&dword_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
+            EffectSprite* g = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, dword_800C8EAC[dword_80083BD0].anim_A)];
             int j = ((unsigned int)frameCount_8008D3FC % (g->count_0 * 2)) / 2;
             int k;
             for (k = 0; k < g->frameCounts_4[j]; k++)
@@ -293,7 +293,7 @@ void sub_800BC90C(BatStageObj_a* p)
                 int sc[3] = { 0x1000, 0x1000, 0x1000 };
                 VECTOR pos;
                 SVECTOR rot;
-                EffectModel* mdl = &dword_80095468.models_28[sub_80020F00(&dword_80095468, 1, id)];
+                EffectModel* mdl = &battleEffectFile_80095468.models_28[FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, id)];
                 int k;
                 memset(&rot, 0, 8);
                 if (dword_80083BD0 == 0x10)

@@ -21,14 +21,14 @@
 
 
 extern char cameraState_8008D4F0[];
-extern int dword_80091C68[];
-extern int dword_8008266C;
+extern int mapHeap_80091C68[];
+extern int mapHasCode_8008266C;
 extern int dword_80091C5C;
 extern int dword_80091C8C;
-extern void (*dword_80091CB4)(int);
+extern void (*mapCallback_80091CB4)(int);
 extern void sub_80027778(char* p, int* q);
 extern void sub_800278BC(char* p, int* q);
-extern int dword_80082668;
+extern int mapJustLoaded_80082668;
 #if 0
 // Not matched (1 word): the original computes a1 + 0x108 from the $v0 copy of a1, this from $s0. Tried: int* param,
 // separate cursor variable (swaps s0/s1), header struct with data[] member, int casts, copy before the MemCopy call,
@@ -41,30 +41,30 @@ void sub_80028C60(int a0, char* a1)
     p = a1;
     a1 += 0x108;
     n = *(int*)(p + 0x104);
-    LoadTiy_80028E74(0, 0, 0, (int*)a1, (int)&dword_80091C20);
+    LoadTiy_80028E74(0, 0, 0, (int*)a1, (int)&areaHeap_80091C20);
     a1 += n;
     n = *(int*)a1;
     a1 += 4;
-    if (dword_80082670 == 0)
+    if (areaReload_80082670 == 0)
     {
-        sub_80027778(a1, &dword_80091C20);
+        sub_80027778(a1, &areaHeap_80091C20);
     }
     a1 += n;
     n = *(int*)a1;
     a1 += 4;
-    if (dword_80082670 == 0)
+    if (areaReload_80082670 == 0)
     {
-        sub_800278BC(a1, &dword_80091C20);
+        sub_800278BC(a1, &areaHeap_80091C20);
     }
     a1 += n;
-    if (dword_80082670 == 1)
+    if (areaReload_80082670 == 1)
     {
-        LoadTiy_80028E74(0, 0, 0, (int*)(a1 + 4), (int)dword_80091C68);
+        LoadTiy_80028E74(0, 0, 0, (int*)(a1 + 4), (int)mapHeap_80091C68);
     }
-    sub_800272BC(dword_8008B500.id_0, word_8008B860);
-    if (dword_80082668 && dword_8008266C && dword_80091C5C && dword_80091C8C == 0 && dword_80091CB4)
+    SetCurrentArea_800272BC(mapState_8008B500.id_0, pendingArea_8008B860);
+    if (mapJustLoaded_80082668 && mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
     {
-        dword_80091CB4(1);
+        mapCallback_80091CB4(1);
     }
 }
 #endif
@@ -75,10 +75,10 @@ extern void sub_80037918(CameraCtrl* p);
 void sub_80028DC0(void)
 {
     CameraCtrl* p;
-    if (dword_80082670 == 0)
+    if (areaReload_80082670 == 0)
     {
         p = cameraTask_8008D4A0->entry.buffer;
-        if (dword_80082668)
+        if (mapJustLoaded_80082668)
         {
             SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
         }

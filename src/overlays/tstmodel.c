@@ -244,7 +244,7 @@ void sub_800A0C00(TstModelD* c)
 
 void sub_800A0EC8(TstModelD* a)
 {
-    InitModelList_80024ADC(&a->models_14, off_8007DC70, 1);
+    InitModelList_80024ADC(&a->models_14, modelLoaderVram_8007DC70, 1);
     LoadModel_80025200(a->models_14, a->modelId_24, a->f20, 2, 0);
     a->f20 = 0;
     a->state = 2;
@@ -259,8 +259,8 @@ void sub_800A0F20(TstModelD* a)
         if (a->modelId_24 == 0x28 && a->f1A8 == -1)
         {
             a->f1A8 = 0;
-            sub_80024FFC(m, name_800A37E8);
-            sub_80025974(m, 5, 0);
+            SaveModelFtgs_80024FFC(m, name_800A37E8);
+            LoadModelAltFtgs_80025974(m, 5, 0);
             return;
         }
         if (a->f1AC <= 0)
@@ -288,7 +288,7 @@ void sub_800A0F20(TstModelD* a)
         {
             a->f1A8 = a->f1B0;
         }
-        sub_80025C38(m, 1);
+        ApplyModelFtgSwaps_80025C38(m, 1);
         a->state = 3;
     }
 }

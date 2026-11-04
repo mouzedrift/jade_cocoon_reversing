@@ -231,7 +231,7 @@ typedef struct FtgSrcSprites9
     FtgSrcSprite9 items_8[1];
 } FtgSrcSprites9;
 
-// per-record sprite groups gathered while loading, merged into FtgObject by sub_80022CC4
+// per-record sprite groups gathered while loading, merged into FtgObject by MergeFtgSpriteGroups_80022CC4
 typedef struct
 {
     int count;
@@ -330,7 +330,7 @@ typedef struct ModelVramSlot
     short id_2; // -1 ends the table
     short reloc_4[6]; // RelocateTPageClut_80022AE8 table
 } ModelVramSlot;
-extern ModelVramSlot* off_8007DC70; // the model loader list's slots
+extern ModelVramSlot* modelLoaderVram_8007DC70; // the model loader list's slots
 
 typedef struct
 {
@@ -373,24 +373,24 @@ typedef struct ModelLoadParams
     int pad_3C;
 } ModelLoadParams;
 
-// model header section (Model.header_4C, copied by sub_80026014)
+// model header section (Model.header_4C, copied by LoadModelHeader_80026014)
 typedef struct
 {
-    int offset_0;  // sub_80024E38: data at offset_0 + 4
-    int offset_4;  // sub_80024E64
-    int records_8; // chain of ModelHeaderRecord at records_8 + 8 (sub_80024FA8)
+    int offset_0;  // GetModelActorAnims_80024E38: data at offset_0 + 4
+    int offset_4;  // GetModelEffectTable_80024E64
+    int records_8; // chain of ModelHeaderRecord at records_8 + 8 (GetModelHeaderRecord_80024FA8)
 } ModelHeaderData;
 typedef struct
 {
-    int offsets_0[5]; // from the record start (sub_80024E90..sub_80024F70)
+    int offsets_0[5]; // from the record start (GetModelBaseScale_80024E90..sub_80024F70)
     int size_14;      // to the next record
 } ModelHeaderRecord;
 
 // sections of Model.header_4C; what each one holds depends on the model kind
-extern void* sub_80024E38(Model* p);
-extern void* sub_80024E64(Model* p);
-extern void* sub_80024E90(Model* p, int n);
-extern void* sub_80024EC8(Model* p, int n);
+extern void* GetModelActorAnims_80024E38(Model* p);
+extern void* GetModelEffectTable_80024E64(Model* p);
+extern void* GetModelBaseScale_80024E90(Model* p, int n);
+extern void* GetModelBoneScale_80024EC8(Model* p, int n);
 extern void* sub_80024F00(Model* p, int n);
 extern void* sub_80024F38(Model* p, int n);
 extern void* sub_80024F70(Model* p, int n);
@@ -398,7 +398,7 @@ extern void* sub_80024F70(Model* p, int n);
 // ---------------------------------------------------------------------------------------------
 // effect files (LoadEffectFile_80020DDC / OnEffectFileLoaded_80020F5C)
 
-// FTG material list (sub_80021DF0 / sub_80021E4C; also Model.mats_5C)
+// FTG material list (AllocFtgMatList_80021DF0 / LoadFtgMatList_80021E4C; also Model.mats_5C)
 typedef struct FtgMatList
 {
     int count_0;
@@ -408,14 +408,14 @@ typedef struct FtgMatList
 // ---------------------------------------------------------------------------------------------
 // loaded models (InitModelList_80024ADC, LoadModel_80025200, FreeModel_80024C48)
 
-// an FTG object saved by sub_80024FFC before it gets swapped (Model.saved_64)
+// an FTG object saved by SaveModelFtgs_80024FFC before it gets swapped (Model.saved_64)
 typedef struct
 {
     int id_0; // index into Model.ftg_50
     FtgObject ftg_4;
 } ModelSavedFtg;
 
-// FTG object swap of the alternate set (Model.swaps_6C, sub_80025C38)
+// FTG object swap of the alternate set (Model.swaps_6C, ApplyModelFtgSwaps_80025C38)
 typedef struct
 {
     short dst_0; // index into Model.ftg_50
@@ -446,7 +446,7 @@ struct Model
     int* animSet_58;            // count, then the animation ids it loaded (-1: was already loaded)
     FtgMatList mats_5C;
     ModelSavedFtg* saved_64;    // savedCount_40 entries
-    FtgObject* ftg2_68;         // alternate FTG set, ftg2Count_42 objects (sub_8002651C)
+    FtgObject* ftg2_68;         // alternate FTG set, ftg2Count_42 objects (LoadModelAltFtgSection_8002651C)
     ModelFtgSwap* swaps_6C;     // swapCount_43 entries
 };
 
@@ -493,7 +493,7 @@ typedef struct
     struct_b4 f18;
 } struct_1c;
 
-// one sprite of an effect frame (0x1C bytes; sub_80021298 copies it with the struct_1c byte-group view)
+// one sprite of an effect frame (0x1C bytes; LoadEffectSprite_80021298 copies it with the struct_1c byte-group view)
 typedef struct EffectSpriteFrame
 {
     short u_0; // texture position; u_0, w_4 and f8 are passed to DrawRotSprite_80044010 as three pointers
@@ -570,7 +570,7 @@ typedef struct EffectFile
     EffectMdecBuffers mdec_34;
 } EffectFile;
 extern EffectFile effectFile_80091BD0; // effects shared by the field and battle (effect.c)
-extern EffectFile dword_80095468;      // the battle stage effect file (BATTLE.BIN)
+extern EffectFile battleEffectFile_80095468;      // the battle stage effect file (BATTLE.BIN)
 
 // OnEffectFileLoaded_80020F5C parameters
 typedef struct
@@ -624,7 +624,7 @@ typedef struct
     struct_2s* pairs_18;
 } struct_8008D648;
 
-// buffer of the GAME overlay task dword_8008B4A4 (overlays/game.h has the full view)
+// buffer of the GAME overlay task gameTask_8008B4A4 (overlays/game.h has the full view)
 typedef struct
 {
     char pad_0[0x84];
@@ -633,7 +633,7 @@ typedef struct
 
 
 // ---------------------------------------------------------------------------------------------
-// collision meshes of the current map (dword_8008B500, filled by sub_80028C60's loader)
+// collision meshes of the current map (mapState_8008B500, filled by sub_80028C60's loader)
 
 typedef struct MapVtx
 {
@@ -659,7 +659,7 @@ typedef struct MapMesh
     MapTri* tris_4;
 } MapMesh;
 
-// a mesh block of a map file (sub_80027A88): header, then per mesh a MapMeshRec and its MapTriRecs
+// a mesh block of a map file (LoadMapMeshes_80027A88): header, then per mesh a MapMeshRec and its MapTriRecs
 typedef struct MapMeshFile
 {
     int size_0; // of the whole block
@@ -681,7 +681,7 @@ typedef struct MapTriRec
     MapVtx v_10[3];
 } MapTriRec;
 
-int* sub_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr);
+int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr);
 
 typedef struct MapState
 {
@@ -702,31 +702,31 @@ typedef struct MapState
     int ftgCount_38;
     FtgObject* ftg_3C;
 } MapState;
-extern MapState dword_8008B500;
+extern MapState mapState_8008B500;
 
-// 16-byte records loaded with the map (sub_80027650)
+// 16-byte records loaded with the map (LoadMapSpawns_80027650)
 typedef struct
 {
     int count_0;
     int (*items_4)[4];
 } MapList16;
-extern MapList16 dword_80091C60;
+extern MapList16 mapSpawns_80091C60;
 
 
-// the loaders / relocators of the primitive kinds of an FTG model (sub_80022458)
+// the loaders / relocators of the primitive kinds of an FTG model (LoadFtgObject_80022458)
 typedef void (*fn_80022458_a)(unsigned char* body, int a3);
 typedef int (*fn_80022458_b)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
 extern fn_80022458_a ftgPrimRelocators_8007DB08[];
 extern fn_80022458_b ftgPrimLoaders_8007DAE0[];
 
-int sub_8002348C(FtgPrimHeader *a0, FtgPolyF3 *a1, FtgObject *a2, int a3);
-int sub_80023624(FtgPrimHeader *a0, FtgSrcPolyG3 *a1, FtgObject *a2, int a3);
-int sub_800238AC(FtgPrimHeader *a0, FtgSrcPolyFT3 *a1, FtgObject *a2, int a3);
-int sub_80023B48(FtgPrimHeader *a0, FtgSrcPolyGT3 *a1, FtgObject *a2, int a3);
-int sub_80023EA4(FtgPrimHeader *a0, FtgPolyF4 *a1, FtgObject *a2, int a3);
-int sub_8002407C(FtgPrimHeader *a0, FtgSrcPolyG4 *a1, FtgObject *a2, int a3);
-int sub_80024394(FtgPrimHeader *a0, FtgSrcPolyFT4 *a1, FtgObject *a2, int a3);
-int sub_800246A0(FtgPrimHeader *a0, FtgSrcPolyGT4 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyF3_8002348C(FtgPrimHeader *a0, FtgPolyF3 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyG3_80023624(FtgPrimHeader *a0, FtgSrcPolyG3 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyFT3_800238AC(FtgPrimHeader *a0, FtgSrcPolyFT3 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyGT3_80023B48(FtgPrimHeader *a0, FtgSrcPolyGT3 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyF4_80023EA4(FtgPrimHeader *a0, FtgPolyF4 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyG4_8002407C(FtgPrimHeader *a0, FtgSrcPolyG4 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyFT4_80024394(FtgPrimHeader *a0, FtgSrcPolyFT4 *a1, FtgObject *a2, int a3);
+int LoadFtgPolyGT4_800246A0(FtgPrimHeader *a0, FtgSrcPolyGT4 *a1, FtgObject *a2, int a3);
 
 void InitOverlayLoaderTask_80020CB8();
 

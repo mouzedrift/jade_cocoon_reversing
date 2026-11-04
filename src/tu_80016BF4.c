@@ -41,7 +41,7 @@ void sub_80016C3C(int* a0, void* buf)
     int pos[3];
     int v[3];
     int* vp;
-    idx = sub_80020F00(&effectFile_80091BD0, 1, 6);
+    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 6);
     t = &effectFile_80091BD0.models_28[idx];
     if (--a1->field_4 > 0)
     {
@@ -89,7 +89,7 @@ void sub_80016E20(int* a0, void* buf)
         for (i = 0; i < 5; i++)
         {
             v[1] = r + (i << 12) / 5;
-            idx = sub_80020F00(&effectFile_80091BD0, 0, 0x176);
+            idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x176);
             sub_800C1A5C(a1->pos_44, v, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
             sub_800C32DC(a1->pos_44, 0xB2, 0, v[1]);
         }
@@ -121,7 +121,7 @@ void sub_80016FC8(int* a0, EffectObj* a1)
         sub_800C1190(0x50, 0x1D);
         for (i = 0; i < 4; i++)
         {
-            idx = sub_80020F00(&effectFile_80091BD0, 0, 0x16);
+            idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x16);
             sub_800C1A5C(a1->pos_44, v, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
             v[1] += 0x400;
             sub_800C32DC(a1->field_1C, 0xF, 0, v[1]);
@@ -129,7 +129,7 @@ void sub_80016FC8(int* a0, EffectObj* a1)
     }
     if (a1->field_4 == 0x30)
     {
-        idx = sub_80020F00(&effectFile_80091BD0, 0, 0x15);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x15);
         sub_800C1A5C(a1->pos_44, v, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
     }
     if (a1->field_4 == 0x33)
@@ -196,7 +196,7 @@ void sub_80017290(EffectObj* a0, int a1)
         b->rot_80.vy = 0;
         b->rot_80.vx = 0;
         b->rot_80.pad = 0;
-        idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
         b->field_88 = (int)&effectFile_80091BD0.models_28[idx];
         e->cb_8 = (EventEntryFn)sub_800173A8;

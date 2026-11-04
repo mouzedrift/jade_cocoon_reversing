@@ -860,7 +860,7 @@ extern void PulseColor_80033394(void* a, void* b, void* c, int d, int e, int f);
 extern void EncodeName_8003F7C8(void* a, void* b);
 
 extern struct_v3 dword_800B069C; // Levant's start position
-extern int dword_80091C94;
+extern int useMapStartPos_80091C94;
 extern char byte_800A08B4[];
 extern SVECTOR dword_800B06A8; // Levant's start rotation
 extern UnitStatus dword_800A2730; // Levant's initial status block
@@ -1109,7 +1109,7 @@ void sub_800A2650(void)
     s->mapId_2E4[2].field_2 = -1;
     s->mapId_2E4[3].field_2 = -1;
     s->mapId_2E4[1].field_0 = 4;
-    dword_80091C94 = 1;
+    useMapStartPos_80091C94 = 1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;
     s->field_810 = 0;

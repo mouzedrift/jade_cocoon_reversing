@@ -41,12 +41,12 @@ void sub_800174F8(EffectObj* a0, int a1)
         b->rot_80.vy = 0;
         b->rot_80.vx = 0;
         b->rot_80.pad = 0;
-        idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
         p = &effectFile_80091BD0.models_28[idx];
         b->field_88 = (int)p;
         b->work_94 = malloc3_8003FC4C(0x54);
-        sub_800218A8(p->ftg_4, b->work_94, 1);
+        CopyFtgObject_800218A8(p->ftg_4, b->work_94, 1);
         sub_80039FE4(p->ftg_4, p->ftg_4 + 1, b->work_94);
         e->cb_8 = (EventEntryFn)sub_8001761C;
     }
@@ -67,7 +67,7 @@ void sub_8001761C(int* a0, EffectObj* a1)
     if (a1->field_0++ > 60)
     {
         *a0 = (*a0 & ~1) | 0x8000;
-        sub_80021804(a1->work_94, 1);
+        FreeFtgObjectData_80021804(a1->work_94, 1);
         free3_8003FC6C(a1->work_94);
     }
 }
@@ -91,12 +91,12 @@ void sub_80017784(EffectObj* a0, int a1, short* a2)
         b->rot_80.vx = a2[0];
         b->rot_80.vy = a2[1];
         b->rot_80.vz = a2[2];
-        idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & ~0x8000;
         p = &effectFile_80091BD0.models_28[idx];
         b->field_88 = (int)p;
         b->work_94 = malloc3_8003FC4C(0x54);
-        sub_800218A8(p->ftg_4, b->work_94, 1);
+        CopyFtgObject_800218A8(p->ftg_4, b->work_94, 1);
         sub_80039FE4(p->ftg_4, p->ftg_4 + 1, b->work_94);
         e->cb_8 = (EventEntryFn)sub_800178C0;
     }
@@ -128,7 +128,7 @@ void sub_800178C0(int* a0, EffectObj* a1)
         {
             a1->field_0 = 0;
             *a0 = (*a0 & ~1) | 0x8000;
-            sub_80021804(a1->work_94, 1);
+            FreeFtgObjectData_80021804(a1->work_94, 1);
             free3_8003FC6C(a1->work_94);
         }
     }
@@ -198,7 +198,7 @@ void sub_80017BF0(EventEntry* a0, int a1)
         q->rot_80.vz = 0;
         q->rot_80.vy = 0;
         q->rot_80.vx = 0;
-        r = sub_80020F00(&effectFile_80091BD0, 1, a1);
+        r = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, a1);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         q->field_88 = (int)&effectFile_80091BD0.models_28[r];
         e->cb_8 = sub_80017CE4;
@@ -291,7 +291,7 @@ void sub_80017FF8(EventEntry* e, void* buf)
     else
     {
         e->flags = (e->flags & ~1) | 0x8000;
-        sub_80021804(a1->work_94, 1);
+        FreeFtgObjectData_80021804(a1->work_94, 1);
         free3_8003FC6C(a1->work_94);
     }
 }

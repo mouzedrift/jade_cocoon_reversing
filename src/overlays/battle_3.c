@@ -424,9 +424,9 @@ void sub_800BF4D0(EventEntry* t, BatHitNum_a* u)
     v.vx = u->pos_10[0];
     v.vy = u->pos_10[2];
     v.vz = u->pos_10[4];
-    v.vx -= dword_8008D600.vx;
-    v.vy -= dword_8008D600.vy;
-    v.vz -= dword_8008D600.vz;
+    v.vx -= cameraEye_8008D600.vx;
+    v.vy -= cameraEye_8008D600.vy;
+    v.vz -= cameraEye_8008D600.vz;
     RotTransPers(&v, (long*)&sxy, &p, &flag);
     u->frame_8++;
     if (u->frame_8 > 0x10)
@@ -1317,10 +1317,10 @@ int sub_800C0BF0()
     s.visible_30 = 0;
     s.model_48 = m;
     s.bones_34 = dword_80079140;
-    s.baseScale_38 = sub_80024E90(m, k);
-    s.boneScale_3C = sub_80024EC8(m, k);
-    s.anims_40 = sub_80024E38(m);
-    s.effectTbl_44 = sub_80024E64(m);
+    s.baseScale_38 = GetModelBaseScale_80024E90(m, k);
+    s.boneScale_3C = GetModelBoneScale_80024EC8(m, k);
+    s.anims_40 = GetModelActorAnims_80024E38(m);
+    s.effectTbl_44 = GetModelEffectTable_80024E64(m);
     s.hasMatrices_4C = 1;
     dword_800C9190.obj = CreateActor_8001D45C(&s);
     sub_8001D68C(dword_800C9190.obj, 0);
@@ -1867,7 +1867,7 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
     if (++u->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
-        sub_800C1A5C(u->pos_10, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[sub_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
+        sub_800C1A5C(u->pos_10, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
             e = AllocEventEntry_80043AF8(dword_8008D60C);
@@ -1897,7 +1897,7 @@ void sub_800C23D0(EventEntry* t, BatSpark_a* u)
                 b->rot_34[1] = rand() & 0x1000;
                 b->rot_34[2] = rand() & 0x1000;
                 b->rot_34[3] = (rand() & 0x1FF) + 0x100;
-                n = sub_80020F00(&effectFile_80091BD0, 1, 0x19);
+                n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x19);
                 e->flags = (e->flags | 1) & 0xFFFF7FFF;
                 {
                     EffectModel* ent = &effectFile_80091BD0.models_28[n];
@@ -1958,7 +1958,7 @@ void sub_800C2914(BatSrc_a* p, int id)
         b->pos_10[1] = p->pos_1C[1];
         b->pos_10[2] = p->pos_1C[2];
         b->frame_0 = 0;
-        n = sub_80020F00(&effectFile_80091BD0, 1, id);
+        n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         b->obj_3C = &effectFile_80091BD0.models_28[n];
         e->cb_8 = (EventEntryFn)sub_800C23D0;
@@ -1992,7 +1992,7 @@ void sub_800C2914(BatSrc_a* p, int id)
             s[2] = b->vel_28[2] / 1024;
             VectorToAngles_8003B5D4(s, b->rot_34);
             b->rot_34[2] = rand() & 0x1000;
-            n = sub_80020F00(&effectFile_80091BD0, 1, id);
+            n = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, id);
             e->flags = (e->flags | 1) & 0xFFFF7FFF;
             b->obj_3C = &effectFile_80091BD0.models_28[n];
             e->cb_8 = (EventEntryFn)sub_800C2CD8;
@@ -2135,7 +2135,7 @@ int sub_800C32DC(int* pos, int a1, int a2, int a3)
     b->frame_0 = 0;
     b->speed_8 = 0;
     b->rot_82 = a3;
-    idx = sub_80020F00(&effectFile_80091BD0, 1, a1);
+    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, a1);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     t = &effectFile_80091BD0.models_28[idx];
     b->clip_88 = t + a2;
@@ -2247,7 +2247,7 @@ void sub_800C371C(EventEntry* t, void* arg)
         if (u->f30 <= 0)
         {
             sub_800C410C();
-            sub_80021804(u->work_94, 1);
+            FreeFtgObjectData_80021804(u->work_94, 1);
             free3_8003FC6C(u->work_94);
             t->flags = (t->flags & ~1) | 0x8000;
         }
@@ -2277,7 +2277,7 @@ void sub_800C3B50(int* p, int id)
     b->pos_44[1] = p[1];
     b->pos_44[2] = p[2];
     b->frame_0 = 0;
-    b->fx_E = sub_80020F00(&effectFile_80091BD0, 0, id);
+    b->fx_E = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, id);
     b->alpha_30 = 0x1000;
     b->f34 = 0;
     b->rot_80[2] = 0;
@@ -2290,14 +2290,14 @@ void sub_800C3B50(int* p, int id)
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     if (f == 0)
     {
-    idx = sub_80020F00(&effectFile_80091BD0, 1, 0x1F);
+    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x1F);
     e->flags = (e->flags | 1) & 0xFFFF7FFF;
     ent = &effectFile_80091BD0.models_28[idx];
     b->clip_88 = ent;
     b->model_94 = malloc3_8003FC4C(0x54);
-    sub_800218A8(ent->ftg_4, b->model_94, 1);
+    CopyFtgObject_800218A8(ent->ftg_4, b->model_94, 1);
     sub_80039FE4(ent->ftg_4, ent->ftg_4 + 1, b->model_94);
-    q = dword_8008B4A4->hero_24;
+    q = gameTask_8008B4A4->hero_24;
     b->pos_44[0] = q->pos_5E4[0];
     b->pos_44[1] = q->pos_5E4[1];
     b->pos_44[2] = q->pos_5E4[2];
@@ -2329,7 +2329,7 @@ void sub_800C3D34(EventEntry* t, BatOrb_a* u)
     else
     {
         t->flags = (t->flags & ~1) | 0x8000;
-        sub_80021804(u->model_94, 1);
+        FreeFtgObjectData_80021804(u->model_94, 1);
         free3_8003FC6C(u->model_94);
     }
     sub_8004D1EC(m->ftg_4, pOT_8008D690, u->pos_44, u->rot_80, stru_8008D534, ((0x1000 - u->alpha_30) << 16) | 0xB0, 0);
@@ -2342,7 +2342,7 @@ void sub_800C3DF8(EventEntry* t, BatOrb_a* u)
     BatOrb_a* w;
     w = u;
     sub_800C1A5C(u->pos_44, (short*)&dword_800795D4, (int)&effectFile_80091BD0.sprites_20[u->fx_E], 0x1000);
-    q = dword_8008B4A4->hero_24;
+    q = gameTask_8008B4A4->hero_24;
     v[0] = q->pos_5E4[0];
     v[1] = q->pos_5E4[1];
     v[2] = q->pos_5E4[2];

@@ -1596,12 +1596,12 @@ void LoadMenuExit_800BAAE0(Task_LOAD* t, LoadTask_LOAD* s)
         FreeActiveOverlay_8002C014();
         if (s->f54_LOAD & 0x20)
         {
-            sub_80027314();
+            RequestAreaReload_80027314();
             sub_800A6D30(sub_800A6D50(1));
         }
         else if (!(s->f54_LOAD & 4))
         {
-            sub_80027314();
+            RequestAreaReload_80027314();
             sub_800A6D30(sub_800A6D50(1));
         }
         if (s->f54_LOAD & 1)

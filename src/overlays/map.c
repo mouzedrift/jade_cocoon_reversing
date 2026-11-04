@@ -51,7 +51,7 @@ typedef struct MapEntry
     char pad_2[14];
 } MapEntry;
 
-extern MapEntry** dword_800B0608[];
+extern MapEntry** mapTable_800B0608[];
 extern int dword_800B0624[];
 extern char dword_800B6B98[];
 extern char dword_800B6BAC[];
@@ -66,7 +66,7 @@ extern int GetMenuCursorIndex_8003DA54(void*);
 extern void sub_800A8DEC();
 extern void sub_800A6D30(int);
 extern void sub_800AD16C(int, int);
-extern int dword_80091C94;
+extern int useMapStartPos_80091C94;
 typedef struct MapSel
 {
     short s0;
@@ -573,7 +573,7 @@ void sub_800B8338(MapPos* p)
     sub_800A8DEC();
     SetFadeMode_8001C19C(0, 0x20);
     sub_800A6D30(1);
-    dword_80091C94 = 1;
+    useMapStartPos_80091C94 = 1;
     eventDispatchHalt_8008B540 = 1;
 }
 
@@ -652,7 +652,7 @@ void sub_800B860C()
     MapSelState* m = &dword_800B9420;
     int a = m->area_4;
     int b = m->map_8;
-    MapEntry* list = dword_800B0608[a][b];
+    MapEntry* list = mapTable_800B0608[a][b];
     RECT r1;
     RECT r2;
     RECT r3;
@@ -759,7 +759,7 @@ void sub_800B860C()
             saveData_8008B570.mapId_2E4[0].field_2 = -1;
             saveData_8008B570.mapId_2E4[1].field_2 = -1;
             saveData_8008B570.mapId_2E4[2].field_2 = -1;
-            dword_80091C94 = 1;
+            useMapStartPos_80091C94 = 1;
             dword_80091C54 = 0;
             sub_800A8DEC();
             sub_800A6D30(1);

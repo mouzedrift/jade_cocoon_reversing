@@ -1375,7 +1375,7 @@ void sub_8001C440(Model* a0, int idx, int key)
             }
             break;
         case 1:
-            sub_80025B5C(a0, q->arg_4, q->arg_6);
+            SetModelFtg_80025B5C(a0, q->arg_4, q->arg_6);
             break;
         }
     }
@@ -2151,9 +2151,9 @@ void FreeActors_8001D3C4(int a0)
 void UpdateActorCb_8001D41C(EventEntry* e, void* a1)
 {
     sub_8001EA28(a1);
-    sub_8001F354(a1);
-    sub_8001F918(a1);
-    sub_8001F9AC(a1);
+    UpdateActorMotion_8001F354(a1);
+    UpdateActorAnimLoad_8001F918(a1);
+    UpdateActor_8001F9AC(a1);
 }
 // Matched
 Actor* CreateActor_8001D45C(ActorDesc* a0)
@@ -2476,7 +2476,7 @@ INCLUDE_ASM(sub_8001DB98);
 void sub_8001DC34(void* p, void* s)
 {
     sub_8001DB98(p, s);
-    sub_8001EA48(p);
+    RunActorScript_8001EA48(p);
 }
 // Matched
 int sub_8001DC60(Actor* p, VECTOR* a1, int a2, int a3)
@@ -2716,7 +2716,7 @@ void sub_8001E28C(Actor* o)
     o->flags_4 |= 0x20000;
     if (o->f100 != 0)
     {
-        sub_8001EFC4(o);
+        StopActorScript_8001EFC4(o);
     }
 }
 // Matched
@@ -2742,7 +2742,7 @@ int sub_8001E34C(Actor* o, ActorActionDesc* d)
     }
     if (d->hitAnim_E >= 0)
     {
-        r = sub_8001F268(o, o->hitTimes_108, (int)o->script_D0, d->hitAnim_E);
+        r = GetActorHitTimes_8001F268(o, o->hitTimes_108, (int)o->script_D0, d->hitAnim_E);
     }
     f = d->effect_10;
     if (f >= 0)
@@ -2966,7 +2966,7 @@ void sub_8001EA00(Actor* p)
 // Matched
 void sub_8001EA28(void* arg0)
 {
-    sub_8001EA48(arg0);
+    RunActorScript_8001EA48(arg0);
 }
 
 int primBufferStart_800960A0[2] BSS = { 0 };

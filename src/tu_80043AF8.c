@@ -59,9 +59,9 @@ int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, sho
 {
     BillboardScratch* s = BILLBOARD_SCRATCH;
     int shade;
-    s->rel_4.vx = pos->vx - dword_8008D600.vx;
-    s->rel_4.vy = pos->vy - dword_8008D600.vy;
-    s->rel_4.vz = pos->vz - dword_8008D600.vz;
+    s->rel_4.vx = pos->vx - cameraEye_8008D600.vx;
+    s->rel_4.vy = pos->vy - cameraEye_8008D600.vy;
+    s->rel_4.vz = pos->vz - cameraEye_8008D600.vz;
     gte_ldv0(&s->rel_4);
     gte_rtps();
     gte_stsxy(s);
@@ -92,9 +92,9 @@ int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, sho
 int DrawBillboardRgb_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned char* rgb)
 {
     BillboardScratch* s = BILLBOARD_SCRATCH;
-    s->rel_4.vx = pos->vx - dword_8008D600.vx;
-    s->rel_4.vy = pos->vy - dword_8008D600.vy;
-    s->rel_4.vz = pos->vz - dword_8008D600.vz;
+    s->rel_4.vx = pos->vx - cameraEye_8008D600.vx;
+    s->rel_4.vy = pos->vy - cameraEye_8008D600.vy;
+    s->rel_4.vz = pos->vz - cameraEye_8008D600.vz;
     gte_ldv0(&s->rel_4);
     gte_rtps();
     gte_stsxy(s);
@@ -144,9 +144,9 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
     if (flags & 1)
     {
         MATRIX m;
-        s->rel_2C.vx = pos->vx - dword_8008D600.vx + ofs->vx;
-        s->rel_2C.vy = pos->vy - dword_8008D600.vy + ofs->vy;
-        s->rel_2C.vz = pos->vz - dword_8008D600.vz + ofs->vz;
+        s->rel_2C.vx = pos->vx - cameraEye_8008D600.vx + ofs->vx;
+        s->rel_2C.vy = pos->vy - cameraEye_8008D600.vy + ofs->vy;
+        s->rel_2C.vz = pos->vz - cameraEye_8008D600.vz + ofs->vz;
         gte_ReadRotMatrix(&s->rot_78);
         m.m[0][0] = m.m[1][1] = m.m[2][2] = 0x1000;
         m.m[0][1] = m.m[0][2] = m.m[1][0] = m.m[1][2] = m.m[2][0] = m.m[2][1] = 0;
@@ -170,9 +170,9 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
         gte_SetRotMatrix(&s->rot_78);
         s->prim_0 = *src;
         ROT_SPRITE_UV(s, src, uv, size);
-        s->rel_2C.vx = pos->vx - dword_8008D600.vx + s->wofs_40.vx;
-        s->rel_2C.vy = pos->vy - dword_8008D600.vy + s->wofs_40.vy;
-        s->rel_2C.vz = pos->vz - dword_8008D600.vz + s->wofs_40.vz;
+        s->rel_2C.vx = pos->vx - cameraEye_8008D600.vx + s->wofs_40.vx;
+        s->rel_2C.vy = pos->vy - cameraEye_8008D600.vy + s->wofs_40.vy;
+        s->rel_2C.vz = pos->vz - cameraEye_8008D600.vz + s->wofs_40.vz;
         gte_ldv0(&s->rel_2C);
         gte_rtps();
         gte_stsxy(&s->x_28);
@@ -302,9 +302,9 @@ void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SV
     RotMatrixYXZ_80046874(rot, (MATRIX*)getScratchAddr(0));
     gte_ReadRotMatrix((MATRIX*)getScratchAddr(8));
     m = (MATRIX*)getScratchAddr(8);
-    m->t[0] = pos->vx - dword_8008D600.vx;
-    m->t[1] = pos->vy - dword_8008D600.vy;
-    m->t[2] = pos->vz - dword_8008D600.vz;
+    m->t[0] = pos->vx - cameraEye_8008D600.vx;
+    m->t[1] = pos->vy - cameraEye_8008D600.vy;
+    m->t[2] = pos->vz - cameraEye_8008D600.vz;
     ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
     gte_MulMatrix0((MATRIX*)getScratchAddr(8), (MATRIX*)getScratchAddr(0), (MATRIX*)getScratchAddr(8));
     if (scale)
@@ -340,9 +340,9 @@ void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos
     PushMatrix();
     gte_ReadRotMatrix((MATRIX*)getScratchAddr(8));
     m = (MATRIX*)getScratchAddr(8);
-    m->t[0] = pos->vx - dword_8008D600.vx;
-    m->t[1] = pos->vy - dword_8008D600.vy;
-    m->t[2] = pos->vz - dword_8008D600.vz;
+    m->t[0] = pos->vx - cameraEye_8008D600.vx;
+    m->t[1] = pos->vy - cameraEye_8008D600.vy;
+    m->t[2] = pos->vz - cameraEye_8008D600.vz;
     ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
     gte_SetTransMatrix((MATRIX*)getScratchAddr(8));
     if (scale)
@@ -384,9 +384,9 @@ void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SV
     RotMatrixZYX_8004D5CC(rot, (MATRIX*)getScratchAddr(0));
     gte_ReadRotMatrix((MATRIX*)getScratchAddr(8));
     m = (MATRIX*)getScratchAddr(8);
-    m->t[0] = pos->vx - dword_8008D600.vx;
-    m->t[1] = pos->vy - dword_8008D600.vy;
-    m->t[2] = pos->vz - dword_8008D600.vz;
+    m->t[0] = pos->vx - cameraEye_8008D600.vx;
+    m->t[1] = pos->vy - cameraEye_8008D600.vy;
+    m->t[2] = pos->vz - cameraEye_8008D600.vz;
     ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
     gte_MulMatrix0((MATRIX*)getScratchAddr(8), (MATRIX*)getScratchAddr(0), (MATRIX*)getScratchAddr(8));
     gte_SetRotMatrix((MATRIX*)getScratchAddr(8));
@@ -847,9 +847,9 @@ void sub_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
     m->t[0] = sk->pos_4->vx;
     m->t[1] = sk->pos_4->vy;
     m->t[2] = sk->pos_4->vz;
-    m->t[0] -= dword_8008D600.vx;
-    m->t[1] -= dword_8008D600.vy;
-    m->t[2] -= dword_8008D600.vz;
+    m->t[0] -= cameraEye_8008D600.vx;
+    m->t[1] -= cameraEye_8008D600.vy;
+    m->t[2] -= cameraEye_8008D600.vz;
     ApplyMatrixLV(m, (VECTOR*)m->t, (VECTOR*)m->t);
     m[1].t[0] = root->t[1] = root->t[2] = 0;
     GetBoneOffsets_80046248(sk, dword_80098690, alt);
@@ -1004,9 +1004,9 @@ void sub_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, in
     root.vx = sk->pos_4->vx;
     root.vy = sk->pos_4->vy;
     root.vz = sk->pos_4->vz;
-    root.vx -= dword_8008D600.vx;
-    root.vy -= dword_8008D600.vy;
-    root.vz -= dword_8008D600.vz;
+    root.vx -= cameraEye_8008D600.vx;
+    root.vy -= cameraEye_8008D600.vy;
+    root.vz -= cameraEye_8008D600.vz;
     ApplyMatrixLV(SKEL_MATS, &root, &root);
     for (i = 0; sk->bones[i].parent >= 0; i++)
     {
