@@ -519,3 +519,12 @@ int InterpolateWindowRect_8004196C(RECT* d, RECT* s, int cur, int max, int mode)
     }
     return max == cur;
 }
+
+INCLUDE_DATA(demoDisclaimer_800869A8);
+INCLUDE_DATA(introAnimeData_800869B0);
+INCLUDE_DATA(introAnime_800869C8);
+INCLUDE_DATA(overlayCallbacks_800869D0);
+INCLUDE_DATA(strMovies_80086A4C);
+INCLUDE_DATA(mdecVLCBuffer_80086F94);
+INCLUDE_DATA(movieWidth_80086F98);
+INCLUDE_DATA(movieHeight_80086F9A);

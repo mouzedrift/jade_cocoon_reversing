@@ -167,3 +167,5 @@ void sub_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
+
+INCLUDE_DATA(charTables_8008685C);

@@ -905,3 +905,8 @@ void GameLoop_8004047C(void)
         }
     } while ((unknownFlags_8008D678 & 4) == 0);
 }
+
+INCLUDE_DATA(dword_8008686C);
+INCLUDE_DATA(dword_80086878);
+INCLUDE_DATA(dword_80086898);
+INCLUDE_DATA(copyrightData_80086930);

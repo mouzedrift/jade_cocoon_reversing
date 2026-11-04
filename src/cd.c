@@ -869,3 +869,8 @@ void AssertFileRequestQueueEmpty_8003C684(void)
         exit(1);
     }
 }
+
+INCLUDE_DATA(fileRequestQueue_80086540);
+INCLUDE_DATA(dword_80086544);
+INCLUDE_DATA(dword_80086548);
+INCLUDE_DATA(dword_8008654C);

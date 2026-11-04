@@ -113,3 +113,5 @@ void DrawWindowFrame_80041ED0(RECT* r, unsigned char* rgb, u_long* ot, unsigned 
     addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
+
+INCLUDE_DATA(byte_80086F9C);

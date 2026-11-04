@@ -16,9 +16,6 @@
 #include "sound.h"
 #include "data_decls.h"
 
-INCLUDE_DATA(dword_8008713C);
-INCLUDE_DATA(dword_80087140);
-INCLUDE_DATA(dword_80087144);
 
 #define ABS_8004B0A8(x) ((x) < 0 ? -(x) : (x))
 // Matched

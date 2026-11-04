@@ -197,3 +197,10 @@ void DrawDemoDisclaimer_80040B94(void)
         bStopDrawingMovie_8008D45C = 1;
     }
 }
+
+INCLUDE_DATA(copyright_80086948);
+INCLUDE_DATA(genkiMovieData_80086950);
+INCLUDE_DATA(genkiMovie_80086968);
+INCLUDE_DATA(craveEntertainmentData_80086970);
+INCLUDE_DATA(craveEntertainmentMovie_80086988);
+INCLUDE_DATA(demoDisclaimerData_80086990);

@@ -805,3 +805,6 @@ int MeasureTextWidthFont1_8003E6B0(int str)
     }
     return w;
 }
+
+INCLUDE_DATA(fontDefs_80086574);
+INCLUDE_DATA(dword_800865B8);
