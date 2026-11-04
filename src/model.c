@@ -42,9 +42,9 @@ void RunActorScript_8001EA48(void* actor)
     int flag21;
     int target;
     ActorScriptCmd* cmd;
-    int n;
+    int anim;
     int mode;
-    int r;
+    int flagsD4;
     flag22 = 0;
     flag21 = flag22;
     done = flag22;
@@ -80,20 +80,20 @@ void RunActorScript_8001EA48(void* actor)
             o->flags_4 &= 0xFF17FFFF;
             return;
         case 1:
-            n = cmd->arg_6;
-            if (o->animIdx_C2 != n)
+            anim = cmd->arg_6;
+            if (o->animIdx_C2 != anim)
             {
                 SetActorAnimPaused_8001D6EC(o, 0);
-                if (n == 0x4003)
+                if (anim == 0x4003)
                 {
-                    n = o->nextAnim_A4;
+                    anim = o->nextAnim_A4;
                     o->animIdx_C2 = o->nextAnim_A4;
                     o->nextAnim_A4 = o->queuedAnim_FE;
                     o->queuedAnim_FE = -1;
                 }
                 else
                 {
-                    o->animIdx_C2 = n;
+                    o->animIdx_C2 = anim;
                 }
                 mode = flag22 ? -2 : -1;
                 if (o->startMode_A8 >= 0)
@@ -101,7 +101,7 @@ void RunActorScript_8001EA48(void* actor)
                     mode = o->startMode_A8;
                     o->startMode_A8 = -1;
                 }
-                SetActorAnim_8001D760(o, n, mode, flag21);
+                SetActorAnim_8001D760(o, anim, mode, flag21);
             }
             done = 1;
             break;
@@ -111,12 +111,12 @@ void RunActorScript_8001EA48(void* actor)
         case 3:
             if (!(o->flags_4 & 0x2000000))
             {
-                r = o->flags_D4;
-                if (!(r & 1))
+                flagsD4 = o->flags_D4;
+                if (!(flagsD4 & 1))
                 {
                     flag21 = 1;
                 }
-                o->flags_D4 = r & ~1;
+                o->flags_D4 = flagsD4 & ~1;
             }
             break;
         case 4:
@@ -247,35 +247,35 @@ void RunActorScript_8001EA48(void* actor)
 // delete it and its externs in model.h when the function is C, the compiler emits it then
 void* const dword_8007411C[10] = { jtgt_80022C34, jtgt_80022C2C, jtgt_80022C34, jtgt_80022C3C, jtgt_80022C4C, jtgt_80022C44, jtgt_80022C4C, jtgt_80022C54, jtgt_80022C5C, jtgt_80022C84 };
 // Matched
-void StopActorScript_8001EFC4(Actor* p)
+void StopActorScript_8001EFC4(Actor* actor)
 {
-    unsigned int f = p->flags_4;
-    int n;
-    if (f & 0x800000)
+    unsigned int flags = actor->flags_4;
+    int kind;
+    if (flags & 0x800000)
     {
-        n = p->kind_C;
-        if (n < 0)
+        kind = actor->kind_C;
+        if (kind < 0)
         {
-            if (f & 0x200000)
+            if (flags & 0x200000)
             {
-                ClearScriptActorBusy_800A5BCC(n - 2);
+                ClearScriptActorBusy_800A5BCC(kind - 2);
             }
         }
-        else if (n >= 3)
+        else if (kind >= 3)
         {
-            if (f & 0x200000)
+            if (flags & 0x200000)
             {
-                ClearScriptActorBusy_800A5BCC(n - 2);
+                ClearScriptActorBusy_800A5BCC(kind - 2);
             }
         }
     }
-    p->flags_4 &= 0xFF17FFFF;
+    actor->flags_4 &= 0xFF17FFFF;
 }
 // Matched
 int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int frame)
 {
     Actor* o = (Actor*)actorAddr;
-    ActorScriptCmd* s = (ActorScriptCmd*)scriptAddr;
+    ActorScriptCmd* cmd = (ActorScriptCmd*)scriptAddr;
     int time;
     int repeats;
     int fromLoop;
@@ -286,11 +286,11 @@ int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int f
     time = 0;
     repeats = time;
     fromLoop = time;
-    while (s->op_0 != 0)
+    while (cmd->op_0 != 0)
     {
-        if (s->op_0 == 1)
+        if (cmd->op_0 == 1)
         {
-            idx = s->arg_6;
+            idx = cmd->arg_6;
             if (fromLoop == 0)
             {
                 start = o->anims_148[idx].start_2;
@@ -317,34 +317,34 @@ int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int f
             time--;
             fromLoop = 0;
         }
-        else if (s->op_0 == 0x14)
+        else if (cmd->op_0 == 0x14)
         {
-            if (target >= 0x4000 && target == s->arg_6)
+            if (target >= 0x4000 && target == cmd->arg_6)
             {
                 return (time << 12) / o->frameSpeed_1E;
             }
         }
-        else if (s->op_0 == 0xF)
+        else if (cmd->op_0 == 0xF)
         {
             time = 0;
         }
-        else if (s->op_0 == 2)
+        else if (cmd->op_0 == 2)
         {
             fromLoop = 1;
         }
-        else if (s->op_0 == 4)
+        else if (cmd->op_0 == 4)
         {
-            repeats = s->arg_6 - 1;
+            repeats = cmd->arg_6 - 1;
         }
-        else if (s->op_0 == 5)
+        else if (cmd->op_0 == 5)
         {
             repeats = o->loopCount_F4 - 1;
         }
-        else if (s->op_0 == 0x17)
+        else if (cmd->op_0 == 0x17)
         {
-            time += s->arg_6;
+            time += cmd->arg_6;
         }
-        else if (s->op_0 == 0 || s->op_0 == 0x10)
+        else if (cmd->op_0 == 0 || cmd->op_0 == 0x10)
         {
             if (target != -1 && target < 0x4000 && o->anims_148[target].end_6 < frame)
             {
@@ -352,7 +352,7 @@ int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int f
             }
             return (time << 12) / o->frameSpeed_1E;
         }
-        s = (ActorScriptCmd*)((unsigned int*)s + s->len_1);
+        cmd = (ActorScriptCmd*)((unsigned int*)cmd + cmd->len_1);
     }
     return -1;
 }
@@ -383,24 +383,24 @@ void UpdateActorMotion_8001F354(void* actor)
 {
     Actor* o = actor;
     int prevDelta[3];
-    ModelAnim* e;
+    ModelAnim* anim;
     int dx;
     int dz;
     int v;
-    SVECTOR* r;
-    int* s;
+    SVECTOR* boneScale;
+    int* baseScale;
     short c;
     int sin;
     short a;
-    e = &o->model_15C->anims_54[o->anim_9C];
+    anim = &o->model_15C->anims_54[o->anim_9C];
     o->prevPos_44[0] = o->pos_38[0];
     o->prevPos_44[1] = o->pos_38[1];
     o->prevPos_44[2] = o->pos_38[2];
     prevDelta[0] = o->animDelta_64[0];
     prevDelta[1] = o->animDelta_64[1];
     prevDelta[2] = o->animDelta_64[2];
-    GetAnimRootMotion_8004D288(o->animDelta_64, e, o->frame_90 % e->frameCount_0);
-    if (o->frame_90 % e->frameCount_0 == 0 || (o->flags_4 & 8))
+    GetAnimRootMotion_8004D288(o->animDelta_64, anim, o->frame_90 % anim->frameCount_0);
+    if (o->frame_90 % anim->frameCount_0 == 0 || (o->flags_4 & 8))
     {
         o->flags_4 &= ~8;
         if (o->flags_4 & 0x40000)
@@ -437,8 +437,8 @@ void UpdateActorMotion_8001F354(void* actor)
         dx = dx * o->speedScale_8C / 4096;
         dz = dz * o->speedScale_8C / 4096;
     }
-    r = o->boneScale_144;
-    s = o->baseScale_138;
+    boneScale = o->boneScale_144;
+    baseScale = o->baseScale_138;
     if (o->flags_4 & 0x4000000)
     {
         if (TurnActorTowards_8001DDFC(o, &o->target_70, o->target_70.pad))
@@ -461,19 +461,19 @@ void UpdateActorMotion_8001F354(void* actor)
         a = o->rot_5C[1];
         sin = (battleCamSpline1Tail_80084350 + 0xF8)[a & 0xFFF];
         c = (battleCamSpline1Tail_80084350 + 0xF8)[(a + 0x400) & 0xFFF];
-        o->pos_38[2] = o->basePos_50[2] + (o->animDelta_64[2] * c - o->animDelta_64[0] * sin) / 4096 / e->divisor_8;
-        o->pos_38[0] = o->basePos_50[0] + (o->animDelta_64[2] * sin + o->animDelta_64[0] * c) / 4096 / e->divisor_8;
-        o->pos_38[1] = o->basePos_50[1] + o->animDelta_64[1] / e->divisor_8;
+        o->pos_38[2] = o->basePos_50[2] + (o->animDelta_64[2] * c - o->animDelta_64[0] * sin) / 4096 / anim->divisor_8;
+        o->pos_38[0] = o->basePos_50[0] + (o->animDelta_64[2] * sin + o->animDelta_64[0] * c) / 4096 / anim->divisor_8;
+        o->pos_38[1] = o->basePos_50[1] + o->animDelta_64[1] / anim->divisor_8;
     }
     else if (o->flags_4 & 0x40000)
     {
-        o->pos_38[0] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
-        o->pos_38[2] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * r->vz / 4096 * s[2] / 4096 / e->divisor_8;
+        o->pos_38[0] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * boneScale->vz / 4096 * baseScale[2] / 4096 / anim->divisor_8;
+        o->pos_38[2] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * boneScale->vz / 4096 * baseScale[2] / 4096 / anim->divisor_8;
     }
     else
     {
-        o->pos_38[0] = o->basePos_50[0] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / e->divisor_8;
-        o->pos_38[2] = o->basePos_50[2] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / e->divisor_8;
+        o->pos_38[0] = o->basePos_50[0] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / anim->divisor_8;
+        o->pos_38[2] = o->basePos_50[2] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / anim->divisor_8;
     }
     if (o->flags_4 & 0x40000)
     {
@@ -484,33 +484,33 @@ void UpdateActorMotion_8001F354(void* actor)
 // Matched
 void UpdateActorAnimLoad_8001F918(void* actor)
 {
-    Actor* p = actor;
-    switch (p->animLoadState_10)
+    Actor* act = actor;
+    switch (act->animLoadState_10)
     {
     case 0:
         break;
     case 1:
-        RequestModelAnim_8002032C(p->modelRef_16, p->task_0->field_4, p->animRequest_12);
-        *(unsigned short*)&p->animLoading_14 = *(unsigned short*)&p->animRequest_12;
-        p->animRequest_12 = -1;
-        p->animLoadState_10 = 2;
+        RequestModelAnim_8002032C(act->modelRef_16, act->task_0->field_4, act->animRequest_12);
+        *(unsigned short*)&act->animLoading_14 = *(unsigned short*)&act->animRequest_12;
+        act->animRequest_12 = -1;
+        act->animLoadState_10 = 2;
         break;
     case 2:
-        if (AreFileRequestsDone_80024DC4(p->model_15C))
+        if (AreFileRequestsDone_80024DC4(act->model_15C))
         {
-            p->animLoadState_10 = 0;
+            act->animLoadState_10 = 0;
         }
         break;
     }
 }
 // Matched
-void UpdateActor_8001F9AC(void* p)
+void UpdateActor_8001F9AC(void* actor)
 {
-    UpdateActorScale_8001F9F0(p);
-    UpdateActorDrawMode_8001FB00(p);
-    DrawActor_8001FD08(p);
-    AdvanceActorFrame_8001FF48(p);
-    CopyActorBoneMatrices_800200F8(p);
+    UpdateActorScale_8001F9F0(actor);
+    UpdateActorDrawMode_8001FB00(actor);
+    DrawActor_8001FD08(actor);
+    AdvanceActorFrame_8001FF48(actor);
+    CopyActorBoneMatrices_800200F8(actor);
 }
 // Matched
 void UpdateActorScale_8001F9F0(Actor* o)
@@ -544,59 +544,59 @@ void UpdateActorScale_8001F9F0(Actor* o)
 // Matched
 void UpdateActorDrawMode_8001FB00(Actor* o)
 {
-    unsigned int f = o->flags_4;
-    int r = 0;
-    int v;
-    int w;
+    unsigned int flags = o->flags_4;
+    int mode = 0;
+    int value;
+    int fade;
     o->drawMode_8 = 0;
-    if (f & 0x780)
+    if (flags & 0x780)
     {
-        if (f & 0x80)
+        if (flags & 0x80)
         {
-            r = 0x10;
+            mode = 0x10;
         }
-        else if (f & 0x100)
+        else if (flags & 0x100)
         {
-            r = 0x30;
+            mode = 0x30;
         }
-        else if (f & 0x200)
+        else if (flags & 0x200)
         {
-            r = 0x50;
+            mode = 0x50;
         }
-        else if (f & 0x400)
+        else if (flags & 0x400)
         {
-            r = 0x70;
+            mode = 0x70;
         }
     }
     if (o->flags_4 & 0x40000000)
     {
-        v = (battleCamSpline1Tail_80084350 + 0xF8)[(o->pulse_BC * o->pulseRate_BE + 0x400) & 0xFFF];
+        value = (battleCamSpline1Tail_80084350 + 0xF8)[(o->pulse_BC * o->pulseRate_BE + 0x400) & 0xFFF];
         (o->pulse_BC)++;
-        o->drawMode_8 = r | 0x80 | (-((v + 0x1000) / 2) << 16);
+        o->drawMode_8 = mode | 0x80 | (-((value + 0x1000) / 2) << 16);
     }
     if (o->flags_4 & 0x60)
     {
-        v = o->fade_20 + 0x1000 / o->fadeDiv_22;
-        if (v >= 0)
+        value = o->fade_20 + 0x1000 / o->fadeDiv_22;
+        if (value >= 0)
         {
-            w = v;
-            if (v > 0x1000)
+            fade = value;
+            if (value > 0x1000)
             {
-                w = 0x1000;
+                fade = 0x1000;
             }
         }
         else
         {
-            w = 0;
+            fade = 0;
         }
-        o->fade_20 = w;
+        o->fade_20 = fade;
         if (o->flags_4 & 0x20)
         {
-            o->drawMode_8 = r | 0x80 | ((0x1000 - o->fade_20) << 16);
+            o->drawMode_8 = mode | 0x80 | ((0x1000 - o->fade_20) << 16);
         }
         else
         {
-            o->drawMode_8 = r | 0x80 | (o->fade_20 << 16);
+            o->drawMode_8 = mode | 0x80 | (o->fade_20 << 16);
         }
     }
     if (o->flags_4 & 0x800)
@@ -607,17 +607,17 @@ void UpdateActorDrawMode_8001FB00(Actor* o)
 // Matched
 int IsActorOnScreen_8001FC90(Actor* actor)
 {
-    SVECTOR v;
+    SVECTOR rel;
     long sxy;
-    long p;
+    long z;
     long flag;
-    v.vx = *(unsigned short*)&actor->pos_38[0];
-    v.vy = *(unsigned short*)&actor->pos_38[1];
-    v.vz = *(unsigned short*)&actor->pos_38[2];
-    v.vx -= cameraEye_8008D600.vx;
-    v.vy -= cameraEye_8008D600.vy;
-    v.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&v, &sxy, &p, &flag);
+    rel.vx = *(unsigned short*)&actor->pos_38[0];
+    rel.vy = *(unsigned short*)&actor->pos_38[1];
+    rel.vz = *(unsigned short*)&actor->pos_38[2];
+    rel.vx -= cameraEye_8008D600.vx;
+    rel.vy -= cameraEye_8008D600.vy;
+    rel.vz -= cameraEye_8008D600.vz;
+    RotTransPers(&rel, &sxy, &z, &flag);
     return flag >= 0;
 }
 extern int FindNearestCameraPoint_80019CC4();
@@ -629,13 +629,13 @@ extern void DrawSpriteVtxQuadsGT4_800459E4();
 void DrawActor_8001FD08(void* actor)
 {
     Actor* o = (Actor*)actor;
-    int v;
-    ModelAnim* t;
+    int light;
+    ModelAnim* altPose;
     unsigned long* ot;
     unsigned long* ot2;
     if (!(o->flags_4 & 0x2000) && IsActorOnScreen_8001FC90(o))
     {
-        v = FindNearestCameraPoint_80019CC4(o->pos_38);
+        light = FindNearestCameraPoint_80019CC4(o->pos_38);
         o->draw_164.anim_14 = &o->model_15C->anims_54[o->anim_9C];
         o->draw_164.ftg_0 = o->model_15C->ftg_50;
         o->draw_164.pos_4 = o->pos_38;
@@ -657,21 +657,21 @@ void DrawActor_8001FD08(void* actor)
         o->draw_164.ot_28 = ot;
         if (o->flags_4 & 0x1000)
         {
-            t = o->model_15C->anims_54;
+            altPose = o->model_15C->anims_54;
         }
         else
         {
-            t = 0;
+            altPose = 0;
         }
         if (o->flags_4 & 0x10)
         {
             DrawAnimSkelBlend_80047E28(&o->draw_164, o->draw_164.boneScale_10, &o->model_15C->anims_54[o->prevAnim_A0],
                          o->prevFrame_94 % o->model_15C->anims_54[o->prevAnim_A0].frameCount_0,
-                         0x1000 - o->blend_AC, &pointLights_8008D534[v], t);
+                         0x1000 - o->blend_AC, &pointLights_8008D534[light], altPose);
         }
         else
         {
-            DrawAnimSkel_80046A58(&o->draw_164, &pointLights_8008D534[v], t);
+            DrawAnimSkel_80046A58(&o->draw_164, &pointLights_8008D534[light], altPose);
         }
         if (unknownFlags_8008D678 & 0x10000)
         {
@@ -776,22 +776,22 @@ void ClearModelAnimRefs_800201A4(void)
 int AddModelAnimRef_800201EC(Model* model)
 {
     int i;
-    ModelAnimRef* p = modelAnimRefs_800919A0;
-    for (i = 0; i < 7; i++, p++)
+    ModelAnimRef* ref = modelAnimRefs_800919A0;
+    for (i = 0; i < 7; i++, ref++)
     {
-        if (model == p->model_0)
+        if (model == ref->model_0)
         {
-            p->refs_4++;
+            ref->refs_4++;
             return i;
         }
     }
-    p = modelAnimRefs_800919A0;
-    for (i = 0; i < 7; i++, p++)
+    ref = modelAnimRefs_800919A0;
+    for (i = 0; i < 7; i++, ref++)
     {
-        if (p->model_0 == 0)
+        if (ref->model_0 == 0)
         {
-            p->model_0 = model;
-            p->refs_4 = 1;
+            ref->model_0 = model;
+            ref->refs_4 = 1;
             return i;
         }
     }
@@ -860,52 +860,52 @@ int IsModelAnimUsed_80020410(int ref, int user, int anim)
     return 1;
 }
 // Matched
-void ClearModelAnimRef_800204AC(ModelAnimRef* p)
+void ClearModelAnimRef_800204AC(ModelAnimRef* ref)
 {
     int i;
     for (i = 0x22; i >= 0; i--)
     {
-        p->users_8[i] = 0;
+        ref->users_8[i] = 0;
     }
-    p->model_0 = 0;
-    p->refs_4 = 0;
+    ref->model_0 = 0;
+    ref->refs_4 = 0;
 }
 // Matched
 void ResetModelLoader_800204D0(void)
 {
-    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* q = p->slots_C;
+    ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
+    ModelLoadSlot* slot = loader->slots_C;
     int i;
-    p->state_0 = 0;
-    p->done_4 = 1;
-    p->models_8 = 0;
+    loader->state_0 = 0;
+    loader->done_4 = 1;
+    loader->models_8 = 0;
     for (i = 0; i < 4; i++)
     {
-        q->loaded_0 = 0;
-        q->id_4 = -1;
-        q->sel_8 = 0;
-        q->arg_C = 0;
-        q->animSet_10 = -1;
-        q++;
+        slot->loaded_0 = 0;
+        slot->id_4 = -1;
+        slot->sel_8 = 0;
+        slot->arg_C = 0;
+        slot->animSet_10 = -1;
+        slot++;
     }
 }
 // Matched
 void FreeModelLoaderList_8002052C(void)
 {
-    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
-    if (p->models_8)
+    ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
+    if (loader->models_8)
     {
-        FreeModelList_80024BB0(&p->models_8);
+        FreeModelList_80024BB0(&loader->models_8);
     }
 }
 // Matched
 void StartModelLoader_8002056C(void)
 {
-    EventEntry* q = &modelLoaderTask_8008B54C->entry;
-    q->cb_8 = (EventEntryFn)ModelLoaderTask_800209AC;
-    q->flags = (q->flags | 1) & ~0x8000;
-    ((ModelLoader*)q->buffer)->state_0 = 0;
-    q->cb_8(q, q->buffer);
+    EventEntry* entry = &modelLoaderTask_8008B54C->entry;
+    entry->cb_8 = (EventEntryFn)ModelLoaderTask_800209AC;
+    entry->flags = (entry->flags | 1) & ~0x8000;
+    ((ModelLoader*)entry->buffer)->state_0 = 0;
+    entry->cb_8(entry, entry->buffer);
 }
 // Matched
 int IsModelLoaderDone_800205D0(void)
@@ -915,75 +915,75 @@ int IsModelLoaderDone_800205D0(void)
 // Matched
 void StopModelLoader_800205F0(void)
 {
-    EventEntry* n = &modelLoaderTask_8008B54C->entry;
-    n->flags = (n->flags & ~1) | 0x8000;
+    EventEntry* entry = &modelLoaderTask_8008B54C->entry;
+    entry->flags = (entry->flags & ~1) | 0x8000;
 }
 // Matched
 int CountLoaderModels_80020614(void)
 {
-    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* e = p->slots_C;
+    ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
+    ModelLoadSlot* slot = loader->slots_C;
     int count = 0;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (e->id_4 >= 0)
+        if (slot->id_4 >= 0)
         {
             count++;
         }
-        e++;
+        slot++;
     }
     return count;
 }
 // Matched
-int GetLoaderModelId_80020654(int k)
+int GetLoaderModelId_80020654(int nth)
 {
-    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* e = p->slots_C;
-    int n = 0;
+    ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
+    ModelLoadSlot* slot = loader->slots_C;
+    int count = 0;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (e->id_4 >= 0)
+        if (slot->id_4 >= 0)
         {
-            if (n == k)
+            if (count == nth)
             {
-                return e->id_4;
+                return slot->id_4;
             }
-            n++;
+            count++;
         }
-        e++;
+        slot++;
     }
     return -1;
 }
 // Matched
 int RequestLoaderModel_800206A0(int id, int sel, int animMode, int animSet)
 {
-    ModelLoader* p = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* e = p->slots_C;
+    ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
+    ModelLoadSlot* slot = loader->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (id == e->id_4)
+        if (id == slot->id_4)
         {
             return 1;
         }
-        e++;
+        slot++;
     }
-    e = p->slots_C;
+    slot = loader->slots_C;
     for (i = 0; i < 4; i++)
     {
-        if (e->id_4 == -1)
+        if (slot->id_4 == -1)
         {
-            e->loaded_0 = 0;
-            e->id_4 = id;
-            e->sel_8 = sel;
-            e->arg_C = animMode;
-            e->animSet_10 = animSet;
-            p->done_4 = 0;
+            slot->loaded_0 = 0;
+            slot->id_4 = id;
+            slot->sel_8 = sel;
+            slot->arg_C = animMode;
+            slot->animSet_10 = animSet;
+            loader->done_4 = 0;
             return 1;
         }
-        e++;
+        slot++;
     }
     return 0;
 }
@@ -996,141 +996,141 @@ Model* AcquireLoaderModel_80020734(int arg)
 void FreeLoaderModel_80020768(Model* model)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* p = base->slots_C;
+    ModelLoadSlot* slot = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p->id_4 >= 0 && p->animSet_10 >= 0)
+        if (slot->id_4 >= 0 && slot->animSet_10 >= 0)
         {
-            if (model == AcquireModel_80024D70(base->models_8, p->id_4))
+            if (model == AcquireModel_80024D70(base->models_8, slot->id_4))
             {
                 FreeModel_80024C48(model);
-                p->id_4 = -1;
+                slot->id_4 = -1;
                 return;
             }
         }
-        p++;
+        slot++;
     }
 }
 // Matched
 void FreeLoaderModelAnimSets_80020814(void)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* p = base->slots_C;
+    ModelLoadSlot* slot = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p->id_4 >= 0 && p->animSet_10 >= 0)
+        if (slot->id_4 >= 0 && slot->animSet_10 >= 0)
         {
-            FreeModelAnimSet_80025884(AcquireModel_80024D70(base->models_8, p->id_4));
+            FreeModelAnimSet_80025884(AcquireModel_80024D70(base->models_8, slot->id_4));
         }
-        p++;
+        slot++;
     }
 }
 // Matched
 void LoadLoaderModelAnimSets_80020898(void)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* p = base->slots_C;
+    ModelLoadSlot* slot = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p->id_4 >= 0 && p->animSet_10 >= 0)
+        if (slot->id_4 >= 0 && slot->animSet_10 >= 0)
         {
-            LoadModelAnimSet_80025780(AcquireModel_80024D70(base->models_8, p->id_4), p->animSet_10, 1);
+            LoadModelAnimSet_80025780(AcquireModel_80024D70(base->models_8, slot->id_4), slot->animSet_10, 1);
         }
-        p++;
+        slot++;
     }
 }
 // Matched
 int AreLoaderModelsLoaded_80020924(void)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
-    ModelLoadSlot* p = base->slots_C;
+    ModelLoadSlot* slot = base->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p->id_4 >= 0)
+        if (slot->id_4 >= 0)
         {
-            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(base->models_8, p->id_4)) == 0)
+            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(base->models_8, slot->id_4)) == 0)
             {
                 return 0;
             }
         }
-        p++;
+        slot++;
     }
     return 1;
 }
 // Matched
-void ModelLoaderTask_800209AC(EventEntry* p, int* a1)
+void ModelLoaderTask_800209AC(EventEntry* entry, int* buf)
 {
-    ModelLoader* q = (ModelLoader*)a1;
-    int s = q->state_0;
-    int t;
-    switch (s)
+    ModelLoader* loader = (ModelLoader*)buf;
+    int state = loader->state_0;
+    int next;
+    switch (state)
     {
     case 0:
-        LoadRequestedModels_80020A38(q);
-        t = q->state_0;
+        LoadRequestedModels_80020A38(loader);
+        next = loader->state_0;
         eventDispatchHalt_8008B540 = 1;
-        q->state_0 = t + 1;
+        loader->state_0 = next + 1;
         break;
     case 1:
-        if (AreRequestedModelsLoaded_80020B70(q))
+        if (AreRequestedModelsLoaded_80020B70(loader))
         {
             StopModelLoader_800205F0();
         }
-        eventDispatchHalt_8008B540 = s;
+        eventDispatchHalt_8008B540 = state;
         break;
     }
 }
 // Matched
-void LoadRequestedModels_80020A38(ModelLoader* p)
+void LoadRequestedModels_80020A38(ModelLoader* loader)
 {
-    ModelLoadSlot* e;
+    ModelLoadSlot* slot;
     int i;
-    if (p->models_8 == 0)
+    if (loader->models_8 == 0)
     {
-        InitModelList_80024ADC(&p->models_8, modelLoaderVram_8007DC70, 1);
+        InitModelList_80024ADC(&loader->models_8, modelLoaderVram_8007DC70, 1);
     }
-    e = p->slots_C;
+    slot = loader->slots_C;
     for (i = 0; i < 4; i++)
     {
-        if (e->id_4 >= 0 && e->loaded_0 == 0)
+        if (slot->id_4 >= 0 && slot->loaded_0 == 0)
         {
-            LoadModel_80025200(p->models_8, e->id_4, e->sel_8, e->arg_C, 1);
+            LoadModel_80025200(loader->models_8, slot->id_4, slot->sel_8, slot->arg_C, 1);
         }
-        e++;
+        slot++;
     }
-    e = p->slots_C;
+    slot = loader->slots_C;
     for (i = 0; i < 4; i++)
     {
-        if (e->id_4 >= 0 && e->loaded_0 == 0)
+        if (slot->id_4 >= 0 && slot->loaded_0 == 0)
         {
-            if (e->animSet_10 >= 0)
+            if (slot->animSet_10 >= 0)
             {
-                LoadModelAnimSet_80025780(AcquireModel_80024D70(p->models_8, e->id_4), e->animSet_10, 1);
+                LoadModelAnimSet_80025780(AcquireModel_80024D70(loader->models_8, slot->id_4), slot->animSet_10, 1);
             }
-            e->loaded_0 = 1;
+            slot->loaded_0 = 1;
         }
-        e++;
+        slot++;
     }
 }
 // Matched
 int AreRequestedModelsLoaded_80020B70(ModelLoader* loader)
 {
-    ModelLoadSlot* p = loader->slots_C;
+    ModelLoadSlot* slot = loader->slots_C;
     int i;
     for (i = 0; i < 4; i++)
     {
-        if (p->loaded_0 != 0)
+        if (slot->loaded_0 != 0)
         {
-            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(loader->models_8, p->id_4)) == 0)
+            if (AreFileRequestsDone_80024DC4(AcquireModel_80024D70(loader->models_8, slot->id_4)) == 0)
             {
                 return 0;
             }
         }
-        p++;
+        slot++;
     }
     loader->done_4 = 1;
     return 1;
@@ -1162,32 +1162,32 @@ int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
     return QueueFileRequest_8003BC84(&req);
 }
 // Matched
-void InitOverlayLoaderTask_80020CB8(EventEntry* p, OverlayLoader* q)
+void InitOverlayLoaderTask_80020CB8(EventEntry* entry, OverlayLoader* loader)
 {
-    q->loaded_4 = -1;
-    q->wanted_0 = 0x1D;
-    p->cb_8 = (EventEntryFn)UpdateOverlayLoaderTask_80020CD8;
+    loader->loaded_4 = -1;
+    loader->wanted_0 = 0x1D;
+    entry->cb_8 = (EventEntryFn)UpdateOverlayLoaderTask_80020CD8;
 }
 // Matched
-void UpdateOverlayLoaderTask_80020CD8(int a0, OverlayLoader* p)
+void UpdateOverlayLoaderTask_80020CD8(int entry, OverlayLoader* loader)
 {
-    if (p->wanted_0 != p->loaded_4)
+    if (loader->wanted_0 != loader->loaded_4)
     {
-        p->loaded_4 = p->wanted_0;
-        p->request_8 = LoadOverlay_80020BF8(2, p->wanted_0);
+        loader->loaded_4 = loader->wanted_0;
+        loader->request_8 = LoadOverlay_80020BF8(2, loader->wanted_0);
     }
 }
 // Matched
 int LoadOverlayIfChanged_80020D1C(int mode, int overlay)
 {
-    OverlayLoader* p = overlayLoaderTask_8008D4C0->entry.buffer;
-    if (p->wanted_0 == overlay)
+    OverlayLoader* loader = overlayLoaderTask_8008D4C0->entry.buffer;
+    if (loader->wanted_0 == overlay)
     {
         return -1;
     }
-    p->wanted_0 = overlay;
-    p->loaded_4 = overlay;
-    return LoadOverlay_80020BF8(mode, p->wanted_0);
+    loader->wanted_0 = overlay;
+    loader->loaded_4 = overlay;
+    return LoadOverlay_80020BF8(mode, loader->wanted_0);
 }
 // Matched
 void ResetOverlayLoaderTask_80020D68(void)
@@ -1197,18 +1197,18 @@ void ResetOverlayLoaderTask_80020D68(void)
 // Matched
 int IsOverlayLoaderIdle_80020D84(void)
 {
-    OverlayLoader* p = overlayLoaderTask_8008D4C0->entry.buffer;
-    int r;
-    if (p->wanted_0 == 0x1D)
+    OverlayLoader* loader = overlayLoaderTask_8008D4C0->entry.buffer;
+    int idle;
+    if (loader->wanted_0 == 0x1D)
     {
-        r = GetFileRequestStatus_8003BE30(p->request_8) == 0;
+        idle = GetFileRequestStatus_8003BE30(loader->request_8) == 0;
     }
     else
     {
         ResetOverlayLoaderTask_80020D68();
-        r = 0;
+        idle = 0;
     }
-    return r;
+    return idle;
 }
 // Matched
 void LoadEffectFile_80020DDC(int fileId, EffectFile* out, short* tpagePos, short* clutPos, int sel, int flag)
@@ -1243,24 +1243,24 @@ void LoadEffectFile_80020DDC(int fileId, EffectFile* out, short* tpagePos, short
     out->request_0 = StartFileRequestTask_8003C6C8(&req);
 }
 // Matched
-int IsEffectFileLoaded_80020EBC(EffectFile* p)
+int IsEffectFileLoaded_80020EBC(EffectFile* file)
 {
-    return GetFileRequestStatus_8003BE30(p->request_0) == 0;
+    return GetFileRequestStatus_8003BE30(file->request_0) == 0;
 }
 // Matched
-void FreeEffectFile_80020EE0(EffectFile* p)
+void FreeEffectFile_80020EE0(EffectFile* file)
 {
-    ListFreeAll_8003FEC8(p->list_4);
+    ListFreeAll_8003FEC8(file->list_4);
 }
 // Matched
-int FindEffectIndex_80020F00(EffectFile* p, int kind, int id)
+int FindEffectIndex_80020F00(EffectFile* file, int kind, int id)
 {
     int i;
-    for (i = 0; i < p->pointCount_14; i++)
+    for (i = 0; i < file->pointCount_14; i++)
     {
-        if (p->points_18[i].kind == kind && p->points_18[i].id == id)
+        if (file->points_18[i].kind == kind && file->points_18[i].id == id)
         {
-            return p->points_18[i].index;
+            return file->points_18[i].index;
         }
     }
     return -1;
@@ -1275,29 +1275,29 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
 {
     EffectLoadArg* arg = arg_in;
     EffectFile* out = arg->out_0;
-    int* p1 = (int*)((char*)hdr + hdr[1]);
-    int* p2 = (int*)((char*)hdr + hdr[2]);
-    int* p3 = (int*)((char*)hdr + hdr[3]);
-    int* p4 = (int*)((char*)hdr + hdr[4]);
-    int* p5 = (int*)((char*)hdr + hdr[5]);
-    int* p6 = (int*)((char*)hdr + hdr[6]);
+    int* dataSec = (int*)((char*)hdr + hdr[1]);
+    int* pointSec = (int*)((char*)hdr + hdr[2]);
+    int* spriteSec = (int*)((char*)hdr + hdr[3]);
+    int* modelSec = (int*)((char*)hdr + hdr[4]);
+    int* imageSec = (int*)((char*)hdr + hdr[5]);
+    int* tiySec = (int*)((char*)hdr + hdr[6]);
     int i;
     int max;
-    int r;
-    int n;
+    int bufSize;
+    int count;
     int* src;
     out->pointCount_14 = 0;
     out->spriteCount_1C = 0;
     out->modelCount_24 = 0;
     out->imageSetCount_2C = 0;
-    out->data_10 = ListAlloc_8003FDC0(out->list_4, p1[0]);
-    MemCopy_800403E8(out->data_10, p1 + 1, p1[0]);
-    n = p2[0];
-    if (n)
+    out->data_10 = ListAlloc_8003FDC0(out->list_4, dataSec[0]);
+    MemCopy_800403E8(out->data_10, dataSec + 1, dataSec[0]);
+    count = pointSec[0];
+    if (count)
     {
-        out->pointCount_14 = n;
-        out->points_18 = ListAlloc_8003FDC0(out->list_4, n * 12);
-        src = p2 + 1;
+        out->pointCount_14 = count;
+        out->points_18 = ListAlloc_8003FDC0(out->list_4, count * 12);
+        src = pointSec + 1;
         for (i = 0; i < out->pointCount_14; i++)
         {
             out->points_18[i].kind = src[0];
@@ -1306,48 +1306,48 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
             src += 3;
         }
     }
-    n = p3[0];
-    if (n)
+    count = spriteSec[0];
+    if (count)
     {
-        out->spriteCount_1C = n;
-        out->sprites_20 = ListAlloc_8003FDC0(out->list_4, n * 0x34);
+        out->spriteCount_1C = count;
+        out->sprites_20 = ListAlloc_8003FDC0(out->list_4, count * 0x34);
         for (i = 0; i < out->spriteCount_1C; i++)
         {
             EffectSprite* d = &out->sprites_20[i];
-            LoadEffectSprite_80021298((int*)((char*)p3 + p3[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
+            LoadEffectSprite_80021298((int*)((char*)spriteSec + spriteSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
         }
     }
-    n = p4[0];
-    if (n)
+    count = modelSec[0];
+    if (count)
     {
-        out->modelCount_24 = n;
-        out->models_28 = ListAlloc_8003FDC0(out->list_4, n * 0x1C);
+        out->modelCount_24 = count;
+        out->models_28 = ListAlloc_8003FDC0(out->list_4, count * 0x1C);
         for (i = 0; i < out->modelCount_24; i++)
         {
             EffectModel* d = &out->models_28[i];
-            LoadEffectModel_80021464((int*)((char*)p4 + p4[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
+            LoadEffectModel_80021464((int*)((char*)modelSec + modelSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
         }
     }
-    n = p5[0];
-    if (n)
+    count = imageSec[0];
+    if (count)
     {
-        out->imageSetCount_2C = n;
-        out->imageSets_30 = ListAlloc_8003FDC0(out->list_4, n * 8);
+        out->imageSetCount_2C = count;
+        out->imageSets_30 = ListAlloc_8003FDC0(out->list_4, count * 8);
         i = 0;
         max = i;
         for (; i < out->imageSetCount_2C; i++)
         {
-            r = LoadMdecImages_800215E8((int*)((char*)p5 + p5[i + 1]), &out->imageSets_30[i], (int)out->list_4);
-            if (max < r)
+            bufSize = LoadMdecImages_800215E8((int*)((char*)imageSec + imageSec[i + 1]), &out->imageSets_30[i], (int)out->list_4);
+            if (max < bufSize)
             {
-                max = r;
+                max = bufSize;
             }
         }
         AllocMdecBuffers_800216E8(&out->mdec_34, max, (int)out->list_4);
     }
-    if (GetTiyFileCount_80028E68(p6))
+    if (GetTiyFileCount_80028E68(tiySec))
     {
-        LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)p6, GetTiyFileCount_80028E68(p6), (int)arg->reloc_4, arg->sel_10);
+        LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)tiySec, GetTiyFileCount_80028E68(tiySec), (int)arg->reloc_4, arg->sel_10);
     }
 }
 // Matched
@@ -1356,31 +1356,31 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, 
     POLY_FT4 buf;
     int i;
     int j;
-    int n;
-    struct_1c* d;
-    struct_1c* s;
+    int count;
+    EffectSpriteFrameBytes* dst;
+    EffectSpriteFrameBytes* cur;
     out->count_0 = *src++;
     out->frameCounts_4 = ListAlloc_8003FDC0(heap, out->count_0);
     out->frames_8 = ListAlloc_8003FDC0(heap, out->count_0 * 4);
     for (i = 0; i < out->count_0; i++)
     {
-        n = *src++;
-        s = (struct_1c*)src;
-        d = ListAlloc_8003FDC0(heap, n * 28);
-        out->frameCounts_4[i] = n;
-        out->frames_8[i] = (EffectSpriteFrame*)d;
+        count = *src++;
+        cur = (EffectSpriteFrameBytes*)src;
+        dst = ListAlloc_8003FDC0(heap, count * 28);
+        out->frameCounts_4[i] = count;
+        out->frames_8[i] = (EffectSpriteFrame*)dst;
         for (j = 0; j < out->frameCounts_4[i]; j++)
         {
-            d->f0 = s->f0;
-            d->f4 = s->f4;
-            d->f8 = s->f8;
-            d->fC = s->fC;
-            d->f10 = s->f10;
-            d->f18 = s->f18;
-            d++;
-            s++;
+            dst->texPos_0 = cur->texPos_0;
+            dst->texSize_4 = cur->texSize_4;
+            dst->pivot_8 = cur->pivot_8;
+            dst->size_C = cur->size_C;
+            dst->pos_10 = cur->pos_10;
+            dst->rgb_18 = cur->rgb_18;
+            dst++;
+            cur++;
         }
-        src = (int*)s;
+        src = (int*)cur;
     }
     MemCopy_800403E8(&buf, src, 0x28);
     InitPolyFT4_80029A10(&out->poly_C, &buf);
@@ -1423,7 +1423,7 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
     int max;
     int size;
     unsigned long* src;
-    int n;
+    int bufSize;
     int count = hdr[0];
     out->count_0 = count;
     out->images_4 = ListAlloc_8003FDC0(heap, count * 4);
@@ -1435,10 +1435,10 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
         src = (unsigned long*)((char*)hdr + hdr[i * 2 + 1]);
         out->images_4[i] = ListAlloc_8003FDC0(heap, size);
         MemCopy_800403E8(out->images_4[i], src, size);
-        n = DecDCTBufSize(src);
-        if (max < n)
+        bufSize = DecDCTBufSize(src);
+        if (max < bufSize)
         {
-            max = n;
+            max = bufSize;
         }
     }
     return max;
@@ -1450,60 +1450,60 @@ void AllocMdecBuffers_800216E8(EffectMdecBuffers* out, int maxSize, int heap)
     out->work_4 = ListAlloc_8003FDC0(heap, 0x2000);
 }
 // Matched
-int GetFtgObjectCount_80021738(int* p)
+int GetFtgObjectCount_80021738(int* file)
 {
-    return p[1];
+    return file[1];
 }
 // Matched
-void AllocFtgObjects_80021744(FtgObject** p, int count, int heap)
+void AllocFtgObjects_80021744(FtgObject** out, int count, int heap)
 {
-    *p = HeapAlloc_8003FC8C(count * 0x54, (struct Pool*)heap);
+    *out = HeapAlloc_8003FC8C(count * 0x54, (struct Pool*)heap);
 }
 // Matched
-void FreeFtgObjects_80021784(FtgObject** a0, unsigned int n, int heap)
+void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, int heap)
 {
-    FtgObject* p = *a0;
+    FtgObject* obj = *objs;
     unsigned int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
-        FreeFtgObject_800229B0(p, heap);
-        p++;
+        FreeFtgObject_800229B0(obj, heap);
+        obj++;
     }
-    HeapFree_8003FD18(*a0, heap);
-    *a0 = 0;
+    HeapFree_8003FD18(*objs, heap);
+    *objs = 0;
 }
 // Matched
-void FreeFtgObjectData_80021804(FtgObject* p, int heap)
+void FreeFtgObjectData_80021804(FtgObject* obj, int heap)
 {
-    FreeFtgObject_800229B0(p, heap);
+    FreeFtgObject_800229B0(obj, heap);
 }
 // Matched
 void LoadFtgObjects_80021824(int* file, FtgObject* out, int count, int heap, int reloc)
 {
-    unsigned int n = GetFtgObjectCount_80021738(file);
+    unsigned int fileCount = GetFtgObjectCount_80021738(file);
     int src = (int)(file + 4);
     unsigned int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < fileCount; i++)
     {
         src = LoadFtgObject_80022458(out, src, heap, reloc);
         out++;
     }
 }
 // Matched
-void CopyFtgObject_800218A8(FtgObject* s, FtgObject* d, int heap)
+void CopyFtgObject_800218A8(FtgObject* src, FtgObject* dst, int heap)
 {
     char* buf;
     int size;
     int i;
-    size = s->f3_0.count * 0x24 + s->g3_8.count * 0x3C;
-    size += s->ft3_10.count * 0x30;
-    size += s->gt3_18.count * 0x48;
-    size += s->f4_20.count * 0x2C;
-    size += s->g4_28.count * 0x50;
-    size += s->ft4_30.count * 0x38;
-    size += s->gt4_38.count * 0x5C;
-    size += s->spriteCount_40 * 0x14;
-    size += s->texSpriteCount_48 * 0x14;
+    size = src->f3_0.count * 0x24 + src->g3_8.count * 0x3C;
+    size += src->ft3_10.count * 0x30;
+    size += src->gt3_18.count * 0x48;
+    size += src->f4_20.count * 0x2C;
+    size += src->g4_28.count * 0x50;
+    size += src->ft4_30.count * 0x38;
+    size += src->gt4_38.count * 0x5C;
+    size += src->spriteCount_40 * 0x14;
+    size += src->texSpriteCount_48 * 0x14;
     if (size)
     {
         buf = HeapAlloc_8003FC8C(size, (struct Pool*)heap);
@@ -1512,102 +1512,102 @@ void CopyFtgObject_800218A8(FtgObject* s, FtgObject* d, int heap)
     {
         buf = 0;
     }
-    d->f3_0.count = s->f3_0.count;
-    d->f3_0.items = (FtgPolyF3*)buf;
-    buf += s->f3_0.count * 0x24;
-    d->g3_8.count = s->g3_8.count;
-    d->g3_8.items = (FtgPolyG3*)buf;
-    buf += s->g3_8.count * 0x3C;
-    d->ft3_10.count = s->ft3_10.count;
-    d->ft3_10.items = (FtgPolyFT3*)buf;
-    buf += s->ft3_10.count * 0x30;
-    d->gt3_18.count = s->gt3_18.count;
-    d->gt3_18.items = (FtgPolyGT3*)buf;
-    buf += s->gt3_18.count * 0x48;
-    d->f4_20.count = s->f4_20.count;
-    d->f4_20.items = (FtgPolyF4*)buf;
-    buf += s->f4_20.count * 0x2C;
-    d->g4_28.count = s->g4_28.count;
-    d->g4_28.items = (FtgPolyG4*)buf;
-    buf += s->g4_28.count * 0x50;
-    d->ft4_30.count = s->ft4_30.count;
-    d->ft4_30.items = (FtgPolyFT4*)buf;
-    buf += s->ft4_30.count * 0x38;
-    d->gt4_38.count = s->gt4_38.count;
-    d->gt4_38.items = (FtgPolyGT4*)buf;
-    buf += s->gt4_38.count * 0x5C;
-    d->spriteCount_40 = s->spriteCount_40;
-    d->sprites_44 = (FtgSprite*)buf;
-    buf += s->spriteCount_40 * 0x14;
-    d->texSpriteCount_48 = s->texSpriteCount_48;
-    d->texSprites_50 = (FtgSprite*)buf;
-    for (i = 0; i < d->f3_0.count; i++)
+    dst->f3_0.count = src->f3_0.count;
+    dst->f3_0.items = (FtgPolyF3*)buf;
+    buf += src->f3_0.count * 0x24;
+    dst->g3_8.count = src->g3_8.count;
+    dst->g3_8.items = (FtgPolyG3*)buf;
+    buf += src->g3_8.count * 0x3C;
+    dst->ft3_10.count = src->ft3_10.count;
+    dst->ft3_10.items = (FtgPolyFT3*)buf;
+    buf += src->ft3_10.count * 0x30;
+    dst->gt3_18.count = src->gt3_18.count;
+    dst->gt3_18.items = (FtgPolyGT3*)buf;
+    buf += src->gt3_18.count * 0x48;
+    dst->f4_20.count = src->f4_20.count;
+    dst->f4_20.items = (FtgPolyF4*)buf;
+    buf += src->f4_20.count * 0x2C;
+    dst->g4_28.count = src->g4_28.count;
+    dst->g4_28.items = (FtgPolyG4*)buf;
+    buf += src->g4_28.count * 0x50;
+    dst->ft4_30.count = src->ft4_30.count;
+    dst->ft4_30.items = (FtgPolyFT4*)buf;
+    buf += src->ft4_30.count * 0x38;
+    dst->gt4_38.count = src->gt4_38.count;
+    dst->gt4_38.items = (FtgPolyGT4*)buf;
+    buf += src->gt4_38.count * 0x5C;
+    dst->spriteCount_40 = src->spriteCount_40;
+    dst->sprites_44 = (FtgSprite*)buf;
+    buf += src->spriteCount_40 * 0x14;
+    dst->texSpriteCount_48 = src->texSpriteCount_48;
+    dst->texSprites_50 = (FtgSprite*)buf;
+    for (i = 0; i < dst->f3_0.count; i++)
     {
-        MemCopy_800403E8(&d->f3_0.items[i], &s->f3_0.items[i], 0x24);
+        MemCopy_800403E8(&dst->f3_0.items[i], &src->f3_0.items[i], 0x24);
     }
-    for (i = 0; i < d->g3_8.count; i++)
+    for (i = 0; i < dst->g3_8.count; i++)
     {
-        MemCopy_800403E8(&d->g3_8.items[i], &s->g3_8.items[i], 0x3C);
+        MemCopy_800403E8(&dst->g3_8.items[i], &src->g3_8.items[i], 0x3C);
     }
-    for (i = 0; i < d->ft3_10.count; i++)
+    for (i = 0; i < dst->ft3_10.count; i++)
     {
-        MemCopy_800403E8(&d->ft3_10.items[i], &s->ft3_10.items[i], 0x30);
+        MemCopy_800403E8(&dst->ft3_10.items[i], &src->ft3_10.items[i], 0x30);
     }
-    for (i = 0; i < d->gt3_18.count; i++)
+    for (i = 0; i < dst->gt3_18.count; i++)
     {
-        MemCopy_800403E8(&d->gt3_18.items[i], &s->gt3_18.items[i], 0x48);
+        MemCopy_800403E8(&dst->gt3_18.items[i], &src->gt3_18.items[i], 0x48);
     }
-    for (i = 0; i < d->f4_20.count; i++)
+    for (i = 0; i < dst->f4_20.count; i++)
     {
-        MemCopy_800403E8(&d->f4_20.items[i], &s->f4_20.items[i], 0x2C);
+        MemCopy_800403E8(&dst->f4_20.items[i], &src->f4_20.items[i], 0x2C);
     }
-    for (i = 0; i < d->g4_28.count; i++)
+    for (i = 0; i < dst->g4_28.count; i++)
     {
-        MemCopy_800403E8(&d->g4_28.items[i], &s->g4_28.items[i], 0x50);
+        MemCopy_800403E8(&dst->g4_28.items[i], &src->g4_28.items[i], 0x50);
     }
-    for (i = 0; i < d->ft4_30.count; i++)
+    for (i = 0; i < dst->ft4_30.count; i++)
     {
-        MemCopy_800403E8(&d->ft4_30.items[i], &s->ft4_30.items[i], 0x38);
+        MemCopy_800403E8(&dst->ft4_30.items[i], &src->ft4_30.items[i], 0x38);
     }
-    for (i = 0; i < d->gt4_38.count; i++)
+    for (i = 0; i < dst->gt4_38.count; i++)
     {
-        MemCopy_800403E8(&d->gt4_38.items[i], &s->gt4_38.items[i], 0x5C);
+        MemCopy_800403E8(&dst->gt4_38.items[i], &src->gt4_38.items[i], 0x5C);
     }
-    for (i = 0; i < d->spriteCount_40; i++)
+    for (i = 0; i < dst->spriteCount_40; i++)
     {
-        MemCopy_800403E8(&d->sprites_44[i], &s->sprites_44[i], 0x14);
+        MemCopy_800403E8(&dst->sprites_44[i], &src->sprites_44[i], 0x14);
     }
-    for (i = 0; i < d->texSpriteCount_48; i++)
+    for (i = 0; i < dst->texSpriteCount_48; i++)
     {
-        MemCopy_800403E8(&d->texSprites_50[i], &s->texSprites_50[i], 0x14);
+        MemCopy_800403E8(&dst->texSprites_50[i], &src->texSprites_50[i], 0x14);
     }
-    d->tpage_4C = s->tpage_4C;
-    d->clut_4E = s->clut_4E;
+    dst->tpage_4C = src->tpage_4C;
+    dst->clut_4E = src->clut_4E;
 }
 // Matched
-int GetFtgMatCount_80021DE4(int* p)
+int GetFtgMatCount_80021DE4(int* file)
 {
-    return p[2];
+    return file[2];
 }
 // Matched
-void AllocFtgMatList_80021DF0(FtgMatList* p, int count, int heap)
+void AllocFtgMatList_80021DF0(FtgMatList* list, int count, int heap)
 {
-    p->count_0 = count;
-    p->items_4 = HeapAlloc_8003FC8C(count * 16, (struct Pool*)heap);
+    list->count_0 = count;
+    list->items_4 = HeapAlloc_8003FC8C(count * 16, (struct Pool*)heap);
 }
 // p is volatile to keep the store before the load
 // Matched
-void FreeFtgMatList_80021E24(volatile FtgMatList* p, int h)
+void FreeFtgMatList_80021E24(volatile FtgMatList* list, int h)
 {
-    p->count_0 = 0;
-    HeapFree_8003FD18(p->items_4);
+    list->count_0 = 0;
+    HeapFree_8003FD18(list->items_4);
 }
 // Matched
-void LoadFtgMatList_80021E4C(int* file, FtgMatList* out, unsigned int n)
+void LoadFtgMatList_80021E4C(int* file, FtgMatList* out, unsigned int count)
 {
     unsigned short* src = (unsigned short*)((char*)file + file[3]);
     unsigned int i;
-    for (i = 0; i < n; i++)
+    for (i = 0; i < count; i++)
     {
         unsigned short* dst = out->items_4[i];
         dst[0] = src[0];
@@ -1623,162 +1623,162 @@ void LoadFtgMatList_80021E4C(int* file, FtgMatList* out, unsigned int n)
 }
 // r2 is unused (the original frame has room for it)
 // Matched
-void MakeFtgSpritePoly_80021EDC(FtgPolyFT4* p, POLY_FT4* d)
+void MakeFtgSpritePoly_80021EDC(FtgPolyFT4* src, POLY_FT4* dst)
 {
-    RECT r;
+    RECT rect;
     RECT r2;
-    r.x = p->u0;
-    r.y = p->v0;
-    r.w = p->u3;
-    r.h = p->v3;
-    if (p->u1 < r.x)
+    rect.x = src->u0;
+    rect.y = src->v0;
+    rect.w = src->u3;
+    rect.h = src->v3;
+    if (src->u1 < rect.x)
     {
-        r.x = p->u1;
+        rect.x = src->u1;
     }
-    if (r.x > p->u2)
+    if (rect.x > src->u2)
     {
-        r.x = p->u2;
+        rect.x = src->u2;
     }
-    if (r.x > p->u3)
+    if (rect.x > src->u3)
     {
-        r.x = p->u3;
+        rect.x = src->u3;
     }
-    if (p->v1 < r.y)
+    if (src->v1 < rect.y)
     {
-        r.y = p->v1;
+        rect.y = src->v1;
     }
-    if (r.y > p->v2)
+    if (rect.y > src->v2)
     {
-        r.y = p->v2;
+        rect.y = src->v2;
     }
-    if (r.y > p->v3)
+    if (rect.y > src->v3)
     {
-        r.y = p->v3;
+        rect.y = src->v3;
     }
-    if (r.w < p->u2)
+    if (rect.w < src->u2)
     {
-        r.w = p->u2;
+        rect.w = src->u2;
     }
-    if (r.w < p->u1)
+    if (rect.w < src->u1)
     {
-        r.w = p->u1;
+        rect.w = src->u1;
     }
-    if (r.w < p->u0)
+    if (rect.w < src->u0)
     {
-        r.w = p->u0;
+        rect.w = src->u0;
     }
-    if (r.h < p->v2)
+    if (rect.h < src->v2)
     {
-        r.h = p->v2;
+        rect.h = src->v2;
     }
-    if (r.h < p->v1)
+    if (rect.h < src->v1)
     {
-        r.h = p->v1;
+        rect.h = src->v1;
     }
-    if (r.h < p->v0)
+    if (rect.h < src->v0)
     {
-        r.h = p->v0;
+        rect.h = src->v0;
     }
-    setlen(d, 9);
-    d->code = 0x2C;
-    d->r0 = p->c.r;
-    d->g0 = p->c.g;
-    d->b0 = p->c.b;
-    d->u0 = r.x;
-    d->v0 = r.y;
-    d->u1 = r.w;
-    d->v1 = r.y;
-    d->u2 = r.x;
-    d->v2 = r.h;
-    d->u3 = r.w;
-    d->v3 = r.h;
-    d->x0 = 0;
-    d->y0 = 0;
-    d->x1 = r.w - r.x;
-    d->y1 = 0;
-    d->x2 = 0;
-    d->y2 = r.h - r.y;
-    d->x3 = r.w - r.x;
-    d->y3 = r.h - r.y;
-    d->code = p->c.code;
-    d->tpage = p->tpage;
-    d->clut = p->clut;
+    setlen(dst, 9);
+    dst->code = 0x2C;
+    dst->r0 = src->c.r;
+    dst->g0 = src->c.g;
+    dst->b0 = src->c.b;
+    dst->u0 = rect.x;
+    dst->v0 = rect.y;
+    dst->u1 = rect.w;
+    dst->v1 = rect.y;
+    dst->u2 = rect.x;
+    dst->v2 = rect.h;
+    dst->u3 = rect.w;
+    dst->v3 = rect.h;
+    dst->x0 = 0;
+    dst->y0 = 0;
+    dst->x1 = rect.w - rect.x;
+    dst->y1 = 0;
+    dst->x2 = 0;
+    dst->y2 = rect.h - rect.y;
+    dst->x3 = rect.w - rect.x;
+    dst->y3 = rect.h - rect.y;
+    dst->code = src->c.code;
+    dst->tpage = src->tpage;
+    dst->clut = src->clut;
 }
 // Matched
-void MakeFtgSprt_800221DC(FtgPolyFT4* p, SPRT* d, DR_TPAGE* tp)
+void MakeFtgSprt_800221DC(FtgPolyFT4* src, SPRT* dst, DR_TPAGE* tpage)
 {
-    RECT r;
-    r.x = p->u0;
-    r.y = p->v0;
-    r.w = p->u3;
-    r.h = p->v3;
-    if (p->u1 < r.x)
+    RECT rect;
+    rect.x = src->u0;
+    rect.y = src->v0;
+    rect.w = src->u3;
+    rect.h = src->v3;
+    if (src->u1 < rect.x)
     {
-        r.x = p->u1;
+        rect.x = src->u1;
     }
-    if (r.x > p->u2)
+    if (rect.x > src->u2)
     {
-        r.x = p->u2;
+        rect.x = src->u2;
     }
-    if (r.x > p->u3)
+    if (rect.x > src->u3)
     {
-        r.x = p->u3;
+        rect.x = src->u3;
     }
-    if (p->v1 < r.y)
+    if (src->v1 < rect.y)
     {
-        r.y = p->v1;
+        rect.y = src->v1;
     }
-    if (r.y > p->v2)
+    if (rect.y > src->v2)
     {
-        r.y = p->v2;
+        rect.y = src->v2;
     }
-    if (r.y > p->v3)
+    if (rect.y > src->v3)
     {
-        r.y = p->v3;
+        rect.y = src->v3;
     }
-    if (r.w < p->u2)
+    if (rect.w < src->u2)
     {
-        r.w = p->u2;
+        rect.w = src->u2;
     }
-    if (r.w < p->u1)
+    if (rect.w < src->u1)
     {
-        r.w = p->u1;
+        rect.w = src->u1;
     }
-    if (r.w < p->u0)
+    if (rect.w < src->u0)
     {
-        r.w = p->u0;
+        rect.w = src->u0;
     }
-    if (r.h < p->v2)
+    if (rect.h < src->v2)
     {
-        r.h = p->v2;
+        rect.h = src->v2;
     }
-    if (r.h < p->v1)
+    if (rect.h < src->v1)
     {
-        r.h = p->v1;
+        rect.h = src->v1;
     }
-    if (r.h < p->v0)
+    if (rect.h < src->v0)
     {
-        r.h = p->v0;
+        rect.h = src->v0;
     }
-    setlen(d, 4);
-    d->code = 0x64;
-    d->r0 = p->c.r;
-    d->g0 = p->c.g;
-    d->b0 = p->c.b;
-    d->u0 = r.x;
-    d->v0 = r.y;
-    d->x0 = 0;
-    d->y0 = 0;
-    d->w = r.w - r.x;
-    d->h = r.h - r.y;
-    d->clut = p->clut;
-    SetDrawTPage(tp, 0, 1, p->tpage);
+    setlen(dst, 4);
+    dst->code = 0x64;
+    dst->r0 = src->c.r;
+    dst->g0 = src->c.g;
+    dst->b0 = src->c.b;
+    dst->u0 = rect.x;
+    dst->v0 = rect.y;
+    dst->x0 = 0;
+    dst->y0 = 0;
+    dst->w = rect.w - rect.x;
+    dst->h = rect.h - rect.y;
+    dst->clut = src->clut;
+    SetDrawTPage(tpage, 0, 1, src->tpage);
 }
 void CountFtgSprites_80022B84(FtgSrcObjectHeader* c, int* x, int* y);
 int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h);
-int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p, FtgSpriteGroups8* a, int k, int h);
-int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p, FtgSpriteGroups9* b, int k, int h);
-void MergeFtgSpriteGroups_80022CC4(FtgObject* a0, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h);
+int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* src, FtgSpriteGroups8* groups8, int k, int h);
+int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* src, FtgSpriteGroups9* groups9, int k, int h);
+void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h);
 // Matched
 int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
 {
@@ -1786,9 +1786,9 @@ int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
     FtgSpriteGroups8 A;
     FtgSpriteGroups9 B;
     unsigned int i;
-    unsigned int n;
+    unsigned int primCount;
     unsigned char* hdr;
-    FtgPrimHeader* p;
+    FtgPrimHeader* prim;
     unsigned int type;
     unsigned int j;
     int k;
@@ -1798,13 +1798,13 @@ int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
     }
     hdr = src;
     src += 0x28;
-    n = AllocFtgObjectPrims_80022634(out, (FtgSrcObjectHeader*)hdr, h);
+    primCount = AllocFtgObjectPrims_80022634(out, (FtgSrcObjectHeader*)hdr, h);
     AllocFtgSpriteGroups_800228F8(&A, &B, (FtgSrcObjectHeader*)hdr, h);
-    for (i = 0; i < n; i++)
+    for (i = 0; i < primCount; i++)
     {
-        p = (FtgPrimHeader*)src;
+        prim = (FtgPrimHeader*)src;
         src += 4;
-        type = p->type_0;
+        type = prim->type_0;
         k = typeCounts[type];
         typeCounts[type] = k + 1;
         if (reloc != 0 && ftgPrimRelocators_8007DB08[type] != 0)
@@ -1821,13 +1821,13 @@ int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
         case 5:
         case 6:
         case 7:
-            src += ftgPrimLoaders_8007DAE0[type](p, src, out, k, h);
+            src += ftgPrimLoaders_8007DAE0[type](prim, src, out, k, h);
             break;
         case 8:
-            src += LoadFtgSprites_8002300C(p, (FtgSrcSprites8*)src, &A, k, h);
+            src += LoadFtgSprites_8002300C(prim, (FtgSrcSprites8*)src, &A, k, h);
             break;
         case 9:
-            src += LoadFtgTexSprites_8002320C(p, (FtgSrcSprites9*)src, &B, k, h);
+            src += LoadFtgTexSprites_8002320C(prim, (FtgSrcSprites9*)src, &B, k, h);
             break;
         }
     }
@@ -1838,14 +1838,14 @@ int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
 // Matched
 int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
 {
-    int x;
-    int y;
+    int spriteCount;
+    int texSpriteCount;
     int size;
     int total;
-    char* p;
+    char* buf;
     int* c = hdr->counts_0;
-    p = 0;
-    CountFtgSprites_80022B84(hdr, &x, &y);
+    buf = 0;
+    CountFtgSprites_80022B84(hdr, &spriteCount, &texSpriteCount);
     size = c[0] * 0x24 + c[1] * 0x3C;
     total = c[0] + c[1];
     size += c[2] * 0x30;
@@ -1860,55 +1860,55 @@ int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     total += c[6];
     size += c[7] * 0x5C;
     total += c[7];
-    size += x * 0x14;
+    size += spriteCount * 0x14;
     total += c[8];
-    size += y * 0x14;
+    size += texSpriteCount * 0x14;
     total += c[9];
     if (size != 0)
     {
-        p = HeapAlloc_8003FC8C(size, h);
+        buf = HeapAlloc_8003FC8C(size, h);
     }
     out->f3_0.count = c[0];
-    out->f3_0.items = (FtgPolyF3*)p;
-    p += c[0] * 0x24;
+    out->f3_0.items = (FtgPolyF3*)buf;
+    buf += c[0] * 0x24;
     out->g3_8.count = c[1];
-    out->g3_8.items = (FtgPolyG3*)p;
-    p += c[1] * 0x3C;
+    out->g3_8.items = (FtgPolyG3*)buf;
+    buf += c[1] * 0x3C;
     out->ft3_10.count = c[2];
-    out->ft3_10.items = (FtgPolyFT3*)p;
-    p += c[2] * 0x30;
+    out->ft3_10.items = (FtgPolyFT3*)buf;
+    buf += c[2] * 0x30;
     out->gt3_18.count = c[3];
-    out->gt3_18.items = (FtgPolyGT3*)p;
-    p += c[3] * 0x48;
+    out->gt3_18.items = (FtgPolyGT3*)buf;
+    buf += c[3] * 0x48;
     out->f4_20.count = c[4];
-    out->f4_20.items = (FtgPolyF4*)p;
-    p += c[4] * 0x2C;
+    out->f4_20.items = (FtgPolyF4*)buf;
+    buf += c[4] * 0x2C;
     out->g4_28.count = c[5];
-    out->g4_28.items = (FtgPolyG4*)p;
-    p += c[5] * 0x50;
+    out->g4_28.items = (FtgPolyG4*)buf;
+    buf += c[5] * 0x50;
     out->ft4_30.count = c[6];
-    out->ft4_30.items = (FtgPolyFT4*)p;
-    p += c[6] * 0x38;
+    out->ft4_30.items = (FtgPolyFT4*)buf;
+    buf += c[6] * 0x38;
     out->gt4_38.count = c[7];
-    out->gt4_38.items = (FtgPolyGT4*)p;
-    p += c[7] * 0x5C;
-    out->spriteCount_40 = x;
-    out->sprites_44 = (FtgSprite*)p;
-    p += x * 0x14;
-    out->texSpriteCount_48 = y;
-    out->texSprites_50 = (FtgSprite*)p;
+    out->gt4_38.items = (FtgPolyGT4*)buf;
+    buf += c[7] * 0x5C;
+    out->spriteCount_40 = spriteCount;
+    out->sprites_44 = (FtgSprite*)buf;
+    buf += spriteCount * 0x14;
+    out->texSpriteCount_48 = texSpriteCount;
+    out->texSprites_50 = (FtgSprite*)buf;
     return total;
 }
 // Matched
 int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, FtgSrcObjectHeader* hdr, int heap)
 {
-    int n;
+    int count;
     int m;
     groups8->count = hdr->counts_0[8];
-    n = hdr->counts_0[8];
-    if (n)
+    count = hdr->counts_0[8];
+    if (count)
     {
-        groups8->groups = HeapAlloc_8003FC8C(n << 3, (struct Pool*)heap);
+        groups8->groups = HeapAlloc_8003FC8C(count << 3, (struct Pool*)heap);
     }
     else
     {
@@ -1916,7 +1916,7 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     }
     groups9->count = hdr->counts_0[9];
     m = hdr->counts_0[9];
-    n += m;
+    count += m;
     if (m)
     {
         groups9->groups = HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
@@ -1925,12 +1925,12 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     {
         groups9->groups = 0;
     }
-    return n;
+    return count;
 }
 // Matched
-void FreeFtgObject_800229B0(FtgObject* p, int heap)
+void FreeFtgObject_800229B0(FtgObject* obj, int heap)
 {
-    FtgPolyF3* a = p->f3_0.items;
+    FtgPolyF3* a = obj->f3_0.items;
     if (a)
     {
         HeapFree_8003FD18(a, heap);
@@ -1966,24 +1966,24 @@ void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
 // Matched
 void RelocateTPageClut_80022AE8(unsigned short* tpage, unsigned short* clut, short* reloc)
 {
-    int u = reloc[0] / 64;
-    int v = reloc[1] / 256;
-    int tp = v * 16 + u;
-    unsigned short t = *clut;
-    u = (t & 0x3F) * 16;
-    v = (t >> 6) & 0x1FF;
+    int x = reloc[0] / 64;
+    int y = reloc[1] / 256;
+    int tp = y * 16 + x;
+    unsigned short clutVal = *clut;
+    x = (clutVal & 0x3F) * 16;
+    y = (clutVal >> 6) & 0x1FF;
     if (((*tpage >> 7) & 3) == 0)
     {
-        u += reloc[2];
-        v += reloc[3];
+        x += reloc[2];
+        y += reloc[3];
     }
     else
     {
-        u += reloc[4];
-        v += reloc[5];
+        x += reloc[4];
+        y += reloc[5];
     }
     *tpage += tp;
-    *clut = v * 64 + (u >> 4);
+    *clut = y * 64 + (x >> 4);
 }
 #if 0
 // Not matched (18 lines; its jump table is dword_8007411C: drop that C table when this compiles). Needs the
@@ -1994,38 +1994,38 @@ void RelocateTPageClut_80022AE8(unsigned short* tpage, unsigned short* clut, sho
 // q + 4 goes to q's own register. Tried: block-local pointers / struct casts, inline helpers (by value: cse removes the
 // param copies; by pointer: memory), (r + 1) + k * 20 vs q += 4 + k * 20, -O1 / single -fno-* flags (no copies either).
 // k = *p++ (below) already puts q + 4 in its own register; only the P and k copies are missing.
-void CountFtgSprites_80022B84(unsigned char* q, int* x, int* y)
+void CountFtgSprites_80022B84(unsigned char* cursor, int* sprites, int* texSprites)
 {
-    int n;
+    int primCount;
     int i;
-    int a;
-    int b;
+    int spriteCount;
+    int texSpriteCount;
     int k;
-    unsigned char* t;
-    int* r;
-    a = 0;
-    r = (int*)q;
-    q += 0x28;
-    n = r[0] + r[1] + r[2] + r[3] + r[4] + r[5] + r[6] + r[7] + r[8] + r[9];
-    b = 0;
-    for (i = 0; i < n; i++)
+    unsigned char* prim;
+    int* counts;
+    spriteCount = 0;
+    counts = (int*)cursor;
+    cursor += 0x28;
+    primCount = counts[0] + counts[1] + counts[2] + counts[3] + counts[4] + counts[5] + counts[6] + counts[7] + counts[8] + counts[9];
+    texSpriteCount = 0;
+    for (i = 0; i < primCount; i++)
     {
-        t = q;
-        q += 4;
-        switch (*t)
+        prim = cursor;
+        cursor += 4;
+        switch (*prim)
         {
-        case 1: q += 0x3C; break;
-        case 0: case 2: q += 0x24; break;
-        case 3: q += 0x40; break;
-        case 5: q += 0x50; break;
-        case 4: case 6: q += 0x2C; break;
-        case 7: q += 0x54; break;
-        case 8: { int* p = (int*)q; k = *p++; q = (unsigned char*)p + k * 20; a += k; break; }
-        case 9: { int* p = (int*)q; k = *p; p += 2; q = (unsigned char*)p + k * 20; b += k; break; }
+        case 1: cursor += 0x3C; break;
+        case 0: case 2: cursor += 0x24; break;
+        case 3: cursor += 0x40; break;
+        case 5: cursor += 0x50; break;
+        case 4: case 6: cursor += 0x2C; break;
+        case 7: cursor += 0x54; break;
+        case 8: { int* words = (int*)cursor; k = *words++; cursor = (unsigned char*)words + k * 20; spriteCount += k; break; }
+        case 9: { int* words = (int*)cursor; k = *words; words += 2; cursor = (unsigned char*)words + k * 20; texSpriteCount += k; break; }
         }
     }
-    *x = a;
-    *y = b;
+    *sprites = spriteCount;
+    *texSprites = texSpriteCount;
 }
 #endif
 INCLUDE_ASM(CountFtgSprites_80022B84);
@@ -2033,139 +2033,139 @@ INCLUDE_ASM(CountFtgSprites_80022B84);
 // Not matched (2 words): the second loop has the j++ / n++ increments in the other order (j++, n++ in the for header
 // or in the body fixes them but then swaps the sprite pointer increments). A j of its own for the second loop fixed the
 // first loop's j/k registers
-void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* a, FtgSpriteGroups9* b, int h)
+void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h)
 {
     int j;
-    int n;
+    int sprite;
     int k;
     FtgSpriteGroup8* e;
     FtgSpriteGroup9* f;
-    if (a->count)
+    if (groups8->count)
     {
         j = 0;
-        e = a->groups;
+        e = groups8->groups;
         k = 0;
-        for (n = 0; n < obj->spriteCount_40; n++)
+        for (sprite = 0; sprite < obj->spriteCount_40; sprite++)
         {
-            if (j >= a->groups[k].count)
+            if (j >= groups8->groups[k].count)
             {
                 k++;
                 j = 0;
-                e = &a->groups[k];
+                e = &groups8->groups[k];
             }
-            obj->sprites_44[n].p0.x = e->items[j].p0.x;
-            obj->sprites_44[n].p0.y = e->items[j].p0.y;
-            obj->sprites_44[n].p0.z = e->items[j].p0.z;
-            obj->sprites_44[n].p0.uv = 0;
-            obj->sprites_44[n].p1.x = e->items[j].p1.x;
-            obj->sprites_44[n].p1.y = e->items[j].p1.y;
-            obj->sprites_44[n].p1.z = e->items[j].p1.z;
-            obj->sprites_44[n].p1.uv = 0;
-            obj->sprites_44[n].c.r = e->items[j].c.r;
-            obj->sprites_44[n].c.g = e->items[j].c.g;
-            obj->sprites_44[n].c.b = e->items[j].c.b;
-            obj->sprites_44[n].c.code = 0;
+            obj->sprites_44[sprite].p0.x = e->items[j].p0.x;
+            obj->sprites_44[sprite].p0.y = e->items[j].p0.y;
+            obj->sprites_44[sprite].p0.z = e->items[j].p0.z;
+            obj->sprites_44[sprite].p0.uv = 0;
+            obj->sprites_44[sprite].p1.x = e->items[j].p1.x;
+            obj->sprites_44[sprite].p1.y = e->items[j].p1.y;
+            obj->sprites_44[sprite].p1.z = e->items[j].p1.z;
+            obj->sprites_44[sprite].p1.uv = 0;
+            obj->sprites_44[sprite].c.r = e->items[j].c.r;
+            obj->sprites_44[sprite].c.g = e->items[j].c.g;
+            obj->sprites_44[sprite].c.b = e->items[j].c.b;
+            obj->sprites_44[sprite].c.code = 0;
             j++;
         }
     }
-    if (b->count)
+    if (groups9->count)
     {
         int j;
         j = 0;
-        obj->tpage_4C = b->groups->tpage;
-        obj->clut_4E = b->groups->clut;
-        f = b->groups;
+        obj->tpage_4C = groups9->groups->tpage;
+        obj->clut_4E = groups9->groups->clut;
+        f = groups9->groups;
         k = 0;
-        for (n = 0; n < obj->texSpriteCount_48; n++, j++)
+        for (sprite = 0; sprite < obj->texSpriteCount_48; sprite++, j++)
         {
-            if (j >= b->groups[k].count)
+            if (j >= groups9->groups[k].count)
             {
                 k++;
                 j = 0;
-                f = &b->groups[k];
+                f = &groups9->groups[k];
             }
-            obj->texSprites_50[n].p0.x = f->items[j].p0.x;
-            obj->texSprites_50[n].p0.y = f->items[j].p0.y;
-            obj->texSprites_50[n].p0.z = f->items[j].p0.z;
-            obj->texSprites_50[n].p0.uv = 0;
-            obj->texSprites_50[n].p1.x = f->items[j].p1.x;
-            obj->texSprites_50[n].p1.y = f->items[j].p1.y;
-            obj->texSprites_50[n].p1.z = f->items[j].p1.z;
-            obj->texSprites_50[n].p1.uv = 0;
-            obj->texSprites_50[n].c.r = f->items[j].c.r;
-            obj->texSprites_50[n].c.g = f->items[j].c.g;
-            obj->texSprites_50[n].c.b = f->items[j].c.b;
-            obj->texSprites_50[n].c.code = f->items[j].c.code;
-            obj->texSprites_50[n].p1.uv = f->items[j].p1.uv;
+            obj->texSprites_50[sprite].p0.x = f->items[j].p0.x;
+            obj->texSprites_50[sprite].p0.y = f->items[j].p0.y;
+            obj->texSprites_50[sprite].p0.z = f->items[j].p0.z;
+            obj->texSprites_50[sprite].p0.uv = 0;
+            obj->texSprites_50[sprite].p1.x = f->items[j].p1.x;
+            obj->texSprites_50[sprite].p1.y = f->items[j].p1.y;
+            obj->texSprites_50[sprite].p1.z = f->items[j].p1.z;
+            obj->texSprites_50[sprite].p1.uv = 0;
+            obj->texSprites_50[sprite].c.r = f->items[j].c.r;
+            obj->texSprites_50[sprite].c.g = f->items[j].c.g;
+            obj->texSprites_50[sprite].c.b = f->items[j].c.b;
+            obj->texSprites_50[sprite].c.code = f->items[j].c.code;
+            obj->texSprites_50[sprite].p1.uv = f->items[j].p1.uv;
         }
     }
 }
 #endif
 INCLUDE_ASM(MergeFtgSpriteGroups_80022CC4);
 // Matched
-int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* a, int k, int h)
+int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* groups8, int k, int h)
 {
-    FtgSrcSprites8* p = p_in;
-    int r = 4;
+    FtgSrcSprites8* src = p_in;
+    int read = 4;
     int i;
-    FtgSrcSprite8* q;
-    a->groups[k].count = p->count_0;
-    a->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
-    q = (FtgSrcSprite8*)((unsigned char*)p + r); // r: bytes read so far
-    for (i = 0; i < p->count_0; i++)
+    FtgSrcSprite8* items;
+    groups8->groups[k].count = src->count_0;
+    groups8->groups[k].items = HeapAlloc_8003FC8C(src->count_0 * 20, h);
+    items = (FtgSrcSprite8*)((unsigned char*)src + read); // r: bytes read so far
+    for (i = 0; i < src->count_0; i++)
     {
-        a->groups[k].items[i].p0.x = q[i].p0.x;
-        a->groups[k].items[i].p0.y = q[i].p0.y;
-        a->groups[k].items[i].p0.z = q[i].p0.z;
-        a->groups[k].items[i].p0.uv = 0;
-        a->groups[k].items[i].p1.x = q[i].p1.x;
-        a->groups[k].items[i].p1.y = q[i].p1.y;
-        a->groups[k].items[i].p1.z = q[i].p1.z;
-        a->groups[k].items[i].p1.uv = 0;
-        a->groups[k].items[i].c.r = q[i].c.r;
-        a->groups[k].items[i].c.g = q[i].c.g;
-        a->groups[k].items[i].c.b = q[i].c.b;
-        a->groups[k].items[i].c.code = 0;
-        r += 20;
+        groups8->groups[k].items[i].p0.x = items[i].p0.x;
+        groups8->groups[k].items[i].p0.y = items[i].p0.y;
+        groups8->groups[k].items[i].p0.z = items[i].p0.z;
+        groups8->groups[k].items[i].p0.uv = 0;
+        groups8->groups[k].items[i].p1.x = items[i].p1.x;
+        groups8->groups[k].items[i].p1.y = items[i].p1.y;
+        groups8->groups[k].items[i].p1.z = items[i].p1.z;
+        groups8->groups[k].items[i].p1.uv = 0;
+        groups8->groups[k].items[i].c.r = items[i].c.r;
+        groups8->groups[k].items[i].c.g = items[i].c.g;
+        groups8->groups[k].items[i].c.b = items[i].c.b;
+        groups8->groups[k].items[i].c.code = 0;
+        read += 20;
     }
-    return r;
+    return read;
 }
 // Matched
-int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* b, int k, int h)
+int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* groups9, int k, int h)
 {
-    FtgSrcSprites9* p = p_in;
-    int r;
+    FtgSrcSprites9* src = p_in;
+    int read;
     int i;
-    FtgSrcSprite9* q;
-    b->groups[k].count = p->count_0;
-    b->groups[k].items = HeapAlloc_8003FC8C(p->count_0 * 20, h);
-    r = 8;
-    b->groups[k].tpage = p->tpage_4;
-    b->groups[k].clut = p->clut_6;
-    q = (FtgSrcSprite9*)((unsigned char*)p + r); // r: bytes read so far
-    for (i = 0; i < p->count_0; i++)
+    FtgSrcSprite9* items;
+    groups9->groups[k].count = src->count_0;
+    groups9->groups[k].items = HeapAlloc_8003FC8C(src->count_0 * 20, h);
+    read = 8;
+    groups9->groups[k].tpage = src->tpage_4;
+    groups9->groups[k].clut = src->clut_6;
+    items = (FtgSrcSprite9*)((unsigned char*)src + read); // r: bytes read so far
+    for (i = 0; i < src->count_0; i++)
     {
-        b->groups[k].items[i].p0.x = q[i].p0.x;
-        b->groups[k].items[i].p0.y = q[i].p0.y;
-        b->groups[k].items[i].p0.z = q[i].p0.z;
-        b->groups[k].items[i].p0.uv = 0;
-        b->groups[k].items[i].p1.x = q[i].p1.x;
-        b->groups[k].items[i].p1.y = q[i].p1.y;
-        b->groups[k].items[i].p1.z = q[i].p1.z;
-        b->groups[k].items[i].p1.uv = 0;
-        b->groups[k].items[i].c.r = q[i].c.r;
-        b->groups[k].items[i].c.g = q[i].c.g;
-        b->groups[k].items[i].c.b = q[i].c.b;
-        b->groups[k].items[i].c.code = hdr->flags_3;
-        b->groups[k].items[i].p1.uv = q[i].p1.u + (q[i].p1.v << 8);
-        r += 20;
+        groups9->groups[k].items[i].p0.x = items[i].p0.x;
+        groups9->groups[k].items[i].p0.y = items[i].p0.y;
+        groups9->groups[k].items[i].p0.z = items[i].p0.z;
+        groups9->groups[k].items[i].p0.uv = 0;
+        groups9->groups[k].items[i].p1.x = items[i].p1.x;
+        groups9->groups[k].items[i].p1.y = items[i].p1.y;
+        groups9->groups[k].items[i].p1.z = items[i].p1.z;
+        groups9->groups[k].items[i].p1.uv = 0;
+        groups9->groups[k].items[i].c.r = items[i].c.r;
+        groups9->groups[k].items[i].c.g = items[i].c.g;
+        groups9->groups[k].items[i].c.b = items[i].c.b;
+        groups9->groups[k].items[i].c.code = hdr->flags_3;
+        groups9->groups[k].items[i].p1.uv = items[i].p1.u + (items[i].p1.v << 8);
+        read += 20;
     }
-    return r;
+    return read;
 }
 // Matched
-void RelocFtgTexSprites_80023460(FtgSrcSprites9* p, int reloc)
+void RelocFtgTexSprites_80023460(FtgSrcSprites9* sprites, int reloc)
 {
-    RelocateTPageClut_80022AE8(&p->tpage_4, &p->clut_6, reloc);
+    RelocateTPageClut_80022AE8(&sprites->tpage_4, &sprites->clut_6, reloc);
 }
 // Matched
 int LoadFtgPolyF3_8002348C(FtgPrimHeader* hdr, FtgPolyF3* src, FtgObject* obj, int idx)
@@ -2178,24 +2178,24 @@ int LoadFtgPolyF3_8002348C(FtgPrimHeader* hdr, FtgPolyF3* src, FtgObject* obj, i
     return 0x24;
 }
 // Matched
-void CopyFtgPolyF3_80023514(FtgPolyF3List* list, FtgPolyF3* s, int code, int idx)
+void CopyFtgPolyF3_80023514(FtgPolyF3List* list, FtgPolyF3* src, int code, int idx)
 {
-    list->items[idx].c.r = s->c.r;
-    list->items[idx].c.g = s->c.g;
-    list->items[idx].c.b = s->c.b;
+    list->items[idx].c.r = src->c.r;
+    list->items[idx].c.g = src->c.g;
+    list->items[idx].c.b = src->c.b;
     list->items[idx].c.code = code;
-    list->items[idx].v[0].x = s->v[0].x;
-    list->items[idx].v[0].y = s->v[0].y;
-    list->items[idx].v[0].z = s->v[0].z;
-    list->items[idx].v[1].x = s->v[1].x;
-    list->items[idx].v[1].y = s->v[1].y;
-    list->items[idx].v[1].z = s->v[1].z;
-    list->items[idx].v[2].x = s->v[2].x;
-    list->items[idx].v[2].y = s->v[2].y;
-    list->items[idx].v[2].z = s->v[2].z;
-    list->items[idx].n.x = s->n.x;
-    list->items[idx].n.y = s->n.y;
-    list->items[idx].n.z = s->n.z;
+    list->items[idx].v[0].x = src->v[0].x;
+    list->items[idx].v[0].y = src->v[0].y;
+    list->items[idx].v[0].z = src->v[0].z;
+    list->items[idx].v[1].x = src->v[1].x;
+    list->items[idx].v[1].y = src->v[1].y;
+    list->items[idx].v[1].z = src->v[1].z;
+    list->items[idx].v[2].x = src->v[2].x;
+    list->items[idx].v[2].y = src->v[2].y;
+    list->items[idx].v[2].z = src->v[2].z;
+    list->items[idx].n.x = src->n.x;
+    list->items[idx].n.y = src->n.y;
+    list->items[idx].n.z = src->n.z;
 }
 // Matched
 int LoadFtgPolyG3_80023624(FtgPrimHeader* hdr, FtgSrcPolyG3* src, FtgObject* obj, int idx)
@@ -2208,38 +2208,38 @@ int LoadFtgPolyG3_80023624(FtgPrimHeader* hdr, FtgSrcPolyG3* src, FtgObject* obj
     return 0x3C;
 }
 // Matched
-void CopyFtgPolyG3_800236AC(FtgPolyG3List* list, FtgSrcPolyG3* s, int code, int idx)
+void CopyFtgPolyG3_800236AC(FtgPolyG3List* list, FtgSrcPolyG3* src, int code, int idx)
 {
-    list->items[idx].c[0].r = s->c[0].r;
-    list->items[idx].c[0].g = s->c[0].g;
-    list->items[idx].c[0].b = s->c[0].b;
+    list->items[idx].c[0].r = src->c[0].r;
+    list->items[idx].c[0].g = src->c[0].g;
+    list->items[idx].c[0].b = src->c[0].b;
     list->items[idx].c[0].code = code;
-    list->items[idx].c[1].r = s->c[1].r;
-    list->items[idx].c[1].g = s->c[1].g;
-    list->items[idx].c[1].b = s->c[1].b;
+    list->items[idx].c[1].r = src->c[1].r;
+    list->items[idx].c[1].g = src->c[1].g;
+    list->items[idx].c[1].b = src->c[1].b;
     list->items[idx].c[0].code = code;
-    list->items[idx].c[2].r = s->c[2].r;
-    list->items[idx].c[2].g = s->c[2].g;
-    list->items[idx].c[2].b = s->c[2].b;
+    list->items[idx].c[2].r = src->c[2].r;
+    list->items[idx].c[2].g = src->c[2].g;
+    list->items[idx].c[2].b = src->c[2].b;
     list->items[idx].c[0].code = code;
-    list->items[idx].v[0].x = s->p[0].v.x;
-    list->items[idx].v[0].y = s->p[0].v.y;
-    list->items[idx].v[0].z = s->p[0].v.z;
-    list->items[idx].v[1].x = s->p[1].v.x;
-    list->items[idx].v[1].y = s->p[1].v.y;
-    list->items[idx].v[1].z = s->p[1].v.z;
-    list->items[idx].v[2].x = s->p[2].v.x;
-    list->items[idx].v[2].y = s->p[2].v.y;
-    list->items[idx].v[2].z = s->p[2].v.z;
-    list->items[idx].n[0].x = s->p[0].n.x;
-    list->items[idx].n[0].y = s->p[0].n.y;
-    list->items[idx].n[0].z = s->p[0].n.z;
-    list->items[idx].n[1].x = s->p[1].n.x;
-    list->items[idx].n[1].y = s->p[1].n.y;
-    list->items[idx].n[1].z = s->p[1].n.z;
-    list->items[idx].n[2].x = s->p[2].n.x;
-    list->items[idx].n[2].y = s->p[2].n.y;
-    list->items[idx].n[2].z = s->p[2].n.z;
+    list->items[idx].v[0].x = src->p[0].v.x;
+    list->items[idx].v[0].y = src->p[0].v.y;
+    list->items[idx].v[0].z = src->p[0].v.z;
+    list->items[idx].v[1].x = src->p[1].v.x;
+    list->items[idx].v[1].y = src->p[1].v.y;
+    list->items[idx].v[1].z = src->p[1].v.z;
+    list->items[idx].v[2].x = src->p[2].v.x;
+    list->items[idx].v[2].y = src->p[2].v.y;
+    list->items[idx].v[2].z = src->p[2].v.z;
+    list->items[idx].n[0].x = src->p[0].n.x;
+    list->items[idx].n[0].y = src->p[0].n.y;
+    list->items[idx].n[0].z = src->p[0].n.z;
+    list->items[idx].n[1].x = src->p[1].n.x;
+    list->items[idx].n[1].y = src->p[1].n.y;
+    list->items[idx].n[1].z = src->p[1].n.z;
+    list->items[idx].n[2].x = src->p[2].n.x;
+    list->items[idx].n[2].y = src->p[2].n.y;
+    list->items[idx].n[2].z = src->p[2].n.z;
     list->items[idx].c[0].code = code;
 }
 // Matched
@@ -2253,40 +2253,40 @@ int LoadFtgPolyFT3_800238AC(FtgPrimHeader* hdr, FtgSrcPolyFT3* src, FtgObject* o
     return 0x24;
 }
 // Matched
-void CopyFtgPolyFT3_80023934(FtgPolyFT3List* list, FtgSrcPolyFT3* s, int code, int idx)
+void CopyFtgPolyFT3_80023934(FtgPolyFT3List* list, FtgSrcPolyFT3* src, int code, int idx)
 {
-    list->items[idx].tpage = s->tex.tpage;
-    list->items[idx].clut = s->tex.clut;
-    list->items[idx].u0 = s->v[0].u;
-    list->items[idx].v0 = s->v[0].v;
+    list->items[idx].tpage = src->tex.tpage;
+    list->items[idx].clut = src->tex.clut;
+    list->items[idx].u0 = src->v[0].u;
+    list->items[idx].v0 = src->v[0].v;
     list->items[idx].v[0].uv = list->items[idx].u0 + (list->items[idx].v0 << 8);
-    list->items[idx].u1 = s->v[1].u;
-    list->items[idx].v1 = s->v[1].v;
+    list->items[idx].u1 = src->v[1].u;
+    list->items[idx].v1 = src->v[1].v;
     list->items[idx].v[1].uv = list->items[idx].u1 + (list->items[idx].v1 << 8);
-    list->items[idx].u2 = s->v[2].u;
-    list->items[idx].v2 = s->v[2].v;
+    list->items[idx].u2 = src->v[2].u;
+    list->items[idx].v2 = src->v[2].v;
     list->items[idx].v[2].uv = list->items[idx].u2 + (list->items[idx].v2 << 8);
     list->items[idx].c.r = 0x80;
     list->items[idx].c.g = 0x80;
     list->items[idx].c.b = 0x80;
     list->items[idx].c.code = code;
-    list->items[idx].v[0].x = s->v[0].x;
-    list->items[idx].v[0].y = s->v[0].y;
-    list->items[idx].v[0].z = s->v[0].z;
-    list->items[idx].v[1].x = s->v[1].x;
-    list->items[idx].v[1].y = s->v[1].y;
-    list->items[idx].v[1].z = s->v[1].z;
-    list->items[idx].v[2].x = s->v[2].x;
-    list->items[idx].v[2].y = s->v[2].y;
-    list->items[idx].v[2].z = s->v[2].z;
-    list->items[idx].n.x = s->n.x;
-    list->items[idx].n.y = s->n.y;
-    list->items[idx].n.z = s->n.z;
+    list->items[idx].v[0].x = src->v[0].x;
+    list->items[idx].v[0].y = src->v[0].y;
+    list->items[idx].v[0].z = src->v[0].z;
+    list->items[idx].v[1].x = src->v[1].x;
+    list->items[idx].v[1].y = src->v[1].y;
+    list->items[idx].v[1].z = src->v[1].z;
+    list->items[idx].v[2].x = src->v[2].x;
+    list->items[idx].v[2].y = src->v[2].y;
+    list->items[idx].v[2].z = src->v[2].z;
+    list->items[idx].n.x = src->n.x;
+    list->items[idx].n.y = src->n.y;
+    list->items[idx].n.z = src->n.z;
 }
 // Matched
-void RelocFtgPolyFT3_80023B24(FtgSrcPolyFT3* p, int reloc)
+void RelocFtgPolyFT3_80023B24(FtgSrcPolyFT3* poly, int reloc)
 {
-    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, reloc);
+    RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
 // Matched
 int LoadFtgPolyGT3_80023B48(FtgPrimHeader* hdr, FtgSrcPolyGT3* src, FtgObject* obj, int idx)
@@ -2299,52 +2299,52 @@ int LoadFtgPolyGT3_80023B48(FtgPrimHeader* hdr, FtgSrcPolyGT3* src, FtgObject* o
     return 0x40;
 }
 // Matched
-void CopyFtgPolyGT3_80023BD0(FtgPolyGT3List* list, FtgSrcPolyGT3* s, int code, int idx)
+void CopyFtgPolyGT3_80023BD0(FtgPolyGT3List* list, FtgSrcPolyGT3* src, int code, int idx)
 {
-    list->items[idx].tpage = s->tex.tpage;
-    list->items[idx].clut = s->tex.clut;
-    list->items[idx].u0 = s->p[0].v.u;
-    list->items[idx].v0 = s->p[0].v.v;
+    list->items[idx].tpage = src->tex.tpage;
+    list->items[idx].clut = src->tex.clut;
+    list->items[idx].u0 = src->p[0].v.u;
+    list->items[idx].v0 = src->p[0].v.v;
     list->items[idx].v[0].uv = list->items[idx].u0 + (list->items[idx].v0 << 8);
-    list->items[idx].u1 = s->p[1].v.u;
-    list->items[idx].v1 = s->p[1].v.v;
+    list->items[idx].u1 = src->p[1].v.u;
+    list->items[idx].v1 = src->p[1].v.v;
     list->items[idx].v[1].uv = list->items[idx].u1 + (list->items[idx].v1 << 8);
-    list->items[idx].u2 = s->p[2].v.u;
-    list->items[idx].v2 = s->p[2].v.v;
+    list->items[idx].u2 = src->p[2].v.u;
+    list->items[idx].v2 = src->p[2].v.v;
     list->items[idx].v[2].uv = list->items[idx].u2 + (list->items[idx].v2 << 8);
     list->items[idx].c[0].code = code;
-    list->items[idx].c[0].r = s->c[0].r;
-    list->items[idx].c[0].g = s->c[0].g;
-    list->items[idx].c[0].b = s->c[0].b;
-    list->items[idx].c[1].r = s->c[1].r;
-    list->items[idx].c[1].g = s->c[1].g;
-    list->items[idx].c[1].b = s->c[1].b;
-    list->items[idx].c[2].r = s->c[2].r;
-    list->items[idx].c[2].g = s->c[2].g;
-    list->items[idx].c[2].b = s->c[2].b;
-    list->items[idx].v[0].x = s->p[0].v.x;
-    list->items[idx].v[0].y = s->p[0].v.y;
-    list->items[idx].v[0].z = s->p[0].v.z;
-    list->items[idx].v[1].x = s->p[1].v.x;
-    list->items[idx].v[1].y = s->p[1].v.y;
-    list->items[idx].v[1].z = s->p[1].v.z;
-    list->items[idx].v[2].x = s->p[2].v.x;
-    list->items[idx].v[2].y = s->p[2].v.y;
-    list->items[idx].v[2].z = s->p[2].v.z;
-    list->items[idx].n[0].x = s->p[0].n.x;
-    list->items[idx].n[0].y = s->p[0].n.y;
-    list->items[idx].n[0].z = s->p[0].n.z;
-    list->items[idx].n[1].x = s->p[1].n.x;
-    list->items[idx].n[1].y = s->p[1].n.y;
-    list->items[idx].n[1].z = s->p[1].n.z;
-    list->items[idx].n[2].x = s->p[2].n.x;
-    list->items[idx].n[2].y = s->p[2].n.y;
-    list->items[idx].n[2].z = s->p[2].n.z;
+    list->items[idx].c[0].r = src->c[0].r;
+    list->items[idx].c[0].g = src->c[0].g;
+    list->items[idx].c[0].b = src->c[0].b;
+    list->items[idx].c[1].r = src->c[1].r;
+    list->items[idx].c[1].g = src->c[1].g;
+    list->items[idx].c[1].b = src->c[1].b;
+    list->items[idx].c[2].r = src->c[2].r;
+    list->items[idx].c[2].g = src->c[2].g;
+    list->items[idx].c[2].b = src->c[2].b;
+    list->items[idx].v[0].x = src->p[0].v.x;
+    list->items[idx].v[0].y = src->p[0].v.y;
+    list->items[idx].v[0].z = src->p[0].v.z;
+    list->items[idx].v[1].x = src->p[1].v.x;
+    list->items[idx].v[1].y = src->p[1].v.y;
+    list->items[idx].v[1].z = src->p[1].v.z;
+    list->items[idx].v[2].x = src->p[2].v.x;
+    list->items[idx].v[2].y = src->p[2].v.y;
+    list->items[idx].v[2].z = src->p[2].v.z;
+    list->items[idx].n[0].x = src->p[0].n.x;
+    list->items[idx].n[0].y = src->p[0].n.y;
+    list->items[idx].n[0].z = src->p[0].n.z;
+    list->items[idx].n[1].x = src->p[1].n.x;
+    list->items[idx].n[1].y = src->p[1].n.y;
+    list->items[idx].n[1].z = src->p[1].n.z;
+    list->items[idx].n[2].x = src->p[2].n.x;
+    list->items[idx].n[2].y = src->p[2].n.y;
+    list->items[idx].n[2].z = src->p[2].n.z;
 }
 // Matched
-void RelocFtgPolyGT3_80023E80(FtgSrcPolyGT3* p, int reloc)
+void RelocFtgPolyGT3_80023E80(FtgSrcPolyGT3* poly, int reloc)
 {
-    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, reloc);
+    RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
 // Matched
 int LoadFtgPolyF4_80023EA4(FtgPrimHeader* hdr, FtgPolyF4* src, FtgObject* obj, int idx)
@@ -2357,27 +2357,27 @@ int LoadFtgPolyF4_80023EA4(FtgPrimHeader* hdr, FtgPolyF4* src, FtgObject* obj, i
     return 0x2C;
 }
 // Matched
-void CopyFtgPolyF4_80023F34(FtgPolyF4List* list, FtgPolyF4* s, int code, int idx)
+void CopyFtgPolyF4_80023F34(FtgPolyF4List* list, FtgPolyF4* src, int code, int idx)
 {
-    list->items[idx].c.r = s->c.r;
-    list->items[idx].c.g = s->c.g;
-    list->items[idx].c.b = s->c.b;
+    list->items[idx].c.r = src->c.r;
+    list->items[idx].c.g = src->c.g;
+    list->items[idx].c.b = src->c.b;
     list->items[idx].c.code = code;
-    list->items[idx].v[0].x = s->v[0].x;
-    list->items[idx].v[0].y = s->v[0].y;
-    list->items[idx].v[0].z = s->v[0].z;
-    list->items[idx].v[1].x = s->v[1].x;
-    list->items[idx].v[1].y = s->v[1].y;
-    list->items[idx].v[1].z = s->v[1].z;
-    list->items[idx].v[2].x = s->v[2].x;
-    list->items[idx].v[2].y = s->v[2].y;
-    list->items[idx].v[2].z = s->v[2].z;
-    list->items[idx].v[3].x = s->v[3].x;
-    list->items[idx].v[3].y = s->v[3].y;
-    list->items[idx].v[3].z = s->v[3].z;
-    list->items[idx].n.x = s->n.x;
-    list->items[idx].n.y = s->n.y;
-    list->items[idx].n.z = s->n.z;
+    list->items[idx].v[0].x = src->v[0].x;
+    list->items[idx].v[0].y = src->v[0].y;
+    list->items[idx].v[0].z = src->v[0].z;
+    list->items[idx].v[1].x = src->v[1].x;
+    list->items[idx].v[1].y = src->v[1].y;
+    list->items[idx].v[1].z = src->v[1].z;
+    list->items[idx].v[2].x = src->v[2].x;
+    list->items[idx].v[2].y = src->v[2].y;
+    list->items[idx].v[2].z = src->v[2].z;
+    list->items[idx].v[3].x = src->v[3].x;
+    list->items[idx].v[3].y = src->v[3].y;
+    list->items[idx].v[3].z = src->v[3].z;
+    list->items[idx].n.x = src->n.x;
+    list->items[idx].n.y = src->n.y;
+    list->items[idx].n.z = src->n.z;
 }
 // Matched
 int LoadFtgPolyG4_8002407C(FtgPrimHeader* hdr, FtgSrcPolyG4* src, FtgObject* obj, int idx)
@@ -2390,48 +2390,48 @@ int LoadFtgPolyG4_8002407C(FtgPrimHeader* hdr, FtgSrcPolyG4* src, FtgObject* obj
     return 0x50;
 }
 // Matched
-void CopyFtgPolyG4_80024104(FtgPolyG4List* list, FtgSrcPolyG4* s, int code, int idx)
+void CopyFtgPolyG4_80024104(FtgPolyG4List* list, FtgSrcPolyG4* src, int code, int idx)
 {
-    list->items[idx].c[0].r = s->c[0].r;
-    list->items[idx].c[0].g = s->c[0].g;
-    list->items[idx].c[0].b = s->c[0].b;
+    list->items[idx].c[0].r = src->c[0].r;
+    list->items[idx].c[0].g = src->c[0].g;
+    list->items[idx].c[0].b = src->c[0].b;
     list->items[idx].c[0].code = code;
-    list->items[idx].c[1].r = s->c[1].r;
-    list->items[idx].c[1].g = s->c[1].g;
-    list->items[idx].c[1].b = s->c[1].b;
+    list->items[idx].c[1].r = src->c[1].r;
+    list->items[idx].c[1].g = src->c[1].g;
+    list->items[idx].c[1].b = src->c[1].b;
     list->items[idx].c[0].code = code;
-    list->items[idx].c[2].r = s->c[2].r;
-    list->items[idx].c[2].g = s->c[2].g;
-    list->items[idx].c[2].b = s->c[2].b;
+    list->items[idx].c[2].r = src->c[2].r;
+    list->items[idx].c[2].g = src->c[2].g;
+    list->items[idx].c[2].b = src->c[2].b;
     list->items[idx].c[0].code = code;
-    list->items[idx].c[3].r = s->c[3].r;
-    list->items[idx].c[3].g = s->c[3].g;
-    list->items[idx].c[3].b = s->c[3].b;
+    list->items[idx].c[3].r = src->c[3].r;
+    list->items[idx].c[3].g = src->c[3].g;
+    list->items[idx].c[3].b = src->c[3].b;
     list->items[idx].c[0].code = code;
-    list->items[idx].v[0].x = s->p[0].v.x;
-    list->items[idx].v[0].y = s->p[0].v.y;
-    list->items[idx].v[0].z = s->p[0].v.z;
-    list->items[idx].v[1].x = s->p[1].v.x;
-    list->items[idx].v[1].y = s->p[1].v.y;
-    list->items[idx].v[1].z = s->p[1].v.z;
-    list->items[idx].v[2].x = s->p[2].v.x;
-    list->items[idx].v[2].y = s->p[2].v.y;
-    list->items[idx].v[2].z = s->p[2].v.z;
-    list->items[idx].v[3].x = s->p[3].v.x;
-    list->items[idx].v[3].y = s->p[3].v.y;
-    list->items[idx].v[3].z = s->p[3].v.z;
-    list->items[idx].n[0].x = s->p[0].n.x;
-    list->items[idx].n[0].y = s->p[0].n.y;
-    list->items[idx].n[0].z = s->p[0].n.z;
-    list->items[idx].n[1].x = s->p[1].n.x;
-    list->items[idx].n[1].y = s->p[1].n.y;
-    list->items[idx].n[1].z = s->p[1].n.z;
-    list->items[idx].n[2].x = s->p[2].n.x;
-    list->items[idx].n[2].y = s->p[2].n.y;
-    list->items[idx].n[2].z = s->p[2].n.z;
-    list->items[idx].n[3].x = s->p[3].n.x;
-    list->items[idx].n[3].y = s->p[3].n.y;
-    list->items[idx].n[3].z = s->p[3].n.z;
+    list->items[idx].v[0].x = src->p[0].v.x;
+    list->items[idx].v[0].y = src->p[0].v.y;
+    list->items[idx].v[0].z = src->p[0].v.z;
+    list->items[idx].v[1].x = src->p[1].v.x;
+    list->items[idx].v[1].y = src->p[1].v.y;
+    list->items[idx].v[1].z = src->p[1].v.z;
+    list->items[idx].v[2].x = src->p[2].v.x;
+    list->items[idx].v[2].y = src->p[2].v.y;
+    list->items[idx].v[2].z = src->p[2].v.z;
+    list->items[idx].v[3].x = src->p[3].v.x;
+    list->items[idx].v[3].y = src->p[3].v.y;
+    list->items[idx].v[3].z = src->p[3].v.z;
+    list->items[idx].n[0].x = src->p[0].n.x;
+    list->items[idx].n[0].y = src->p[0].n.y;
+    list->items[idx].n[0].z = src->p[0].n.z;
+    list->items[idx].n[1].x = src->p[1].n.x;
+    list->items[idx].n[1].y = src->p[1].n.y;
+    list->items[idx].n[1].z = src->p[1].n.z;
+    list->items[idx].n[2].x = src->p[2].n.x;
+    list->items[idx].n[2].y = src->p[2].n.y;
+    list->items[idx].n[2].z = src->p[2].n.z;
+    list->items[idx].n[3].x = src->p[3].n.x;
+    list->items[idx].n[3].y = src->p[3].n.y;
+    list->items[idx].n[3].z = src->p[3].n.z;
 }
 // Matched
 int LoadFtgPolyFT4_80024394(FtgPrimHeader* hdr, FtgSrcPolyFT4* src, FtgObject* obj, int idx)
@@ -2444,46 +2444,46 @@ int LoadFtgPolyFT4_80024394(FtgPrimHeader* hdr, FtgSrcPolyFT4* src, FtgObject* o
     return 0x2C;
 }
 // Matched
-void CopyFtgPolyFT4_8002441C(FtgPolyFT4List* list, FtgSrcPolyFT4* s, int code, int idx)
+void CopyFtgPolyFT4_8002441C(FtgPolyFT4List* list, FtgSrcPolyFT4* src, int code, int idx)
 {
-    list->items[idx].tpage = s->tex.tpage;
-    list->items[idx].clut = s->tex.clut;
-    list->items[idx].u0 = s->v[0].u;
-    list->items[idx].v0 = s->v[0].v;
+    list->items[idx].tpage = src->tex.tpage;
+    list->items[idx].clut = src->tex.clut;
+    list->items[idx].u0 = src->v[0].u;
+    list->items[idx].v0 = src->v[0].v;
     list->items[idx].v[0].uv = list->items[idx].u0 + (list->items[idx].v0 << 8);
-    list->items[idx].u1 = s->v[1].u;
-    list->items[idx].v1 = s->v[1].v;
+    list->items[idx].u1 = src->v[1].u;
+    list->items[idx].v1 = src->v[1].v;
     list->items[idx].v[1].uv = list->items[idx].u1 + (list->items[idx].v1 << 8);
-    list->items[idx].u2 = s->v[2].u;
-    list->items[idx].v2 = s->v[2].v;
+    list->items[idx].u2 = src->v[2].u;
+    list->items[idx].v2 = src->v[2].v;
     list->items[idx].v[2].uv = list->items[idx].u2 + (list->items[idx].v2 << 8);
-    list->items[idx].u3 = s->v[3].u;
-    list->items[idx].v3 = s->v[3].v;
+    list->items[idx].u3 = src->v[3].u;
+    list->items[idx].v3 = src->v[3].v;
     list->items[idx].v[3].uv = list->items[idx].u3 + (list->items[idx].v3 << 8);
     list->items[idx].c.r = 0x80;
     list->items[idx].c.g = 0x80;
     list->items[idx].c.b = 0x80;
     list->items[idx].c.code = code;
-    list->items[idx].v[0].x = s->v[0].x;
-    list->items[idx].v[0].y = s->v[0].y;
-    list->items[idx].v[0].z = s->v[0].z;
-    list->items[idx].v[1].x = s->v[1].x;
-    list->items[idx].v[1].y = s->v[1].y;
-    list->items[idx].v[1].z = s->v[1].z;
-    list->items[idx].v[2].x = s->v[2].x;
-    list->items[idx].v[2].y = s->v[2].y;
-    list->items[idx].v[2].z = s->v[2].z;
-    list->items[idx].v[3].x = s->v[3].x;
-    list->items[idx].v[3].y = s->v[3].y;
-    list->items[idx].v[3].z = s->v[3].z;
-    list->items[idx].n.x = s->n.x;
-    list->items[idx].n.y = s->n.y;
-    list->items[idx].n.z = s->n.z;
+    list->items[idx].v[0].x = src->v[0].x;
+    list->items[idx].v[0].y = src->v[0].y;
+    list->items[idx].v[0].z = src->v[0].z;
+    list->items[idx].v[1].x = src->v[1].x;
+    list->items[idx].v[1].y = src->v[1].y;
+    list->items[idx].v[1].z = src->v[1].z;
+    list->items[idx].v[2].x = src->v[2].x;
+    list->items[idx].v[2].y = src->v[2].y;
+    list->items[idx].v[2].z = src->v[2].z;
+    list->items[idx].v[3].x = src->v[3].x;
+    list->items[idx].v[3].y = src->v[3].y;
+    list->items[idx].v[3].z = src->v[3].z;
+    list->items[idx].n.x = src->n.x;
+    list->items[idx].n.y = src->n.y;
+    list->items[idx].n.z = src->n.z;
 }
 // Matched
-void RelocFtgPolyFT4_8002467C(FtgSrcPolyFT4* p, int reloc)
+void RelocFtgPolyFT4_8002467C(FtgSrcPolyFT4* poly, int reloc)
 {
-    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, reloc);
+    RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
 // Matched
 int LoadFtgPolyGT4_800246A0(FtgPrimHeader* hdr, FtgSrcPolyGT4* src, FtgObject* obj, int idx)
@@ -2496,64 +2496,64 @@ int LoadFtgPolyGT4_800246A0(FtgPrimHeader* hdr, FtgSrcPolyGT4* src, FtgObject* o
     return 0x54;
 }
 // Matched
-void CopyFtgPolyGT4_80024730(FtgPolyGT4List* list, FtgSrcPolyGT4* s, int code, int idx)
+void CopyFtgPolyGT4_80024730(FtgPolyGT4List* list, FtgSrcPolyGT4* src, int code, int idx)
 {
-    list->items[idx].tpage = s->tex.tpage;
-    list->items[idx].clut = s->tex.clut;
-    list->items[idx].u0 = s->p[0].v.u;
-    list->items[idx].v0 = s->p[0].v.v;
+    list->items[idx].tpage = src->tex.tpage;
+    list->items[idx].clut = src->tex.clut;
+    list->items[idx].u0 = src->p[0].v.u;
+    list->items[idx].v0 = src->p[0].v.v;
     list->items[idx].v[0].uv = list->items[idx].u0 + (list->items[idx].v0 << 8);
-    list->items[idx].u1 = s->p[1].v.u;
-    list->items[idx].v1 = s->p[1].v.v;
+    list->items[idx].u1 = src->p[1].v.u;
+    list->items[idx].v1 = src->p[1].v.v;
     list->items[idx].v[1].uv = list->items[idx].u1 + (list->items[idx].v1 << 8);
-    list->items[idx].u2 = s->p[2].v.u;
-    list->items[idx].v2 = s->p[2].v.v;
+    list->items[idx].u2 = src->p[2].v.u;
+    list->items[idx].v2 = src->p[2].v.v;
     list->items[idx].v[2].uv = list->items[idx].u2 + (list->items[idx].v2 << 8);
-    list->items[idx].u3 = s->p[3].v.u;
-    list->items[idx].v3 = s->p[3].v.v;
+    list->items[idx].u3 = src->p[3].v.u;
+    list->items[idx].v3 = src->p[3].v.v;
     list->items[idx].v[3].uv = list->items[idx].u3 + (list->items[idx].v3 << 8);
     list->items[idx].c[0].code = code;
-    list->items[idx].c[0].r = s->c[0].r;
-    list->items[idx].c[0].g = s->c[0].g;
-    list->items[idx].c[0].b = s->c[0].b;
-    list->items[idx].c[1].r = s->c[1].r;
-    list->items[idx].c[1].g = s->c[1].g;
-    list->items[idx].c[1].b = s->c[1].b;
-    list->items[idx].c[2].r = s->c[2].r;
-    list->items[idx].c[2].g = s->c[2].g;
-    list->items[idx].c[2].b = s->c[2].b;
-    list->items[idx].c[3].r = s->c[3].r;
-    list->items[idx].c[3].g = s->c[3].g;
-    list->items[idx].c[3].b = s->c[3].b;
-    list->items[idx].v[0].x = s->p[0].v.x;
-    list->items[idx].v[0].y = s->p[0].v.y;
-    list->items[idx].v[0].z = s->p[0].v.z;
-    list->items[idx].v[1].x = s->p[1].v.x;
-    list->items[idx].v[1].y = s->p[1].v.y;
-    list->items[idx].v[1].z = s->p[1].v.z;
-    list->items[idx].v[2].x = s->p[2].v.x;
-    list->items[idx].v[2].y = s->p[2].v.y;
-    list->items[idx].v[2].z = s->p[2].v.z;
-    list->items[idx].v[3].x = s->p[3].v.x;
-    list->items[idx].v[3].y = s->p[3].v.y;
-    list->items[idx].v[3].z = s->p[3].v.z;
-    list->items[idx].n[0].x = s->p[0].n.x;
-    list->items[idx].n[0].y = s->p[0].n.y;
-    list->items[idx].n[0].z = s->p[0].n.z;
-    list->items[idx].n[1].x = s->p[1].n.x;
-    list->items[idx].n[1].y = s->p[1].n.y;
-    list->items[idx].n[1].z = s->p[1].n.z;
-    list->items[idx].n[2].x = s->p[2].n.x;
-    list->items[idx].n[2].y = s->p[2].n.y;
-    list->items[idx].n[2].z = s->p[2].n.z;
-    list->items[idx].n[3].x = s->p[3].n.x;
-    list->items[idx].n[3].y = s->p[3].n.y;
-    list->items[idx].n[3].z = s->p[3].n.z;
+    list->items[idx].c[0].r = src->c[0].r;
+    list->items[idx].c[0].g = src->c[0].g;
+    list->items[idx].c[0].b = src->c[0].b;
+    list->items[idx].c[1].r = src->c[1].r;
+    list->items[idx].c[1].g = src->c[1].g;
+    list->items[idx].c[1].b = src->c[1].b;
+    list->items[idx].c[2].r = src->c[2].r;
+    list->items[idx].c[2].g = src->c[2].g;
+    list->items[idx].c[2].b = src->c[2].b;
+    list->items[idx].c[3].r = src->c[3].r;
+    list->items[idx].c[3].g = src->c[3].g;
+    list->items[idx].c[3].b = src->c[3].b;
+    list->items[idx].v[0].x = src->p[0].v.x;
+    list->items[idx].v[0].y = src->p[0].v.y;
+    list->items[idx].v[0].z = src->p[0].v.z;
+    list->items[idx].v[1].x = src->p[1].v.x;
+    list->items[idx].v[1].y = src->p[1].v.y;
+    list->items[idx].v[1].z = src->p[1].v.z;
+    list->items[idx].v[2].x = src->p[2].v.x;
+    list->items[idx].v[2].y = src->p[2].v.y;
+    list->items[idx].v[2].z = src->p[2].v.z;
+    list->items[idx].v[3].x = src->p[3].v.x;
+    list->items[idx].v[3].y = src->p[3].v.y;
+    list->items[idx].v[3].z = src->p[3].v.z;
+    list->items[idx].n[0].x = src->p[0].n.x;
+    list->items[idx].n[0].y = src->p[0].n.y;
+    list->items[idx].n[0].z = src->p[0].n.z;
+    list->items[idx].n[1].x = src->p[1].n.x;
+    list->items[idx].n[1].y = src->p[1].n.y;
+    list->items[idx].n[1].z = src->p[1].n.z;
+    list->items[idx].n[2].x = src->p[2].n.x;
+    list->items[idx].n[2].y = src->p[2].n.y;
+    list->items[idx].n[2].z = src->p[2].n.z;
+    list->items[idx].n[3].x = src->p[3].n.x;
+    list->items[idx].n[3].y = src->p[3].n.y;
+    list->items[idx].n[3].z = src->p[3].n.z;
 }
 // Matched
-void RelocFtgPolyGT4_80024AB8(FtgSrcPolyGT4* p, int reloc)
+void RelocFtgPolyGT4_80024AB8(FtgSrcPolyGT4* poly, int reloc)
 {
-    RelocateTPageClut_80022AE8(&p->tex.tpage, &p->tex.clut, reloc);
+    RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
 // Matched
 void InitModelList_80024ADC(ModelList** out, ModelVramSlot* vram, int heap)
@@ -2586,83 +2586,83 @@ void FreeModelList_80024BB0(ModelList** list)
     *list = 0;
 }
 // Matched
-void FreeModel_80024C48(Model* p)
+void FreeModel_80024C48(Model* model)
 {
     int h;
-    FreeModelAltFtgs_80025AB0(p);
-    ApplyModelFtgSwaps_80025C38(p, 1);
-    h = p->list_0->heap_4;
-    if (p->animLoaded_44 != 0)
+    FreeModelAltFtgs_80025AB0(model);
+    ApplyModelFtgSwaps_80025C38(model, 1);
+    h = model->list_0->heap_4;
+    if (model->animLoaded_44 != 0)
     {
-        HeapFree_8003FD18(p->animLoaded_44, h);
+        HeapFree_8003FD18(model->animLoaded_44, h);
     }
-    if (p->header_4C != 0)
+    if (model->header_4C != 0)
     {
-        HeapFree_8003FD18(p->header_4C, h);
+        HeapFree_8003FD18(model->header_4C, h);
     }
-    if (p->ftg_50 != 0)
+    if (model->ftg_50 != 0)
     {
-        FreeFtgObjects_80021784(&p->ftg_50, p->ftgCount_3C, h);
+        FreeFtgObjects_80021784(&model->ftg_50, model->ftgCount_3C, h);
     }
-    if (p->anims_54 != 0)
+    if (model->anims_54 != 0)
     {
-        FreeModelAnims_8002679C(&p->anims_54, p->animCount_3E, h);
+        FreeModelAnims_8002679C(&model->anims_54, model->animCount_3E, h);
     }
-    if (p->animSet_58 != 0)
+    if (model->animSet_58 != 0)
     {
-        HeapFree_8003FD18(p->animSet_58, h);
+        HeapFree_8003FD18(model->animSet_58, h);
     }
-    if (p->mats_5C.items_4 != 0)
+    if (model->mats_5C.items_4 != 0)
     {
-        FreeFtgMatList_80021E24(&p->mats_5C, h);
+        FreeFtgMatList_80021E24(&model->mats_5C, h);
     }
-    if (p->saved_64 != 0)
+    if (model->saved_64 != 0)
     {
-        HeapFree_8003FD18(p->saved_64, h);
+        HeapFree_8003FD18(model->saved_64, h);
     }
-    if (p->ftg2_68 != 0)
+    if (model->ftg2_68 != 0)
     {
-        FreeFtgObjects_80021784(&p->ftg2_68, p->ftg2Count_42, h);
+        FreeFtgObjects_80021784(&model->ftg2_68, model->ftg2Count_42, h);
     }
-    if (p->swaps_6C != 0)
+    if (model->swaps_6C != 0)
     {
-        HeapFree_8003FD18(p->swaps_6C, h);
+        HeapFree_8003FD18(model->swaps_6C, h);
     }
-    ClearModel_800266CC(p);
+    ClearModel_800266CC(model);
 }
 // Matched
-Model* AcquireModel_80024D70(ModelList* p, unsigned int id)
+Model* AcquireModel_80024D70(ModelList* list, unsigned int id)
 {
-    int i = FindModelIndex_80026630(p, id);
+    int i = FindModelIndex_80026630(list, id);
     if (i >= 0)
     {
-        Model* r = &p->items_8[i];
-        r->refs_3A++;
-        return r;
+        Model* model = &list->items_8[i];
+        model->refs_3A++;
+        return model;
     }
     return 0;
 }
 // Matched
-int AreFileRequestsDone_80024DC4(Model* p)
+int AreFileRequestsDone_80024DC4(Model* model)
 {
     int i;
     i = 0;
-    while (i < p->requestCount_4)
+    while (i < model->requestCount_4)
     {
-        if (GetFileRequestStatus_8003BE30(p->requests_8[i]) != 0)
+        if (GetFileRequestStatus_8003BE30(model->requests_8[i]) != 0)
         {
             return 0;
         }
         i++;
     }
-    p->requestCount_4 = 0;
+    model->requestCount_4 = 0;
     return 1;
 }
 // Matched
-void* GetModelActorAnims_80024E38(Model* p)
+void* GetModelActorAnims_80024E38(Model* model)
 {
     char* result = 0;
-    ModelHeaderData* hdr = p->header_4C;
+    ModelHeaderData* hdr = model->header_4C;
     if (hdr && hdr->offset_0)
     {
         result = (char*)hdr + hdr->offset_0 + 4;
@@ -2670,10 +2670,10 @@ void* GetModelActorAnims_80024E38(Model* p)
     return result;
 }
 // Matched
-void* GetModelEffectTable_80024E64(Model* p)
+void* GetModelEffectTable_80024E64(Model* model)
 {
     char* result = 0;
-    ModelHeaderData* hdr = p->header_4C;
+    ModelHeaderData* hdr = model->header_4C;
     if (hdr && hdr->offset_4)
     {
         result = (char*)hdr + hdr->offset_4;
@@ -2681,60 +2681,60 @@ void* GetModelEffectTable_80024E64(Model* p)
     return result;
 }
 // Matched
-void* GetModelBaseScale_80024E90(Model* p, int n)
+void* GetModelBaseScale_80024E90(Model* model, int record)
 {
-    char* r = GetModelHeaderRecord_80024FA8(p, n);
-    if (r)
+    char* rec = GetModelHeaderRecord_80024FA8(model, record);
+    if (rec)
     {
-        r += ((ModelHeaderRecord*)r)->offsets_0[0];
+        rec += ((ModelHeaderRecord*)rec)->offsets_0[0];
     }
-    return r;
+    return rec;
 }
 // Matched
-void* GetModelBoneScale_80024EC8(Model* p, int n)
+void* GetModelBoneScale_80024EC8(Model* model, int record)
 {
-    char* r = GetModelHeaderRecord_80024FA8(p, n);
-    if (r)
+    char* rec = GetModelHeaderRecord_80024FA8(model, record);
+    if (rec)
     {
-        r += ((ModelHeaderRecord*)r)->offsets_0[1];
+        rec += ((ModelHeaderRecord*)rec)->offsets_0[1];
     }
-    return r;
+    return rec;
 }
 // Matched
-void* GetModelBoneGroupLevels_80024F00(Model* p, int n)
+void* GetModelBoneGroupLevels_80024F00(Model* model, int record)
 {
-    char* r = GetModelHeaderRecord_80024FA8(p, n);
-    if (r)
+    char* rec = GetModelHeaderRecord_80024FA8(model, record);
+    if (rec)
     {
-        r += ((ModelHeaderRecord*)r)->offsets_0[2];
+        rec += ((ModelHeaderRecord*)rec)->offsets_0[2];
     }
-    return r;
+    return rec;
 }
 // Matched
-void* GetModelBoneGroupFlags_80024F38(Model* p, int n)
+void* GetModelBoneGroupFlags_80024F38(Model* model, int record)
 {
-    char* r = GetModelHeaderRecord_80024FA8(p, n);
-    if (r)
+    char* rec = GetModelHeaderRecord_80024FA8(model, record);
+    if (rec)
     {
-        r += ((ModelHeaderRecord*)r)->offsets_0[3];
+        rec += ((ModelHeaderRecord*)rec)->offsets_0[3];
     }
-    return r;
+    return rec;
 }
 // Matched
-void* GetModelFtgWeights_80024F70(Model* p, int n)
+void* GetModelFtgWeights_80024F70(Model* model, int record)
 {
-    char* r = GetModelHeaderRecord_80024FA8(p, n);
-    if (r)
+    char* rec = GetModelHeaderRecord_80024FA8(model, record);
+    if (rec)
     {
-        r += ((ModelHeaderRecord*)r)->offsets_0[4];
+        rec += ((ModelHeaderRecord*)rec)->offsets_0[4];
     }
-    return r;
+    return rec;
 }
 // Matched
-char* GetModelHeaderRecord_80024FA8(Model* model, int n)
+char* GetModelHeaderRecord_80024FA8(Model* model, int record)
 {
     char* hdr = (char*)model->header_4C;
-    char* r = 0;
+    char* rec = 0;
     int i;
     if (hdr)
     {
@@ -2743,33 +2743,33 @@ char* GetModelHeaderRecord_80024FA8(Model* model, int n)
         {
             hdr += off;
             hdr += 8;
-            for (i = 0; i < n; i++)
+            for (i = 0; i < record; i++)
             {
                 hdr += ((ModelHeaderRecord*)hdr)->size_14;
             }
-            r = hdr;
+            rec = hdr;
         }
     }
-    return r;
+    return rec;
 }
 // Matched
-void SaveModelFtgs_80024FFC(Model* p, int* ids)
+void SaveModelFtgs_80024FFC(Model* model, int* ids)
 {
-    int n;
+    int count;
     int heap;
-    for (n = 0; ids[n] >= 0; n++)
+    for (count = 0; ids[count] >= 0; count++)
     {
     }
-    heap = p->list_0->heap_4;
-    p->savedCount_40 = n;
-    p->saved_64 = HeapAlloc_8003FC8C(n * sizeof(ModelSavedFtg), (struct Pool*)heap);
-    n--;
-    while (n >= 0)
+    heap = model->list_0->heap_4;
+    model->savedCount_40 = count;
+    model->saved_64 = HeapAlloc_8003FC8C(count * sizeof(ModelSavedFtg), (struct Pool*)heap);
+    count--;
+    while (count >= 0)
     {
-        int id = ids[n];
-        p->saved_64[n].id_0 = id;
-        p->saved_64[n].ftg_4 = p->ftg_50[id];
-        n--;
+        int id = ids[count];
+        model->saved_64[count].id_0 = id;
+        model->saved_64[count].ftg_4 = model->ftg_50[id];
+        count--;
     }
 }
 // Matched
@@ -2899,29 +2899,29 @@ int LoadModel_80025200(ModelList* list, int id, int texSel, int animMode, int fl
 // k*2 into idx*4 + 0x14 instead of keeping (e[9] + k) * 2. The int form ((k + e[9]) * 2 + (int)e) keeps the sum but
 // misplaces &b and the sum register (8 lines). Tried: operand orders, temporaries for e[9]/k, k/idx types, e[k + 1]
 // double reads, statement order, shifts instead of *2; permuter 1500 iters
-int LoadModelAnim_80025440(Model* p, int idx, int flag)
+int LoadModelAnim_80025440(Model* model, int idx, int flag)
 {
     ModelLoadParams b;
     FileRequestDesc c;
     unsigned short* e;
-    unsigned short* t;
-    int u;
-    int v;
+    unsigned short* sectors;
+    int offset;
+    int size;
     int k;
-    unsigned char* f = p->animLoaded_44 + idx;
+    unsigned char* f = model->animLoaded_44 + idx;
     if (*f == 0)
     {
         k = idx * 2 + 10;
-        e = (unsigned short*)modelDescs_800824CC[p->id_38];
-        t = e;
-        t += e[9];
-        t += k;
-        u = t[0];
-        v = t[1];
+        e = (unsigned short*)modelDescs_800824CC[model->id_38];
+        sectors = e;
+        sectors += e[9];
+        sectors += k;
+        offset = sectors[0];
+        size = sectors[1];
         *f = 1;
         InitModelLoadParams_80025ED0(&b);
         b.flags_0 = 0x10;
-        b.model_14 = p;
+        b.model_14 = model;
         b.desc_4 = (ModelDesc*)e;
         b.animIdx_10 = idx;
         c.flags_0 = 0x68;
@@ -2934,32 +2934,32 @@ int LoadModelAnim_80025440(Model* p, int idx, int flag)
             c.flags_0 = 0x69;
         }
         c.fileId_4 = e[0];
-        c.offset_8 = u;
-        c.size_C = v;
+        c.offset_8 = offset;
+        c.size_C = size;
         c.dest_10 = 0;
         c.params_14 = &b;
         c.paramsSize_18 = 0x3C;
         c.callback_1C = OnModelFileLoaded_80025D7C;
-        AddFileRequest_80025D00(p, &c);
+        AddFileRequest_80025D00(model, &c);
         return 1;
     }
-    return AreFileRequestsDone_80024DC4(p) == 0;
+    return AreFileRequestsDone_80024DC4(model) == 0;
 }
 #endif
 INCLUDE_ASM(LoadModelAnim_80025440);
 // Matched
-void FreeModelAnim_8002556C(Model* p, int idx)
+void FreeModelAnim_8002556C(Model* model, int idx)
 {
-    if (((char*)p->animLoaded_44)[idx])
+    if (((char*)model->animLoaded_44)[idx])
     {
-        FreeModelAnimData_800269C4(p->anims_54, p->animCount_3E, idx, p->list_0->heap_4);
-        p->animLoaded_44[idx] = 0;
+        FreeModelAnimData_800269C4(model->anims_54, model->animCount_3E, idx, model->list_0->heap_4);
+        model->animLoaded_44[idx] = 0;
     }
 }
 // Matched
-int IsModelAnimLoaded_800255D8(Model* p, int idx)
+int IsModelAnimLoaded_800255D8(Model* model, int idx)
 {
-    return ((char*)p->animLoaded_44)[idx] != 0;
+    return ((char*)model->animLoaded_44)[idx] != 0;
 }
 // Matched
 int LoadModelListTextures_800255F0(ModelList* list, int id, int sel)
@@ -3010,22 +3010,22 @@ int LoadAllModelAnims_800256B8(ModelList* list, int id)
     return 1;
 }
 // Matched
-int LoadModelAnimSet_80025780(Model* p, int idx, int flag)
+int LoadModelAnimSet_80025780(Model* model, int idx, int flag)
 {
     ModelLoadParams params;
     FileRequestDesc req;
     ModelDesc* desc;
-    char* t;
+    char* sets;
     int offset;
     int size;
-    FreeModelAnimSet_80025884(p);
-    desc = modelDescs_800824CC[p->id_38];
-    t = (char*)desc + (desc->animCount_12 * 6 + 0x14);
-    offset = ((unsigned short*)t)[idx * 2 + 1];
-    size = ((unsigned short*)t)[idx * 2 + 2];
+    FreeModelAnimSet_80025884(model);
+    desc = modelDescs_800824CC[model->id_38];
+    sets = (char*)desc + (desc->animCount_12 * 6 + 0x14);
+    offset = ((unsigned short*)sets)[idx * 2 + 1];
+    size = ((unsigned short*)sets)[idx * 2 + 2];
     InitModelLoadParams_80025ED0(&params);
     params.flags_0 = 0x20;
-    params.model_14 = p;
+    params.model_14 = model;
     params.desc_4 = desc;
     req.flags_0 = 0x68;
     if (flag != 0)
@@ -3043,40 +3043,40 @@ int LoadModelAnimSet_80025780(Model* p, int idx, int flag)
     req.params_14 = &params;
     req.paramsSize_18 = 0x3C;
     req.callback_1C = OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00(p, &req);
+    AddFileRequest_80025D00(model, &req);
     return 1;
 }
 // Matched
-void FreeModelAnimSet_80025884(Model* p)
+void FreeModelAnimSet_80025884(Model* model)
 {
-    int* list = p->animSet_58;
+    int* list = model->animSet_58;
     if (list)
     {
-        int heap = p->list_0->heap_4;
-        int n = list[0];
+        int heap = model->list_0->heap_4;
+        int count = list[0];
         int i;
-        for (i = 0; i < n; i++)
+        for (i = 0; i < count; i++)
         {
-            int id = p->animSet_58[i + 1];
+            int id = model->animSet_58[i + 1];
             if (id >= 0)
             {
-                FreeModelAnim_8002556C(p, id);
+                FreeModelAnim_8002556C(model, id);
             }
         }
-        HeapFree_8003FD18(p->animSet_58, heap);
-        p->animSet_58 = 0;
+        HeapFree_8003FD18(model->animSet_58, heap);
+        model->animSet_58 = 0;
     }
 }
 // Matched
-int IsAnimInModelAnimSet_80025924(Model* p, int id)
+int IsAnimInModelAnimSet_80025924(Model* model, int id)
 {
-    int* list = p->animSet_58;
+    int* list = model->animSet_58;
     int i;
-    int n;
+    int count;
     if (list != 0)
     {
-        n = list[0];
-        for (i = 0; i < n; i++)
+        count = list[0];
+        for (i = 0; i < count; i++)
         {
             if (id == list[i + 1])
             {
@@ -3087,27 +3087,27 @@ int IsAnimInModelAnimSet_80025924(Model* p, int id)
     return 0;
 }
 // Matched
-int LoadModelAltFtgs_80025974(Model* p, int idx, int flag)
+int LoadModelAltFtgs_80025974(Model* model, int idx, int flag)
 {
     ModelLoadParams params;
     FileRequestDesc req;
     ModelDesc* desc;
-    char* t;
+    char* sets;
     int offset;
     int size;
     ModelList* list;
-    FreeModelAltFtgs_80025AB0(p);
-    desc = modelDescs_800824CC[p->id_38];
-    t = (char*)desc + (desc->animCount_12 * 6 + 0x14);
-    t += *(unsigned short*)t * 4 + 2;
-    list = p->list_0;
-    offset = ((unsigned short*)t)[idx * 2 + 1];
-    size = ((unsigned short*)t)[idx * 2 + 2];
+    FreeModelAltFtgs_80025AB0(model);
+    desc = modelDescs_800824CC[model->id_38];
+    sets = (char*)desc + (desc->animCount_12 * 6 + 0x14);
+    sets += *(unsigned short*)sets * 4 + 2;
+    list = model->list_0;
+    offset = ((unsigned short*)sets)[idx * 2 + 1];
+    size = ((unsigned short*)sets)[idx * 2 + 2];
     InitModelLoadParams_80025ED0(&params);
     params.flags_0 = 0x40;
-    params.model_14 = p;
-    params.vram_18 = list->vram_C + p->slot_30;
-    params.sel_8 = p->texSel_34;
+    params.model_14 = model;
+    params.vram_18 = list->vram_C + model->slot_30;
+    params.sel_8 = model->texSel_34;
     params.desc_4 = desc;
     req.flags_0 = 0x68;
     if (flag != 0)
@@ -3125,24 +3125,24 @@ int LoadModelAltFtgs_80025974(Model* p, int idx, int flag)
     req.params_14 = &params;
     req.paramsSize_18 = 0x3C;
     req.callback_1C = OnModelFileLoaded_80025D7C;
-    AddFileRequest_80025D00(p, &req);
+    AddFileRequest_80025D00(model, &req);
     return 1;
 }
 // Matched
-void FreeModelAltFtgs_80025AB0(Model* p)
+void FreeModelAltFtgs_80025AB0(Model* model)
 {
-    int h = p->list_0->heap_4;
-    if (p->ftg2_68)
+    int h = model->list_0->heap_4;
+    if (model->ftg2_68)
     {
-        FreeFtgObjects_80021784(&p->ftg2_68, p->ftg2Count_42, h);
-        p->ftg2Count_42 = 0;
-        p->ftg2_68 = 0;
+        FreeFtgObjects_80021784(&model->ftg2_68, model->ftg2Count_42, h);
+        model->ftg2Count_42 = 0;
+        model->ftg2_68 = 0;
     }
-    if (p->swaps_6C)
+    if (model->swaps_6C)
     {
-        HeapFree_8003FD18(p->swaps_6C, h);
-        p->swapCount_43 = 0;
-        p->swaps_6C = 0;
+        HeapFree_8003FD18(model->swaps_6C, h);
+        model->swapCount_43 = 0;
+        model->swaps_6C = 0;
     }
 }
 // Matched
@@ -3151,38 +3151,38 @@ void GetModelAltFtg_80025B20(void* dst, Model* src, int idx)
     MemCopy_800403E8(dst, &src->ftg2_68[idx], sizeof(FtgObject));
 }
 // Matched
-void SetModelFtg_80025B5C(Model* p, int idx, int sel)
+void SetModelFtg_80025B5C(Model* model, int idx, int sel)
 {
-    FtgObject tmp;
+    FtgObject ftg;
     if (idx == sel)
     {
-        GetSavedModelFtg_8002512C((unsigned int*)&tmp, p, idx);
+        GetSavedModelFtg_8002512C((unsigned int*)&ftg, model, idx);
     }
-    else if (sel < p->ftgCount_3C)
+    else if (sel < model->ftgCount_3C)
     {
-        GetModelFtg_800251A0(&tmp, p, idx, sel);
+        GetModelFtg_800251A0(&ftg, model, idx, sel);
     }
     else
     {
-        GetModelAltFtg_80025B20(&tmp, p, sel - p->ftgCount_3C);
+        GetModelAltFtg_80025B20(&ftg, model, sel - model->ftgCount_3C);
     }
-    p->ftg_50[idx] = tmp;
+    model->ftg_50[idx] = ftg;
 }
 // Matched
-void ApplyModelFtgSwaps_80025C38(Model* p, int flag)
+void ApplyModelFtgSwaps_80025C38(Model* model, int flag)
 {
     int i;
-    for (i = 0; i < p->savedCount_40; i++)
+    for (i = 0; i < model->savedCount_40; i++)
     {
-        ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)p->saved_64); // integer sum, as above
-        SetModelFtg_80025B5C(p, e->id_0, e->id_0);
+        ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)model->saved_64); // integer sum, as above
+        SetModelFtg_80025B5C(model, e->id_0, e->id_0);
     }
     if (flag)
     {
-        for (i = 0; i < p->swapCount_43; i++)
+        for (i = 0; i < model->swapCount_43; i++)
         {
-            ModelFtgSwap* s = (ModelFtgSwap*)(i * 4 + (int)p->swaps_6C);
-            SetModelFtg_80025B5C(p, s->dst_0, s->src_2);
+            ModelFtgSwap* swap = (ModelFtgSwap*)(i * 4 + (int)model->swaps_6C);
+            SetModelFtg_80025B5C(model, swap->dst_0, swap->src_2);
         }
     }
 }
@@ -3202,63 +3202,63 @@ int AddFileRequest_80025D00(Model* model, FileRequestDesc* req)
 // Matched
 void OnModelFileLoaded_80025D7C(int* arg, int data)
 {
-    ModelLoadParams* p = (ModelLoadParams*)arg;
-    if (p->flags_0 & 1)
+    ModelLoadParams* params = (ModelLoadParams*)arg;
+    if (params->flags_0 & 1)
     {
-        p->header_1C = (ModelHeaderSection*)data;
-        data += p->desc_4->header_2.size << 11;
+        params->header_1C = (ModelHeaderSection*)data;
+        data += params->desc_4->header_2.size << 11;
     }
-    if (p->flags_0 & 2)
+    if (params->flags_0 & 2)
     {
-        p->tim_20 = (int*)data;
-        data += p->desc_4->tex_6.size << 11;
+        params->tim_20 = (int*)data;
+        data += params->desc_4->tex_6.size << 11;
     }
-    if (p->flags_0 & 4)
+    if (params->flags_0 & 4)
     {
-        p->ftg_24 = (int*)data;
-        data += p->desc_4->ftg_A.size << 11;
+        params->ftg_24 = (int*)data;
+        data += params->desc_4->ftg_A.size << 11;
     }
-    if (p->flags_0 & 8)
+    if (params->flags_0 & 8)
     {
-        p->anims_28 = (ModelAnimSection*)data;
-        data += p->desc_4->anims_E.size << 11;
+        params->anims_28 = (ModelAnimSection*)data;
+        data += params->desc_4->anims_E.size << 11;
     }
-    if (p->flags_0 & 0x10)
+    if (params->flags_0 & 0x10)
     {
-        p->anim_2C = (char*)data;
+        params->anim_2C = (char*)data;
     }
-    if (p->flags_0 & 0x20)
+    if (params->flags_0 & 0x20)
     {
-        p->animSet_30 = (ModelAnimSetSection*)data;
+        params->animSet_30 = (ModelAnimSetSection*)data;
     }
-    if (p->flags_0 & 0x40)
+    if (params->flags_0 & 0x40)
     {
-        p->flags_0 |= 0x80;
-        p->extra_38 = (unsigned char*)(data + ((int*)data)[1]);
-        p->flags_0 |= 0x40;
-        p->ftg2_34 = (int*)(data + ((int*)data)[2]);
-        p->flags_0 |= 2;
-        p->tim_20 = (int*)(data + ((int*)data)[3]);
+        params->flags_0 |= 0x80;
+        params->extra_38 = (unsigned char*)(data + ((int*)data)[1]);
+        params->flags_0 |= 0x40;
+        params->ftg2_34 = (int*)(data + ((int*)data)[2]);
+        params->flags_0 |= 2;
+        params->tim_20 = (int*)(data + ((int*)data)[3]);
     }
-    ParseModelFile_80025F14(p);
+    ParseModelFile_80025F14(params);
 }
 // Matched
-void InitModelLoadParams_80025ED0(ModelLoadParams* p)
+void InitModelLoadParams_80025ED0(ModelLoadParams* params)
 {
-    p->sel_8 = -1;
-    p->flags_0 = 0;
-    p->desc_4 = 0;
-    p->mode_C = 2;
-    p->animIdx_10 = 0;
-    p->model_14 = 0;
-    p->vram_18 = 0;
-    p->header_1C = 0;
-    p->tim_20 = 0;
-    p->ftg_24 = 0;
-    p->anims_28 = 0;
-    p->anim_2C = 0;
-    p->ftg2_34 = 0;
-    p->extra_38 = 0;
+    params->sel_8 = -1;
+    params->flags_0 = 0;
+    params->desc_4 = 0;
+    params->mode_C = 2;
+    params->animIdx_10 = 0;
+    params->model_14 = 0;
+    params->vram_18 = 0;
+    params->header_1C = 0;
+    params->tim_20 = 0;
+    params->ftg_24 = 0;
+    params->anims_28 = 0;
+    params->anim_2C = 0;
+    params->ftg2_34 = 0;
+    params->extra_38 = 0;
 }
 // Matched
 void ParseModelFile_80025F14(ModelLoadParams* params)
@@ -3299,203 +3299,203 @@ void ParseModelFile_80025F14(ModelLoadParams* params)
 // Matched
 void LoadModelHeader_80026014(ModelLoadParams* params)
 {
-    ModelHeaderSection* q = params->header_1C;
-    Model* p = params->model_14;
-    int h = p->list_0->heap_4;
-    int n = q->size_0;
-    void* r;
-    p->headerSize_48 = n;
-    r = HeapAlloc_8003FC8C(n, (struct Pool*)h);
-    p->header_4C = r;
-    MemCopy_800403E8(r, params->header_1C->data_4, n);
+    ModelHeaderSection* section = params->header_1C;
+    Model* model = params->model_14;
+    int h = model->list_0->heap_4;
+    int size = section->size_0;
+    void* buf;
+    model->headerSize_48 = size;
+    buf = HeapAlloc_8003FC8C(size, (struct Pool*)h);
+    model->header_4C = buf;
+    MemCopy_800403E8(buf, params->header_1C->data_4, size);
 }
 // Matched
 void LoadModelTextures_8002607C(ModelLoadParams* params)
 {
     if (params->sel_8 != -1)
     {
-        Model* p = params->model_14;
+        Model* model = params->model_14;
         LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)params->tim_20, GetTiyFileCount_80028E68(params->tim_20), (int)params->vram_18->reloc_4, params->sel_8);
-        p->texSel_34 = params->sel_8;
+        model->texSel_34 = params->sel_8;
     }
 }
 // Matched
 void LoadModelFtg_800260FC(ModelLoadParams* params)
 {
-    Model* p = params->model_14;
+    Model* model = params->model_14;
     int* list = params->ftg_24;
-    ModelVramSlot* v = params->vram_18;
-    int h = p->list_0->heap_4;
-    p->ftgCount_3C = GetFtgObjectCount_80021738(list);
-    AllocFtgObjects_80021744(&p->ftg_50, p->ftgCount_3C, h);
-    LoadFtgObjects_80021824(params->ftg_24, p->ftg_50, p->ftgCount_3C, h, (int)v->reloc_4);
+    ModelVramSlot* vram = params->vram_18;
+    int h = model->list_0->heap_4;
+    model->ftgCount_3C = GetFtgObjectCount_80021738(list);
+    AllocFtgObjects_80021744(&model->ftg_50, model->ftgCount_3C, h);
+    LoadFtgObjects_80021824(params->ftg_24, model->ftg_50, model->ftgCount_3C, h, (int)vram->reloc_4);
     if (GetFtgMatCount_80021DE4(params->ftg_24) != 0)
     {
-        AllocFtgMatList_80021DF0(&p->mats_5C, GetFtgMatCount_80021DE4(params->ftg_24), h);
-        LoadFtgMatList_80021E4C(params->ftg_24, &p->mats_5C, GetFtgMatCount_80021DE4(params->ftg_24));
+        AllocFtgMatList_80021DF0(&model->mats_5C, GetFtgMatCount_80021DE4(params->ftg_24), h);
+        LoadFtgMatList_80021E4C(params->ftg_24, &model->mats_5C, GetFtgMatCount_80021DE4(params->ftg_24));
     }
 }
 // Matched
 void LoadModelAnims_800261C8(ModelLoadParams* params)
 {
-    Model* p = params->model_14;
-    int h = p->list_0->heap_4;
+    Model* model = params->model_14;
+    int h = model->list_0->heap_4;
     int i;
     int j;
     int mode;
-    p->animCount_3E = params->desc_4->animCount_12;
-    if (p->anims_54 == 0)
+    model->animCount_3E = params->desc_4->animCount_12;
+    if (model->anims_54 == 0)
     {
-        AllocModelAnims_80026730(&p->anims_54, p->animCount_3E, h);
+        AllocModelAnims_80026730(&model->anims_54, model->animCount_3E, h);
     }
-    if (p->animLoaded_44 != 0)
+    if (model->animLoaded_44 != 0)
     {
-        HeapFree_8003FD18(p->animLoaded_44, h);
+        HeapFree_8003FD18(model->animLoaded_44, h);
     }
-    p->animLoaded_44 = HeapAlloc_8003FC8C(p->animCount_3E, (struct Pool*)h);
-    for (i = 0; i < p->animCount_3E; i++)
+    model->animLoaded_44 = HeapAlloc_8003FC8C(model->animCount_3E, (struct Pool*)h);
+    for (i = 0; i < model->animCount_3E; i++)
     {
         mode = params->mode_C;
         if (mode == 0)
         {
             if (i == 0)
             {
-                p->animLoaded_44[0] = 1;
+                model->animLoaded_44[0] = 1;
             }
             else
             {
-                p->animLoaded_44[i] = 0;
+                model->animLoaded_44[i] = 0;
             }
         }
         else if (mode == 1)
         {
             if (i == 0)
             {
-                p->animLoaded_44[0] = 1;
+                model->animLoaded_44[0] = 1;
             }
             else if (i == 1)
             {
-                p->animLoaded_44[1] = 1;
+                model->animLoaded_44[1] = 1;
             }
             else
             {
-                p->animLoaded_44[i] = 0;
+                model->animLoaded_44[i] = 0;
             }
         }
         else if (mode == 3)
         {
             if (i == 0)
             {
-                p->animLoaded_44[0] = 0;
+                model->animLoaded_44[0] = 0;
             }
             else if (i == 1)
             {
-                p->animLoaded_44[1] = 0;
+                model->animLoaded_44[1] = 0;
             }
             else
             {
-                p->animLoaded_44[i] = *(unsigned char*)&params->desc_4->animFlags_14[i];
+                model->animLoaded_44[i] = *(unsigned char*)&params->desc_4->animFlags_14[i];
             }
         }
         else
         {
-            p->animLoaded_44[i] = *(unsigned char*)&params->desc_4->animFlags_14[i];
+            model->animLoaded_44[i] = *(unsigned char*)&params->desc_4->animFlags_14[i];
         }
     }
-    for (i = 0, j = 0; i < p->animCount_3E; i++)
+    for (i = 0, j = 0; i < model->animCount_3E; i++)
     {
         if ((&params->desc_4->animFlags_14[0])[i] != 0) // indexed through the decayed pointer, as the original
         {
-            if (p->animLoaded_44[i] != 0)
+            if (model->animLoaded_44[i] != 0)
             {
-                LoadModelAnimData_80026A8C(&p->anims_54[i], (int)params->anims_28 + (&params->anims_28->offsets_4[0])[j], h);
+                LoadModelAnimData_80026A8C(&model->anims_54[i], (int)params->anims_28 + (&params->anims_28->offsets_4[0])[j], h);
             }
             j++;
         }
     }
 }
 // Matched
-void LoadSingleModelAnim_800263CC(ModelLoadParams* p)
+void LoadSingleModelAnim_800263CC(ModelLoadParams* params)
 {
     ModelList* l;
-    Model* q = p->model_14;
-    l = q->list_0;
-    LoadModelAnimData_80026A8C(&q->anims_54[p->animIdx_10], (int)p->anim_2C, l->heap_4);
+    Model* model = params->model_14;
+    l = model->list_0;
+    LoadModelAnimData_80026A8C(&model->anims_54[params->animIdx_10], (int)params->anim_2C, l->heap_4);
 }
 // Matched
 void LoadModelAnimSetSection_80026410(ModelLoadParams* params)
 {
-    ModelAnimSetSection* q = params->animSet_30;
-    Model* p = params->model_14;
-    int n = q->count_0;
-    int h = p->list_0->heap_4;
-    int* list = HeapAlloc_8003FC8C((n + 1) * 4, (struct Pool*)h);
+    ModelAnimSetSection* section = params->animSet_30;
+    Model* model = params->model_14;
+    int count = section->count_0;
+    int h = model->list_0->heap_4;
+    int* list = HeapAlloc_8003FC8C((count + 1) * 4, (struct Pool*)h);
     int i;
     int id;
     int src;
-    p->animSet_58 = list;
-    list[0] = n;
-    for (i = 0; i < n; i++)
+    model->animSet_58 = list;
+    list[0] = count;
+    for (i = 0; i < count; i++)
     {
-        id = q->items_4[i].id;
-        src = (int)q + q->items_4[i].offset;
-        if (p->animLoaded_44[id] == 0)
+        id = section->items_4[i].id;
+        src = (int)section + section->items_4[i].offset;
+        if (model->animLoaded_44[id] == 0)
         {
-            p->animSet_58[i + 1] = id;
-            p->animLoaded_44[id] = 1;
-            LoadModelAnimData_80026A8C(&p->anims_54[id], src, h);
+            model->animSet_58[i + 1] = id;
+            model->animLoaded_44[id] = 1;
+            LoadModelAnimData_80026A8C(&model->anims_54[id], src, h);
         }
         else
         {
-            p->animSet_58[i + 1] = -1;
+            model->animSet_58[i + 1] = -1;
         }
     }
 }
 // Matched
 void LoadModelAltFtgSection_8002651C(ModelLoadParams* params)
 {
-    Model* p = params->model_14;
+    Model* model = params->model_14;
     int* list = params->ftg2_34;
-    ModelVramSlot* v = params->vram_18;
-    int heap = p->list_0->heap_4;
-    p->ftg2Count_42 = GetFtgObjectCount_80021738(list);
-    AllocFtgObjects_80021744(&p->ftg2_68, p->ftg2Count_42, heap);
-    LoadFtgObjects_80021824(params->ftg2_34, p->ftg2_68, p->ftg2Count_42, heap, (int)v->reloc_4);
+    ModelVramSlot* vram = params->vram_18;
+    int heap = model->list_0->heap_4;
+    model->ftg2Count_42 = GetFtgObjectCount_80021738(list);
+    AllocFtgObjects_80021744(&model->ftg2_68, model->ftg2Count_42, heap);
+    LoadFtgObjects_80021824(params->ftg2_34, model->ftg2_68, model->ftg2Count_42, heap, (int)vram->reloc_4);
 }
 // Matched
 void LoadModelFtgSwaps_8002659C(ModelLoadParams* params)
 {
-    unsigned char* q = params->extra_38;
-    Model* p = params->model_14;
-    int h = p->list_0->heap_4;
-    void* r;
-    p->swapCount_43 = *q;
-    q += 4;
-    r = HeapAlloc_8003FC8C(p->swapCount_43 << 2, (struct Pool*)h);
-    p->swaps_6C = r;
-    MemCopy_800403E8(r, q, p->swapCount_43 << 2);
+    unsigned char* src = params->extra_38;
+    Model* model = params->model_14;
+    int h = model->list_0->heap_4;
+    void* buf;
+    model->swapCount_43 = *src;
+    src += 4;
+    buf = HeapAlloc_8003FC8C(model->swapCount_43 << 2, (struct Pool*)h);
+    model->swaps_6C = buf;
+    MemCopy_800403E8(buf, src, model->swapCount_43 << 2);
 }
 // Matched
-int CountModelVramSlots_80026600(ModelVramSlot* p)
+int CountModelVramSlots_80026600(ModelVramSlot* slot)
 {
-    int n = 0;
-    if (p->id_2 != -1)
+    int count = 0;
+    if (slot->id_2 != -1)
     {
         do
         {
-            p++;
-            n++;
-        } while (p->id_2 != -1);
+            slot++;
+            count++;
+        } while (slot->id_2 != -1);
     }
-    return n;
+    return count;
 }
 // Matched
-int FindModelIndex_80026630(ModelList* p, unsigned int id)
+int FindModelIndex_80026630(ModelList* list, unsigned int id)
 {
     int i;
-    for (i = 0; i < p->count_0; i++)
+    for (i = 0; i < list->count_0; i++)
     {
-        if (p->items_8[i].id_38 == id)
+        if (list->items_8[i].id_38 == id)
         {
             return i;
         }
@@ -3503,12 +3503,12 @@ int FindModelIndex_80026630(ModelList* p, unsigned int id)
     return -1;
 }
 // Matched
-int FindFreeModelIndex_8002667C(ModelList* p)
+int FindFreeModelIndex_8002667C(ModelList* list)
 {
     int i;
-    for (i = 0; i < p->count_0; i++)
+    for (i = 0; i < list->count_0; i++)
     {
-        if (p->items_8[i].id_38 == 0xFFFF)
+        if (list->items_8[i].id_38 == 0xFFFF)
         {
             return i;
         }
@@ -3516,56 +3516,56 @@ int FindFreeModelIndex_8002667C(ModelList* p)
     return -1;
 }
 // Matched
-void ClearModel_800266CC(Model* p)
+void ClearModel_800266CC(Model* model)
 {
-    p->id_38 = 0xFFFF;
-    p->requestCount_4 = 0;
-    p->texSel_34 = 0;
-    p->refs_3A = 0;
-    p->ftgCount_3C = 0;
-    p->animCount_3E = 0;
-    p->savedCount_40 = 0;
-    p->ftg2Count_42 = 0;
-    p->swapCount_43 = 0;
-    p->animLoaded_44 = 0;
-    p->headerSize_48 = 0;
-    p->header_4C = 0;
-    p->ftg_50 = 0;
-    p->anims_54 = 0;
-    p->animSet_58 = 0;
-    p->mats_5C.count_0 = 0;
-    p->mats_5C.items_4 = 0;
-    p->saved_64 = 0;
-    p->ftg2_68 = 0;
-    p->swaps_6C = 0;
+    model->id_38 = 0xFFFF;
+    model->requestCount_4 = 0;
+    model->texSel_34 = 0;
+    model->refs_3A = 0;
+    model->ftgCount_3C = 0;
+    model->animCount_3E = 0;
+    model->savedCount_40 = 0;
+    model->ftg2Count_42 = 0;
+    model->swapCount_43 = 0;
+    model->animLoaded_44 = 0;
+    model->headerSize_48 = 0;
+    model->header_4C = 0;
+    model->ftg_50 = 0;
+    model->anims_54 = 0;
+    model->animSet_58 = 0;
+    model->mats_5C.count_0 = 0;
+    model->mats_5C.items_4 = 0;
+    model->saved_64 = 0;
+    model->ftg2_68 = 0;
+    model->swaps_6C = 0;
 }
 // Matched
-int GetModelAnimCount_80026724(int* p)
+int GetModelAnimCount_80026724(int* section)
 {
-    return p[0];
+    return section[0];
 }
 // Matched
 void AllocModelAnims_80026730(ModelAnim** out, int count, int heap)
 {
-    ModelAnim* p = HeapAlloc_8003FC8C(count * 28, (struct Pool*)heap);
+    ModelAnim* anims = HeapAlloc_8003FC8C(count * 28, (struct Pool*)heap);
     int i;
-    *out = p;
+    *out = anims;
     for (i = 0; i < count; i++)
     {
-        p[i].cues_10 = 0;
-        p[i].basePose_14 = 0;
-        p[i].frames_18 = 0;
+        anims[i].cues_10 = 0;
+        anims[i].basePose_14 = 0;
+        anims[i].frames_18 = 0;
     }
 }
 // Matched
-void FreeModelAnims_8002679C(ModelAnim** anims, int n, int heap)
+void FreeModelAnims_8002679C(ModelAnim** anims, int count, int heap)
 {
     ModelAnim* arr;
     int i;
     if (*anims)
     {
         arr = *anims;
-        for (i = 0; i < n; i++)
+        for (i = 0; i < count; i++)
         {
             if (arr[i].cues_10)
             {
@@ -3587,42 +3587,42 @@ void FreeModelAnims_8002679C(ModelAnim** anims, int n, int heap)
 // Matched
 void LoadModelAnimSection_80026870(ModelAnim** out, int section, int heap)
 {
-    int r = GetModelAnimCount_80026724((int*)section);
-    AllocModelAnims_80026730(out, r, heap);
-    LoadModelAnimsMasked_800268E8(out[0], section, r, heap, -1);
+    int count = GetModelAnimCount_80026724((int*)section);
+    AllocModelAnims_80026730(out, count, heap);
+    LoadModelAnimsMasked_800268E8(out[0], section, count, heap, -1);
 }
 // Matched
-void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int n, int h, int mask)
+void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int count, int h, int mask)
 {
-    int* q = (int*)section;
+    int* offsets = (int*)section;
     int i;
-    for (i = 0; i < n; i++, anims++)
+    for (i = 0; i < count; i++, anims++)
     {
         int bit = 1 << i;
         if ((mask & bit) && anims->basePose_14 == 0 && anims->frames_18 == 0)
         {
-            LoadModelAnimData_80026A8C(anims, section + q[i + 1], h);
+            LoadModelAnimData_80026A8C(anims, section + offsets[i + 1], h);
         }
     }
 }
 // Matched
-void FreeModelAnimData_800269C4(ModelAnim* anims, int n, int sel, int h)
+void FreeModelAnimData_800269C4(ModelAnim* anims, int count, int sel, int h)
 {
-    ModelAnim* p = anims;
+    ModelAnim* anim = anims;
     int i;
-    for (i = 0; i < n; i++, p++)
+    for (i = 0; i < count; i++, anim++)
     {
-        if (sel == i && p->basePose_14 != 0 && p->frames_18 != 0)
+        if (sel == i && anim->basePose_14 != 0 && anim->frames_18 != 0)
         {
-            if (p->cues_10 != 0)
+            if (anim->cues_10 != 0)
             {
-                HeapFree_8003FD18(p->cues_10, h);
+                HeapFree_8003FD18(anim->cues_10, h);
             }
-            HeapFree_8003FD18(p->basePose_14, h);
-            HeapFree_8003FD18(p->frames_18, h);
-            p->cues_10 = 0;
-            p->basePose_14 = 0;
-            p->frames_18 = 0;
+            HeapFree_8003FD18(anim->basePose_14, h);
+            HeapFree_8003FD18(anim->frames_18, h);
+            anim->cues_10 = 0;
+            anim->basePose_14 = 0;
+            anim->frames_18 = 0;
         }
     }
 }
@@ -3631,30 +3631,30 @@ void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, int heap)
 {
     int hasDivisor = 0;
     int hasCues = hasDivisor;
-    unsigned int n;
+    unsigned int frames;
     unsigned int m;
-    unsigned short* s;
-    unsigned short* d;
+    unsigned short* cur;
+    unsigned short* dst;
     unsigned int i;
     unsigned int j;
-    int r;
+    int size;
     int k;
     anim->frameCount_0 = ((ModelAnimFile*)src)->frameCount_0;
-    n = anim->frameCount_0;
+    frames = anim->frameCount_0;
     anim->boneCount_4 = ((ModelAnimFile*)src)->boneCount_4;
     m = anim->boneCount_4;
-    if ((int)n < 0)
+    if ((int)frames < 0)
     {
-        n &= 0x7FFFFFFF;
-        s = (unsigned short*)(((int*)src) + 3);
-        anim->frameCount_0 = n;
+        frames &= 0x7FFFFFFF;
+        cur = (unsigned short*)(((int*)src) + 3);
+        anim->frameCount_0 = frames;
         anim->divisor_8 = ((ModelAnimFile*)src)->divisor_8;
         hasDivisor = 1;
     }
     else
     {
         anim->divisor_8 = 0x20;
-        s = (unsigned short*)(((int*)src) + 2);
+        cur = (unsigned short*)(((int*)src) + 2);
     }
     if ((int)m < 0)
     {
@@ -3666,87 +3666,87 @@ void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, int heap)
         anim->cueCount_C = 0;
     }
     anim->basePose_14 = HeapAlloc_8003FC8C(m * 6, (struct Pool*)heap);
-    anim->frames_18 = HeapAlloc_8003FC8C((m + 2) * (n << 1) * 3, (struct Pool*)heap);
-    d = anim->basePose_14;
+    anim->frames_18 = HeapAlloc_8003FC8C((m + 2) * (frames << 1) * 3, (struct Pool*)heap);
+    dst = anim->basePose_14;
     for (i = 0; i < m; i++)
     {
-        *d++ = *s++;
-        *d++ = *s++;
-        *d++ = *s++;
+        *dst++ = *cur++;
+        *dst++ = *cur++;
+        *dst++ = *cur++;
     }
-    d = anim->frames_18;
-    for (j = 0; j < n; j++)
+    dst = anim->frames_18;
+    for (j = 0; j < frames; j++)
     {
-        *d++ = *s++;
-        *d++ = *s++;
-        *d++ = *s++;
-        *d++ = *s++;
-        *d++ = *s++;
-        *d++ = *s++;
+        *dst++ = *cur++;
+        *dst++ = *cur++;
+        *dst++ = *cur++;
+        *dst++ = *cur++;
+        *dst++ = *cur++;
+        *dst++ = *cur++;
         for (i = 0; i < m; i++)
         {
-            *d++ = *s++;
-            *d++ = *s++;
-            *d++ = *s++;
+            *dst++ = *cur++;
+            *dst++ = *cur++;
+            *dst++ = *cur++;
         }
     }
     if (hasCues)
     {
-        r = m * 6 + 8;
-        r += (m * 6 + 0xC) * n;
+        size = m * 6 + 8;
+        size += (m * 6 + 0xC) * frames;
         if (hasDivisor)
         {
-            r += 4;
+            size += 4;
         }
-        s = (unsigned short*)((char*)((int*)src) + r);
-        if (r & 3)
+        cur = (unsigned short*)((char*)((int*)src) + size);
+        if (size & 3)
         {
-            r += 2;
-            s = (unsigned short*)((char*)((int*)src) + r);
+            size += 2;
+            cur = (unsigned short*)((char*)((int*)src) + size);
         }
-        anim->cueCount_C = *(int*)s;
-        s += 2;
+        anim->cueCount_C = *(int*)cur;
+        cur += 2;
         anim->cues_10 = HeapAlloc_8003FC8C(anim->cueCount_C * 8, (struct Pool*)heap);
         k = 0;
         while (k < anim->cueCount_C)
         {
-            anim->cues_10[k].frame_0 = s[0];
-            anim->cues_10[k].kind_2 = s[1];
-            anim->cues_10[k].arg_4 = s[2];
-            anim->cues_10[k].arg_6 = s[3];
+            anim->cues_10[k].frame_0 = cur[0];
+            anim->cues_10[k].kind_2 = cur[1];
+            anim->cues_10[k].arg_4 = cur[2];
+            anim->cues_10[k].arg_6 = cur[3];
             k++;
-            s += 4;
+            cur += 4;
         }
     }
 }
 // Matched
-int GetRecordTableCount_80026D6C(int* p)
+int GetRecordTableCount_80026D6C(int* file)
 {
-    return p[0];
+    return file[0];
 }
 // Matched
 void AllocRecordTables_80026D78(struct_12** out, int count, int heap)
 {
-    struct_12* p = HeapAlloc_8003FC8C(count * 12, heap);
+    struct_12* tables = HeapAlloc_8003FC8C(count * 12, heap);
     int i;
     for (i = 0; i < count; i++)
     {
-        p[i].field_0 = 0;
-        p[i].field_4 = 0;
-        p[i].field_8 = 0;
+        tables[i].field_0 = 0;
+        tables[i].field_4 = 0;
+        tables[i].field_8 = 0;
     }
-    *out = p;
+    *out = tables;
 }
 // Matched
-void FreeRecordTables_80026DE8(struct_12** tables, int n, int h)
+void FreeRecordTables_80026DE8(struct_12** tables, int count, int h)
 {
-    struct_12* p = *tables;
+    struct_12* table = *tables;
     int i;
-    for (i = 0; i < n; i++, p++)
+    for (i = 0; i < count; i++, table++)
     {
-        if (p->field_8 != 0)
+        if (table->field_8 != 0)
         {
-            HeapFree_8003FD18(p->field_8, h);
+            HeapFree_8003FD18(table->field_8, h);
         }
     }
     HeapFree_8003FD18(*tables, h);
@@ -3770,24 +3770,24 @@ typedef struct
     unsigned short d;
 } struct_4h;
 // Matched
-void LoadRecordTable_80026EF8(struct_12* p, unsigned short* s, int heap)
+void LoadRecordTable_80026EF8(struct_12* table, unsigned short* src, int heap)
 {
     unsigned short* d;
     int i;
-    p->field_0 = *(int*)s;
-    s += 2;
-    p->field_4 = *(int*)s;
-    s += 2;
-    d = HeapAlloc_8003FC8C(p->field_0 * 8, heap);
-    p->field_8 = (int)d;
-    for (i = 0; i < p->field_0; i++)
+    table->field_0 = *(int*)src;
+    src += 2;
+    table->field_4 = *(int*)src;
+    src += 2;
+    d = HeapAlloc_8003FC8C(table->field_0 * 8, heap);
+    table->field_8 = (int)d;
+    for (i = 0; i < table->field_0; i++)
     {
-        d[0] = s[0];
-        d[1] = s[1];
-        d[2] = s[2];
-        d[3] = s[3];
+        d[0] = src[0];
+        d[1] = src[1];
+        d[2] = src[2];
+        d[3] = src[3];
         d += 4;
-        s += 4;
+        src += 4;
     }
 }
 typedef struct
@@ -3909,10 +3909,10 @@ void FreeMapArea_8002728C(void)
     ListFreeAll_8003FEC8(&areaHeap_80091C20);
 }
 // Matched
-void SetCurrentArea_800272BC(int a0, int a1)
+void SetCurrentArea_800272BC(int map, int area)
 {
-    currentAreaMap_80091C88 = a0;
-    currentArea_80091C44 = a1;
+    currentAreaMap_80091C88 = map;
+    currentArea_80091C44 = area;
 }
 #if 0
 // Not matched (close)
@@ -3949,11 +3949,11 @@ void RequestAreaReload_80027314(void)
     word_8008B862 = -1;
 }
 // Matched
-int RequestAreaPreload_80027330(short a0)
+int RequestAreaPreload_80027330(short area)
 {
     if (areaPreloading_80082678 == 0)
     {
-        areaPreload_80091C40[0] = a0;
+        areaPreload_80091C40[0] = area;
         return 1;
     }
     return 0;
@@ -4060,17 +4060,17 @@ int UpdateLoadFade_80027540(void)
 // Matched
 void AllocMapWallFlags_800275E8(unsigned char** out, int count, int heap)
 {
-    unsigned char* p;
-    unsigned char* q;
+    unsigned char* flags;
+    unsigned char* cur;
     int i;
     if (count != 0)
     {
-        p = ListAlloc_8003FDC0(heap, count);
-        *out = p;
-        q = p;
+        flags = ListAlloc_8003FDC0(heap, count);
+        *out = flags;
+        cur = flags;
         for (i = 0; i < count; i++)
         {
-            q[i] = 1;
+            cur[i] = 1;
         }
     }
 }
@@ -4079,16 +4079,16 @@ int* LoadMapSpawns_80027650(int* file, int unused, int h)
 {
     int* src;
     int (*d)[4];
-    int n;
+    int count;
     int i;
     MapList16* g = &mapSpawns_80091C60;
     file += 1;
-    n = *file++;
+    count = *file++;
     src = file;
-    g->count_0 = n;
-    if (n != 0)
+    g->count_0 = count;
+    if (count != 0)
     {
-        d = ListAlloc_8003FDC0(h, n * 16);
+        d = ListAlloc_8003FDC0(h, count * 16);
         g->items_4 = d;
         for (i = 0; i < g->count_0; i++)
         {
@@ -4105,40 +4105,40 @@ int* LoadMapSpawns_80027650(int* file, int unused, int h)
 // Matched
 void LoadMapFtg_80027708(int* file, int heap)
 {
-    int r = GetFtgObjectCount_80021738(file);
-    mapState_8008B500.ftgCount_38 = r;
-    if (r != 0)
+    int count = GetFtgObjectCount_80021738(file);
+    mapState_8008B500.ftgCount_38 = count;
+    if (count != 0)
     {
-        AllocFtgObjects_80021744(&mapState_8008B500.ftg_3C, r, heap);
+        AllocFtgObjects_80021744(&mapState_8008B500.ftg_3C, count, heap);
         LoadFtgObjects_80021824(file, mapState_8008B500.ftg_3C, mapState_8008B500.ftgCount_38, heap, 0);
     }
 }
 // Matched
 void LoadTileSets_80027778(int* data, int heap)
 {
-    struct_27778* arr;
+    TileSet* arr;
     unsigned int i;
     int j;
     int* src;
-    unsigned short* q;
-    int n;
+    unsigned short* cur;
+    int count;
     tileAnim_8008D648.field_4 = data[0];
     tileAnim_8008D648.field_8 = data[1];
-    n = data[2];
-    tileAnim_8008D648.count_0 = n;
-    arr = ListAlloc_8003FDC0(heap, n * 16);
+    count = data[2];
+    tileAnim_8008D648.count_0 = count;
+    arr = ListAlloc_8003FDC0(heap, count * 16);
     for (i = 0; i < tileAnim_8008D648.count_0; i++)
     {
         src = (int*)((char*)data + data[i + 3]);
-        arr[i].field_0 = *src++;
+        arr[i].depth_0 = *src++;
         arr[i].count = *src++;
-        q = (unsigned short*)src;
-        arr[i].field_8 = *q++;
-        arr[i].field_A = *q++;
+        cur = (unsigned short*)src;
+        arr[i].columns_8 = *cur++;
+        arr[i].rows_A = *cur++;
         arr[i].items = ListAlloc_8003FDC0(heap, arr[i].count * 2);
         for (j = 0; j < arr[i].count; j++)
         {
-            arr[i].items[j] = *q++;
+            arr[i].items[j] = *cur++;
         }
     }
     tileAnim_8008D648.items_C = arr;
@@ -4146,35 +4146,35 @@ void LoadTileSets_80027778(int* data, int heap)
 // Matched
 void LoadTileAnimLayers_800278BC(int* data, int heap)
 {
-    int* p = data;
+    int* file = data;
     unsigned int i;
     unsigned int j;
-    int n;
-    int* q;
-    struct_4b* r;
-    struct_2s* e;
-    n = p[0];
-    tileAnim_8008D648.listCount_10 = n;
-    tileAnim_8008D648.lists_14 = ListAlloc_8003FDC0(heap, n * 8);
+    int count;
+    int* src;
+    TileAnimFrame* frames;
+    TileAnimTimer* timer;
+    count = file[0];
+    tileAnim_8008D648.listCount_10 = count;
+    tileAnim_8008D648.lists_14 = ListAlloc_8003FDC0(heap, count * 8);
     for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
-        q = (int*)((char*)p + p[i + 1]);
-        tileAnim_8008D648.lists_14[i].count = *q;
+        src = (int*)((char*)file + file[i + 1]);
+        tileAnim_8008D648.lists_14[i].count = *src;
         tileAnim_8008D648.lists_14[i].items = ListAlloc_8003FDC0(heap, tileAnim_8008D648.lists_14[i].count * 4);
-        r = (struct_4b*)(q + 1);
+        frames = (TileAnimFrame*)(src + 1);
         for (j = 0; j < tileAnim_8008D648.lists_14[i].count; j++)
         {
-            tileAnim_8008D648.lists_14[i].items[j].a = r[j].a;
-            tileAnim_8008D648.lists_14[i].items[j].b = r[j].b;
-            tileAnim_8008D648.lists_14[i].items[j].c = r[j].c;
+            tileAnim_8008D648.lists_14[i].items[j].set_0 = frames[j].set_0;
+            tileAnim_8008D648.lists_14[i].items[j].clut_1 = frames[j].clut_1;
+            tileAnim_8008D648.lists_14[i].items[j].time_2 = frames[j].time_2;
         }
     }
     tileAnim_8008D648.pairs_18 = ListAlloc_8003FDC0(heap, tileAnim_8008D648.listCount_10 * 4);
     for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
-        e = (struct_2s*)(i * 4 + (int)tileAnim_8008D648.pairs_18); // integer sum, as the original
-        e->b = 0;
-        e->a = 0;
+        timer = (TileAnimTimer*)(i * 4 + (int)tileAnim_8008D648.pairs_18); // integer sum, as the original
+        timer->frame_2 = 0;
+        timer->timer_0 = 0;
     }
 }
 // Matched
@@ -4183,11 +4183,11 @@ int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapM
     MapMesh* arr;
     unsigned int i;
     unsigned int j;
-    unsigned char* p;
+    unsigned char* cur;
     MapMeshRec* rec;
     MapTriRec* tri;
     MapMeshFile* hh;
-    p = (unsigned char*)(hdr + 1);
+    cur = (unsigned char*)(hdr + 1);
     hh = hdr;
     arr = ListAlloc_8003FDC0(heap, hdr->count_4 * sizeof(MapMesh));
     *count = hdr->count_4;
@@ -4198,14 +4198,14 @@ int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapM
     }
     for (i = 0; i < hh->count_4; i++)
     {
-        rec = (MapMeshRec*)p;
+        rec = (MapMeshRec*)cur;
         arr[i].nTris_0 = rec->nTris_0;
-        p = (unsigned char*)(rec + 1);
+        cur = (unsigned char*)(rec + 1);
         arr[i].tris_4 = ListAlloc_8003FDC0(heap, rec->nTris_0 * sizeof(MapTri));
         for (j = 0; j < rec->nTris_0; j++)
         {
-            tri = (MapTriRec*)p;
-            p += sizeof(int);
+            tri = (MapTriRec*)cur;
+            cur += sizeof(int);
             arr[i].tris_4[j].nx_18 = tri->n_8.x_0;
             arr[i].tris_4[j].ny_1A = tri->n_8.y_2;
             arr[i].tris_4[j].nz_1C = tri->n_8.z_4;
@@ -4222,31 +4222,31 @@ int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapM
             arr[i].tris_4[j].v_0[2].y_2 = tri->v_10[2].y_2;
             arr[i].tris_4[j].v_0[2].z_4 = tri->v_10[2].z_4;
             arr[i].tris_4[j].v_0[2].pad_6 = 0;
-            p += sizeof(MapTriRec) - sizeof(int);
+            cur += sizeof(MapTriRec) - sizeof(int);
         }
     }
     *out = arr;
     return (int*)((unsigned char*)hdr + hh->size_0);
 }
 // Matched
-void InitMapLoaderTask_80027CC0(EventEntry* p, int* q)
+void InitMapLoaderTask_80027CC0(EventEntry* entry, int* state)
 {
-    q[0] = 0;
-    q[1] = 0;
-    MapLoaderTask_80027CF8(p, q);
-    p->cb_8 = (EventEntryFn)MapLoaderTask_80027CF8;
+    state[0] = 0;
+    state[1] = 0;
+    MapLoaderTask_80027CF8(entry, state);
+    entry->cb_8 = (EventEntryFn)MapLoaderTask_80027CF8;
 }
 typedef struct
 {
     short f0;
     short f2;
     short f4;
-    short f6;
-    short f8;
+    short encounterSet_6; // SelectEncounterSpecies_800A5030 / SetBattleStageForMap_800A52AC argument
+    short music_8;        // PlayMusic_800300E0 id (< 0: keep)
     short fA;
     char pad_C[4];
-} MapEntry16;
-extern MapEntry16** mapTable_800B0608[];
+} MapAreaEntry;
+extern MapAreaEntry** mapTable_800B0608[];
 #define MAP_ENTRY_CF8(i) mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
 extern int fieldMode_800B0EC0;
 extern void SelectMapEntrance_800ADDAC(void);
@@ -4260,23 +4260,23 @@ extern void StartEncounter_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
 extern void OnMapFileLoaded_80028808(void* a0, int* a1);
 // Matched
-void MapLoaderTask_80027CF8(void* a0, int* state)
+void MapLoaderTask_80027CF8(void* entry, int* state)
 {
     int* st = state;
-    short v[2];
+    short encounterSets[2];
     FileRequestDesc req;
-    MapEntry16* e;
-    int t;
-    int m;
+    MapAreaEntry* e;
+    int encounter;
+    int music;
     int n;
     int k;
     switch (st[0])
     {
     case 0:
-        m = fieldMode_800B0EC0;
-        if (m == 1 && IsOverlayLoaderIdle_80020D84() == 0)
+        music = fieldMode_800B0EC0;
+        if (music == 1 && IsOverlayLoaderIdle_80020D84() == 0)
         {
-            eventDispatchHalt_8008B540 = m;
+            eventDispatchHalt_8008B540 = music;
         }
         else if (UpdateLoadFade_80027540() != 0)
         {
@@ -4292,7 +4292,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 {
                     SelectMapEntrance_800ADDAC();
                 }
-                if (GetSetReturnEntrance_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6)
+                if (GetSetReturnEntrance_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).encounterSet_6)
                 {
                     ClearEventFlag_800AD124(0);
                 }
@@ -4300,10 +4300,10 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 for (mapAreaCount_80091CB0 = 0; e[mapAreaCount_80091CB0].f0 != -1; mapAreaCount_80091CB0++)
                 {
                 }
-                v[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_2).f6;
-                v[0] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f6;
-                t = SelectEncounterSpecies_800A5030(v[0], v[1], dword_80091C90);
-                SetBattleStageForMap_800A52AC(v[0]);
+                encounterSets[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_2).encounterSet_6;
+                encounterSets[0] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).encounterSet_6;
+                encounter = SelectEncounterSpecies_800A5030(encounterSets[0], encounterSets[1], dword_80091C90);
+                SetBattleStageForMap_800A52AC(encounterSets[0]);
                 mapStartMode_80091C54 = 1;
                 areaReload_80082670 = 0;
                 forceMapReload_80091C9C = 0;
@@ -4320,39 +4320,39 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
                 }
                 ApplyModelFtgSwaps_80025C38(GetLevantModel_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 freeActorModels_80091CA0 = 0;
-                if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || t != 0)
+                if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || encounter != 0)
                 {
                     freeActorModels_80091CA0 = 1;
                 }
                 dword_80091C90 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA;
                 UnloadMap_80027118();
                 FreeMapArea_8002728C();
-                m = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f8;
-                if (m >= 0)
+                music = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).music_8;
+                if (music >= 0)
                 {
-                    if (GetEventVar_800AD154(12) == 1 && m == 0xD)
+                    if (GetEventVar_800AD154(12) == 1 && music == 0xD)
                     {
-                        m = 0xF;
+                        music = 0xF;
                     }
-                    else if (GetEventVar_800AD154(12) == 2 && m == 0xD)
+                    else if (GetEventVar_800AD154(12) == 2 && music == 0xD)
                     {
-                        m = 0x91;
+                        music = 0x91;
                     }
-                    else if (GetEventVar_800AD154(12) == 3 && m == 0x29)
+                    else if (GetEventVar_800AD154(12) == 3 && music == 0x29)
                     {
-                        m = 0x26;
+                        music = 0x26;
                     }
-                    else if (GetEventVar_800AD154(12) == 4 && m == 0x2A)
+                    else if (GetEventVar_800AD154(12) == 4 && music == 0x2A)
                     {
-                        m = 0x25;
+                        music = 0x25;
                     }
-                    PlayMusic_800300E0(m, 1);
-                    SetBattleMusic_800315D8(m);
+                    PlayMusic_800300E0(music, 1);
+                    SetBattleMusic_800315D8(music);
                     SetLoadFadeFlag_80027478(0x20, 1);
                 }
                 if (dword_80091C90 == 0 && dword_80091C58 != 0)
                 {
-                    StartEncounter_800B88A4(t);
+                    StartEncounter_800B88A4(encounter);
                     k = st[0];
                     eventDispatchHalt_8008B540 = 1;
                     n = k;
@@ -4398,7 +4398,7 @@ void MapLoaderTask_80027CF8(void* a0, int* state)
     }
 }
 // Matched
-void ResetMapLoaderTask_8002830C(EventEntry* p)
+void ResetMapLoaderTask_8002830C(EventEntry* entry)
 {
     saveData_8008B570.mapId_2E4[0].field_2 = -1;
     saveData_8008B570.mapId_2E4[1].field_2 = -1;
@@ -4408,31 +4408,31 @@ void ResetMapLoaderTask_8002830C(EventEntry* p)
     freeActorModels_80091CA0 = 1;
     UnloadMap_80027118();
     FreeMapArea_8002728C();
-    p->cb_8 = (EventEntryFn)InitMapLoaderTask_80027CC0;
+    entry->cb_8 = (EventEntryFn)InitMapLoaderTask_80027CC0;
 }
 // Matched
-void InitAreaLoaderTask_80028388(EventEntry* p, int* q)
+void InitAreaLoaderTask_80028388(EventEntry* entry, int* state)
 {
-    q[0] = 0;
-    q[1] = 0;
-    AreaLoaderTask_800283C0(p, q);
-    p->cb_8 = (EventEntryFn)AreaLoaderTask_800283C0;
+    state[0] = 0;
+    state[1] = 0;
+    AreaLoaderTask_800283C0(entry, state);
+    entry->cb_8 = (EventEntryFn)AreaLoaderTask_800283C0;
 }
 extern int GetGameMode_800A6D50(int a0);
 extern int battleFlags_800B1228;
 extern void OnRoomDataLoaded_80028C60();
 // Matched
-void AreaLoaderTask_800283C0(void* a0, int* state)
+void AreaLoaderTask_800283C0(void* entry, int* state)
 {
     int* st = state;
     FileRequestDesc req;
     FileRequestDesc req2;
     FileRequestDesc req3;
-    int s;
+    int step;
     int load;
     int wait;
-    s = st[0];
-    switch (s)
+    step = st[0];
+    switch (step)
     {
     case 0:
         if (GetGameMode_800A6D50(0) != 1 && areaReload_80082670 == 0)
@@ -4548,7 +4548,7 @@ typedef struct
 {
     char pad_0[0xC];
     int fC;
-} MapEntry16b;
+} MapAreaEntryb;
 extern void LoadEventData_800A5628(int a0, int* a1, int a2);
 extern void MarkSharedEdges_800B73C0(MapMesh* a0, int a1);
 extern int FindTriAtXZ_800B76B8(MapMesh* a0, struct_v3* a1);
@@ -4556,60 +4556,60 @@ extern int* LoadMapMeshes_80027A88();
 extern short savedLevantRot_80091CA8[];
 extern EventNode* gameTask_8008B4A4; // the GAME overlay task
 // Matched
-void OnMapFileLoaded_80028808(void* a0, int* data)
+void OnMapFileLoaded_80028808(void* params, int* data)
 {
     MapFileHeader hdr;
-    int n;
-    int* p;
+    int size;
+    int* cur;
     unsigned int cnt;
     unsigned int i;
     unsigned int j;
     int a;
     int c;
     int c2;
-    p = data;
-    n = *p++;
-    if (n != 0 && dword_80091C8C == 0)
+    cur = data;
+    size = *cur++;
+    if (size != 0 && dword_80091C8C == 0)
     {
-        MemCopy_800403E8(mapCodeAddr_80073210, p, n);
-        mapCallback_80091CB4 = ((MapEntry16b*)mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
+        MemCopy_800403E8(mapCodeAddr_80073210, cur, size);
+        mapCallback_80091CB4 = ((MapAreaEntryb*)mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
     }
-    p = (int*)((char*)p + n);
+    cur = (int*)((char*)cur + size);
     mapJustLoaded_80082668 = 1;
-    mapHasCode_8008266C = n != 0;
-    cnt = *p++;
+    mapHasCode_8008266C = size != 0;
+    cnt = *cur++;
     for (j = 0; j < cnt; j++)
     {
-        a = *p++;
-        c = *p++;
-        c2 = *p++;
-        LoadEventData_800A5628(a, p, c);
-        p = (int*)((char*)p + c2);
+        a = *cur++;
+        c = *cur++;
+        c2 = *cur++;
+        LoadEventData_800A5628(a, cur, c);
+        cur = (int*)((char*)cur + c2);
     }
     mapState_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
-    mapState_8008B500.nMeshes_4 = *p++;
-    mapState_8008B500.f8_8 = *p++;
-    MemCopy_800403E8(&hdr, p, sizeof(hdr));
-    p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes_C, &mapState_8008B500.nMeshes_4, &mapHeap_80091C68, (char*)p + 0x104);
+    mapState_8008B500.nMeshes_4 = *cur++;
+    mapState_8008B500.f8_8 = *cur++;
+    MemCopy_800403E8(&hdr, cur, sizeof(hdr));
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes_C, &mapState_8008B500.nMeshes_4, &mapHeap_80091C68, (char*)cur + 0x104);
     MarkSharedEdges_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
-    p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, p);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10, (int)&mapHeap_80091C68);
-    p = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, p);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
-    p = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, p);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C, (int)&mapHeap_80091C68);
-    p = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, p);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
-    cnt = p[0];
-    LoadMapFtg_80027708(p, (int)&mapHeap_80091C68);
-    p = (int*)((char*)p + cnt);
-    cnt = *p++;
-    LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&mapHeap_80091C68);
-    p = LoadMapSpawns_80027650((int*)((char*)p + cnt), 0, (int)&mapHeap_80091C68);
+    cnt = cur[0];
+    LoadMapFtg_80027708(cur, (int)&mapHeap_80091C68);
+    cur = (int*)((char*)cur + cnt);
+    cnt = *cur++;
+    LoadTiy_80028E74(0, 0, 0, (int*)cur, (int)&mapHeap_80091C68);
+    cur = LoadMapSpawns_80027650((int*)((char*)cur + cnt), 0, (int)&mapHeap_80091C68);
     mapAreas_80082674 = ListAlloc_8003FDC0(&mapHeap_80091C68, mapState_8008B500.nMeshes_4 * 12);
-    MemCopy_800403E8(mapAreas_80082674, p, mapState_8008B500.nMeshes_4 * 12);
+    MemCopy_800403E8(mapAreas_80082674, cur, mapState_8008B500.nMeshes_4 * 12);
     if (mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
     {
         ((void (*)(int))mapCallback_80091CB4)(0);

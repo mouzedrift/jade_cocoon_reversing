@@ -80,7 +80,7 @@ void DrawBattleStage_800BC90C(BatStageObj_a* p)
                         {
                             sz[0] = e->size_C[0] * 5;
                             sz[1] = e->size_C[1] * 5;
-                            DrawRotSprite_80044010(&g->poly_C, &pos, stageRot_800C9124, &e->u_0, &e->w_4, &e->f8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
+                            DrawRotSprite_80044010(&g->poly_C, &pos, stageRot_800C9124, &e->u_0, &e->w_4, &e->pivotX_8, sz, &e->pos_10[0], &col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {

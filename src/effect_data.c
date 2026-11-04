@@ -4117,7 +4117,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
     col[1] = sp->pos_10[1];
     col[2] = sp->pos_10[2];
     col[3] = obj->field_4 * 32;
-    DrawRotSprite_80044010(&e1->poly_C, obj->pos_44, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz, col, sp->rgb_18, 2, 0x30,
+    DrawRotSprite_80044010(&e1->poly_C, obj->pos_44, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->pivotX_8, sz, col, sp->rgb_18, 2, 0x30,
                  pOT_8008D690);
     c = cameraState_8008D4F0.pos_14;
     rgb[0] = sp->rgb_18[0] >> 3;
@@ -4139,7 +4139,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
     {
         sz2[0] = sz[0] / 4;
         sz2[1] = sz[1] / 4;
-        DrawRotSprite_80044010(&e2->poly_C, pos, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->pivotX_8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     d[0] = obj->pos_44[0] - pos[0];
@@ -4152,7 +4152,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         pos2[2] = pos[2] + d[2] / 2;
         sz2[0] = sz[0];
         sz2[1] = sz[1];
-        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->pivotX_8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.geomScreen_2E * 2 < dot)
@@ -4162,7 +4162,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         pos2[2] = pos[2] - d[2] / 2;
         sz2[0] = sz[0] / 2;
         sz2[1] = sz[1] / 2;
-        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->pivotX_8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (cameraState_8008D4F0.geomScreen_2E * 4 / 3 < dot)
@@ -4172,7 +4172,7 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         pos2[2] = pos[2] - d[2] / 4;
         sz2[0] = sz[0] * 2;
         sz2[1] = sz[1] * 2;
-        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->f8, sz2, col, rgb, 0, 0x30,
+        DrawRotSprite_80044010(&e2->poly_C, pos2, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->pivotX_8, sz2, col, rgb, 0, 0x30,
                      pOT_8008D690);
     }
     if (effectOutcomeFlag_8008D780 == 1)

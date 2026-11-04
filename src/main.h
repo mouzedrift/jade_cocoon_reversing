@@ -65,7 +65,7 @@ extern EventNode* newGameTask_8008D638;
 extern EventNode* helpWindowTask_8008D63C;
 extern EventNode* messageWindowTask_8008D640;
 extern int dword_8008D644;
-extern struct_8008D648 tileAnim_8008D648;
+extern TileAnimLayers tileAnim_8008D648;
 extern int dword_8008D664;
 extern short cameraTargetScreenY_8008D66A;
 extern int zoomLimit_8008D66C;

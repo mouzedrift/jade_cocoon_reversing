@@ -1545,7 +1545,7 @@ void DropSpriteTask_800C1220(EventEntry* t, BatDrop_a* u)
     w[1] = 0;
     w[2] = 0;
     u->rot_34[1] += 0x80;
-    DrawRotSprite_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->f8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
+    DrawRotSprite_80044010(&d->poly_C, v, u->rot_34, &e->u_0, &e->w_4, &e->pivotX_8, s, w, e->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
 // Matched
@@ -1665,7 +1665,7 @@ void HomingSparkTask_800C17EC(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, (int*)&zeroSvector_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->pivotX_8, e->size_C, (int*)&zeroSvector_800795D4, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1707,7 +1707,7 @@ void SpriteAnimTask_800C1B2C(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->pivotX_8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1775,7 +1775,7 @@ void BounceSparkTask_800C1DA4(EventEntry* t, BatSpark_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->pos_10, u->rot_34, &e->u_0, &e->w_4, &e->pivotX_8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -1843,7 +1843,7 @@ void RisingSparkTask_800C2170(EventEntry* t, BatSpark_a* u)
             c[0] = u->pos_10[0];
             c[1] = u->pos_10[1];
             c[2] = u->pos_10[2];
-            DrawRotSprite_80044010(&d->poly_C, u->base_1C, u->rot_34, &e->u_0, &e->w_4, &e->f8, e->size_C, c, e->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&d->poly_C, u->base_1C, u->rot_34, &e->u_0, &e->w_4, &e->pivotX_8, e->size_C, c, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->frame_0 += u->speed_8;
     }
@@ -2076,7 +2076,7 @@ void SpriteTrailTask_800C2FC8(EventEntry* t, BatTrail_a* u)
         for (i = 0; i < d->frameCounts_4[u->frame_0 / 4096]; i++)
         {
             e = d->frames_8[u->frame_0 / 4096] + i;
-            r = DrawRotSprite_80044010(&d->poly_C, u->pos_44, u->rot_80, &e->u_0, &e->w_4, &e->f8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
+            r = DrawRotSprite_80044010(&d->poly_C, u->pos_44, u->rot_80, &e->u_0, &e->w_4, &e->pivotX_8, e->size_C, e->pos_10, e->rgb_18, 0, 0x30, pOT_8008D690);
         }
         u->trail_50[0].x = u->pos_44[0] + r[0];
         u->trail_50[0].y = u->pos_44[1] + r[1];

@@ -61,8 +61,8 @@ INCLUDE_OVERLAY_ASM(game, TileAnimTask_800A0A04);
 void DrawTileAnimLayers_800A0A5C(short* q)
 {
     TileAnimScratch* s = TILE_ANIM_SCRATCH;
-    struct_8_4b* list;
-    struct_2s* st;
+    TileAnimLayer* list;
+    TileAnimTimer* st;
     unsigned short* cells;
     int z;
     int n;
@@ -105,24 +105,24 @@ void DrawTileAnimLayers_800A0A5C(short* q)
         {
             if (!(*q & 1))
             {
-                st->a++;
+                st->timer_0++;
             }
-            if ((unsigned short)st->a >= (list->items[(unsigned short)st->b].c & 0x7F))
+            if ((unsigned short)st->timer_0 >= (list->items[(unsigned short)st->frame_2].time_2 & 0x7F))
             {
-                st->b++;
-                if ((unsigned short)st->b >= list->count)
+                st->frame_2++;
+                if ((unsigned short)st->frame_2 >= list->count)
                 {
-                    st->b = 0;
+                    st->frame_2 = 0;
                 }
-                st->a = 0;
+                st->timer_0 = 0;
             }
         }
-        s->set_70 = list->items[(unsigned short)st->b].a;
-        s->clut_74 = list->items[(unsigned short)st->b].b;
-        s->time_78 = list->items[(unsigned short)st->b].c & 0x7F;
+        s->set_70 = list->items[(unsigned short)st->frame_2].set_0;
+        s->clut_74 = list->items[(unsigned short)st->frame_2].clut_1;
+        s->time_78 = list->items[(unsigned short)st->frame_2].time_2 & 0x7F;
         s->tiles_60 = tileAnim_8008D648.items_C[s->set_70];
         cells = s->tiles_60.items;
-        if (list->items[(unsigned short)st->b].c & 0x80)
+        if (list->items[(unsigned short)st->frame_2].time_2 & 0x80)
         {
             setSemiTrans(&s->ft4_4, 1);
             setSemiTrans(&s->sprt_2C, 1);
@@ -133,7 +133,7 @@ void DrawTileAnimLayers_800A0A5C(short* q)
             setSemiTrans(&s->sprt_2C, 0);
         }
         z = ((tileAnim_8008D648.field_4 +
-              (unsigned int)((tileAnim_8008D648.field_8 - tileAnim_8008D648.field_4) * (0xFF - s->tiles_60.field_0)) / 0xFF) >>
+              (unsigned int)((tileAnim_8008D648.field_8 - tileAnim_8008D648.field_4) * (0xFF - s->tiles_60.depth_0)) / 0xFF) >>
              4) &
             0x3FF;
         s->ft4_4.clut = (s->clut_74 + 0x1F0) << 6;
@@ -146,9 +146,9 @@ void DrawTileAnimLayers_800A0A5C(short* q)
                 continue;
             }
             t = v / 8;
-            s->x0_48 = (n % (short)s->tiles_60.field_8) * 32 - (short)s->tiles_60.field_8 * 16;
+            s->x0_48 = (n % (short)s->tiles_60.columns_8) * 32 - (short)s->tiles_60.columns_8 * 16;
             s->ft4_4.tpage = (((t + 20) / 4) & 0xF) | 0xA0;
-            s->y0_4A = (n / (short)s->tiles_60.field_8) * 32 - (short)s->tiles_60.field_A * 16;
+            s->y0_4A = (n / (short)s->tiles_60.columns_8) * 32 - (short)s->tiles_60.rows_A * 16;
             s->x1_4C = s->cx_50 + (s->ox_58 + ((s->x0_48 + 32) * s->zoom_54) / 4096);
             s->y1_4E = s->cy_52 + (s->oy_5C + ((s->y0_4A + 32) * s->zoom_54) / 4096);
             s->x0_48 = s->cx_50 + (s->ox_58 + (s->x0_48 * s->zoom_54) / 4096);

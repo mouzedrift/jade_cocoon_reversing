@@ -493,14 +493,14 @@ typedef struct TileAnimScratch
     int zoom_54; // cameraZoom_8008B4F8
     int ox_58;   // screen offset of the view centre
     int oy_5C;
-    struct_27778 tiles_60; // the frame's tile set
+    TileSet tiles_60; // the frame's tile set
     int set_70;  // the frame: tile set,
     int clut_74; // clut row,
     int time_78; // frames to show
 } TileAnimScratch;
 #define TILE_ANIM_SCRATCH ((TileAnimScratch*)getScratchAddr(0x85))
 extern ShortPair screenOffset_8008D474;
-extern struct_8008D648 tileAnim_8008D648;
+extern TileAnimLayers tileAnim_8008D648;
 extern void DrawTileAnimLayers_800A0A5C(short* q);
 
 extern int GameFn_8003B9E0(int* a, int* b);
