@@ -34,9 +34,8 @@ extern int MeasureTextWidth_8003E4C8();
 
 
 
-extern unsigned char enemyBits_800C9E72[];
 
-extern unsigned char enemyUnits_800C9E80[];
+extern unsigned char enemyUnits_800C9E80[4];
 
 
 
@@ -74,6 +73,16 @@ typedef struct BatCmd_a
     int mask_8; // acting unit bits
     int targets_C; // target unit bits
 } BatCmd_a;
+
+// the battle menu's enemy target list. bits_2 is a member (a global array would be word aligned, it is at 0x800C9E72);
+// the code indexes it through its decayed address (`*(t.bits_2 + n)`, a bits pointer), which keeps the base at +2
+typedef struct BatEnemyTargets_a
+{
+    unsigned char flag_0; // cleared when the menu opens
+    unsigned char unk_1;
+    unsigned char bits_2[3]; // unit bit of each living enemy, in menu order
+} BatEnemyTargets_a;
+extern BatEnemyTargets_a enemyTargets_800C9E70;
 
 // the enemy AI's context (ChooseEnemyCommand_800C4118)
 typedef struct BatTask
@@ -963,7 +972,6 @@ extern int CanCastMagic_800C6CFC();
 extern EventNode* battleMenuTask_8008D468;
 
 
-extern unsigned char dword_800C9E70;
 
 extern void SelectMenuWindows_800C71A0();
 
@@ -1115,7 +1123,6 @@ extern void DrawMenuHelpText_800C8828(int a);
 
 extern int IsDrainAction_80013228(UnitStatus* a, UnitStatus* b, BatCmd_a* c, BatResult_a* r);
 
-extern unsigned char enemyBits_800C9E72[];
 
 
 

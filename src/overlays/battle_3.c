@@ -637,7 +637,6 @@ int IsBossSpecies_800BF9B4(int species)
     return r;
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800B67F0);
 
 #if 0 // Not matched: x is copied to v1 and the mask is built before the load in the original; regalloc/schedule differ in every variant tried
 void MarkSpeciesCaptured_800BF9F0(int species)
@@ -4217,7 +4216,7 @@ int StartBattleMenu_800C6EFC()
             if (enemyMask_800C9E4C & m)
             {
                 enemyUnits_800C9E80[n] = i + 4;
-                enemyBits_800C9E72[n] = m;
+                *(enemyTargets_800C9E70.bits_2 + n) = m;
                 n++;
             }
         }
@@ -4225,7 +4224,7 @@ int StartBattleMenu_800C6EFC()
         prevMenuPage_800C9E40 = 0;
         menuState_800C9E48 = 0;
         targetFlags_800C9E68 = 4;
-        dword_800C9E70 = 0;
+        enemyTargets_800C9E70.flag_0 = 0;
         InitMenuCursors_800C7088();
         SelectMenuWindows_800C71A0();
         DisableMenuCommands_800C71C8();
@@ -4551,7 +4550,6 @@ int IsMenuSelectionValid_800C7530()
     }
 }
 
-INCLUDE_OVERLAY_ASM(battle, dword_800BA238);
 
 unsigned char GetSelectedCommand_800C78D0()
 {
@@ -4578,7 +4576,7 @@ int GetSelectedTargets_800C791C()
     else if (b & 4)
     {
         short i = GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314);
-        r = enemyBits_800C9E72[i];
+        r = *(enemyTargets_800C9E70.bits_2 + i);
     }
     else
     {
@@ -4935,7 +4933,8 @@ void SetCameraFocusTargets_800C8694(unsigned char page)
 {
     if (page == 4 && (targetFlags_800C9E68 & 5) == 4)
     {
-        newCameraFocus_800C9E3C = enemyBits_800C9E72[(short)GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314)];
+        unsigned char* bits = enemyTargets_800C9E70.bits_2;
+        newCameraFocus_800C9E3C = bits[(short)GetMenuCursorIndex_8003DA54(enemyTargetMenu_800C9314)];
     }
     else
     {
@@ -5510,7 +5509,7 @@ int menuTarget_800C9E54 = 0;
 BatCmd_a menuCommand_800C9E58 = { 0 };
 unsigned char targetFlags_800C9E68 = 0;
 BatMenuItem_a *menuItems_800C9E6C = 0;
-INCLUDE_OVERLAY_ASM(battle, dword_800C9E70);
-INCLUDE_OVERLAY_ASM(battle, partyMinionMask_800C9E78);
-INCLUDE_OVERLAY_ASM(battle, menuErrorText_800C9E7C);
-INCLUDE_OVERLAY_ASM(battle, enemyUnits_800C9E80);
+BatEnemyTargets_a enemyTargets_800C9E70 = { 0 };
+int partyMinionMask_800C9E78 = 0;
+int menuErrorText_800C9E7C = 0;
+unsigned char enemyUnits_800C9E80[4] = { 0 };

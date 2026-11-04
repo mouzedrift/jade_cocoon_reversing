@@ -25,7 +25,6 @@ void* GetEventDataSlot_800A55B0(int a)
     return r;
 }
 
-INCLUDE_OVERLAY_ASM(game, dword_800A0630);
 
 extern void LoadEventEffectFile_800BC7A8(int a, int b);
 extern void LoadRelocBlob_800BC854(int a, int b);
@@ -54,7 +53,6 @@ void LoadEventData_800A5628(int kind, int a, int b)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(game, dword_800A0648);
 
 void FreeEventData_800A56BC(int kind)
 {

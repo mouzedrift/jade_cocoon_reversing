@@ -324,7 +324,6 @@ void ApplyConfigSetting_800C31DC(CfgCtxConfig* c)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(config, dword_800C2C88);
 
 void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
 {
@@ -426,7 +425,6 @@ void HandleConfigPageInput_800C3540(CfgCtxConfig* c)
         break;
     }
 }
-INCLUDE_OVERLAY_ASM(config, dword_800C2CA0);
 
 void OpenConfigPage_800C378C(CfgCtxConfig* c)
 {
@@ -454,7 +452,6 @@ void OpenConfigPage_800C378C(CfgCtxConfig* c)
     c->page_2 = c->nextPage_4;
     c->nextPage_4 = -1;
 }
-INCLUDE_OVERLAY_ASM(config, dword_800C2CB8);
 
 void DrawConfigPage_800C383C(CfgCtxConfig* c)
 {
@@ -715,7 +712,6 @@ done:
     DrawUiTiySprt_8002C06C(&box, 0xE8, 0xE);
     DrawWindow_80042460(rect, &box.col_8, dword_8008D454 + 0x38, 0);
 }
-INCLUDE_OVERLAY_ASM(config, dword_800C2D20);
 
 #if 0
 // Not matched: the original does not keep i*38 in a register across the loop body (uses fewer saved registers)

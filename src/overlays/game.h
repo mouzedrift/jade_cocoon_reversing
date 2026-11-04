@@ -1253,7 +1253,6 @@ extern const int dword_800A0694;
 extern const int dword_800A06F0[18];
 extern const char aAssertionFailed_800A07E0[];
 extern const char aPLDISPC_800A0808[];
-extern const int dword_800A0814;
 extern GameRec_1 encounterRecord_800ADE78;
 extern short formation1_800ADE8C[2];
 extern short formation2_800ADE90[2];

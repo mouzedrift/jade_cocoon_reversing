@@ -725,7 +725,6 @@ void StoreEnterState_800BB30C(StoreMenu* o)
         o->nextState_2 = -1;
     }
 }
-INCLUDE_OVERLAY_ASM(wpnshop, dword_800BADA0);
 
 void StoreInput_800BB664(StoreMenu* o)
 {
