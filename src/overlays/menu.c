@@ -134,7 +134,7 @@ typedef struct MenuQuad
 } MenuQuad;
 extern char name_800C18F4[];
 extern void DrawLargeTextBox_8002AF10();
-extern void sub_8002F1C8();
+extern void DrawUnitStatusWindow_8002F1C8();
 
 extern int name_800AD288();
 extern UnitStatus* name_80014390();
@@ -454,9 +454,9 @@ void sub_800BC24C(MenuTask* t)
     }
 }
 
-extern void sub_8002E334();
-extern void sub_8002FD0C();
-extern void sub_8002F8E4();
+extern void DrawLevantSummary_8002E334();
+extern void DrawLevantHeaderWindows_8002FD0C();
+extern void DrawPartySlotWindow_8002F8E4();
 extern void AddClipDrawAreaPrim_80033308();
 extern void sub_800BC934(int a, int b);
 typedef struct MenuPartyQ
@@ -489,8 +489,8 @@ void sub_800BC2A8(MenuMain* c)
         q20.y = 8;
         q20.f4 = 1;
         q20.f8 = frameCount_8008D3FC;
-        sub_8002E334(st, &q20);
-        sub_8002FD0C(0xE, 8, 1, 1, 0);
+        DrawLevantSummary_8002E334(st, &q20);
+        DrawLevantHeaderWindows_8002FD0C(0xE, 8, 1, 1, 0);
     }
     else
     {
@@ -498,8 +498,8 @@ void sub_800BC2A8(MenuMain* c)
         q30.y = 8;
         q30.f4 = 0;
         q30.f8 = 0;
-        sub_8002E334(st, &q30);
-        sub_8002FD0C(0xE, 8, 0, 0, 0);
+        DrawLevantSummary_8002E334(st, &q30);
+        DrawLevantHeaderWindows_8002FD0C(0xE, 8, 0, 0, 0);
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 14);
     for (i = 0; i < c->count_44 - 1; i++)
@@ -529,7 +529,7 @@ void sub_800BC2A8(MenuMain* c)
         loc.e = e;
         loc.f = i;
         loc.g = g;
-        sub_8002F8E4(st, &loc);
+        DrawPartySlotWindow_8002F8E4(st, &loc);
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 14);
     for (i = 0; i < c->count_44; i++)
@@ -639,12 +639,12 @@ void sub_800BC8A8(void)
     DrawWindow_80042460(rect, &b.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
 }
 
-extern int sub_8002FA0C();
+extern int GetPartyWindowX_8002FA0C();
 void sub_800BC934(int a, int b)
 {
     short rect[4];
     MenuBox bx;
-    short r = sub_8002FA0C((short)b, (short)(a - 1));
+    short r = GetPartyWindowX_8002FA0C((short)b, (short)(a - 1));
     if (r != 0)
     {
         rect[0] = r + 8;
@@ -824,7 +824,7 @@ void sub_800BCEA0(MenuMain* a, int b, void* c, short d)
         Minion* m = GetMinion_80010598(3, i - 1);
         s[0] = 0x33;
         s[1] = 0x3E;
-        sub_8002DB48(c, b, 0, s, m, &a->st_1AC[i]);
+        DrawUnitStatusPanel_8002DB48(c, b, 0, s, m, &a->st_1AC[i]);
     }
     col.col = uiColor_8008B590;
     col.c_2 = 0;
@@ -1537,13 +1537,13 @@ extern void sub_800C0CA4();
 extern void sub_800BEAE0();
 extern void sub_800BEBFC();
 void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2);
-extern void sub_8002CAC8();
-extern void sub_8002CE28();
-extern void sub_8002C728();
-extern void sub_8002D7D0();
-extern int sub_8002D250();
-extern void sub_8002F120();
-extern int sub_8002C670();
+extern void DrawMagicList_8002CAC8();
+extern void DrawAbilityList_8002CE28();
+extern void DrawItemList_8002C728();
+extern void DrawFamilyTree_8002D7D0();
+extern int DrawTargetSelectMenu_8002D250();
+extern void DrawMpGauge_8002F120();
+extern int DrawAbilityDescription_8002C670();
 extern RECT name_800C1AEC[]; // the menu windows' rects
 extern char name_800C22D8[];
 extern char name_800BBA44[];
@@ -1605,14 +1605,14 @@ void sub_800BE4A0(MenuCtx* c)
             m = GetMinion_80010598(3, c->arr_2A[1]);
             if (m)
             {
-                r.field_0 = c->arr_2A[7];
-                r.field_2 = c->arr_46[2];
+                r.cursor_0 = c->arr_2A[7];
+                r.scroll_2 = c->arr_46[2];
                 r.field_4 = s;
-                r.field_6 = 14;
+                r.ot_6 = 14;
                 r.field_8 = 0;
                 r.field_A = 1;
-                r.field_C_minion = m;
-                sub_8002CAC8(&r, 0);
+                r.minion_C = m;
+                DrawMagicList_8002CAC8(&r, 0);
             }
             break;
         }
@@ -1642,25 +1642,25 @@ void sub_800BE4A0(MenuCtx* c)
             if (m)
             {
                 struct_minion_ref r;
-                r.field_0 = c->arr_2A[10];
-                r.field_2 = 0;
+                r.cursor_0 = c->arr_2A[10];
+                r.scroll_2 = 0;
                 r.field_4 = s;
-                r.field_6 = 14;
+                r.ot_6 = 14;
                 r.field_8 = 0;
                 r.field_A = 1;
-                r.field_C_minion = m;
-                sub_8002CE28(&r, 0);
+                r.minion_C = m;
+                DrawAbilityList_8002CE28(&r, 0);
             }
             {
                 int found = 0;
                 int is = c->sel_2 == 11;
                 if (IsCircleHeldP1_8003D480() && is && c->f24 == 0)
                 {
-                    found = sub_8002C670(GetMinion_80010598(3, c->arr_2A[1]), 0, name_800C22D8, c->arr_2A[10], 14) != 0;
+                    found = DrawAbilityDescription_8002C670(GetMinion_80010598(3, c->arr_2A[1]), 0, name_800C22D8, c->arr_2A[10], 14) != 0;
                 }
                 if (!found)
                 {
-                    sub_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 14, 0);
+                    DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 14, 0);
                 }
             }
             break;
@@ -1670,7 +1670,7 @@ void sub_800BE4A0(MenuCtx* c)
             MenuPair p;
             p.a = 0;
             p.b = 0;
-            sub_8002D7D0(GetMinion_80010598(3, c->arr_2A[1]), 14, &p);
+            DrawFamilyTree_8002D7D0(GetMinion_80010598(3, c->arr_2A[1]), 14, &p);
             break;
         }
         case 10:
@@ -1692,14 +1692,14 @@ void sub_800BE4A0(MenuCtx* c)
             {
                 s = 4;
             }
-            r.field_0 = c->arr_2A[3];
-            r.field_2 = c->arr_46[0];
+            r.cursor_0 = c->arr_2A[3];
+            r.scroll_2 = c->arr_46[0];
             r.field_4 = s;
-            r.field_6 = 14;
+            r.ot_6 = 14;
             r.field_8 = 0;
             r.field_A = 1;
-            r.field_C_minion = 0;
-            sub_8002C728(&r);
+            r.minion_C = 0;
+            DrawItemList_8002C728(&r);
             break;
         }
         case 12:
@@ -1754,7 +1754,7 @@ void sub_800BE4A0(MenuCtx* c)
                 pr[1] = 0;
                 pr[2] = c->arr_2A[5];
                 pr[3] = 1;
-                sub_8002D250(pr, 0, c->arr_2A[5], 14);
+                DrawTargetSelectMenu_8002D250(pr, 0, c->arr_2A[5], 14);
                 if (c->sel_2 == 2 && c->arr_2A[5] != 0)
                 {
                     MenuPair p;
@@ -1765,7 +1765,7 @@ void sub_800BE4A0(MenuCtx* c)
                     s = buf[1];
                     p.a = 0xD2;
                     p.b = 0xBB;
-                    sub_8002F120(sub_80014390(c->arr_2A[5] & 0xFF), &p, s, 14);
+                    DrawMpGauge_8002F120(sub_80014390(c->arr_2A[5] & 0xFF), &p, s, 14);
                     r.w = 0x64;
                     r.h = 0x15;
                     r.x = 0xD2;
@@ -1859,7 +1859,7 @@ void sub_800BEAE0(MenuCtx* c)
 }
 INCLUDE_OVERLAY_ASM(menu, dword_800BBB04);
 
-extern void sub_8002DB48();
+extern void DrawUnitStatusPanel_8002DB48();
 void sub_800BEBFC(MenuCtx* o, int a)
 {
     Minion* m = 0;
@@ -1874,7 +1874,7 @@ void sub_800BEBFC(MenuCtx* o, int a)
     s[0] = 0x33;
     s[1] = 0x3E;
     if (m)
-        sub_8002DB48(m2, 0xE, a, s, m, 0);
+        DrawUnitStatusPanel_8002DB48(m2, 0xE, a, s, m, 0);
 }
 
 void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
@@ -1886,10 +1886,10 @@ void sub_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
     DrawWindow_80042460(a, &t, &pOT_8008D454[b], frameCount_8008D3FC);
 }
 
-extern void sub_8002E334();
+extern void DrawLevantSummary_8002E334();
 extern void InterpolateWindowRect_8004196C();
 extern void AddDrawAreaPrim_8003326C();
-extern void sub_8002FD0C();
+extern void DrawLevantHeaderWindows_8002FD0C();
 extern void DrawAnimatedWindow_8002BEC8();
 extern void DrawLargeNumber_8002C100();
 extern void AddClipDrawAreaPrim_80033308();
@@ -1922,12 +1922,12 @@ void sub_800BECE4(MenuCtx* c, short b)
     q.s = s;
     q.z4 = 1;
     q.z8 = t;
-    sub_8002E334(&levantStatus_8008BD38, &q);
+    DrawLevantSummary_8002E334(&levantStatus_8008BD38, &q);
     InterpolateWindowRect_8004196C(tmp, name_800C2994, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
     InterpolateWindowRect_8004196C(tmp, name_800C298C, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    sub_8002FD0C(b, (short)s, 1, flag, tmp);
+    DrawLevantHeaderWindows_8002FD0C(b, (short)s, 1, flag, tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     if (c->sel_2 == 0)
     {
@@ -1955,7 +1955,7 @@ void sub_800BECE4(MenuCtx* c, short b)
 #endif
 INCLUDE_OVERLAY_ASM(menu, sub_800BECE4);
 
-extern void sub_8002F8E4();
+extern void DrawPartySlotWindow_8002F8E4();
 void sub_800BEFAC(MenuCtx* a, short b)
 {
     MenuLoc loc;
@@ -1986,18 +1986,18 @@ void sub_800BEFAC(MenuCtx* a, short b)
             loc.e = r16;
             loc.f = j;
             loc.g = 1;
-            sub_8002F8E4(r18, &loc);
+            DrawPartySlotWindow_8002F8E4(r18, &loc);
             AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
             j++;
         } while (j < a->f8 - 1);
     }
 }
 
-extern void sub_8002E334();
+extern void DrawLevantSummary_8002E334();
 extern void InterpolateWindowRect_8004196C();
 extern void AddDrawAreaPrim_8003326C();
-extern void sub_8002FD0C();
-extern void sub_8002F7D0();
+extern void DrawLevantHeaderWindows_8002FD0C();
+extern void DrawLevantStats_8002F7D0();
 extern void DrawAnimatedWindow_8002BEC8();
 extern int GetRankName_8002FCD8();
 extern int sub_800AD02C();
@@ -2028,16 +2028,16 @@ void sub_800BF0F4(MenuCtx* a, short b)
     q.s = s;
     q.z4 = 0;
     q.z8 = 0;
-    sub_8002E334(lv, &q);
+    DrawLevantSummary_8002E334(lv, &q);
     InterpolateWindowRect_8004196C(tmp, name_800C2994, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
     InterpolateWindowRect_8004196C(tmp, name_800C298C, (short)s, 8, 0);
     AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    sub_8002FD0C(b, (short)s, 0, 0, tmp);
+    DrawLevantHeaderWindows_8002FD0C(b, (short)s, 0, 0, tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     pos[0] = 0xD1;
     pos[1] = 0x88;
-    sub_8002F7D0(pos, 0xE);
+    DrawLevantStats_8002F7D0(pos, 0xE);
     DrawAnimatedWindow_8002BEC8(tmp, name_800C1BE0, (short)s, b, 0, 0);
     w.sel_0 = -1;
     pp[0] = 0xA;
@@ -2129,7 +2129,7 @@ typedef struct MenuUseQ
     int g;
 } MenuUseQ;
 extern int CheckItemUsable_80033AFC();
-extern int sub_80033DF4();
+extern int CheckItemOnTarget_80033DF4();
 extern int sub_800AD73C();
 extern int sub_800A5E80();
 extern int sub_800C1000();
@@ -2167,7 +2167,7 @@ int sub_800BF540(MenuCtx* c)
         q2.b = 0;
         q2.c = c->arr_2A[5];
         q2.d = 1;
-        r = sub_80033DF4(&q2);
+        r = CheckItemOnTarget_80033DF4(&q2);
         switch (r)
         {
         case 2:
@@ -2688,7 +2688,7 @@ void DrawItemGrid_800C01F4(MenuItemGrid* c)
             r.y = name_800C18EC.y + dy;
             it = GetSaveItem_80033AE4(&saveData_8008B570, k + c->scroll_3C * 3);
             if (it && it->species_5C != 0xD3)
-                sub_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
+                DrawUnitStatusWindow_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
         }
     }
     if (c->scroll_3C != 0)
@@ -2738,14 +2738,14 @@ void sub_800C0428(MenuCtx* c)
         }
         r = name_80014390(u & 0xFF);
         if (u == 0)
-            sub_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 2);
+            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 2);
         else
-            sub_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 0);
+            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, name_800C18F4, 0xE, 0);
     }
 }
 
 extern int sub_800C0990();
-extern void sub_8002F7D0();
+extern void DrawLevantStats_8002F7D0();
 extern void DrawAnimatedWindow_8002BEC8();
 extern char name_800C18C4[];
 void sub_800C0578(MenuObj* o)
@@ -2755,7 +2755,7 @@ void sub_800C0578(MenuObj* o)
     short s = sub_800C0990(o, 1);
     r[0] = 0xC2;
     r[1] = 0x31;
-    sub_8002F7D0(r, 0xE);
+    DrawLevantStats_8002F7D0(r, 0xE);
     DrawAnimatedWindow_8002BEC8(buf, name_800C18C4, s, 0xE, 0, 0);
 }
 
@@ -2774,7 +2774,7 @@ void sub_800C05E0(MenuCtx* c)
         }
     }
     if (!found && c->f24 == 0 && c->sel_2 != 0x10)
-        sub_8002F1C8(&levantStatus_8008BD38, 0, 0, 0, name_800C18F4, 0xE, 2);
+        DrawUnitStatusWindow_8002F1C8(&levantStatus_8008BD38, 0, 0, 0, name_800C18F4, 0xE, 2);
 }
 
 extern int name_8001AEC0();
@@ -2795,7 +2795,7 @@ void sub_800C06E8(MenuCtx* c)
         }
     }
     if (!found && c->f24 == 0)
-        sub_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 0xE, 0);
+        DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, name_800C18F4, 0xE, 0);
 
 }
 
@@ -2859,7 +2859,7 @@ typedef struct MenuWinItem
 } MenuWinItem;
 extern MenuWinItem* name_800C28C4[];
 extern int GetKeyItemIcon_8001D344();
-extern void sub_8002C6DC();
+extern void DrawScrollArrow_8002C6DC();
 extern char name_800C276C[];
 extern char name_800C2770[];
 void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
@@ -2917,9 +2917,9 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* a)
     if (n < 4)
         n = 4;
     if (a->scroll_2 != 0)
-        sub_8002C6DC(name_800C276C, 3, a->ot_6);
+        DrawScrollArrow_8002C6DC(name_800C276C, 3, a->ot_6);
     if (a->scroll_2 < n - 4 && n >= 5)
-        sub_8002C6DC(name_800C2770, 1, a->ot_6);
+        DrawScrollArrow_8002C6DC(name_800C2770, 1, a->ot_6);
 }
 
 
@@ -2953,7 +2953,7 @@ INCLUDE_OVERLAY_ASM(menu, sub_800C0C3C);
 
 
 
-extern int sub_80033DF4();
+extern int CheckItemOnTarget_80033DF4();
 void sub_800C0CA4(MenuCtx* c, int* out)
 {
     MenuTmp tmp;
@@ -2972,7 +2972,7 @@ void sub_800C0CA4(MenuCtx* c, int* out)
     tmp.f8 = 1;
     sub_800C00D4(&tmp, r17, (short)u);
     tmp.f0 = 4;
-    if (sub_80033DF4(&q) == 0 && sub_800C0DD4(r17))
+    if (CheckItemOnTarget_80033DF4(&q) == 0 && sub_800C0DD4(r17))
     {
         int v;
         sub_80013C28(&levantStatus_8008BD38, r16, &tmp, &tmp.d_10);

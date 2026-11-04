@@ -53,7 +53,7 @@ void StopAllEventEntries_80043B40(EventNode* p)
     }
 }
 extern short word_8008D51E; // projection distance
-extern int sub_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl);
+extern int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl);
 // Matched
 int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, short* off, short fl)
 {
@@ -84,7 +84,7 @@ int DrawBillboard_80043B8C(POLY_FT4* p, VECTOR* pos, short* size, int flags, sho
             setSemiTrans(p, 1);
             p->tpage = (p->tpage & ~0x60) | (flags & 0x60);
         }
-        return sub_80031BE4(p, pOT_8008D690 + ((s->otz_C >> 2) & 0x3FF), s->x_0, s->y_2, s->w_10, s->h_14, off, fl);
+        return AddScaledPolyFT4_80031BE4(p, pOT_8008D690 + ((s->otz_C >> 2) & 0x3FF), s->x_0, s->y_2, s->w_10, s->h_14, off, fl);
     }
     return 0;
 }
@@ -114,7 +114,7 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* p, VECTOR* pos, short* size, unsigned ch
         p->r0 = (rgb[0] * sceneBrightness_8008D40C) >> 12;
         p->g0 = (rgb[1] * sceneBrightness_8008D40C) >> 12;
         p->b0 = (rgb[2] * sceneBrightness_8008D40C) >> 12;
-        return sub_80031BE4(p, pOT_8008B4C8 + ((s->otz_C >> 2) & 0x3FF), s->x_0, s->y_2, s->w_10, s->h_14, 0, 0x20);
+        return AddScaledPolyFT4_80031BE4(p, pOT_8008B4C8 + ((s->otz_C >> 2) & 0x3FF), s->x_0, s->y_2, s->w_10, s->h_14, 0, 0x20);
     }
     return 0;
 }

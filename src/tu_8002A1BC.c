@@ -231,7 +231,7 @@ extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsign
 extern void AddSprtWithTPage_800331C4(unsigned short* a, SPRT* o, DR_TPAGE* b, unsigned long* c, unsigned char* col);
 extern int MeasureTextWidthFont1_8003E6B0(int text);
 extern int MeasureTextWidth_8003E4C8(int text);
-extern void sub_8002FAA0(int a0, unsigned short* pos, int name, int a3);
+extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
 extern void sub_8003F264(unsigned short* pos, int v, int ot);
 extern void sub_8003EFBC(unsigned short* pos, int v, int ot);
@@ -290,16 +290,16 @@ void DrawMenuWindowContents_8002A710(void* a, int ot)
         loc[1] = r[1];
         if (p->flags & 4)
         {
-            sub_8002FAA0(1, loc, p->text, ot);
+            DrawSmallText_8002FAA0(1, loc, p->text, ot);
         }
         else if (p->flags & 8)
         {
             loc[0] += (short)r[2] / 2;
-            sub_8002FAA0(2, loc, p->text, ot);
+            DrawSmallText_8002FAA0(2, loc, p->text, ot);
         }
         else
         {
-            sub_8002FAA0(0, loc, p->text, ot);
+            DrawSmallText_8002FAA0(0, loc, p->text, ot);
         }
         break;
     case 5:

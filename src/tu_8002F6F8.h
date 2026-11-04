@@ -5,6 +5,6 @@ typedef struct
 {
     unsigned short s[11];
 } NameBuf;
-extern const NameBuf dword_80074434;
+extern const NameBuf emptyNameBuf_80074434;
 
 #endif

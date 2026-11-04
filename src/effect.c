@@ -237,7 +237,7 @@ int LowestSetBit_80014358(unsigned int mask)
     return 0;
 }
 #if 0
-// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_8001449C / sub_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
+// Not matched (13 words): a0 and r swap saved registers ($s1/$s2), same problem as sub_8001449C / GetUnitSkills_80031B30. Writing a0 = a0 - 1 in the last branch fixes them (6 words) but then writes $s1 and the w temps move to $a0; u_char a0 (with funcs.h changed): still swapped; r uninitialised + explicit r = 0: worse
 UnitStatus* sub_80014390(int a0)
 {
     UnitStatus* r = 0;

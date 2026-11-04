@@ -1012,7 +1012,7 @@ extern void AddDrawAreaPrim_8003326C(RECT* r, char* ot);
 extern void AddClipDrawAreaPrim_80033308(char* ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
 extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
-extern void sub_8002FAA0(int a0, void* pos, unsigned char* name, int a3);
+extern void DrawSmallText_8002FAA0(int a0, void* pos, unsigned char* name, int a3);
 // Matched
 void sub_800B8BD4(LoadTask_LOAD* t)
 {
@@ -1092,7 +1092,7 @@ void sub_800B8BD4(LoadTask_LOAD* t)
                     AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
                     p3.x_LOAD = dword_800BD93C[6].x_LOAD;
                     p3.y_LOAD = dword_800BD93C[6].y_LOAD + i * 33;
-                    sub_8002FAA0(0, &p3, t->summaries_LOAD[n].name_0, 1);
+                    DrawSmallText_8002FAA0(0, &p3, t->summaries_LOAD[n].name_0, 1);
                     AddDrawAreaPrim_8003326C(&dword_800BDA10, dword_8008D454 + 4);
                 }
                 else if (j == 7)

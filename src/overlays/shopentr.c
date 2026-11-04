@@ -88,7 +88,7 @@ typedef struct
     unsigned char field_C8;
 } EntShopentr;
 extern EntShopentr* sub_800B9C5C(int a0);
-extern void sub_8002FAA0(int a0, void* a1, void* a2, short a3);
+extern void DrawSmallText_8002FAA0(int a0, void* a1, void* a2, short a3);
 extern void DrawElementIconsRow_8002B1B0(short a0, void* a1, short a2);
 extern char str_800B6F08[];
 
@@ -459,7 +459,7 @@ void sub_800B7858(CtxShopentr* c)
         p[0] = a.x + 3;
         if (d)
         {
-            sub_8002FAA0(0, p, d, col);
+            DrawSmallText_8002FAA0(0, p, d, col);
         }
         p[0] = 0xa2;
         p[1] = a.y + 4;

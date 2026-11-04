@@ -1975,15 +1975,15 @@ extern int IsCircleHeldP1_8003D480(void);
 extern int FindNthMagicBit_8001AEC0(unsigned int* bits, int n);
 extern void DrawPortraitWindow_8002A4E4(int a);
 extern void DrawTextList_8002A310(void* p, int a);
-extern void sub_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
+extern void DrawAbilityDescription_8002C670(Minion* m, ShopPosShop* pos, void* a2, int idx, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawWindow_80042460(void* rect, ShopWinShop* w, void* ot, int t);
-extern void sub_8002CE28(struct_minion_ref* a0, ShopPosShop* a1);
-extern void sub_8002CAC8(struct_minion_ref* a0, ShopPosShop* a1);
-extern void sub_8002D7D0(Minion* m, int ot, ShopPosShop* base);
+extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, ShopPosShop* a1);
+extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, ShopPosShop* a1);
+extern void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPosShop* base);
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void sub_8002DB48(UnitStatus* m, int ot, void* rect, ShopPosShop* pos, Minion* mn, UnitStatus* cmp);
-extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPosShop* pos, Minion* mn, UnitStatus* cmp);
+extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
 extern void DrawUiWindow_8002A384(ShopUiWinShop* p);
 extern void sub_800BCEDC(ShopUnit3Shop* u);
 extern void sub_800BCCD8(ShopUnit3Shop* u);
@@ -2054,7 +2054,7 @@ void sub_800BC380(ShopUnit3Shop* u)
         pos.y = 0x12;
         if (u->field_24 & 0x40)
         {
-            sub_8002C670(u->field_54, &pos, name_800C044C, u->field_48, 0xE);
+            DrawAbilityDescription_8002C670(u->field_54, &pos, name_800C044C, u->field_48, 0xE);
         }
         else if (u->field_24 & 0x80)
         {
@@ -2107,33 +2107,33 @@ void sub_800BC380(ShopUnit3Shop* u)
                     {
                         p28.x = 0x5C;
                         p28.y = 0x5E;
-                        r30.field_0 = u->field_48;
-                        r30.field_2 = u->field_4A;
+                        r30.cursor_0 = u->field_48;
+                        r30.scroll_2 = u->field_4A;
                         r30.field_4 = 2;
-                        r30.field_6 = 0xE;
+                        r30.ot_6 = 0xE;
                         r30.field_8 = 0;
                         r30.field_A = 1;
-                        r30.field_C_minion = u->field_54;
-                        sub_8002CE28(&r30, &p28);
+                        r30.minion_C = u->field_54;
+                        DrawAbilityList_8002CE28(&r30, &p28);
                     }
                     else if (u->field_24 & 0x80)
                     {
                         p40.x = 0x7E;
                         p40.y = 0x6D;
-                        r48.field_0 = u->field_48;
-                        r48.field_2 = u->field_4A;
+                        r48.cursor_0 = u->field_48;
+                        r48.scroll_2 = u->field_4A;
                         r48.field_4 = 2;
-                        r48.field_6 = 0xE;
+                        r48.ot_6 = 0xE;
                         r48.field_8 = 0;
                         r48.field_A = 1;
-                        r48.field_C_minion = u->field_54;
-                        sub_8002CAC8(&r48, &p40);
+                        r48.minion_C = u->field_54;
+                        DrawMagicList_8002CAC8(&r48, &p40);
                     }
                     else if (u->field_24 & 0x100)
                     {
                         p58.x = 0x28;
                         p58.y = 0x1E;
-                        sub_8002D7D0(u->field_54, 0xE, &p58);
+                        DrawFamilyTree_8002D7D0(u->field_54, 0xE, &p58);
                     }
                 }
                 if (!(u->field_24 & 0x1C0))
@@ -2143,11 +2143,11 @@ void sub_800BC380(ShopUnit3Shop* u)
                     InterpolateWindowRect_8004196C(&r68, &name_800BF790, n, 8, 0);
                     if (u->field_0 == 3 && u->field_3C == 2)
                     {
-                        sub_8002DB48(&name_800C08E8.status_84, 0xE, &r68, &p60, u->field_54, &u->field_4C->status_84);
+                        DrawUnitStatusPanel_8002DB48(&name_800C08E8.status_84, 0xE, &r68, &p60, u->field_54, &u->field_4C->status_84);
                     }
                     else
                     {
-                        sub_8002DB48(&u->field_54->status_84, 0xE, &r68, &p60, u->field_54, 0);
+                        DrawUnitStatusPanel_8002DB48(&u->field_54->status_84, 0xE, &r68, &p60, u->field_54, 0);
                     }
                 }
             }
@@ -2188,7 +2188,7 @@ void sub_800BC380(ShopUnit3Shop* u)
             p30.x = name_800BF7B0[0].x + name_800BF7B0[0].w / 2;
             p30.y = name_800BF7B0[0].y + 2;
             InterpolateWindowRect_8004196C(&r28, &name_800BF7B0[0], 8, 8, 0);
-            sub_8002FAA0(2, (unsigned short*)&p30, u->field_4C->status_84.name_10, 0xE);
+            DrawSmallText_8002FAA0(2, (unsigned short*)&p30, u->field_4C->status_84.name_10, 0xE);
             t = 0;
             if (u->field_3C == 0 && u->field_0 == 3 && (u->field_24 & 2))
             {
@@ -2214,7 +2214,7 @@ void sub_800BC380(ShopUnit3Shop* u)
                     ShopPosShop p40;
                     p40.x = name_800BF7B0[j].x + name_800BF7B0[j].w / 2;
                     p40.y = name_800BF7B0[j].y + 2;
-                    sub_8002FAA0(2, (unsigned short*)&p40, u->field_50->status_84.name_10, 0xE);
+                    DrawSmallText_8002FAA0(2, (unsigned short*)&p40, u->field_50->status_84.name_10, 0xE);
                     break;
                 }
                 case 2:
@@ -2254,13 +2254,13 @@ void sub_800BC380(ShopUnit3Shop* u)
         if (i == 6)
         {
             struct_minion_ref r40;
-            r40.field_0 = u->a5E[8];
-            r40.field_2 = u->a72[2];
+            r40.cursor_0 = u->a5E[8];
+            r40.scroll_2 = u->a72[2];
             r40.field_4 = 2;
-            r40.field_6 = 0xE;
+            r40.ot_6 = 0xE;
             r40.field_8 = 0;
             r40.field_A = 1;
-            r40.field_C_minion = 0;
+            r40.minion_C = 0;
             DrawPersonList_800BED48(&r40);
         }
         if (u->field_C == 8)
@@ -3208,7 +3208,7 @@ void sub_800BE4D0(ShopTaskShop* t, ShopUnit3Shop* a)
 }
 
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void sub_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
+extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, char* name, int a3);
 extern ShopSixShop name_800B971C;
 extern char name_800BFE24[];
 void sub_800BE53C(ShopUnit3Shop* u)
@@ -3263,7 +3263,7 @@ void sub_800BE53C(ShopUnit3Shop* u)
         p[1] = r[1] + 3;
         if (s)
         {
-            sub_8002FAA0(2, p, s, 0xE);
+            DrawSmallText_8002FAA0(2, p, s, 0xE);
         }
         if (clut)
         {
@@ -3356,7 +3356,7 @@ void sub_800BE7F0(ShopUnit3Shop* u)
         p.b = r[1] + 3;
         if (s)
         {
-            sub_8002FAA0(2, (unsigned short*)&p, s, 0xE);
+            DrawSmallText_8002FAA0(2, (unsigned short*)&p, s, 0xE);
         }
         if (clut)
         {
@@ -3518,7 +3518,7 @@ extern char name_8008D434[];
 extern char name_8008D440[];
 extern char name_800C0090[];
 extern char name_800C0094[];
-extern void sub_8002C6DC(void* p, int a, int b);
+extern void DrawScrollArrow_8002C6DC(void* p, int a, int b);
 void DrawPersonList_800BED48(short* s)
 {
     ShopSixShop q;
@@ -3587,11 +3587,11 @@ void DrawPersonList_800BED48(short* s)
     }
     if (s[1] != 0)
     {
-        sub_8002C6DC(name_800C0090, 3, s[3]);
+        DrawScrollArrow_8002C6DC(name_800C0090, 3, s[3]);
     }
     if (s[1] < n - 4 && n >= 5)
     {
-        sub_8002C6DC(name_800C0094, 1, s[3]);
+        DrawScrollArrow_8002C6DC(name_800C0094, 1, s[3]);
     }
 }
 
@@ -3610,7 +3610,7 @@ void sub_800BF02C(Minion* a, int* o, int c)
     ShopLocalShop l;
     unsigned int h = GetSpeciesModelDesc_80019C70(a->species_2)->modelId_0;
     int t;
-    o[0] = sub_800338DC(a->species_4C, l.b, l.w);
+    o[0] = GetTopSpecies_800338DC(a->species_4C, l.b, l.w);
     o[1] = GetSpeciesModelDesc_80019C70(l.b[0])->modelId_0;
     o[2] = GetSpeciesModelDesc_80019C70(l.b[1])->modelId_0;
     o[3] = GetSpeciesModelDesc_80019C70(l.b[2])->modelId_0;

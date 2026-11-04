@@ -2236,7 +2236,7 @@ int sub_800BB4A4(EvCtxEventfnc* c)
         {
             k = c->pc_8->c_C;
             PlayMusic_800300E0(k, 1);
-            sub_800315D8(k);
+            SetBattleMusic_800315D8(k);
         }
         else
         {

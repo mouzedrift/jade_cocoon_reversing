@@ -274,8 +274,8 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
 }
 extern int dword_800B129C[];
 extern int GetMagicEffect_8001AC8C(int idx);
-extern int sub_80031870(int a0);
-extern int sub_800316EC(int a0, int a1);
+extern int SkillSlotToAnimIndex_80031870(int a0);
+extern int GetSkillEffect_800316EC(int a0, int a1);
 // Matched
 int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)
 {
@@ -312,11 +312,11 @@ int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd*
         desc->effectKinds_18 = cmd[2];
         break;
     case 6:
-        r = sub_80031870(cmd[1]);
+        r = SkillSlotToAnimIndex_80031870(cmd[1]);
         desc->script_4 = scripts[3 + r];
         desc->turnStep_C = r;
         desc->hitAnim_E = r + 6;
-        desc->effect_10 = sub_800316EC(cmd[1], cmd[2]);
+        desc->effect_10 = GetSkillEffect_800316EC(cmd[1], cmd[2]);
         desc->effectKinds_18 = cmd[3];
         break;
     case 7:

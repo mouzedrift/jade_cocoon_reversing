@@ -179,7 +179,7 @@ void sub_800A05E0(Minion* a, CombatModelParams* o, int c)
     CombatLocalCombat l;
     unsigned int h = GetSpeciesModelDesc_80019C70(a->species_2)->modelId_0;
     int t;
-    o->count_0 = sub_800338DC(a->species_4C, l.b, l.w);
+    o->count_0 = GetTopSpecies_800338DC(a->species_4C, l.b, l.w);
     o->parts_4[0] = GetSpeciesModelDesc_80019C70(l.b[0])->modelId_0;
     o->parts_4[1] = GetSpeciesModelDesc_80019C70(l.b[1])->modelId_0;
     o->parts_4[2] = GetSpeciesModelDesc_80019C70(l.b[2])->modelId_0;
@@ -888,7 +888,7 @@ int sub_800A1934(Minion* p)
 // Matched
 void sub_800A1958(Minion* p)
 {
-    sub_80033548(&p->status_84, 0x400);
+    HasStatusFlag_80033548(&p->status_84, 0x400);
 }
 
 // Matched

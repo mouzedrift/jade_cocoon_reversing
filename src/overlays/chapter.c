@@ -59,7 +59,7 @@ void ChapterIntroTask_800B66F4(ChapterTask* t, int* st)
     {
     case 0:
         PlayMusic_800300E0(dword_800B6FE0[saveData_8008B570.chapter_2DC].music_8, 1);
-        sub_800315D8(dword_800B6FE0[saveData_8008B570.chapter_2DC].music_8);
+        SetBattleMusic_800315D8(dword_800B6FE0[saveData_8008B570.chapter_2DC].music_8);
         st[0]++;
         break;
     case 1:

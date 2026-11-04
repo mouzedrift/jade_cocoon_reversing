@@ -257,7 +257,7 @@ void sub_800CBBE0(int p)
 
 int sub_800CBC28()
 {
-    return sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
+    return MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298));
 }
 
 int sub_800CBC58()
@@ -335,10 +335,10 @@ extern unsigned short name_800CD820[][2]; // per byte_800CD83A and window: which
 extern unsigned char byte_800A84A8;
 extern unsigned int dword_800CD41C[];
 extern char* name_800CD50C[];
-extern int sub_8002C670();
-extern void sub_8002CE28(struct_minion_ref* a0, void* a1);
-extern void sub_8002CAC8(struct_minion_ref* a0, void* a1);
-extern int sub_80031A04(void* skills, int a);
+extern int DrawAbilityDescription_8002C670();
+extern void DrawAbilityList_8002CE28(struct_minion_ref* a0, void* a1);
+extern void DrawMagicList_8002CAC8(struct_minion_ref* a0, void* a1);
+extern int GetSkillMpCost_80031A04(void* skills, int a);
 extern void DrawButtonHelpBar_8002B004(void* p, int a, int b);
 extern void sub_800CC40C();
 // Matched
@@ -366,7 +366,7 @@ void sub_800CBEA4()
             m = sub_800A11D8(byte_800CD839);
             p[0] = 10;
             p[1] = 0x14;
-            sub_8002C670(m, p, name_800CD718, (short)GetMenuCursorIndex_8003DA54(dword_800CD298), 0xF);
+            DrawAbilityDescription_8002C670(m, p, name_800CD718, (short)GetMenuCursorIndex_8003DA54(dword_800CD298), 0xF);
         }
         else if (byte_800CD83A == 2)
         {
@@ -442,14 +442,14 @@ void sub_800CBEA4()
         CombComPos2 p;
         p = name_800CB680;
         r.field_4 = 2;
-        r.field_6 = 0xF;
+        r.ot_6 = 0xF;
         r.field_8 = -1;
-        r.field_0 = dword_800CD298[4];
-        r.field_2 = dword_800CD298[5];
-        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.cursor_0 = dword_800CD298[4];
+        r.scroll_2 = dword_800CD298[5];
+        r.minion_C = sub_800A11D8(byte_800CD839);
         r.field_A = 0;
-        sub_8002CE28(&r, p.xy[byte_800CD839]);
-        word_800A82D2 = -sub_80031A04(&r.field_C_minion->skills_DE, sub_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298)));
+        DrawAbilityList_8002CE28(&r, p.xy[byte_800CD839]);
+        word_800A82D2 = -GetSkillMpCost_80031A04(&r.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(dword_800CD298)));
     }
     if (!(name_800CD820[byte_800CD83A][k] & 0x80))
     {
@@ -457,14 +457,14 @@ void sub_800CBEA4()
         CombComPos2 p;
         p = name_800CB688;
         r.field_4 = 2;
-        r.field_6 = 0xF;
+        r.ot_6 = 0xF;
         r.field_8 = -1;
-        r.field_0 = dword_800CD2A4[4];
-        r.field_2 = dword_800CD2A4[5];
-        r.field_C_minion = sub_800A11D8(byte_800CD839);
+        r.cursor_0 = dword_800CD2A4[4];
+        r.scroll_2 = dword_800CD2A4[5];
+        r.minion_C = sub_800A11D8(byte_800CD839);
         r.field_A = 0;
-        sub_8002CAC8(&r, p.xy[byte_800CD839]);
-        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.field_C_minion->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4)));
+        DrawMagicList_8002CAC8(&r, p.xy[byte_800CD839]);
+        word_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0((int)&r.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(dword_800CD2A4)));
     }
     if (byte_800CD83A == 5)
     {
@@ -671,7 +671,7 @@ extern int dword_800CD458;
 extern int dword_800CD460;
 extern Minion dword_800A3AA0[][3];
 extern int sub_800A1958(Minion* p);
-extern int sub_80033C98(struct_minion_ref* p);
+extern int CheckSkillUsable_80033C98(struct_minion_ref* p);
 extern int CheckMagicCastable_80033C08(struct_minion_ref* p);
 int sub_800CCA94()
 {
@@ -679,9 +679,9 @@ int sub_800CCA94()
     short b[4];
     int idx = GetMenuCursorIndex_8003DA54(dword_800CD854);
     int* p;
-    a.field_0 = dword_800CD854[4];
+    a.cursor_0 = dword_800CD854[4];
     dword_800CD84C = 0;
-    a.field_2 = dword_800CD854[5];
+    a.scroll_2 = dword_800CD854[5];
     a.field_A = 0;
     b[3] = 0;
     b[0] = dword_800CD840->arg_4;
@@ -698,8 +698,8 @@ int sub_800CCA94()
         dword_800CD84C = *p;
         return 0;
     case 1:
-        a.field_C_minion = sub_800A11D8(byte_800CD839);
-        switch (sub_80033C98(&a))
+        a.minion_C = sub_800A11D8(byte_800CD839);
+        switch (CheckSkillUsable_80033C98(&a))
         {
         case 0:
         case 1:
@@ -716,7 +716,7 @@ int sub_800CCA94()
         }
         break;
     case 2:
-        a.field_C_minion = sub_800A11D8(byte_800CD839);
+        a.minion_C = sub_800A11D8(byte_800CD839);
         switch (CheckMagicCastable_80033C08(&a))
         {
         case 0:
