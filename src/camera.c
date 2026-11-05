@@ -20,7 +20,6 @@
 #include "effect_data.h"
 #include "main.h"
 
-extern CameraView cameraState_8008D4F0;
 extern ShortPair screenOffset_8008D474;
 // the buffer of a pad vibration task (vibrationTasks_8008D4B8, one per port)
 typedef struct
@@ -366,7 +365,7 @@ void ResetCameraToLevant_800376A8(void)
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     UpdateCameraRotation_80039E14();
     cameraZoom_8008B4F8 = 0x1000;
-    geomScreenDistance_8008B548 = (geomScreenBase_8008D51E << 12) / 0x1000;
+    geomScreenDistance_8008B548 = (cameraState_8008D4F0.geomScreen_2E << 12) / 0x1000;
     cam->flags_4 = 0;
     cam->mode_8 = 0;
     cam->blend_24 = 0;
@@ -714,9 +713,9 @@ void UpdateCameraZoom_8003856C(CameraCtrl* cam)
         cameraZoom_8008B4F8 = 0x10000;
         cam->flags_4 &= ~0x20;
     }
-    if (zoomLimit_8008D66C * 4 < geomScreenBase_8008D51E * cameraZoom_8008B4F8 / 4096)
+    if (zoomLimit_8008D66C * 4 < cameraState_8008D4F0.geomScreen_2E * cameraZoom_8008B4F8 / 4096)
     {
-        cameraZoom_8008B4F8 = (zoomLimit_8008D66C << 14) / geomScreenBase_8008D51E;
+        cameraZoom_8008B4F8 = (zoomLimit_8008D66C << 14) / cameraState_8008D4F0.geomScreen_2E;
         if (cameraZoom_8008B4F8 < 0x1000)
         {
             cameraZoom_8008B4F8 = 0x1000;
@@ -743,8 +742,8 @@ void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target)
     unsigned int prevScreen;
     UpdateCameraRotation_80039E14();
     UpdateCameraZoom_8003856C(cam);
-    screen = geomScreenBase_8008D51E * cameraZoom_8008B4F8;
-    prevScreen = geomScreenBase_8008D51E * prevCameraZoom_8008D4BC;
+    screen = cameraState_8008D4F0.geomScreen_2E * cameraZoom_8008B4F8;
+    prevScreen = cameraState_8008D4F0.geomScreen_2E * prevCameraZoom_8008D4BC;
     sv.vx = target->x;
     sv.vy = target->y;
     sv.vz = target->z;
@@ -780,8 +779,8 @@ void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, int target, Vec3i* blendTa
 
     UpdateCameraRotation_80039E14();
     UpdateCameraZoom_8003856C(cam);
-    prevScreen = geomScreenBase_8008D51E * prevCameraZoom_8008D4BC;
-    screen = geomScreenBase_8008D51E * cameraZoom_8008B4F8;
+    prevScreen = cameraState_8008D4F0.geomScreen_2E * prevCameraZoom_8008D4BC;
+    screen = cameraState_8008D4F0.geomScreen_2E * cameraZoom_8008B4F8;
     geomScreenDistance_8008B548 = prevScreen >> 12;
     SetGeomScreen(screen / 4096);
     sv.vx = targetPos->x;
@@ -829,8 +828,8 @@ extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 void ComputeCameraMoveAngles_80038D64(CameraCtrl* cam, int* center)
 {
     int diff;
-    cam->angSrc_150 = ratan2Difference_8003B9E0(center, cameraEye_8008D504) & 0xFFF;
-    cam->distSrc_154 = ISqrt_8003B918(DistanceSquaredXZ_8003B860(center, cameraEye_8008D504));
+    cam->angSrc_150 = ratan2Difference_8003B9E0(center, (int*)&cameraState_8008D4F0.eye_14) & 0xFFF;
+    cam->distSrc_154 = ISqrt_8003B918(DistanceSquaredXZ_8003B860(center, (int*)&cameraState_8008D4F0.eye_14));
     cam->angDst_152 = ratan2Difference_8003B9E0(center, (int*)&cam->eyeDst_18C) & 0xFFF;
     cam->distDst_158 = ISqrt_8003B918(DistanceSquaredXZ_8003B860(center, (int*)&cam->eyeDst_18C));
     diff = cam->angDst_152 - cam->angSrc_150;

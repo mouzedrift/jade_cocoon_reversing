@@ -25,3 +25,4 @@ tileSets_8008D654                   # == tileAnim_8008D648.items_C
 effectRows_80091BE0                   # == effectFile_80091BD0.data_10
 mdecEffectSchedule_80091C00      # == effectFile_80091BD0.imageSets_30
 seqSlotSepAccessNum_80091D0C                    # == seqSlotSound_80091D00.field_C_sep_access_num
+pointLights_8008D534             # == cameraState_8008D4F0.ent_44

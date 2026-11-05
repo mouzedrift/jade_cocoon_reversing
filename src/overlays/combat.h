@@ -152,7 +152,7 @@ extern CombatVramPos dword_8007DCAC[];         // -> globals.h: portrait image v
 extern CombatVramPos dword_8007DCBC[];         // -> globals.h: portrait clut vram positions
 extern Minion saveMinions_8008BEF8[];          // -> globals.h
 extern short defaultBones_80079140[];          // -> globals.h: default bone table
-extern CameraView cameraState_8008D4F0;        // -> camera.h
+
 extern int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx);  // -> minion_init.h
 extern void SetActorStatusTint_80018EBC(void* actor, UnitStatus* status); // -> minion_init.h
 extern ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c); // -> effect_cmd.h

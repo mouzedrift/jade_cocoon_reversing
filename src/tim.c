@@ -20,7 +20,6 @@
 #include "tim.h"
 
 
-extern char cameraState_8008D4F0[];
 extern int mapHeap_80091C68[];
 extern int mapHasCode_8008266C;
 extern int dword_80091C5C;
@@ -34,7 +33,7 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
 {
     int n;
     char* p;
-    MemCopy_800403E8(cameraState_8008D4F0, data, 0x104);
+    MemCopy_800403E8(&cameraState_8008D4F0, data, sizeof(CameraView));
     p = data;
     data += 0x108;
     n = *(int*)(p + 0x104);

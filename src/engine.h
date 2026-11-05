@@ -40,22 +40,6 @@ typedef struct
     short pad;
 } SoundCue;
 
-// the block at 0x8008D4F0 (camera.c copies its first 0x68 bytes as CameraView)
-typedef struct
-{
-    char pad_0[0x30];
-    unsigned char ambient_30[3];
-    unsigned char pad_33;
-    SVECTOR lightDir_34;
-    short lightColor_3C[3];
-    short pad_42;
-    struct
-    {
-        VECTOR pos;
-        int field_10;
-        int active;
-    } points_44[8];
-} CameraState;
 
 // a point light passed to SetModelLighting_80019D84
 // (also the camera's light list cameraState_8008D4F0.ent_44 / pointLights_8008D534)

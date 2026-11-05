@@ -6,6 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "engine.h"
+#include "camera.h"
 
 /* SHOPCTRL functions */
 void StartShopCtrl_800B66C4(int shopId);
@@ -45,7 +46,6 @@ void SuspendFieldMinions_800A7B00(int idx);               // GAME.BIN (game.h)
 void ResumeFieldMinions_800A7BF0(int idx);                // GAME.BIN (game.h)
 
 /* exe-side, to move to <exe header> (named in the comment) */
-extern int cameraState_8008D4F0;          // camera.h / engine.h block (CameraView in combbtl.h)
 extern short screenOffset_8008D474[2];    // game.h / eventfnc.h
 void SetLoadFadeFlag_80027478(int a, int b); // model_ftg
 void DrawMenuBackground_8002BE10();       // ui_sprites

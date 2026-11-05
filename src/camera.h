@@ -6,22 +6,23 @@
 #include "engine.h"
 
 
-/* cameraState_8008D4F0 */
+/* cameraState_8008D4F0: the scene camera and lights (main.c; tim.c / SHOPCTRL copy all 0x104 bytes) */
 typedef struct
 {
     int pad_0[5];
-    Vec3i eye_14; // eye (copied to cameraEye_8008D600)
+    Vec3i eye_14; // eye (copied to cameraEye_8008D600; also the alias cameraEye_8008D504)
     Vec3i lookAt_20; // look-at
     short roll_2C;     // roll
-    short geomScreen_2E; // projection distance (geomScreenBase_8008D51E)
-    unsigned char ambientR_30; // scene ambient colour (sceneAmbient_8008D520)
+    short geomScreen_2E; // projection distance (also the alias geomScreenBase_8008D51E)
+    unsigned char ambientR_30; // scene ambient colour
     unsigned char ambientG_31;
     unsigned char ambientB_32;
     unsigned char pad_33;
-    SVECTOR lightDir_34;   // scene light direction (sceneLightDir_8008D524)
-    SVECTOR lightColor_3C; // scene light colour (sceneLightColor_8008D52C)
-    PointLight ent_44[8]; // 0x8008D534 == ent_44[0]
+    SVECTOR lightDir_34;   // scene light direction
+    SVECTOR lightColor_3C; // scene light colour (vx/vy/vz used)
+    PointLight ent_44[8]; // point lights; .range_14 == 0 ends the list (also the alias pointLights_8008D534)
 } CameraView;
+extern CameraView cameraState_8008D4F0;
 
 /* cameraState_8008D4F0.ent_44: accessed through its own symbol (going through cameraState changes the codegen) */
 extern PointLight pointLights_8008D534[8];

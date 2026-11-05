@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "engine.h"
+#include "camera.h"
 #include "gte.h"
 #include "model.h"
 #include "STDLIB.H"
@@ -98,7 +99,6 @@ int PickArpatronOrVatolka_80019C84(void)
     }
     return species;
 }
-extern CameraState cameraState_8008D4F0;
 extern short screenOffset_8008D474[2];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
@@ -126,13 +126,13 @@ int FindNearestCameraPoint_80019CC4(int* pos)
     }
     for (i = 0; i < 8; i++)
     {
-        if (cameraState_8008D4F0.points_44[i].active == 0)
+        if (cameraState_8008D4F0.ent_44[i].range_14 == 0)
         {
             break;
         }
-        if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos) < best)
+        if (DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.ent_44[i].pos_0, pos) < best)
         {
-            best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.points_44[i].pos, pos);
+            best = DistanceSquaredXZ_8003B860((int*)&cameraState_8008D4F0.ent_44[i].pos_0, pos);
             found = i;
         }
     }
@@ -146,7 +146,7 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
 {
     MATRIX* sm;
     int* delta;
-    CameraState* cam;
+    CameraView* cam;
     int sq[3];
     int dist;
     int intensity;
@@ -163,9 +163,9 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
     sm->m[2][0] = -lightMatrix_80087114.m[0][0];
     sm->m[2][1] = -lightMatrix_80087114.m[0][1];
     sm->m[2][2] = -lightMatrix_80087114.m[0][2];
-    colorMatrix_80087134.m[0][2] = cam->lightColor_3C[0] / 4;
-    colorMatrix_80087134.m[1][2] = cam->lightColor_3C[1] / 4;
-    colorMatrix_80087134.m[2][2] = cam->lightColor_3C[2] / 4;
+    colorMatrix_80087134.m[0][2] = cam->lightColor_3C.vx / 4;
+    colorMatrix_80087134.m[1][2] = cam->lightColor_3C.vy / 4;
+    colorMatrix_80087134.m[2][2] = cam->lightColor_3C.vz / 4;
     if (pointLightRange_8008D3F0 != 0)
     {
         delta[0] = pointLightPos_8008D680[0] - (ofs->vx + pos->vx);
@@ -248,16 +248,16 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
 void InitSceneFade_8001A38C(void)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
-    CameraState* cam;
+    CameraView* cam;
     fade->flags = 0;
     fade->count = 0;
     cam = &cameraState_8008D4F0;
     lightMatrix_80087114.m[2][0] = -(unsigned short)cam->lightDir_34.vx;
     lightMatrix_80087114.m[2][1] = -(unsigned short)cam->lightDir_34.vy;
     lightMatrix_80087114.m[2][2] = -(unsigned short)cam->lightDir_34.vz;
-    colorMatrix_80087134.m[0][2] = cam->lightColor_3C[0] / 4;
-    colorMatrix_80087134.m[1][2] = cam->lightColor_3C[1] / 4;
-    colorMatrix_80087134.m[2][2] = cam->lightColor_3C[2] / 4;
+    colorMatrix_80087134.m[0][2] = cam->lightColor_3C.vx / 4;
+    colorMatrix_80087134.m[1][2] = cam->lightColor_3C.vy / 4;
+    colorMatrix_80087134.m[2][2] = cam->lightColor_3C.vz / 4;
 }
 // Matched
 void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
@@ -267,7 +267,7 @@ void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
     DR_TPAGE tp;
     int shade;
     SVECTOR* sv;
-    CameraState* cam;
+    CameraView* cam;
     unsigned char flash;
     if (fade->flags & 0x20)
     {
@@ -384,15 +384,15 @@ void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
     lightMatrix_80087114.m[0][2] = cam->lightDir_34.vz;
     if (unknownFlags_8008D678 & 0x400)
     {
-        colorMatrix_80087134.m[0][0] = cam->lightColor_3C[0] * sceneBrightness_8008D40C >> 12;
-        colorMatrix_80087134.m[1][0] = cam->lightColor_3C[1] * sceneBrightness_8008D40C >> 12;
-        colorMatrix_80087134.m[2][0] = cam->lightColor_3C[2] * sceneBrightness_8008D40C >> 12;
+        colorMatrix_80087134.m[0][0] = cam->lightColor_3C.vx * sceneBrightness_8008D40C >> 12;
+        colorMatrix_80087134.m[1][0] = cam->lightColor_3C.vy * sceneBrightness_8008D40C >> 12;
+        colorMatrix_80087134.m[2][0] = cam->lightColor_3C.vz * sceneBrightness_8008D40C >> 12;
     }
     else
     {
-        colorMatrix_80087134.m[0][0] = cam->lightColor_3C[0];
-        colorMatrix_80087134.m[1][0] = cam->lightColor_3C[1];
-        colorMatrix_80087134.m[2][0] = cam->lightColor_3C[2];
+        colorMatrix_80087134.m[0][0] = cam->lightColor_3C.vx;
+        colorMatrix_80087134.m[1][0] = cam->lightColor_3C.vy;
+        colorMatrix_80087134.m[2][0] = cam->lightColor_3C.vz;
     }
     lightMatrix_80087114.m[1][0] = 0;
     lightMatrix_80087114.m[1][1] = 0;
@@ -408,15 +408,15 @@ void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
     colorMatrix_80087134.m[2][2] = colorMatrix_80087134.m[2][0] / 4;
     if (unknownFlags_8008D678 & 0x400)
     {
-        backColor_8008D460[0] = cameraState_8008D4F0.ambient_30[0] * sceneBrightness_8008D40C >> 12;
-        backColor_8008D460[1] = cameraState_8008D4F0.ambient_30[1] * sceneBrightness_8008D40C >> 12;
-        backColor_8008D460[2] = cameraState_8008D4F0.ambient_30[2] * sceneBrightness_8008D40C >> 12;
+        backColor_8008D460[0] = cameraState_8008D4F0.ambientR_30 * sceneBrightness_8008D40C >> 12;
+        backColor_8008D460[1] = cameraState_8008D4F0.ambientG_31 * sceneBrightness_8008D40C >> 12;
+        backColor_8008D460[2] = cameraState_8008D4F0.ambientB_32 * sceneBrightness_8008D40C >> 12;
     }
     else
     {
-        backColor_8008D460[0] = cameraState_8008D4F0.ambient_30[0];
-        backColor_8008D460[1] = cameraState_8008D4F0.ambient_30[1];
-        backColor_8008D460[2] = cameraState_8008D4F0.ambient_30[2];
+        backColor_8008D460[0] = cameraState_8008D4F0.ambientR_30;
+        backColor_8008D460[1] = cameraState_8008D4F0.ambientG_31;
+        backColor_8008D460[2] = cameraState_8008D4F0.ambientB_32;
     }
 }
 // Matched

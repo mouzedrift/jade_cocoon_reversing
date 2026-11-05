@@ -9,21 +9,8 @@ void* const dword_800B6710[25] = { jtgt_800BD0F4, jtgt_800BD0F4, jtgt_800BD4F0, 
 #if 0 // Not matched: ~900 of 1095 instructions identical; control flow, stack frame and most blocks match; left are
       // register allocation / loop-invariant hoisting differences (light, saveData and 1/240 constant bases) in every block.
       // Its .rdata (initializer at 0x800B6700, switch table at 0x800B6710) comes out right since this file was split off.
-typedef struct BatCameraLight
-{
-    char pad0[0x30];
-    unsigned char r_30;
-    unsigned char g_31;
-    unsigned char b_32;
-    char pad33[0x1D];
-    short r_50;
-    short g_52;
-    short b_54;
-} BatCameraLight;
 
-extern char cameraState_8008D4F0[];
 extern short cameraRot_8008D4C8;
-extern short geomScreenBase_8008D51E;
 extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
 typedef struct BatStageObj
 {
@@ -58,7 +45,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     CVECTOR col;
                     short sz[2];
                     EffectSpriteFrame* frame = &sprite->frames_8[j][k];
-                    BatCameraLight* light = (BatCameraLight*)cameraState_8008D4F0;
+                    CameraView* light = &cameraState_8008D4F0;
                     pos.vx = obj->x_38;
                     pos.vy = obj->y_3C;
                     pos.vz = obj->z_40;
@@ -67,9 +54,9 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
                     if (frame->size_C[1] != 0)
                     {
-                        col.r = light->r_30 + frame->rgb_18[0] * light->r_50 / 4096;
-                        col.g = light->g_31 + frame->rgb_18[1] * light->g_52 / 4096;
-                        col.b = light->b_32 + frame->rgb_18[2] * light->b_54 / 4096;
+                        col.r = light->ambientR_30 + frame->rgb_18[0] * light->ent_44[0].color_C.vx / 4096;
+                        col.g = light->ambientG_31 + frame->rgb_18[1] * light->ent_44[0].color_C.vy / 4096;
+                        col.b = light->ambientB_32 + frame->rgb_18[2] * light->ent_44[0].color_C.vz / 4096;
                         if (battleStageId_80083BD0 == 0x10)
                         {
                             SetSemiTrans(&sprite->poly_C, 1);
@@ -118,10 +105,10 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
             sv.vz = rel.vz;
             RotTransPers(&sv, (long*)&sxy, &depth, &flag);
             poly = battleEffectFile_80095468.sprites_20[battleStages_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
-            sx = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * geomScreenBase_8008D51E / 240;
+            sx = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * cameraState_8008D4F0.geomScreen_2E / 240;
             if ((unsigned int)(sx + 0x60) < 0x1A0)
             {
-                size = geomScreenBase_8008D51E * 96 / 240;
+                size = cameraState_8008D4F0.geomScreen_2E * 96 / 240;
                 poly.r0 = poly.r0 * sceneBrightness_8008D40C >> 12;
                 poly.g0 = poly.g0 * sceneBrightness_8008D40C >> 12;
                 poly.b0 = poly.b0 * sceneBrightness_8008D40C >> 12;
@@ -191,7 +178,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     int uu;
                     int vv;
                     SaveData* sd;
-                    BatCameraLight* light;
+                    CameraView* light;
                     if (stageAnimUv_800C9D8C[1] < 0 && stageAnimUv_800C9D8C[0] < 0)
                     {
                         stageAnimUv_800C9D8C[0] = sprite->poly_C.u0;
@@ -224,10 +211,10 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     sprite->poly_C.v3 = stageAnimUv_800C9D8C[1] + vv + frame->h_6;
                     if (frame->size_C[1] != 0)
                     {
-                        light = (BatCameraLight*)cameraState_8008D4F0;
-                        col.r = light->r_30 + frame->rgb_18[0] * light->r_50 / 4096;
-                        col.g = light->g_31 + frame->rgb_18[1] * light->g_52 / 4096;
-                        col.b = light->b_32 + frame->rgb_18[2] * light->b_54 / 4096;
+                        light = &cameraState_8008D4F0;
+                        col.r = light->ambientR_30 + frame->rgb_18[0] * light->ent_44[0].color_C.vx / 4096;
+                        col.g = light->ambientG_31 + frame->rgb_18[1] * light->ent_44[0].color_C.vy / 4096;
+                        col.b = light->ambientB_32 + frame->rgb_18[2] * light->ent_44[0].color_C.vz / 4096;
                         SetSemiTrans(&sprite->poly_C, 1);
                         DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
                     }
@@ -251,7 +238,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     int ang;
                     EffectSpriteFrame* frame = &sprite->frames_8[j][k];
                     SaveData* sd = &saveData_8008B570;
-                    BatCameraLight* light = (BatCameraLight*)cameraState_8008D4F0;
+                    CameraView* light = &cameraState_8008D4F0;
                     pos.vx = obj->x_38;
                     pos.vy = obj->y_3C;
                     pos.vz = obj->z_40;
@@ -270,9 +257,9 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     sprite->poly_C.v3 = frame->v_2 + frame->h_6;
                     if (frame->size_C[1] != 0)
                     {
-                        col.r = light->r_30 + frame->rgb_18[0] * light->r_50 / 4096;
-                        col.g = light->g_31 + frame->rgb_18[1] * light->g_52 / 4096;
-                        col.b = light->b_32 + frame->rgb_18[2] * light->b_54 / 4096;
+                        col.r = light->ambientR_30 + frame->rgb_18[0] * light->ent_44[0].color_C.vx / 4096;
+                        col.g = light->ambientG_31 + frame->rgb_18[1] * light->ent_44[0].color_C.vy / 4096;
+                        col.b = light->ambientB_32 + frame->rgb_18[2] * light->ent_44[0].color_C.vz / 4096;
                         DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
                     }
                 }

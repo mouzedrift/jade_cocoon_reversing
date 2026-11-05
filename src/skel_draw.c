@@ -52,7 +52,6 @@ void StopAllEventEntries_80043B40(EventNode* node)
         node = node->next;
     }
 }
-extern short geomScreenBase_8008D51E; // projection distance
 extern int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl);
 // Matched
 int DrawBillboard_80043B8C(POLY_FT4* poly, VECTOR* pos, short* size, int flags, short* off, short fl)
@@ -68,8 +67,8 @@ int DrawBillboard_80043B8C(POLY_FT4* poly, VECTOR* pos, short* size, int flags, 
     gte_stszotz(&scratch->otz_C);
     if (scratch->otz_C - 1 < 0xFFFU)
     {
-        scratch->w_10 = (size[0] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
-        scratch->h_14 = (size[1] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
+        scratch->w_10 = (size[0] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * cameraState_8008D4F0.geomScreen_2E / 0xA0000;
+        scratch->h_14 = (size[1] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * cameraState_8008D4F0.geomScreen_2E / 0xA0000;
         if (scratch->w_10 > 0x800)
         {
             scratch->w_10 = 0x800;
@@ -101,8 +100,8 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* poly, VECTOR* pos, short* size, unsigned
     gte_stszotz(&scratch->otz_C);
     if (scratch->otz_C - 101 < 0xF9BU)
     {
-        scratch->w_10 = (size[0] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
-        scratch->h_14 = (size[1] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * geomScreenBase_8008D51E / 0xA0000;
+        scratch->w_10 = (size[0] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * cameraState_8008D4F0.geomScreen_2E / 0xA0000;
+        scratch->h_14 = (size[1] << 7) / scratch->otz_C * cameraZoom_8008B4F8 * cameraState_8008D4F0.geomScreen_2E / 0xA0000;
         if (scratch->w_10 > 0x800)
         {
             scratch->w_10 = 0x800;

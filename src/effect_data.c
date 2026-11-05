@@ -19,6 +19,7 @@
 #include "effect_data.h"
 #include "model.h"
 #include "engine.h"
+#include "camera.h"
 #include "minion_init.h"
 #include "family_tree.h"
 #include "unit_query.h"
@@ -4068,15 +4069,6 @@ void RepeatUntilOutcomeTask_80014C28(int* flags, EffectObj* obj)
         SpawnModelAnim_800C32DC(obj->targetPos_1C, 30, 0, 0);
     }
 }
-typedef struct
-{
-    int pad_0[5];
-    int pos_14[3];
-    int lookAt_20[3];
-    short roll_2C;
-    short geomScreen_2E;
-} CamView;
-extern CamView cameraState_8008D4F0;
 extern void DrawRotSprite_80044010(POLY_FT4* src, int* pos, void* rot, short* uv, short* size, short* pivot, short* scale, short* ofs,
                          unsigned char* rgb, int flags, int abr, unsigned long* ot);
 // Matched
@@ -4096,8 +4088,8 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
     EffectSprite* e2;
     EffectSpriteFrame* sp;
     int dot;
-    int* camPos;
-    int* lookAt;
+    Vec3i* camPos;
+    Vec3i* lookAt;
 
     obj->field_4++;
     PushMatrix();
@@ -4121,22 +4113,22 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
     col[3] = obj->field_4 * 32;
     DrawRotSprite_80044010(&e1->poly_C, obj->pos_44, &obj->rot_80, &sp->u_0, &sp->w_4, &sp->pivotX_8, size, col, sp->rgb_18, 2, 0x30,
                  pOT_8008D690);
-    camPos = cameraState_8008D4F0.pos_14;
+    camPos = &cameraState_8008D4F0.eye_14;
     rgb[0] = sp->rgb_18[0] >> 3;
     rgb[1] = sp->rgb_18[1] >> 3;
     rgb[2] = sp->rgb_18[1] >> 3;
-    lookAt = camPos + 3;
-    pos[0] = obj->pos_44[0] - camPos[0];
-    pos[1] = obj->pos_44[1] - camPos[1];
-    pos[2] = obj->pos_44[2] - camPos[2];
-    dir[0] = lookAt[0] - camPos[0];
-    dir[1] = lookAt[1] - camPos[1];
-    dir[2] = lookAt[2] - camPos[2];
+    lookAt = &cameraState_8008D4F0.lookAt_20;
+    pos[0] = obj->pos_44[0] - camPos->x;
+    pos[1] = obj->pos_44[1] - camPos->y;
+    pos[2] = obj->pos_44[2] - camPos->z;
+    dir[0] = lookAt->x - camPos->x;
+    dir[1] = lookAt->y - camPos->y;
+    dir[2] = lookAt->z - camPos->z;
     VectorNormal((VECTOR*)dir, (VECTOR*)dir);
     dot = (dir[0] * pos[0] + dir[1] * pos[1] + dir[2] * pos[2]) / 4096;
-    pos[0] = cameraState_8008D4F0.pos_14[0] + dir[0] * dot / 8192;
-    pos[1] = cameraState_8008D4F0.pos_14[1] + dir[1] * dot / 8192;
-    pos[2] = cameraState_8008D4F0.pos_14[2] + dir[2] * dot / 8192;
+    pos[0] = cameraState_8008D4F0.eye_14.x + dir[0] * dot / 8192;
+    pos[1] = cameraState_8008D4F0.eye_14.y + dir[1] * dot / 8192;
+    pos[2] = cameraState_8008D4F0.eye_14.z + dir[2] * dot / 8192;
     if (cameraState_8008D4F0.geomScreen_2E < dot)
     {
         flareSize[0] = size[0] / 4;
