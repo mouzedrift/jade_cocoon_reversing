@@ -214,7 +214,6 @@ extern void* SetFileBufferInUse_8003BFB8(int inUse);
 extern void ListFree_8003FE38(void* list, void* ptr);
 struct Pool;
 extern void HeapFree_8003FD18(); // callers pass only the pointer (second arg is whatever is in a1)
-extern void StopPadVibration_80036658(int idx);
 extern void SetActorScript_8001DB98(struct Actor* actor, unsigned char* script);
 extern int ParseTim_80029708(void* outTim, void* inTim);
 extern void LoadTimToVram_800296A0(void* tim);
@@ -290,7 +289,6 @@ extern void SetActorVisible_8001D730(struct Actor* actor, int on);
 extern void FreeFtgObject_800229B0(struct FtgObject* p, int heap);
 extern int CountModelVramSlots_80026600(struct ModelVramSlot* p);
 extern void FreeMapArea_8002728C(void);
-extern void StopPadVibrationTask_800367F0(int entry, unsigned char* port);
 extern int IsFileRequestQueueIdle_8003BF88(void);
 extern void FreeMdecBuffer_800418CC(void);
 extern int RunModelTask_80010A10(int key);
@@ -542,6 +540,8 @@ int TestMagicBit_8001AE2C(unsigned int* bits, unsigned int idx);
 void BeginFade_8001C260(void);
 void FreezeScreen_8001C224(void);
 void DrawIntroMovie_8001AF64(void* descs);
+void StopPadVibrationTask_800367F0(int entry, unsigned char* port);
+void StopPadVibration_80036658(int idx);
 #endif
 
 extern void UnloadMap_80027118(void);

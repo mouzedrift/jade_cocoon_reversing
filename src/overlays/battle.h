@@ -551,7 +551,6 @@ extern int LoadSeqSlotSound_800303E8();
 
 extern int IsSoundTaskReady_80030688();
 
-extern void StartBattleCamera_80037748();
 
 extern void LoadUiTiy_8002BF74();
 
@@ -578,7 +577,6 @@ extern BatVec3* AveragePositions_800BC5EC();
 
 extern void ApplyBattleCommand_800BEBB8();
 
-extern void MoveBattleCameraForAction_80037828(int a, int b, int c);
 
 extern void ActionWaitIdle_800BDB4C();
 
@@ -595,7 +593,6 @@ extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
 
 
-extern void StartPadVibration_80036528(int pad, int kind);
 
 extern void RemoveEmptyCocoons_800AD944(int a);
 
@@ -605,7 +602,6 @@ extern void AddEnemyItem_800A2898(int a);
 
 extern void SetEnemyStatusTint_800A284C(int a);
 
-extern void SetAreaElementLight_80039ED8(int a);
 
 
 extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset);
@@ -638,7 +634,6 @@ typedef struct BatHitNumber
 } BatHitNumber;
 
 
-extern void StartPadVibration_80036528(int a, int b);
 
 
 
@@ -1596,7 +1591,6 @@ extern void LoadLoaderModelAnimSets_80020898(void);
 extern int LoadOverlayIfChanged_80020D1C(int mode, int overlay);
 /* exe-side, to move to engine.h */
 /* exe-side, to move to camera.h */
-extern void FocusBattleCamera_80037AE0(unsigned short mask);
 /* exe-side, to move to sound.h */
 extern void FreeSeqSlotSound_80030664(void);
 extern int PlayMusic_800300E0(int idx, int unused);

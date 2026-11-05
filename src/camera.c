@@ -71,7 +71,6 @@ void StopAllPadVibration_80036678(void)
     StopPadVibration_80036658(0);
     StopPadVibration_80036658(1);
 }
-extern void StopPadVibrationTask_800367F0(int entry, unsigned char* port);
 // Matched
 void UpdatePadVibration_800366A0(EventEntry* entry, PadVibTask* vib)
 {
@@ -119,13 +118,7 @@ void UpdatePadVibration_80036820(int port)
         }
     }
 }
-extern void UpdateCameraFollow_80037918(CameraCtrl* cam);
-extern void SaveCameraState_80039620(CameraCtrl* cam);
-extern void SetupCameraOrbit_80038CA8(CameraCtrl* cam);
-extern void SetupBattleIntroCamera_80037F44(CameraCtrl* cam);
-extern void CameraOrbitTask_800374E0();
 extern int FindMeshAtPos_800B8184(int pos, int b);
-extern void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam);
 
 // Matched
 void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam)
@@ -157,10 +150,7 @@ void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam)
     }
     UpdateCameraFollow_80037918(cam);
 }
-extern void PlaceBattleIntroCamera_80037C74(CameraCtrl* cam);
-extern void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target);
 extern void DrawBattleStage_800BC90C(CameraCtrl* cam);
-extern void CameraBattleTask_80036AB4(EventEntry* entry, CameraCtrl* cam);
 extern void StartSceneFadeIn_8001AA04(int duration);
 
 // Matched
@@ -189,9 +179,6 @@ void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam)
         break;
     }
 }
-extern void UpdateCameraMove_80038230(CameraCtrl* cam);
-extern void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam);
-void CameraSplineTask_80036BB0(EventEntry* entry, CameraCtrl* cam);
 
 // Matched
 void CameraBattleTask_80036AB4(EventEntry* entry, CameraCtrl* cam)
@@ -294,9 +281,6 @@ void CameraSplineTask_80036BB0(EventEntry* entry, CameraCtrl* cam)
 }
 #undef SPLINE
 extern int DistanceSquaredXZ_8003B860(int* a, int* b);
-void ComputeCameraMoveAngles_80038D64(CameraCtrl* cam, int* center);
-extern void UpdateCameraMove_80038230(CameraCtrl* cam);
-extern void CameraOrbitReturnTask_800375F8(EventEntry* entry, CameraCtrl* cam);
 // Matched
 void CameraOrbitTask_800374E0(EventEntry* entry, CameraCtrl* cam)
 {
@@ -357,7 +341,6 @@ void CameraOrbitReturnTask_800375F8(EventEntry* entry, CameraCtrl* cam)
 void FreeCameraTask_800376A0(EventEntry* entry, void* buffer)
 {
 }
-extern void UpdateCameraRotation_80039E14(void);
 extern int geomScreenDistance_8008B548;
 // Matched
 void ResetCameraToLevant_800376A8(void)
@@ -392,8 +375,6 @@ void EndBattleCamera_80037770(void)
     cam->flags_4 &= ~0x2000;
     RestoreCameraState_80039698(cam);
 }
-extern void StartCameraSplineLong_8003970C(int action, int* spline);
-extern void StartCameraSplineShort_8003983C(int action, int* spline);
 // Matched
 void StartBattleCameraSpline_800377B4(int side, short action)
 {
@@ -445,7 +426,6 @@ int GetCameraMode_800378F8(void)
 {
     return ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->mode_8;
 }
-extern void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, int target, Vec3i* blendTarget, int blend);
 // Matched
 void UpdateCameraFollow_80037918(CameraCtrl* cam)
 {
@@ -515,8 +495,6 @@ void SetCameraTarget_80037AC8(int target)
 extern int* GetBattleSelection_800A1E3C(void);
 extern BattleObj_800C0FAC* GetSummonedMinionBonePos_800C0FAC(void);
 extern unsigned char actingUnit_800C9C7C;
-extern void MoveCameraToFocusPreset_80038E2C(CameraCtrl* cam, int preset, int eyeRaise);
-extern void CameraBattleTask_80036AB4();
 // Matched
 void FocusBattleCamera_80037AE0(unsigned short mask)
 {
@@ -723,8 +701,6 @@ void UpdateCameraZoom_8003856C(CameraCtrl* cam)
         cam->flags_4 &= ~0x20;
     }
 }
-extern void UpdateCameraZoom_8003856C(CameraCtrl* cam);
-extern void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos);
 extern int prevCameraZoom_8008D4BC;
 typedef struct
 {

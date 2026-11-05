@@ -100,9 +100,36 @@ typedef struct
     int b;
 } struct_pair8;
 
-void InitCameraTask_800368F8();
 
-void ResetCameraToLevant_800376A8(void);
 void StartCameraShake_80037BFC(int strength);
 
+void UpdateCameraFollow_80037918(CameraCtrl* cam);
+void SaveCameraState_80039620(CameraCtrl* cam);
+void SetupCameraOrbit_80038CA8(CameraCtrl* cam);
+void SetupBattleIntroCamera_80037F44(CameraCtrl* cam);
+void CameraOrbitTask_800374E0(EventEntry* entry, CameraCtrl* cam);
+void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam);
+void PlaceBattleIntroCamera_80037C74(CameraCtrl* cam);
+void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target);
+void CameraBattleTask_80036AB4(EventEntry* entry, CameraCtrl* cam);
+void UpdateCameraMove_80038230(CameraCtrl* cam);
+void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam);
+void CameraSplineTask_80036BB0(EventEntry* entry, CameraCtrl* cam);
+void ComputeCameraMoveAngles_80038D64(CameraCtrl* cam, int* center);
+void CameraOrbitReturnTask_800375F8(EventEntry* entry, CameraCtrl* cam);
+void UpdateCameraRotation_80039E14(void);
+void StartCameraSplineLong_8003970C(int action, int* spline);
+void StartCameraSplineShort_8003983C(int action, int* spline);
+void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, int target, Vec3i* blendTarget, int blend);
+void MoveCameraToFocusPreset_80038E2C(CameraCtrl* cam, int preset, int eyeRaise);
+void UpdateCameraZoom_8003856C(CameraCtrl* cam);
+void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos);
+void ResetCameraToLevant_800376A8(void);
+void StartBattleCamera_80037748(void);
+void MoveBattleCameraForAction_80037828(int side, short action, int force);
+void StartPadVibration_80036528(int idx, int pattern);
+void SetAreaElementLight_80039ED8(int mode);
+void FocusBattleCamera_80037AE0(unsigned short mask);
+void SetCameraBattleMode_80037720(void);
+void SetCameraZoom_80037A6C(int zoom, int steps);
 #endif

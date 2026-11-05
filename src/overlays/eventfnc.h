@@ -9,6 +9,7 @@
 #include "engine.h"
 #include "minion_init.h"
 #include "sound.h"
+#include "camera.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -262,7 +263,6 @@ extern SVECTOR* GetActorRot_800BBBD0(int actor); // rotation of Levant (0) or a 
 
 extern short screenOffset_8008D474[2];
 
-extern void UpdateCameraFollow_80037918(void* p);
 
 extern void SetGeomOffset(long ofx, long ofy);
 
@@ -355,7 +355,6 @@ typedef struct EvViewRect
 
 extern EvViewRect viewport_8008D420;
 
-extern void SetCameraZoom_80037A6C(int a, int b);
 
 extern int GetFieldMinionCount_800A7790(void);
 
@@ -365,9 +364,7 @@ extern int IsEventPointValid_800A6504(int a, EvVec* v);
 
 extern int battleResult_800B1230;
 
-extern void StartPadVibration_80036528(int a, int b);
 
-extern void StopPadVibration_80036658(int a);
 
 extern int IsActorCmdReady_800BBAB0(int i);
 

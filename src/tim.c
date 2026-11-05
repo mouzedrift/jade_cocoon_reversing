@@ -65,7 +65,6 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     }
 }
 extern short screenOffset_8008D474[2];
-extern void UpdateCameraFollow_80037918(CameraCtrl* p);
 // Matched
 void InitRoomCamera_80028DC0(void)
 {

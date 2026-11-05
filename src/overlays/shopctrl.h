@@ -51,6 +51,5 @@ void SetLoadFadeFlag_80027478(int a, int b); // model_ftg
 void DrawMenuBackground_8002BE10();       // ui_sprites
 void LoadUiTiy_8002BF74();                // ui_sprites
 void FreeActiveOverlay_8002C014();        // ui_sprites
-void UpdateCameraFollow_80037918(void* camera); // camera.h
 
 #endif

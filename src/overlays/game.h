@@ -468,7 +468,6 @@ extern void FreeLevantAnimSet_800AC73C();
 
 extern void FreeLoaderModelAnimSets_80020814(void);
 
-extern void SetCameraBattleMode_80037720(void);
 
 extern void StopSoundSeqs_80030D68(SoundStruct* sound); // exe-side, to move to sound_seq.h
 
@@ -540,7 +539,6 @@ extern void EnableCameraPoints_800A094C(void);
 extern void ResetSoundTask_8002FEB8(void);
 
 
-extern void ResetCameraToLevant_800376A8(void);
 
 extern void InitLevantControl_800A8140(void);
 
@@ -621,7 +619,6 @@ extern void StartEncounterBattle_800A13B8();
 
 extern int CheckEnemyContact_800A19E4();
 
-extern void StartPadVibration_80036528();
 
 extern EventNode* enemyAiTasks_8008D49C;
 
