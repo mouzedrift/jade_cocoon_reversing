@@ -186,7 +186,6 @@ extern void RequestAreaReload_80027314(void);
 extern int RequestAreaPreload_80027330(short a0);
 extern void EndBattleCamera_80037770(void);
 extern int CdSeekIsComplete_8003C900(void);
-extern void CountdownTask_80016BF4(EventEntry* entry, struct EffectObj* obj);
 extern void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short left, short right);
 extern void DrawLargeTextBox_8002AF10(int text, int pos, int ot);
 extern void DrawSmallTextBox_8002AF58(int text, int pos, int ot);

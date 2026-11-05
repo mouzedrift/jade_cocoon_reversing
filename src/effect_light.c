@@ -142,7 +142,6 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
     obj->field_4++;
 }
 extern EventNode* effectObjects_8008B4A8;
-extern void LightFlashTask_80017208(int* flags, EffectObj* obj);
 // Matched
 void SpawnLightFlash_80017158(int* pos, unsigned char* rgb)
 {
@@ -176,7 +175,6 @@ void LightFlashTask_80017208(int* flags, EffectObj* obj)
         flags[0] = (flags[0] & ~1) | 0x8000;
     }
 }
-void GlowModelTask_800173A8(int* flags, void* buf);
 // Matched
 void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
 {
