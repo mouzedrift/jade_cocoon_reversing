@@ -24,6 +24,7 @@
 #include "util.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "tim.h"
 
 extern short screenOffset_8008D474[2];
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -2998,7 +2999,6 @@ void InitAreaLoaderTask_80028388(EventEntry* entry, int* state)
 }
 extern int GetGameMode_800A6D50(int a0);
 extern int battleFlags_800B1228;
-extern void OnRoomDataLoaded_80028C60();
 // Matched
 void AreaLoaderTask_800283C0(void* entry, int* state)
 {

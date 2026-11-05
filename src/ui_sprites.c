@@ -25,6 +25,7 @@
 #include "cd.h"
 #include "ui_sprites.h"
 #include "menu_draw.h"
+#include "tim.h"
 
 const int emptyString_800741EC = 0;
 

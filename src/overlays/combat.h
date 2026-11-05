@@ -19,6 +19,7 @@
 #include "model.h"
 #include "cd.h"
 #include "ui_sprites.h"
+#include "tim.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by BuildMinionModelParams_800A05E0
 typedef struct CombatModelParams

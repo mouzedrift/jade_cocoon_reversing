@@ -16,6 +16,7 @@
 #include "cd.h"
 #include "ui_sprites.h"
 #include "sound.h"
+#include "tim.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem

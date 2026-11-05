@@ -26,6 +26,7 @@
 #include "util.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "tim.h"
 
 // the bit masks SetBoneGroupFlags_80019B14 (minion_init.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so SetBoneGroupFlags_80019B14 is probably the first function of this TU

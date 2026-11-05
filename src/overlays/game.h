@@ -25,6 +25,7 @@
 #include "sound_seq.h"
 #include "movie.h"
 #include "ui_sprites.h"
+#include "tim.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -1072,7 +1073,6 @@ extern char dword_8007DC88;
 
 extern unsigned int dword_8008BD38;
 
-extern void TintVramImage_800292D0();
 
 
 

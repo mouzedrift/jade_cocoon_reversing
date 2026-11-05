@@ -85,8 +85,6 @@ int GetTiyFileCount_80028E68(int* file)
 {
     return file[0];
 }
-extern void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int count, int heap);
-extern void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int count);
 // Matched
 void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int heap)
 {
@@ -113,17 +111,6 @@ void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int
         }
     }
 }
-extern void ShiftClutHue_80029D00(TimInfo* t, unsigned int a1);
-typedef struct
-{
-    unsigned short pixelDx_0;
-    unsigned short pixelDy_2;
-    unsigned short clut4Dx_4;
-    unsigned short clut4Dy_6;
-    unsigned short clut8Dx_8;
-    unsigned short clut8Dy_A;
-} TimReloc;
-void RelocateTimInfo_800297C0(TimInfo* tim, TimReloc* reloc);
 // Matched
 void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, int count, int reloc, int hue)
 {
@@ -151,10 +138,6 @@ void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, i
         }
     }
 }
-int Rgb555ToHsv_80029EA8(short* in, short* out);
-int HsvToRgb555_8002A040(short* in, short* out);
-void UnpackColor555_80029C68(unsigned short* dst, unsigned short* src);
-void PackColor555_80029CB4(unsigned short* dst, unsigned short* src);
 // Matched
 void ShiftVramImageHsv_800290FC(RECT* rect, short* dst, short* delta)
 {
@@ -379,8 +362,6 @@ void PackColor555_80029CB4(unsigned short* dst, unsigned short* src)
     *dst |= src[1] << 5;
     *dst |= src[2] << 10;
 }
-int Rgb555ToHsv_80029EA8(short* in, short* out);
-int HsvToRgb555_8002A040(short* in, short* out);
 // Matched
 void ShiftClutHue_80029D00(TimInfo* tim, unsigned int hue)
 {
