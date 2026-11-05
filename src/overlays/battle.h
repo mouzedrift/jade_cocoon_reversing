@@ -1470,7 +1470,6 @@ extern void DrawStatusIcons_8002F480(UnitStatus* unit, short* pos, int ot, int r
 /* exe-side, to move to font.h */
 /* exe-side, to move to util.h */
 /* exe-side, to move to menu_window.h */
-extern void DrawTextLinesWindow_8002AE38(int* lines, short* pos, int ot, short* rect, int count);
 /* exe-side, to move to globals.h / data_decls.h */
 /* exe-side: main.h declares it (main.h itself conflicts with battle.h types) */
 extern unsigned short uiColor_8008B590;

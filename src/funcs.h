@@ -66,7 +66,6 @@ extern void InitImage_80010428(void);
 extern void SetDisplayMode_80040658(int mode);
 extern void InitEvents_8001028C(void);
 extern long vsyncEventHandler_800103AC(void);
-extern void GetMenuItemColor_8002ACE8(int flags, unsigned char* out);
 
 struct Pool;
 extern int GetSealResultFlags_80013358(int idx);
@@ -75,17 +74,11 @@ extern EventEntry* FindModelTask_8001091C();
 struct Pool;
 extern void DrawNextPrompt_8003CF88(short a0, short a1, int idx);
 extern int DsControlB(unsigned char com, unsigned char* param, unsigned char* result);
-extern void SetMenuItemDigitColor_8002AD80(int flags);
 extern void AddStatus_80012794(UnitStatus* status, int bits);
-extern void SetMenuItemFont1Clut_8002AD08(int flags);
-extern void SetMenuItemFont2Clut_8002AD44(int flags);
 extern void SeVibOn(void);
 extern void SetVib(void);
 extern void SsUtVibrateOn(void);
 extern void SsUtVibrateOff(void);
-extern void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count);
-extern void DrawLargeTextBox_8002AF10(int text, int pos, int ot);
-extern void DrawSmallTextBox_8002AF58(int text, int pos, int ot);
 extern int IsTargetListed_8002D738(int idx, int self, int mode);
 
 extern unsigned int GetEquippedId_800AD990(int a0);

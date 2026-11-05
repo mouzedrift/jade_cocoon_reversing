@@ -1930,7 +1930,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         }
         else if (menu->flags_24 & 0x80)
         {
-            DrawLargeTextBox_8002AF10((int)magicDescLines_800C026C[FindNthMagicBit_8001AEC0(&menu->shown_54->magicBits_F4, menu->pageIndex_48 + menu->pageScroll_4A)], (int)&pos, 0xE);
+            DrawLargeTextBox_8002AF10(magicDescLines_800C026C[FindNthMagicBit_8001AEC0(&menu->shown_54->magicBits_F4, menu->pageIndex_48 + menu->pageScroll_4A)], &pos, 0xE);
         }
     }
     if (menu->windows_1C & 2)

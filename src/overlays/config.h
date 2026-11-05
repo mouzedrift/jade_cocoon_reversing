@@ -164,7 +164,6 @@ extern ButtonHelpEntry helpBar_800C592C[3];
 extern int configMenuActive_800C5944;
 
 /* exe-side, to move to <exe header> */
-extern void DrawTextLinesWindow_8002AE38(void* lines, void* pos, int ot, void* rect, int count);
 extern unsigned short uiColor_8008B590;
 
 #endif

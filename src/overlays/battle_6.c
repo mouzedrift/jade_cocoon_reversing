@@ -2746,7 +2746,7 @@ void BattleMenuDraw_800C7DA8()
         {
             if (GetSelectedItem_800C79B8() != 0xFF)
             {
-                DrawLargeTextBox_8002AF10((int)itemDescriptions_800C96C8[GetSelectedItem_800C79B8()], 0, 0xF);
+                DrawLargeTextBox_8002AF10(itemDescriptions_800C96C8[GetSelectedItem_800C79B8()], 0, 0xF);
                 mode = 1;
             }
         }
@@ -2760,7 +2760,7 @@ void BattleMenuDraw_800C7DA8()
         {
             if (GetSelectedMagic_800C7A1C() < 0x1E)
             {
-                DrawLargeTextBox_8002AF10((int)magicDescriptions_800C9978[GetSelectedMagic_800C7A1C()], 0, 0xF);
+                DrawLargeTextBox_8002AF10(magicDescriptions_800C9978[GetSelectedMagic_800C7A1C()], 0, 0xF);
                 mode = 1;
             }
         }
@@ -3034,7 +3034,7 @@ void DrawMenuMessage_800C88AC(int text)
     lines[1] = 0;
     lines[2] = 0;
     lines[3] = 0;
-    DrawLargeTextBox_8002AF10((int)lines, 0, 0xF);
+    DrawLargeTextBox_8002AF10(lines, 0, 0xF);
 }
 
 void MenuShowError_800C88E4()

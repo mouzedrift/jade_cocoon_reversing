@@ -518,7 +518,7 @@ void CannotUnequipTask_800C50F0(EventEntry* t, EquipCtx* c)
     char* box = cannotUnequipBox_800C5D50;
     DrawMenuBackground_8002BE10();
     DrawEquipMenu_800C4A94(c);
-    DrawLargeTextBox_8002AF10((int)box, 0, 0xe);
+    DrawLargeTextBox_8002AF10(box, 0, 0xe);
     if (c->msgTimer_46 < 0x96)
     {
         c->msgTimer_46++;

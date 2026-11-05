@@ -820,7 +820,7 @@ void DrawStore_800BB950(StoreMenu* store)
     }
     if (p)
     {
-        DrawLargeTextBox_8002AF10((int)p, (int)&pos, 0xE);
+        DrawLargeTextBox_8002AF10(p, &pos, 0xE);
     }
     else
     {

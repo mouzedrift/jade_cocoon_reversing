@@ -27,6 +27,7 @@
 #include "ui_gauge.h"
 #include "menu_draw.h"
 #include "tim.h"
+#include "menu_window.h"
 
 const int emptyString_800741EC = 0;
 

@@ -191,9 +191,8 @@ void DrawMenuItemWithWindow_8002ADB4(MenuWindowItem* item, void* window, int ot,
 }
 extern short uiColor_8008B590;
 // Matched
-void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int count)
+void DrawTextLinesWindow_8002AE38(const char** lines, Pos16* pos, int ot, RECT* rect, int count)
 {
-    int* lines = (int*)text;
     Pos16 cur;
     WindowStyle style;
     unsigned int i;
@@ -216,7 +215,7 @@ void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int 
     }
 }
 // Matched
-void DrawLargeTextBox_8002AF10(int text, int pos, int ot)
+void DrawLargeTextBox_8002AF10(const char** text, Pos16* pos, int ot)
 {
     RECT rect;
     rect.x = 10;
@@ -226,7 +225,7 @@ void DrawLargeTextBox_8002AF10(int text, int pos, int ot)
     DrawTextBox_8002AFA0(text, pos, ot, &rect, 4);
 }
 // Matched
-void DrawSmallTextBox_8002AF58(int text, int pos, int ot)
+void DrawSmallTextBox_8002AF58(const char** text, Pos16* pos, int ot)
 {
     RECT rect;
     rect.x = 10;
@@ -235,23 +234,17 @@ void DrawSmallTextBox_8002AF58(int text, int pos, int ot)
     rect.h = 0x12;
     DrawTextBox_8002AFA0(text, pos, ot, &rect, 1);
 }
-#if 0
-void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
-{
-}
-#endif
 // Matched
-void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
+void DrawTextBox_8002AFA0(const char** text, Pos16* pos, int ot, RECT* rect, int count)
 {
     Pos16 cur;
-    Pos16* src = (Pos16*)pos;
-    if (src)
+    if (pos)
     {
-        ((Pos16*)rect)->x = src->x;
-        ((Pos16*)rect)->y = src->y;
+        rect->x = pos->x;
+        rect->y = pos->y;
     }
-    cur.x = ((Pos16*)rect)->x + 4;
-    cur.y = ((Pos16*)rect)->y + 5;
+    cur.x = rect->x + 4;
+    cur.y = rect->y + 5;
     DrawTextLinesWindow_8002AE38(text, &cur, ot, rect, count);
 }
 // Matched

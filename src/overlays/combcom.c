@@ -434,7 +434,7 @@ void DrawCmdMessage_800CBB4C(const char* text)
     pos[1] = 0xC3;
     pos[0] = rect.x + 2;
     line = text;
-    DrawTextBox_8002AFA0((int)&line, (int)pos, 0xF, &rect, 1);
+    DrawTextBox_8002AFA0(&line, pos, 0xF, &rect, 1);
 }
 
 void DrawLargeMessage_800CBBE0(const char* text)
@@ -445,7 +445,7 @@ void DrawLargeMessage_800CBBE0(const char* text)
     dlg.line1_4 = 0;
     dlg.line2_8 = 0;
     dlg.line3_C = 0;
-    DrawLargeTextBox_8002AF10((int)&dlg, (int)pos, 0xF);
+    DrawLargeTextBox_8002AF10(&dlg, pos, 0xF);
 }
 
 int GetSelectedSkill_800CBC28()
@@ -522,7 +522,7 @@ void DrawCmdMenu_800CBEA4()
                 short pos[2];
                 pos[0] = 10;
                 pos[1] = 0x14;
-                DrawLargeTextBox_8002AF10((int)&magicDescs_800CD538[GetSelectedMagic_800CBC58()], (int)pos, 0xF);
+                DrawLargeTextBox_8002AF10(&magicDescs_800CD538[GetSelectedMagic_800CBC58()], pos, 0xF);
                 shown = 1;
             }
         }

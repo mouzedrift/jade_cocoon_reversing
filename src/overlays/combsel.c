@@ -245,7 +245,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
             {
                 mainMenuHelp_800A59C4[3] = nextTextP2_800A59E0[0];
             }
-            DrawSmallTextBox_8002AF58((int)&mainMenuHelp_800A59C4[combatMenuChoice_800A1BC4], 0, 15);
+            DrawSmallTextBox_8002AF58(&mainMenuHelp_800A59C4[combatMenuChoice_800A1BC4], 0, 15);
             break;
         case 1:
         {
@@ -259,17 +259,17 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
                 prompt = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\224\202\217\201@\202\204\202\205\202\214\202\205\202\224\202\205\201D"; // Select minion to delete.
                 break;
             }
-            DrawSmallTextBox_8002AF58((int)&prompt, 0, 15);
+            DrawSmallTextBox_8002AF58(&prompt, 0, 15);
             break;
         }
         case 2:
         {
             const char* prompt = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\224\202\217\201@\202\205\202\216\202\224\202\205\202\222\201D"; // Select minion to enter.
-            DrawSmallTextBox_8002AF58((int)&prompt, 0, 15);
+            DrawSmallTextBox_8002AF58(&prompt, 0, 15);
             break;
         }
         case 3:
-            DrawSmallTextBox_8002AF58((int)quitPrompt_800A59D8, 0, 15);
+            DrawSmallTextBox_8002AF58(quitPrompt_800A59D8, 0, 15);
             break;
         }
         win->time_4 = GetTime30Hz_8002C64C();

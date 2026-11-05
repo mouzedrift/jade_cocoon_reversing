@@ -14,6 +14,7 @@
 #include "ui_sprites.h"
 #include "party_window.h"
 #include "ui_gauge.h"
+#include "menu_window.h"
 
 typedef struct
 {
@@ -67,7 +68,6 @@ void ShopCtrlRequestShop_800B6CA0(void);       // SHOPCTRL.BIN (shopctrl.h)
 Minion* GetShopMinion_800B9C5C(int i);         // SHOP.BIN (shop.h), not loaded with this overlay
 
 /* exe-side, to move to <exe header> (named in the comment) */
-void DrawElementIconsRow_8002B1B0(short mask, void* pos, short ot); // menu_window.h
 
 /* SHOPENTR data */
 

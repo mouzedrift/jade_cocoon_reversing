@@ -23,6 +23,7 @@
 #include "party_window.h"
 #include "party.h"
 #include "model_ftg.h"
+#include "menu_window.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by BuildMinionModelParams_800A05E0
 typedef struct CombatModelParams
@@ -163,6 +164,5 @@ extern Minion saveMinions_8008BEF8[];          // -> globals.h
 extern short defaultBones_80079140[];          // -> globals.h: default bone table
 
 extern ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c); // -> effect_cmd.h
-extern void DrawElementIconsRow_8002B1B0(int mask, void* pos, int ot); // -> menu_window.h
 
 #endif
