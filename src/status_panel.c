@@ -26,6 +26,7 @@
 #include "unit_gauges.h"
 #include "unit_stats.h"
 #include "party_window.h"
+#include "ui_gauge.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
@@ -52,7 +53,6 @@ void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
     loc[1] = pos[1];
     DrawStatIcons_8002E0D8(loc, ot);
 }
-extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 // Matched
 void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsigned short* pos, Minion* minion, UnitStatus* cmp)
 {
@@ -61,7 +61,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsign
     unsigned char elements[8];
     unsigned short loc[2];
     unsigned short loc2[2];
-    unsigned int expGauge[4];
+    Gauge expGauge;
     unsigned char stats[0x18];
     unsigned char cmpStats[0x18];
     unsigned short loc3[2];
@@ -137,18 +137,18 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsign
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x63;
     DrawValueGauge_8002EFC4(&unit->mp_C, 0, 0, loc, ot, 1);
-    expGauge[0] = 2;
-    expGauge[1] = 0;
+    expGauge.state = 2;
+    expGauge.delta_4 = 0;
     exp = unit->exp_4;
     while (exp > 0x4000000)
     {
         exp -= 0x4000000;
     }
-    expGauge[2] = exp;
-    expGauge[3] = 0x4000000;
+    expGauge.cur_8 = exp;
+    expGauge.max_C = 0x4000000;
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x2B;
-    DrawGauge_8002BA54(expGauge, 0, loc, ot);
+    DrawGauge_8002BA54(&expGauge, 0, loc, ot);
     GetElementLevels_80033864(minion, elements);
     loc[0] = pos[0] + 0xA2;
     loc[1] = pos[1] + 4;
@@ -281,7 +281,6 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
     CalcEquippedStats_80033624(outStats, copy);
 }
 extern int GetEmptyCocoons_800AD8E4(void);
-extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 // Matched
 void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
 {
@@ -290,8 +289,8 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     unsigned short base[2];
     unsigned short loc[2];
     int buf[2];
-    int hpGauge[4];
-    int expGauge[4];
+    Gauge hpGauge;
+    Gauge expGauge;
 
     base[0] = 0x4E;
     base[1] = 0x2C;
@@ -339,13 +338,13 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 0x15;
     DrawUiTiySprt_8002C06C(loc2, 0x12, args->ot_0);
-    hpGauge[0] = 0;
-    hpGauge[1] = 0;
+    hpGauge.state = 0;
+    hpGauge.delta_4 = 0;
     loc2[0] = base[0] + 0x22;
     loc2[1] = base[1] + 0x14;
-    hpGauge[2] = st->hp_8.cur_0;
-    hpGauge[3] = st->hp_8.max_2;
-    DrawGauge_8002BA54(hpGauge, 0, loc2, args->ot_0);
+    hpGauge.cur_8 = st->hp_8.cur_0;
+    hpGauge.max_C = st->hp_8.max_2;
+    DrawGauge_8002BA54(&hpGauge, 0, loc2, args->ot_0);
     loc2[0] = base[0] + 0x3C;
     loc2[1] = base[1] + 0x1C;
     DrawCurMaxValue_8002EE28(&st->hp_8, loc2, args->ot_0, 1);
@@ -358,17 +357,17 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 0x34;
     DrawUiTiySprt_8002C06C(loc2, 0xE2, args->ot_0);
-    expGauge[0] = 2;
-    expGauge[1] = 0;
+    expGauge.state = 2;
+    expGauge.delta_4 = 0;
     loc2[0] = base[0] + 0x4B;
     loc2[1] = base[1] + 0x36;
-    expGauge[2] = st->exp_4;
-    while (expGauge[2] > 0x4000000)
+    expGauge.cur_8 = st->exp_4;
+    while (expGauge.cur_8 > 0x4000000)
     {
-        expGauge[2] -= 0x4000000;
+        expGauge.cur_8 -= 0x4000000;
     }
-    expGauge[3] = 0x4000000;
-    DrawGauge_8002BA54(expGauge, 0, loc2, args->ot_0);
+    expGauge.max_C = 0x4000000;
+    DrawGauge_8002BA54(&expGauge, 0, loc2, args->ot_0);
 }
 // Matched
 void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short ot)

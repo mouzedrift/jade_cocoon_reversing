@@ -20,6 +20,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "ui_sprites.h"
+#include "ui_gauge.h"
 
 const CVECTOR colorGrey_800741E4 = { 128, 128, 128 };
 const CVECTOR colorWhite_800741E8 = { 255, 255, 255 };
@@ -55,11 +56,6 @@ void DrawElementIcons_8002B2A4(short mask, short* base, int ot, short (*offsets)
         DrawUiTiySprt_8002C06C(pos, icon, ot);
     }
 }
-typedef struct
-{
-    unsigned short kind;
-    unsigned short dir;
-} ScrollArrow;
 extern const CVECTOR colorGrey_800741E4;
 extern const CVECTOR colorWhite_800741E8;
 // Matched
@@ -137,15 +133,6 @@ void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, short* pos, int o
         break;
     }
 }
-typedef struct
-{
-    int state;
-    int delta_4; // pending change, drawn blinking
-    int cur_8;
-    int max_C;
-} Gauge;
-unsigned int ScaleGaugeLength_8002BC60(unsigned int a, unsigned int b, unsigned int c);
-void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int t, int ot);
 // Matched
 void DrawGauge_8002BA54(Gauge* gauge, int time, short* origin, int ot)
 {

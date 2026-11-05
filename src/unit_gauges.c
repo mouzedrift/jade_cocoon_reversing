@@ -23,18 +23,18 @@
 #include "ui_sprites.h"
 #include "menu_draw.h"
 #include "party_window.h"
+#include "ui_gauge.h"
 
 const MenuWindowItem statusIcon0_800743D4 = { 0x10, 1, 151, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 210, 172, 21, 20, 3, 4 };
 const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 3, 5 };
 const MenuWindowItem statusIcon2_8007440C = { 0x10, 1, 177, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 6, 5 };
 const StatusIconMasks statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
 
-extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 // Matched
 void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unused, short ot)
 {
     unsigned short loc[2];
-    unsigned int expGauge[4];
+    Gauge expGauge;
     RECT rect;
     unsigned int exp;
     rect.x = pos[0];
@@ -45,18 +45,18 @@ void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unuse
     loc[0] = pos[0] + 7;
     loc[1] = pos[1] + 0x37;
     DrawUiTiySprt_8002C06C(loc, 0x3B, ot);
-    expGauge[0] = 2;
-    expGauge[1] = 0;
+    expGauge.state = 2;
+    expGauge.delta_4 = 0;
     exp = unit->exp_4;
     while (exp > 0x4000000)
     {
         exp -= 0x4000000;
     }
-    expGauge[2] = exp;
-    expGauge[3] = 0x4000000;
+    expGauge.cur_8 = exp;
+    expGauge.max_C = 0x4000000;
     loc[0] = pos[0] + 0x20;
     loc[1] = pos[1] + 0x42;
-    DrawGauge_8002BA54(expGauge, 0, loc, (short)ot);
+    DrawGauge_8002BA54(&expGauge, 0, loc, (short)ot);
     loc[0] = pos[0];
     loc[1] = pos[1] + 0x24;
     DrawMpGauge_8002F120(unit, loc, 0, ot);
@@ -118,20 +118,19 @@ void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short ot)
         loc[0] += 7;
     } while (count > 0);
 }
-extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 // Matched
 void DrawValueGauge_8002EFC4(UnitGauge* values, int gaugeArg, int time, void* origin_, int ot, int showNumbers)
 {
     unsigned short pos[2];
-    int gauge[4];
+    Gauge gauge;
     unsigned short* origin = (unsigned short*)origin_;
-    gauge[0] = 1;
-    gauge[1] = gaugeArg;
-    gauge[2] = values->cur_0;
-    gauge[3] = values->max_2;
+    gauge.state = 1;
+    gauge.delta_4 = gaugeArg;
+    gauge.cur_8 = values->cur_0;
+    gauge.max_C = values->max_2;
     pos[0] = origin[0];
     pos[1] = origin[1];
-    DrawGauge_8002BA54(gauge, time, pos, ot);
+    DrawGauge_8002BA54(&gauge, time, pos, ot);
     pos[0] = origin[0] + 8;
     pos[1] = origin[1] + 7;
     DrawCurMaxValue_8002EE28(values, pos, (short)ot, showNumbers);

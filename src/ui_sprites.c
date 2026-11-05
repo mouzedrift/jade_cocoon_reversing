@@ -24,6 +24,7 @@
 #include "movie.h"
 #include "cd.h"
 #include "ui_sprites.h"
+#include "ui_gauge.h"
 #include "menu_draw.h"
 #include "tim.h"
 
@@ -250,11 +251,6 @@ int DrawAbilityDescription_8002C670(char* minion, int pos, int texts, short slot
     DrawLargeTextBox_8002AF10(texts + (unsigned char)skill[0xdf] * 16, pos, ot);
     return 1;
 }
-typedef struct
-{
-    short kind;
-    short dir;
-} ScrollArrow;
 extern void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot);
 // Matched
 void DrawScrollArrow_8002C6DC(short* pos, short dir, short ot)
