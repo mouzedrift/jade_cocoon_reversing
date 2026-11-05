@@ -279,4 +279,8 @@ extern short battleCamSpline1Tail_80084350[];
 
 extern void (*dword_80083780[1])();
 
+void SpawnEffectObject_800149A4(EffectArgs* args);
+void EffectObjectTask_80015478(EventEntry* entry, void* buf);
+void StartEffect_8001497C(void);
+int IsEffectReady_80014954(void);
 #endif

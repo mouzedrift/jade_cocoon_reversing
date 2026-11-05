@@ -4014,7 +4014,6 @@ void StartEffect_8001497C(void)
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     state->flags_28 |= 1;
 }
-void EffectObjectTask_80015478(EventEntry* entry, void* buf);
 // Matched
 void SpawnEffectObject_800149A4(EffectArgs* args)
 {

@@ -93,7 +93,6 @@ extern unsigned int GetEquippedId_800AD990(int a0);
 extern void StopAllEventEntries_80043B40(EventNode* p);
 
 extern void SetHitVariantForCommand_800BFAF8(int a0);
-extern void StartEffect_8001497C(void);
 
 
 extern Minion* GetSlotMinion_800A11D8(int a0);

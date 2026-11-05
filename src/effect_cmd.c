@@ -43,7 +43,6 @@ extern EffectFileEntry effectFileTable_800795F0[];
 extern EffectRow* effectRows_80091BE0;
 extern int effectSfxStarted_8008D784;
 extern int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
-extern void SpawnEffectObject_800149A4(EffectArgs* args);
 // Matched
 void SetHitVariant_80018430(short variant)
 {

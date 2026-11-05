@@ -29,6 +29,7 @@
 #include "effect.h"
 #include "minion_init.h"
 #include "party.h"
+#include "effect_data.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -1735,7 +1736,6 @@ void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
    short GetLevantAnimStartFrame_800AC7F0(int anim, int set) */
 /* exe-side, to move to unit_query.h */
 /* exe-side, to move to effect_data.h */
-extern int IsEffectReady_80014954(void);
 /* exe-side, to move to engine.h */
 /* libc (PSY-Q) */
 extern int printf(const char* fmt, ...);
