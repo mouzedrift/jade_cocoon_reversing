@@ -11,30 +11,6 @@
 #include "menu_window.h"
 #include "engine.h"
 
-// one row of the item list: three DrawMenuWindows_8002A5A4 items (icon, name, count)
-typedef struct EquipListRow
-{
-    unsigned short flags_0;
-    int icon_4; // sprite index (type 1 item)
-    void* sprts_8;
-    void* tpages_C;
-    short x_10;
-    short y_12;
-    char pad_14[8];
-    unsigned short nameFlags_1C;
-    short pad_1E;
-    int name_20;
-    char pad_24[8];
-    short nameX_2C;
-    short nameY_2E;
-    char pad_30[8];
-    unsigned short countFlags_38;
-    char pad_3A[2];
-    int count_3C;
-    char pad_40[8];
-    short countX_48;
-    short countY_4A;
-} EquipListRow;
 
 /* the types of equip.c */
 struct EquipCtx;
@@ -87,16 +63,6 @@ typedef struct
     char frame_3;
 } EquipBox;
 
-// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
-typedef struct
-{
-    int flags_0;
-    int time_4;
-    int anim_8;
-    int cursor_C;
-    void* rows_10;
-    int ot_14;
-} EquipMenuWin;
 
 typedef struct
 {
@@ -248,10 +214,10 @@ extern const char emptyText_800C4784[4];
 extern const char aCannotUnequip_800C4788[32];
 extern char scrollUpArrowPos_800C5834[4];
 extern char scrollDownArrowPos_800C5838[4];
-extern int equipListRow0_800C583C[28];
-extern int equipListRow1_800C58AC[28];
-extern int equipListRow2_800C591C[28];
-extern EquipListRow *equipListRows_800C598C[4];
+extern MenuWindowItem equipListRow0_800C583C[4];
+extern MenuWindowItem equipListRow1_800C58AC[4];
+extern MenuWindowItem equipListRow2_800C591C[4];
+extern MenuWindowItem* equipListRows_800C598C[4];
 extern char descBoxPos_800C599C[4];
 extern char statCompareWindowRect_800C59A0[8];
 extern char statsWindowRect_800C59A8[8];

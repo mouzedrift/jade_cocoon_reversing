@@ -132,25 +132,25 @@ const char aCannotUnequip_800C4788[32] = { 130, 98, 130, 129, 130, 142, 130, 142
 
 char scrollUpArrowPos_800C5834[4] = { 160, 0, 131 };
 char scrollDownArrowPos_800C5838[4] = { 159, 0, 208 };
-int equipListRow0_800C583C[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
-    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
-    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem equipListRow0_800C583C[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x53, 0x89, 0x15, 0x15, 3, 5 },
+    { 0x10, 3, 0, NULL, NULL, 0x68, 0x89, 0x70, 0x15, 4, 4 },
+    { 4, 8, 0, NULL, NULL, 0xD8, 0x89, 0x17, 0x15, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int equipListRow1_800C58AC[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
-    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
-    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem equipListRow1_800C58AC[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x53, 0x89, 0x15, 0x15, 3, 5 },
+    { 0x10, 3, 0, NULL, NULL, 0x68, 0x89, 0x70, 0x15, 4, 4 },
+    { 4, 8, 0, NULL, NULL, 0xD8, 0x89, 0x17, 0x15, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int equipListRow2_800C591C[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x890053, 0x150015, 0x50003, 0x30010,
-    0, 0, 0, 0x890068, 0x150070, 0x40004, 0x80004, 0,
-    0, 0, 0x8900D8, 0x150017, 0x30000, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem equipListRow2_800C591C[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x53, 0x89, 0x15, 0x15, 3, 5 },
+    { 0x10, 3, 0, NULL, NULL, 0x68, 0x89, 0x70, 0x15, 4, 4 },
+    { 4, 8, 0, NULL, NULL, 0xD8, 0x89, 0x17, 0x15, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-EquipListRow *equipListRows_800C598C[4] = { (void *)equipListRow0_800C583C, (void *)equipListRow1_800C58AC, (void *)equipListRow2_800C591C };
+MenuWindowItem* equipListRows_800C598C[4] = { equipListRow0_800C583C, equipListRow1_800C58AC, equipListRow2_800C591C, NULL };
 char descBoxPos_800C599C[4] = { 10, 0, 61 };
 char statCompareWindowRect_800C59A0[8] = { 25, 1, 49, 0, 29, 0, 77 };
 char statsWindowRect_800C59A8[8] = { 194, 0, 49, 0, 75, 0, 77 };
@@ -653,7 +653,7 @@ void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short ca
     int v;
     int icon;
     int count;
-    EquipMenuWin win;
+    MenuWindowList win;
     short k = 8;
     for (i = 0; i < 3; i++)
     {
@@ -670,35 +670,35 @@ void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short ca
             v = (int)emptyText_800C4784;
             count = 0;
         }
-        equipListRows_800C598C[i]->icon_4 = icon;
-        equipListRows_800C598C[i]->name_20 = v;
-        equipListRows_800C598C[i]->count_3C = count;
-        equipListRows_800C598C[i]->sprts_8 = &publicTiySprts_8008D434;
-        equipListRows_800C598C[i]->tpages_C = &publicTiyTPages_8008D440;
-        equipListRows_800C598C[i]->x_10 = rect->x;
-        equipListRows_800C598C[i]->y_12 = rect->y + i * 22;
-        equipListRows_800C598C[i]->nameX_2C = rect->x + 0x15;
-        equipListRows_800C598C[i]->nameY_2E = rect->y + i * 22;
-        equipListRows_800C598C[i]->countX_48 = rect->x + 0x85;
-        equipListRows_800C598C[i]->countY_4A = rect->y + i * 22;
+        equipListRows_800C598C[i][0].text_4 = icon;
+        equipListRows_800C598C[i][1].text_4 = v;
+        equipListRows_800C598C[i][2].text_4 = count;
+        equipListRows_800C598C[i][0].sprts_8 = &publicTiySprts_8008D434;
+        equipListRows_800C598C[i][0].tpages_C = &publicTiyTPages_8008D440;
+        equipListRows_800C598C[i][0].x_10 = rect->x;
+        equipListRows_800C598C[i][0].y_12 = rect->y + i * 22;
+        equipListRows_800C598C[i][1].x_10 = rect->x + 0x15;
+        equipListRows_800C598C[i][1].y_12 = rect->y + i * 22;
+        equipListRows_800C598C[i][2].x_10 = rect->x + 0x85;
+        equipListRows_800C598C[i][2].y_12 = rect->y + i * 22;
         if (count == 0)
         {
-            equipListRows_800C598C[i]->flags_0 |= 0x40;
-            equipListRows_800C598C[i]->nameFlags_1C |= 0x40;
-            equipListRows_800C598C[i]->countFlags_38 |= 0x40;
+            equipListRows_800C598C[i][0].flags_0 |= 0x40;
+            equipListRows_800C598C[i][1].flags_0 |= 0x40;
+            equipListRows_800C598C[i][2].flags_0 |= 0x40;
         }
         else
         {
-            equipListRows_800C598C[i]->flags_0 &= ~0x40;
-            equipListRows_800C598C[i]->nameFlags_1C &= ~0x40;
-            equipListRows_800C598C[i]->countFlags_38 &= ~0x40;
+            equipListRows_800C598C[i][0].flags_0 &= ~0x40;
+            equipListRows_800C598C[i][1].flags_0 &= ~0x40;
+            equipListRows_800C598C[i][2].flags_0 &= ~0x40;
         }
     }
     win.flags_0 = list->mode;
     win.time_4 = frameCount_8008D3FC;
-    win.anim_8 = k;
+    win.open_8 = k;
     win.cursor_C = list->cursor;
-    win.rows_10 = equipListRows_800C598C;
+    win.items_10 = equipListRows_800C598C;
     win.ot_14 = list->ot;
     DrawMenuWindows_8002A5A4(&win);
     SetFontClutOffset_8003F900(2, 0);
