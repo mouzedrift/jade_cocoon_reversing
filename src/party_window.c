@@ -93,7 +93,7 @@ extern void DrawUnitStatusExp_8002ECE0(int a0, unsigned short* pos, int a2, shor
 void DrawPartySlotWindow_8002F8E4(int unit, PartySlotWindow* win)
 {
     unsigned short loc[2];
-    char buf[8];
+    RECT buf;
     UiWindowDesc desc;
     int time;
     int highlight;
@@ -106,10 +106,10 @@ void DrawPartySlotWindow_8002F8E4(int unit, PartySlotWindow* win)
     {
         time = win->time_8;
     }
-    InterpolateWindowRect_8004196C(buf, &partyWindowRects_80082E90[win->partySize_2 - 1][win->slot_C], win->open_0, 8, 0);
-    AddDrawAreaPrim_8003326C(buf, &pOT_8008D454[win->ot_6]);
+    InterpolateWindowRect_8004196C(&buf, &partyWindowRects_80082E90[win->partySize_2 - 1][win->slot_C], win->open_0, 8, 0);
+    AddDrawAreaPrim_8003326C(&buf, &pOT_8008D454[win->ot_6]);
     desc.colorSet_8 = highlight;
-    desc.rect_0 = buf;
+    desc.rect_0 = &buf;
     desc.time_4 = time;
     desc.ot_A = win->ot_6;
     DrawUiWindow_8002A384(&desc);

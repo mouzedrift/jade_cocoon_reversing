@@ -29,7 +29,7 @@ extern void DrawPortrait_8002A42C(unsigned short* pos, short a1, int a2, short a
 // Matched
 void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short animate, int clipRect)
 {
-    char buf[8];
+    RECT buf;
     RECT rect;
     unsigned short loc[2];
     UiWindowDesc desc1;
@@ -47,12 +47,12 @@ void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short
     rect.y = 0x2C;
     rect.w = 0x44;
     rect.h = 0x44;
-    InterpolateWindowRect_8004196C(buf, &rect, step, 8, 0);
+    InterpolateWindowRect_8004196C(&buf, &rect, step, 8, 0);
     loc[0] = 12;
     loc[1] = 0x2E;
     DrawPortrait_8002A42C(loc, 0, clipRect, ot);
     desc1.colorSet_8 = highlight;
-    desc1.rect_0 = buf;
+    desc1.rect_0 = &buf;
     desc1.time_4 = time;
     desc1.ot_A = ot;
     DrawUiWindow_8002A384(&desc1);
@@ -60,9 +60,9 @@ void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short
     rect.y = 0x2C;
     rect.w = 0x8D;
     rect.h = 0x44;
-    InterpolateWindowRect_8004196C(buf, &rect, step, 8, 0);
+    InterpolateWindowRect_8004196C(&buf, &rect, step, 8, 0);
     desc2.colorSet_8 = highlight;
-    desc2.rect_0 = buf;
+    desc2.rect_0 = &buf;
     desc2.time_4 = time;
     desc2.ot_A = ot;
     DrawUiWindow_8002A384(&desc2);
