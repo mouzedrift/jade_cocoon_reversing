@@ -22,6 +22,7 @@
 #include "unit_query.h"
 #include "sound_seq.h"
 #include "font.h"
+#include "cursor.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];

@@ -71,7 +71,6 @@ struct Pool;
 extern UnitStatus* GetUnitStatus_80014390(int arg0);
 extern EventEntry* FindModelTask_8001091C();
 struct Pool;
-extern void DrawNextPrompt_8003CF88(short a0, short a1, int idx);
 extern int DsControlB(unsigned char com, unsigned char* param, unsigned char* result);
 extern void AddStatus_80012794(UnitStatus* status, int bits);
 extern void SeVibOn(void);

@@ -942,7 +942,7 @@ void SceneSelect_800B860C()
         {
             r2.x = 0x1E;
             r2.y = st->area_4 * 14 + 0x32;
-            DrawCursorHand_8003D034(&r2, 0);
+            DrawCursorHand_8003D034(&r2.x, 0);
         }
         break;
     case 1:
@@ -979,7 +979,7 @@ void SceneSelect_800B860C()
         {
             r3.x = 0x1E;
             r3.y = st->map_8 * 14 + 0x32;
-            DrawCursorHand_8003D034(&r3, 0);
+            DrawCursorHand_8003D034(&r3.x, 0);
         }
         break;
     case 2:

@@ -20,6 +20,7 @@
 #include "menu_draw.h"
 #include "status_panel.h"
 #include "party_window.h"
+#include "cursor.h"
 
 
 // a list panel of the store (StoreMenu.panel_34)

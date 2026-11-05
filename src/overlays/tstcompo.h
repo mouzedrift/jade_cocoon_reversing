@@ -17,6 +17,7 @@
 #include "party.h"
 #include "model_ftg.h"
 #include "ftg_draw.h"
+#include "cursor.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
@@ -257,7 +258,6 @@ extern int dword_8007DC74;
 extern short sinTable_80084540[];
 /* exe-side, to move to pad_text.h */
 /* exe-side, to move to cursor.h */
-extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
 /* exe-side, to move to font.h */
 /* exe-side, to move to util.h */
 /* exe-side, to move to party.h */

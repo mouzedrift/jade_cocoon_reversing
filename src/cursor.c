@@ -18,6 +18,7 @@
 #include "tiy.h"
 #include "util.h"
 #include "unit_query.h"
+#include "cursor.h"
 
 
 

@@ -30,6 +30,7 @@
 #include "minion_init.h"
 #include "party.h"
 #include "ability_menu.h"
+#include "cursor.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel

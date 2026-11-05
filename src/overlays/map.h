@@ -17,6 +17,7 @@
 #include "ui_sprites.h"
 #include "sound.h"
 #include "tim.h"
+#include "cursor.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem
@@ -232,7 +233,6 @@ extern MapDest mapSelect_800AEBF8;  // the selected destination (GAME data)
 extern void StartMapOverlay_800A75F8();
 
 /* exe-side, to move to an exe header */
-extern void DrawCursorHand_8003D034(void*, int);
 // state of the map select (SceneSelect_800B860C)
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
                                 int half);
