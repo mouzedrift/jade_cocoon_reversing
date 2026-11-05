@@ -1,6 +1,9 @@
 #ifndef _TU_8002D738_H_
 #define _TU_8002D738_H_
 
+#include "globals.h"
+#include "effect_data.h" // Pos16
+
 extern const char aDeveloper_80074320[];
 extern const char aConqueror_80074334[];
 extern const char aVindicator_80074348[];
@@ -11,4 +14,6 @@ extern const char aAdept_80074398[];
 extern const char aNovice_800743A4[];
 extern const char aApprentice_800743B4[];
 
+int IsTargetListed_8002D738(int idx, int self, int mode);
+void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base);
 #endif

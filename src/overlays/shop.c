@@ -1873,7 +1873,7 @@ void DismissShopPrompt_800BC2DC(ShopMenu* menu)
 // Not matched: stack layout matches; loop-invariant constant 2 is not hoisted (the original keeps it in a spilled pseudo, rematerialised in $t1), so a few registers differ
 void DrawShopMenu_800BC380(ShopMenu* menu)
 {
-    ShopPos pos;
+    Pos16 pos;
     WindowStyle win;
     short i;
     short j;
@@ -1966,12 +1966,12 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         {
             if (menu->shown_54->id != 4 && !(menu->flags_24 & 0x20))
             {
-                ShopPos abilityPos;
+                Pos16 abilityPos;
                 ListMenuState abilityRef;
-                ShopPos p40;
+                Pos16 p40;
                 ListMenuState magicRef;
-                ShopPos treePos;
-                ShopPos statusPos;
+                Pos16 treePos;
+                Pos16 statusPos;
                 RECT statusRect;
                 if (menu->flags_24 & 0x1C0)
                 {
@@ -2056,7 +2056,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         if (i == 4)
         {
             RECT rect;
-            ShopPos baseNamePos;
+            Pos16 baseNamePos;
             baseNamePos.x = mergeSlotRects_800BF7B0[0].x + mergeSlotRects_800BF7B0[0].w / 2;
             baseNamePos.y = mergeSlotRects_800BF7B0[0].y + 2;
             InterpolateWindowRect_8004196C(&rect, &mergeSlotRects_800BF7B0[0], 8, 8, 0);
@@ -2083,7 +2083,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                 {
                 case 1:
                 {
-                    ShopPos p40;
+                    Pos16 p40;
                     p40.x = mergeSlotRects_800BF7B0[j].x + mergeSlotRects_800BF7B0[j].w / 2;
                     p40.y = mergeSlotRects_800BF7B0[j].y + 2;
                     DrawSmallText_8002FAA0(2, (unsigned short*)&p40, menu->partner_50->status_84.name_10, 0xE);
@@ -2091,7 +2091,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                 }
                 case 2:
                 {
-                    ShopPos p48;
+                    Pos16 p48;
                     p48.x = mergeSlotRects_800BF7B0[j].x + 7;
                     p48.y = mergeSlotRects_800BF7B0[j].y + 1;
                     DrawUiTiySprt_8002C06C(&p48, 0x42, 0xE);
@@ -2113,7 +2113,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                 if (menu->state_0 == 3 && (menu->flags_24 & 2))
                 {
                     ShopPair p48;
-                    ShopPos arrowPos;
+                    Pos16 arrowPos;
                     arrowPos.x = 0xA5;
                     p48.a = 0;
                     p48.b = 0;

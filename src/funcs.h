@@ -77,7 +77,6 @@ extern void SeVibOn(void);
 extern void SetVib(void);
 extern void SsUtVibrateOn(void);
 extern void SsUtVibrateOff(void);
-extern int IsTargetListed_8002D738(int idx, int self, int mode);
 
 extern unsigned int GetEquippedId_800AD990(int a0);
 extern void StopAllEventEntries_80043B40(EventNode* p);

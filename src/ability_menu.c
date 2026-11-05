@@ -24,6 +24,7 @@
 #include "ui_sprites.h"
 #include "party.h"
 #include "ability_menu.h"
+#include "family_tree.h"
 
 // Matched
 void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)

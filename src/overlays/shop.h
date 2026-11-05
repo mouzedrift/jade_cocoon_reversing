@@ -31,6 +31,7 @@
 #include "party.h"
 #include "ability_menu.h"
 #include "cursor.h"
+#include "family_tree.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -143,11 +144,6 @@ typedef struct FormActorDesc
     int model_48;
 } FormActorDesc;
 
-typedef struct ShopPos
-{
-    short x;
-    short y;
-} ShopPos;
 
 
 typedef struct ShopPair
@@ -284,7 +280,6 @@ int fn_80024EC8(int a, int b);            // model_ftg
 int fn_80024F00(int a, int b);            // model_ftg
 int fn_80024F38(int a, int b);            // model_ftg
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
-void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base); // family_tree.h
 void* memset(void* p, int c, unsigned int n);        // libc
 
 /* SHOP data */

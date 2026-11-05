@@ -32,6 +32,7 @@
 #include "party.h"
 #include "ability_menu.h"
 #include "battle_damage.h"
+#include "family_tree.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -699,7 +700,6 @@ extern int IsSceneHeld_800A5E68(void);
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
 extern unsigned short uiColor_8008B590;
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
-extern void DrawFamilyTree_8002D7D0();
 
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */
 
