@@ -390,7 +390,6 @@ extern void EvCmdEndScene_800B8A34(GameEvCtx* q);
 
 extern void ChooseEnemyCommand_800C4118(void* a, void* b, int c, int d);
 
-extern void StartSceneFadeOut_8001AA50(int a);
 
 extern int StartBattle_800BA9E4(void);
 

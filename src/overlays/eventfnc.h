@@ -468,7 +468,6 @@ extern int AreLevantFilesLoaded_800AC768(void);
 extern void FreeLevantAnimById_800AC6A8(int a);
 
 
-extern void StartSceneDarken_8001AAA8(int a);
 
 extern int LevantCommand_800A8EC4(int* p);
 
@@ -734,9 +733,6 @@ extern int eventDataBuf_800AEBC8;
 /* exe-side, to move to unit_stats.h */
 extern short defaultBones_80079140[]; // default bone table
 /* exe-side, to move to engine.h */
-extern void StartSceneFadeIn_8001AA04(int duration); // not short: EvCmdFadeSound_800BB4A4 passes an lhu value
-extern void StartSceneFadeOut_8001AA50(int duration);
-extern void StartSceneBrighten_8001AB1C(int duration);
 /* exe-side, to move to sound_seq.h */
 /* exe-side, to move to sound.h */
 /* exe-side, to move to model_ftg.h */

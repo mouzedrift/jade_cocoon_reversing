@@ -272,8 +272,6 @@ int StartModelTask_80010850(void* p);     // party.h
 int fn_80010A44(int a);                   // party.h
 void fn_80011CD0(UnitStatus* p);          // unit_stats.h
 void fn_80019B14(int a, int b, int c);    // minion_init.h
-void StartSceneDarken_8001AAA8(int a);    // engine.h
-void StartSceneBrighten_8001AB1C(int a);  // engine.h
 void fn_8001ABEC(int a);                  // engine.h
 void* fn_8001D45C(void* p);               // engine.h (CreateActor)
 void fn_8001D68C(void* p, int on);        // engine.h

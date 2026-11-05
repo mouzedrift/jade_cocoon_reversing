@@ -441,7 +441,7 @@ void SetSceneDark_8001A9E4(void)
     sceneBrightness_8008D40C = 0;
 }
 // Matched
-void StartSceneFadeIn_8001AA04(short duration)
+void StartSceneFadeIn_8001AA04(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
     EventEntry* task;
@@ -452,7 +452,7 @@ void StartSceneFadeIn_8001AA04(short duration)
     SceneFadeTask_8001A41C(task, fade);
 }
 // Matched
-void StartSceneFadeOut_8001AA50(short duration)
+void StartSceneFadeOut_8001AA50(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
     EventEntry* task;
@@ -464,7 +464,7 @@ void StartSceneFadeOut_8001AA50(short duration)
     SceneFadeTask_8001A41C(task, fade);
 }
 // Matched
-void StartSceneDarken_8001AAA8(short duration)
+void StartSceneDarken_8001AAA8(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
     EventEntry* task;
@@ -481,7 +481,7 @@ void StopSceneDarken_8001AAF4(void)
     fade->flags &= ~4;
 }
 // Matched
-void StartSceneBrighten_8001AB1C(short duration)
+void StartSceneBrighten_8001AB1C(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
     EventEntry* task;

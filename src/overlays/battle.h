@@ -1443,7 +1443,6 @@ extern BatSelection* GetBattleSelection_800A1E3C();
 extern void ExitLevantBattleMode_800A8984(int victoryPose);
 
 /* exe-side, to move to engine.h */
-extern void StartSceneDarken_8001AAA8(short duration);
 /* exe-side, to move to sound_seq.h */
 
 /* battle_5.c: the actor window's box (DrawWindow_80042460's style) */

@@ -362,4 +362,8 @@ int TestMagicBit_8001AE2C(unsigned int* bits, unsigned int idx);
 void BeginFade_8001C260(void);
 void FreezeScreen_8001C224(void);
 void DrawIntroMovie_8001AF64(void* descs);
+void StartSceneFadeIn_8001AA04(int duration);
+void StartSceneDarken_8001AAA8(int duration);
+void StartSceneFadeOut_8001AA50(int duration);
+void StartSceneBrighten_8001AB1C(int duration);
 #endif

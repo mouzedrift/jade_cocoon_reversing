@@ -20,6 +20,7 @@
 #include "effect_data.h"
 #include "main.h"
 #include "cd.h"
+#include "engine.h"
 
 extern ShortPair screenOffset_8008D474;
 // Matched
@@ -142,7 +143,6 @@ void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam)
     UpdateCameraFollow_80037918(cam);
 }
 extern void DrawBattleStage_800BC90C(CameraCtrl* cam);
-extern void StartSceneFadeIn_8001AA04(int duration);
 
 // Matched
 void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam)
