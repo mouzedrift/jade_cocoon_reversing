@@ -28,9 +28,7 @@ const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620
 const MenuWindowItem statusIcon2_8007440C = { 0x10, 1, 177, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 6, 5 };
 const StatusIconMasks statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
 
-extern void DrawUnitStatus_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
-void DrawMpGauge_8002F120(char* a0, unsigned short* pos, int a2, short a3);
 // Matched
 void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unused, short ot)
 {
@@ -60,18 +58,17 @@ void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unuse
     DrawGauge_8002BA54(expGauge, 0, loc, (short)ot);
     loc[0] = pos[0];
     loc[1] = pos[1] + 0x24;
-    DrawMpGauge_8002F120((char*)unit, loc, 0, ot);
+    DrawMpGauge_8002F120(unit, loc, 0, ot);
 }
-void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short a2);
 // Matched
-void DrawCurMaxValue_8002EE28(short* values, unsigned short* pos, short ot, int showNumbers)
+void DrawCurMaxValue_8002EE28(UnitGauge* values, unsigned short* pos, short ot, int showNumbers)
 {
     unsigned short loc[2];
     if (showNumbers)
     {
         loc[0] = pos[0] + 0x15;
         loc[1] = pos[1];
-        DrawSmallNumber3_8002C290(loc, values[0], ot);
+        DrawSmallNumber3_8002C290(loc, values->cur_0, ot);
     }
     else
     {
@@ -94,7 +91,7 @@ void DrawCurMaxValue_8002EE28(short* values, unsigned short* pos, short ot, int 
         y = pos[1];
         loc[0] = x + 0x30;
         loc[1] = y;
-        DrawSmallNumber3_8002C290(loc, values[1], ot);
+        DrawSmallNumber3_8002C290(loc, values->max_2, ot);
     }
     else
     {
@@ -121,18 +118,16 @@ void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short ot)
     } while (count > 0);
 }
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
-extern void DrawCurMaxValue_8002EE28(short* a, unsigned short* pos, short c, int d);
-extern void DrawValueGauge_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
 // Matched
-void DrawValueGauge_8002EFC4(char* values, int gaugeArg, int time, void* origin_, int ot, int showNumbers)
+void DrawValueGauge_8002EFC4(UnitGauge* values, int gaugeArg, int time, void* origin_, int ot, int showNumbers)
 {
     unsigned short pos[2];
     int gauge[4];
     unsigned short* origin = (unsigned short*)origin_;
     gauge[0] = 1;
     gauge[1] = gaugeArg;
-    gauge[2] = ((short*)values)[0];
-    gauge[3] = ((short*)values)[1];
+    gauge[2] = values->cur_0;
+    gauge[3] = values->max_2;
     pos[0] = origin[0];
     pos[1] = origin[1];
     DrawGauge_8002BA54(gauge, time, pos, ot);
@@ -141,7 +136,7 @@ void DrawValueGauge_8002EFC4(char* values, int gaugeArg, int time, void* origin_
     DrawCurMaxValue_8002EE28(values, pos, (short)ot, showNumbers);
 }
 // Matched
-void DrawHpGauge_8002F078(char* unit, unsigned short* pos, int gaugeArg, short ot)
+void DrawHpGauge_8002F078(UnitStatus* unit, unsigned short* pos, int gaugeArg, short ot)
 {
     unsigned short loc[2];
     loc[0] = pos[0] + 7;
@@ -149,10 +144,10 @@ void DrawHpGauge_8002F078(char* unit, unsigned short* pos, int gaugeArg, short o
     DrawUiTiySprt_8002C06C(loc, 0x76, ot);
     loc[0] = pos[0] + 0x20;
     loc[1] = pos[1] + 3;
-    DrawValueGauge_8002EFC4(unit + 8, gaugeArg, 0, loc, ot, 1);
+    DrawValueGauge_8002EFC4(&unit->hp_8, gaugeArg, 0, loc, ot, 1);
 }
 // Matched
-void DrawMpGauge_8002F120(char* unit, unsigned short* pos, int gaugeArg, short ot)
+void DrawMpGauge_8002F120(UnitStatus* unit, unsigned short* pos, int gaugeArg, short ot)
 {
     unsigned short loc[2];
     loc[0] = pos[0] + 7;
@@ -160,11 +155,10 @@ void DrawMpGauge_8002F120(char* unit, unsigned short* pos, int gaugeArg, short o
     DrawUiTiySprt_8002C06C(loc, 0x71, ot);
     loc[0] = pos[0] + 0x20;
     loc[1] = pos[1] + 3;
-    DrawValueGauge_8002EFC4(unit + 0xC, gaugeArg, 0, loc, ot, 1);
+    DrawValueGauge_8002EFC4(&unit->mp_C, gaugeArg, 0, loc, ot, 1);
 }
-extern void DrawUnitStatus_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
 // Matched
-void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, int rect, int ot, int flags)
+void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot, int flags)
 
 {
     UiWindowDesc desc;
@@ -187,7 +181,7 @@ void DrawUnitStatus_8002F23C(UnitStatus* unit, int gaugeArg, int time, unsigned 
     DrawSmallText_8002FAA0(0, loc, unit->name_10, ot);
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0xB;
-    DrawValueGauge_8002EFC4((char*)&unit->hp_8.cur_0, gaugeArg, time, loc, ot, (flags ^ 1) & 1);
+    DrawValueGauge_8002EFC4(&unit->hp_8, gaugeArg, time, loc, ot, (flags ^ 1) & 1);
     loc[0] = pos[0] + 0x45;
     loc[1] = pos[1] + 4;
     DrawElementIconsGrid_8002B228(GetUnitElementMask_8003412C(unit), loc, ot, flags);

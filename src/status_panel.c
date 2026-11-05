@@ -23,6 +23,7 @@
 #include "event.h"
 #include "ui_sprites.h"
 #include "effect.h"
+#include "unit_gauges.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
@@ -52,7 +53,6 @@ void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
 }
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawStatDelta_8002E004(unsigned short* p, int a1, int a2);
-extern void DrawValueGauge_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void DrawElementChart_8002E730(unsigned short* pos, unsigned char* a1, short ot);
 extern void DrawStatGrid_8002EACC(UnitStatus* a0, unsigned short* pos, int a2, short ot);
@@ -126,7 +126,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     }
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x45;
-    DrawValueGauge_8002EFC4((char*)&unit->hp_8.cur_0, 0, 0, loc, ot, 1);
+    DrawValueGauge_8002EFC4(&unit->hp_8, 0, 0, loc, ot, 1);
     if (cmp)
     {
         delta = cmp->mp_C.max_2 - unit->mp_C.max_2;
@@ -139,7 +139,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
     }
     loc[0] = pos[0] + 3;
     loc[1] = pos[1] + 0x63;
-    DrawValueGauge_8002EFC4((char*)&unit->mp_C.cur_0, 0, 0, loc, ot, 1);
+    DrawValueGauge_8002EFC4(&unit->mp_C, 0, 0, loc, ot, 1);
     expGauge[0] = 2;
     expGauge[1] = 0;
     exp = unit->exp_4;
@@ -286,7 +286,6 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
 extern int GetEmptyCocoons_800AD8E4(void);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
-extern void DrawCurMaxValue_8002EE28(short* a, unsigned short* pos, short c, int d);
 // Matched
 void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
 {
@@ -353,7 +352,7 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     DrawGauge_8002BA54(hpGauge, 0, loc2, args->ot_0);
     loc2[0] = base[0] + 0x3C;
     loc2[1] = base[1] + 0x1C;
-    DrawCurMaxValue_8002EE28((short*)&st->hp_8.cur_0, loc2, args->ot_0, 1);
+    DrawCurMaxValue_8002EE28(&st->hp_8, loc2, args->ot_0, 1);
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 0x24;
     DrawUiTiySprt_8002C06C(loc2, 0x70, args->ot_0);

@@ -24,6 +24,7 @@
 #include "pad_text.h"
 #include "ui_sprites.h"
 #include "menu_draw.h"
+#include "unit_gauges.h"
 
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
@@ -88,7 +89,6 @@ typedef struct
     short pad_E;
     unsigned int highlight_10;
 } PartySlotWindow;
-extern void DrawUnitStatusExp_8002ECE0(int a0, unsigned short* pos, int a2, short ot);
 // Matched
 void DrawPartySlotWindow_8002F8E4(int unit, PartySlotWindow* win)
 {

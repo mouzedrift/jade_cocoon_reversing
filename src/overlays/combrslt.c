@@ -152,7 +152,6 @@ void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWin
     }
 }
 
-extern void DrawHpGauge_8002F078();
 
 // Matched
 void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box)

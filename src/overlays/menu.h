@@ -25,6 +25,7 @@
 #include "sound_seq.h"
 #include "ui_sprites.h"
 #include "menu_draw.h"
+#include "unit_gauges.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -721,7 +722,6 @@ extern int IsSceneHeld_800A5E68(void);
 /* exe-side, to move to <exe header> */
 // = GetDominantSpecies_800338B0: rename once funcs.h declares it returning int (with its unsigned char return
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
-extern void DrawUnitStatusWindow_8002F1C8();
 extern void UseItemOnUnit_80013C28();
 extern unsigned short uiColor_8008B590;
 extern void AccumulateExpGain_800122A0();
@@ -735,7 +735,6 @@ extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 extern void DrawAbilityList_8002CE28();
 extern void DrawFamilyTree_8002D7D0();
 extern int DrawTargetSelectMenu_8002D250();
-extern void DrawMpGauge_8002F120();
 extern void DrawUnitStatusPanel_8002DB48();
 extern void DrawLevantStats_8002F7D0();
 

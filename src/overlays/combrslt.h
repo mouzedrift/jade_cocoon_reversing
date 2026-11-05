@@ -11,6 +11,7 @@
 #include "engine.h"
 #include "event.h"
 #include "ui_sprites.h"
+#include "unit_gauges.h"
 
 
 
@@ -46,6 +47,5 @@ void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box);
 
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590; // -> globals.h
-extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h
 
 #endif

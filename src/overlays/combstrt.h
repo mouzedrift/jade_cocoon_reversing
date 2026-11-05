@@ -12,6 +12,7 @@
 #include "event.h"
 #include "sound_seq.h"
 #include "ui_sprites.h"
+#include "unit_gauges.h"
 
 
 
@@ -50,6 +51,5 @@ void DrawTeamMinion_800A49DC(int side, int slot);
 extern unsigned short word_8008D3FC; // low half of frameCount_8008D3FC (globals.h), read with lhu
 extern unsigned short uiColor_8008B590; // -> globals.h
 extern int rand(void);
-extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h
 
 #endif

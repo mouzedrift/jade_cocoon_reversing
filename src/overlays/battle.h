@@ -28,6 +28,7 @@
 #include "sound_seq.h"
 #include "ui_sprites.h"
 #include "effect.h"
+#include "unit_gauges.h"
 
 
 
@@ -1466,8 +1467,6 @@ void BossAi02_800C5A7C(EnemyAi* ai);
 void EnemyAiDefend_800C58AC(EnemyAi* ai);
 
 /* exe-side, to move to unit_gauges.h */
-extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, void* rect, int ot, int flags);
-extern void DrawMpGauge_8002F120(UnitStatus* unit, short* pos, int gaugeArg, short ot);
 extern void DrawStatusIcons_8002F480(UnitStatus* unit, short* pos, int ot, int reverse);
 /* exe-side, to move to event.h */
 /* exe-side, to move to font.h */
