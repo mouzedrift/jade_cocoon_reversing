@@ -5,6 +5,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "menu_draw.h"
 #include "main.h"
 #include "pad_text.h"
 #include "font.h"
@@ -59,38 +60,13 @@ typedef struct MapSelState
     int entry_C;
 } MapSelState;
 
-// a menu item drawn by DrawMenuWindows_8002A5A4 (DrawMenuWindowContents_8002A710)
-typedef struct MapItem
-{
-    unsigned short flags_0; // 1: ends the row
-    unsigned short type_2;  // 3: text (font 2)
-    const char* text_4;
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x_10; // the window rect
-    short y_12;
-    short w_14;
-    short h_16;
-    short mx_18;
-    short my_1A;
-} MapItem;
 
 // a menu row: one item and the end marker
 typedef struct MapWin
 {
-    MapItem items[2];
+    MenuWindowItem items[2];
 } MapWin;
 
-// a window list drawn by DrawMenuWindows_8002A5A4
-typedef struct MapMenu
-{
-    int flags_0;
-    int time_4;
-    int anim_8;
-    int sel_C;
-    MapWin** windows_10; // NULL terminated
-    int ot_14;
-} MapMenu;
 
 extern int dword_800B66C0;
 extern const char aParelForest_800B66C4[];
@@ -116,7 +92,7 @@ extern const char aBarrierGate_800B689C[28];
 extern const MapWin destListRow0_800B68B8;
 extern const MapWin destListRow1_800B68F0;
 extern const MapWin destListRow2_800B6928;
-extern const MapMenu menuTemplate_800B6960;
+extern const MenuWindowList menuTemplate_800B6960;
 extern const char aProceed_800B6978[];
 extern const char aYes_800B698C[];
 extern const MapWin yesRow_800B6994;

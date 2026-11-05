@@ -140,16 +140,16 @@ const MapWin destListRow2_800B6928 = { {
     { 8, 3, 0, 0, 0, 16, 188, 116, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 } };
-const MapMenu menuTemplate_800B6960 = { 2, 0, 8 };
+const MenuWindowList menuTemplate_800B6960 = { 2, 0, 8 };
 const char aProceed_800B6978[] = "\202o\202\222\202\217\202\203\202\205\202\205\202\204\201H"; // Proceed?
 const char aYes_800B698C[] = "\202x\202\205\202\223"; // Yes
 const MapWin yesRow_800B6994 = { {
-    { 8, 3, aYes_800B698C, 0, 0, 114, 184, 46, 18, 2, 2 },
+    { 8, 3, (int)aYes_800B698C, 0, 0, 114, 184, 46, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 } };
 const char aNo_800B69CC[] = "\202m\202\217"; // No
 const MapWin noRow_800B69D4 = { {
-    { 8, 3, aNo_800B69CC, 0, 0, 160, 184, 46, 18, 2, 2 },
+    { 8, 3, (int)aNo_800B69CC, 0, 0, 160, 184, 46, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 } };
 const char aField2_800B6A0C[16] = "\202e\202\211\202\205\202\214\202\204\202Q";
@@ -335,8 +335,8 @@ void DestinationSelect_800B7044(MapTask* task, int work)
     MapWin w0;
     MapWin w1;
     MapWin w2;
-    MapWin* list[4];
-    MapMenu menu;
+    MenuWindowItem* list[4];
+    MenuWindowList menu;
     MapXY arrow;
     MapXY pos[2];
     MapElem* elem;
@@ -413,22 +413,22 @@ void DestinationSelect_800B7044(MapTask* task, int work)
                 w2 = destListRow2_800B6928;
                 memset(list, 0, 0x10);
                 menu = menuTemplate_800B6960;
-                list[0] = &w0;
-                list[1] = &w1;
-                list[2] = &w2;
-                menu.windows_10 = list;
+                list[0] = w0.items;
+                list[1] = w1.items;
+                list[2] = w2.items;
+                menu.items_10 = list;
                 for (i = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A;
                      i < mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A + mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].rows_2; i++)
                 {
                     GetNthOpenDest_800B8128((short)i, mapSelect_800AEBF8.area, &listDest);
-                    list[i - mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A]->items[0].text_4 = destNames_800B92FC[listDest.area][listDest.dest];
+                    list[i - mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A][0].text_4 = (int)destNames_800B92FC[listDest.area][listDest.dest];
                 }
                 if (openDestCount_800B8CA4 < 3)
                 {
                     list[openDestCount_800B8CA4] = 0;
                 }
                 menu.time_4 = GetTime30Hz_8002C64C();
-                menu.sel_C = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].cursor_8;
+                menu.cursor_C = mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].cursor_8;
                 DrawMenuWindows_8002A5A4(&menu);
             }
         }
@@ -587,8 +587,8 @@ void ConfirmDestination_800B7A90(MapTask* task, int work)
     short tp2[4];
     MapWin w0;
     MapWin w1;
-    MapWin* list[3];
-    MapMenu menu;
+    MenuWindowItem* list[3];
+    MenuWindowList menu;
     int y;
     int wd;
     MapDest* cur = &mapSelect_800AEBF8;
@@ -631,11 +631,11 @@ void ConfirmDestination_800B7A90(MapTask* task, int work)
     w1 = noRow_800B69D4;
     memset(list, 0, 0xC);
     menu = menuTemplate_800B6960;
-    list[0] = &w0;
-    list[1] = &w1;
+    list[0] = w0.items;
+    list[1] = w1.items;
     menu.time_4 = GetTime30Hz_8002C64C();
-    menu.windows_10 = list;
-    menu.sel_C = confirmCursor_800B9324.cursor_8;
+    menu.items_10 = list;
+    menu.cursor_C = confirmCursor_800B9324.cursor_8;
     DrawMenuWindows_8002A5A4(&menu);
     if (IsConfirmPressedP1_8003D380(1))
     {
