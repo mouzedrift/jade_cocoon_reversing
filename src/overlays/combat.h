@@ -16,6 +16,7 @@
 #include "MEMORY.H"
 #include "util.h"
 #include "unit_query.h"
+#include "model.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by BuildMinionModelParams_800A05E0
 typedef struct CombatModelParams

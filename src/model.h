@@ -736,5 +736,48 @@ int LoadFtgPolyGT4_800246A0(FtgPrimHeader *hdr, FtgSrcPolyGT4 *src, FtgObject *o
 void InitOverlayLoaderTask_80020CB8();
 
 
+void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr);
+int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx);
+int IsModelLoaderDone_800205D0(void);
+void FreeEffectFile_80020EE0(EffectFile* file);
+void RunActorScript_8001EA48(void* actor);
+void ClearModelAnimRef_800204AC(ModelAnimRef* ref);
+int IsEffectFileLoaded_80020EBC(EffectFile* file);
+int FindEffectIndex_80020F00(EffectFile* file, int kind, int id);
+void LoadEffectFile_80020DDC(int fileId, EffectFile* out, short* tpagePos, short* clutPos, int sel, int flag);
+void ResetOverlayLoaderTask_80020D68(void);
+void UpdateActorMotion_8001F354(void* actor);
+void UpdateActorAnimLoad_8001F918(void* actor);
+void UpdateActorScale_8001F9F0(Actor* o);
+void UpdateActorDrawMode_8001FB00(Actor* o);
+void DrawActor_8001FD08(void* actor);
+void AdvanceActorFrame_8001FF48(Actor* o);
+void CopyActorBoneMatrices_800200F8(void* actor);
+Model* AcquireLoaderModel_80020734(int arg);
+void UpdateActor_8001F9AC(void* actor);
+int AddModelAnimRef_800201EC(Model* model);
+void FreeLoaderModel_80020768(Model* model);
+void FreeModelLoaderList_8002052C(void);
+void UpdateOverlayLoaderTask_80020CD8(int entry, OverlayLoader* loader);
+void ClearModelAnimRefs_800201A4(void);
+void ResetModelLoader_800204D0(void);
+void StopModelLoader_800205F0(void);
+int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int frame);
+void ModelLoaderTask_800209AC(EventEntry* entry, int* buf);
+int RequestModelAnim_8002032C(int ref, int user, int anim);
+void StopActorScript_8001EFC4(Actor* actor);
+void ReleaseModelAnim_800203B0(int ref, int user, int anim);
+void LoadRequestedModels_80020A38(ModelLoader* loader);
+int AreRequestedModelsLoaded_80020B70(ModelLoader* loader);
+void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, List* heap);
+void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, List* heap);
+int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, List* heap);
+void AllocMdecBuffers_800216E8(EffectMdecBuffers* out, int maxSize, List* heap);
+int AreLoaderModelsLoaded_80020924(void);
+void LoadLoaderModelAnimSets_80020898(void);
+int LoadOverlayIfChanged_80020D1C(int mode, int overlay);
+int RequestLoaderModel_800206A0(int id, int sel, int animMode, int animSet);
+void StartModelLoader_8002056C(void);
+void FreeLoaderModelAnimSets_80020814(void);
 #endif
 

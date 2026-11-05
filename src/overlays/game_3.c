@@ -374,7 +374,7 @@ GameSpawnMember encounterGroups_800AEB00[3][3] = {
 };
 int encounterSpecies_800AEB6C[4] = { 211, 211, 211, 211 };
 int mdecBufferMode_800AEB7C = 2;
-int eventEffects_800AEB80[15] = { 0 };
+EffectFile eventEffects_800AEB80 = { 0 };
 int *eventReloc_800AEBBC = 0;
 void *eventTiy_800AEBC0[2] = { 0 };
 void *eventDataBuf_800AEBC8 = 0;
@@ -2048,7 +2048,7 @@ int GameShutdown_800A7574(void)
 }
 
 // Matched
-void StartMapOverlay_800A75F8(GameTask* task, void** work)
+void StartMapOverlay_800A75F8(GameTask* task, int* work)
 {
     *work = LoadOverlayIfChanged_80020D1C(1, 0xa);
     task->next_8 = WaitMapOverlay_800A7654;
@@ -2065,7 +2065,7 @@ void WaitMapOverlay_800A7654(GameTask* task, int* work)
 }
 
 // Matched
-void StartChapterOverlay_800A7690(GameTask* task, void** work)
+void StartChapterOverlay_800A7690(GameTask* task, int* work)
 {
     *work = LoadOverlayIfChanged_80020D1C(1, 0x14);
     task->next_8 = WaitChapterOverlay_800A76D8;

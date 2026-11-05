@@ -19,6 +19,7 @@
 #include "msg_window.h"
 #include "unit_query.h"
 #include "movie.h"
+#include "model.h"
 
 typedef struct CombBtlNode
 {

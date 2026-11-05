@@ -15,6 +15,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "pad_text.h"
+#include "model.h"
 
 
 // a window row of one item (the item + the row end)

@@ -218,7 +218,7 @@ void EncounterWatchTask_800A1314(GameTask* task)
 }
 
 // Matched
-void StartEncounterBattle_800A13B8(GameTask* task, void** work)
+void StartEncounterBattle_800A13B8(GameTask* task, GameBattleWork* work)
 {
     EnterLevantBattleMode_800A895C();
     SetupEncounter_800A1BD0();
@@ -226,7 +226,7 @@ void StartEncounterBattle_800A13B8(GameTask* task, void** work)
     FreeLevantAnimSet_800AC73C();
     FreeLoaderModelAnimSets_80020814();
     SetCameraBattleMode_80037720();
-    *work = LoadOverlayIfChanged_80020D1C(1, 6);
+    work->req_0 = LoadOverlayIfChanged_80020D1C(1, 6);
     task->next_8 = WaitBattleOverlay_800A1474;
     StopSoundSeqs_80030D68(&bgmSound_80091CE0);
     PlayMusic_800300E0(0, 1);
@@ -2133,8 +2133,8 @@ void FreeAllEventData_800A54A0(void)
 {
     if (mdecBufferMode_800AEB7C != 2)
         FreeMdecBuffer_800A5854();
-    if (eventEffects_800AEB80[1])
-        ListFreeAll_8003FEC8(&eventEffects_800AEB80[1]);
+    if (eventEffects_800AEB80.list_4.count)
+        ListFreeAll_8003FEC8(&eventEffects_800AEB80.list_4);
     if (eventReloc_800AEBBC)
     {
         ListFree_8003FE38(&eventHeap_80091C10, eventReloc_800AEBBC);

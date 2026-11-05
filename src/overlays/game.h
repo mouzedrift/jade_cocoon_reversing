@@ -296,7 +296,6 @@ extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
 extern int FindInLists_800A52EC(short** tab, int count, int key);
 
-extern void* LoadOverlayIfChanged_80020D1C(int a, int b);
 
 extern void WaitChapterOverlay_800A76D8();
 
@@ -468,7 +467,6 @@ extern void SuspendOtherEnemies_800A1E98();
 
 extern void FreeLevantAnimSet_800AC73C();
 
-extern void FreeLoaderModelAnimSets_80020814(void);
 
 
 extern void StopSoundSeqs_80030D68(SoundStruct* sound); // exe-side, to move to sound_seq.h
@@ -1474,7 +1472,7 @@ extern short *encounterMapLists_800AE9DC[73];
 extern GameSpawnMember encounterGroups_800AEB00[3][3];
 extern int encounterSpecies_800AEB6C[4];
 extern int mdecBufferMode_800AEB7C;
-extern int eventEffects_800AEB80[15];
+extern EffectFile eventEffects_800AEB80;
 extern int *eventReloc_800AEBBC;
 extern void *eventTiy_800AEBC0[2];
 extern void *eventDataBuf_800AEBC8;
@@ -1681,7 +1679,7 @@ extern int sub_800B330C(void);
 extern GameSpawnEntry* sub_800B2B40();
 
 /* EVENTFNC-side (eventfnc.h; EVENTFNC is loaded under GAME) */
-extern void LoadEventEffectFile_800BC7A8(int file);
+extern void LoadEventEffectFile_800BC7A8(int* file);
 extern void LoadRelocBlob_800BC854(int src);
 extern void LoadEventTiy_800BC98C(int tiy);
 extern void CopyEventData_800BCA18(int src, unsigned int size);
@@ -1701,8 +1699,8 @@ void LevantActorTaskExit_800A955C();
 void LevantModelTaskExit_800ACF0C();
 void LevantModelTaskInit_800ACAA4(int* task, int* work);
 void ReturnToPrevGameMode_800A8108();
-void StartChapterOverlay_800A7690(GameTask* task, void** work);
-void StartMapOverlay_800A75F8(GameTask* task, void** work);
+void StartChapterOverlay_800A7690(GameTask* task, int* work);
+void StartMapOverlay_800A75F8(GameTask* task, int* work);
 int AreLevantFilesLoaded_800AC768();
 void ClearLevantDefending_800AB28C();
 void ClearLevantFade_800AB150(GameLevantFade* lev);

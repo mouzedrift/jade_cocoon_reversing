@@ -103,7 +103,6 @@ int PickArpatronOrVatolka_80019C84(void)
 extern short screenOffset_8008D474[2];
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
-void OnEffectFileLoaded_80020F5C();
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];

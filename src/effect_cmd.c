@@ -23,6 +23,7 @@
 #include "effect_data.h"
 #include "skill_anim.h"
 #include "engine.h"
+#include "model.h"
 
 typedef struct
 {

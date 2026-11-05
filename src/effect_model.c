@@ -19,6 +19,7 @@
 #include "effect_obj.h"
 #include "effect_model.h"
 #include "util.h"
+#include "model.h"
 
 const int off_80072278[0] = {  };
 

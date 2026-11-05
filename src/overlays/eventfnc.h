@@ -133,9 +133,7 @@ extern int sceneScriptId_800AEBD8;
 
 extern void LoadEncounterModels_800B8940(int* ids);
 
-extern void RequestLoaderModel_800206A0(int a, int b, int c, int d);
 
-extern void StartModelLoader_8002056C(void);
 
 
 
@@ -430,30 +428,14 @@ typedef struct EvItemMsgSrc
 
 extern void memset(void* p, int v, int n);
 
-typedef struct EvEffectFile
-{
-    int f0_0;
-    int list_4; // ListInit_8003FDB0 list of the loaded effect data
-    char pad_8[0x24];
-    int usesMdec_2C; // AllocMdecBuffer_800A5804 after loading
-} EvEffectFile;
-
-typedef struct EvEffectLoadArg
-{
-    EvEffectFile* g_0;
-    short s_4[6];
-    int f10_10;
-} EvEffectLoadArg;
-
 extern int mdecBufferMode_800AEB7C;
 
-extern EvEffectFile eventEffects_800AEB80;
+extern EffectFile eventEffects_800AEB80;
 
 extern void FreeMdecBuffer_800A5854(void);
 
 extern void AllocMdecBuffer_800A5804(int a);
 
-extern void OnEffectFileLoaded_80020F5C(EvEffectLoadArg* p, int a);
 
 // sprites / tpages of the TIY loaded by LoadEventTiy_800BC98C
 typedef struct

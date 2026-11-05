@@ -7,7 +7,7 @@ void* GetEventDataSlot_800A55B0(int kind)
     switch (kind)
     {
     case 0:
-        slot = eventEffects_800AEB80;
+        slot = &eventEffects_800AEB80;
         break;
     case 1:
         slot = eventReloc_800AEBBC;
@@ -32,7 +32,7 @@ void LoadEventData_800A5628(int kind, int data, int arg)
     switch (kind)
     {
     case 0:
-        LoadEventEffectFile_800BC7A8(data);
+        LoadEventEffectFile_800BC7A8((int*)data);
         break;
     case 1:
         LoadRelocBlob_800BC854(data);
@@ -56,8 +56,8 @@ void FreeEventData_800A56BC(int kind)
     case 0:
         if (mdecBufferMode_800AEB7C != 2)
             FreeMdecBuffer_800A5854();
-        if (eventEffects_800AEB80[1])
-            ListFreeAll_8003FEC8(&eventEffects_800AEB80[1]);
+        if (eventEffects_800AEB80.list_4.count)
+            ListFreeAll_8003FEC8(&eventEffects_800AEB80.list_4);
         break;
     case 1:
         if (eventReloc_800AEBBC)

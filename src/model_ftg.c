@@ -27,7 +27,6 @@ extern short screenOffset_8008D474[2];
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
-void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr);
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];

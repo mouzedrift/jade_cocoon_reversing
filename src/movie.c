@@ -21,6 +21,7 @@
 #include "LIBCD.H"
 #include "movie.h"
 #include "util.h"
+#include "model.h"
 
 extern unsigned long* ringBufferStart_800960B0;
 

@@ -2788,28 +2788,28 @@ void EvMessageNop_800BC7A0(EvScriptCtx* ctx)
 {
 }
 
-void LoadEventEffectFile_800BC7A8(int file)
+void LoadEventEffectFile_800BC7A8(int* file)
 {
-    EvEffectLoadArg arg;
+    EffectLoadArg arg;
     if (mdecBufferMode_800AEB7C != 2)
     {
         FreeMdecBuffer_800A5854();
     }
-    if (eventEffects_800AEB80.list_4)
+    if (eventEffects_800AEB80.list_4.count)
     {
         ListFreeAll_8003FEC8(&eventEffects_800AEB80.list_4);
     }
-    arg.g_0 = &eventEffects_800AEB80;
-    arg.s_4[5] = 0;
-    arg.s_4[4] = 0;
-    arg.s_4[3] = 0;
-    arg.s_4[2] = 0;
-    arg.s_4[1] = 0;
-    arg.s_4[0] = 0;
-    arg.f10_10 = 0;
+    arg.out_0 = &eventEffects_800AEB80;
+    arg.reloc_4[5] = 0;
+    arg.reloc_4[4] = 0;
+    arg.reloc_4[3] = 0;
+    arg.reloc_4[2] = 0;
+    arg.reloc_4[1] = 0;
+    arg.reloc_4[0] = 0;
+    arg.sel_10 = 0;
     ListInit_8003FDB0(&eventEffects_800AEB80.list_4);
     OnEffectFileLoaded_80020F5C(&arg, file);
-    if (eventEffects_800AEB80.usesMdec_2C)
+    if (eventEffects_800AEB80.imageSetCount_2C)
     {
         AllocMdecBuffer_800A5804(0);
     }

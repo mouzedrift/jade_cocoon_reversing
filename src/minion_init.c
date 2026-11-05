@@ -21,6 +21,7 @@
 #include "minion_init.h"
 #include "effect_data.h"
 #include "util.h"
+#include "model.h"
 
 const char aKlarrgas_80072310[] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
 const char aYolga_80072324[] = "\202x\202\217\202\214\202\207\202\201"; // Yolga

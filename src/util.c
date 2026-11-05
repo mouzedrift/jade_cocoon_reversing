@@ -19,6 +19,7 @@
 #include "main.h"
 #include "font.h"
 #include "unit_query.h"
+#include "model.h"
 
 
 

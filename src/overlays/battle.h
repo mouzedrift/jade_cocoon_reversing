@@ -308,7 +308,6 @@ extern void PlaySeqSlot_80031160();
 
 extern void StartCommandAction_80018A4C();
 
-extern int LoadOverlay_80020BF8();
 
 
 extern void TurnLevantToward_800A8D48();
@@ -1567,9 +1566,6 @@ int TriggerMinionAction_800C0E84(BattleCmd* cmd, int isReaction); // isReaction 
 /* GAME-side (game.h) */
 extern int CanFleeFromEnemy_800A28FC(int idx);
 /* exe-side, to move to model.h */
-extern int AreLoaderModelsLoaded_80020924(void);
-extern void LoadLoaderModelAnimSets_80020898(void);
-extern int LoadOverlayIfChanged_80020D1C(int mode, int overlay);
 /* exe-side, to move to engine.h */
 /* exe-side, to move to camera.h */
 /* exe-side, to move to sound.h */
