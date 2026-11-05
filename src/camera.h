@@ -101,6 +101,16 @@ typedef struct
 } struct_pair8;
 
 
+// the buffer of a pad vibration task (vibrationTasks_8008D4B8, one per port)
+typedef struct
+{
+    unsigned char port_0;
+    unsigned char pattern_1; // vibrationPatterns_80083B30 row
+    unsigned char step_2;
+    unsigned char pad_3;
+    short timer_4; // frames left of the step
+} PadVibTask;
+
 void StartCameraShake_80037BFC(int strength);
 
 void UpdateCameraFollow_80037918(CameraCtrl* cam);
@@ -132,4 +142,20 @@ void SetAreaElementLight_80039ED8(int mode);
 void FocusBattleCamera_80037AE0(unsigned short mask);
 void SetCameraBattleMode_80037720(void);
 void SetCameraZoom_80037A6C(int zoom, int steps);
+void UpdatePadVibration_800366A0(EventEntry* entry, PadVibTask* vib);
+void SetCameraTarget_80037AC8(int target);
+void StopAllPadVibration_80036678(void);
+void MoveBattleCameraDefault_800378CC(void);
+void MoveBattleCamera_800390F4(CameraCtrl* cam, int mode);
+int GetCameraMode_800378F8(void);
+short GetCameraBlend_80037A4C(void);
+void UpdatePadVibration_80036820(int port);
+void FreeCameraTask_800376A0(EventEntry* entry, void* buffer);
+void RestoreCameraState_80039698(CameraCtrl* cam);
+void EndBattleCamera_80037770(void);
+void StopPadVibrationTask_800367F0(int entry, unsigned char* port);
+void StopPadVibration_80036658(int idx);
+void StartBattleCameraSpline_800377B4(int side, short action, int unused);
+void SetCameraBlendTarget_800379DC(int* target, int steps);
+void ClearCameraBlendTarget_80037A20(int a0, int steps);
 #endif

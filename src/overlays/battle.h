@@ -575,7 +575,6 @@ extern void TriggerLevantAction_800A8C0C(int b);
 
 extern void TriggerEnemyEffects_800A2760(BattleCmd* p, int b);
 
-extern void StartBattleCameraSpline_800377B4(int a, int b, int c);
 
 
 

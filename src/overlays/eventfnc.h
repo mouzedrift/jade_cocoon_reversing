@@ -21,6 +21,13 @@
 #include "tim.h"
 #include "unit_stats.h"
 
+typedef struct EvVec
+{
+    int x_0;
+    int y_4;
+    int z_8;
+} EvVec;
+
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
 {
@@ -30,12 +37,6 @@ typedef struct EvInstr
     int c_C;
 } EvInstr;
 
-typedef struct EvVec
-{
-    int x_0;
-    int y_4;
-    int z_8;
-} EvVec;
 
 typedef struct EvEntity
 {
@@ -344,9 +345,7 @@ extern EvShopRequest shopRequest_800B06B0;
 
 extern int ExchangeEventResult_800A5F9C(int a);
 
-extern void SetCameraBlendTarget_800379DC(EvVec* v, int b);
 
-extern void ClearCameraBlendTarget_80037A20(int a, int b);
 
 typedef struct EvViewRect
 {

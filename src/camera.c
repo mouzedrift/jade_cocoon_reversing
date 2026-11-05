@@ -22,16 +22,6 @@
 #include "cd.h"
 
 extern ShortPair screenOffset_8008D474;
-// the buffer of a pad vibration task (vibrationTasks_8008D4B8, one per port)
-typedef struct
-{
-    unsigned char port_0;
-    unsigned char pattern_1; // vibrationPatterns_80083B30 row
-    unsigned char step_2;
-    unsigned char pad_3;
-    short timer_4; // frames left of the step
-} PadVibTask;
-extern void UpdatePadVibration_800366A0(EventEntry* entry, PadVibTask* vib);
 // Matched
 void StartPadVibration_80036528(int idx, int pattern)
 {
@@ -376,7 +366,7 @@ void EndBattleCamera_80037770(void)
     RestoreCameraState_80039698(cam);
 }
 // Matched
-void StartBattleCameraSpline_800377B4(int side, short action)
+void StartBattleCameraSpline_800377B4(int side, short action, int unused)
 {
     if (side == 0)
     {
@@ -449,7 +439,7 @@ void UpdateCameraFollow_80037918(CameraCtrl* cam)
     }
 }
 // Matched
-void SetCameraBlendTarget_800379DC(int* target, short steps)
+void SetCameraBlendTarget_800379DC(int* target, int steps)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->blendTarget_28.x = target[0];
@@ -459,7 +449,7 @@ void SetCameraBlendTarget_800379DC(int* target, short steps)
     cam->blendStep_26 = steps;
 }
 // Matched
-void ClearCameraBlendTarget_80037A20(int a0, short steps)
+void ClearCameraBlendTarget_80037A20(int a0, int steps)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->blendStep_26 = steps;
