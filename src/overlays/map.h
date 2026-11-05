@@ -14,6 +14,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "cd.h"
+#include "ui_sprites.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem

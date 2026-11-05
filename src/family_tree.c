@@ -19,6 +19,7 @@
 #include "effect_data.h"
 #include "unit_query.h"
 #include "event.h"
+#include "menu_draw.h"
 
 const char aDeveloper_80074320[] = "\202c\202\205\202\226\202\205\202\214\202\217\202\220\202\205\202\222"; // Developer
 const char aConqueror_80074334[] = "\202b\202\217\202\216\202\221\202\225\202\205\202\222\202\217\202\222"; // Conqueror
@@ -60,18 +61,10 @@ int GetAllMinionsTargetMask_8002D780(void)
     }
     return mask;
 }
-typedef struct
-{
-    int rect;
-    int time;
-    short field_8;
-    short ot;
-} UiWindowArgs;
 extern const CVECTOR familyTreeLineColor_800743CC;
 extern short ElementLevelsToMask_8002F424(unsigned char* levels);
 extern void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text, int ot);
 extern void DrawElementIconsRow_8002B1B0(short mask, int pos, int ot);
-extern void DrawUiWindow_8002A384(UiWindowArgs* args);
 // Matched
 void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
 {
@@ -81,7 +74,7 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
     Pos16 lineTo;
     CVECTOR color;
     unsigned char levels[4];
-    UiWindowArgs win;
+    UiWindowDesc win;
     unsigned char* name;
     Pos16* pPos;
     int i;
@@ -118,10 +111,10 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
         {
             DrawElementIconsRow_8002B1B0(GetAncestorElementMask_80033848(m, i - 1), (int)pPos, ot);
         }
-        win.field_8 = 0;
-        win.rect = (int)&rect;
-        win.ot = ot;
-        win.time = frameCount_8008D3FC;
+        win.colorSet_8 = 0;
+        win.rect_0 = &rect;
+        win.ot_A = ot;
+        win.time_4 = frameCount_8008D3FC;
         DrawUiWindow_8002A384(&win);
     }
     for (k = 0; k < 12; k++)

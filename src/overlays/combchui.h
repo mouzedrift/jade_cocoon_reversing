@@ -10,6 +10,7 @@
 #include "font.h"
 #include "menu_draw.h"
 #include "util.h"
+#include "ui_sprites.h"
 
 
 extern int dword_800A4088;
@@ -22,6 +23,5 @@ void DrawTextLines_800A450C(const char** lines, unsigned short* box);
 /* exe-side, to move to <exe header> */
 extern unsigned char pads_800918E8[2][9]; // main.c; pads_800918E8[1][0]: pad 2 state, 0xFF: no controller
 extern void AlignMenuItem_8002AC88(int flags, void* rect, int width, void* out); // -> menu_window.h
-extern void DrawMenuBackground_8002BE10(void);
 
 #endif

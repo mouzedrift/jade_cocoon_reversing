@@ -1,12 +1,24 @@
 #ifndef _TU_8002A1BC_H_
 #define _TU_8002A1BC_H_
 
+#include "globals.h"
+
 extern const char aQuit_8007415C[];
 extern const char aSelect_80074168[];
 extern const char aDescription_80074178[];
 extern const char aYes_80074190[];
 extern const char aNo_80074198[];
 extern const int dword_800741A0;
+
+/* DrawUiWindow_8002A384's parameter block */
+typedef struct UiWindowDesc
+{
+    RECT* rect_0;
+    int time_4;
+    short colorSet_8; // 1: highlighted
+    short ot_A;
+} UiWindowDesc;
+
 
 void InitReverbTask_8002A1BC();
 
@@ -49,4 +61,5 @@ extern MenuWindowItem yesNoItemNo_80082740[2];  // "No" + the row end
 extern MenuWindowItem* yesNoRows_80082778[3];
 extern MenuWindowList yesNoWindow_80082784;
 
+void DrawUiWindow_8002A384(UiWindowDesc* desc);
 #endif

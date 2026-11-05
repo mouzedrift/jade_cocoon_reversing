@@ -11,6 +11,7 @@
 #include "font.h"
 #include "pad_text.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 typedef struct
 {
@@ -66,7 +67,6 @@ Minion* GetShopMinion_800B9C5C(int i);         // SHOP.BIN (shop.h), not loaded 
 /* exe-side, to move to <exe header> (named in the comment) */
 void DrawGauge_8002BA54(void* gauge, int arg1, void* pos, int ot); // ui_gauge
 void DrawElementIconsRow_8002B1B0(short mask, void* pos, short ot); // menu_window.h
-void DrawMenuBackground_8002BE10(void);        // ui_sprites
 void DrawSmallText_8002FAA0(int align, void* pos, void* text, short ot); // party_window.h
 
 /* SHOPENTR data */

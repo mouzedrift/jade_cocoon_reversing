@@ -17,6 +17,7 @@
 #include "event.h"
 #include "pad_text.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
@@ -179,9 +180,7 @@ extern unsigned char actorSlot_800A85BD;
 extern unsigned short uiColor_8008B590;          // -> globals.h
 extern void* memset(void* p, int c, unsigned int n);
 extern int MeasureTextWidth_8003E4C8(const char* str);       // -> pad_text.h
-extern int DrawAbilityDescription_8002C670();                // -> tiy.h (ui_sprites.c): (char* minion, int pos, int texts, short slot, short ot)
 extern void DrawAbilityList_8002CE28(ListMenuState* menu, void* origin); // -> ability_menu
-extern void DrawMagicList_8002CAC8(ListMenuState* menu, void* origin);   // -> tiy.h (ui_sprites.c)
 extern int GetSkillMpCost_80031A04(void* skills, int slot);  // -> skills.h
 
 #endif

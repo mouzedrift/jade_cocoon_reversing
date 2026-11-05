@@ -24,6 +24,7 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "movie.h"
+#include "ui_sprites.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -98,7 +99,6 @@ extern void FreeEnemyAi_800A2D28(GameAi* ai);
 
 extern void SuspendEnemyAi_800A2EC8(GameAi* ai);
 
-extern void FreeActiveOverlay_8002C014(void);
 
 extern void FreeSeqSlotSound_80030664(void);
 

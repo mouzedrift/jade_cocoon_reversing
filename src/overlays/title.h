@@ -19,6 +19,7 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "movie.h"
+#include "ui_sprites.h"
 
 
 // a window row of one item (the item + the row end)

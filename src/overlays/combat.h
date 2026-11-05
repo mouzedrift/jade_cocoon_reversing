@@ -18,6 +18,7 @@
 #include "unit_query.h"
 #include "model.h"
 #include "cd.h"
+#include "ui_sprites.h"
 
 // parameters of StartModelTask_80010850 (0x34 bytes), built from a minion by BuildMinionModelParams_800A05E0
 typedef struct CombatModelParams
@@ -162,9 +163,7 @@ extern void SetActorStatusTint_80018EBC(void* actor, UnitStatus* status); // -> 
 extern ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c); // -> effect_cmd.h
 extern int StartModelTask_80010850(void* params); // -> party.h
 extern int PlayMusic_800300E0(int idx, int unused); // -> sound.h
-extern void LoadUiTiy_8002BF74(void);           // -> tiy.h (ui_sprites.c)
 extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* text, int ot); // -> party_window.h
-extern void DrawSmallNumber3_8002C290(void* pos, int value, int ot); // -> tiy.h (ui_sprites.c)
 extern void DrawElementIconsRow_8002B1B0(int mask, void* pos, int ot); // -> menu_window.h
 
 #endif

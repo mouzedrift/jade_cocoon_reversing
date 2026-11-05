@@ -22,6 +22,7 @@
 #include "model.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 typedef struct CombBtlNode
 {
@@ -244,6 +245,5 @@ extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int hi
 extern int LoadSeqSlotSound_800303E8(void);        // -> sound.h (sound.c)
 extern void FreeSeqSlotSound_80030664(void);       // -> sound.h (sound.c)
 extern int IsSoundTaskReady_80030688(void);        // -> sound.h (sound.c)
-extern void LoadUiTiy_8002BF74(void);              // -> tiy.h (ui_sprites.c)
 
 #endif

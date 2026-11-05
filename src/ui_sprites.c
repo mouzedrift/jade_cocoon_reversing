@@ -23,10 +23,11 @@
 #include "unit_query.h"
 #include "movie.h"
 #include "cd.h"
+#include "ui_sprites.h"
+#include "menu_draw.h"
 
 const int emptyString_800741EC = 0;
 
-extern void DrawUiTiySprt_8002C06C(unsigned short* p, int a1, int a2);
 // Matched
 void DrawMenuBackground_8002BE10(void)
 {
@@ -47,16 +48,8 @@ void DrawMenuBackground_8002BE10(void)
         }
     }
 }
-typedef struct
-{
-    int rect_0;
-    int time_4;
-    short colorSet_8;
-    short ot_A;
-} UiWindowDesc;
-extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
-void DrawAnimatedWindow_8002BEC8(int outRect, int rect, short step, short ot, int highlight, int time)
+void DrawAnimatedWindow_8002BEC8(RECT* outRect, RECT* rect, short step, short ot, int highlight, int time)
 {
     UiWindowDesc desc;
     InterpolateWindowRect_8004196C(outRect, rect, step, 8, 0);

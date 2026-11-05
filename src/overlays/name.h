@@ -14,6 +14,7 @@
 #include "util.h"
 #include "event.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 // a cursor area of the screen: the character grid, the page selector, the commands
 typedef struct
@@ -142,8 +143,6 @@ extern void ShopCtrlRequestShop_800B6CA0();
 
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590;
-extern void DrawMenuBackground_8002BE10();
-extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern int charWidthThresholds_80086898[][12];
 
 #endif

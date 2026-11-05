@@ -16,6 +16,8 @@
 #include "event.h"
 #include "pad_text.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
+#include "menu_draw.h"
 
 
 // a list panel of the store (StoreMenu.panel_34)
@@ -62,11 +64,6 @@ typedef struct StoreMenu
     short messageTimer_50;
 } StoreMenu;
 
-typedef struct StoreRect
-{
-    short x, y, w, h;
-} StoreRect;
-
 
 // DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
 typedef struct StoreArrow
@@ -75,15 +72,6 @@ typedef struct StoreArrow
     short dir_2;
 } StoreArrow;
 
-
-// DrawUiWindow_8002A384's parameter block
-typedef struct StoreUiWindow
-{
-    void* rect;
-    int frame;
-    short highlight;
-    short ot;
-} StoreUiWindow;
 
 typedef struct StoreXY
 {
@@ -117,7 +105,7 @@ void StoreTask_800BB1F4(EventEntry* task, StoreMenu* store);
 void StoreWaitMapReload_800BB298(EventEntry* task, void* buffer);
 void StoreEnterState_800BB30C(StoreMenu* store);
 void StoreInput_800BB664(StoreMenu* store);
-void DrawStoreWindowFrame_800BB868(StoreMenu* store, StoreRect* rect, int a2, int a3, short idx);
+void DrawStoreWindowFrame_800BB868(StoreMenu* store, RECT* rect, int a2, int a3, short idx);
 void DrawStoreDialog_800BB8CC(StoreMenu* store);
 void DrawStore_800BB950(StoreMenu* store);
 void UpdateStoreCursor_800BBDD0(StoreMenu* store);
@@ -181,13 +169,8 @@ void SetEquipment_800AD9EC(int itemId, int category);
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 void DrawTextList_8002A310(void* p, int a); // menu_draw.h
-void DrawUiWindow_8002A384(void* p);        // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);    // menu_draw.h
 void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
-void DrawMenuBackground_8002BE10();         // ui_sprites
-void FreeActiveOverlay_8002C014(void);      // ui_sprites
-void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot); // ui_sprites
-void DrawSmallNumber9_8002C414(void* p, int a, short b); // ui_sprites
 void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot); // status_panel.h
 void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out); // status_panel.h
 void DrawLevantStats_8002F7D0(void* pos, int ot); // party_window.h

@@ -14,6 +14,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 typedef struct
 {
@@ -475,17 +476,11 @@ extern void RequestGameMode_800A6D30(int a);
 /* exe-side, to move to an exe header */
 // main.h has these too, but declares loadMenuTask_8008D480 as int[2]: not included until that is fixed
 extern void DrawLoadingIcon_8003CD5C(void);
-extern void DrawMenuBackground_8002BE10(void);
-extern void LoadUiTiy_8002BF74(void);
 extern int dword_8008BD80;
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
-extern void FreeActiveOverlay_8002C014(void);
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
-extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
 extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
-extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
-extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
 extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* name, int ot);
 extern void* memcpy(void* dst, const void* src, unsigned int n);
 

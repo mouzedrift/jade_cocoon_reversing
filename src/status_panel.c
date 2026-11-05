@@ -21,11 +21,11 @@
 #include "util.h"
 #include "unit_query.h"
 #include "event.h"
+#include "ui_sprites.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
 
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 void DrawStatIcons_8002E0D8(unsigned short* p, short a1);
 // Matched
 void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
@@ -51,7 +51,6 @@ void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
 }
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawStatDelta_8002E004(unsigned short* p, int a1, int a2);
-extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 extern void DrawValueGauge_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void DrawElementChart_8002E730(unsigned short* pos, unsigned char* a1, short ot);
@@ -200,7 +199,6 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
         }
     }
 }
-extern void DrawSmallNumber3_8002C290(void* p, int a1, int a2);
 // Matched
 void DrawStatDelta_8002E004(unsigned short* origin, int delta, int ot)
 {
@@ -231,7 +229,6 @@ void DrawStatDelta_8002E004(unsigned short* origin, int delta, int ot)
 }
 extern unsigned char statIcons_80082EBC[];
 extern unsigned char statRowY_80082EE8[];
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void DrawStatIcons_8002E0D8(unsigned short* origin, short ot)
 {
@@ -244,7 +241,6 @@ void DrawStatIcons_8002E0D8(unsigned short* origin, short ot)
         DrawUiTiySprt_8002C06C(pos, statIcons_80082EBC[i], ot);
     }
 }
-extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 // Matched
 void DrawStatCompare_8002E188(unsigned char* oldStats, unsigned char* newStats, unsigned short* pos, short ot)
 {
@@ -287,7 +283,6 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
     CalcEquippedStats_80033624(outStats, copy);
 }
 extern int GetEmptyCocoons_800AD8E4(void);
-extern void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 extern void DrawCurMaxValue_8002EE28(short* a, unsigned short* pos, short c, int d);

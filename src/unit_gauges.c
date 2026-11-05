@@ -20,6 +20,8 @@
 #include "menu_window.h"
 #include "msg_window.h"
 #include "event.h"
+#include "ui_sprites.h"
+#include "menu_draw.h"
 
 const MenuWindowItem statusIcon0_800743D4 = { 0x10, 1, 151, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 210, 172, 21, 20, 3, 4 };
 const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 3, 5 };
@@ -29,7 +31,6 @@ const StatusIconMasks statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
 extern void DrawUnitStatus_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 void DrawMpGauge_8002F120(char* a0, unsigned short* pos, int a2, short a3);
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unused, short ot)
 {
@@ -61,8 +62,6 @@ void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unuse
     loc[1] = pos[1] + 0x24;
     DrawMpGauge_8002F120((char*)unit, loc, 0, ot);
 }
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
-extern void DrawSmallNumber3_8002C290(unsigned short* pos, int val, int ot);
 void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short a2);
 // Matched
 void DrawCurMaxValue_8002EE28(short* values, unsigned short* pos, short ot, int showNumbers)
@@ -108,7 +107,6 @@ void DrawCurMaxValue_8002EE28(short* values, unsigned short* pos, short ot, int 
         DrawUiTiySprtRow_8002EF5C(loc, 3, ot);
     }
 }
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short ot)
 {
@@ -164,15 +162,7 @@ void DrawMpGauge_8002F120(char* unit, unsigned short* pos, int gaugeArg, short o
     loc[1] = pos[1] + 3;
     DrawValueGauge_8002EFC4(unit + 0xC, gaugeArg, 0, loc, ot, 1);
 }
-typedef struct
-{
-    int rect_0;
-    int time_4;
-    short colorSet_8;
-    short ot_A;
-} UiWindowDesc;
 extern void DrawUnitStatus_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
-extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, int rect, int ot, int flags)
 

@@ -22,18 +22,12 @@
 #include "unit_query.h"
 #include "movie.h"
 #include "pad_text.h"
+#include "ui_sprites.h"
+#include "menu_draw.h"
 
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
 
-typedef struct
-{
-    int rect_0;
-    int time_4;
-    short colorSet_8;
-    short ot_A;
-} UiWindowDesc;
-extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawPulsingWindow_8002F6F8(int rect, int* st)
 {
@@ -66,8 +60,6 @@ void DrawPulsingWindow_8002F6F8(int rect, int* st)
 }
 
 extern unsigned char statIcons_80082EBC[];
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
-extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 // Matched
 void DrawLevantStats_8002F7D0(unsigned short* pos, short ot)
 {
@@ -117,7 +109,7 @@ void DrawPartySlotWindow_8002F8E4(int unit, PartySlotWindow* win)
     InterpolateWindowRect_8004196C(buf, &partyWindowRects_80082E90[win->partySize_2 - 1][win->slot_C], win->open_0, 8, 0);
     AddDrawAreaPrim_8003326C(buf, &pOT_8008D454[win->ot_6]);
     desc.colorSet_8 = highlight;
-    desc.rect_0 = (int)buf;
+    desc.rect_0 = buf;
     desc.time_4 = time;
     desc.ot_A = win->ot_6;
     DrawUiWindow_8002A384(&desc);

@@ -157,7 +157,6 @@ extern void RelocFtgPolyGT3_80023E80(struct FtgSrcPolyGT3* p, int reloc);
 extern void RelocFtgPolyFT4_8002467C(struct FtgSrcPolyFT4* p, int reloc);
 extern void RelocFtgPolyGT4_80024AB8(struct FtgSrcPolyGT4* p, int reloc);
 extern void RelocFtgTexSprites_80023460(struct FtgSrcSprites9* p, int reloc);
-extern unsigned int GetTime30Hz_8002C64C(void);
 extern void FreeBgmSeqs_800306D8(void);
 extern void FreeActorBones_8001EA00(struct Actor* actor);
 extern void FreeFtgMatList_80021E24(volatile struct FtgMatList* p, int h);
@@ -214,7 +213,6 @@ extern void CalcMinionEquippedStats_80013EB4(unsigned char* out, int a1, int a2)
 extern int GetMagicMpCost_8001AC58(int idx);
 struct Pool;
 extern void InitPolyFT4_80029A10(void* a0, void* a1);
-extern void SetLargeDigitColor_8002C5D0(int color);
 extern void CdReadReadyCallback_8003CA30(unsigned char mode);
 extern int SetActorAction_8001E34C();
 extern char* GetModelHeaderRecord_80024FA8(Model* model, int n);
@@ -303,7 +301,6 @@ extern void CountdownTask_80016BF4(EventEntry* entry, struct EffectObj* obj);
 extern void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short left, short right);
 extern void DrawLargeTextBox_8002AF10(int text, int pos, int ot);
 extern void DrawSmallTextBox_8002AF58(int text, int pos, int ot);
-extern void OnUiTiyLoaded_8002BFCC(void* params, int* data);
 extern int IsTargetListed_8002D738(int idx, int self, int mode);
 
 extern void SceneFadeTask_8001A41C(EventEntry* entry, struct SceneFade* fade);

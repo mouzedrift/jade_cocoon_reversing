@@ -1972,7 +1972,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                 ListMenuState magicRef;
                 ShopPos treePos;
                 ShopPos statusPos;
-                ShopRect statusRect;
+                RECT statusRect;
                 if (menu->flags_24 & 0x1C0)
                 {
                     if (menu->flags_24 & 0x40)
@@ -2036,8 +2036,8 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         {
             if (!(menu->flags_24 & 2) && menu->messageShown_18 == 0)
             {
-                ShopRect rect;
-                ShopUiWin cursorWin;
+                RECT rect;
+                UiWindowDesc cursorWin;
                 rect.x = 0x56;
                 rect.y = menu->listIndex_30 * 16 + 0x25;
                 rect.w = 0x1E;
@@ -2045,7 +2045,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                 cursorWin.rect_0 = &rect;
                 cursorWin.ot_A = 0xE;
                 cursorWin.time_4 = frameCount_8008D3FC;
-                cursorWin.field_8 = 1;
+                cursorWin.colorSet_8 = 1;
                 DrawUiWindow_8002A384(&cursorWin);
             }
         }
@@ -2055,7 +2055,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         }
         if (i == 4)
         {
-            ShopRect rect;
+            RECT rect;
             ShopPos baseNamePos;
             baseNamePos.x = mergeSlotRects_800BF7B0[0].x + mergeSlotRects_800BF7B0[0].w / 2;
             baseNamePos.y = mergeSlotRects_800BF7B0[0].y + 2;
@@ -2077,7 +2077,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         if (i == 5)
             for (j = 1; j < 3; j++)
             {
-                ShopRect slotRect;
+                RECT slotRect;
                 InterpolateWindowRect_8004196C(&slotRect, &mergeSlotRects_800BF7B0[j], 8, 8, 0);
                 switch (j)
                 {
@@ -3693,11 +3693,11 @@ Actor* GetFormActor_800BF780()
     return formModel_800C09E0.actor_3C;
 }
 
-ShopRect statusWindowRect_800BF790 = { 92, 94, 218, 117 };
-ShopRect dialogWindowRect_800BF798 = { 80, 20, 223, 54 };
-ShopRect partyLabelRect_800BF7A0 = { 10, 77, 71, 15 };
-ShopRect storedLabelRect_800BF7A8 = { 10, 138, 71, 15 };
-ShopRect mergeSlotRects_800BF7B0[3] = { { 92, 79, 60, 12 }, { 179, 79, 60, 12 }, { 261, 79, 49, 12 } }; // base, partner, result
+RECT statusWindowRect_800BF790 = { 92, 94, 218, 117 };
+RECT dialogWindowRect_800BF798 = { 80, 20, 223, 54 };
+RECT partyLabelRect_800BF7A0 = { 10, 77, 71, 15 };
+RECT storedLabelRect_800BF7A8 = { 10, 138, 71, 15 };
+RECT mergeSlotRects_800BF7B0[3] = { { 92, 79, 60, 12 }, { 179, 79, 60, 12 }, { 261, 79, 49, 12 } }; // base, partner, result
 ShopTextLine dialogLines_800BF7C8[4] = {
     { 0x180057 },
     { 0x280057 },

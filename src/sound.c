@@ -20,19 +20,12 @@
 #include "movie.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "menu_draw.h"
 
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";
 
-typedef struct
-{
-    void* rect_0;
-    int time_4;
-    short colorSet_8;
-    short ot_A;
-} UiWindowDesc;
 extern void DrawPortrait_8002A42C(unsigned short* pos, short a1, int a2, short a3);
-extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short animate, int clipRect)
 {

@@ -26,6 +26,7 @@
 #include "movie.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 
 
@@ -185,7 +186,6 @@ extern void WaitBattleMenu_800BB940();
 
 extern void DestroyEncounterActors_800A1B78();
 
-extern void FreeActiveOverlay_8002C014();
 
 extern void LoadLevantAnimSet_800AC708();
 
@@ -542,7 +542,6 @@ extern int LoadSeqSlotSound_800303E8();
 extern int IsSoundTaskReady_80030688();
 
 
-extern void LoadUiTiy_8002BF74();
 
 extern void StartBattleWindows_800BFB80();
 
@@ -961,18 +960,15 @@ extern int GetUnitSkills_80031B30(int a);
 
 
 
-extern void DrawAbilityDescription_8002C670(void* a0, int a1, void* a2, int a3, int a4);
 
 extern int DrawTargetSelectMenu_8002D250(void* a0, int a1, int a2, int a3);
 
 
-extern void DrawItemList_8002C728(void* a0);
 
 extern void DrawAbilityList_8002CE28(void* a0, int a1);
 
 extern int GetSkillMpCost_80031A04(UnitSkills* a0, int a1);
 
-extern void DrawMagicList_8002CAC8(void* a0, void* a1);
 
 
 

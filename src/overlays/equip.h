@@ -15,6 +15,7 @@
 #include "event.h"
 #include "pad_text.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 
 /* the types of equip.c */
@@ -236,12 +237,10 @@ extern int GetLastInventorySlot_800AD308(int table);
 extern int SetEquipment_800AD9EC(int id, int slot);
 
 /* exe-side, to move to <exe header> */
-extern void DrawMenuBackground_8002BE10();
 extern short uiColor_8008B590;
 extern void DrawLevantStats_8002F7D0(void* pos, int ot);
 extern void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out);
 extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot);
 extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
-extern void DrawScrollArrow_8002C6DC(int pos, short dir, short ot);
 
 #endif

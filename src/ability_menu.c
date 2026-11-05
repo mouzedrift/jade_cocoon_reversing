@@ -21,6 +21,7 @@
 #include "msg_window.h"
 #include "util.h"
 #include "unit_query.h"
+#include "ui_sprites.h"
 
 int GetAbilityIcon_8002D1A4(int type, short slot);
 // Matched

@@ -12,6 +12,7 @@
 #include "util.h"
 #include "event.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
 
 
 
@@ -62,10 +63,7 @@ extern void QuitToTitle_800A5538(CombSelTask* t);
 extern int AllSlotsEmpty_800A5560(Minion* team, int count);
 
 /* exe-side, to move to <exe header> */
-extern void DrawSmallNumber3_8002C290(void* pos, int value, int ot);
-extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* pos, int ot);
-extern void DrawMenuBackground_8002BE10(void);
 
 extern int dword_800A4088;
 extern const MenuWindowItem titleItem_800A4238;

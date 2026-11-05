@@ -634,7 +634,7 @@ const MenuWindowList menuWindow_800BADF0 = { 2, 0, 8, 0, 0, 14 };
 const int dword_800BAE08 = 0;
 
 // Matched
-void DrawStoreWindowFrame_800BB868(StoreMenu* store, StoreRect* rect, int a2, int a3, short idx)
+void DrawStoreWindowFrame_800BB868(StoreMenu* store, RECT* rect, int a2, int a3, short idx)
 {
     WindowStyle style;
     int bit = 1 << idx;
@@ -885,7 +885,7 @@ void SetStoreErrorText_800BBE54(StoreMenu* store)
 // Matched
 void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
 {
-    StoreRect rect;
+    RECT rect;
     StoreSprtBox box;
     rect.x = pos->x;
     rect.y = pos->y;
@@ -909,7 +909,7 @@ void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
 // Matched
 void DrawHeldCountWindow_800BBFD4(int count)
 {
-    StoreRect rect;
+    RECT rect;
     StoreSprtBox box;
     rect.x = 0x77;
     rect.y = 0x4D;
@@ -932,7 +932,7 @@ void DrawHeldCountWindow_800BBFD4(int count)
 // Matched
 void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
 {
-    StoreRect rect;
+    RECT rect;
     StoreSprtBox box;
     rect.x = 0x77;
     rect.y = 0x5E;
@@ -974,7 +974,7 @@ void DrawStoreMainMenu_800BC194(StoreMenu* store)
 // Matched
 void DrawStoreMainCursor_800BC210(StoreMenu* store)
 {
-    StoreRect r;
+    RECT r;
     r.x = 0x56;
     r.y = store->cursorIndex_30 * 16 + 0x25;
     r.w = 0x1E;
@@ -1012,16 +1012,16 @@ void DrawItemHeldCount_800BC2E4(StoreMenu* store)
 void DrawStoreList_800BC374(StoreMenu* store, short panel)
 {
     MenuWindowList cfg;
-    StoreRect r28;
+    RECT r28;
     union
     {
         StoreSprtBox b;
-        StoreRect r;
+        RECT r;
         StoreArrow p;
     } u30;
     union
     {
-        StoreRect r;
+        RECT r;
         StoreArrow p;
     } u40;
     StoreSprtBox b48;
@@ -1224,8 +1224,8 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
 // Matched
 void DrawEquippedMark_800BCABC(StoreMenu* store, short panel)
 {
-    StoreRect rect;
-    StoreUiWindow win;
+    RECT rect;
+    UiWindowDesc win;
     StoreXY box;
     int cur = GetEquippedId_800AD990(store->equipKind_10);
     int idx;
@@ -1259,10 +1259,10 @@ void DrawEquippedMark_800BCABC(StoreMenu* store, short panel)
         rect.y = 0x4D;
         rect.w = 0x26;
         rect.h = 0x10;
-        win.highlight = 1;
-        win.rect = &rect;
-        win.frame = frameCount_8008D3FC;
-        win.ot = 0xE;
+        win.colorSet_8 = 1;
+        win.rect_0 = &rect;
+        win.time_4 = frameCount_8008D3FC;
+        win.ot_A = 0xE;
         box.x = 0x54;
         box.y = 0x50;
         DrawUiTiySprt_8002C06C(&box, 0xB6, 0xE);
@@ -1296,15 +1296,15 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
 {
     unsigned char curStats[0x18];
     unsigned char newStats[0x18];
-    StoreRect r40;
-    StoreRect r48;
+    RECT r40;
+    RECT r48;
     WindowStyle s50;
     union
     {
         StoreArrow p;
         WindowStyle s;
     } u;
-    StoreRect r60;
+    RECT r60;
     int itemId;
     CalcEquippedStats_80033624(curStats, &levantStatus_8008BD38);
     itemId = GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(store, 0xA), store->equipKind_10, store->stockMask_1E);
@@ -1393,7 +1393,7 @@ void DrawStoreButtonHelp_800BCF80(unsigned short* state)
 void DrawTotalPrice_800BCFCC(StoreMenu* store)
 {
     int v = 0;
-    StoreRect r;
+    RECT r;
     StoreSprtBox b;
     if (store->itemId_14 != 0xFF)
     {

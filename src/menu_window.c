@@ -21,6 +21,7 @@
 #include "font.h"
 #include "util.h"
 #include "event.h"
+#include "ui_sprites.h"
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
@@ -253,7 +254,6 @@ void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count)
     cur.y = ((Pos16*)rect)->y + 5;
     DrawTextLinesWindow_8002AE38(text, &cur, ot, rect, count);
 }
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
 {

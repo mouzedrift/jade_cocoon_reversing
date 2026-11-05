@@ -19,12 +19,12 @@
 #include "effect_data.h"
 #include "util.h"
 #include "unit_query.h"
+#include "ui_sprites.h"
 
 const CVECTOR colorGrey_800741E4 = { 128, 128, 128 };
 const CVECTOR colorWhite_800741E8 = { 255, 255, 255 };
 
 extern int elementIcons_800827BC[];
-extern void DrawUiTiySprt_8002C06C(void* p, int a1, int a2);
 // Matched
 void DrawElementIcons_8002B2A4(short mask, short* base, int ot, short (*offsets)[2], int showUnlit)
 {

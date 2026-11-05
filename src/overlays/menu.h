@@ -23,6 +23,8 @@
 #include "pad_text.h"
 #include "model.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
+#include "menu_draw.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -721,13 +723,9 @@ extern int IsSceneHeld_800A5E68(void);
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
 extern void DrawUnitStatusWindow_8002F1C8();
 extern void UseItemOnUnit_80013C28();
-extern void DrawUiTiySprt_8002C06C();
 extern unsigned short uiColor_8008B590;
-extern void LoadUiTiy_8002BF74();
 extern void AccumulateExpGain_800122A0();
-extern void DrawMenuBackground_8002BE10();
 extern int GetLevelRank_800121A8();
-extern void FreeActiveOverlay_8002C014();
 extern void DrawLevantSummary_8002E334();
 extern void DrawLevantHeaderWindows_8002FD0C();
 extern void DrawPartySlotWindow_8002F8E4();
@@ -736,21 +734,13 @@ extern int GetPartyWindowX_8002FA0C();
 extern void DrawPortrait_8002A42C(short* p, int a, int b, short c);
 extern void DrawLargeText_8002FBD8();
 extern int GetRankName_8002FCD8();
-extern void DrawUiWindow_8002A384();
-extern void DrawSmallNumber3_8002C290();
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
-extern void DrawMagicList_8002CAC8();
 extern void DrawAbilityList_8002CE28();
-extern void DrawItemList_8002C728();
 extern void DrawFamilyTree_8002D7D0();
 extern int DrawTargetSelectMenu_8002D250();
 extern void DrawMpGauge_8002F120();
-extern int DrawAbilityDescription_8002C670();
 extern void DrawUnitStatusPanel_8002DB48();
-extern void DrawAnimatedWindow_8002BEC8();
-extern void DrawLargeNumber_8002C100();
 extern void DrawLevantStats_8002F7D0();
-extern void DrawScrollArrow_8002C6DC();
 
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */
 

@@ -21,6 +21,8 @@
 #include "pad_text.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "ui_sprites.h"
+#include "menu_draw.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -43,14 +45,6 @@ typedef struct ShopElementOrder
 {
     int order[4];
 } ShopElementOrder;
-
-typedef struct ShopRect
-{
-    short x;
-    short y;
-    short w;
-    short h;
-} ShopRect;
 
 
 // work area of the shop menu task (EventEntry.buffer)
@@ -147,15 +141,6 @@ typedef struct ShopPos
     short y;
 } ShopPos;
 
-
-// DrawUiWindow_8002A384's parameter block
-typedef struct ShopUiWin
-{
-    ShopRect* rect_0;
-    int time_4;
-    short field_8;
-    short ot_A;
-} ShopUiWin;
 
 typedef struct ShopPair
 {
@@ -295,13 +280,8 @@ int fn_80024EC8(int a, int b);            // model_ftg
 int fn_80024F00(int a, int b);            // model_ftg
 int fn_80024F38(int a, int b);            // model_ftg
 void DrawTextList_8002A310(void* p, int a);          // menu_draw.h
-void DrawUiWindow_8002A384(ShopUiWin* p);            // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);             // menu_draw.h
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
-void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot); // ui_sprites
-void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* descs, int idx, int ot); // ui_sprites
-void DrawScrollArrow_8002C6DC(void* p, int a, int b); // ui_sprites
-void DrawMagicList_8002CAC8(ListMenuState* ref, ShopPos* pos); // ui_sprites
 void DrawAbilityList_8002CE28(ListMenuState* ref, ShopPos* pos); // ability_menu
 void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base); // family_tree.h
 void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPos* pos, Minion* mn, UnitStatus* cmp); // status_panel.h
@@ -508,11 +488,11 @@ extern const MenuWindowList mainMenuWindow_800B9608;
 extern const int dword_800B9620;
 extern const int dword_800B96F0;
 extern const MenuWindowList minionListWindow_800B971C;
-extern ShopRect statusWindowRect_800BF790;
-extern ShopRect dialogWindowRect_800BF798;
-extern ShopRect partyLabelRect_800BF7A0;
-extern ShopRect storedLabelRect_800BF7A8;
-extern ShopRect mergeSlotRects_800BF7B0[3];
+extern RECT statusWindowRect_800BF790;
+extern RECT dialogWindowRect_800BF798;
+extern RECT partyLabelRect_800BF7A0;
+extern RECT storedLabelRect_800BF7A8;
+extern RECT mergeSlotRects_800BF7B0[3];
 extern ShopTextLine dialogLines_800BF7C8[4];
 extern unsigned short stateCursors_800BF7E8[16][4];
 extern short stateConfirmNext_800BF868[16];

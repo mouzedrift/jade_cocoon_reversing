@@ -13,6 +13,7 @@
 #include "event.h"
 #include "model.h"
 #include "cd.h"
+#include "ui_sprites.h"
 
 
 
@@ -45,6 +46,5 @@ extern void DrawCardSlotMenu_800BB4A8(int slot);
 
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590; // -> globals.h
-extern void DrawMenuBackground_8002BE10(void);
 
 #endif
