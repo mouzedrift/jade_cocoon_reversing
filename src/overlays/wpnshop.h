@@ -11,16 +11,6 @@
 #include "menu_window.h"
 #include "engine.h"
 
-// DrawMenuWindows_8002A5A4's parameter block (MenuWindowList in menu_draw.c)
-typedef struct StoreMenuWindows
-{
-    int flags_0;
-    int time_4;
-    int open_8;
-    int cursor_C;
-    int items_10;
-    int ot_14;
-} StoreMenuWindows;
 
 // a list panel of the store (StoreMenu.panel_34)
 typedef struct StorePanel
@@ -29,13 +19,6 @@ typedef struct StorePanel
     char pad_4[16];
 } StorePanel;
 
-typedef struct StoreMenuItem
-{
-    unsigned short flags_0; // 2: price too high, 0x40: empty row
-    short pad_2;
-    int value_4; // icon, name text, price
-    char pad_8[0x14];
-} StoreMenuItem;
 
 // work area of the store task (EventEntry.buffer)
 typedef struct StoreMenu
@@ -504,7 +487,7 @@ extern const char aProtectsHeadFro_800BACA4[];
 extern const char aBandWithLeather_800BACF8[];
 extern const char aOrnamentalItem_800BAD30[];
 extern const int dword_800BAD50;
-extern const StoreMenuWindows menuWindow_800BADF0;
+extern const MenuWindowList menuWindow_800BADF0;
 extern const int dword_800BAE08;
 extern int dword_800BE110;
 extern int dword_800BE114[4];
@@ -580,19 +563,19 @@ extern unsigned short equipModeStates_800BE868[2];
 extern unsigned short itemModeStates_800BE86C[2];
 extern unsigned short equipListStates_800BE870[2];
 extern int equipKindSprites_800BE874[3];
-extern int storeListRow0_800BE880[28];
-extern int storeListRow1_800BE8F0[28];
-extern int storeListRow2_800BE960[28];
-extern int storeListRow3_800BE9D0[28];
-extern StoreMenuItem *storeListRows_800BEA40[5];
-extern int mainMenuItem0_800BEA54[14];
-extern int mainMenuItem1_800BEA8C[14];
-extern int mainMenuItem2_800BEAC4[14];
-extern char mainMenuItems_800BEAFC[16];
-extern int equipKindItem0_800BEB0C[14];
-extern int equipKindItem1_800BEB44[14];
-extern int equipKindItem2_800BEB7C[14];
-extern char equipKindItems_800BEBB4[16];
+extern MenuWindowItem storeListRow0_800BE880[4];
+extern MenuWindowItem storeListRow1_800BE8F0[4];
+extern MenuWindowItem storeListRow2_800BE960[4];
+extern MenuWindowItem storeListRow3_800BE9D0[4];
+extern MenuWindowItem *storeListRows_800BEA40[5];
+extern MenuWindowItem mainMenuItem0_800BEA54[2];
+extern MenuWindowItem mainMenuItem1_800BEA8C[2];
+extern MenuWindowItem mainMenuItem2_800BEAC4[2];
+extern MenuWindowItem* mainMenuItems_800BEAFC[4];
+extern MenuWindowItem equipKindItem0_800BEB0C[2];
+extern MenuWindowItem equipKindItem1_800BEB44[2];
+extern MenuWindowItem equipKindItem2_800BEB7C[2];
+extern MenuWindowItem* equipKindItems_800BEBB4[4];
 extern StorePos moneyWindowPosL_800BEBC4;
 extern StorePos moneyWindowPosR_800BEBC8;
 extern char itemDescLines_800BEBCC[688];

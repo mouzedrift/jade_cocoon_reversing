@@ -630,7 +630,7 @@ void StoreInput_800BB664(StoreMenu* store)
     DrawStore_800BB950(store);
     DrawStoreButtonHelp_800BCF80(store);
 }
-const StoreMenuWindows menuWindow_800BADF0 = { 2, 0, 8, 0, 0, 14 };
+const MenuWindowList menuWindow_800BADF0 = { 2, 0, 8, 0, 0, 14 };
 const int dword_800BAE08 = 0;
 
 // Matched
@@ -963,11 +963,11 @@ void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
 // Matched
 void DrawStoreMainMenu_800BC194(StoreMenu* store)
 {
-    StoreMenuWindows cfg;
+    MenuWindowList cfg;
     cfg = menuWindow_800BADF0;
     cfg.time_4 = GetTime30Hz_8002C64C();
     cfg.cursor_C = store->cursorIndex_30;
-    cfg.items_10 = (int)mainMenuItems_800BEAFC;
+    cfg.items_10 = mainMenuItems_800BEAFC;
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
@@ -985,11 +985,11 @@ void DrawStoreMainCursor_800BC210(StoreMenu* store)
 // Matched
 void DrawEquipKindMenu_800BC268(StoreMenu* store)
 {
-    StoreMenuWindows cfg;
+    MenuWindowList cfg;
     cfg = menuWindow_800BADF0;
     cfg.time_4 = GetTime30Hz_8002C64C();
     cfg.cursor_C = store->cursorIndex_30;
-    cfg.items_10 = (int)equipKindItems_800BEBB4;
+    cfg.items_10 = equipKindItems_800BEBB4;
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
@@ -1008,12 +1008,10 @@ void DrawItemHeldCount_800BC2E4(StoreMenu* store)
     DrawHeldCountWindow_800BBFD4(r);
 }
 
-// a cell of the shop list rows (DrawMenuWindows_8002A5A4)
-
 // Matched
 void DrawStoreList_800BC374(StoreMenu* store, short panel)
 {
-    StoreMenuWindows cfg;
+    MenuWindowList cfg;
     StoreRect r28;
     union
     {
@@ -1112,9 +1110,9 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
             storeListRows_800BEA40[i][0].flags_0 &= ~0x40;
             storeListRows_800BEA40[i][1].flags_0 &= ~0x40;
             storeListRows_800BEA40[i][2].flags_0 &= ~0x40;
-            storeListRows_800BEA40[i][0].value_4 = icon;
-            storeListRows_800BEA40[i][1].value_4 = name;
-            storeListRows_800BEA40[i][2].value_4 = price;
+            storeListRows_800BEA40[i][0].text_4 = icon;
+            storeListRows_800BEA40[i][1].text_4 = name;
+            storeListRows_800BEA40[i][2].text_4 = price;
             if (GetMoney_800AD02C() < price && (panel == 4 || panel == 10))
             {
                 storeListRows_800BEA40[i][0].flags_0 |= 2;
@@ -1138,7 +1136,7 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     cfg = menuWindow_800BADF0;
     cfg.time_4 = GetTime30Hz_8002C64C();
     cfg.cursor_C = top;
-    cfg.items_10 = (int)storeListRows_800BEA40;
+    cfg.items_10 = storeListRows_800BEA40;
     if (panel == store->panel_34)
     {
         cfg.flags_0 = (cfg.flags_0 & ~7) | 2;
@@ -2153,57 +2151,57 @@ unsigned short equipModeStates_800BE868[2] = { 6, 7 };
 unsigned short itemModeStates_800BE86C[2] = { 2, 3 };
 unsigned short equipListStates_800BE870[2] = { 4, 5 };
 int equipKindSprites_800BE874[3] = { 22, 20, 3 };
-int storeListRow0_800BE880[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x70000A, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0x70001F, 0x15006F, 0x40004, 0x80004, 0,
-    0, 0, 0x70008A, 0x150033, 0x40003, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem storeListRow0_800BE880[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0xA, 0x70, 0x15, 0x15, 3, 3 },
+    { 0x10, 3, 0, NULL, NULL, 0x1F, 0x70, 0x6F, 0x15, 4, 4 },
+    { 4, 8, 0, NULL, NULL, 0x8A, 0x70, 0x33, 0x15, 3, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int storeListRow1_800BE8F0[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x85000A, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0x85001F, 0x15006F, 0x40004, 0x80004, 0,
-    0, 0, 0x85008A, 0x150033, 0x40003, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem storeListRow1_800BE8F0[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0xA, 0x85, 0x15, 0x15, 3, 3 },
+    { 0x10, 3, 0, NULL, NULL, 0x1F, 0x85, 0x6F, 0x15, 4, 4 },
+    { 4, 8, 0, NULL, NULL, 0x8A, 0x85, 0x33, 0x15, 3, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int storeListRow2_800BE960[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x9A000A, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0x9A001F, 0x15006F, 0x40004, 0x80004, 0,
-    0, 0, 0x9A008A, 0x150033, 0x40003, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem storeListRow2_800BE960[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0xA, 0x9A, 0x15, 0x15, 3, 3 },
+    { 0x10, 3, 0, NULL, NULL, 0x1F, 0x9A, 0x6F, 0x15, 4, 4 },
+    { 4, 8, 0, NULL, NULL, 0x8A, 0x9A, 0x33, 0x15, 3, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int storeListRow3_800BE9D0[28] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0xAF000A, 0x150015, 0x30003, 0x30010,
-    0, 0, 0, 0xAF001F, 0x15006F, 0x40004, 0x80004, 0,
-    0, 0, 0xAF008A, 0x150033, 0x40003, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem storeListRow3_800BE9D0[4] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0xA, 0xAF, 0x15, 0x15, 3, 3 },
+    { 0x10, 3, 0, NULL, NULL, 0x1F, 0xAF, 0x6F, 0x15, 4, 4 },
+    { 4, 8, 0, NULL, NULL, 0x8A, 0xAF, 0x33, 0x15, 3, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-StoreMenuItem *storeListRows_800BEA40[5] = { (void *)storeListRow0_800BE880, (void *)storeListRow1_800BE8F0, (void *)storeListRow2_800BE960, (void *)storeListRow3_800BE9D0 };
-int mainMenuItem0_800BEA54[14] = {
-    0x10008, 23, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5E000A, 0x12002F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem* storeListRows_800BEA40[5] = { storeListRow0_800BE880, storeListRow1_800BE8F0, storeListRow2_800BE960, storeListRow3_800BE9D0, NULL };
+MenuWindowItem mainMenuItem0_800BEA54[2] = {
+    { 8, 1, 23, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x5E, 0x2F, 0x12, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int mainMenuItem1_800BEA8C[14] = {
-    0x10008, 170, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x71000A, 0x12002F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem mainMenuItem1_800BEA8C[2] = {
+    { 8, 1, 170, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x71, 0x2F, 0x12, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int mainMenuItem2_800BEAC4[14] = {
-    0x10008, 53, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x84000A, 0x12002F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem mainMenuItem2_800BEAC4[2] = {
+    { 8, 1, 53, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x84, 0x2F, 0x12, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-char mainMenuItems_800BEAFC[16] = { 84, 234, 11, 128, 140, 234, 11, 128, 196, 234, 11, 128 };
-int equipKindItem0_800BEB0C[14] = {
-    0x10008, 22, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x5E000A, 0x12002F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem* mainMenuItems_800BEAFC[4] = { mainMenuItem0_800BEA54, mainMenuItem1_800BEA8C, mainMenuItem2_800BEAC4, NULL };
+MenuWindowItem equipKindItem0_800BEB0C[2] = {
+    { 8, 1, 22, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x5E, 0x2F, 0x12, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int equipKindItem1_800BEB44[14] = {
-    0x10008, 20, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x71000A, 0x12002F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem equipKindItem1_800BEB44[2] = {
+    { 8, 1, 20, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x71, 0x2F, 0x12, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int equipKindItem2_800BEB7C[14] = {
-    0x10008, 3, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x84000A, 0x12002F, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem equipKindItem2_800BEB7C[2] = {
+    { 8, 1, 3, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x84, 0x2F, 0x12, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-char equipKindItems_800BEBB4[16] = { 12, 235, 11, 128, 68, 235, 11, 128, 124, 235, 11, 128 };
+MenuWindowItem* equipKindItems_800BEBB4[4] = { equipKindItem0_800BEB0C, equipKindItem1_800BEB44, equipKindItem2_800BEB7C, NULL };
 StorePos moneyWindowPosL_800BEBC4 = { 10, 77 };
 StorePos moneyWindowPosR_800BEBC8 = { 189, 77 };
 char itemDescLines_800BEBCC[688] = { 128, 143, 11, 128, 56, 143, 11, 128, 236, 142, 11, 128, 144, 142, 11, 128, 128, 143, 11, 128, 80, 142, 11, 128, 248, 141, 11, 128, 180, 141, 11, 128, 128, 143, 11, 128, 80, 141, 11, 128, 228, 140, 11, 128, 0, 0, 0, 0, 188, 140, 11, 128, 92, 140, 11, 128, 248, 139, 11, 128, 0, 0, 0, 0, 188, 139, 11, 128, 116, 139, 11, 128, 64, 139, 11, 128, 0, 0, 0, 0, 16, 139, 11, 128, 212, 138, 11, 128, 156, 138, 11, 128, 0, 0, 0, 0, 92, 138, 11, 128, 16, 138, 11, 128, 224, 137, 11, 128, 0, 0, 0, 0, 164, 137, 11, 128, 92, 137, 11, 128, 36, 137, 11, 128, 0, 0, 0, 0, 232, 136, 11, 128, 160, 136, 11, 128, 100, 136, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 224, 135, 11, 128, 156, 135, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 68, 135, 11, 128, 224, 134, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 128, 134, 11, 128, 36, 134, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 200, 133, 11, 128, 132, 133, 11, 128, 0, 0, 0, 0, 96, 133, 11, 128, 248, 132, 11, 128, 180, 132, 11, 128, 136, 132, 11, 128, 104, 132, 11, 128, 28, 132, 11, 128, 200, 131, 11, 128, 0, 0, 0, 0, 168, 131, 11, 128, 68, 131, 11, 128, 232, 130, 11, 128, 0, 0, 0, 0, 204, 130, 11, 128, 136, 130, 11, 128, 64, 130, 11, 128, 0, 0, 0, 0, 36, 130, 11, 128, 220, 129, 11, 128, 112, 129, 11, 128, 0, 0, 0, 0, 80, 129, 11, 128, 248, 128, 11, 128, 156, 128, 11, 128, 0, 0, 0, 0, 132, 128, 11, 128, 60, 128, 11, 128, 224, 127, 11, 128, 0, 0, 0, 0, 184, 127, 11, 128, 88, 127, 11, 128, 240, 126, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 96, 126, 11, 128, 248, 125, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 152, 125, 11, 128, 48, 125, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 208, 124, 11, 128, 108, 124, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 12, 124, 11, 128, 168, 123, 11, 128, 0, 0, 0, 0, 104, 123, 11, 128, 0, 123, 11, 128, 156, 122, 11, 128, 0, 0, 0, 0, 96, 122, 11, 128, 0, 123, 11, 128, 0, 122, 11, 128, 0, 0, 0, 0, 192, 121, 11, 128, 88, 121, 11, 128, 244, 120, 11, 128, 0, 0, 0, 0, 184, 120, 11, 128, 88, 121, 11, 128, 92, 120, 11, 128, 0, 0, 0, 0, 32, 120, 11, 128, 188, 119, 11, 128, 92, 119, 11, 128, 0, 0, 0, 0, 32, 119, 11, 128, 188, 119, 11, 128, 196, 118, 11, 128, 0, 0, 0, 0, 136, 118, 11, 128, 32, 118, 11, 128, 192, 117, 11, 128, 0, 0, 0, 0, 124, 117, 11, 128, 32, 118, 11, 128, 24, 117, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 112, 116, 11, 128, 48, 116, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 212, 115, 11, 128, 152, 115, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 96, 115, 11, 128, 36, 115, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 220, 114, 11, 128, 160, 114, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 80, 114, 11, 128, 20, 114, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 196, 113, 11, 128, 136, 113, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 52, 113, 11, 128, 240, 112, 11, 128, 0, 0, 0, 0, 192, 112, 11, 128, 92, 112, 11, 128, 4, 112, 11, 128, 0, 0, 0, 0, 236, 111, 11, 128, 132, 111, 11, 128, 44, 111, 11, 128, 0, 0, 0, 0, 236, 111, 11, 128, 224, 110, 11, 128, 172, 110, 11, 128 };
