@@ -27,4 +27,23 @@ typedef struct
     ModelTaskState* state_4;
 } ModelTaskBuf;
 
+int CountMinions_80010548(int id);
+Minion* GetMinion_80010598(int id, int nth);
+void ClearMinionsAndItems_80010600(void);
+int AddItem_80010650(UnitStats* pItem);
+int CountItems_800106B8(void);
+unsigned char* GetMinionName_800106F8(int id, int nth);
+unsigned char* GetMinionAncestorName_80010724(int id, int nth, int idx);
+unsigned char GetMinionAncestorElement_80010768(int id, int nth, int idx);
+UnitStatus* GetMinionStatus_800107A0(int id, int nth);
+unsigned char* GetMinionStatBlock_800107CC(int id, int nth);
+UnitSkills* GetMinionSkills_800107F8(int id, int nth);
+unsigned int* GetMinionMagicBits_80010824(int id, int nth);
+void ModelTaskUpdateCb_80010A90(int entry, int* buf);
+void ModelTaskFreeCb_80010AB4(int entry, int* buf);
+int FreeModelTask_8001098C(int key);
+int StepModelTask_80010AD8(ModelTaskState* state);
+int RunModelTask_80010A10(int key);
+Model* GetModelTaskModel_80010A44(int key);
+int StartModelTask_80010850(void* params);
 #endif

@@ -22,6 +22,7 @@
 #include "model.h"
 #include "movie.h"
 #include "boot.h"
+#include "party.h"
 
 
 

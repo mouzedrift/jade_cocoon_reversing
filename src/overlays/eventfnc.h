@@ -20,6 +20,7 @@
 #include "sound_seq.h"
 #include "tim.h"
 #include "unit_stats.h"
+#include "party.h"
 
 typedef struct EvVec
 {

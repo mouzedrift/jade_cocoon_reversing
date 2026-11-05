@@ -28,6 +28,7 @@
 #include "tim.h"
 #include "effect.h"
 #include "minion_init.h"
+#include "party.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 

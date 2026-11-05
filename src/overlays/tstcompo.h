@@ -14,6 +14,7 @@
 #include "cd.h"
 #include "engine.h"
 #include "minion_init.h"
+#include "party.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
@@ -258,7 +259,6 @@ extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int
 /* exe-side, to move to font.h */
 /* exe-side, to move to util.h */
 /* exe-side, to move to party.h */
-extern void StartModelTask_80010850();
 /* exe-side, to move to skel_draw.h */
 extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);

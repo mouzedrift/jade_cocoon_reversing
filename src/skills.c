@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "skills.h"
+#include "party.h"
 
 
 // Matched

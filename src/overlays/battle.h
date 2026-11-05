@@ -30,6 +30,7 @@
 #include "effect.h"
 #include "unit_gauges.h"
 #include "unit_stats.h"
+#include "party.h"
 
 
 
@@ -223,7 +224,6 @@ typedef struct BatModelReq
 
 extern void BuildMinionModelReq_800C064C();
 
-extern void StartModelTask_80010850();
 
 extern int GetUnitTurnSpeed_800BF784();
 

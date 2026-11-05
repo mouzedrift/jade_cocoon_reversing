@@ -27,6 +27,7 @@
 #include "unit_stats.h"
 #include "party_window.h"
 #include "ui_gauge.h"
+#include "party.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 

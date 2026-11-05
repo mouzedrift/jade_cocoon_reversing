@@ -21,6 +21,7 @@
 #include "unit_query.h"
 #include "model.h"
 #include "cd.h"
+#include "party.h"
 
 const char aAssertionFaile_3[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEffectC[] = "EFFECT.C";
@@ -94,7 +95,7 @@ void CalcUnitEquippedStats_80013E80(unsigned char* out, int unit)
 // Matched
 void CalcMinionEquippedStats_80013EB4(unsigned char* out, int a1, int a2)
 {
-    CalcEquippedStats_80033624(out, GetMinionStatus_800107A0(a2)); // sic: one argument (GetMinionStatus_800107A0 is unprototyped)
+    CalcEquippedStats_80033624(out, GetMinionStatus_800107A0(a2, a1));
 }
 // Matched
 void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, int mode)

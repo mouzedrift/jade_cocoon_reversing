@@ -22,6 +22,7 @@
 #include "menu_draw.h"
 #include "unit_gauges.h"
 #include "party_window.h"
+#include "party.h"
 
 const char aDeveloper_80074320[] = "\202c\202\205\202\226\202\205\202\214\202\217\202\220\202\205\202\222"; // Developer
 const char aConqueror_80074334[] = "\202b\202\217\202\216\202\221\202\225\202\205\202\222\202\217\202\222"; // Conqueror

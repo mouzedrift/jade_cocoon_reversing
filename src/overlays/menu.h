@@ -29,6 +29,7 @@
 #include "status_panel.h"
 #include "unit_stats.h"
 #include "party_window.h"
+#include "party.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow

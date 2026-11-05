@@ -23,6 +23,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "effect.h"
+#include "party.h"
 
 
 

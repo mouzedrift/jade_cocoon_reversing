@@ -28,6 +28,7 @@
 #include "unit_stats.h"
 #include "party_window.h"
 #include "minion_init.h"
+#include "party.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -268,7 +269,6 @@ void AddEmptyCocoons_800AD8F4(int a);
 extern char defaultBones_80079140[];
 extern short sinTable_80084540[];        // data_decls.h
 extern Minion name_8008EF18[];
-int StartModelTask_80010850(void* p);     // party.h
 int fn_80010A44(int a);                   // party.h
 void fn_80011CD0(UnitStatus* p);          // unit_stats.h
 void fn_80019B14(int a, int b, int c);    // minion_init.h
