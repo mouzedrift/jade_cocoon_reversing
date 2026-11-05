@@ -28,7 +28,6 @@
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
 
-void DrawStatIcons_8002E0D8(unsigned short* p, short a1);
 // Matched
 void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
 {
@@ -52,12 +51,9 @@ void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
     DrawStatIcons_8002E0D8(loc, ot);
 }
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
-extern void DrawStatDelta_8002E004(unsigned short* p, int a1, int a2);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
-extern void DrawElementChart_8002E730(unsigned short* pos, unsigned char* a1, short ot);
-extern void DrawStatGrid_8002EACC(UnitStatus* a0, unsigned short* pos, int a2, short ot);
 // Matched
-void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned short* pos, Minion* minion, UnitStatus* cmp)
+void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsigned short* pos, Minion* minion, UnitStatus* cmp)
 {
     short i;
     short j;
@@ -374,7 +370,6 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     expGauge[3] = 0x4000000;
     DrawGauge_8002BA54(expGauge, 0, loc2, args->ot_0);
 }
-void SetElementChartTri_8002E944(POLY_F3* p, unsigned short* pos, short idx, short dir);
 // Matched
 void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short ot)
 {

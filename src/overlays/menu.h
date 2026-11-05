@@ -26,6 +26,7 @@
 #include "ui_sprites.h"
 #include "menu_draw.h"
 #include "unit_gauges.h"
+#include "status_panel.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -116,15 +117,6 @@ typedef struct MenuPair
     short a;
     short b;
 } MenuPair;
-
-// what DrawLevantSummary_8002E334 takes
-typedef struct LevantSummaryArgs
-{
-    short ot_0;
-    short step_2;      // window open step
-    int highlight_4;
-    int time_8;
-} LevantSummaryArgs;
 
 // what DrawEquipmentWindow_800C0E04 / DrawKeyItemsWindow_800C09B0 take
 typedef struct MenuEquipQ
@@ -221,15 +213,6 @@ typedef struct BattleResult
     unsigned int expShown_2CC[4];
     int i2DC;
 } BattleResult;
-
-// what DrawLevantSummary_8002E334 takes (as LevantSummaryArgs)
-typedef struct ResultSummaryArgs
-{
-    short ot_0;
-    short step_2;
-    int highlight_4;
-    int time_8;
-} ResultSummaryArgs;
 
 
 typedef struct UiWinArgs
@@ -726,7 +709,6 @@ extern void UseItemOnUnit_80013C28();
 extern unsigned short uiColor_8008B590;
 extern void AccumulateExpGain_800122A0();
 extern int GetLevelRank_800121A8();
-extern void DrawLevantSummary_8002E334();
 extern void DrawPartySlotWindow_8002F8E4();
 extern int GetPartyWindowX_8002FA0C();
 extern void DrawLargeText_8002FBD8();
@@ -735,7 +717,6 @@ extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 extern void DrawAbilityList_8002CE28();
 extern void DrawFamilyTree_8002D7D0();
 extern int DrawTargetSelectMenu_8002D250();
-extern void DrawUnitStatusPanel_8002DB48();
 extern void DrawLevantStats_8002F7D0();
 
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */

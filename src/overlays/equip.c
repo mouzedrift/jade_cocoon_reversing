@@ -598,7 +598,7 @@ void DrawEquipStats_800C5314(EquipCtx* c)
         CalcStatsWithEquip_8002E288(levant, c->item_40, c->category_18, newStats);
         pos.x = 0x119;
         pos.y = 0x34;
-        DrawStatCompare_8002E188(baseStats, newStats, &pos, 0xe);
+        DrawStatCompare_8002E188(baseStats, newStats, &pos.x, 0xe);
         u.p.kind_0 = 2;
         u.p.dir_2 = 0;
         arrowPos.x = 0x112;

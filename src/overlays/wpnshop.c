@@ -1318,7 +1318,7 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
 
                 r40.x = 0x119;
                 r40.y = 0x73;
-                DrawStatCompare_8002E188(curStats, newStats, &r40, 0xE);
+                DrawStatCompare_8002E188(curStats, newStats, &r40.x, 0xE);
             }
         }
     }

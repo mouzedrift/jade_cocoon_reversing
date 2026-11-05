@@ -1003,8 +1003,8 @@ void ResultEndTask_800BC24C(MenuTask* task)
 void DrawResultParty_800BC2A8(BattleResult* result)
 {
     short pos[2];
-    ResultSummaryArgs q20;
-    ResultSummaryArgs q30;
+    MenuDrawArgs q20;
+    MenuDrawArgs q30;
     PartySlotArgs loc;
     void* st;
     short i;
@@ -1020,7 +1020,7 @@ void DrawResultParty_800BC2A8(BattleResult* result)
     if (result->leveledUp_7C[0] && !(result->flags_0 & 2))
     {
         q20.ot_0 = 0xE;
-        q20.step_2 = 8;
+        q20.open_2 = 8;
         q20.highlight_4 = 1;
         q20.time_8 = frameCount_8008D3FC;
         DrawLevantSummary_8002E334(st, &q20);
@@ -1029,7 +1029,7 @@ void DrawResultParty_800BC2A8(BattleResult* result)
     else
     {
         q30.ot_0 = 0xE;
-        q30.step_2 = 8;
+        q30.open_2 = 8;
         q30.highlight_4 = 0;
         q30.time_8 = 0;
         DrawLevantSummary_8002E334(st, &q30);
@@ -2312,7 +2312,7 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
 {
     short pos[2];
     RECT tmp;
-    LevantSummaryArgs summary;
+    MenuDrawArgs summary;
     int openStep = GetWindowOpenStep_800C0990(menu, 2);
     int flag;
     short f = 0;
@@ -2325,7 +2325,7 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
     if (flag)
         time = frameCount_8008D3FC;
     summary.ot_0 = b;
-    summary.step_2 = openStep;
+    summary.open_2 = openStep;
     summary.highlight_4 = 1;
     summary.time_8 = time;
     DrawLevantSummary_8002E334(&levantStatus_8008BD38, &summary);
@@ -2404,7 +2404,7 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
 {
     short pos[2];
     RECT tmp;
-    LevantSummaryArgs summary;
+    MenuDrawArgs summary;
     short pp[2];
     MenuEquipQ eq;
     int t50[2];
@@ -2416,7 +2416,7 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
     pos[0] = 0xA;
     pos[1] = 0x2C;
     summary.ot_0 = b;
-    summary.step_2 = openStep;
+    summary.open_2 = openStep;
     summary.highlight_4 = 0;
     summary.time_8 = 0;
     DrawLevantSummary_8002E334(lv, &summary);
