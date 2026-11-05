@@ -115,7 +115,6 @@ void DrawCopyrightScreen_800408F4(void)
         bStopDrawingMovie_8008D45C = 1;
     }
 }
-extern void DrawCopyrightScreen_800408F4(void);
 // Matched
 void InitCopyrightScreen_80040A10(int* entry)
 {
