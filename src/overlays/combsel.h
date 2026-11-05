@@ -8,23 +8,8 @@
 #include "effect_data.h"
 #include "main.h"
 #include "pad_text.h"
-#include "menu_window.h"
+#include "menu_window.h" // MenuWindowItem / MenuWindowList (menu_draw.h)
 
-// a menu item drawn by DrawMenuWindowContents_8002A710 / DrawMenuItemWithWindow_8002ADB4
-typedef struct CombSelItem
-{
-    unsigned short flags_0; // 2: greyed out
-    unsigned short type_2;  // 1: TIY sprite
-    int icon_4;
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x_10; // the window rect
-    short y_12;
-    short w_14;
-    short h_16;
-    short mx_18;
-    short my_1A;
-} CombSelItem;
 
 // the window colour DrawWindow_80042460 takes
 typedef struct CombSelBox
@@ -43,16 +28,6 @@ typedef struct CombSelArrow
 
 
 
-// a window list drawn by DrawMenuWindows_8002A5A4
-typedef struct CombSelMenu
-{
-    int flags_0; // 1 inactive, 2 active (the cursor row blinks), 4 cursor row highlighted
-    int time_4;  // blink timer
-    int anim_8;  // window open animation step (InterpolateWindowRect_8004196C)
-    int cursor_C;
-    CombSelItem** rows_10; // NULL-terminated; each row ends with an item with flags_0 & 1
-    int ot_14;
-} CombSelMenu;
 
 typedef struct CombSelTask
 {
@@ -62,9 +37,6 @@ typedef struct CombSelTask
 } CombSelTask;
 
 // the main executable's Yes / No window (its two rows and the window list)
-extern CombSelItem dword_80082708[2];
-extern CombSelItem dword_80082740[2];
-extern CombSelMenu dword_80082784;
 
 // COMBAT (the overlay below this one)
 extern MenuCursor combatCursor_800A1BBC; // the main menu cursor
@@ -102,35 +74,35 @@ extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* po
 extern void DrawMenuBackground_8002BE10(void);
 
 extern int dword_800A4088;
-extern const CombSelItem titleItem_800A4238;
-extern const CombSelItem playerItems_800A4254[2];
-extern const CombSelItem listHeaderItem_800A428C;
+extern const MenuWindowItem titleItem_800A4238;
+extern const MenuWindowItem playerItems_800A4254[2];
+extern const MenuWindowItem listHeaderItem_800A428C;
 extern const int dword_800A4348;
-extern CombSelItem teamRow0_800A55C4[2];
-extern CombSelItem teamRow1_800A55FC[2];
-extern CombSelItem teamRow2_800A5634[2];
-extern CombSelItem *teamRows_800A566C[4];
-extern CombSelMenu teamWindow_800A567C;
-extern CombSelItem listRow0_800A5694[2];
-extern CombSelItem listRow1_800A56CC[2];
-extern CombSelItem listRow2_800A5704[2];
-extern CombSelItem listRow3_800A573C[2];
-extern CombSelItem listRow4_800A5774[2];
-extern CombSelItem listRow5_800A57AC[2];
-extern CombSelItem *listRows_800A57E4[7];
-extern CombSelMenu listWindow_800A5800;
-extern CombSelItem loadRow_800A5818[2];
-extern CombSelItem enterRow_800A5850[2];
-extern CombSelItem deleteRow_800A5888[2];
-extern CombSelItem nextRow_800A58C0[2];
-extern CombSelItem quitRow_800A58F8[2];
-extern CombSelItem *mainRows_800A5930[6];
-extern CombSelMenu mainWindow_800A5948;
+extern MenuWindowItem teamRow0_800A55C4[2];
+extern MenuWindowItem teamRow1_800A55FC[2];
+extern MenuWindowItem teamRow2_800A5634[2];
+extern MenuWindowItem *teamRows_800A566C[4];
+extern MenuWindowList teamWindow_800A567C;
+extern MenuWindowItem listRow0_800A5694[2];
+extern MenuWindowItem listRow1_800A56CC[2];
+extern MenuWindowItem listRow2_800A5704[2];
+extern MenuWindowItem listRow3_800A573C[2];
+extern MenuWindowItem listRow4_800A5774[2];
+extern MenuWindowItem listRow5_800A57AC[2];
+extern MenuWindowItem *listRows_800A57E4[7];
+extern MenuWindowList listWindow_800A5800;
+extern MenuWindowItem loadRow_800A5818[2];
+extern MenuWindowItem enterRow_800A5850[2];
+extern MenuWindowItem deleteRow_800A5888[2];
+extern MenuWindowItem nextRow_800A58C0[2];
+extern MenuWindowItem quitRow_800A58F8[2];
+extern MenuWindowItem *mainRows_800A5930[6];
+extern MenuWindowList mainWindow_800A5948;
 extern MenuCursor teamCursor_800A5960;
 extern MenuCursor listCursor_800A596C;
 extern MenuCursor quitCursor_800A5978;
 extern MenuCursor *modeCursors_800A5984[4];
-extern CombSelMenu *modeWindows_800A5994[4];
+extern MenuWindowList *modeWindows_800A5994[4];
 extern int playerIcons_800A59A4[2];
 extern int nextIcons_800A59AC[2];
 extern void (*modeHandlers_800A59B4[4])();
