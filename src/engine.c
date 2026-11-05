@@ -1437,10 +1437,10 @@ unsigned short GetButtonConfigEntry_8001C818(unsigned short* entry)
     return *entry;
 }
 // Matched
-int GetButtonConfigBitIndex_8001C824(void)
+int GetButtonConfigBitIndex_8001C824(int idx)
 {
     int i;
-    unsigned short button = GetButtonConfig_8001C874();
+    unsigned short button = GetButtonConfig_8001C874(idx);
     for (i = 0; i < 14; i++)
     {
         if (padButtonBits_8007CAD8[i] == button)
@@ -1798,7 +1798,7 @@ unsigned char* GetPersonMergeInfo_8001CD58(int idx)
     return personMergeInfo_8007CB4C[idx];
 }
 // Matched
-int GetPersonIcon_8001CD6C(void)
+int GetPersonIcon_8001CD6C(int idx)
 {
     return 0x36;
 }

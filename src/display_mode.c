@@ -15,6 +15,7 @@
 #include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
+#include "engine.h"
 
 
 // Matched

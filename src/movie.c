@@ -23,6 +23,7 @@
 #include "util.h"
 #include "model.h"
 #include "cd.h"
+#include "engine.h"
 
 extern unsigned long* ringBufferStart_800960B0;
 

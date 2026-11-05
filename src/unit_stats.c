@@ -28,6 +28,7 @@
 #include "camera.h"
 #include "util.h"
 #include "unit_query.h"
+#include "engine.h"
 
 const char msgAsleep_80071B78[] = "\202\313\202\336\202\301\202\304\202\242\202\351"; // ねむっている
 const char msgParalyzed_80071B88[] = "\203}\203q\202\265\202\304\202\242\202\351"; // マヒしている

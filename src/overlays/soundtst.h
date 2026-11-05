@@ -11,6 +11,7 @@
 #include "util.h"
 #include "event.h"
 #include "sound_seq.h"
+#include "engine.h"
 
 extern int dword_800A05A0;
 extern const char aKY6A212XA_800A05A4[];

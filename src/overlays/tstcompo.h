@@ -12,6 +12,7 @@
 #include "event.h"
 #include "pad_text.h"
 #include "cd.h"
+#include "engine.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
