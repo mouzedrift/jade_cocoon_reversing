@@ -15,53 +15,53 @@ const char aThereAreNoFreeB_800A0658[] = "\202s\202\210\202\205\202\222\202\205\
 const char aTheMEMORYCARDIn_800A069C[] = "\202\224\202\210\202\205\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\224\202\210\202\211\202\223\201@\202r\202k\202n\202s\201D"; // the MEMORY CARD in this SLOT.
 const TitleMenuWindow titleMenuWin0_800A06D8 = {
     {
-        { 8, 1, 3, 0, 0, 106, 140, { 108, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 1, 3, NULL, NULL, 106, 140, 108, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin1_800A0710 = {
     {
-        { 8, 1, 4, 0, 0, 106, 157, { 108, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 1, 4, NULL, NULL, 106, 157, 108, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin2_800A0748 = {
     {
-        { 8, 1, 0, 0, 0, 106, 174, { 108, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 1, 0, NULL, NULL, 106, 174, 108, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin3_800A0780 = {
     {
-        { 8, 1, 1, 0, 0, 106, 191, { 108, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 1, 1, NULL, NULL, 106, 191, 108, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin4_800A07B8 = {
     {
-        { 8, 0, 0, 0, 0, 214, 140, { 100, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 0, 0, NULL, NULL, 214, 140, 100, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin5_800A07F0 = {
     {
-        { 8, 0, 0, 0, 0, 214, 157, { 100, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 0, 0, NULL, NULL, 214, 157, 100, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin6_800A0828 = {
     {
-        { 8, 0, 0, 0, 0, 214, 174, { 100, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 0, 0, NULL, NULL, 214, 174, 100, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin7_800A0860 = {
     {
-        { 8, 0, 0, 0, 0, 214, 191, { 100, 0, 16, 0, 0, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 0, 0, NULL, NULL, 214, 191, 100, 16, 0, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
-const TitleMenuCfg titleMenuCfg_800A0898 = { 0x2102, 0, 8, 0, 0, 14 };
+const MenuWindowList titleMenuCfg_800A0898 = { 0x2102, 0, 8, 0, 0, 14 };
 const TitleColor logoPulseColor_800A08B0 = { "ZZZ" };
 const char debugLevantName_800A08B4[] = "\203\214\203o\203\223\203g"; // レバント
 const int dword_800A08C0[2] = { 0, 0x8940000 };
@@ -536,8 +536,8 @@ void DrawTitleMenu_800A1760(TitleMenuWork* work, int sel, int frames)
 void DrawTitleMenuWindows_800A1780(TitleMenuWork* work, int sel)
 {
     TitleMenuWindow b0, b1, b2, b3, b4, b5, b6, b7;
-    TitleMenuWindow* ptrs[5];
-    TitleMenuCfg cfg;
+    MenuWindowItem* ptrs[5];
+    MenuWindowList cfg;
     b0 = titleMenuWin0_800A06D8;
     b1 = titleMenuWin1_800A0710;
     b2 = titleMenuWin2_800A0748;
@@ -556,13 +556,13 @@ void DrawTitleMenuWindows_800A1780(TitleMenuWork* work, int sel)
     b2.items[0].tpages_C = &work->tpages_14;
     b3.items[0].sprts_8 = &work->sprts_C;
     b3.items[0].tpages_C = &work->tpages_14;
-    ptrs[0] = &b0;
-    ptrs[1] = &b1;
-    ptrs[2] = &b2;
-    ptrs[3] = &b3;
+    ptrs[0] = b0.items;
+    ptrs[1] = b1.items;
+    ptrs[2] = b2.items;
+    ptrs[3] = b3.items;
     cfg.time_4 = GetTime30Hz_8002C64C();
     cfg.cursor_C = sel;
-    cfg.windows_10 = ptrs;
+    cfg.items_10 = ptrs;
     DrawMenuWindows_8002A5A4(&cfg);
 }
 

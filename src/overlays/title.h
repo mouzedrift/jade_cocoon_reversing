@@ -10,30 +10,15 @@
 #include "unit_stats.h"
 #include "font.h"
 #include "engine.h"
+#include "menu_draw.h"
 
-typedef struct TitleMenuItem
-{
-    unsigned short flags_0;
-    short pad_2;
-    int icon_4; // sprite index (type 1 item)
-    void* sprts_8;
-    void* tpages_C;
-    short x_10;
-    short y_12;
-    char pad_14[8];
-} TitleMenuItem;
 
+// a window row of one item (the item + the row end)
 typedef struct
 {
-    TitleMenuItem items[2];
+    MenuWindowItem items[2];
 } TitleMenuWindow;
 
-typedef struct
-{
-    int flags_0, time_4, anim_8, cursor_C; // a DrawMenuWindows_8002A5A4 menu (CombSelMenu)
-    TitleMenuWindow** windows_10;
-    int ot_14;
-} TitleMenuCfg;
 
 typedef struct { char rgb[4]; } TitleColor;
 
@@ -53,7 +38,7 @@ extern const TitleMenuWindow titleMenuWin4_800A07B8;
 extern const TitleMenuWindow titleMenuWin5_800A07F0;
 extern const TitleMenuWindow titleMenuWin6_800A0828;
 extern const TitleMenuWindow titleMenuWin7_800A0860;
-extern const TitleMenuCfg titleMenuCfg_800A0898;
+extern const MenuWindowList titleMenuCfg_800A0898;
 extern const TitleColor logoPulseColor_800A08B0;
 extern const char debugLevantName_800A08B4[];
 extern const int dword_800A08C0[2];
