@@ -22,7 +22,10 @@ typedef struct TargetQuery
     short f6;
 } TargetQuery;
 
-int CheckMagicUsable_80034068(TargetQuery* q);
 int CheckUsableStub_80034124(TargetQuery* q);
 
+int CheckMagicUsable_80034068(TargetQuery* q);
+short** FindTextResumePage_80034900(short** list);
+int NthMaskedIndex_80034B88(int n, unsigned int mask);
+int IsCurrentMapListed_80034140(void);
 #endif

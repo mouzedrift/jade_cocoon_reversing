@@ -117,7 +117,6 @@ extern TextSize MeasureTextLines_8003E3B4(int* list);
 extern TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
 extern void GetPortraitPoly_800A6308(int a, void* b);
 extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
-extern short** FindTextResumePage_80034900(short** list);
 extern void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1);
 // Matched
 EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
@@ -789,7 +788,6 @@ const int aMoney_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
 const int aEmptyCocoon_8007485C[2] = { 0x9A96F38B };
 const int aTimesSign_80074864[2] = { 0x7782 };
 
-extern int NthMaskedIndex_80034B88(int n, unsigned int mask);
 // Matched
 void HandleMsgWindowInput_800353A0(MsgWindow* win)
 {

@@ -19,6 +19,7 @@
 #include "tiy.h"
 #include "minion_menu.h"
 #include "engine.h"
+#include "msg_window.h"
 
 
 
@@ -911,7 +912,6 @@ UnitStats* GetSaveItem_80033AE4(SaveData* save, int idx)
 {
     return &save->items[idx];
 }
-extern int IsCurrentMapListed_80034140(void);
 // Matched
 int CheckItemUsable_80033AFC(ListMenuState* menu)
 {

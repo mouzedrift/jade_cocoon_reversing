@@ -18,6 +18,7 @@
 #include "minion_menu.h"
 #include "effect_data.h"
 #include "skills.h"
+#include "msg_window.h"
 
 extern int CheckSkillUsable_80033C98(ListMenuState* menu);
 int GetAbilityIcon_8002D1A4(int type, short slot);
@@ -138,7 +139,6 @@ int GetAbilityIcon_8002D1A4(int type, short slot)
     return abilityIconsByType_8008280C[slot][type];
 }
 extern int CheckItemOnTarget_80033DF4(short* req);
-extern int CheckMagicUsable_80034068(short* req);
 // Matched
 int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
 {
