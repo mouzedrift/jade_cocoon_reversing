@@ -968,32 +968,6 @@ extern int GetSkillTargetFlags_80031B0C(int a, int b);
 
 
 
-// one window of a menu's window list (the exe's DrawMenuWindowContents_8002A710 view); a list ends with flags_0 bit 0
-typedef struct BatMenuWindow
-{
-    unsigned short flags_0; // bit 1: greyed out
-    unsigned short type_2;  // 1: a uiTiy sprite
-    int text_4;             // sprite index for type 1
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x_10;
-    short y_12;
-    short w_14;
-    short h_16;
-    short mx_18;
-    short my_1A;
-} BatMenuWindow;
-
-// what DrawMenuWindows_8002A5A4 draws: the command menu's windows
-typedef struct BatMenuWindows
-{
-    int mode_0;                // 2: the command page, 4: a sub page
-    int time_4;
-    unsigned int frame_8;      // open animation frame (0..8)
-    int cursor_C;              // the command menu's cursor
-    BatMenuWindow** windows_10; // NULL-terminated list of window lists
-    int ot_14;
-} BatMenuWindows;
 
 
 
@@ -1390,19 +1364,19 @@ extern int msgDivineMinionsCannot_800C939C;
 extern int msgCannotUseHere_800C93A0;
 extern BatMenuItem levantMenuItems_800C93A4[6];
 extern BatMenuItem minionMenuItems_800C93D4[5];
-extern BatMenuWindow winAttack_800C93FC[2];
-extern BatMenuWindow winDefend_800C9434[2];
-extern BatMenuWindow winSummon_800C946C[2];
-extern BatMenuWindow winCapture_800C94A4[2];
-extern BatMenuWindow winItem_800C94DC[2];
-extern BatMenuWindow winFlee_800C9514[2];
-extern BatMenuWindow winSpecialAttack_800C954C[2];
-extern BatMenuWindow winMagic_800C9584[2];
-extern BatMenuWindow winChangeFighter_800C95BC[2];
-extern BatMenuWindow *levantMenuWindows_800C95F4[7];
-extern BatMenuWindow *minionMenuWindows_800C9610[6];
-extern BatMenuWindow **menuWindowSets_800C9628[2];
-extern BatMenuWindows menuWindows_800C9630;
+extern MenuWindowItem winAttack_800C93FC[2];
+extern MenuWindowItem winDefend_800C9434[2];
+extern MenuWindowItem winSummon_800C946C[2];
+extern MenuWindowItem winCapture_800C94A4[2];
+extern MenuWindowItem winItem_800C94DC[2];
+extern MenuWindowItem winFlee_800C9514[2];
+extern MenuWindowItem winSpecialAttack_800C954C[2];
+extern MenuWindowItem winMagic_800C9584[2];
+extern MenuWindowItem winChangeFighter_800C95BC[2];
+extern MenuWindowItem *levantMenuWindows_800C95F4[7];
+extern MenuWindowItem *minionMenuWindows_800C9610[6];
+extern MenuWindowItem **menuWindowSets_800C9628[2];
+extern MenuWindowList menuWindows_800C9630;
 extern unsigned char commandByCursor_800C9648[12];
 extern unsigned char commandNextPage_800C9654[12];
 extern unsigned char commandTargetFlags_800C9660[12];

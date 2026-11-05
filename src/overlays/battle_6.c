@@ -235,46 +235,46 @@ BatMenuItem minionMenuItems_800C93D4[5] = {
     { helpMagic_800C9370 },
     { helpChangeFighter_800C9374 },
 };
-BatMenuWindow winAttack_800C93FC[2] = {
+MenuWindowItem winAttack_800C93FC[2] = {
     { 8, 1, 13, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 157, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winDefend_800C9434[2] = {
+MenuWindowItem winDefend_800C9434[2] = {
     { 8, 1, 48, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 157, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winSummon_800C946C[2] = {
+MenuWindowItem winSummon_800C946C[2] = {
     { 8, 1, 180, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winCapture_800C94A4[2] = {
+MenuWindowItem winCapture_800C94A4[2] = {
     { 8, 1, 224, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winItem_800C94DC[2] = {
+MenuWindowItem winItem_800C94DC[2] = {
     { 8, 1, 88, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 38, 18, 2, 3 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winFlee_800C9514[2] = {
+MenuWindowItem winFlee_800C9514[2] = {
     { 8, 1, 57, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 195, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winSpecialAttack_800C954C[2] = {
+MenuWindowItem winSpecialAttack_800C954C[2] = {
     { 8, 1, 183, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winMagic_800C9584[2] = {
+MenuWindowItem winMagic_800C9584[2] = {
     { 8, 1, 108, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow winChangeFighter_800C95BC[2] = {
+MenuWindowItem winChangeFighter_800C95BC[2] = {
     { 8, 1, 40, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 76, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-BatMenuWindow *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };
-BatMenuWindow *minionMenuWindows_800C9610[6] = { winAttack_800C93FC, winDefend_800C9434, winSpecialAttack_800C954C, winMagic_800C9584, winChangeFighter_800C95BC };
-BatMenuWindow **menuWindowSets_800C9628[2] = { levantMenuWindows_800C95F4, minionMenuWindows_800C9610 };
-BatMenuWindows menuWindows_800C9630 = { 2 };
+MenuWindowItem *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };
+MenuWindowItem *minionMenuWindows_800C9610[6] = { winAttack_800C93FC, winDefend_800C9434, winSpecialAttack_800C954C, winMagic_800C9584, winChangeFighter_800C95BC };
+MenuWindowItem **menuWindowSets_800C9628[2] = { levantMenuWindows_800C95F4, minionMenuWindows_800C9610 };
+MenuWindowList menuWindows_800C9630 = { 2 };
 unsigned char commandByCursor_800C9648[12] = { 0, 0, 1, 1, 2, 6, 3, 7, 4, 8, 5, 5 };
 unsigned char commandNextPage_800C9654[12] = { 4, 5, 4, 4, 1, 5, 2, 3, 4 };
 unsigned char commandTargetFlags_800C9660[12] = { 4, 0, 2, 4, 0, 0, 4, 4, 2 };
@@ -2292,7 +2292,7 @@ void InitMenuCursors_800C7088()
 
 void SelectMenuWindows_800C71A0()
 {
-    menuWindows_800C9630.windows_10 = menuWindowSets_800C9628[menuForMinion_800C9E49];
+    menuWindows_800C9630.items_10 = menuWindowSets_800C9628[menuForMinion_800C9E49];
 }
 
 void DisableMenuCommands_800C71C8()
@@ -2696,17 +2696,17 @@ void UpdateMenuWindows_800C7CE8(unsigned char page)
     unsigned int frame;
     if (page == 0)
     {
-        menuWindows_800C9630.mode_0 = 2;
+        menuWindows_800C9630.flags_0 = 2;
     }
     else
     {
-        menuWindows_800C9630.mode_0 = 4;
+        menuWindows_800C9630.flags_0 = 4;
     }
     menuWindows_800C9630.time_4 = GetTime30Hz_8002C64C();
-    frame = menuWindows_800C9630.frame_8;
+    frame = menuWindows_800C9630.open_8;
     if (frame < 8)
     {
-        menuWindows_800C9630.frame_8 = frame + 1;
+        menuWindows_800C9630.open_8 = frame + 1;
     }
     menuWindows_800C9630.cursor_C = commandMenu_800C92D8[0].cursor_8;
 }
