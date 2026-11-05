@@ -67,7 +67,10 @@ extern int elementBonusMagic2_8007A68C[];
 extern int elementBonusMagic3_8007A69C[];
 extern signed char elementModifiers_8007BA74[16];
 extern unsigned char speciesModifiers_8007BA84[];
-extern int sub_8007C30C[15];
+extern MATRIX defaultLightMatrix_8007C2EC; // default scene light direction (row 0)
+extern MATRIX defaultColorMatrix_8007C30C; // default scene light colour (column 0)
+extern int dword_8007C32C;
+extern void* dword_8007C330[6];
 extern short screenModes_8007C728[][2];
 extern SoundCue soundCues_8007C750[];
 extern short levelSeqsCue2_8007CAC0[];

@@ -1626,10 +1626,13 @@ MinionModelDesc speciesModelDescs_8007BD30[365] = {
     { 91, 0, 40 },
     { 92, 0, 40 },
 };
-unsigned char rankLevelThresholds_8007C2E4[40] = { 1, 7, 13, 22, 27, 0, 0, 0, 252, 7, 90, 245, 222, 8 };
-int sub_8007C30C[15] = {
-    0x1000, 0x10000000, 0, 0x1000, 0, 0, 0, 0,
-    0x4D4D4D, 0x8007C2EC, 0x8007C2EC, 0x8007C30C, 0x8007C30C, 0x8007C32C, 0x8007C32C,
+unsigned char rankLevelThresholds_8007C2E4[8] = { 1, 7, 13, 22, 27 };
+MATRIX defaultLightMatrix_8007C2EC = { { { 0x7FC, -0xAA6, 0x8DE } } };
+MATRIX defaultColorMatrix_8007C30C = { { { 0x1000 }, { 0x1000 }, { 0x1000 } } };
+int dword_8007C32C = 0x4D4D4D;
+void* dword_8007C330[6] = {
+    &defaultLightMatrix_8007C2EC, &defaultLightMatrix_8007C2EC, &defaultColorMatrix_8007C30C, &defaultColorMatrix_8007C30C,
+    &dword_8007C32C, &dword_8007C32C,
 };
 int magicNames_8007C348[0x1E * 2] = {
     0x800731EC, 0x800731E8, 0x800731DC, 0x800731E8, 0x800731D0, 0x800731E8, 0x800731C4, 0x800731E8,

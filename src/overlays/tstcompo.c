@@ -672,8 +672,8 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
     screenOffset_8008D474[0] = 0;
     screenOffset_8008D474[1] = 0;
     geomScreenDistance_8008B548 = 0xA0;
-    lightMatrix_80087114 = dword_8007C2EC;
-    colorMatrix_80087134 = dword_8007C30C;
+    lightMatrix_80087114 = defaultLightMatrix_8007C2EC;
+    colorMatrix_80087134 = defaultColorMatrix_8007C30C;
     SetGteLightAndCamera_8004D0E8();
 }
 

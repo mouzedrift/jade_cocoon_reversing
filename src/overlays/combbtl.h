@@ -13,6 +13,7 @@
 #include "combat.h"
 #include "main.h"
 #include "engine.h"
+#include "effect_data.h"
 
 typedef struct CombBtlNode
 {
@@ -250,8 +251,6 @@ int GetStatusCommand_800BFA4C(int flags, int prevFlags);
 /* exe-side, to move to <exe header> */
 /* main.h declares these too, but can't be included here: it has hitNumberTasks_8008D778 as int[2] (main.c), the code
    uses it as a task list head like the other two (BATTLE.BIN's battle_3.c too) -> main.h: EventNode* hitNumberTasks_8008D778 */
-extern MATRIX dword_8007C2EC; // -> globals.h: default light matrix
-extern MATRIX dword_8007C30C; // -> globals.h: default light colour matrix
 extern void StartSceneFadeOut_8001AA50(short duration); // -> engine.h
 extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, int time); // -> menu_window.h
 extern void DrawMpGauge_8002F120(UnitStatus* unit, CombBtlPair* pos, int gaugeArg, short ot); // -> unit_gauges.h

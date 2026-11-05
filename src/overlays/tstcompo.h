@@ -214,10 +214,6 @@ typedef struct TstCompoWork
     int enemy_22C;
 } TstCompoWork;
 
-typedef struct TstCompoMat
-{
-    int w[8];
-} TstCompoMat;
 
 // window style for DrawWindow_80042460
 typedef struct TstCompoWinStyle
@@ -250,8 +246,8 @@ extern void SetCameraLookAt_800A1E68();
 extern int cameraEye_8008D600[];
 /* exe-side, to move to main.h / globals.h */
 extern short screenOffset_8008D474[];
-extern TstCompoMat dword_8007C2EC;
-extern TstCompoMat dword_8007C30C;
+extern MATRIX defaultLightMatrix_8007C2EC; // effect_data.h
+extern MATRIX defaultColorMatrix_8007C30C; // effect_data.h
 extern unsigned short uiColor_8008B590;
 /* exe-side: effect_data.h declares it as int dword_8007DC74[6] */
 extern int dword_8007DC74;
@@ -279,8 +275,8 @@ extern void SetBoneGroupFlags_80019B14(void* p, char* a1, char* a2);
 /* exe-side, to move to ftg_draw.h */
 extern void SetGteLightAndCamera_8004D0E8();
 /* exe-side, to move to event.h */
-extern TstCompoMat lightMatrix_80087114;
-extern TstCompoMat colorMatrix_80087134;
+extern MATRIX lightMatrix_80087114; // event.h
+extern MATRIX colorMatrix_80087134; // event.h
 extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 /* PSY-Q library */
 extern void* memset(void* p, int c, unsigned int n);

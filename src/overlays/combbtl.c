@@ -1271,18 +1271,18 @@ void StartArenaCamera_800A7290()
         save->levant_7A8.rot.vx = 0;
         save->levant_7A8.rot.vy = 0;
         save->levant_7A8.rot.vz = 0;
-        cam->lightDir_34.vx = dword_8007C2EC.m[0][0];
-        cam->lightDir_34.vy = dword_8007C2EC.m[0][1];
-        cam->lightDir_34.vz = dword_8007C2EC.m[0][2];
-        cam->lightColor_3C.vx = dword_8007C30C.m[0][0];
-        cam->lightColor_3C.vy = dword_8007C30C.m[1][0];
-        cam->lightColor_3C.vz = dword_8007C30C.m[2][0];
-        lightMatrix_80087114.m[0][0] = dword_8007C2EC.m[0][0];
-        lightMatrix_80087114.m[0][1] = dword_8007C2EC.m[0][1];
-        lightMatrix_80087114.m[0][2] = dword_8007C2EC.m[0][2];
-        colorMatrix_80087134.m[0][0] = dword_8007C30C.m[0][0];
-        colorMatrix_80087134.m[1][0] = dword_8007C30C.m[1][0];
-        colorMatrix_80087134.m[2][0] = dword_8007C30C.m[2][0];
+        cam->lightDir_34.vx = defaultLightMatrix_8007C2EC.m[0][0];
+        cam->lightDir_34.vy = defaultLightMatrix_8007C2EC.m[0][1];
+        cam->lightDir_34.vz = defaultLightMatrix_8007C2EC.m[0][2];
+        cam->lightColor_3C.vx = defaultColorMatrix_8007C30C.m[0][0];
+        cam->lightColor_3C.vy = defaultColorMatrix_8007C30C.m[1][0];
+        cam->lightColor_3C.vz = defaultColorMatrix_8007C30C.m[2][0];
+        lightMatrix_80087114.m[0][0] = defaultLightMatrix_8007C2EC.m[0][0];
+        lightMatrix_80087114.m[0][1] = defaultLightMatrix_8007C2EC.m[0][1];
+        lightMatrix_80087114.m[0][2] = defaultLightMatrix_8007C2EC.m[0][2];
+        colorMatrix_80087134.m[0][0] = defaultColorMatrix_8007C30C.m[0][0];
+        colorMatrix_80087134.m[1][0] = defaultColorMatrix_8007C30C.m[1][0];
+        colorMatrix_80087134.m[2][0] = defaultColorMatrix_8007C30C.m[2][0];
     }
 }
 
