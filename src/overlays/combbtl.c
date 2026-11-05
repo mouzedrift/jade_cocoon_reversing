@@ -375,18 +375,18 @@ void AnnounceWinner_800A51EC(CombBtlTask* t)
     }
 }
 
-const CombBtlItem winnerBanner_800A4A54 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x56, 0x32, 0x14, 2, 4 };
-const CombBtlItem resultBanner_800A4A70 = { 8, 1, 0xE6, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x6B, 0x32, 0x14, 2, 4 };
+const MenuWindowItem winnerBanner_800A4A54 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x56, 0x32, 0x14, 2, 4 };
+const MenuWindowItem resultBanner_800A4A70 = { 8, 1, 0xE6, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x6B, 0x32, 0x14, 2, 4 };
 
 void DrawWinnerBanner_800A5290(CombBtlTask* t)
 {
     CombBtlBox box;
-    CombBtlItem winner = winnerBanner_800A4A54;
+    MenuWindowItem winner = winnerBanner_800A4A54;
     int icons[2];
-    CombBtlItem result;
+    MenuWindowItem result;
     icons[0] = 0x33;
     icons[1] = 0xDF;
-    winner.icon_4 = icons[loserSide_800A85F8 ^ 1];
+    winner.text_4 = icons[loserSide_800A85F8 ^ 1];
     box.state_2 = 1;
     box.frame_3 = 1;
     box.color_0 = saveData_8008B570.uiColor_20.h;
@@ -1179,13 +1179,13 @@ const CombBtlSideRot sideActorArgs_800A4AEC = { {
         { 0 },
         { 0, 0, 0, 8 },
     } };
-const CombBtlItem sideLabel0_800A4AFC = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 110, 20, 50, 20, 2, 4 };
-const CombBtlItem sideLabel1_800A4B18 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 160, 20, 50, 20, 2, 4 };
+const MenuWindowItem sideLabel0_800A4AFC = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 110, 20, 50, 20, 2, 4 };
+const MenuWindowItem sideLabel1_800A4B18 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 160, 20, 50, 20, 2, 4 };
 const CombBtlPos2 statusIconPos_800A4B34 = { {
         { 10, 79 },
         { 0x136, 79 },
     } };
-const CombBtlItem slotItem_800A4B3C = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 50, 20, 2, 4 };
+const MenuWindowItem slotItem_800A4B3C = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 50, 20, 2, 4 };
 const CombBtlPos2 slotItemPos_800A4B58 = { {
         { 110, 40 },
         { 160, 40 },
@@ -1358,13 +1358,13 @@ void OpenSideWindow_800A75F8(int side)
 // Matched
 void SideWindowTask_800A7694(EventEntry* e, void* buf)
 {
-    CombBtlItem w0 = sideLabel0_800A4AFC;
-    CombBtlItem w1 = sideLabel1_800A4B18;
+    MenuWindowItem w0 = sideLabel0_800A4AFC;
+    MenuWindowItem w1 = sideLabel1_800A4B18;
     CombBtlBox box60;
     CombBtlPair pt;
     CombBtlPos2 pos70 = statusIconPos_800A4B34;
     CombBtlBox box78;
-    CombBtlItem w2;
+    MenuWindowItem w2;
     union
     {
         CombBtlPos2 pos;
@@ -1378,7 +1378,7 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     CombBtlPos2 posB8;
     int sel = 0;
     UnitStatus* status;
-    CombBtlItem* label;
+    MenuWindowItem* label;
     CombBtlSideWindow* win;
 
     if (exchangeFlags_800A84A8 & 0xC)
@@ -1447,7 +1447,7 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     w2 = slotItem_800A4B3C;
     uA0.pos = slotItemPos_800A4B58;
     uA8.v = slotIcons_800A4B60;
-    w2.icon_4 = uA8.v.v[sideSlot_800A4078[win->side_0]];
+    w2.text_4 = uA8.v.v[sideSlot_800A4078[win->side_0]];
     w2.x_10 = uA0.pos.p[win->side_0].lo;
     w2.y_12 = uA0.pos.p[win->side_0].hi;
     box78.state_2 = 0;

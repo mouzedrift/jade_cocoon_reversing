@@ -13,6 +13,7 @@
 #include "combat.h"
 #include "main.h"
 #include "engine.h"
+#include "menu_window.h"
 #include "effect_data.h"
 
 typedef struct CombBtlNode
@@ -42,21 +43,6 @@ typedef struct CombBtlSideRot
     unsigned char rot_0[2][8]; // per side: the actor rotation (3 shorts + pad)
 } CombBtlSideRot;
 
-// a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (DrawMenuWindowContents_8002A710)
-typedef struct CombBtlItem
-{
-    unsigned short flags_0;
-    unsigned short type_2; // 1: TIY sprite
-    int icon_4;
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x_10; // the window rect
-    short y_12;
-    short w_14;
-    short h_16;
-    short mx_18;
-    short my_1A;
-} CombBtlItem;
 
 // an announcer line list with a trailing word (finalLines_800A8454)
 typedef struct CombBtlLineList6
@@ -78,10 +64,10 @@ typedef struct CombBtlInt3
 extern int dword_800A4088;
 extern const CombBtlSidePos sideActorPos_800A4AD4;
 extern const CombBtlSideRot sideActorArgs_800A4AEC;
-extern const CombBtlItem sideLabel0_800A4AFC;
-extern const CombBtlItem sideLabel1_800A4B18;
+extern const MenuWindowItem sideLabel0_800A4AFC;
+extern const MenuWindowItem sideLabel1_800A4B18;
 extern const CombBtlPos2 statusIconPos_800A4B34;
-extern const CombBtlItem slotItem_800A4B3C;
+extern const MenuWindowItem slotItem_800A4B3C;
 extern const CombBtlPos2 slotItemPos_800A4B58;
 extern const CombBtlInt3 slotIcons_800A4B60;
 extern const CombBtlPos2 mpGaugePos_800A4B6C;
@@ -168,7 +154,7 @@ typedef struct CombBtlSideWindow
     RECT cur_10; // the window rect being opened (InterpolateWindowRect_8004196C)
 } CombBtlSideWindow;
 
-// a menu item (DrawMenuItemWithWindow_8002ADB4)
+// a window style (DrawWindow_80042460, DrawMenuItemWithWindow_8002ADB4)
 typedef struct CombBtlBox
 {
     short color_0;

@@ -5,6 +5,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "globals.h"
+#include "menu_draw.h"
 #include "pad_text.h"
 #include "combat.h"
 #include "load.h"
@@ -17,40 +18,17 @@ typedef struct CombLoadBox
     char frame_3;
 } CombLoadBox;
 
-// a menu entry / window (0x38 bytes, CombComItem)
-typedef struct CombLoadItem
-{
-    unsigned short flags;
-    short type_2;
-    void* text_4;
-    int sprts_8;
-    int tpages_C;
-    short x_10;
-    short y_12;
-    int rest[9];
-} CombLoadItem;
-
-// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
-typedef struct CombLoadMenu
-{
-    int flags_0;
-    unsigned int time_4;
-    int anim_8;
-    int cursor_C;
-    CombLoadItem** items_10;
-    int ot_14;
-} CombLoadMenu;
 
 extern int dword_800A4088;
 extern MenuCursor cardSlotCursor_800A468C;
 extern MenuCursor dataCursor_800A4698;
-extern CombLoadItem dataRow0_800A46A4;
-extern CombLoadItem dataRow1_800A46DC;
-extern CombLoadItem dataRow2_800A4714;
-extern CombLoadItem dataRow3_800A474C;
-extern CombLoadItem dataRow4_800A4784;
-extern CombLoadItem* dataRows_800A47BC[6];
-extern CombLoadMenu dataMenuWin_800A47D4;
+extern MenuWindowItem dataRow0_800A46A4[2]; // the row + its end
+extern MenuWindowItem dataRow1_800A46DC[2]; // the row + its end
+extern MenuWindowItem dataRow2_800A4714[2]; // the row + its end
+extern MenuWindowItem dataRow3_800A474C[2]; // the row + its end
+extern MenuWindowItem dataRow4_800A4784[2]; // the row + its end
+extern MenuWindowItem* dataRows_800A47BC[6];
+extern MenuWindowList dataMenuWin_800A47D4;
 extern int cardSelectState_800A47F0;
 extern int loadOvlRequest_800A47F4;
 

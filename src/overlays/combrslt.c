@@ -8,32 +8,32 @@ int dword_800A4088 SDATA = 23; // first word of the overlay
 
 MenuCursor slotCursor_800A47E8 = { 1, 1, 1, 0x40, 0, 0 };
 int dword_800A47F4 = 0;
-CombRsltText playerLabelItemP1_800A47F8 = { 8, 1, 51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 10, 20, 0x140032, 0x40002 };
-CombRsltText playerLabelItemP2_800A4814 = { 8, 1, 223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 260, 20, 0x140032, 0x40002 };
-CombRsltText* playerLabelItems_800A4830[2] = { &playerLabelItemP1_800A47F8, &playerLabelItemP2_800A4814 };
+MenuWindowItem playerLabelItemP1_800A47F8 = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem playerLabelItemP2_800A4814 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem* playerLabelItems_800A4830[2] = { &playerLabelItemP1_800A47F8, &playerLabelItemP2_800A4814 };
 // text_4 set to the win / lose / draw sprite (DrawPlayerResult_800A4240)
-CombRsltText resultItemP1_800A4838 = { 8, 1, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 10, 41, 0x140032, 0x40002 };
-CombRsltText resultItemP2_800A4854 = { 8, 1, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 260, 41, 0x140032, 0x40002 };
-CombRsltText* resultItems_800A4870[2] = { &resultItemP1_800A4838, &resultItemP2_800A4854 };
+MenuWindowItem resultItemP1_800A4838 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 41, 0x32, 0x14, 2, 4 };
+MenuWindowItem resultItemP2_800A4854 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 41, 0x32, 0x14, 2, 4 };
+MenuWindowItem* resultItems_800A4870[2] = { &resultItemP1_800A4838, &resultItemP2_800A4854 };
 // the score boxes (window only: DrawScorePair_800A444C draws the numbers)
-CombRsltText scoreWindowP1_800A4878 = { 8, 0, 0, 0, 0, 28, 193, 0x150063, 0x40002 };
-CombRsltText scoreWindowP2_800A4894 = { 8, 0, 0, 0, 0, 184, 193, 0x150063, 0x40002 };
-CombRsltText* scoreWindows_800A48B0[2] = { &scoreWindowP1_800A4878, &scoreWindowP2_800A4894 };
+MenuWindowItem scoreWindowP1_800A4878 = { 8, 0, 0, NULL, NULL, 28, 193, 0x63, 0x15, 2, 4 };
+MenuWindowItem scoreWindowP2_800A4894 = { 8, 0, 0, NULL, NULL, 184, 193, 0x63, 0x15, 2, 4 };
+MenuWindowItem* scoreWindows_800A48B0[2] = { &scoreWindowP1_800A4878, &scoreWindowP2_800A4894 };
 int slotLabelSprites_800A48B8[3] = { 219, 115, 102 };
 CombRsltPos minionSlotPos_800A48C4[2][3] = {
     { { 10, 64 }, { 10, 109 }, { 10, 154 } },
     { { 166, 64 }, { 166, 109 }, { 166, 154 } },
 };
 
-const CombRsltText resultTitleItem_800A408C = { 8, 1, 159, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 122, 20, 0x14004C, 0x40002 };
-const CombRsltText minionLabelItem_800A40A8 = { 8, 1, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0, 0, 0x140032, 0x40002 };
-const CombRsltText minionHpItem_800A40C4 = { 10, 1, 64, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0, 0, 0x14005E, 0x40002 };
+const MenuWindowItem resultTitleItem_800A408C = { 8, 1, 159, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 122, 20, 0x4C, 0x14, 2, 4 };
+const MenuWindowItem minionLabelItem_800A40A8 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x32, 0x14, 2, 4 };
+const MenuWindowItem minionHpItem_800A40C4 = { 10, 1, 64, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x5E, 0x14, 2, 4 };
 
 // Versus mode result screen: per player result, score and minions; any button fades back to the versus task
 void VersusResultTask_800A40E0(CombatTask* task)
 {
     CombRsltBox box;
-    CombRsltText title = resultTitleItem_800A408C;
+    MenuWindowItem title = resultTitleItem_800A408C;
     int i;
     box.state_2 = 0;
     box.frame_3 = 1;
@@ -157,8 +157,8 @@ extern void DrawHpGauge_8002F078();
 // Matched
 void DrawResultMinion_800A4554(int player, int slot, CombRsltBox* box)
 {
-    CombRsltText label = minionLabelItem_800A40A8;
-    CombRsltText hp;
+    MenuWindowItem label = minionLabelItem_800A40A8;
+    MenuWindowItem hp;
     CombRsltPos r1;
     CombRsltPos r2;
     CombRsltPos r3[2];

@@ -10,19 +10,6 @@
 #include "menu_window.h"
 #include "engine.h"
 
-// a menu item drawn by DrawMenuItemWithWindow_8002ADB4 (0x1C bytes, CombSelItem)
-typedef struct CombRsltText
-{
-    unsigned short flags_0;
-    short type_2;
-    int text_4; // string, or sprite index for type 1
-    int sprts_8;
-    int tpages_C;
-    unsigned short x_10;
-    unsigned short y_12;
-    int size_14;
-    int margin_18;
-} CombRsltText;
 
 // the window colour DrawWindow_80042460 takes (CombSelBox)
 typedef struct CombRsltBox
@@ -39,20 +26,20 @@ typedef struct CombRsltPos
 } CombRsltPos;
 
 extern int dword_800A4088;
-extern const CombRsltText resultTitleItem_800A408C;
-extern const CombRsltText minionLabelItem_800A40A8;
-extern const CombRsltText minionHpItem_800A40C4;
+extern const MenuWindowItem resultTitleItem_800A408C;
+extern const MenuWindowItem minionLabelItem_800A40A8;
+extern const MenuWindowItem minionHpItem_800A40C4;
 extern MenuCursor slotCursor_800A47E8;
 extern int dword_800A47F4;
-extern CombRsltText playerLabelItemP1_800A47F8;
-extern CombRsltText playerLabelItemP2_800A4814;
-extern CombRsltText* playerLabelItems_800A4830[2];
-extern CombRsltText resultItemP1_800A4838;
-extern CombRsltText resultItemP2_800A4854;
-extern CombRsltText* resultItems_800A4870[2];
-extern CombRsltText scoreWindowP1_800A4878;
-extern CombRsltText scoreWindowP2_800A4894;
-extern CombRsltText* scoreWindows_800A48B0[2];
+extern MenuWindowItem playerLabelItemP1_800A47F8;
+extern MenuWindowItem playerLabelItemP2_800A4814;
+extern MenuWindowItem* playerLabelItems_800A4830[2];
+extern MenuWindowItem resultItemP1_800A4838;
+extern MenuWindowItem resultItemP2_800A4854;
+extern MenuWindowItem* resultItems_800A4870[2];
+extern MenuWindowItem scoreWindowP1_800A4878;
+extern MenuWindowItem scoreWindowP2_800A4894;
+extern MenuWindowItem* scoreWindows_800A48B0[2];
 extern int slotLabelSprites_800A48B8[3];
 extern CombRsltPos minionSlotPos_800A48C4[2][3];
 
