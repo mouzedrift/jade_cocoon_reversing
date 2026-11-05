@@ -32,6 +32,7 @@
 #include "unit_stats.h"
 #include "party.h"
 #include "model_ftg.h"
+#include "ability_menu.h"
 
 
 
@@ -959,11 +960,9 @@ extern int GetUnitSkills_80031B30(int a);
 
 
 
-extern int DrawTargetSelectMenu_8002D250(void* a0, int a1, int a2, int a3);
 
 
 
-extern void DrawAbilityList_8002CE28(void* a0, int a1);
 
 extern int GetSkillMpCost_80031A04(UnitSkills* a0, int a1);
 

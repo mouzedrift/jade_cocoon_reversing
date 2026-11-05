@@ -2171,14 +2171,14 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
         }
         case 15:
         {
-            short pr[4];
+            TargetQuery pr;
             if (!menu->showMessage_24)
             {
-                pr[0] = GetInventorySlotId_800AD288(menu->cursors_2A[3] + menu->scrolls_46[0], 0);
-                pr[1] = 0;
-                pr[2] = menu->cursors_2A[5];
-                pr[3] = 1;
-                DrawTargetSelectMenu_8002D250(pr, 0, menu->cursors_2A[5], 14);
+                pr.id_0 = GetInventorySlotId_800AD288(menu->cursors_2A[3] + menu->scrolls_46[0], 0);
+                pr.actor_2 = 0;
+                pr.target_4 = menu->cursors_2A[5];
+                pr.f6 = 1;
+                DrawTargetSelectMenu_8002D250(&pr, 0, menu->cursors_2A[5], 14);
                 if (menu->state_2 == 2 && menu->cursors_2A[5] != 0)
                 {
                     MenuPair p;

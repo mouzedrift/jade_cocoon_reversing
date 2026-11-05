@@ -23,8 +23,8 @@
 #include "unit_query.h"
 #include "ui_sprites.h"
 #include "party.h"
+#include "ability_menu.h"
 
-int GetAbilityIcon_8002D1A4(int type, short slot);
 // Matched
 void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
 {
