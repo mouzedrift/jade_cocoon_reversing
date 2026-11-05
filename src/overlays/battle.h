@@ -29,6 +29,7 @@
 #include "ui_sprites.h"
 #include "effect.h"
 #include "unit_gauges.h"
+#include "unit_stats.h"
 
 
 

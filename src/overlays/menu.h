@@ -27,6 +27,7 @@
 #include "menu_draw.h"
 #include "unit_gauges.h"
 #include "status_panel.h"
+#include "unit_stats.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -707,8 +708,6 @@ extern int IsSceneHeld_800A5E68(void);
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
 extern void UseItemOnUnit_80013C28();
 extern unsigned short uiColor_8008B590;
-extern void AccumulateExpGain_800122A0();
-extern int GetLevelRank_800121A8();
 extern void DrawPartySlotWindow_8002F8E4();
 extern int GetPartyWindowX_8002FA0C();
 extern void DrawLargeText_8002FBD8();

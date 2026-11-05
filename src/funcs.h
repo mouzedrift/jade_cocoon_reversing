@@ -67,8 +67,6 @@ extern void PlayGenkiMovie_80040AEC(void);
 extern void PlayCraveEntertainmentMovie_80040B54(void);
 
 // Matches
-extern int BaseMaxMpForLevel_80012178(int level, void* unused);
-extern int BaseMaxHpForLevel_80012140(int level, void* unused);
 extern int LoadData001File_8003CD1C(void);
 extern void InitImage_80010428(void);
 extern void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx);
@@ -78,21 +76,12 @@ extern void* DATA_GetFileBuffer_8003CAA0(int idx);
 extern void SetDisplayMode_80040658(int mode);
 extern void InitEvents_8001028C(void);
 extern long vsyncEventHandler_800103AC(void);
-extern unsigned int GetCapturedMinionsCount_800125B8(void);
 extern void SetCurrentArea_800272BC(int a0, int a1);
 extern void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* p, short depth);
 extern void SetReverbDepthRight_8002A2FC(SpuReverbAttr* p, short depth);
 extern int IsSkillLearned_80031954(void* skills, int idx);
 extern void SetCameraTarget_80037AC8(int target);
-extern int GetSporeMode_80011B6C(void);
-extern void ApplyLevelUpsBonus_80011D78(UnitStatus* status);
-extern void ApplyLevelUpsPlain_80012188(UnitStatus* p);
 extern int InitMinionData_8001900C(UnitStats* m, int* params); // returns the rank (GetRankForLevel_80019A80)
-extern void FillHpMp_80011C0C(UnitStatus* a, UnitStatus* b);
-extern void ClearStatus_80011C30(UnitStatus* p);
-extern void RecoverQuarterHpMp_80011C44(UnitStatus* p);
-extern void Heal_80011CD0(UnitStatus* p);
-extern void ReviveOneHp_80011CF4(UnitStatus* p);
 extern void CopyName_80019AF4(unsigned int* dst, unsigned int* src);
 extern void FreeFtgObjectData_80021804(struct FtgObject* p, int heap);
 extern void SetReverbMode_8002A280(SpuReverbAttr* p, short mode);
@@ -158,8 +147,6 @@ extern void FreeFtgObjects_80021784(struct FtgObject** a0, unsigned int n, int h
 extern void LoadFtgObjects_80021824(int* file, struct FtgObject* out, int count, int heap, int reloc);
 extern void SetMenuItemDigitColor_8002AD80(int flags);
 extern void CdReadSyncCallback_8003C9FC(unsigned char mode);
-extern void HaltEventsAndFade_80011B8C(void);
-extern void HaltEventsFadeStopMovie_80011BCC(void);
 extern void InitMapLoaderTask_80027CC0(EventEntry* p, int* q);
 extern void InitAreaLoaderTask_80028388(EventEntry* p, int* q);
 extern void AddStatus_80012794(UnitStatus* status, int bits);
@@ -187,7 +174,6 @@ extern Model* GetModelTaskModel_80010A44(int key);
 extern void ShowCopyright_80040A84(void);
 extern void PlayGenkiMovie_80040AEC(void);
 extern void PlayCraveEntertainmentMovie_80040B54(void);
-extern void EmptyCallback_80011C04(void);
 extern void EmptyCallback_800251DC(void);
 extern void FreeCameraTask_800376A0(EventEntry* entry, void* buffer);
 extern void SeVibOn(void);
@@ -205,7 +191,6 @@ extern void RequestAreaReload_80027314(void);
 extern int RequestAreaPreload_80027330(short a0);
 extern void EndBattleCamera_80037770(void);
 extern int CdSeekIsComplete_8003C900(void);
-extern void UseSporeItem_80011B24(int item);
 extern void CountdownTask_80016BF4(EventEntry* entry, struct EffectObj* obj);
 extern void SetReverbDepth_8002A2A0(SpuReverbAttr* p, short left, short right);
 extern void DrawLargeTextBox_8002AF10(int text, int pos, int ot);
@@ -215,7 +200,6 @@ extern int IsTargetListed_8002D738(int idx, int self, int mode);
 extern unsigned int GetEquippedId_800AD990(int a0);
 extern void StopAllEventEntries_80043B40(EventNode* p);
 
-extern void AdjustUnitStat_80012614(UnitStatus* a0, int sel, int delta, int mask);
 extern void SetHitVariantForCommand_800BFAF8(int a0);
 extern void StartEffect_8001497C(void);
 
@@ -246,18 +230,11 @@ extern void KillUnit_800127B8(UnitStatus* status);
 extern UnitStatus* GetEnemyStatus_800A2B60(int idx);
 extern UnitStatus* GetSlotStatus_800A10C0(int a0);
 extern UnitStats* GetUnitStats_8001449C(int unit);
-extern int CombinedExpDelta_80012204(int a, int b, int c, int d);
-extern double PackedExpToTotal_80012358(int level, int exp);
-extern int TotalExpToPacked_8001247C(double x);
 extern int LoadModelListTextures_800255F0(ModelList* list, int idx, int sel);
 extern int LoadAllModelAnims_800256B8(ModelList* list, int id);
 extern int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY);
 extern void CopyFtgObject_800218A8(struct FtgObject* s, struct FtgObject* d, int heap);
 extern void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale);
-extern int ModelTaskLoad_80010B90(struct ModelTaskState* p);
-extern int ModelTaskWaitLoad_80010C30(struct ModelTaskState* p);
-extern int ModelTaskApplyTextures_80010CDC(struct ModelTaskState* p);
-extern int ModelTaskDraw_80010DB0(struct ModelTaskState* p);
 
 
 void StopPadVibrationTask_800367F0(int entry, unsigned char* port);

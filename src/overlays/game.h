@@ -1231,7 +1231,6 @@ extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, unsigned long* 
 
 extern void GetAnimRootMotion_8004D288(void* out, void* s, int k);
 
-extern void InitSporeTask_80011ADC();
 extern void LevantControlTask_800A818C();
 extern void EnemyAiFlee_800A2EEC();
 extern void EnemyAiWanderChase_800A2FB8();

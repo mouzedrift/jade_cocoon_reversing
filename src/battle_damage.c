@@ -18,6 +18,7 @@
 #include "common_tu.h"
 #include "unit_query.h"
 #include "effect.h"
+#include "unit_stats.h"
 
 
 

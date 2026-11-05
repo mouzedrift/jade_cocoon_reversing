@@ -1288,21 +1288,6 @@ int ModelTaskApplyTextures_80010CDC(ModelTaskState* task)
 }
 typedef struct
 {
-    int f0;
-    short x;
-    short y;
-    short z;
-    short pad;
-} Vtx12;
-typedef struct
-{
-    char* pos[3];
-    char* rot[3];
-    Vtx12* src[3];
-    int w[3];
-} VtxBlend;
-typedef struct
-{
     int ftg_0;     // the ActorDrawArgs layout
     void* pos_4;
     void* rot_8;
@@ -1318,7 +1303,6 @@ typedef struct
 extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* scale1, char* pose1, int t1, char* scale2, char* pose2, int t2, char* rotBase, char* posBase,
                          char* out, void* vout);
 extern void DrawAnimSkel_80046A58(FuseSkel* sk, void* buf, char* pose);
-void BlendVertices_80011904(VtxBlend* p, Vtx12* out);
 extern unsigned char defaultBones_80079140[];
 extern unsigned char mergeBones_80079210[];
 // Matched
@@ -1527,7 +1511,6 @@ void BlendVertices_80011904(VtxBlend* blend, Vtx12* out)
         out[vtx].z = sum;
     }
 }
-void UpdateSporeTask_80011AF8(EventEntry* p, int* q);
 // Matched
 void InitSporeTask_80011ADC(EventEntry* entry, int* spore)
 {
@@ -1642,13 +1625,11 @@ int GetGrowthKind_80011D28(int base)
     }
     return 9;
 }
-int ApplyLevelUps_80011D98(UnitStatus* m, int mode);
 // Matched
 void ApplyLevelUpsBonus_80011D78(UnitStatus* status)
 {
     ApplyLevelUps_80011D98(status, 1);
 }
-extern int GetGrowthKind_80011D28(int a0);
 // Matched
 int ApplyLevelUps_80011D98(UnitStatus* status, int mode)
 {

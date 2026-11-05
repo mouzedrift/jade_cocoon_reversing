@@ -2,6 +2,7 @@
 #define TU_80010B90_H
 
 #include "event.h" // EventDesc
+#include "party.h" // ModelTaskState
 
 /* the buffer of sporeTask_8008D464 (made by the game overlay): Sleep Spores (item 0x29) set mode 0, Attract Spores (0x2A) mode 1, for 1000 frames; the field AI reads it (GetSporeMode_80011B6C) */
 typedef struct
@@ -58,6 +59,53 @@ extern EventDesc eventDescs_80078EB8[];
 
 extern int dword_80078E90[10];
 
+typedef struct
+{
+    int f0;
+    short x;
+    short y;
+    short z;
+    short pad;
+} Vtx12;
+
+typedef struct
+{
+    char* pos[3];
+    char* rot[3];
+    Vtx12* src[3];
+    int w[3];
+} VtxBlend;
+
 void LoadMenuStart_800B7650();
 
+int BaseMaxMpForLevel_80012178(int level, void* unused);
+int BaseMaxHpForLevel_80012140(int level, void* unused);
+unsigned int GetCapturedMinionsCount_800125B8(void);
+int GetSporeMode_80011B6C(void);
+void ApplyLevelUpsBonus_80011D78(UnitStatus* status);
+void ApplyLevelUpsPlain_80012188(UnitStatus* status);
+void FillHpMp_80011C0C(UnitStatus* dst, UnitStatus* src);
+void ClearStatus_80011C30(UnitStatus* status);
+void RecoverQuarterHpMp_80011C44(UnitStatus* status);
+void Heal_80011CD0(UnitStatus* status);
+void ReviveOneHp_80011CF4(UnitStatus* status);
+void HaltEventsAndFade_80011B8C(void);
+void HaltEventsFadeStopMovie_80011BCC(void);
+void EmptyCallback_80011C04(void);
+void UseSporeItem_80011B24(int item);
+void AdjustUnitStat_80012614(UnitStatus* status, int sel, int delta, int mask);
+int CombinedExpDelta_80012204(int levelA, int expA, int levelB, int expB);
+double PackedExpToTotal_80012358(int level, int exp);
+int TotalExpToPacked_8001247C(double x);
+int ModelTaskLoad_80010B90(ModelTaskState* task);
+int ModelTaskWaitLoad_80010C30(ModelTaskState* task);
+int ModelTaskApplyTextures_80010CDC(ModelTaskState* task);
+int ModelTaskDraw_80010DB0(ModelTaskState* task);
+void InitSporeTask_80011ADC(EventEntry* entry, int* spore);
+void AccumulateExpGain_800122A0(int unit, int exp, int* acc);
+int GetLevelRank_800121A8(int level);
+int ApplyLevelUps_80011D98(UnitStatus* status, int mode);
+void BlendVertices_80011904(VtxBlend* blend, Vtx12* out);
+void UpdateSporeTask_80011AF8(EventEntry* entry, int* spore);
+int GetGrowthKind_80011D28(int base);
 #endif

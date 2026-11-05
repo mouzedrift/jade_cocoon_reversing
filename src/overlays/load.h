@@ -15,6 +15,7 @@
 #include "event.h"
 #include "sound_seq.h"
 #include "ui_sprites.h"
+#include "unit_stats.h"
 
 typedef struct
 {

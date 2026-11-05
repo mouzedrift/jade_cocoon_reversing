@@ -19,6 +19,7 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "tim.h"
+#include "unit_stats.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
