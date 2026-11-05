@@ -23,6 +23,7 @@
 #include "model_ftg.h"
 #include "util.h"
 #include "cd.h"
+#include "sound_seq.h"
 
 extern short screenOffset_8008D474[2];
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)

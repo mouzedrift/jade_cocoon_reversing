@@ -22,6 +22,7 @@
 #include "unit_query.h"
 #include "pad_text.h"
 #include "cd.h"
+#include "sound_seq.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -469,7 +470,6 @@ extern void FreeLevantAnimSet_800AC73C();
 
 
 
-extern void StopSoundSeqs_80030D68(SoundStruct* sound); // exe-side, to move to sound_seq.h
 
 extern void PlayMusic_800300E0(int a, int b);
 
@@ -1013,9 +1013,7 @@ extern int CanAddInventoryCount_800AD670(int have, int count);
 
 extern void LevantModelTask_800ACB64();
 
-extern void PlaySfx_80031494(int);
 
-extern void PlaySeqSlot_80031160(int, int);
 
 // a map entrance (mapTable_800B0608[area][map][n], ends with id -1)
 typedef struct GameMapEntrance

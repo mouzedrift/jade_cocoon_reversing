@@ -14,6 +14,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "pad_text.h"
+#include "sound_seq.h"
 
 
 /* the types of equip.c */

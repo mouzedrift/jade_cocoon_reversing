@@ -15,6 +15,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "pad_text.h"
+#include "sound_seq.h"
 
 
 // a list panel of the store (StoreMenu.panel_34)

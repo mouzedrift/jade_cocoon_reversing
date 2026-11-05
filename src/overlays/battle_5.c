@@ -1483,7 +1483,6 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
 
 
 #if 0 // Not matched: regalloc only: the 0xFFFF7FFF mask and the effect-file base swap saved registers (orig s0/s3); body and schedule otherwise match
-extern void PlaySfx_80031494(int id);
 extern void OrbHomingTask_800C3DF8();
 extern void OrbFadeTask_800C3D34();
 void SpawnOrb_800C3B50(int* pos, int id)

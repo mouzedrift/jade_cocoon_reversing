@@ -16,6 +16,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "pad_text.h"
+#include "sound_seq.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg

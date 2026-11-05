@@ -20,6 +20,7 @@
 #include "effect_light.h"
 #include "model.h"
 #include "cd.h"
+#include "sound_seq.h"
 
 const ColorRGBA orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
 const int dword_80072274 = 0;

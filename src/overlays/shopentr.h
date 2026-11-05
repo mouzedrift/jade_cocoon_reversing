@@ -10,6 +10,7 @@
 #include "util.h"
 #include "font.h"
 #include "pad_text.h"
+#include "sound_seq.h"
 
 typedef struct
 {

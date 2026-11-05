@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "main.h"
 #include "sound.h"
+#include "sound_seq.h"
 
 typedef struct ChapterEntry
 {

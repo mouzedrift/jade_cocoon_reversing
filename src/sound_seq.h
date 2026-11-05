@@ -1,6 +1,8 @@
 #ifndef _TU_80030D00_H_
 #define _TU_80030D00_H_
 
+#include "sound.h"
+
 extern const char aRendWings_8007447C[];
 extern const char aBreakLegs_80074494[];
 extern const char aCritical_800744AC[];
@@ -23,4 +25,24 @@ extern const char aDashes3_80074610[];
 extern const int dword_80074618;
 extern const int dword_800746B8;
 
+int GetSkillEffect_800316EC(unsigned int slot, int actorMask);
+void PlaySeqSlot_80031160(unsigned int idx, short loops);
+void PlaySfx_80031494(int id);
+void FreeSoundSeqs_80030EEC(void* soundArg);
+void SetBattleMusic_800315D8(int music);
+int GetBattleMusic_800315E4(void);
+void FadeOutSeqSlot_800313C8(int idx);
+int ReturnZero_800316DC(void);
+int ReturnZero_800316E4(void);
+void FreeSound_80030D00(SoundStruct* sound);
+void FreeBgmAndSfx_800315F4(void);
+void FreeSoundVab_80030EA4(SoundStruct* sound);
+void StopSoundSeqs_80030D68(SoundStruct* sound);
+void StopSeqSlot_80031334(int idx);
+void SfxKeyOff_80031574(short voice, short sfx);
+short SfxKeyOn_800314F4(int sfx);
+void FadeOutSfxSeq_80031638(void);
+void PlayMusicSeq_80031260(SoundStruct* sound, int idx, short loops);
+void PlaySoundSeq_8003105C(SoundStruct* sound, int idx, short loops);
+void StopSoundSeq_80031408(SoundStruct* sound, int idx);
 #endif

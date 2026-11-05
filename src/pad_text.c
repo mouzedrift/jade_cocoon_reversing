@@ -20,11 +20,11 @@
 #include "main.h"
 #include "util.h"
 #include "unit_query.h"
+#include "sound_seq.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
 extern unsigned short padRepeat_800918CC[];
-extern void PlaySfx_80031494(int id);
 
 const unsigned short emptyText_80074994[2] = { 0 };
 const TextBuf22 emptyNameBuf_80074998 = { { 0xFFFF } };

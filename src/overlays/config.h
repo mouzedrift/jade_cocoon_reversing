@@ -10,6 +10,7 @@
 #include "menu_window.h"
 #include "event.h"
 #include "pad_text.h"
+#include "sound_seq.h"
 
 // the first 8 bytes of a menu cursor (CombSelCursor: cols, rows, count, flags)
 typedef struct { char b[8]; } CfgCursorHead;

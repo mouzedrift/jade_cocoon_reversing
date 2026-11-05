@@ -13,6 +13,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "event.h"
+#include "sound_seq.h"
 
 typedef struct
 {

@@ -11,6 +11,7 @@
 #include "menu_window.h" // MenuWindowItem / MenuWindowList (menu_draw.h)
 #include "util.h"
 #include "event.h"
+#include "sound_seq.h"
 
 
 
@@ -61,7 +62,6 @@ extern void QuitToTitle_800A5538(CombSelTask* t);
 extern int AllSlotsEmpty_800A5560(Minion* team, int count);
 
 /* exe-side, to move to <exe header> */
-extern void PlaySfx_80031494(int id);
 extern void DrawSmallNumber3_8002C290(void* pos, int value, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* pos, int ot);

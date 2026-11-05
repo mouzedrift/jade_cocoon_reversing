@@ -24,6 +24,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "movie.h"
+#include "sound_seq.h"
 
 const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -493,7 +494,6 @@ void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
         entry[0] = (entry[0] & ~1) | 0x8000;
     }
 }
-extern void PlaySfx_80031494(int id);
 /* defined below (their parameter types are declared there) */
 // Matched
 void UpdateMsgWindowState_80034C18(MsgWindow* w)

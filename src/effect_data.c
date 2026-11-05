@@ -30,6 +30,7 @@
 #include "menu_window.h"
 #include "util.h"
 #include "cd.h"
+#include "sound_seq.h"
 
 int weaponEffectIds_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,
@@ -4187,8 +4188,6 @@ extern void SpawnShatterEffect_800C2914(void* src, int id);
 extern void PlayTimedSfx_800C1190(int frames, int sfx);
 extern void PlayTimedSeq_800C10B8(int frames, int slot);
 extern void PlayMusic_800300E0(int idx, int a1);
-extern void PlaySeqSlot_80031160(int idx, int loops);
-extern void PlaySfx_80031494(int id);
 extern void SpawnMdecEffect_80017A6C(int parent, int frames);
 extern void SpawnLightFlash_80017158(int* pos, void* rgb);
 extern void SpawnPulseModel_800174F8(void* parent, int modelId);

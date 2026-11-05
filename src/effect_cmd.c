@@ -24,6 +24,7 @@
 #include "skill_anim.h"
 #include "engine.h"
 #include "model.h"
+#include "sound_seq.h"
 
 typedef struct
 {
@@ -282,7 +283,6 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     return result;
 }
 extern int dword_800B129C[];
-extern int GetSkillEffect_800316EC(int slot, int actorMask);
 // Matched
 int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)
 {

@@ -19,6 +19,7 @@
 #include "util.h"
 #include "movie.h"
 #include "cd.h"
+#include "sound_seq.h"
 
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";
@@ -155,7 +156,6 @@ void UpdateSoundTask_8002FF64(int entry, SoundTask* task)
         break;
     }
 }
-extern void StopSoundSeqs_80030D68(SoundStruct* p);
 // Matched
 void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer)
 {
@@ -171,8 +171,6 @@ void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer)
     FreeSound_80030D00(task->sfx_8);
 }
 
-extern void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops);
-extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader);
 // Matched
 int PlayMusic_800300E0(int idx, int unused)
@@ -350,7 +348,6 @@ void FreeBgmSeqs_800306D8(void)
 {
     FreeSoundSeqs_80030EEC(&bgmSound_80091CE0);
 }
-extern void StopSoundSeq_80031408(SoundStruct* s, int idx);
 // Matched
 void StopSoundSeqById_800306FC(int idx)
 {
@@ -369,7 +366,6 @@ void StopSoundSeqById_800306FC(int idx)
         StopSoundSeq_80031408(task->sfx_8, idx);
     }
 }
-extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
 // Matched
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader)
 {

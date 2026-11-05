@@ -10,6 +10,7 @@
 #include "menu_window.h"
 #include "util.h"
 #include "event.h"
+#include "sound_seq.h"
 
 
 

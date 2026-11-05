@@ -13,6 +13,7 @@
 #include "engine.h"
 #include "util.h"
 #include "event.h"
+#include "sound_seq.h"
 
 // a cursor area of the screen: the character grid, the page selector, the commands
 typedef struct

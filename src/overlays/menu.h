@@ -22,6 +22,7 @@
 #include "movie.h"
 #include "pad_text.h"
 #include "model.h"
+#include "sound_seq.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow

@@ -17,6 +17,7 @@
 #include "msg_window.h"
 #include "event.h"
 #include "cd.h"
+#include "sound_seq.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -736,9 +737,6 @@ extern void StartSceneFadeIn_8001AA04(int duration); // not short: EvCmdFadeSoun
 extern void StartSceneFadeOut_8001AA50(int duration);
 extern void StartSceneBrighten_8001AB1C(int duration);
 /* exe-side, to move to sound_seq.h */
-extern void FadeOutSfxSeq_80031638(void);
-extern short SfxKeyOn_800314F4(int sfx);
-extern void SfxKeyOff_80031574(short voice, short sfx);
 /* exe-side, to move to sound.h */
 extern int PlayMusic_800300E0(int idx, int unused);
 /* exe-side, to move to model_ftg.h */

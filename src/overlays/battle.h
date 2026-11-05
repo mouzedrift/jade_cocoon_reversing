@@ -25,6 +25,7 @@
 #include "event.h"
 #include "movie.h"
 #include "cd.h"
+#include "sound_seq.h"
 
 
 
@@ -107,7 +108,6 @@ extern int IsActionDone_800BEA94();
 
 extern int GetUnitPos_800BC6CC();
 
-extern void FadeOutSeqSlot_800313C8(int);
 
 
 
@@ -298,7 +298,6 @@ extern void* memset(void* dst, int c, unsigned int n); // the exe's libc memset
 
 extern void SwapEncounterEnemy_800A2AE8(void);
 
-extern void PlaySeqSlot_80031160();
 
 extern void StartCommandAction_80018A4C();
 
@@ -1454,8 +1453,6 @@ extern void ExitLevantBattleMode_800A8984(int victoryPose);
 /* exe-side, to move to engine.h */
 extern void StartSceneDarken_8001AAA8(short duration);
 /* exe-side, to move to sound_seq.h */
-extern void StopSoundSeqs_80030D68(SoundStruct* sound);
-extern void StopSeqSlot_80031334(int idx);
 
 /* battle_5.c: the actor window's box (DrawWindow_80042460's style) */
 
@@ -1565,7 +1562,5 @@ extern void FreeSeqSlotSound_80030664(void);
 extern int PlayMusic_800300E0(int idx, int unused);
 /* exe-side, to move to cd.h */
 /* exe-side, to move to sound_seq.h */
-extern void SfxKeyOff_80031574(short voice, short sfx);
-extern short SfxKeyOn_800314F4(int sfx);
 /* PSY-Q libsnd */
 extern void SsUtAllKeyOff(short mode);
