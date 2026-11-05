@@ -24,6 +24,7 @@
 #include "unit_query.h"
 #include "effect.h"
 #include "party.h"
+#include "skills.h"
 
 
 
@@ -951,7 +952,6 @@ int CheckItemUsable_80033AFC(ListMenuState* menu)
     }
     return 0;
 }
-extern int GetSkillMpCost_80031A04(void* p, int idx);
 // Matched
 int CheckMagicCastable_80033C08(ListMenuState* menu)
 {
@@ -978,7 +978,7 @@ int CheckSkillUsable_80033C98(ListMenuState* menu)
 {
     int cost;
     short idx = menu->cursor_0;
-    cost = GetSkillMpCost_80031A04(&menu->minion_C->skills_DE, idx);
+    cost = GetSkillMpCost_80031A04(menu->minion_C->skills_DE.slot, idx);
     if (!IsSkillLearned_80031954(&menu->minion_C->skills_DE, idx))
     {
         return 7;

@@ -228,7 +228,6 @@ extern const char aAssertionFaile_2[];
 extern const char aCommonC[];
 extern const ActionData defaultActionData_80071F58; // an empty action
 extern int GetUnitSkills_80031B30(int unit);
-extern int GetSkillMpCost_80031A04(int skills, int slot);
 extern void CalcActionDamage_80013374(ActionData* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out);
 // Matched
 void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out)

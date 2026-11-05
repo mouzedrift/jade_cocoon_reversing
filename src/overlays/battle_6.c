@@ -2858,7 +2858,7 @@ void BattleMenuDraw_800C7DA8()
         ref.minion_C = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
         ref.fieldMenu_A = 0;
         DrawAbilityList_8002CE28(&ref, 0);
-        previewMpChange_800C9182 = -GetSkillMpCost_80031A04(&ref.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
+        previewMpChange_800C9182 = -GetSkillMpCost_80031A04(ref.minion_C->skills_DE.slot, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4)));
     }
     if (!(pageHideFlags_800C968C[menuPage_800C9E50][mode] & 0x80) && !(flags & 8))
     {

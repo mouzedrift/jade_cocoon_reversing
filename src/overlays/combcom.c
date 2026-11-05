@@ -596,7 +596,7 @@ void DrawCmdMenu_800CBEA4()
         ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         ref.fieldMenu_A = 0;
         DrawAbilityList_8002CE28(&ref, pos.xy[side_800CD839]);
-        previewMp_800A82D2 = -GetSkillMpCost_80031A04(&ref.minion_C->skills_DE, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
+        previewMp_800A82D2 = -GetSkillMpCost_80031A04(ref.minion_C->skills_DE.slot, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(skillCursor_800CD298)));
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x80))
     {

@@ -34,6 +34,7 @@
 #include "model_ftg.h"
 #include "ability_menu.h"
 #include "ftg_draw.h"
+#include "skills.h"
 
 
 
@@ -965,7 +966,6 @@ extern int GetUnitSkills_80031B30(int a);
 
 
 
-extern int GetSkillMpCost_80031A04(UnitSkills* a0, int a1);
 
 
 

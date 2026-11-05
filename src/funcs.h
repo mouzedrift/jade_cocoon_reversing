@@ -66,7 +66,6 @@ extern void InitImage_80010428(void);
 extern void SetDisplayMode_80040658(int mode);
 extern void InitEvents_8001028C(void);
 extern long vsyncEventHandler_800103AC(void);
-extern int IsSkillLearned_80031954(void* skills, int idx);
 extern void GetMenuItemColor_8002ACE8(int flags, unsigned char* out);
 
 struct Pool;

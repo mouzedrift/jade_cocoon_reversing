@@ -86,14 +86,14 @@ int GetAbilityBonusName_800319E8(int idx)
     return abilityBonusNames_80083580[idx];
 }
 // Matched
-int GetSkillMpCost_80031A04(unsigned char* skills, int slot)
+int GetSkillMpCost_80031A04(UnitSkill* skills, int slot)
 {
     int cost;
-    skills += slot * 4;
+    skills += slot;
     cost = 0;
-    if (skills[0] != 0)
+    if (skills->flags_0 != 0)
     {
-        switch (skills[1])
+        switch (skills->id_1)
         {
         case 2:
         case 3:
@@ -117,7 +117,7 @@ int GetSkillMpCost_80031A04(unsigned char* skills, int slot)
             cost += 15;
             break;
         }
-        switch (skills[2])
+        switch (skills->bonus_2)
         {
         case 2:
         case 3:
