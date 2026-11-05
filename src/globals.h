@@ -466,13 +466,6 @@ extern int numFilesInsideTiy_8008B4BC;
 
 extern ActionData weaponActions_8007D274[0x17];
 extern unsigned short growthKindThresholds_80079374[];
-int FindModelIndex_80026630(ModelList* p, unsigned int id);
-void ClearModel_800266CC(Model* p);
-int FindFreeModelIndex_8002667C(ModelList* p);
-void FreeModel_80024C48(Model* p);
-void ApplyModelFtgSwaps_80025C38(Model* p, int flag);
-int AddFileRequest_80025D00(Model* model, FileRequestDesc* req);
-void OnModelFileLoaded_80025D7C(int* arg, int data);
 
 
 extern unsigned short padButtonBits_8007CAD8[0xe];

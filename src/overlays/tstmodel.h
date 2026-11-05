@@ -11,6 +11,7 @@
 #include "pad_text.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "model_ftg.h"
 
 typedef struct TstModelBone
 {

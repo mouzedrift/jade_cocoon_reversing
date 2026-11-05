@@ -19,6 +19,7 @@
 #include "party.h"
 #include "util.h"
 #include "unit_stats.h"
+#include "model_ftg.h"
 
 
 extern unsigned long SpuSetTransferStartAddr(unsigned long addr);

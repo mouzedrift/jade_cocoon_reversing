@@ -15,6 +15,7 @@
 #include "engine.h"
 #include "minion_init.h"
 #include "party.h"
+#include "model_ftg.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)

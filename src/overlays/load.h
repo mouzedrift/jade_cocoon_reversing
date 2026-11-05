@@ -17,6 +17,7 @@
 #include "ui_sprites.h"
 #include "unit_stats.h"
 #include "party_window.h"
+#include "model_ftg.h"
 
 typedef struct
 {

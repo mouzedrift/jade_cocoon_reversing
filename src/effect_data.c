@@ -33,6 +33,7 @@
 #include "sound_seq.h"
 #include "effect_model.h"
 #include "effect_light.h"
+#include "model_ftg.h"
 
 int weaponEffectIds_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,

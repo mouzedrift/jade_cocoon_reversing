@@ -31,6 +31,7 @@
 #include "unit_gauges.h"
 #include "unit_stats.h"
 #include "party.h"
+#include "model_ftg.h"
 
 
 
