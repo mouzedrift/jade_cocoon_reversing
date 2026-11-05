@@ -10,6 +10,7 @@
 #include "pad_text.h"
 #include "menu_window.h" // MenuWindowItem / MenuWindowList (menu_draw.h)
 #include "util.h"
+#include "event.h"
 
 
 // the window colour DrawWindow_80042460 takes
@@ -70,7 +71,6 @@ extern int AllSlotsEmpty_800A5560(Minion* team, int count);
 extern void PlaySfx_80031494(int id);
 extern void DrawSmallNumber3_8002C290(void* pos, int value, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
-extern void DrawWindow_80042460(void* r, void* col, void* ot, int time);
 extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* pos, int ot);
 extern void DrawMenuBackground_8002BE10(void);
 

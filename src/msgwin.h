@@ -81,14 +81,8 @@ typedef struct MsgWindow
     int field_2C;
     int field_30;
     int field_34;
-    short x_38;
-    short y_3A;
-    short w_3C;
-    short h_3E;
-    short field_40;
-    short field_42;
-    short field_44;
-    short field_46;
+    RECT rect_38; // the text window
+    RECT rect_40; // the title / speaker window
     int field_48;
     unsigned short x_4C;
     unsigned short y_4E;

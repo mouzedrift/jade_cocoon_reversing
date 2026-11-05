@@ -17,6 +17,7 @@
 #include "soundtask.h"
 #include "data_decls.h"
 #include "util.h"
+#include "movie.h"
 
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";
@@ -28,7 +29,6 @@ typedef struct
     short colorSet_8;
     short ot_A;
 } UiWindowDesc;
-extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
 extern void DrawPortrait_8002A42C(unsigned short* pos, short a1, int a2, short a3);
 extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched

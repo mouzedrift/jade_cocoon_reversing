@@ -561,7 +561,7 @@ void ResetCombatCamera_800A12B8(void)
 
 // COMBAT overlay entry (the battle arena): runs combatTaskList_800A398C, back to the title menu after
 // Matched
-int CombatMain_800A1324(void)
+enum GameStates CombatMain_800A1324(void)
 {
     unknownFlags_8008D678 |= 0x2000000;
     unknownFlags_8008D678 |= 0x4000000;

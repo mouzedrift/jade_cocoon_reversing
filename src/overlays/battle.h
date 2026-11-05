@@ -22,6 +22,8 @@
 #include "menu_window.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
+#include "movie.h"
 
 
 
@@ -31,7 +33,6 @@ extern void SetHitVariant_80018430(int a);
 
 extern int GetEmptyCocoons_800AD8E4();
 
-extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 
 
 
@@ -1495,8 +1496,6 @@ extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int hi
 extern void DrawMpGauge_8002F120(UnitStatus* unit, short* pos, int gaugeArg, short ot);
 extern void DrawStatusIcons_8002F480(UnitStatus* unit, short* pos, int ot, int reverse);
 /* exe-side, to move to event.h */
-extern void DrawWindow_80042460(short* rect, BatWindowBox* style, void* ot, int time);
-extern void DrawUiColorWindow_800424C0(void* rect, short colorSet, void* ot, int time);
 /* exe-side, to move to font.h */
 /* exe-side, to move to util.h */
 /* exe-side, to move to menu_window.h */

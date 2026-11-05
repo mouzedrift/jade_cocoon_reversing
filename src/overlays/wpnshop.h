@@ -13,6 +13,7 @@
 #include "model_ftg.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
 
 
 // a list panel of the store (StoreMenu.panel_34)
@@ -204,7 +205,6 @@ void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, uns
 void DrawLevantStats_8002F7D0(void* pos, int ot); // party_window.h
 void UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.h
 int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d); // pad_text.h
-void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3); // event.h
 
 /* WPNSHOP data */
 

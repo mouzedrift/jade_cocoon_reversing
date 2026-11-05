@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "font.h"
 #include "util.h"
+#include "event.h"
 
 extern int dword_800A05A0;
 extern const char aKY6A212XA_800A05A4[];

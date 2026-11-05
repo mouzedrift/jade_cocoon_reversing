@@ -22,6 +22,8 @@
 #include "font.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
+#include "movie.h"
 
 const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -147,10 +149,10 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     w->res_18.result_20 = 0;
     w->res_18.field_24 = 0;
     w->field_34 = 0;
-    w->x_38 = 0;
-    w->y_3A = 0;
-    w->w_3C = 0;
-    w->h_3E = 0;
+    w->rect_38.x = 0;
+    w->rect_38.y = 0;
+    w->rect_38.w = 0;
+    w->rect_38.h = 0;
     w->field_48 = 0;
     w->x_4C = 0;
     w->y_4E = 0;
@@ -204,13 +206,13 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
             w->res_18.pageCount_1C++;
             w->list_B4[w->count_7C++] = (int*)list;
             sz = MeasureTextLines_8003E3B4((int*)list);
-            if (w->w_3C < sz.w)
+            if (w->rect_38.w < sz.w)
             {
-                w->w_3C = sz.w;
+                w->rect_38.w = sz.w;
             }
-            if (w->h_3E < sz.h)
+            if (w->rect_38.h < sz.h)
             {
-                w->h_3E = sz.h;
+                w->rect_38.h = sz.h;
             }
             while (*list++)
             {
@@ -252,104 +254,104 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     w->field_1CC = cfg->field_10;
     w->field_1C4 = (int)w->list_B4[w->page_78];
     w->field_1D0 = cfg->field_38;
-    w->h_3E = 0x38;
-    w->w_3C = 0xDB;
-    w->field_46 = 0x43;
-    w->field_44 = 0x46;
+    w->rect_38.h = 0x38;
+    w->rect_38.w = 0xDB;
+    w->rect_40.h = 0x43;
+    w->rect_40.w = 0x46;
     w->w_50 += 0x11;
     w->h_52 += 7;
     if (cfg->style_28 == 1)
     {
         if (cfg->pos_4)
         {
-            w->field_40 = cfg->pos_4[0];
-            w->field_42 = cfg->pos_4[0] + cfg->pos_4[1];
-            w->x_38 = w->field_40 + 0x45;
-            w->y_3A = w->field_42 + 0xE;
-            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
-            w->titleY_70 = w->y_3A - 0xC;
+            w->rect_40.x = cfg->pos_4[0];
+            w->rect_40.y = cfg->pos_4[0] + cfg->pos_4[1];
+            w->rect_38.x = w->rect_40.x + 0x45;
+            w->rect_38.y = w->rect_40.y + 0xE;
+            w->titleX_6E = w->rect_38.x + w->rect_38.w - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
+            w->titleY_70 = w->rect_38.y - 0xC;
         }
         else
         {
             switch ((unsigned int)cfg->posMode_0)
             {
             case 0:
-                w->field_42 = w->field_40 = 0x10;
-                w->x_38 = w->field_40 + 0x44;
-                w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
-                w->titleY_70 = w->y_3A + w->h_3E - 2;
+                w->rect_40.y = w->rect_40.x = 0x10;
+                w->rect_38.x = w->rect_40.x + 0x44;
+                w->rect_38.y = w->rect_40.y + 0xD;
+                w->titleX_6E = w->rect_38.x + w->rect_38.w - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
+                w->titleY_70 = w->rect_38.y + w->rect_38.h - 2;
                 break;
             case 1:
-                w->field_40 = 0x10;
-                w->field_42 = 0x74;
-                w->x_38 = w->field_40 + 0x44;
-                w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
-                w->titleY_70 = w->y_3A - 0x10;
+                w->rect_40.x = 0x10;
+                w->rect_40.y = 0x74;
+                w->rect_38.x = w->rect_40.x + 0x44;
+                w->rect_38.y = w->rect_40.y + 0xD;
+                w->titleX_6E = w->rect_38.x + w->rect_38.w - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
+                w->titleY_70 = w->rect_38.y - 0x10;
                 break;
             case 2:
-                w->field_40 = 0x10;
-                w->field_42 = 0xA1;
-                w->x_38 = w->field_40 + 0x44;
-                w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
-                w->titleY_70 = w->y_3A - 0x10;
+                w->rect_40.x = 0x10;
+                w->rect_40.y = 0xA1;
+                w->rect_38.x = w->rect_40.x + 0x44;
+                w->rect_38.y = w->rect_40.y + 0xD;
+                w->titleX_6E = w->rect_38.x + w->rect_38.w - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
+                w->titleY_70 = w->rect_38.y - 0x10;
                 break;
             }
         }
-        w->x_4C = w->field_40 + 0xA;
-        w->y_4E = w->y_3A + w->h_3E + 3;
+        w->x_4C = w->rect_40.x + 0xA;
+        w->y_4E = w->rect_38.y + w->rect_38.h + 3;
     }
     else
     {
         if (cfg->pos_4)
         {
-            w->field_40 = cfg->pos_4[0];
-            w->field_42 = cfg->pos_4[0] + cfg->pos_4[1];
-            w->x_38 = w->field_40 + 0x45;
-            w->y_3A = w->field_42 + 0xD;
-            w->titleX_6E = w->x_38 + w->w_3C - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
-            w->titleY_70 = w->y_3A - 0xC;
+            w->rect_40.x = cfg->pos_4[0];
+            w->rect_40.y = cfg->pos_4[0] + cfg->pos_4[1];
+            w->rect_38.x = w->rect_40.x + 0x45;
+            w->rect_38.y = w->rect_40.y + 0xD;
+            w->titleX_6E = w->rect_38.x + w->rect_38.w - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
+            w->titleY_70 = w->rect_38.y - 0xC;
         }
         else
         {
             switch ((unsigned int)cfg->posMode_0)
             {
             case 0:
-                w->field_42 = w->x_38 = 0x10;
-                w->field_40 = w->x_38 + 0xDA;
-                w->y_3A = w->field_42 + 0xD;
-                w->titleX_6E = w->field_40 + w->field_44 - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
-                w->titleY_70 = w->field_42 + w->field_46 - 2;
+                w->rect_40.y = w->rect_38.x = 0x10;
+                w->rect_40.x = w->rect_38.x + 0xDA;
+                w->rect_38.y = w->rect_40.y + 0xD;
+                w->titleX_6E = w->rect_40.x + w->rect_40.w - MeasureTextWidth_8003E4C8(w->title_74) - 0x10;
+                w->titleY_70 = w->rect_40.y + w->rect_40.h - 2;
                 break;
             case 1:
-                w->field_42 = 0x60;
-                w->x_38 = 0x10;
-                w->y_3A = w->field_42 + 0xD;
-                w->field_40 = w->x_38 + 0xDA;
-                w->titleX_6E = w->x_38;
-                w->titleY_70 = w->y_3A - 0x10;
+                w->rect_40.y = 0x60;
+                w->rect_38.x = 0x10;
+                w->rect_38.y = w->rect_40.y + 0xD;
+                w->rect_40.x = w->rect_38.x + 0xDA;
+                w->titleX_6E = w->rect_38.x;
+                w->titleY_70 = w->rect_38.y - 0x10;
                 break;
             case 2:
-                w->field_42 = 0xA1;
-                w->x_38 = 0x10;
-                w->y_3A = w->field_42 + 0xD;
-                w->field_40 = w->x_38 + 0xDA;
-                w->titleX_6E = w->x_38;
-                w->titleY_70 = w->y_3A - 0x10;
+                w->rect_40.y = 0xA1;
+                w->rect_38.x = 0x10;
+                w->rect_38.y = w->rect_40.y + 0xD;
+                w->rect_40.x = w->rect_38.x + 0xDA;
+                w->titleX_6E = w->rect_38.x;
+                w->titleY_70 = w->rect_38.y - 0x10;
                 break;
             }
         }
-        w->x_4C = w->x_38 + 0xA;
-        w->y_4E = w->y_3A + w->h_3E + 3;
+        w->x_4C = w->rect_38.x + 0xA;
+        w->y_4E = w->rect_38.y + w->rect_38.h + 3;
     }
     w->titleY_70 -= 2;
-    w->y_3A -= 2;
-    w->x_64 = w->field_40 + 3;
-    w->y_66 = w->field_42 + 2;
-    w->clip_1B8.promptX_0 = w->x_38 + 7;
-    w->clip_1B8.promptY_2 = w->y_3A + 4;
+    w->rect_38.y -= 2;
+    w->x_64 = w->rect_40.x + 3;
+    w->y_66 = w->rect_40.y + 2;
+    w->clip_1B8.promptX_0 = w->rect_38.x + 7;
+    w->clip_1B8.promptY_2 = w->rect_38.y + 4;
     e->cb_8 = (EventEntryFn)UpdateMessageWindow_80034BB8;
     e->flags = (e->flags | 1) & ~0x8000;
     return (MsgWindowEntry*)e;
@@ -499,13 +501,11 @@ void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
     }
 }
 extern void PlaySfx_80031494(int id);
-extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern int IsWindowFrameFit_800429A8(void* r);
 /* defined below (their parameter types are declared there) */
 // Matched
 void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
-    short r[4];
+    RECT r;
     int i;
     int j;
     int c;
@@ -648,17 +648,17 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->field_34 = 8;
             w->field_C = 2;
         }
-        InterpolateWindowRect_8004196C(r, &w->x_38, w->field_34, 8, 0);
-        DrawMsgWindowBackground_80035898(w, (int)r, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)r, 0);
-        InterpolateWindowRect_8004196C(r, &w->field_40, w->field_34, 8, 0);
-        DrawMsgWindowBackground_80035898(w, (int)r, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)r, 0);
+        InterpolateWindowRect_8004196C(&r, &w->rect_38, w->field_34, 8, 0);
+        DrawMsgWindowBackground_80035898(w, &r, 2);
+        DrawMsgWindowBorder_800358CC(w, &r, 0);
+        InterpolateWindowRect_8004196C(&r, &w->rect_40, w->field_34, 8, 0);
+        DrawMsgWindowBackground_80035898(w, &r, 2);
+        DrawMsgWindowBorder_800358CC(w, &r, 0);
         break;
     case 2:
         DrawMsgWindowTitle_800359F8(w);
         DrawMsgWindowPortrait_80035900(w);
-        v = DrawMsgWindowText_8003580C(w, &w->x_38);
+        v = DrawMsgWindowText_8003580C(w, &w->rect_38);
         if (v == 1)
         {
             w->field_C = 3;
@@ -699,19 +699,19 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
                 w->res_18.field_24 = v;
             }
         }
-        DrawMsgWindowBackground_80035898(w, (int)&w->x_38, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)&w->x_38, 0);
-        DrawMsgWindowBackground_80035898(w, (int)&w->field_40, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)&w->field_40, 0);
+        DrawMsgWindowBackground_80035898(w, &w->rect_38, 2);
+        DrawMsgWindowBorder_800358CC(w, &w->rect_38, 0);
+        DrawMsgWindowBackground_80035898(w, &w->rect_40, 2);
+        DrawMsgWindowBorder_800358CC(w, &w->rect_40, 0);
         break;
     case 3:
         DrawMsgWindowTitle_800359F8(w);
         DrawMsgWindowPortrait_80035900(w);
-        DrawMsgWindowText_8003580C(w, &w->x_38);
-        DrawMsgWindowBackground_80035898(w, (int)&w->x_38, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)&w->x_38, 0);
-        DrawMsgWindowBackground_80035898(w, (int)&w->field_40, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)&w->field_40, 0);
+        DrawMsgWindowText_8003580C(w, &w->rect_38);
+        DrawMsgWindowBackground_80035898(w, &w->rect_38, 2);
+        DrawMsgWindowBorder_800358CC(w, &w->rect_38, 0);
+        DrawMsgWindowBackground_80035898(w, &w->rect_40, 2);
+        DrawMsgWindowBorder_800358CC(w, &w->rect_40, 0);
         break;
     case 4:
         w->field_34--;
@@ -721,16 +721,16 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->field_C = 0;
             w->mode_8 = 7;
         }
-        InterpolateWindowRect_8004196C(r, &w->x_38, w->field_34, 8, 0);
-        if (IsWindowFrameFit_800429A8(r) == 1)
+        InterpolateWindowRect_8004196C(&r, &w->rect_38, w->field_34, 8, 0);
+        if (IsWindowFrameFit_800429A8(&r) == 1)
         {
-            DrawMsgWindowText_8003580C(w, r);
-            DrawMsgWindowBackground_80035898(w, (int)r, 2);
-            DrawMsgWindowBorder_800358CC(w, (int)r, 0);
+            DrawMsgWindowText_8003580C(w, &r);
+            DrawMsgWindowBackground_80035898(w, &r, 2);
+            DrawMsgWindowBorder_800358CC(w, &r, 0);
         }
-        InterpolateWindowRect_8004196C(r, &w->field_40, w->field_34, 8, 0);
-        DrawMsgWindowBackground_80035898(w, (int)r, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)r, 0);
+        InterpolateWindowRect_8004196C(&r, &w->rect_40, w->field_34, 8, 0);
+        DrawMsgWindowBackground_80035898(w, &r, 2);
+        DrawMsgWindowBorder_800358CC(w, &r, 0);
         break;
     }
     switch ((unsigned int)w->field_10)
@@ -746,12 +746,12 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->mode_8 = 3;
             w->res_18.field_24 = 1;
         }
-        InterpolateWindowRect_8004196C(r, &w->x_4C, w->field_48, 8, 5);
-        if (IsWindowFrameFit_800429A8(r) == 1)
+        InterpolateWindowRect_8004196C(&r, &w->x_4C, w->field_48, 8, 5);
+        if (IsWindowFrameFit_800429A8(&r) == 1)
         {
-            DrawMsgWindowChoices_800355EC(w, r);
-            DrawMsgWindowBackground_80035898(w, (int)r, 2);
-            DrawMsgWindowBorder_800358CC(w, (int)r, 0);
+            DrawMsgWindowChoices_800355EC(w, &r);
+            DrawMsgWindowBackground_80035898(w, &r, 2);
+            DrawMsgWindowBorder_800358CC(w, &r, 0);
         }
         break;
     case 2:
@@ -767,12 +767,12 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->field_10 = 0;
             w->mode_8 = 6;
         }
-        InterpolateWindowRect_8004196C(r, &w->x_4C, w->field_48, 8, 5);
-        if (IsWindowFrameFit_800429A8(r) == 1)
+        InterpolateWindowRect_8004196C(&r, &w->x_4C, w->field_48, 8, 5);
+        if (IsWindowFrameFit_800429A8(&r) == 1)
         {
-            DrawMsgWindowChoices_800355EC(w, r);
-            DrawMsgWindowBackground_80035898(w, (int)r, 2);
-            DrawMsgWindowBorder_800358CC(w, (int)r, 0);
+            DrawMsgWindowChoices_800355EC(w, &r);
+            DrawMsgWindowBackground_80035898(w, &r, 2);
+            DrawMsgWindowBorder_800358CC(w, &r, 0);
         }
         break;
     }
@@ -842,7 +842,7 @@ extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, in
 extern int MoveGridCursorP1_8003D630(short* m);
 extern void DrawPulsingWindow_8002F6F8(void* a0, void* st, int a2);
 // Matched
-void DrawMsgWindowChoices_800355EC(MsgWindow* win, unsigned short* rect)
+void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
 {
     RECT clip;
     union
@@ -858,10 +858,10 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, unsigned short* rect)
     } u;
     RECT cursorRect;
     int sel;
-    clip.x = rect[0] + 6;
-    clip.y = rect[1] + 4;
-    clip.w = rect[2] - 6;
-    clip.h = rect[3] - 7;
+    clip.x = rect->x + 6;
+    clip.y = rect->y + 4;
+    clip.w = rect->w - 6;
+    clip.h = rect->h - 7;
     if (clip.h > 0 && clip.w > 0)
     {
         int i = 0;
@@ -903,19 +903,19 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, unsigned short* rect)
     u.st[2] = 1;
     cursorRect.x = win->x_4C + 4;
     cursorRect.y = win->y_4E + sel * 12 + 3;
-    cursorRect.w = rect[2] - 8;
+    cursorRect.w = rect->w - 8;
     cursorRect.h = 13;
     DrawPulsingWindow_8002F6F8(&cursorRect, u.st, 0);
     win->res_18.sel_1A = NthMaskedIndex_80034B88(win->choice_B2, win->mask_14);
 }
 extern int UpdateTextWindow_8003DB74(MsgTextClip* p, int a);
 // Matched
-int DrawMsgWindowText_8003580C(MsgWindow* win, unsigned short* rect)
+int DrawMsgWindowText_8003580C(MsgWindow* win, RECT* rect)
 {
-    win->clip_1B8.x = rect[0] + 6;
-    win->clip_1B8.y = rect[1] + 4;
-    win->clip_1B8.w = rect[2] - 6;
-    win->clip_1B8.h = rect[3] - 7;
+    win->clip_1B8.x = rect->x + 6;
+    win->clip_1B8.y = rect->y + 4;
+    win->clip_1B8.w = rect->w - 6;
+    win->clip_1B8.h = rect->h - 7;
     if ((short)win->clip_1B8.h > 0 && (short)win->clip_1B8.w > 0)
     {
         return UpdateTextWindow_8003DB74(&win->clip_1B8, ((win->flags_4 >> 18) ^ 1) & 1);
@@ -923,7 +923,7 @@ int DrawMsgWindowText_8003580C(MsgWindow* win, unsigned short* rect)
     return 1;
 }
 // Matched
-void DrawMsgWindowBackground_80035898(MsgWindow* win, int rect, int ot)
+void DrawMsgWindowBackground_80035898(MsgWindow* win, RECT* rect, int ot)
 {
     if (!(win->flags_4 & 0x40000))
     {
@@ -931,7 +931,7 @@ void DrawMsgWindowBackground_80035898(MsgWindow* win, int rect, int ot)
     }
 }
 // Matched
-void DrawMsgWindowBorder_800358CC(MsgWindow* win, int rect, int ot)
+void DrawMsgWindowBorder_800358CC(MsgWindow* win, RECT* rect, int ot)
 {
     if (!(win->flags_4 & 0x40000))
     {
@@ -1003,10 +1003,10 @@ MsgWindowEntry* OpenItemMessageWindow_80035AC8(ItemMsgInit* init)
         win->res_18.result_20 = 0;
         win->res_18.field_24 = 0;
         win->field_34 = 0;
-        win->x_38 = 0;
-        win->y_3A = 0;
-        win->w_3C = 0;
-        win->h_3E = 0;
+        win->rect_38.x = 0;
+        win->rect_38.y = 0;
+        win->rect_38.w = 0;
+        win->rect_38.h = 0;
         win->field_48 = 0;
         win->x_4C = 0;
         win->y_4E = 0;

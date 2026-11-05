@@ -20,6 +20,7 @@
 #include "effect_data.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
@@ -480,8 +481,6 @@ void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level,
     }
 }
 extern void BaseStatRatios_8001419C(unsigned char* p, short* out);
-extern void DrawRectOutline_80042750(RECT* r, unsigned char* rgb, void* ot);
-extern void DrawLine_80042870(DVECTOR* a, DVECTOR* b, unsigned char* rgb, void* ot);
 // Matched
 void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, short ot)
 {

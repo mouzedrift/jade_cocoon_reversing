@@ -12,6 +12,7 @@
 #include "menu_window.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
 
 typedef struct
 {
@@ -492,7 +493,6 @@ extern void FreeActiveOverlay_8002C014(void);
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
-extern void DrawWindow_80042460(void* rect, void* color, void* ot, int d);
 extern TextSize MeasureTextLines_8003E3B4(int* list);
 extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);

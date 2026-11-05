@@ -671,10 +671,6 @@ int GetMagicIcon_8001AF3C(int idx)
     }
     return 0;
 }
-extern void* CreateEventList_800435B4(void* list);
-extern void RunEventList_80043898(void* node);
-extern void RunEventListFreeCallbacks_800438F8(void* node);
-extern int FreeEventList_80043A5C(void* head);
 // Matched
 void DrawIntroMovie_8001AF64(void* descs)
 {

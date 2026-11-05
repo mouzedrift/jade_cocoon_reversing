@@ -9,6 +9,7 @@
 #include "main.h"
 #include "font.h"
 #include "util.h"
+#include "event.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
@@ -277,7 +278,6 @@ extern void SetGteLightAndCamera_8004D0E8();
 /* exe-side, to move to event.h */
 extern MATRIX lightMatrix_80087114; // event.h
 extern MATRIX colorMatrix_80087134; // event.h
-extern void DrawWindow_80042460(void* a, void* b, void* c, int d);
 /* PSY-Q library */
 extern void* memset(void* p, int c, unsigned int n);
 

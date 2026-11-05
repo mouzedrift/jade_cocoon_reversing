@@ -9,6 +9,7 @@
 #include "combat.h"
 #include "menu_window.h"
 #include "engine.h"
+#include "event.h"
 
 
 // the window colour DrawWindow_80042460 takes (CombSelBox)
@@ -54,6 +55,5 @@ extern unsigned short uiColor_8008B590; // -> globals.h
 extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot); // -> tiy.h (ui_sprites.c)
 extern void DrawMenuBackground_8002BE10(void);
 extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, int time); // -> event.h
 
 #endif

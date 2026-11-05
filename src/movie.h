@@ -14,4 +14,5 @@ extern int dword_800960B4[3];
 
 extern int dword_80096104;
 
+int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode);
 #endif

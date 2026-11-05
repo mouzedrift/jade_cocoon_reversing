@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem
@@ -235,7 +236,6 @@ extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned 
                                 int half);
 extern void SetSemiTrans(void* p, int abe);
 extern void DrawScrollArrows_8002B8DC(MapXY arrow, MenuCursor* sel, MapXY* pos, int ot);
-extern void DrawUiColorWindow_800424C0(void* r, int a, void* ot, int b);
 extern void* memset(void* p, int c, unsigned int n);
 extern void SetDrawMove(DR_MOVE* p, RECT* r, int x, int y);
 

@@ -21,6 +21,7 @@
 #include "engine.h"
 #include "util.h"
 #include "unit_query.h"
+#include "movie.h"
 
 const int emptyString_800741EC = 0;
 
@@ -52,7 +53,6 @@ typedef struct
     short colorSet_8;
     short ot_A;
 } UiWindowDesc;
-extern void InterpolateWindowRect_8004196C(int a, int b, int c, int d, int e);
 extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawAnimatedWindow_8002BEC8(int outRect, int rect, short step, short ot, int highlight, int time)

@@ -20,18 +20,11 @@
 #include "pad_text.h"
 #include "font.h"
 #include "util.h"
+#include "event.h"
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
-/* DrawWindow_80042460's style */
-typedef struct
-{
-    unsigned short color;
-    unsigned char colorSet_2; // GetWindowColors_8004226C
-    unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
-} WindowStyle;
 extern short uiColor_8008B590;
-extern void DrawWindow_80042460(void* rect, void* style, void* ot, int time);
 // Matched
 void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
 {
@@ -93,27 +86,27 @@ void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
     flags = list->flags_0;
     if (!(flags & 0x100))
     {
-        style.color = uiColor_8008B590;
+        style.color_0 = uiColor_8008B590;
     }
     else if (flags & 0x2000)
     {
-        style.color = 4;
+        style.color_0 = 4;
     }
     else if (flags & 0x1000)
     {
-        style.color = 3;
+        style.color_0 = 3;
     }
     else if (flags & 0x800)
     {
-        style.color = 2;
+        style.color_0 = 2;
     }
     else if (flags & 0x400)
     {
-        style.color = 1;
+        style.color_0 = 1;
     }
     else
     {
-        style.color = 0;
+        style.color_0 = 0;
     }
     DrawWindow_80042460(rect, &style, &pOT_8008D454[list->ot_14], time);
 }
@@ -217,7 +210,7 @@ void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int 
     {
         style.semiTrans_3 = 1;
         style.colorSet_2 = 0;
-        style.color = uiColor_8008B590;
+        style.color_0 = uiColor_8008B590;
         DrawWindow_80042460(rect, &style, &pOT_8008D454[ot], 0);
     }
 }
@@ -296,7 +289,7 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
     rect.h = 0xE;
     style.semiTrans_3 = 1;
     style.colorSet_2 = 0;
-    style.color = uiColor_8008B590;
+    style.color_0 = uiColor_8008B590;
     DrawWindow_80042460(&rect, &style, &pOT_8008D454[ot], 0);
 }
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);

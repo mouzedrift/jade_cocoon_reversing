@@ -9,6 +9,7 @@
 #include "combat.h"
 #include "menu_window.h"
 #include "util.h"
+#include "event.h"
 
 // the window colour DrawWindow_80042460 takes (CombSelBox)
 typedef struct CombStrtBox
@@ -56,6 +57,5 @@ extern unsigned short uiColor_8008B590; // -> globals.h
 extern int rand(void);
 extern void DrawMenuBackground_8002BE10(void);
 extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, int time); // -> event.h
 
 #endif

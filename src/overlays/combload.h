@@ -10,6 +10,7 @@
 #include "combat.h"
 #include "load.h"
 #include "util.h"
+#include "event.h"
 
 // the window colour DrawWindow_80042460 takes (CombSelBox)
 typedef struct CombLoadBox

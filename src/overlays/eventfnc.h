@@ -15,6 +15,7 @@
 #include "util.h"
 #include "msgwin.h"
 #include "msg_window.h"
+#include "event.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -307,7 +308,6 @@ extern int OpenEventMessage_800BBE3C(EvScriptCtx* ctx);
 
 extern int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx);
 
-extern int XaRequestStop_80043524(void);
 
 
 extern struct Actor* GetFieldMinionActor_800A7A60(int i);

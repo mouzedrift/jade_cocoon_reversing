@@ -24,6 +24,8 @@
 #include "font.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
+#include "movie.h"
 
 const char aQuit_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
@@ -109,13 +111,6 @@ typedef struct
     short ot_A;
 } UiWindowDesc;
 extern short uiColor_8008B590;
-typedef struct
-{
-    short color;
-    unsigned char colorSet_2; // GetWindowColors_8004226C
-    unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
-} WindowStyle;
-extern void DrawWindow_80042460(int rect, WindowStyle* style, void* ot, int time);
 // Matched
 void DrawUiWindow_8002A384(UiWindowDesc* desc)
 {
@@ -124,7 +119,7 @@ void DrawUiWindow_8002A384(UiWindowDesc* desc)
     short col = uiColor_8008B590;
     style.semiTrans_3 = 1;
     style.colorSet_2 = colorSet;
-    style.color = col;
+    style.color_0 = col;
     DrawWindow_80042460(desc->rect_0, &style, &pOT_8008D454[desc->ot_A], desc->time_4);
 }
 typedef struct
@@ -172,7 +167,6 @@ void DrawPortraitWindow_8002A4E4(short ot)
     DrawWindowBackground_800429F8((int)portraitWindowRect_800827E4, ot);
 }
 
-extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 // Matched
 void DrawMenuWindows_8002A5A4(MenuWindowList* list)
 {

@@ -368,9 +368,7 @@ extern void WaitMapOverlay_800A7654();
 extern void EncounterWatchTask_800A1314();
 
 
-extern void RunEventListFreeCallbacks_800438F8(int a);
 
-extern void FreeEventList_80043A5C(int a);
 
 extern void SetLevantWallEnabled_800A6534(int wall, int on);
 
@@ -566,7 +564,6 @@ extern int sub_800BBB94(void);
 
 extern void GameMainStart_800A6968();
 
-extern int CreateEventList_800435B4(EventDesc** p);
 
 
 

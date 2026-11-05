@@ -28,15 +28,13 @@ extern const char aDWorkPsusEvent[];
 #define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
 
 extern short uiColor_8008B590;
-extern void GetWindowColors_8004226C(int colorSet, RECT* rgbOut, int time, int colorIdx);
 
 extern unsigned char** windowColorSets_80087064[];
 extern unsigned char* windowPulseColors_80087050[];
 extern int windowPulseScale_80086FB0[][3];
 // Matched
-void GetWindowColors_8004226C(int colorSet, RECT* rgbOut, int time, int colorIdx)
+void GetWindowColors_8004226C(int colorSet, unsigned char* out, int time, int colorIdx)
 {
-    unsigned char* out = (unsigned char*)rgbOut;
     unsigned char c0[4];
     unsigned char c1[4];
     int cr;
@@ -85,18 +83,18 @@ void GetWindowColors_8004226C(int colorSet, RECT* rgbOut, int time, int colorIdx
     }
 }
 // Matched
-void DrawWindow_80042460(int rect, unsigned char* style, int ot, int time)
+void DrawWindow_80042460(RECT* rect, WindowStyle* style, u_long* ot, int time)
 {
-    RECT rgb;
-    GetWindowColors_8004226C(style[2], &rgb, time, *(short*)style);
-    DrawWindowFrame_80041ED0(rect, &rgb, ot, style[3]);
+    unsigned char rgb[8];
+    GetWindowColors_8004226C(style->colorSet_2, rgb, time, style->color_0);
+    DrawWindowFrame_80041ED0(rect, rgb, ot, style->semiTrans_3);
 }
 // Matched
-void DrawUiColorWindow_800424C0(int rect, short colorSet, int ot, int time)
+void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, u_long* ot, int time)
 {
-    RECT rgb;
-    GetWindowColors_8004226C(colorSet, &rgb, time, uiColor_8008B590);
-    DrawWindowFrame_80041ED0(rect, &rgb, ot, 1);
+    unsigned char rgb[8];
+    GetWindowColors_8004226C(colorSet, rgb, time, uiColor_8008B590);
+    DrawWindowFrame_80041ED0(rect, rgb, ot, 1);
 }
 // Matched
 void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
@@ -124,7 +122,6 @@ void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
     }
 }
-extern void DrawLine_80042870(DVECTOR* from, DVECTOR* to, unsigned char* rgb, void* ot);
 // Matched
 void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot)
 {
@@ -157,10 +154,10 @@ void DrawLine_80042870(DVECTOR* from, DVECTOR* to, unsigned char* rgb, void* ot)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 // Matched
-int IsWindowFrameFit_800429A8(short* rect)
+int IsWindowFrameFit_800429A8(RECT* rect)
 {
     SPRT* sprts = publicTiySprts_8008D434;
-    if (rect[2] >= *(short*)&sprts[79].w + *(short*)&sprts[82].w && rect[3] >= *(short*)&sprts[79].h + *(short*)&sprts[82].h)
+    if (rect->w >= *(short*)&sprts[79].w + *(short*)&sprts[82].w && rect->h >= *(short*)&sprts[79].h + *(short*)&sprts[82].h)
     {
         return 1;
     }
@@ -168,20 +165,19 @@ int IsWindowFrameFit_800429A8(short* rect)
 }
 extern unsigned char* windowBgColors_80087028[];
 // Matched
-void DrawWindowBackground_800429F8(int rect, int ot)
+void DrawWindowBackground_800429F8(RECT* rect, int ot)
 {
-    short* box = (short*)rect;
     SPRT* sprts = publicTiySprts_8008D434;
     unsigned char rgb[4][4];
     RECT inner;
     short i;
 
-    if (box[2] >= *(short*)&sprts[79].w + *(short*)&sprts[82].w && box[3] >= *(short*)&sprts[79].h + *(short*)&sprts[82].h)
+    if (rect->w >= *(short*)&sprts[79].w + *(short*)&sprts[82].w && rect->h >= *(short*)&sprts[79].h + *(short*)&sprts[82].h)
     {
-        inner.x = box[0] + 3;
-        inner.y = box[1] + 2;
-        inner.w = box[2] - 6;
-        inner.h = box[3] - 4;
+        inner.x = rect->x + 3;
+        inner.y = rect->y + 2;
+        inner.w = rect->w - 6;
+        inner.h = rect->h - 4;
         for (i = 0; i < 4; i++)
         {
             rgb[i][0] = windowBgColors_80087028[(short)saveData_8008B570.uiColor_20.i][0];
@@ -193,14 +189,13 @@ void DrawWindowBackground_800429F8(int rect, int ot)
 }
 #define EVT_SPRT publicTiySprts_8008D434
 // Matched
-void DrawWindowBorder_80042B38(int rect, int ot)
+void DrawWindowBorder_80042B38(RECT* rect, int ot)
 {
-    short* box = (short*)rect;
     RECT parts[8];
     short w;
     short h;
 
-    if (box[2] >= EVT_SPRT[79].w + EVT_SPRT[82].w && box[3] >= EVT_SPRT[79].h + EVT_SPRT[82].h)
+    if (rect->w >= EVT_SPRT[79].w + EVT_SPRT[82].w && rect->h >= EVT_SPRT[79].h + EVT_SPRT[82].h)
     {
         parts[0].w = EVT_SPRT[79].w;
         parts[0].h = EVT_SPRT[79].h;
@@ -219,27 +214,27 @@ void DrawWindowBorder_80042B38(int rect, int ot)
         parts[7].w = EVT_SPRT[85].w;
         parts[7].h = EVT_SPRT[85].h;
 
-        w = box[2] - (parts[0].w + parts[1].w);
-        h = box[3] - (parts[0].h + parts[2].h);
-        parts[0].x = box[0];
-        parts[0].y = box[1];
+        w = rect->w - (parts[0].w + parts[1].w);
+        h = rect->h - (parts[0].h + parts[2].h);
+        parts[0].x = rect->x;
+        parts[0].y = rect->y;
         parts[4].x = parts[0].x + parts[0].w;
-        parts[4].y = box[1];
+        parts[4].y = rect->y;
         parts[4].w = w;
         parts[1].x = parts[4].x + parts[4].w;
-        parts[1].y = box[1];
-        parts[6].x = box[0];
+        parts[1].y = rect->y;
+        parts[6].x = rect->x;
         parts[6].y = parts[0].y + parts[0].h;
         parts[6].w = parts[6].w - 1;
         parts[6].h = h;
-        parts[7].x = box[0] + box[2] - parts[7].w;
+        parts[7].x = rect->x + rect->w - parts[7].w;
         parts[7].y = parts[1].y + parts[1].h;
         parts[7].w = parts[7].w - 1;
         parts[7].h = parts[6].h;
-        parts[2].x = box[0];
+        parts[2].x = rect->x;
         parts[2].y = parts[6].y + parts[6].h;
         parts[5].x = parts[2].x + parts[2].w;
-        parts[5].y = box[1] + box[3] - parts[5].h;
+        parts[5].y = rect->y + rect->h - parts[5].h;
         parts[5].w = parts[4].w;
         parts[3].x = parts[5].x + parts[5].w;
         parts[3].y = parts[2].y;
@@ -271,11 +266,8 @@ void DrawWindowBorder_80042B38(int rect, int ot)
     }
 }
 extern int SetCdXaLock_8003C0A4(int lock);
-extern int XaStartRead_800434C4(int pos);
 extern int xaStartPos_80096108;
 extern int xaEndPos_8009610C;
-extern void XaIdleTask_800430E8();
-extern void XaMonitorTask_800432EC();
 
 // Matched
 void XaInitTask_80043054(EventEntry* entry, XaTask* task)
@@ -293,7 +285,6 @@ void XaStop_800430B0(void)
     DsControlB(9, 0, 0);
 }
 extern int DsSystemStatus(void);
-void XaSetup_800433FC(XaTask* task);
 // Matched
 void XaIdleTask_800430E8(EventEntry* entry, XaTask* buffer)
 {

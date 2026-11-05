@@ -19,6 +19,7 @@
 #include "unit_gauges.h"
 #include "menu_window.h"
 #include "msg_window.h"
+#include "event.h"
 
 const MenuWindowItem statusIcon0_800743D4 = { 0x10, 1, 151, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 210, 172, 21, 20, 3, 4 };
 const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 3, 5 };
@@ -245,12 +246,6 @@ short ElementLevelsToMask_8002F424(unsigned char* levels)
     }
     return mask;
 }
-typedef struct
-{
-    unsigned short color;
-    unsigned char colorSet_2; // GetWindowColors_8004226C
-    unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
-} WindowStyle;
 extern short uiColor_8008B590;
 // Matched
 void DrawMenuWindowItems_8002F480(int* status, unsigned short* pos, int ot, int reverse)
@@ -279,7 +274,7 @@ void DrawMenuWindowItems_8002F480(int* status, unsigned short* pos, int ot, int 
     }
     style.colorSet_2 = 0;
     style.semiTrans_3 = 1;
-    style.color = uiColor_8008B590;
+    style.color_0 = uiColor_8008B590;
     for (i = 0; i < 3; i++)
     {
         j = i;

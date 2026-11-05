@@ -18,6 +18,8 @@
 #include "msg_window.h"
 #include "util.h"
 #include "unit_query.h"
+#include "event.h"
+#include "movie.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -724,7 +726,6 @@ extern void DrawUnitStatusWindow_8002F1C8();
 extern void UseItemOnUnit_80013C28();
 extern void DrawUiTiySprt_8002C06C();
 extern unsigned short uiColor_8008B590;
-extern void DrawWindow_80042460();
 extern void LoadUiTiy_8002BF74();
 extern void AccumulateExpGain_800122A0();
 extern void DrawMenuBackground_8002BE10();
@@ -749,7 +750,6 @@ extern int DrawTargetSelectMenu_8002D250();
 extern void DrawMpGauge_8002F120();
 extern int DrawAbilityDescription_8002C670();
 extern void DrawUnitStatusPanel_8002DB48();
-extern void InterpolateWindowRect_8004196C();
 extern void DrawAnimatedWindow_8002BEC8();
 extern void DrawLargeNumber_8002C100();
 extern void DrawLevantStats_8002F7D0();

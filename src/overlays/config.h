@@ -8,6 +8,7 @@
 #include "sound.h"
 #include "main.h"
 #include "menu_window.h"
+#include "event.h"
 
 // the first 8 bytes of a menu cursor (CombSelCursor: cols, rows, count, flags)
 typedef struct { char b[8]; } CfgCursorHead;
@@ -174,7 +175,6 @@ extern int configMenuActive_800C5944;
 extern void DrawTextLinesWindow_8002AE38(void* lines, void* pos, int ot, void* rect, int count);
 extern unsigned short uiColor_8008B590;
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
-extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 extern void ApplyBgmVolume_800309D8(void* p);
 extern void DrawMenuBackground_8002BE10();
 extern void UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.c defines it with one argument (returns int)

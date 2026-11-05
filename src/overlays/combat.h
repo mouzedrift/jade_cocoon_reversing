@@ -122,7 +122,7 @@ Minion* GetSlotMinion_800A11D8(int i);
 void StartCombatCamera_800A11F4(void);
 void StopCombatCamera_800A127C(void);
 void ResetCombatCamera_800A12B8(void);
-int CombatMain_800A1324(void);
+enum GameStates CombatMain_800A1324(void);
 void CombatInit_800A13A0(CombatTask* t);
 void CombatFree_800A148C(void);
 void CombatWaitUiTiy_800A14AC(CombatTask* t);
