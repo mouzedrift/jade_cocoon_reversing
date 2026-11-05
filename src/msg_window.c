@@ -833,7 +833,6 @@ void HandleMsgWindowInput_800353A0(MsgWindow* win)
         break;
     }
 }
-extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
 // Matched
 void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
 {

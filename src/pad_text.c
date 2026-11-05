@@ -21,6 +21,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "sound_seq.h"
+#include "font.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
@@ -654,7 +655,6 @@ int IsTextMarkerLine_8003E484(int text)
     }
     return 0;
 }
-extern int GetCharWidth_8003E884(int idx, short n);
 // Matched
 int MeasureTextWidth_8003E4C8(const char* str)
 {
