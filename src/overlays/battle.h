@@ -21,6 +21,7 @@
 #include "font.h"
 #include "menu_window.h"
 #include "util.h"
+#include "unit_query.h"
 
 
 
@@ -32,9 +33,7 @@ extern int GetEmptyCocoons_800AD8E4();
 
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 
-extern void AddDrawAreaPrim_8003326C();
 
-extern void AddClipDrawAreaPrim_80033308();
 
 
 
@@ -935,13 +934,9 @@ typedef struct BatMenuItem
 
 
 
-extern int CheckItemUsable_80033AFC(ListMenuState* q);
 
-extern int CheckMagicCastable_80033C08(ListMenuState* q);
 
-extern int CheckSkillUsable_80033C98(ListMenuState* q);
 
-extern int CheckItemOnTarget_80033DF4(TargetQuery* q);
 
 
 extern unsigned char GetSelectedCommand_800C78D0();
@@ -956,7 +951,6 @@ extern unsigned char GetSelectedCommand_800C78D0();
 
 extern int GetUnitSkills_80031B30(int a);
 
-extern int GetSkillTargetFlags_80031B0C(int a, int b);
 
 
 
@@ -1309,7 +1303,6 @@ typedef struct BatCureChance
     unsigned int chance; // % per turn
 } BatCureChance;
 extern BatCureChance statusCureChances_800C9138[1];
-extern int GetEquipmentId_8003356C(UnitStatus* p, unsigned int idx);
 extern unsigned int Rand100_80013E30();
 extern BatXY enemyWindowLayouts_800C9140[9];
 extern int enemyGaugePreview_800C9164[3];

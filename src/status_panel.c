@@ -19,6 +19,7 @@
 #include "status_panel.h"
 #include "effect_data.h"
 #include "util.h"
+#include "unit_query.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
@@ -47,13 +48,11 @@ void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
     loc[1] = pos[1];
     DrawStatIcons_8002E0D8(loc, ot);
 }
-extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawStatDelta_8002E004(unsigned short* p, int a1, int a2);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 extern void DrawValueGauge_8002EFC4(char* a0, int a1, int a2, void* a3_, int a4, int a5);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
-extern void GetElementLevels_80033864(Minion* m, unsigned char* out);
 extern void DrawElementChart_8002E730(unsigned short* pos, unsigned char* a1, short ot);
 extern void DrawStatGrid_8002EACC(UnitStatus* a0, unsigned short* pos, int a2, short ot);
 // Matched
@@ -200,7 +199,6 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, int unused, unsigned
         }
     }
 }
-extern void DrawRotatedPublicSprite_80031FF4(int a, void* b, void* c, int d);
 extern void DrawSmallNumber3_8002C290(void* p, int a1, int a2);
 // Matched
 void DrawStatDelta_8002E004(unsigned short* origin, int delta, int ot)
@@ -287,7 +285,6 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
     }
     CalcEquippedStats_80033624(outStats, copy);
 }
-extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern int GetEmptyCocoons_800AD8E4(void);
 extern void DrawAnimatedWindow_8002BEC8(int a0, int a1, short a2, short a3, int a4, int a5);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);

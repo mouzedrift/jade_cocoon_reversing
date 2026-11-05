@@ -17,6 +17,7 @@
 #include "model_ftg.h"
 #include "msg_window.h"
 #include "util.h"
+#include "unit_query.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -732,7 +733,6 @@ extern void FreeActiveOverlay_8002C014();
 extern void DrawLevantSummary_8002E334();
 extern void DrawLevantHeaderWindows_8002FD0C();
 extern void DrawPartySlotWindow_8002F8E4();
-extern void AddClipDrawAreaPrim_80033308();
 extern void PlayMusic_800300E0();
 extern int GetPartyWindowX_8002FA0C();
 extern void DrawPortrait_8002A42C(short* p, int a, int b, short c);
@@ -750,12 +750,9 @@ extern void DrawMpGauge_8002F120();
 extern int DrawAbilityDescription_8002C670();
 extern void DrawUnitStatusPanel_8002DB48();
 extern void InterpolateWindowRect_8004196C();
-extern void AddDrawAreaPrim_8003326C();
 extern void DrawAnimatedWindow_8002BEC8();
 extern void DrawLargeNumber_8002C100();
 extern void DrawLevantStats_8002F7D0();
-extern int CheckItemUsable_80033AFC();
-extern int CheckItemOnTarget_80033DF4();
 extern int UpdateMenuCursor_8003D794();
 extern void DrawScrollArrow_8002C6DC();
 

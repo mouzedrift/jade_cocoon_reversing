@@ -19,6 +19,7 @@
 #include "event.h"
 #include "winframe.h"
 #include "util.h"
+#include "unit_query.h"
 
 
 const char aDWorkPsusEvent[] = "D:/WORK/PSUS/EVENT.C";
@@ -32,7 +33,6 @@ extern void GetWindowColors_8004226C(int colorSet, RECT* rgbOut, int time, int c
 extern unsigned char** windowColorSets_80087064[];
 extern unsigned char* windowPulseColors_80087050[];
 extern int windowPulseScale_80086FB0[][3];
-extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 // Matched
 void GetWindowColors_8004226C(int colorSet, RECT* rgbOut, int time, int colorIdx)
 {

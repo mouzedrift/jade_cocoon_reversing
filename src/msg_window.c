@@ -21,6 +21,7 @@
 #include "pad_text.h"
 #include "font.h"
 #include "util.h"
+#include "unit_query.h"
 
 const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -837,8 +838,6 @@ void HandleMsgWindowInput_800353A0(MsgWindow* win)
         break;
     }
 }
-extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
-extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
 extern int MoveGridCursorP1_8003D630(short* m);
 extern void DrawPulsingWindow_8002F6F8(void* a0, void* st, int a2);
@@ -1049,15 +1048,9 @@ typedef struct
     short x;
     short y;
 } ShortPos;
-typedef struct
-{
-    int a;
-    int b;
-} TPageWords;
 extern const int aMoney_80074850[];
 extern const int aEmptyCocoon_8007485C[];
 extern const int aTimesSign_80074864[];
-extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPageWords* tp);
 extern void RemoveInventory_800AD1E0(int a, int b, int c);
 extern void AddMoney_800AD058(int a);
 extern void AddEmptyCocoons_800AD8F4(int a);
@@ -1068,7 +1061,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 {
     ItemMsgWindow* o;
     SPRT spr[3];
-    TPageWords tp[3];
+    DR_TPAGE tp[3];
     RECT r;
     TextSize p70;
     ShortPos p78;

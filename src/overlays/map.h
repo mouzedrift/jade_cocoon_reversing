@@ -11,6 +11,7 @@
 #include "font.h"
 #include "engine.h"
 #include "util.h"
+#include "unit_query.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem

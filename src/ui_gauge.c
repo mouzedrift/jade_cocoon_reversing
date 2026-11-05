@@ -18,6 +18,7 @@
 #include "tiy.h"
 #include "effect_data.h"
 #include "util.h"
+#include "unit_query.h"
 
 const CVECTOR colorGrey_800741E4 = { 128, 128, 128 };
 const CVECTOR colorWhite_800741E8 = { 255, 255, 255 };
@@ -61,7 +62,6 @@ typedef struct
 } ScrollArrow;
 extern const CVECTOR colorGrey_800741E4;
 extern const CVECTOR colorWhite_800741E8;
-extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
 // Matched
 void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot)
 {
@@ -246,8 +246,6 @@ unsigned int ScaleGaugeLength_8002BC60(unsigned int value, unsigned int max, uns
     return 0;
 }
 extern const CVECTOR colorWhite_800741E8;
-extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period, int half);
-extern void AddScaledPolyFT4_80031BE4(void* p, unsigned long* ot, int x, int y, int scale, int a5, int a6, int a7);
 // Matched
 void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int time, int ot)
 {

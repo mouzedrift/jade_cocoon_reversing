@@ -21,6 +21,7 @@
 #include "engine.h"
 #include "ftg_draw.h"
 #include "spadstack.h"
+#include "unit_query.h"
 
 // Matched
 EventEntry* AllocEventEntry_80043AF8(EventNode* node)
@@ -52,7 +53,6 @@ void StopAllEventEntries_80043B40(EventNode* node)
         node = node->next;
     }
 }
-extern int AddScaledPolyFT4_80031BE4(POLY_FT4* p, unsigned long* ot, short x, short y, int sx, int sy, short* off, int fl);
 // Matched
 int DrawBillboard_80043B8C(POLY_FT4* poly, VECTOR* pos, short* size, int flags, short* off, short fl)
 {

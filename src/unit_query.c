@@ -21,6 +21,7 @@
 #include "engine.h"
 #include "msg_window.h"
 #include "util.h"
+#include "unit_query.h"
 
 
 
@@ -509,16 +510,16 @@ void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, void* tpage, voi
 }
 extern DRAWENV drawEnv_8008D698[2];
 // Matched
-void AddDrawAreaPrim_8003326C(unsigned short* bounds, void* ot)
+void AddDrawAreaPrim_8003326C(RECT* bounds, void* ot)
 {
     DR_AREA area;
     RECT rect;
     DRAWENV* env = drawEnv_8008D698;
-    unsigned short* clip = (unsigned short*)&env[bDoubleBuffer_8008D428].clip;
-    rect.x = bounds[0] + clip[0];
-    rect.y = bounds[1] + clip[1];
-    rect.w = bounds[2];
-    rect.h = bounds[3];
+    RECT* clip = &env[bDoubleBuffer_8008D428].clip;
+    rect.x = bounds->x + clip->x;
+    rect.y = bounds->y + clip->y;
+    rect.w = bounds->w;
+    rect.h = bounds->h;
     SetDrawArea(&area, &rect);
     AddPrimCopy_80040298(ot, &area, 3);
 }
@@ -673,7 +674,6 @@ int GetEquipmentId_8003356C(UnitStatus* status, unsigned int idx)
     }
     return id;
 }
-extern void ApplyEquipmentModifiers_80033754(unsigned char* a, UnitStatus* b);
 // Matched
 void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* dst)
 {
@@ -1021,39 +1021,33 @@ int ReturnZero_80033DEC(void)
 {
     return 0;
 }
-typedef struct
-{
-    short item;
-    short pad_2;
-    short target;
-} ItemUseCheck;
 // Matched
-int CheckItemOnTarget_80033DF4(ItemUseCheck* use)
+int CheckItemOnTarget_80033DF4(TargetQuery* use)
 {
     UnitStatus* target;
     int noEffect = 0;
-    if (GetItemFlags_8001CE70(use->item) & 0x80)
+    if (GetItemFlags_8001CE70(use->id_0) & 0x80)
     {
         return 0;
     }
-    if (GetItemFlags_8001CE70(use->item) & 4)
+    if (GetItemFlags_8001CE70(use->id_0) & 4)
     {
         return 0;
     }
-    if (!(GetItemFlags_8001CE70(use->item) & 8) && use->target == 0)
+    if (!(GetItemFlags_8001CE70(use->id_0) & 8) && use->target_4 == 0)
     {
         return 2;
     }
-    if (!(GetItemFlags_8001CE70(use->item) & 0x10) && (use->target == 1 || use->target == 2 || use->target == 3))
+    if (!(GetItemFlags_8001CE70(use->id_0) & 0x10) && (use->target_4 == 1 || use->target_4 == 2 || use->target_4 == 3))
     {
         return 1;
     }
-    target = GetUnitStatus_80014390(use->target & 0xFF);
-    if (use->item != 13 && (target->status_0 & 0x400))
+    target = GetUnitStatus_80014390(use->target_4 & 0xFF);
+    if (use->id_0 != 13 && (target->status_0 & 0x400))
     {
         return 4;
     }
-    switch (use->item)
+    switch (use->id_0)
     {
     case 0:
     case 1:

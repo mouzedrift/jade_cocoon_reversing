@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "common_tu.h"
+#include "unit_query.h"
 
 
 

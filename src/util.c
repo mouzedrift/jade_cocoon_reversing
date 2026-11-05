@@ -18,6 +18,7 @@
 #include "util.h"
 #include "main.h"
 #include "font.h"
+#include "unit_query.h"
 
 
 

@@ -11,6 +11,7 @@
 #include "menu_window.h"
 #include "engine.h"
 #include "util.h"
+#include "unit_query.h"
 
 
 /* the types of equip.c */
@@ -248,6 +249,5 @@ extern void DrawStatCompare_8002E188(void* before, void* after, void* pos, int o
 extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 extern void DrawScrollArrow_8002C6DC(int pos, short dir, short ot);
-extern void AddClipDrawAreaPrim_80033308(void* p);
 
 #endif

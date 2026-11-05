@@ -23,6 +23,7 @@
 #include "pad_text.h"
 #include "font.h"
 #include "util.h"
+#include "unit_query.h"
 
 const char aQuit_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
@@ -142,7 +143,6 @@ short GetMagicElementIcon_8002A3E0(int magic)
     return 36;
 }
 extern void GetPortraitSprt_800A61CC(int a, void* b, void* c);
-extern void AddDrawAreaPrim_8003326C(int a, void* b);
 // Matched
 void DrawPortrait_8002A42C(unsigned short* pos, short id, int drawArea, short ot)
 {
@@ -173,7 +173,6 @@ void DrawPortraitWindow_8002A4E4(short ot)
 }
 
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
-extern void AddClipDrawAreaPrim_80033308(void* a);
 // Matched
 void DrawMenuWindows_8002A5A4(MenuWindowList* list)
 {
@@ -187,7 +186,7 @@ void DrawMenuWindows_8002A5A4(MenuWindowList* list)
             InterpolateWindowRect_8004196C(&rect, &list->items_10[i][j].x_10, list->open_8, 8, 0);
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + list->ot_14);
             DrawMenuWindowContents_8002A710(&list->items_10[i][j], list->ot_14);
-            AddDrawAreaPrim_8003326C((int)&rect, pOT_8008D454 + list->ot_14);
+            AddDrawAreaPrim_8003326C(&rect, pOT_8008D454 + list->ot_14);
             DrawMenuItemWindow_8002AAF0(list, i, j, &rect);
         }
     }
@@ -200,7 +199,6 @@ typedef struct
     unsigned short y;
 } Pt;
 extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
-extern void AddSprtWithTPage_800331C4(unsigned short* a, SPRT* o, DR_TPAGE* b, unsigned long* c, unsigned char* col);
 extern int MeasureTextWidthFont1_8003E6B0(int text);
 extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);

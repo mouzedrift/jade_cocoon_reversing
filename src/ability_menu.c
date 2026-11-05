@@ -20,8 +20,8 @@
 #include "skills.h"
 #include "msg_window.h"
 #include "util.h"
+#include "unit_query.h"
 
-extern int CheckSkillUsable_80033C98(ListMenuState* menu);
 int GetAbilityIcon_8002D1A4(int type, short slot);
 // Matched
 void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
@@ -139,9 +139,8 @@ int GetAbilityIcon_8002D1A4(int type, short slot)
     }
     return abilityIconsByType_8008280C[slot][type];
 }
-extern int CheckItemOnTarget_80033DF4(short* req);
 // Matched
-int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
+int DrawTargetSelectMenu_8002D250(TargetQuery* req, int mode, int cursor, int ot)
 {
     MenuWindowItem list0[4] = {
         {8, 4, 0, 0, 0, 0x2E, 0x98, 0x3C, 0xC, 2, 2},
@@ -187,7 +186,7 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
         status = GetUnitStatus_80014390(0);
         lists[k] = list0;
         lists[k][0].text_4 = (int)status->name_10;
-        req[2] = 0;
+        req->target_4 = 0;
         if (mode == 0)
         {
             state = CheckItemOnTarget_80033DF4(req);
@@ -213,11 +212,11 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
     row = 0;
     for (i = 0; i < minionCount; i++)
     {
-        listed = IsTargetListed_8002D738(i, req[1], mode);
+        listed = IsTargetListed_8002D738(i, req->actor_2, mode);
         if (listed == 1)
         {
-            req[2] = i + 1;
-            status = GetUnitStatus_80014390(((unsigned char*)req)[4]);
+            req->target_4 = i + 1;
+            status = GetUnitStatus_80014390((unsigned char)req->target_4);
             state = 0;
             item = subs[i];
             lists[k] = item;
@@ -262,15 +261,15 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
         }
         return cursor;
     case 1:
-        return req[1];
+        return req->actor_2;
     case 2:
         return cursor + 1;
     case 3:
         if (cursor < 0)
         {
-            return (allMask | 1) & ~(1 << req[1]);
+            return (allMask | 1) & ~(1 << req->actor_2);
         }
-        if (cursor < req[1])
+        if (cursor < req->actor_2)
         {
             return cursor;
         }

@@ -19,6 +19,7 @@
 #include "pad_text.h"
 #include "main.h"
 #include "util.h"
+#include "unit_query.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
@@ -392,8 +393,6 @@ void InitFonts_8003DA70(void)
         font->clutOffset_2A = 0;
     }
 }
-extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
-extern void AddDrawAreaPrim_8003326C(void* p, unsigned long* ot);
 typedef struct TextWindow TextWindow;
 void DrawTextWindow_8003DCA4(int draw, TextWindow* w);
 // Matched

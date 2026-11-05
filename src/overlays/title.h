@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "menu_draw.h"
 #include "util.h"
+#include "unit_query.h"
 
 
 // a window row of one item (the item + the row end)
@@ -163,7 +164,6 @@ extern int IsConfigMenuActive_800C45D8(void);
 
 /* exe-side, to move to an exe header */
 extern void SsSepSetDecrescendo(short, short, short, long);
-extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 extern void srand(unsigned int seed); // PSY-Q LIBC

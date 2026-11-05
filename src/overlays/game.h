@@ -19,6 +19,7 @@
 #include "unit_stats.h" // eventDescs_80078EB8
 #include "model_ftg.h"
 #include "util.h"
+#include "unit_query.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -1750,7 +1751,6 @@ void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
    short GetLevantAnimLoopStart_800AC834(int anim, int set)
    short GetLevantAnimStartFrame_800AC7F0(int anim, int set) */
 /* exe-side, to move to unit_query.h */
-extern void GetPublicTiySprt_80032470(int idx, SPRT* pOut20, DR_TPAGE* pOut8);
 /* exe-side, to move to effect_data.h */
 extern int IsEffectReady_80014954(void);
 /* exe-side, to move to engine.h */

@@ -19,6 +19,7 @@
 #include "cdread.h"
 #include "cd.h"
 #include "util.h"
+#include "unit_query.h"
 
 const LoadingIconFrames loadingIconFrames_8007490C = { {
         7, 8, 9, 10, 11, 12, 13, 14,
@@ -261,7 +262,6 @@ int LoadData001File_8003CD1C(void)
 
     return 1;
 }
-extern void DrawPublicTiySprt_80033080(unsigned short* pos, int sprtIdx, int ot);
 // Matched
 void DrawLoadingIcon_8003CD5C(void)
 {

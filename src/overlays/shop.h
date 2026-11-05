@@ -15,6 +15,7 @@
 #include "menu_window.h"
 #include "model_ftg.h"
 #include "util.h"
+#include "unit_query.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel

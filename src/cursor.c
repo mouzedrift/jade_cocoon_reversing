@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "tiy.h"
 #include "util.h"
+#include "unit_query.h"
 
 
 
@@ -31,7 +32,6 @@ void DrawNextPrompt_8003CF88(short x, short y, int idx)
     AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[60], 5);
     AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[60], 2);
 }
-extern void DrawPublicTiySprt_80033080(void* pos, int sprtIdx, int ot);
 // Matched
 void DrawCursorHand_8003D034(unsigned short* pPos, int ot)
 {

@@ -19,6 +19,7 @@
 #include "effect_data.h"
 #include "font.h"
 #include "util.h"
+#include "unit_query.h"
 
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
@@ -95,8 +96,6 @@ typedef struct
 } PartySlotWindow;
 extern void DrawUnitStatusExp_8002ECE0(int a0, unsigned short* pos, int a2, short ot);
 extern void InterpolateWindowRect_8004196C(void* a0, RECT* a1, int a2, int a3, int a4);
-extern void AddDrawAreaPrim_8003326C(void* a, unsigned long* ot);
-extern void AddClipDrawAreaPrim_80033308(unsigned long* ot);
 // Matched
 void DrawPartySlotWindow_8002F8E4(int unit, PartySlotWindow* win)
 {

@@ -12,6 +12,7 @@
 #include "engine.h"
 #include "model_ftg.h"
 #include "util.h"
+#include "unit_query.h"
 
 
 // a list panel of the store (StoreMenu.panel_34)

@@ -17,6 +17,7 @@
 #include "effect_data.h"
 #include "util.h"
 #include "msg_window.h"
+#include "unit_query.h"
 
 typedef struct CombBtlNode
 {
@@ -249,8 +250,6 @@ extern int IsSoundTaskReady_80030688(void);        // -> sound.h (sound.c)
 extern void StopSoundSeqs_80030D68(SoundStruct* sound); // -> sound.h (sound_seq.c)
 extern void PlaySeqSlot_80031160(unsigned int idx, short loops); // -> sound.h (sound_seq.c)
 extern void StopSeqSlot_80031334(int idx);         // -> sound.h (sound_seq.c)
-extern void AddDrawAreaPrim_8003326C(RECT* r, unsigned long* ot); // -> unit_query.h
-extern void AddClipDrawAreaPrim_80033308(unsigned long* ot); // -> unit_query.h
 extern int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode); // -> movie.h
 extern void DrawWindow_80042460(void* rect, void* style, void* ot, int time); // -> event.h
 extern int XaRequestStop_80043524(void);           // -> event.h

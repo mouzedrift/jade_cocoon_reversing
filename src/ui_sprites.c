@@ -20,6 +20,7 @@
 #include "effect_data.h"
 #include "engine.h"
 #include "util.h"
+#include "unit_query.h"
 
 const int emptyString_800741EC = 0;
 
@@ -52,8 +53,6 @@ typedef struct
     short ot_A;
 } UiWindowDesc;
 extern void InterpolateWindowRect_8004196C(int a, int b, int c, int d, int e);
-extern void AddDrawAreaPrim_8003326C(int a, void* b);
-extern void AddClipDrawAreaPrim_80033308(void* a);
 extern void DrawUiWindow_8002A384(UiWindowDesc* p);
 // Matched
 void DrawAnimatedWindow_8002BEC8(int outRect, int rect, short step, short ot, int highlight, int time)
@@ -271,7 +270,6 @@ void DrawScrollArrow_8002C6DC(short* pos, short dir, short ot)
     arrow.dir = dir;
     DrawScrollArrow_8002B3DC(arrow, frameCount_8008D3FC, pos, ot);
 }
-extern int CheckItemUsable_80033AFC(ListMenuState* p);
 extern int GetLastInventorySlot_800AD308(int a0);
 extern const int emptyString_800741EC;
 // Matched
@@ -366,7 +364,6 @@ void DrawItemList_8002C728(ListMenuState* menu)
         DrawScrollArrow_8002C6DC(itemScrollDownPos_80082824, 1, menu->ot_6);
     }
 }
-extern int CheckMagicCastable_80033C08(ListMenuState* p);
 // Matched
 void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
 {

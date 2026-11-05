@@ -13,6 +13,7 @@
 #include "main.h"
 #include "menu_window.h"
 #include "engine.h"
+#include "unit_query.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
@@ -188,8 +189,5 @@ extern int DrawAbilityDescription_8002C670();                // -> tiy.h (ui_spr
 extern void DrawAbilityList_8002CE28(ListMenuState* menu, void* origin); // -> ability_menu
 extern void DrawMagicList_8002CAC8(ListMenuState* menu, void* origin);   // -> tiy.h (ui_sprites.c)
 extern int GetSkillMpCost_80031A04(void* skills, int slot);  // -> skills.h
-extern int GetSkillTargetFlags_80031B0C(int skills, int idx); // -> unit_query.h
-extern int CheckSkillUsable_80033C98(ListMenuState* menu);   // -> unit_query.h
-extern int CheckMagicCastable_80033C08(ListMenuState* menu); // -> unit_query.h
 
 #endif

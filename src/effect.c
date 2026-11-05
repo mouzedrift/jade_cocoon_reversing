@@ -18,6 +18,7 @@
 #include "data_decls.h"
 #include "effect_obj.h"
 #include "effect.h"
+#include "unit_query.h"
 
 const char aAssertionFaile_3[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEffectC[] = "EFFECT.C";
