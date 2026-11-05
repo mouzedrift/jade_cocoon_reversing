@@ -177,7 +177,6 @@ extern int configMenuActive_800C5944;
 /* exe-side, to move to <exe header> */
 extern void DrawTextLinesWindow_8002AE38(void* lines, void* pos, int ot, void* rect, int count);
 extern unsigned short uiColor_8008B590;
-extern void DrawMenuWindows_8002A5A4(CfgDlgConfig* p);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3);
 extern void ApplyBgmVolume_800309D8(void* p);

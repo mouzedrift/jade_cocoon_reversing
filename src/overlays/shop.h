@@ -322,7 +322,6 @@ int IsMapLoading_800272D0();                        // model_ftg
 void DrawTextList_8002A310(void* p, int a);          // menu_draw.h
 void DrawUiWindow_8002A384(ShopUiWin* p);            // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);             // menu_draw.h
-void DrawMenuWindows_8002A5A4(void* p);              // menu_draw.h
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
 void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot); // ui_sprites
 void DrawAbilityDescription_8002C670(Minion* m, ShopPos* pos, void* descs, int idx, int ot); // ui_sprites

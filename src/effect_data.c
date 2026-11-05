@@ -2909,23 +2909,22 @@ ButtonHelpEntry helpBarSelectDesc_80082698[3] = { { 16, aSelect_80074168 }, { 11
 ButtonHelpEntry helpBarSelectQuitDesc_800826B0[4] = { { 16, aSelect_80074168 }, { 167, aQuit_8007415C }, { 110, aDescription_80074178 }, { -1 } };
 ButtonHelpEntry helpBarSelectQuit2_800826D0[3] = { { 16, aSelect_80074168 }, { 167, aQuit_8007415C }, { -1 } };
 ButtonHelpEntry helpBarSelect_800826E8[2] = { { 16, aSelect_80074168 }, { -1 } };
-unsigned char largeDigitColors_800826F8[8][4] = {
+unsigned char largeDigitColors_800826F8[4][4] = {
     { 128, 128, 128 },
     { 53, 100, 129 },
     { 139, 48, 48 },
     { 26, 75, 67 },
-    { 8, 0, 3 },
-    { 144, 65, 7, 128 },
 };
-int aRx[21] = {
-    0x780072, 0x12002E, 0x20002, 1, 0, 0, 0, -1,
-    -1, -1, 0x30008, 0x80074198, 0, 0, 0x7800CE, 0x12002E,
-    0x20002, 1,
+MenuWindowItem yesNoItemYes_80082708[2] = {
+    { 8, 3, (int)aYes_80074190, NULL, NULL, 0x72, 0x78, 0x2E, 0x12, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int dword_8008276C[12] = {
-    -1, -1, -1, 0x80082708, 0x80082740, 0, 2, 0,
-    8, 0, 0x80082778,
+MenuWindowItem yesNoItemNo_80082740[2] = {
+    { 8, 3, (int)aNo_80074198, NULL, NULL, 0xCE, 0x78, 0x2E, 0x12, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
+MenuWindowItem* yesNoRows_80082778[3] = { yesNoItemYes_80082708, yesNoItemNo_80082740, NULL };
+MenuWindowList yesNoWindow_80082784 = { 2, 0, 8, 0, yesNoRows_80082778, 0 };
 short scrollArrowIcons_8008279C[16] = {
     4, 3, 5, 69, 68, 70, 22, 21,
     23, 16, 15, 17, 16, 15, 17,
@@ -2970,7 +2969,7 @@ int aH6p_2[17] = {
     0x150017, 0x30000, 1, 0, 0, 0, -1, -1,
     -1,
 };
-MenuItem *itemListRows_800829E8[5] = { (void *)itemListRowData_80082828, (void *)&itemListRowData_8008288C[3], (void *)&itemListRowData_800828FC[3], (void *)&itemListRowData_8008296C[3] };
+MenuWindowItem *itemListRows_800829E8[5] = { (void *)itemListRowData_80082828, (void *)&itemListRowData_8008288C[3], (void *)&itemListRowData_800828FC[3], (void *)&itemListRowData_8008296C[3] };
 unsigned short magicScrollUpPos_800829FC[2] = { 160, 47 };
 unsigned short magicScrollDownPos_80082A00[2] = { 160, 148 };
 int magicListRowData_80082A04[11] = { 0x10010, 0, 0x8008D620, 0x8008D3F4, 0x360060, 0x150015, 0x40004, 0x30010 };
@@ -2993,7 +2992,7 @@ int aU6k_2[10] = {
     0x360075, 0x15006B, 0x40003, 1, 0, 0, 0, -1,
     -1, -1,
 };
-MenuItem *magicListRows_80082B54[5] = { (void *)magicListRowData_80082A04, (void *)&magicListRowData_80082A4C[3], (void *)&magicListRowData_80082AA0[3], (void *)&magicListRowData_80082AF4[3] };
+MenuWindowItem *magicListRows_80082B54[5] = { (void *)magicListRowData_80082A04, (void *)&magicListRowData_80082A4C[3], (void *)&magicListRowData_80082AA0[3], (void *)&magicListRowData_80082AF4[3] };
 int abilityListRowData_80082B68[4] = { 0x10008, 0, 0x8008D620, 0x8008D3F4 };
 int a8[21] = {
     0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
@@ -3024,7 +3023,7 @@ int a8_3[24] = {
     0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
     0x40000, 1, 0, 0, 0, -1, -1, -1,
 };
-MenuItem *abilityListRows_80082D98[6] = { (void *)abilityListRowData_80082B68, (void *)&abilityListRowData_80082BCC[3], (void *)&abilityListRowData_80082C3C[3], (void *)&abilityListRowData_80082CAC[3], (void *)&abilityListRowData_80082D1C[3] };
+MenuWindowItem *abilityListRows_80082D98[6] = { (void *)abilityListRowData_80082B68, (void *)&abilityListRowData_80082BCC[3], (void *)&abilityListRowData_80082C3C[3], (void *)&abilityListRowData_80082CAC[3], (void *)&abilityListRowData_80082D1C[3] };
 int aKumu[3] = { 0x6B0028, 0x4D0075, 0x8A0075 };
 int familyTreeBoxPosData_80082DBC[4] = { 0x3E00C2, 0x5C00C2, 0x7A00C2, 0x9800C2 };
 Pos16 *familyTreeBoxPos_80082DCC[7] = { (void *)aKumu, (void *)&aKumu[1], (void *)&aKumu[2], (void *)familyTreeBoxPosData_80082DBC, (void *)&familyTreeBoxPosData_80082DBC[1], (void *)&familyTreeBoxPosData_80082DBC[2], (void *)&familyTreeBoxPosData_80082DBC[3] };

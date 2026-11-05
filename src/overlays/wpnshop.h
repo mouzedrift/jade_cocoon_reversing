@@ -209,7 +209,6 @@ void SetLoadFadeFlag_80027478(int a, int b); // model_ftg
 void DrawTextList_8002A310(void* p, int a); // menu_draw.h
 void DrawUiWindow_8002A384(void* p);        // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);    // menu_draw.h
-void DrawMenuWindows_8002A5A4(StoreMenuWindows* p); // menu_draw.h
 void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
 void DrawMenuBackground_8002BE10();         // ui_sprites
 void FreeActiveOverlay_8002C014(void);      // ui_sprites

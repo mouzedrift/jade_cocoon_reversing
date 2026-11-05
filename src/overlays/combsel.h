@@ -98,9 +98,7 @@ extern void PlaySfx_80031494(int id);
 extern void DrawSmallNumber3_8002C290(void* pos, int value, int ot);
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern void DrawWindow_80042460(void* r, void* col, void* ot, int time);
-extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* col, int ot, int time);
 extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* pos, int ot);
-extern void DrawMenuWindows_8002A5A4(void* menu);
 extern void DrawMenuBackground_8002BE10(void);
 
 extern int dword_800A4088;

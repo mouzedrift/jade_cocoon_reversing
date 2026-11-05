@@ -87,8 +87,6 @@ extern CombStrtPos dword_80082740;   // -> menu data (its "no" item)
 extern unsigned short word_8008D3FC; // low half of frameCount_8008D3FC (globals.h), read with lhu
 extern unsigned short uiColor_8008B590; // -> globals.h
 extern int rand(void);
-extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, int time); // -> menu_window.h
-extern void DrawMenuWindows_8002A5A4(void* list);            // -> menu_draw.h
 extern void DrawMenuBackground_8002BE10(void);
 extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, int time); // -> event.h

@@ -2,6 +2,7 @@
 #define _TU_8002AAF0_H_
 
 #include "effect_data.h" // Pos16
+#include "menu_draw.h"
 
 typedef struct
 {
@@ -26,5 +27,7 @@ extern ButtonHelpEntry helpBarSelectQuit2_800826D0[3];    // Select / Quit
 extern ButtonHelpEntry helpBarSelect_800826E8[2];         // Select
 
 
+void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect);
+void DrawMenuItemWithWindow_8002ADB4(MenuWindowItem* item, void* window, int ot, int time); // window: a DrawWindow_80042460 style
 void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot);
 #endif

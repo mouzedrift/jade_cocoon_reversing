@@ -22,20 +22,6 @@
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
-typedef struct
-{
-    unsigned short flags;
-    char pad_2[0x1A];
-} MenuWindowItem;
-typedef struct
-{
-    int flags;
-    int time_4;
-    int open_8;   // open animation step, 8: open
-    int cursor_C; // highlighted row
-    MenuWindowItem** items;
-    int ot;
-} MenuWindowList;
 /* DrawWindow_80042460's style */
 typedef struct
 {
@@ -44,20 +30,20 @@ typedef struct
     unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
 } WindowStyle;
 extern short uiColor_8008B590;
-extern void DrawWindow_80042460(void* a, int b, void* c, int d);
+extern void DrawWindow_80042460(void* rect, void* style, void* ot, int time);
 // Matched
 void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
 {
     WindowStyle style;
     int time;
     int flags;
-    MenuWindowItem* item = &list->items[i][j];
+    MenuWindowItem* item = &list->items_10[i][j];
     time = 0;
-    if (item->flags & 0x20)
+    if (item->flags_0 & 0x20)
     {
         return;
     }
-    flags = list->flags;
+    flags = list->flags_0;
     if (flags & 8)
     {
         style.semiTrans_3 = 0;
@@ -82,7 +68,7 @@ void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
     {
         style.semiTrans_3 = 1;
     }
-    flags = list->flags;
+    flags = list->flags_0;
     if (flags & 1)
     {
         style.colorSet_2 = 0;
@@ -103,7 +89,7 @@ void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
     {
         style.colorSet_2 = 0;
     }
-    flags = list->flags;
+    flags = list->flags_0;
     if (!(flags & 0x100))
     {
         style.color = uiColor_8008B590;
@@ -128,7 +114,7 @@ void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
     {
         style.color = 0;
     }
-    DrawWindow_80042460(rect, (int)&style, &pOT_8008D454[list->ot], time);
+    DrawWindow_80042460(rect, &style, &pOT_8008D454[list->ot_14], time);
 }
 // Matched
 void AlignMenuItem_8002AC88(int flags, short* rect, int width, short* out)
@@ -200,15 +186,13 @@ void SetMenuItemDigitColor_8002AD80(int flags)
         SetLargeDigitColor_8002C5D0(0);
     }
 }
-extern void DrawMenuWindowContents_8002A710(void* a, int b);
-extern void DrawWindow_80042460(void* a, int b, void* c, int d);
 // Matched
-void DrawMenuItemWithWindow_8002ADB4(char* item, int window, int ot, int time)
+void DrawMenuItemWithWindow_8002ADB4(MenuWindowItem* item, void* window, int ot, int time)
 {
     DrawMenuWindowContents_8002A710(item, ot);
     SetFontClutOffset_8003F900(2, 0);
     SetFontClutOffset_8003F900(1, 0);
-    DrawWindow_80042460(item + 0x10, window, &pOT_8008D454[ot], time);
+    DrawWindow_80042460(&item->x_10, window, &pOT_8008D454[ot], time);
 }
 extern short uiColor_8008B590;
 // Matched
@@ -233,7 +217,7 @@ void DrawTextLinesWindow_8002AE38(int text, Pos16* pos, int ot, RECT* rect, int 
         style.semiTrans_3 = 1;
         style.colorSet_2 = 0;
         style.color = uiColor_8008B590;
-        DrawWindow_80042460(rect, (int)&style, &pOT_8008D454[ot], 0);
+        DrawWindow_80042460(rect, &style, &pOT_8008D454[ot], 0);
     }
 }
 // Matched
@@ -312,7 +296,7 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
     style.semiTrans_3 = 1;
     style.colorSet_2 = 0;
     style.color = uiColor_8008B590;
-    DrawWindow_80042460(&rect, (int)&style, &pOT_8008D454[ot], 0);
+    DrawWindow_80042460(&rect, &style, &pOT_8008D454[ot], 0);
 }
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
 // Matched

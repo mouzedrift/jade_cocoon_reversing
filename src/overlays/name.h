@@ -169,7 +169,6 @@ extern int nameEntryActive_800B83F8;
 extern void ShopCtrlRequestShop_800B6CA0();
 
 /* exe-side, to move to <exe header> */
-extern void DrawMenuWindows_8002A5A4(void* p);
 extern unsigned short uiColor_8008B590;
 extern void DrawWindow_80042460(void* rect, void* box, void* ot, int a3);
 extern void DrawMenuBackground_8002BE10();

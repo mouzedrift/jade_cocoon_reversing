@@ -17,10 +17,11 @@
 #include "data_decls.h"
 #include "unit.h"
 #include "unit_gauges.h"
+#include "menu_window.h"
 
-const StatusIcon statusIcon0_800743D4 = { { 16, 0, 1, 0, 151, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 210, 172, 21, 20 }, 0x40003 };
-const StatusIcon statusIcon1_800743F0 = { { 16, 0, 1, 0, 189, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50003 };
-const StatusIcon statusIcon2_8007440C = { { 16, 0, 1, 0, 177, 0, 0, 0, 32, 214, 8, 128, 244, 211, 8, 128 }, { 0, 0, 34, 20 }, 0x50006 };
+const MenuWindowItem statusIcon0_800743D4 = { 0x10, 1, 151, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 210, 172, 21, 20, 3, 4 };
+const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 3, 5 };
+const MenuWindowItem statusIcon2_8007440C = { 0x10, 1, 177, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 6, 5 };
 const StatusIconMasks statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
 
 extern void DrawUnitStatus_8002F23C(UnitStatus* a0, int a1, int a2, unsigned short* a3, int a4, int a5);
@@ -250,15 +251,14 @@ typedef struct
     unsigned char semiTrans_3; // DrawWindowFrame_80041ED0: 0 opaque, n: abr n - 1
 } WindowStyle;
 extern short uiColor_8008B590;
-extern void DrawMenuItemWithWindow_8002ADB4(char* a0, int a1, int a2, int a3);
 // Matched
-void DrawStatusIcons_8002F480(int* status, unsigned short* pos, int ot, int reverse)
+void DrawMenuWindowItems_8002F480(int* status, unsigned short* pos, int ot, int reverse)
 {
-    StatusIcon icon0 = statusIcon0_800743D4;
-    StatusIcon icon1 = statusIcon1_800743F0;
-    StatusIcon icon2 = statusIcon2_8007440C;
+    MenuWindowItem icon0 = statusIcon0_800743D4;
+    MenuWindowItem icon1 = statusIcon1_800743F0;
+    MenuWindowItem icon2 = statusIcon2_8007440C;
     WindowStyle style;
-    StatusIcon* icons[3];
+    MenuWindowItem* icons[3];
     StatusIconMasks masks = statusIconMasks_80074428;
     unsigned short loc[2];
     int i;
@@ -290,17 +290,17 @@ void DrawStatusIcons_8002F480(int* status, unsigned short* pos, int ot, int reve
         {
             if (!reverse)
             {
-                icons[j]->r.x = loc[0];
-                icons[j]->r.y = loc[1];
-                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&style, ot, 0);
-                loc[0] += icons[j]->r.w;
+                icons[j]->x_10 = loc[0];
+                icons[j]->y_12 = loc[1];
+                DrawMenuItemWithWindow_8002ADB4(icons[j], &style, ot, 0);
+                loc[0] += icons[j]->w_14;
             }
             else
             {
-                loc[0] -= icons[j]->r.w;
-                icons[j]->r.x = loc[0];
-                icons[j]->r.y = loc[1];
-                DrawMenuItemWithWindow_8002ADB4((char*)icons[j], (int)&style, ot, 0);
+                loc[0] -= icons[j]->w_14;
+                icons[j]->x_10 = loc[0];
+                icons[j]->y_12 = loc[1];
+                DrawMenuItemWithWindow_8002ADB4(icons[j], &style, ot, 0);
             }
         }
     }

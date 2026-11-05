@@ -64,7 +64,6 @@ void DrawResultMinion_800A4554(int player, int slot, CombRsltBox* box);
 
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590; // -> globals.h
-extern void DrawMenuItemWithWindow_8002ADB4(void* item, void* window, int ot, int time); // -> menu_window.h
 extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot); // -> tiy.h (ui_sprites.c)
 extern void DrawMenuBackground_8002BE10(void);
 extern void DrawHpGauge_8002F078(void* status, void* pos, int a, int ot); // -> unit_gauges.h

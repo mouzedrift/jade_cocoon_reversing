@@ -1015,7 +1015,6 @@ extern void DrawAbilityDescription_8002C670(void* a0, int a1, void* a2, int a3, 
 
 extern int DrawTargetSelectMenu_8002D250(void* a0, int a1, int a2, int a3);
 
-extern void DrawMenuWindows_8002A5A4(void* a0);
 
 extern void DrawItemList_8002C728(void* a0);
 

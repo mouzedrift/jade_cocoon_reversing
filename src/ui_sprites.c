@@ -270,16 +270,6 @@ void DrawScrollArrow_8002C6DC(short* pos, short dir, short ot)
     arrow.dir = dir;
     DrawScrollArrow_8002B3DC(arrow, frameCount_8008D3FC, pos, ot);
 }
-typedef struct
-{
-    int flags_0;
-    int time_4;
-    int open_8;   // open animation step, 8: open
-    int cursor_C; // highlighted row
-    MenuItem** items_10;
-    int ot_14;
-} MenuWindowList;
-extern void DrawMenuWindows_8002A5A4(MenuWindowList* p);
 extern int CheckItemUsable_80033AFC(ListMenuState* p);
 extern int GetLastInventorySlot_800AD308(int a0);
 extern const int emptyString_800741EC;
@@ -294,7 +284,7 @@ void DrawItemList_8002C728(ListMenuState* menu)
     int count;
     int icon;
     int name;
-    MenuItem** row;
+    MenuWindowItem** row;
     int y;
     int total;
     cursor = menu->cursor_0;
@@ -320,37 +310,37 @@ void DrawItemList_8002C728(ListMenuState* menu)
         (*row)[0].tpages_C = &publicTiyTPages_8008D440;
         (*row)[1].text_4 = name;
         (*row)[2].text_4 = count;
-        (*row)[0].x = 0x53;
+        (*row)[0].x_10 = 0x53;
         y = i * 22 + 0x36;
-        (*row)[0].y = y;
-        (*row)[1].x = 0x68;
-        (*row)[1].y = y;
-        (*row)[2].x = 0xD8;
-        (*row)[2].y = y;
+        (*row)[0].y_12 = y;
+        (*row)[1].x_10 = 0x68;
+        (*row)[1].y_12 = y;
+        (*row)[2].x_10 = 0xD8;
+        (*row)[2].y_12 = y;
         menu->cursor_0 = i;
         if ((short)CheckItemUsable_80033AFC(menu))
         {
-            (*row)[0].flags |= 2;
-            (*row)[1].flags |= 2;
-            (*row)[2].flags |= 2;
+            (*row)[0].flags_0 |= 2;
+            (*row)[1].flags_0 |= 2;
+            (*row)[2].flags_0 |= 2;
         }
         else
         {
-            (*row)[0].flags &= ~2;
-            (*row)[1].flags &= ~2;
-            (*row)[2].flags &= ~2;
+            (*row)[0].flags_0 &= ~2;
+            (*row)[1].flags_0 &= ~2;
+            (*row)[2].flags_0 &= ~2;
         }
         if (count == 0)
         {
-            itemListRows_800829E8[i][0].flags |= 0x40;
-            itemListRows_800829E8[i][1].flags |= 0x40;
-            itemListRows_800829E8[i][2].flags |= 0x40;
+            itemListRows_800829E8[i][0].flags_0 |= 0x40;
+            itemListRows_800829E8[i][1].flags_0 |= 0x40;
+            itemListRows_800829E8[i][2].flags_0 |= 0x40;
         }
         else
         {
-            itemListRows_800829E8[i][0].flags &= ~0x40;
-            itemListRows_800829E8[i][1].flags &= ~0x40;
-            itemListRows_800829E8[i][2].flags &= ~0x40;
+            itemListRows_800829E8[i][0].flags_0 &= ~0x40;
+            itemListRows_800829E8[i][1].flags_0 &= ~0x40;
+            itemListRows_800829E8[i][2].flags_0 &= ~0x40;
         }
     }
     list.flags_0 = menu->windowFlags_4;
@@ -388,7 +378,7 @@ void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
     int idx;
     int icon;
     int name;
-    MenuItem** row;
+    MenuWindowItem** row;
     int y;
     int total;
     cursor = menu->cursor_0;
@@ -423,21 +413,21 @@ void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
         row = &magicListRows_80082B54[i];
         (*row)[0].text_4 = icon;
         (*row)[1].text_4 = name;
-        (*row)[0].x = pos[0];
+        (*row)[0].x_10 = pos[0];
         y = i * 22;
-        (*row)[0].y = pos[1] + y;
-        (*row)[1].x = pos[0] + 0x15;
-        (*row)[1].y = pos[1] + y;
+        (*row)[0].y_12 = pos[1] + y;
+        (*row)[1].x_10 = pos[0] + 0x15;
+        (*row)[1].y_12 = pos[1] + y;
         menu->cursor_0 = i;
         if ((short)CheckMagicCastable_80033C08(menu))
         {
-            (*row)[0].flags |= 2;
-            (*row)[1].flags |= 2;
+            (*row)[0].flags_0 |= 2;
+            (*row)[1].flags_0 |= 2;
         }
         else
         {
-            (*row)[0].flags &= ~2;
-            (*row)[1].flags &= ~2;
+            (*row)[0].flags_0 &= ~2;
+            (*row)[1].flags_0 &= ~2;
         }
     }
     list.flags_0 = menu->windowFlags_4;

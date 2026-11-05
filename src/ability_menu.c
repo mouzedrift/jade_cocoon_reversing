@@ -19,31 +19,20 @@
 #include "effect_data.h"
 #include "skills.h"
 
-// what DrawMenuWindows_8002A5A4 (menu_draw.c) takes
-typedef struct
-{
-    int field_0;
-    int time_4;
-    int openStep_8; // window open animation step (of 8; InterpolateWindowRect_8004196C)
-    int cursor_C;
-    MenuItem** items_10; // 0-terminated list of item lists
-    int ot_14;
-} MenuWindowsArgs;
-extern void DrawMenuWindows_8002A5A4(MenuWindowsArgs* args);
 extern int CheckSkillUsable_80033C98(ListMenuState* menu);
 int GetAbilityIcon_8002D1A4(int type, short slot);
 // Matched
 void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
 {
-    MenuWindowsArgs args;
+    MenuWindowList args;
     unsigned short pos[2];
     short cursor;
     short openStep;
     short i;
     int name;
     int bonusName;
-    MenuItem** row;
-    MenuItem** row2;
+    MenuWindowItem** row;
+    MenuWindowItem** row2;
     int y;
     cursor = menu->cursor_0;
     openStep = 8;
@@ -73,28 +62,28 @@ void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
             }
 
             row = &abilityListRows_80082D98[i];
-            (*row)[0].flags &= ~2;
-            (*row)[1].flags &= ~2;
-            (*row)[2].flags &= ~2;
+            (*row)[0].flags_0 &= ~2;
+            (*row)[1].flags_0 &= ~2;
+            (*row)[2].flags_0 &= ~2;
             menu->cursor_0 = i;
             if ((short)CheckSkillUsable_80033C98(menu))
             {
-                (*row)[0].flags |= 2;
-                (*row)[1].flags |= 2;
-                (*row)[2].flags |= 2;
+                (*row)[0].flags_0 |= 2;
+                (*row)[1].flags_0 |= 2;
+                (*row)[2].flags_0 |= 2;
             }
             else
             {
-                (*row)[0].flags &= ~2;
-                (*row)[1].flags &= ~2;
-                (*row)[2].flags &= ~2;
+                (*row)[0].flags_0 &= ~2;
+                (*row)[1].flags_0 &= ~2;
+                (*row)[2].flags_0 &= ~2;
             }
         }
         else
         {
-            abilityListRows_80082D98[i][0].flags |= 2;
-            abilityListRows_80082D98[i][1].flags |= 2;
-            abilityListRows_80082D98[i][2].flags |= 2;
+            abilityListRows_80082D98[i][0].flags_0 |= 2;
+            abilityListRows_80082D98[i][1].flags_0 |= 2;
+            abilityListRows_80082D98[i][2].flags_0 |= 2;
         }
         y = GetAbilityIcon_8002D1A4(GetAbilityAction_800318C8(menu->minion_C->skills_DE.slot[i].id_1)->element_8, i);
         row2 = &abilityListRows_80082D98[i];
@@ -103,17 +92,17 @@ void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
         (*row2)[2].text_4 = bonusName;
         (*row2)[0].sprts_8 = &uiTiySprts_8008D620;
         (*row2)[0].tpages_C = &uiTiyTPages_8008D3F4;
-        (*row2)[0].x = pos[0];
+        (*row2)[0].x_10 = pos[0];
         y = i * 22;
-        (*row2)[0].y = pos[1] + y;
-        (*row2)[1].x = pos[0] + 0x26;
-        (*row2)[1].y = pos[1] + y;
-        (*row2)[2].x = pos[0] + 0x83;
-        (*row2)[2].y = pos[1] + y;
+        (*row2)[0].y_12 = pos[1] + y;
+        (*row2)[1].x_10 = pos[0] + 0x26;
+        (*row2)[1].y_12 = pos[1] + y;
+        (*row2)[2].x_10 = pos[0] + 0x83;
+        (*row2)[2].y_12 = pos[1] + y;
     }
-    args.field_0 = menu->windowFlags_4;
+    args.flags_0 = menu->windowFlags_4;
     args.time_4 = frameCount_8008D3FC;
-    args.openStep_8 = openStep;
+    args.open_8 = openStep;
     args.cursor_C = cursor;
     args.items_10 = abilityListRows_80082D98;
     args.ot_14 = menu->ot_6;
@@ -148,47 +137,33 @@ int GetAbilityIcon_8002D1A4(int type, short slot)
     }
     return abilityIconsByType_8008280C[slot][type];
 }
-typedef struct
-{
-    unsigned short flags;
-    unsigned short type;
-    int text;
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x;
-    short y;
-    short w;
-    short h;
-    short mx;
-    short my;
-} TargetMenuItem;
 extern int CheckItemOnTarget_80033DF4(short* req);
 extern int CheckMagicUsable_80034068(short* req);
 // Matched
 int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
 {
-    TargetMenuItem list0[4] = {
+    MenuWindowItem list0[4] = {
         {8, 4, 0, 0, 0, 0x2E, 0x98, 0x3C, 0xC, 2, 2},
         {8, 0, 0, 0, 0, 0x26, 0x98, 6, 0xC, 2, 2},
         {8, 0, 0, 0, 0, 0x6C, 0x98, 6, 0xC, 2, 2},
         {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
     };
-    TargetMenuItem list1[2] = {
+    MenuWindowItem list1[2] = {
         {8, 4, 0, 0, 0, 0x2E, 0xA6, 0x3C, 0xC, 2, 2},
         {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
     };
-    TargetMenuItem list2[2] = {
+    MenuWindowItem list2[2] = {
         {8, 4, 0, 0, 0, 0x2E, 0xB3, 0x3C, 0xC, 2, 2},
         {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
     };
-    TargetMenuItem list3[2] = {
+    MenuWindowItem list3[2] = {
         {8, 4, 0, 0, 0, 0x2E, 0xC0, 0x3C, 0xC, 2, 2},
         {1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1},
     };
-    TargetMenuItem* lists[5] = {0};
-    TargetMenuItem* subs[3] = {0};
+    MenuWindowItem* lists[5] = {0};
+    MenuWindowItem* subs[3] = {0};
     int k = 0;
-    MenuWindowsArgs args = {2, 0, 8, 0, 0, 0};
+    MenuWindowList args = {2, 0, 8, 0, 0, 0};
     int minionCount;
     int allMask;
     int i;
@@ -196,12 +171,12 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
     int state;
     UnitStatus* status;
     int row;
-    TargetMenuItem* item;
+    MenuWindowItem* item;
     minionCount = CountMinions_80010548(3);
     allMask = GetAllMinionsTargetMask_8002D780();
     args.time_4 = GetTime30Hz_8002C64C();
     args.cursor_C = cursor;
-    args.items_10 = (MenuItem**)lists;
+    args.items_10 = lists;
     args.ot_14 = ot;
     subs[0] = list1;
     subs[1] = list2;
@@ -210,7 +185,7 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
     {
         status = GetUnitStatus_80014390(0);
         lists[k] = list0;
-        lists[k][0].text = (int)status->name_10;
+        lists[k][0].text_4 = (int)status->name_10;
         req[2] = 0;
         if (mode == 0)
         {
@@ -222,15 +197,15 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
         }
         if (state == 0 || state == 1)
         {
-            lists[k][0].flags &= ~2;
-            lists[k][1].flags &= ~2;
-            lists[k][2].flags &= ~2;
+            lists[k][0].flags_0 &= ~2;
+            lists[k][1].flags_0 &= ~2;
+            lists[k][2].flags_0 &= ~2;
         }
         else
         {
-            lists[k][0].flags |= 2;
-            lists[k][1].flags |= 2;
-            lists[k][2].flags |= 2;
+            lists[k][0].flags_0 |= 2;
+            lists[k][1].flags_0 |= 2;
+            lists[k][2].flags_0 |= 2;
         }
         k++;
     }
@@ -245,9 +220,9 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
             state = 0;
             item = subs[i];
             lists[k] = item;
-            item->text = (int)status->name_10;
+            item->text_4 = (int)status->name_10;
 
-            lists[k]->y = 0xA6 + row * 13;
+            lists[k]->y_12 = 0xA6 + row * 13;
             if (mode == 0)
             {
                 state = CheckItemOnTarget_80033DF4(req);
@@ -265,11 +240,11 @@ int DrawTargetSelectMenu_8002D250(short* req, int mode, int cursor, int ot)
             }
             if (state == 0 || state == 2)
             {
-                lists[k]->flags &= ~2;
+                lists[k]->flags_0 &= ~2;
             }
             else
             {
-                lists[k]->flags |= 2;
+                lists[k]->flags_0 |= 2;
             }
             k++;
             row++;

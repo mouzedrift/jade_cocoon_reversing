@@ -70,7 +70,6 @@ extern void DrawCardSlotMenu_800BB4A8(int slot);
 
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590; // -> globals.h
-extern void DrawMenuWindows_8002A5A4(void* list);            // -> menu_draw.h
 extern void DrawMenuBackground_8002BE10(void);
 
 #endif

@@ -184,7 +184,6 @@ extern void DrawWindow_80042460(void* rect, void* box, void* ot, unsigned int a3
 extern void srand(unsigned int seed); // PSY-Q LIBC
 extern void UpdateMenuCursor_8003D794(void* a0, int a1);
 extern void CheckMemCards_8003BB1C(void);
-extern void DrawMenuWindows_8002A5A4(TitleMenuCfg* cfg);
 extern unsigned short word_8008B55A;
 extern int dword_8008BD80;
 

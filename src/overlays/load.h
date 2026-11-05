@@ -507,7 +507,6 @@ extern int dword_8008BD80;
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
 extern void FreeActiveOverlay_8002C014(void);
 extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
-extern void DrawMenuWindows_8002A5A4(void* p);
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);

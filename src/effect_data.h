@@ -2,6 +2,7 @@
 #define _TU_80014954_H_
 #include "actor.h"
 #include "engine.h"
+#include "menu_draw.h"
 
 // the files the overlays are loaded from, and where their addresses go
 typedef struct
@@ -11,18 +12,6 @@ typedef struct
 } OverlayEntry;
 extern OverlayEntry overlays_8007D9E8[];
 
-// an item of a menu window (the tables of ui_sprites / ability_menu)
-typedef struct
-{
-    unsigned short flags;
-    short pad_2;
-    int text_4; // the text, or the sprite index into sprts_8
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x;
-    short y;
-    char pad_14[8];
-} MenuItem;
 
 // camera offsets (camera)
 typedef struct
@@ -202,9 +191,7 @@ extern int mapJustLoaded_80082668;
 extern int mapHasCode_8008266C;
 extern int* mapAreas_80082674;
 extern int dword_8008267C;
-extern unsigned char largeDigitColors_800826F8[][4];
-extern int aRx[21];
-extern int dword_8008276C[12];
+extern unsigned char largeDigitColors_800826F8[4][4];
 extern short scrollArrowIcons_8008279C[];
 extern int elementIcons_800827BC[];
 extern int elementIconsUnlit_800827D0[];
@@ -224,7 +211,7 @@ extern int itemListRowData_800828FC[14];
 extern int aH6p_1[14];
 extern int itemListRowData_8008296C[14];
 extern int aH6p_2[17];
-extern MenuItem* itemListRows_800829E8[];
+extern MenuWindowItem* itemListRows_800829E8[];
 extern unsigned short magicScrollUpPos_800829FC[];
 extern unsigned short magicScrollDownPos_80082A00[];
 extern int magicListRowData_80082A04[11];
@@ -235,7 +222,7 @@ extern int magicListRowData_80082AA0[14];
 extern int aU6k_1[7];
 extern int magicListRowData_80082AF4[14];
 extern int aU6k_2[10];
-extern MenuItem* magicListRows_80082B54[];
+extern MenuWindowItem* magicListRows_80082B54[];
 extern int abilityListRowData_80082B68[4];
 extern int a8[21];
 extern int abilityListRowData_80082BCC[7];
@@ -246,7 +233,7 @@ extern int abilityListRowData_80082CAC[7];
 extern int a8_2[21];
 extern int abilityListRowData_80082D1C[7];
 extern int a8_3[24];
-extern MenuItem* abilityListRows_80082D98[];
+extern MenuWindowItem* abilityListRows_80082D98[];
 extern int aKumu[3];
 extern int familyTreeBoxPosData_80082DBC[4];
 extern Pos16* familyTreeBoxPos_80082DCC[7];
