@@ -208,6 +208,15 @@ extern const char aPatdreg_80073008[];
 extern const char aRaddreg_80073018[];
 extern const char aMarrdreg_80073028[];
 // bones: 4 shorts per bone (Actor.bones_134); a1/a2: three flags each from model header sections
-extern void SetBoneGroupFlags_80019B14(short* bones, unsigned short* levels, unsigned short* flags);
 
+int InitMinionData_8001900C(UnitStats* unit, int* params);
+void CopyName_80019AF4(unsigned int* dst, unsigned int* src);
+int GetUnitRank_80019AD0(UnitStats* unit);
+int GetRankForLevel_80019A80(int level);
+void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base);
+void InitSpeciesSkills_800199A0(UnitStats* unit);
+void InitSpeciesMagic_80019A20(UnitStats* unit);
+void SetBoneGroupFlags_80019B14(short* bones, unsigned short* levels, unsigned short* flags);
+int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx);
+void SetActorStatusTint_80018EBC(Actor* actor, UnitStatus* status);
 #endif

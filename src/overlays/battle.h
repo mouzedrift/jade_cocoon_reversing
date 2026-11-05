@@ -501,9 +501,7 @@ extern UnitStatus* GetPartyMinionStatus_800C0F78(int);
 
 
 
-extern void GetActorHitFrame_80018E5C(Actor*, int);
 
-extern void SetActorStatusTint_80018EBC(Actor*, UnitStatus*);
 
 
 extern int IsSummonedMinionReady_800C0D88();

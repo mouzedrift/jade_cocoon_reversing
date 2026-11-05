@@ -27,6 +27,7 @@
 #include "status_panel.h"
 #include "unit_stats.h"
 #include "party_window.h"
+#include "minion_init.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel

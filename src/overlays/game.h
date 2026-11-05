@@ -27,6 +27,7 @@
 #include "ui_sprites.h"
 #include "tim.h"
 #include "effect.h"
+#include "minion_init.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -90,7 +91,6 @@ typedef struct GameEnemySlot
     GameEnemy data_8;
 } GameEnemySlot;
 
-extern void SetBoneGroupFlags_80019B14(short* p, unsigned short* a1, unsigned short* a2);
 extern short defaultBones_80079140[]; // default bone table
 extern GameEnemy* GetEventEnemy_800A5F6C(void);
 extern GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* ai);
@@ -292,9 +292,7 @@ typedef struct GameMenuRequest
 } GameMenuRequest;
 
 
-extern void SetActorStatusTint_80018EBC(Actor* a, UnitStatus* b);
 
-extern void GetActorHitFrame_80018E5C(Actor* a, int b);
 
 
 extern int FindInLists_800A52EC(short** tab, int count, int key);

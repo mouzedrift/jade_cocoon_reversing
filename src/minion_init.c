@@ -257,7 +257,7 @@ int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
     return frame;
 }
 // Matched
-void SetActorStatusTint_80018EBC(int actor, UnitStatus* status)
+void SetActorStatusTint_80018EBC(Actor* actor, UnitStatus* status)
 {
     unsigned int flags = status->status_0;
     int* tint = 0;
@@ -298,9 +298,6 @@ void SetActorStatusTint_80018EBC(int actor, UnitStatus* status)
 
 extern MinionBaseStats* sub_800B32A4(int a0);
 extern unsigned char* sub_800B32F0(int a0);
-extern void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base);
-extern void InitSpeciesSkills_800199A0(UnitStats* unit);
-extern void InitSpeciesMagic_80019A20(UnitStats* a0);
 // Matched
 int InitMinionData_8001900C(UnitStats* unit, int* params)
 {
