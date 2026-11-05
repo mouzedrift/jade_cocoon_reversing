@@ -31,16 +31,6 @@ typedef struct MenuQ
     int w[4];
 } MenuQ;
 
-// what DrawMenuWindows_8002A5A4 takes
-typedef struct MenuWin
-{
-    int flags_0;  // 1 plain, 2 blinking cursor, 4 fixed cursor
-    int time_4;   // blink timer
-    int open_8;   // window open step out of 8
-    int cursor_C;
-    int items_10;
-    int ot_14;
-} MenuWin;
 
 typedef struct BattleDrop
 {
@@ -50,10 +40,6 @@ typedef struct BattleDrop
     char pad_4[4];
 } BattleDrop;
 
-typedef struct MenuBox7
-{
-    int w[7];
-} MenuBox7;
 
 typedef struct MenuCursorLayout
 {
@@ -72,37 +58,7 @@ typedef struct MenuCell
     unsigned short h;
 } MenuCell;
 
-typedef struct MenuWinItem
-{
-    unsigned short flags_0;
-    short pad_2;
-    void* data_4;
-    SPRT** spr_8;
-    DR_TPAGE** tp_C;
-    short x_10;
-    short y_12;
-    char pad_14[8];
-} MenuWinItem;
 
-typedef struct MenuEquipLine
-{
-    char pad_0[4];
-    int label_4;
-    SPRT** sprts_8;
-    DR_TPAGE** tpages_C;
-    short x_10;
-    short y_12;
-    char pad_14[0xC];
-    int icon_20;
-    char pad_24[8];
-    short x_2C;
-    short y_2E;
-    char pad_30[0xC];
-    void* name_3C;
-    char pad_40[8];
-    short x_48;
-    short y_4A;
-} MenuEquipLine;
 
 /* the types of menu.c */
 
@@ -167,10 +123,10 @@ typedef struct LevantSummaryArgs
 // what DrawEquipmentWindow_800C0E04 / DrawKeyItemsWindow_800C09B0 take
 typedef struct MenuEquipQ
 {
-    short sel_0; // -> MenuWin.cursor_C
+    short sel_0; // -> MenuWindowList.cursor_C
     short scroll_2;
-    short winFlags_4; // -> MenuWin.flags_0
-    short ot_6;  // -> MenuWin.ot_14
+    short winFlags_4; // -> MenuWindowList.flags_0
+    short ot_6;  // -> MenuWindowList.ot_14
     short f8;
     short fA;
     int z;
@@ -676,13 +632,13 @@ extern const char aMinionList_800BB950[];
 extern const char aSelect_800BB968[];
 extern const char aRearrange_800BB978[];
 extern const char aDescription_800BB98C[];
-extern const MenuBox7 minionListTitle_800BB9A4;
+extern const MenuWindowItem minionListTitle_800BB9A4;
 extern const char minionListBullet_800BB9C0[];
 extern const int dword_800BB9C4;
 extern const char aLeaveTheForest_800BBA44[];
 extern const char aYesNo_800BBA68[];
 extern const int dword_800BBA7C;
-extern const MenuWin menuHdrActive_800BBB7C;
+extern const MenuWindowList menuHdrActive_800BBB7C;
 extern const int dword_800BBB94[2];
 extern int dword_800C1050[4];
 extern char levelUpStatusRect_800C1060[32];
@@ -691,10 +647,11 @@ extern short dword_800C1718[10];
 extern int resultHelpBar_800C172C[7];
 extern char dword_800C1748[12];
 extern int equipSlotLabels_800C1754[3];
-extern int equipRowWeapon_800C1760[28];
-extern int equipRowArmor_800C17D0[28];
-extern int equipRowAccessory_800C1840[28];
-extern MenuEquipLine *equipRows_800C18B0[5];
+extern MenuWindowItem equipRowWeapon_800C1760[4];
+extern MenuWindowItem equipRowArmor_800C17D0[4];
+extern MenuWindowItem equipRowAccessory_800C1840[4];
+extern MenuWindowItem* equipRows_800C18B0[4];
+extern short dword_800C18C0[2];
 extern char levantStatsRect_800C18C4[8];
 extern char menuTitleRect_800C18CC[8];
 extern char configLabelRect_800C18D4[8];
@@ -719,24 +676,24 @@ extern MenuQ itemDescs_800C1BE8[43];
 extern MenuQ keyItemDescs_800C1E98[38];
 extern MenuQ magicDescs_800C20F8[30];
 extern char abilityDescs_800C22D8[624];
-extern int levantCmdItem0_800C2548[14];
-extern int levantCmdItem1_800C2580[14];
-extern int levantCmdItem2_800C25B8[14];
-extern int levantCmdItem3_800C25F0[14];
-extern int levantCmdItem4_800C2628[14];
-extern char levantCmdItems_800C2660[24];
-extern int minionCmdItem0_800C2678[14];
-extern int minionCmdItem1_800C26B0[14];
-extern int minionCmdItem2_800C26E8[14];
-extern int minionCmdItem3_800C2720[14];
-extern char minionCmdItems_800C2758[20];
+extern MenuWindowItem levantCmdItem0_800C2548[2];
+extern MenuWindowItem levantCmdItem1_800C2580[2];
+extern MenuWindowItem levantCmdItem2_800C25B8[2];
+extern MenuWindowItem levantCmdItem3_800C25F0[2];
+extern MenuWindowItem levantCmdItem4_800C2628[2];
+extern MenuWindowItem* levantCmdItems_800C2660[6];
+extern MenuWindowItem minionCmdItem0_800C2678[2];
+extern MenuWindowItem minionCmdItem1_800C26B0[2];
+extern MenuWindowItem minionCmdItem2_800C26E8[2];
+extern MenuWindowItem minionCmdItem3_800C2720[2];
+extern MenuWindowItem* minionCmdItems_800C2758[5];
 extern char keyItemsUpArrowPos_800C276C[4];
 extern char keyItemsDownArrowPos_800C2770[4];
-extern int keyItemRow0_800C2774[21];
-extern int keyItemRow1_800C27C8[21];
-extern int keyItemRow2_800C281C[21];
-extern int keyItemRow3_800C2870[21];
-extern MenuWinItem *keyItemRows_800C28C4[5];
+extern MenuWindowItem keyItemRow0_800C2774[3];
+extern MenuWindowItem keyItemRow1_800C27C8[3];
+extern MenuWindowItem keyItemRow2_800C281C[3];
+extern MenuWindowItem keyItemRow3_800C2870[3];
+extern MenuWindowItem* keyItemRows_800C28C4[5];
 extern char helpBarParty_800C28D8[24];
 extern char helpBarPartyList_800C28F0[32];
 extern char helpBarTopList_800C2910[32];

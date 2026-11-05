@@ -304,7 +304,7 @@ const char aMinionList_800BB950[] = "\202l\202\211\202\216\202\211\202\217\202\2
 const char aSelect_800BB968[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
 const char aRearrange_800BB978[] = "\202q\202\205\202\201\202\222\202\222\202\201\202\216\202\207\202\205"; // Rearrange
 const char aDescription_800BB98C[] = "\202c\202\205\202\223\202\203\202\222\202\211\202\220\202\224\202\211\202\217\202\216"; // Description
-const MenuBox7 minionListTitle_800BB9A4 = { { 0x10010, 111, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x100074, 0x120058, 0x2000E } };
+const MenuWindowItem minionListTitle_800BB9A4 = { 0x10, 1, 111, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x74, 0x10, 0x58, 0x12, 14, 2 };
 const char minionListBullet_800BB9C0[] = "\201E"; // ・
 const int dword_800BB9C4 = 0;
 
@@ -528,25 +528,26 @@ short dword_800C1718[10] = { 68, 69, 70, 71, 72, 72, 72, 72, 72, 0 };
 int resultHelpBar_800C172C[7] = { 16, (int)&emptyHelpLabel_800B66EC, 167, (int)aQuit_800B66E0, 110, (int)aStatus_800B66D0, -1 };
 char dword_800C1748[12] = { 0, 0, 0, 0, 78, 0, 44, 0, 141, 0, 68 };
 int equipSlotLabels_800C1754[3] = { 22, 20, 3 }; // DrawEquipmentWindow_800C0E04: the label sprite of each equipment row
-int equipRowWeapon_800C1760[28] = {
-    0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x3D000A, 0x150032, 0x5000A, 0x10010,
-    0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x3D003C, 0x150015, 0x50003, 0x30010, 0,
-    0, 0, 0x3D0051, 0x150070, 0x40004, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem equipRowWeapon_800C1760[4] = {
+    { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x3D, 0x32, 0x15, 10, 5 },
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x3C, 0x3D, 0x15, 0x15, 3, 5 },
+    { 0x10, 3, 0, NULL, NULL, 0x51, 0x3D, 0x70, 0x15, 4, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int equipRowArmor_800C17D0[28] = {
-    0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x3D000A, 0x150032, 0x5000B, 0x10010,
-    0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x3D003C, 0x150015, 0x50003, 0x30010, 0,
-    0, 0, 0x3D0051, 0x150070, 0x40004, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem equipRowArmor_800C17D0[4] = {
+    { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x3D, 0x32, 0x15, 11, 5 },
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x3C, 0x3D, 0x15, 0x15, 3, 5 },
+    { 0x10, 3, 0, NULL, NULL, 0x51, 0x3D, 0x70, 0x15, 4, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int equipRowAccessory_800C1840[28] = {
-    0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x3D000A, 0x150032, 0x50005, 0x10010,
-    0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x3D003C, 0x150015, 0x50003, 0x30010, 0,
-    0, 0, 0x3D0051, 0x150070, 0x40005, 1, 0, 0,
-    0, -1, -1, -1,
+MenuWindowItem equipRowAccessory_800C1840[4] = {
+    { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x3D, 0x32, 0x15, 5, 5 },
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x3C, 0x3D, 0x15, 0x15, 3, 5 },
+    { 0x10, 3, 0, NULL, NULL, 0x51, 0x3D, 0x70, 0x15, 5, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-MenuEquipLine *equipRows_800C18B0[5] = { (void *)equipRowWeapon_800C1760, (void *)equipRowArmor_800C17D0, (void *)equipRowAccessory_800C1840, 0, (MenuEquipLine *)0xA700D2 };
+MenuWindowItem* equipRows_800C18B0[4] = { equipRowWeapon_800C1760, equipRowArmor_800C17D0, equipRowAccessory_800C1840, NULL };
+short dword_800C18C0[2] = { 0xD2, 0xA7 };
 char levantStatsRect_800C18C4[8] = { 194, 0, 49, 0, 75, 0, 77 };
 char menuTitleRect_800C18CC[8] = { 139, 0, 18, 0, 43, 0, 19 };
 char configLabelRect_800C18D4[8] = { 125, 0, 193, 0, 70, 0, 19 };
@@ -749,67 +750,67 @@ MenuQ magicDescs_800C20F8[30] = {
     { { (int)aEnhanceWind_800BA588, (int)aIncreasesWindAt_800BA534, (int)aEffectivenessOf_800BA4D4 } },
 };
 char abilityDescs_800C22D8[624] = { 56, 104, 11, 128, 56, 104, 11, 128, 56, 104, 11, 128, 0, 0, 0, 0, 56, 104, 11, 128, 56, 104, 11, 128, 56, 104, 11, 128, 0, 0, 0, 0, 0, 185, 11, 128, 168, 184, 11, 128, 160, 172, 11, 128, 0, 0, 0, 0, 124, 184, 11, 128, 36, 184, 11, 128, 200, 173, 11, 128, 0, 0, 0, 0, 252, 183, 11, 128, 164, 183, 11, 128, 232, 174, 11, 128, 0, 0, 0, 0, 124, 183, 11, 128, 36, 183, 11, 128, 128, 171, 11, 128, 0, 0, 0, 0, 248, 182, 11, 128, 164, 182, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 120, 182, 11, 128, 16, 182, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 212, 181, 11, 128, 104, 181, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 44, 181, 11, 128, 196, 180, 11, 128, 116, 180, 11, 128, 0, 0, 0, 0, 60, 180, 11, 128, 240, 179, 11, 128, 160, 179, 11, 128, 0, 0, 0, 0, 100, 179, 11, 128, 28, 179, 11, 128, 212, 178, 11, 128, 0, 0, 0, 0, 152, 178, 11, 128, 92, 178, 11, 128, 16, 178, 11, 128, 0, 0, 0, 0, 212, 177, 11, 128, 136, 177, 11, 128, 48, 177, 11, 128, 0, 0, 0, 0, 248, 176, 11, 128, 152, 176, 11, 128, 52, 176, 11, 128, 0, 0, 0, 0, 248, 175, 11, 128, 160, 175, 11, 128, 52, 176, 11, 128 };
-int levantCmdItem0_800C2548[14] = {
-    0x10008, 82, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x120020, 0x130042, 0x30005, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem levantCmdItem0_800C2548[2] = {
+    { 8, 1, 82, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x20, 0x12, 0x42, 0x13, 5, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int levantCmdItem1_800C2580[14] = {
-    0x10008, 88, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x120064, 0x13002B, 0x40007, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem levantCmdItem1_800C2580[2] = {
+    { 8, 1, 88, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x64, 0x12, 0x2B, 0x13, 7, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int levantCmdItem2_800C25B8[14] = {
-    0x10008, 49, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x120091, 0x13002B, 0x30007, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem levantCmdItem2_800C25B8[2] = {
+    { 8, 1, 49, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x91, 0x12, 0x2B, 0x13, 7, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int levantCmdItem3_800C25F0[14] = {
-    0x10008, 145, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x1200BE, 0x13002B, 0x30009, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem levantCmdItem3_800C25F0[2] = {
+    { 8, 1, 145, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xBE, 0x12, 0x2B, 0x13, 9, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int levantCmdItem4_800C2628[14] = {
-    0x10008, 87, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x1200EB, 0x130036, 0x30006, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem levantCmdItem4_800C2628[2] = {
+    { 8, 1, 87, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xEB, 0x12, 0x36, 0x13, 6, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-char levantCmdItems_800C2660[24] = { 72, 37, 12, 128, 128, 37, 12, 128, 184, 37, 12, 128, 240, 37, 12, 128, 40, 38, 12, 128 };
-int minionCmdItem0_800C2678[14] = {
-    0x10008, 205, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x120035, 0x120046, 0x20005, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem* levantCmdItems_800C2660[6] = { levantCmdItem0_800C2548, levantCmdItem1_800C2580, levantCmdItem2_800C25B8, levantCmdItem3_800C25F0, levantCmdItem4_800C2628, NULL };
+MenuWindowItem minionCmdItem0_800C2678[2] = {
+    { 8, 1, 205, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x35, 0x12, 0x46, 0x12, 5, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int minionCmdItem1_800C26B0[14] = {
-    0x10008, 108, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x12007D, 0x12002B, 0x20004, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem minionCmdItem1_800C26B0[2] = {
+    { 8, 1, 108, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x12, 0x2B, 0x12, 4, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int minionCmdItem2_800C26E8[14] = {
-    0x10008, 49, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x1200AA, 0x12002B, 0x30005, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem minionCmdItem2_800C26E8[2] = {
+    { 8, 1, 49, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xAA, 0x12, 0x2B, 0x12, 5, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int minionCmdItem3_800C2720[14] = {
-    0x10008, 96, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x1200D7, 0x120034, 0x30005, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem minionCmdItem3_800C2720[2] = {
+    { 8, 1, 96, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xD7, 0x12, 0x34, 0x12, 5, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-char minionCmdItems_800C2758[20] = { 120, 38, 12, 128, 176, 38, 12, 128, 232, 38, 12, 128, 32, 39, 12, 128 };
+MenuWindowItem* minionCmdItems_800C2758[5] = { minionCmdItem0_800C2678, minionCmdItem1_800C26B0, minionCmdItem2_800C26E8, minionCmdItem3_800C2720, NULL };
 char keyItemsUpArrowPos_800C276C[4] = { 160, 0, 47 };
 char keyItemsDownArrowPos_800C2770[4] = { 160, 0, 148 };
-int keyItemRow0_800C2774[21] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360061, 0x150015, 0x40003, 0x30010,
-    0, 0, 0, 0x360076, 0x15006B, 0x40004, 1, 0,
-    0, 0, -1, -1, -1,
+MenuWindowItem keyItemRow0_800C2774[3] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x61, 0x36, 0x15, 0x15, 3, 4 },
+    { 0x10, 3, 0, NULL, NULL, 0x76, 0x36, 0x6B, 0x15, 4, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int keyItemRow1_800C27C8[21] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360061, 0x150015, 0x40003, 0x30010,
-    0, 0, 0, 0x360076, 0x15006B, 0x40004, 1, 0,
-    0, 0, -1, -1, -1,
+MenuWindowItem keyItemRow1_800C27C8[3] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x61, 0x36, 0x15, 0x15, 3, 4 },
+    { 0x10, 3, 0, NULL, NULL, 0x76, 0x36, 0x6B, 0x15, 4, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int keyItemRow2_800C281C[21] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360061, 0x150015, 0x40003, 0x30010,
-    0, 0, 0, 0x360076, 0x15006B, 0x40004, 1, 0,
-    0, 0, -1, -1, -1,
+MenuWindowItem keyItemRow2_800C281C[3] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x61, 0x36, 0x15, 0x15, 3, 4 },
+    { 0x10, 3, 0, NULL, NULL, 0x76, 0x36, 0x6B, 0x15, 4, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int keyItemRow3_800C2870[21] = {
-    0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360061, 0x150015, 0x40003, 0x30010,
-    0, 0, 0, 0x360076, 0x15006B, 0x40004, 1, 0,
-    0, 0, -1, -1, -1,
+MenuWindowItem keyItemRow3_800C2870[3] = {
+    { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x61, 0x36, 0x15, 0x15, 3, 4 },
+    { 0x10, 3, 0, NULL, NULL, 0x76, 0x36, 0x6B, 0x15, 4, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-MenuWinItem *keyItemRows_800C28C4[5] = { (void *)keyItemRow0_800C2774, (void *)keyItemRow1_800C27C8, (void *)keyItemRow2_800C281C, (void *)keyItemRow3_800C2870 };
+MenuWindowItem* keyItemRows_800C28C4[5] = { keyItemRow0_800C2774, keyItemRow1_800C27C8, keyItemRow2_800C281C, keyItemRow3_800C2870, NULL };
 char helpBarParty_800C28D8[24] = { 16, 0, 0, 0, 56, 185, 11, 128, 167, 0, 0, 0, 44, 185, 11, 128, 255, 255, 255, 255 };
 char helpBarPartyList_800C28F0[32] = { 16, 0, 0, 0, 56, 185, 11, 128, 167, 0, 0, 0, 44, 185, 11, 128, 94, 0, 0, 0, 80, 185, 11, 128, 255, 255, 255, 255 };
 char helpBarTopList_800C2910[32] = { 16, 0, 0, 0, 104, 185, 11, 128, 167, 0, 0, 0, 44, 185, 11, 128, 94, 0, 0, 0, 80, 185, 11, 128, 255, 255, 255, 255 };
@@ -1578,7 +1579,7 @@ void FieldMenuTask_800BD6C8(MenuTask* task, MenuCtx* menu)
 void MinionListScreen_800BD80C(MenuTask* task, char* a)
 {
     MenuWinColor col;
-    MenuBox7 box;
+    MenuWindowItem box;
     UiWinArgs win;
     RECT r;
     short pos[2];
@@ -2714,7 +2715,7 @@ void SetMenuCursorLayout_800BF8B4(MenuCtx* menu)
         break;
     }
 }
-const MenuWin menuHdrActive_800BBB7C = { 2, 0, 0, 0, 0, 14 };
+const MenuWindowList menuHdrActive_800BBB7C = { 2, 0, 0, 0, 0, 14 };
 const int dword_800BBB94[2] = { 0x3C028009, 0x8C44D490 };
 
 int TopMenuCursorDown_800BFB10(MenuCtx* menu)
@@ -3115,13 +3116,13 @@ void DrawMagicInfo_800C06E8(MenuCtx* menu)
 
 void DrawLevantCmdMenu_800C07F0(MenuCtx* menu)
 {
-    MenuWin dlg;
+    MenuWindowList dlg;
     int openStep;
     dlg = menuHdrActive_800BBB7C;
     openStep = GetWindowOpenStep_800C0990(menu, 1);
     dlg.time_4 = GetTime30Hz_8002C64C();
     dlg.open_8 = (short)openStep;
-    dlg.items_10 = (int)levantCmdItems_800C2660;
+    dlg.items_10 = levantCmdItems_800C2660;
     dlg.flags_0 &= ~7;
     if (menu->state_2 == 6)
         dlg.flags_0 |= 2;
@@ -3134,13 +3135,13 @@ void DrawLevantCmdMenu_800C07F0(MenuCtx* menu)
 
 void DrawMinionCmdMenu_800C08C0(MenuCtx* menu)
 {
-    MenuWin dlg;
+    MenuWindowList dlg;
     int openStep;
     dlg = menuHdrActive_800BBB7C;
     openStep = GetWindowOpenStep_800C0990(menu, 0x80);
     dlg.time_4 = GetTime30Hz_8002C64C();
     dlg.open_8 = (short)openStep;
-    dlg.items_10 = (int)minionCmdItems_800C2758;
+    dlg.items_10 = minionCmdItems_800C2758;
     dlg.flags_0 &= ~7;
     if (menu->state_2 == 7)
         dlg.flags_0 |= 2;
@@ -3160,7 +3161,7 @@ int GetWindowOpenStep_800C0990(MenuCtx* menu, int mask)
 
 void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq)
 {
-    MenuWin dlg;
+    MenuWindowList dlg;
     short i;
     short openStep;
     short saved = eq->sel_0;
@@ -3181,10 +3182,10 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq)
             icon = -1;
             nm = emptyText_800B6838;
         }
-        keyItemRows_800C28C4[i][0].data_4 = (void*)icon;
-        keyItemRows_800C28C4[i][0].spr_8 = &publicTiySprts_8008D434;
-        keyItemRows_800C28C4[i][0].tp_C = &publicTiyTPages_8008D440;
-        keyItemRows_800C28C4[i][1].data_4 = nm;
+        keyItemRows_800C28C4[i][0].text_4 = icon;
+        keyItemRows_800C28C4[i][0].sprts_8 = &publicTiySprts_8008D434;
+        keyItemRows_800C28C4[i][0].tpages_C = &publicTiyTPages_8008D440;
+        keyItemRows_800C28C4[i][1].text_4 = (int)nm;
         keyItemRows_800C28C4[i][0].x_10 = 0x61;
         keyItemRows_800C28C4[i][0].y_12 = i * 22 + 0x36;
         keyItemRows_800C28C4[i][1].x_10 = 0x76;
@@ -3205,7 +3206,7 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq)
     dlg.time_4 = frameCount_8008D3FC;
     dlg.open_8 = openStep;
     dlg.cursor_C = saved;
-    dlg.items_10 = (int)keyItemRows_800C28C4;
+    dlg.items_10 = keyItemRows_800C28C4;
     dlg.ot_14 = eq->ot_6;
     DrawMenuWindows_8002A5A4(&dlg);
     SetFontClutOffset_8003F900(2, 0);
@@ -3296,7 +3297,7 @@ int IsRecoveryItem_800C0DD4(int item)
 
 void DrawEquipmentWindow_800C0E04(MenuEquipQ* eq, short* pos, short openStep)
 {
-    MenuWin dlg;
+    MenuWindowList dlg;
     short i;
     for (i = 0; i < 3; i++)
     {
@@ -3313,23 +3314,23 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* eq, short* pos, short openStep)
             icon = -1;
             nm = emptyText_800B6838;
         }
-        equipRows_800C18B0[i]->label_4 = equipSlotLabels_800C1754[i];
-        equipRows_800C18B0[i]->icon_20 = icon;
-        equipRows_800C18B0[i]->name_3C = nm;
-        equipRows_800C18B0[i]->sprts_8 = &uiTiySprts_8008D620;
-        equipRows_800C18B0[i]->tpages_C = &uiTiyTPages_8008D3F4;
-        equipRows_800C18B0[i]->x_10 = pos[0];
-        equipRows_800C18B0[i]->y_12 = pos[1] + i * 22;
-        equipRows_800C18B0[i]->x_2C = pos[0] + 0x32;
-        equipRows_800C18B0[i]->y_2E = pos[1] + i * 22;
-        equipRows_800C18B0[i]->x_48 = pos[0] + 0x47;
-        equipRows_800C18B0[i]->y_4A = pos[1] + i * 22;
+        equipRows_800C18B0[i][0].text_4 = equipSlotLabels_800C1754[i];
+        equipRows_800C18B0[i][1].text_4 = icon;
+        equipRows_800C18B0[i][2].text_4 = (int)nm;
+        equipRows_800C18B0[i][0].sprts_8 = &uiTiySprts_8008D620;
+        equipRows_800C18B0[i][0].tpages_C = &uiTiyTPages_8008D3F4;
+        equipRows_800C18B0[i][0].x_10 = pos[0];
+        equipRows_800C18B0[i][0].y_12 = pos[1] + i * 22;
+        equipRows_800C18B0[i][1].x_10 = pos[0] + 0x32;
+        equipRows_800C18B0[i][1].y_12 = pos[1] + i * 22;
+        equipRows_800C18B0[i][2].x_10 = pos[0] + 0x47;
+        equipRows_800C18B0[i][2].y_12 = pos[1] + i * 22;
     }
     dlg.flags_0 = eq->winFlags_4;
     dlg.time_4 = frameCount_8008D3FC;
     dlg.open_8 = openStep;
     dlg.cursor_C = eq->sel_0;
-    dlg.items_10 = (int)equipRows_800C18B0;
+    dlg.items_10 = equipRows_800C18B0;
     dlg.ot_14 = eq->ot_6;
     DrawMenuWindows_8002A5A4(&dlg);
     SetFontClutOffset_8003F900(2, 0);

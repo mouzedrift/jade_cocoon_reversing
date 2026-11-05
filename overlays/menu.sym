@@ -394,6 +394,7 @@ equipRowWeapon_800C1760=0x800c1760; // data
 equipRowArmor_800C17D0=0x800c17d0; // data
 equipRowAccessory_800C1840=0x800c1840; // data
 equipRows_800C18B0=0x800c18b0; // data
+dword_800C18C0=0x800c18c0; // data
 levantStatsRect_800C18C4=0x800c18c4; // data
 menuTitleRect_800C18CC=0x800c18cc; // data
 configLabelRect_800C18D4=0x800c18d4; // data
