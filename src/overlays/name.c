@@ -68,7 +68,7 @@ MenuWindowItem pageItem123_800B8344[2] = {
 };
 MenuWindowItem* pageItemLists_800B837C[3] = { pageItemAbc_800B830C, pageItem123_800B8344, NULL };
 MenuWindowList pageMenu_800B8388 = { 2, 0, 8, 0, pageItemLists_800B837C, 0 };
-char helpBar_800B83A0[24] = { 16, 0, 0, 0, 32, 110, 11, 128, 167, 0, 0, 0, 16, 110, 11, 128, 255, 255, 255, 255 };
+ButtonHelpEntry helpBar_800B83A0[3] = { { 16, aSelect_800B6E20 }, { 167, aCancel_800B6E10 }, { -1 } };
 char defaultName_800B83B8[0x10] = { 0 }; // ResetNameToDefault_800B7FA0 copies 0x14 bytes from it
 // WrapGridCursor_800B8020: the NameCursor flag that lets the cursor wrap, per direction (1 left .. 4 down)
 short cursorWrapMasks_800B83C8[4] = { 1, 1, 2, 2 };

@@ -148,7 +148,7 @@ extern MenuWindowItem pageItemAbc_800B830C[2];
 extern MenuWindowItem pageItem123_800B8344[2];
 extern MenuWindowItem* pageItemLists_800B837C[3];
 extern MenuWindowList pageMenu_800B8388;
-extern char helpBar_800B83A0[24];
+extern ButtonHelpEntry helpBar_800B83A0[3];
 extern char defaultName_800B83B8[0x10];
 extern short cursorWrapMasks_800B83C8[4];
 extern short cursorWrapDirs_800B83D0[4];
