@@ -1419,7 +1419,7 @@ int EvCmdMessage_800BA020(EvScriptCtx* ctx)
             ctx->pc_8++;
             return 1;
         }
-        if ((*(int*)ctx->msgWindow_11C & 0x8001) == 1)
+        if ((ctx->msgWindow_11C->flags_0 & 0x8001) == 1)
         {
             break;
         }
@@ -2406,14 +2406,14 @@ int sub_800BBE18(EvScriptCtx* ctx)
 int* FindMsgChoiceList_800BC560(int* p);
 int GetChoiceMask_800BC58C(int* p);
 int IsActorLeftOf_800BC5C8(int a, int b);
-void SetupItemMsgSlots_800BC6C4(EvItemMsgCfg* cfg, EvItemMsgSrc* src, int n);
+void SetupItemMsgSlots_800BC6C4(ItemMsgInit* cfg, EvItemMsgSrc* src, int n);
 
 // Opens the message/item window for the current say/ask instruction (ops 0x37-0x3E) and resets the per-message options
 // Matched
 int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
 {
     EvMsgWindowCfg cfg;
-    EvItemMsgCfg it;
+    ItemMsgInit it;
     EvSpeaker pair;
     EvItemMsgSrc src;
     int* list;
@@ -2427,18 +2427,18 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     int posMode;
     int str;
     int mask;
-    int ret;
+    MsgWindowEntry* ret;
     short* pos;
     int skip;
     EvVoiceCue* voice;
     int srcArg;
     int fl;
     ret = 0;
-    str = ret;
+    str = 0;
     list = 0;
     bc = 1;
-    mask = ret;
-    pos = (short*)ret;
+    mask = 0;
+    pos = 0;
     c0 = 0;
     c4 = 0;
     cc = 1;
@@ -2568,9 +2568,9 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     {
         it.posMode_0 = posMode;
         it.pos_4 = pos;
-        it.f8 = 0;
-        it.f48 = pc->b_8;
-        it.f4C = 0;
+        it.field_8 = 0;
+        it.mode_48 = pc->b_8;
+        it.text_4C = 0;
         {
             int arg = pc->c_C;
             if (arg == 0)
@@ -2585,9 +2585,9 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     {
         it.posMode_0 = posMode;
         it.pos_4 = pos;
-        it.f8 = 0;
-        it.f48 = pc->b_8;
-        it.f4C = 0;
+        it.field_8 = 0;
+        it.mode_48 = pc->b_8;
+        it.text_4C = 0;
         srcArg = pc->a_4;
         if (srcArg == -1)
         {
@@ -2603,9 +2603,9 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     {
         it.posMode_0 = posMode;
         it.pos_4 = pos;
-        it.f8 = 0;
-        it.f48 = 0xB;
-        it.f4C = str;
+        it.field_8 = 0;
+        it.mode_48 = 0xB;
+        it.text_4C = (int*)str;
         SetupItemMsgSlots_800BC6C4(&it, 0, 0);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
@@ -2624,7 +2624,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
 
 int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx)
 {
-    EvMsgResult info;
+    MsgResult info;
     unsigned int flags;
     int i;
     EvXaClip* voice;
@@ -2650,7 +2650,7 @@ int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx)
         SkipActorAnims_800A67B4(ctx);
         flags = ctx->flags_0;
         ctx->flags_0 = flags & ~2;
-        if (!info.fC_C)
+        if (!info.field_24)
         {
             return 0;
         }
@@ -2658,9 +2658,9 @@ int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx)
         {
             ctx->flags_0 = (ctx->flags_0 & ~0x40) | 0x80;
         }
-        if (info.f8_8)
+        if (info.result_20)
         {
-            ctx->branch_EC = info.choice_2;
+            ctx->branch_EC = info.sel_1A;
         }
         CloseMsgWindow_80034A84(ctx->msgWindow_11C);
         currentMessageId_800AEBE8 = 0x8000;
@@ -2753,33 +2753,33 @@ int IsActorLeftOf_800BC5C8(int actorA, int actorB)
 }
 
 // Matched
-void SetupItemMsgSlots_800BC6C4(EvItemMsgCfg* cfg, EvItemMsgSrc* src, int n)
+void SetupItemMsgSlots_800BC6C4(ItemMsgInit* cfg, EvItemMsgSrc* src, int n)
 {
     int local[8];
     int i;
-    EvItemMsgSlot* slot;
+    ItemMsgEntry* slot;
     memset(local, 0, 0x20);
     local[0] = 2;
     local[5] = 3;
     for (i = 0; i < 3; i++)
     {
-        slot = &cfg->slots_C[i];
+        slot = &cfg->entries_C[i];
         if (i < n)
         {
-            slot->f0_0 = src[i].a_0;
-            slot->f4_4 = src[i].b_2;
-            slot->f8_8 = src[i].c_4;
+            slot->type = src[i].a_0;
+            slot->id = src[i].b_2;
+            slot->count = src[i].c_4;
         }
         else
         {
-            slot->f0_0 = -1;
-            slot->f4_4 = 0;
-            slot->f8_8 = 0;
+            slot->type = -1;
+            slot->id = 0;
+            slot->count = 0;
         }
-        if (slot->f0_0 >= 0)
+        if (slot->type >= 0)
         {
-            slot->fC_C = local[slot->f0_0];
-            slot->f10_10 = slot->f4_4;
+            slot->field_C = local[slot->type];
+            slot->field_10 = slot->id;
         }
     }
 }

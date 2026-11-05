@@ -134,7 +134,7 @@ typedef struct GameEvCtx
     int lastMsg_110;
     int choiceMask_114;
     int msgOpen_118;
-    int msgWindow_11C;
+    struct MsgWindowEntry* msgWindow_11C;
     int ent_120;
 } GameEvCtx;
 

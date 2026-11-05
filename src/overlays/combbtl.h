@@ -16,6 +16,7 @@
 #include "menu_window.h"
 #include "effect_data.h"
 #include "util.h"
+#include "msg_window.h"
 
 typedef struct CombBtlNode
 {
@@ -100,7 +101,7 @@ extern const char *lossLines_800A843C[6];
 extern CombBtlLineList6 finalLines_800A8454;
 extern short hpDamage_800A8470[2];
 extern short mpDamage_800A8474[2];
-extern int announcerWindow_800A8478;
+extern MsgWindowEntry* announcerWindow_800A8478;
 extern int dword_800A847C;
 extern int statusCured_800A8480[2];
 extern short exchangeStep_800A8488;
@@ -189,7 +190,7 @@ void WaitVictoryJingle_800A5080(CombBtlTask* t);
 void RecordBattleResult_800A50E4(CombBtlTask* t);
 void AnnounceWinner_800A51EC(CombBtlTask* t);
 void DrawWinnerBanner_800A5290(CombBtlTask* t);
-int OpenAnnouncerWindow_800A5408(int which, int lines, int side);
+MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side);
 void CombBtlEnd_800A54CC(CombBtlTask* t);
 void CombBtlExit_800A5544(CombBtlTask* t);
 void SendInMinions_800A5638(CombBtlTask* t, int a);
@@ -250,8 +251,6 @@ extern void PlaySeqSlot_80031160(unsigned int idx, short loops); // -> sound.h (
 extern void StopSeqSlot_80031334(int idx);         // -> sound.h (sound_seq.c)
 extern void AddDrawAreaPrim_8003326C(RECT* r, unsigned long* ot); // -> unit_query.h
 extern void AddClipDrawAreaPrim_80033308(unsigned long* ot); // -> unit_query.h
-extern int GetMsgWindowResultIfDone_800349B4();    // -> msg_window.h
-extern void CloseMsgWindow_80034A84();             // -> msg_window.h
 extern int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode); // -> movie.h
 extern void DrawWindow_80042460(void* rect, void* style, void* ot, int time); // -> event.h
 extern int XaRequestStop_80043524(void);           // -> event.h

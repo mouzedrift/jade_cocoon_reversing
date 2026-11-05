@@ -1376,9 +1376,9 @@ void OnMinionLevelUp_800BCF74(short index)
 
 void ShowDropMessage_800BCFDC(BattleResult* result)
 {
-    ItemMsgCfg msg;
+    ItemMsgInit msg;
     short msgPos[2];
-    ItemMsgSlot ent[3];
+    ItemMsgEntry ent[3];
     short i;
     short n = 0;
     msgPos[0] = 100;
@@ -1387,11 +1387,11 @@ void ShowDropMessage_800BCFDC(BattleResult* result)
     {
         if (result->hasDrop_4C[i])
         {
-            ent[n].kind_0 = battleDrops_800C29A0[i].kind_2;
-            ent[n].item_4 = battleDrops_800C29A0[i].item_3;
-            ent[n].f8 = 1;
-            ent[n].fC = 2;
-            ent[n].f10 = battleDrops_800C29A0[i].item_3;
+            ent[n].type = battleDrops_800C29A0[i].kind_2;
+            ent[n].id = battleDrops_800C29A0[i].item_3;
+            ent[n].count = 1;
+            ent[n].field_C = 2;
+            ent[n].field_10 = battleDrops_800C29A0[i].item_3;
             n++;
         }
     }
@@ -1400,21 +1400,21 @@ void ShowDropMessage_800BCFDC(BattleResult* result)
         i = n;
         do
         {
-            ent[i].kind_0 = -1;
-            ent[i].item_4 = 0xFF;
-            ent[i].f8 = 0;
-            ent[i].fC = 0;
-            ent[i].f10 = 0;
+            ent[i].type = -1;
+            ent[i].id = 0xFF;
+            ent[i].count = 0;
+            ent[i].field_C = 0;
+            ent[i].field_10 = 0;
         } while (++i < 3);
     }
     msg.posMode_0 = 1;
     msg.pos_4 = msgPos;
-    msg.f8 = 0;
-    msg.e[0] = ent[0];
-    msg.e[1] = ent[1];
-    msg.e[2] = ent[2];
-    msg.f48 = -1;
-    msg.f4C = 0;
+    msg.field_8 = 0;
+    msg.entries_C[0] = ent[0];
+    msg.entries_C[1] = ent[1];
+    msg.entries_C[2] = ent[2];
+    msg.mode_48 = -1;
+    msg.text_4C = 0;
     OpenItemMessageWindow_80035AC8(&msg);
 }
 

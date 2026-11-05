@@ -120,7 +120,7 @@ CombBtlLineList6 finalLines_800A8454 = {
 };
 short hpDamage_800A8470[2] = { 0 };
 short mpDamage_800A8474[2] = { 0 };
-int announcerWindow_800A8478 = 0;
+MsgWindowEntry* announcerWindow_800A8478 = 0;
 int dword_800A847C = 0;
 int statusCured_800A8480[2] = { 0 };
 short exchangeStep_800A8488 = 0;
@@ -404,29 +404,29 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
 }
 
 // Matched
-int OpenAnnouncerWindow_800A5408(int which, int lines, int side)
+MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side)
 {
-    int cfg[18];
+    MsgWindowCfg cfg;
     int kinds[2] = {2, 3};
-    const char* tbl[2] = {"\202q\202\201" /* Ra */, "\202l\202\225" /* Mu */};
-    cfg[0] = 2;
-    cfg[1] = 0;
-    cfg[2] = lines;
-    cfg[4] = (settingsFlags_8008B58C.word & 7) != 3;
-    cfg[5] = 0;
-    cfg[6] = 0;
-    cfg[7] = 0;
-    cfg[8] = 7;
-    cfg[9] = kinds[which];
-    cfg[10] = side;
-    cfg[11] = 1;
-    cfg[12] = 0;
-    cfg[13] = 0;
-    cfg[14] = (settingsFlags_8008B58C.word >> 3) & 1;
-    cfg[15] = 1;
-    cfg[16] = 0;
-    cfg[3] = (int)tbl[which];
-    return (int)OpenMessageWindow_8003422C(cfg);
+    char* tbl[2] = {"\202q\202\201" /* Ra */, "\202l\202\225" /* Mu */};
+    cfg.posMode_0 = 2;
+    cfg.pos_4 = 0;
+    cfg.text_8 = (int*)lines;
+    cfg.field_10 = (settingsFlags_8008B58C.word & 7) != 3;
+    cfg.cancelable_14 = 0;
+    cfg.mask_18 = 0;
+    cfg.lines_1C = 0;
+    cfg.portraitKind_20 = 7;
+    cfg.portraitId_24 = kinds[which];
+    cfg.style_28 = side;
+    cfg.field_2C = 1;
+    cfg.field_30 = 0;
+    cfg.field_34 = 0;
+    cfg.field_38 = (settingsFlags_8008B58C.word >> 3) & 1;
+    cfg.field_3C = 1;
+    cfg.field_40 = 0;
+    cfg.title_C = tbl[which];
+    return OpenMessageWindow_8003422C(&cfg);
 }
 
 // the jump table of ResolveCommand_800A616C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
@@ -1627,11 +1627,11 @@ int StartAnnouncer_800A8098(int which, int lines, int side)
 
 void AnnouncerTask_800A816C(EventEntry* e)
 {
-    int buf[4];
+    MsgResult buf;
     int v;
     if (!(combatFlags_800A3A88 & 4))
     {
-        if (GetMsgWindowResultIfDone_800349B4(announcerWindow_800A8478, buf) && buf[3])
+        if (GetMsgWindowResultIfDone_800349B4(announcerWindow_800A8478, &buf) && buf.field_24)
         {
             combatFlags_800A3A88 |= 4;
         }

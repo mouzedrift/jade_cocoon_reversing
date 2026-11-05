@@ -13,6 +13,8 @@
 #include "camera.h"
 #include "model_ftg.h"
 #include "util.h"
+#include "msgwin.h"
+#include "msg_window.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -80,7 +82,7 @@ typedef struct EvScriptCtx
     int* lastMsg_110;
     int choiceMask_114;
     int msgOpen_118;
-    int msgWindow_11C; // the message window (OpenMessageWindow_8003422C)
+    MsgWindowEntry* msgWindow_11C; // the message window (OpenMessageWindow_8003422C)
     EvEntity* ent_120;
 } EvScriptCtx;
 
@@ -307,7 +309,6 @@ extern int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx);
 
 extern int XaRequestStop_80043524(void);
 
-extern int ConsumeMsgWindowMark_80034ADC(int a, int b);
 
 extern struct Actor* GetFieldMinionActor_800A7A60(int i);
 
@@ -389,14 +390,6 @@ extern SVECTOR* GetFieldMinionRot_800A7984(int a);
 
 extern int eventTempFlags_800AEBD4;
 
-typedef struct EvMsgResult
-{
-    short f0_0;
-    short choice_2;
-    int f4_4;
-    int f8_8;
-    int fC_C;
-} EvMsgResult;
 
 typedef struct EvXaClip
 {
@@ -412,15 +405,11 @@ typedef struct EvVoiceCue
     EvXaClip xa_2;
 } EvVoiceCue;
 
-extern int GetMsgWindowResultIfDone_800349B4(int a, EvMsgResult* b);
 
 extern void SkipActorAnims_800A67B4(EvScriptCtx* ctx);
 
-extern void CloseMsgWindow_80034A84(int a);
 
-extern int IsMsgWindowWaiting_80034A30(int a);
 
-extern void EnableMsgWindowAdvance_80034A68(int a);
 
 extern int currentMessageId_800AEBE8;
 
@@ -438,14 +427,6 @@ typedef struct EvItemMsgSrc
     int c_4;
 } EvItemMsgSrc;
 
-typedef struct EvItemMsgSlot
-{
-    int f0_0;
-    int f4_4;
-    int f8_8;
-    int fC_C;
-    int f10_10;
-} EvItemMsgSlot;
 
 extern void memset(void* p, int v, int n);
 
@@ -725,15 +706,6 @@ typedef struct EvMsgWindowCfg
     int voice_44;
 } EvMsgWindowCfg;
 
-typedef struct EvItemMsgCfg
-{
-    int posMode_0;
-    short* pos_4;
-    int f8;
-    EvItemMsgSlot slots_C[3];
-    int f48;
-    int f4C;
-} EvItemMsgCfg;
 
 typedef struct EvMsgOptions
 {
@@ -789,8 +761,6 @@ extern void SfxKeyOff_80031574(short voice, short sfx);
 extern int PlayMusic_800300E0(int idx, int unused);
 /* exe-side, to move to model_ftg.h */
 /* exe-side, to move to msg_window.h */
-extern int OpenMessageWindow_8003422C(EvMsgWindowCfg* cfg);
-extern int OpenItemMessageWindow_80035AC8(EvItemMsgCfg* cfg);
 /* PSY-Q library */
 extern int printf(const char* fmt, ...);
 extern int rand(void);

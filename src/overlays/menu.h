@@ -228,24 +228,6 @@ typedef struct ResultSummaryArgs
     int time_8;
 } ResultSummaryArgs;
 
-typedef struct ItemMsgSlot
-{
-    int kind_0;
-    int item_4;
-    int f8;
-    int fC;
-    int f10;
-} ItemMsgSlot;
-
-typedef struct ItemMsgCfg
-{
-    int posMode_0;
-    short* pos_4;
-    int f8;
-    ItemMsgSlot e[3];
-    int f48;
-    int f4C;
-} ItemMsgCfg;
 
 typedef struct UiWinArgs
 {
@@ -756,8 +738,6 @@ extern int GetPartyWindowX_8002FA0C();
 extern void DrawPortrait_8002A42C(short* p, int a, int b, short c);
 extern void DrawLargeText_8002FBD8();
 extern int GetRankName_8002FCD8();
-extern void* OpenItemMessageWindow_80035AC8();
-extern void CloseMsgWindow_80034A84();
 extern void DrawUiWindow_8002A384();
 extern void DrawSmallNumber3_8002C290();
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);

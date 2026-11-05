@@ -24,18 +24,21 @@ typedef struct
     int field_24;
 } MsgResult;
 
-typedef struct
+/* one item line of an item message window */
+typedef struct ItemMsgEntry
 {
-    int type;
+    int type;    // -1: none, else the nameGetters_8007CB08 index (6: money, 7: count only)
     int id;
     int count;
-    int pad[2];
+    int field_C;
+    int field_10;
 } ItemMsgEntry;
 
 /* OpenItemMessageWindow_80035AC8's argument (0x50 bytes, copied to MsgWindow.item_214) */
-typedef struct
+typedef struct ItemMsgInit
 {
-    int pad_0[2];
+    int posMode_0; // as MsgWindowCfg
+    short* pos_4;
     int field_8;
     ItemMsgEntry entries_C[3];
     int mode_48;
@@ -126,7 +129,7 @@ typedef struct MsgWindow
 } MsgWindow;
 
 /* an EventEntry of messageWindowTask_8008D640, with its buffer typed */
-typedef struct
+typedef struct MsgWindowEntry
 {
     int flags_0;
     int field_4;

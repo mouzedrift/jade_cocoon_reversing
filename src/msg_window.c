@@ -118,9 +118,8 @@ extern TextSize MeasureTextLines_8003E3B4(int* list);
 extern TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
 extern void GetPortraitPoly_800A6308(int a, void* b);
 extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
-extern void UpdateMessageWindow_80034BB8(int* a0, MsgWindow* a1);
 // Matched
-EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
+MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
 {
     EventEntry* e;
     MsgWindow* w;
@@ -352,7 +351,7 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     w->clip_1B8.promptY_2 = w->y_3A + 4;
     e->cb_8 = (EventEntryFn)UpdateMessageWindow_80034BB8;
     e->flags = (e->flags | 1) & ~0x8000;
-    return e;
+    return (MsgWindowEntry*)e;
 }
 // Matched
 short** FindTextResumePage_80034900(short** list)
@@ -488,8 +487,6 @@ int NthMaskedIndex_80034B88(int n, unsigned int mask)
     }
     return i - 1;
 }
-extern void UpdateMsgWindowState_80034C18(MsgWindow* a);
-extern void HandleMsgWindowInput_800353A0(MsgWindow* o);
 // Matched
 void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
 {
@@ -504,10 +501,6 @@ extern void PlaySfx_80031494(int id);
 extern void InterpolateWindowRect_8004196C(void* a0, void* a1, int a2, int a3, int a4);
 extern int IsWindowFrameFit_800429A8(void* r);
 /* defined below (their parameter types are declared there) */
-extern int DrawMsgWindowText_8003580C();
-extern void DrawMsgWindowTitle_800359F8();
-extern void DrawMsgWindowPortrait_80035900();
-extern void DrawMsgWindowChoices_800355EC();
 // Matched
 void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
@@ -993,9 +986,8 @@ void DrawMsgWindowTitle_800359F8(MsgWindow* win)
 }
 extern EventNode* messageWindowTask_8008D640;
 extern void PlayMusic_800300E0(int a, int b);
-extern void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf);
 // Matched
-EventEntry* OpenItemMessageWindow_80035AC8(int* init)
+MsgWindowEntry* OpenItemMessageWindow_80035AC8(ItemMsgInit* init)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(messageWindowTask_8008D640);
     MsgWindow* win;
@@ -1036,7 +1028,7 @@ EventEntry* OpenItemMessageWindow_80035AC8(int* init)
         }
         entry->cb_8 = UpdateItemMessageWindow_80035BD8;
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
-        return entry;
+        return (MsgWindowEntry*)entry;
     }
     return 0;
 }

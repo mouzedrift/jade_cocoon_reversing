@@ -558,8 +558,8 @@ void BattleNextTurn_800BAE74(BatTaskEntry* task, BatTurnWork* work)
 
 void WaitChainMessage_800BB100(BatTaskEntry* task, BatTurnWork* work)
 {
-    int result[4];
-    if (GetMsgWindowResultIfDone_800349B4(work->handle_C, result) && result[3])
+    MsgResult result;
+    if (GetMsgWindowResultIfDone_800349B4(work->handle_C, &result) && result.field_24)
     {
         CloseMsgWindow_80034A84(work->handle_C);
         task->next_8 = WaitChainMessageClosed_800BB168;

@@ -288,11 +288,8 @@ typedef struct BatStage
 } BatStage;
 
 
-extern int IsMsgWindowAlive_80034AB8();
 
-extern int GetMsgWindowResultIfDone_800349B4();
 
-extern void CloseMsgWindow_80034A84();
 
 
 extern void RemoveEnemy_800A2924();
