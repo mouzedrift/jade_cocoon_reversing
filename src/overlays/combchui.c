@@ -59,15 +59,15 @@ void VersusIntroTask_800A4394(CombatTask* task, int arg)
         menuY = 0xC8;
         rect[3] = menuY;
         DrawTextLines_800A450C(introTextLines_800A45BC, rect);
-        dword_80082784.time_4 = GetTime30Hz_8002C64C();
-        dword_80082784.anim_8 = 8;
-        dword_80082784.ot_14 = 0;
-        dword_80082708.x_10 = 0x72;
-        dword_80082708.y_12 = menuY;
-        dword_80082740.x_10 = 0xA0;
-        dword_80082740.y_12 = menuY;
-        dword_80082784.cursor_C = p2PadYesNoMenu_800A45B0.cursor_8;
-        DrawMenuWindows_8002A5A4(&dword_80082784);
+        yesNoWindow_80082784.time_4 = GetTime30Hz_8002C64C();
+        yesNoWindow_80082784.open_8 = 8;
+        yesNoWindow_80082784.ot_14 = 0;
+        yesNoItemYes_80082708[0].x_10 = 0x72;
+        yesNoItemYes_80082708[0].y_12 = menuY;
+        yesNoItemNo_80082740[0].x_10 = 0xA0;
+        yesNoItemNo_80082740[0].y_12 = menuY;
+        yesNoWindow_80082784.cursor_C = p2PadYesNoMenu_800A45B0.cursor_8;
+        DrawMenuWindows_8002A5A4(&yesNoWindow_80082784);
         DrawMenuBackground_8002BE10();
     }
 }

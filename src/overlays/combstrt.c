@@ -17,9 +17,9 @@ const char* stateQuestions_800A4C04[4] = {
     "\202r\202\210\202\225\202\206\202\206\202\214\202\211\202\216\202\207\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201D\201D\201D", // Shuffling minion order...
 };
 unsigned char setupState_800A4C14 = 255;
-CombStrtWin playerLabelItemP1_800A4C18 = { 0x10008, (void*)51, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 10, 20, 0x140032, 0x40002 };
-CombStrtWin playerLabelItemP2_800A4C34 = { 0x10008, (void*)223, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 260, 20, 0x140032, 0x40002 };
-CombStrtWin* playerLabelItems_800A4C50[2] = { &playerLabelItemP1_800A4C18, &playerLabelItemP2_800A4C34 };
+MenuWindowItem playerLabelItemP1_800A4C18 = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem playerLabelItemP2_800A4C34 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem* playerLabelItems_800A4C50[2] = { &playerLabelItemP1_800A4C18, &playerLabelItemP2_800A4C34 };
 int slotLabelSprites_800A4C58[3] = { 219, 115, 102 };
 short minionSlotPos_800A4C64[2][3][2] = { { { 10, 64 }, { 10, 109 }, { 10, 154 } }, { { 166, 64 }, { 166, 109 }, { 166, 154 } } };
 void (*setupStateHandlers_800A4C7C[4])() = { SetupAllowChangeInput_800A43FC, SetupShuffleInput_800A4498, SetupStartFightInput_800A4524, SetupShuffleAnim_800A45B8 };
@@ -30,15 +30,15 @@ short shufflePhase_800A4C92 = 0;
 short shuffleTimer_800A4C94 = 0;
 short shuffleDelay_800A4C96 = 0;
 
-const CombStrtWin titleItem_800A4138 = { 0x10008, (void*)36, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7A, 0x14, 0x14004C, 0x40002 };
-const CombStrtWin minionLabelItem_800A4154 = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0, 0, 0x140032, 0x40002 };
+const MenuWindowItem titleItem_800A4138 = { 8, 1, 36, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7A, 0x14, 0x4C, 0x14, 2, 4 };
+const MenuWindowItem minionLabelItem_800A4154 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x32, 0x14, 2, 4 };
 
 // Versus fight setup: yes/no questions (allow minion changing, shuffle order, start fight) and the shuffle animation
 // Matched
 void VersusSetupTask_800A4170(CombatTask* t, int a)
 {
     CombStrtBox box;
-    CombStrtWin title;
+    MenuWindowItem title;
     int i;
     int prevState;
     title = titleItem_800A4138;
@@ -65,18 +65,18 @@ void VersusSetupTask_800A4170(CombatTask* t, int a)
     }
     if (setupState_800A4C14 != 3)
     {
-        dword_80082784.flags_0 = 10;
-        dword_80082784.time_4 = GetTime30Hz_8002C64C();
-        dword_80082784.ot_14 = 10;
-        dword_80082784.anim_8 = windowAnimStep_800A4C8C;
-        dword_80082784.cursor_C = yesNoCursor_800A4BF0.cursor_8;
-        dword_80082708.flags_0 = 8;
-        dword_80082740.flags_0 = 8;
-        dword_80082708.x_10 = 0xC8;
-        dword_80082708.y_12 = 0xC3;
-        dword_80082740.x_10 = 0xF6;
-        dword_80082740.y_12 = 0xC3;
-        DrawMenuWindows_8002A5A4(&dword_80082784);
+        yesNoWindow_80082784.flags_0 = 10;
+        yesNoWindow_80082784.time_4 = GetTime30Hz_8002C64C();
+        yesNoWindow_80082784.ot_14 = 10;
+        yesNoWindow_80082784.open_8 = windowAnimStep_800A4C8C;
+        yesNoWindow_80082784.cursor_C = yesNoCursor_800A4BF0.cursor_8;
+        yesNoItemYes_80082708[0].flags_0 = 8;
+        yesNoItemNo_80082740[0].flags_0 = 8;
+        yesNoItemYes_80082708[0].x_10 = 0xC8;
+        yesNoItemYes_80082708[0].y_12 = 0xC3;
+        yesNoItemNo_80082740[0].x_10 = 0xF6;
+        yesNoItemNo_80082740[0].y_12 = 0xC3;
+        DrawMenuWindows_8002A5A4(&yesNoWindow_80082784);
     }
     if (++windowAnimStep_800A4C8C >= 9)
     {
@@ -278,7 +278,7 @@ void DrawTeam_800A4958(int side)
 void DrawTeamMinion_800A49DC(int side, int slot)
 {
     CombStrtBox c1;
-    CombStrtWin label;
+    MenuWindowItem label;
     short pos[4];
     CombStrtBox c2;
     RECT r1;
@@ -289,7 +289,7 @@ void DrawTeamMinion_800A49DC(int side, int slot)
     if (IsMinionSlotEmpty_800A1934(minion) != 1)
     {
         label = minionLabelItem_800A4154;
-        label.icon_4 = (void*)slotLabelSprites_800A4C58[slot];
+        label.text_4 = slotLabelSprites_800A4C58[slot];
         label.x_10 = minionSlotPos_800A4C64[side][slot][0];
         label.y_12 = minionSlotPos_800A4C64[side][slot][1];
         c1.state_2 = 0;

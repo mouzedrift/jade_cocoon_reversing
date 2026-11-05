@@ -8,24 +8,8 @@
 #include "pad_text.h"
 #include "combat.h"
 #include "font.h"
+#include "menu_draw.h"
 
-// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
-typedef struct CombChuiWin
-{
-    int flags_0;
-    int time_4;  // blink timer
-    int anim_8;  // window open animation step
-    int cursor_C;
-    int rows_10;
-    int ot_14;
-} CombChuiWin;
-
-typedef struct CombChuiPos
-{
-    char pad_0[0x10];
-    short x_10;
-    short y_12;
-} CombChuiPos;
 
 extern int dword_800A4088;
 extern MenuCursor p2PadYesNoMenu_800A45B0;
@@ -36,9 +20,6 @@ void DrawTextLines_800A450C(const char** lines, unsigned short* box);
 
 /* exe-side, to move to <exe header> */
 extern unsigned char pads_800918E8[2][9]; // main.c; pads_800918E8[1][0]: pad 2 state, 0xFF: no controller
-extern CombChuiWin dword_80082784;   // -> menu data (the yes/no window list)
-extern CombChuiPos dword_80082708;   // -> menu data (its "yes" item)
-extern CombChuiPos dword_80082740;   // -> menu data (its "no" item)
 extern void AlignMenuItem_8002AC88(int flags, void* rect, int width, void* out); // -> menu_window.h
 extern void DrawMenuBackground_8002BE10(void);
 
