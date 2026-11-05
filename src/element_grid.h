@@ -6,4 +6,5 @@
 // the initialiser of DrawElementIconsGrid_8002B228's local
 extern const Block16 elementIconGridOffsets_800741D4;
 
+void DrawElementIconsGrid_8002B228(short mask, short* pos, int ot, int unused);
 #endif
