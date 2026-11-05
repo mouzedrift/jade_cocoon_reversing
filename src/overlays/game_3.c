@@ -971,10 +971,11 @@ int levantAnimSets_800B11DC[19] = {
     4, 4, 2,
 };
 int battleFlags_800B1228 = 0;
-int battleHitEnemies_800B122C[13] = {
-    0, 0, 0, 0, 0, 0, 0, 0,
-    0, 0, 0, 0, 0xB00,
-};
+unsigned int battleHitEnemies_800B122C = 0;
+int battleResult_800B1230 = 0;
+int dword_800B1234 = 0;
+GameEnemyResult battleEnemyResults_800B1238[3] = { 0 };
+int dword_800B125C = 0xB00;
 GameEncounter gCtx_800B1260 = { 0 };
 int dword_800B1CA8[4] = { 0 };
 GameEnemy eventEnemy_800B1CB8 = { 0 };

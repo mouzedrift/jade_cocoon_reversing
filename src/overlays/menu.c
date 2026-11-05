@@ -11,7 +11,7 @@ const int menuOverlayId_800B66C0 = 29;
 const char aItemsObtained_800B66C4[] = "\223\271\213\357\227\336\223\374\216\350"; // 道具類入手
 const char aStatus_800B66D0[] = "\202r\202\224\202\201\202\224\202\225\202\223"; // Status
 const char aQuit_800B66E0[] = "\202p\202\225\202\211\202\224"; // Quit
-const int dword_800B66EC = 0x6F430000;
+const int emptyHelpLabel_800B66EC = 0x6F430000;
 const char aNoNeedToUseThis_800B66F0[] = "\202m\202\217\201@\202\216\202\205\202\205\202\204\201@\202\224\202\217\201@\202\225\202\223\202\205\201@\202\224\202\210\202\211\202\223\201@\202\211\202\224\202\205\202\215\201D"; // No need to use this item.
 const char aThisMinionCanno_800B6724[] = "\202s\202\210\202\211\202\223\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\206\202\211\202\207\202\210\202\224\201@\202\222\202\211\202\207\202\210\202\224\201@\202\216\202\217\202\227\201D"; // This minion cannot fight right now.
 const char aMinionsCannotUs_800B676C[] = "\202l\202\211\202\216\202\211\202\217\202\216\202\223\201@\202\203\202\201\202\216\202\216\202\217\202\224\201@\202\225\202\223\202\205\201@\202\224\202\210\202\211\202\223\201@\202\211\202\224\202\205\202\215\201D"; // Minions cannot use this item.
@@ -525,7 +525,7 @@ ItemDropRow itemDropTable_800C1080[211] = {
 };
 short dword_800C1718[10] = { 68, 69, 70, 71, 72, 72, 72, 72, 72, 0 };
 // the button help of the battle result screen (BattleResultTask_800BBF48)
-int resultHelpBar_800C172C[7] = { 16, (int)&dword_800B66EC, 167, (int)aQuit_800B66E0, 110, (int)aStatus_800B66D0, -1 };
+int resultHelpBar_800C172C[7] = { 16, (int)&emptyHelpLabel_800B66EC, 167, (int)aQuit_800B66E0, 110, (int)aStatus_800B66D0, -1 };
 char dword_800C1748[12] = { 0, 0, 0, 0, 78, 0, 44, 0, 141, 0, 68 };
 int equipSlotLabels_800C1754[3] = { 22, 20, 3 }; // DrawEquipmentWindow_800C0E04: the label sprite of each equipment row
 int equipRowWeapon_800C1760[28] = {
@@ -849,16 +849,16 @@ EventEntry* CreateBattleResultTask_800BBB9C(EventNode* node)
         for (i = 0; i < 3; i++)
         {
             int ok = 0;
-            if (enemyResults_800B1238[i].a == 7)
+            if (battleEnemyResults_800B1238[i].a == 7)
                 continue;
-            if (enemyResults_800B1238[i].idx_6)
-                status = GetMinionStatus_800107A0(3, enemyResults_800B1238[i].idx_6 - 1);
+            if (battleEnemyResults_800B1238[i].idx_6)
+                status = GetMinionStatus_800107A0(3, battleEnemyResults_800B1238[i].idx_6 - 1);
             else
                 status = &levantStatus_8008BD38;
-            if (enemyResults_800B1238[i].idx_6 || enemyResults_800B1238[i].a == 5 || enemyResults_800B1238[i].a == 0x1A)
+            if (battleEnemyResults_800B1238[i].idx_6 || battleEnemyResults_800B1238[i].a == 5 || battleEnemyResults_800B1238[i].a == 0x1A)
                 ok = 1;
             if (ok && !(status->status_0 & 0x400))
-                AccumulateExpGain_800122A0(enemyResults_800B1238[i].idx_6, enemyResults_800B1238[i].u8, &result->expGain_6C[enemyResults_800B1238[i].idx_6]);
+                AccumulateExpGain_800122A0(battleEnemyResults_800B1238[i].idx_6, battleEnemyResults_800B1238[i].u8, &result->expGain_6C[battleEnemyResults_800B1238[i].idx_6]);
         }
         result->s58 = 0;
         result->count_44 = CountMinions_80010548(3) + 1;
@@ -1440,7 +1440,7 @@ int RollBattleDrops_800BD230(BattleResult* result)
     }
     for (i = 0; i < 3; i++)
     {
-        MenuEnt* ent = &enemyResults_800B1238[i];
+        MenuEnt* ent = &battleEnemyResults_800B1238[i];
         if (ent->dropTable_4 != -1 && ent->a != 7)
         {
             if (RollDrop_800BD358(&battleDrops_800C29A0[i], ent->dropTable_4))

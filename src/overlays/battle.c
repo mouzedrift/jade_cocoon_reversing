@@ -22,7 +22,7 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
     work->c_C = sel->c_18;
     encounterRecord_800ADE78.active_0 = 0;
     MoveBattleCameraForAction_80037828(2, 0, 0);
-    switch (dword_800B1230)
+    switch (battleResult_800B1230)
     {
     case 0:
         StopSoundSeqs_80030D68(&systemSound_80091D40);
@@ -171,7 +171,7 @@ void BattleEndFadeOut_800BA624(BatTaskEntry* task, BatEndWork* work)
     SetFadeMode_8001C19C(0, 0x20);
     SetFadeMode_8001C19C(1, 0x20);
     StopSceneDarken_8001AAF4();
-    if (dword_800B1230 == 2)
+    if (battleResult_800B1230 == 2)
     {
         work->timer_4 = 0x1E;
         task->next_8 = BattleEndFled_800BA6A0;
@@ -188,7 +188,7 @@ void BattleEndFled_800BA6A0(BatTaskEntry* task, BatEndWork* work)
     SetFadeMode_8001C19C(0, 0x20);
     if (--work->timer_4 <= 0)
     {
-        if (dword_800B1230 == 2)
+        if (battleResult_800B1230 == 2)
         {
             RemoveAliveEnemies_800BA720();
         }
@@ -245,12 +245,12 @@ void BattleEndReturnToField_800BA848(BatTaskEntry* task, BatEndWork* work)
         EndEncounter_800A1E1C();
         RecoverPartyAfterBattle_800BA97C();
         EnableCameraPoints_800A094C();
-        if ((dword_800B1230 == 0 || dword_800B1230 == 2) && work->c_C == 1)
+        if ((battleResult_800B1230 == 0 || battleResult_800B1230 == 2) && work->c_C == 1)
         {
             work->fileReq_0 = LoadOverlayIfChanged_80020D1C(1, 7);
             task->next_8 = WaitBattleReturnFiles_800A14E0;
         }
-        else if (dword_800B1230 == 3)
+        else if (battleResult_800B1230 == 3)
         {
             StopLevantAnimLoop_800A9364();
             WarpAfterLostBattle_800A5FAC();
@@ -341,7 +341,7 @@ void InitEnemyRecords_800BABC4()
     int alive;
     BatEnemyResult* rec;
     i = 0;
-    rec = dword_800B1238;
+    rec = battleEnemyResults_800B1238;
 loop: // a for loop hoists the constants (-1, 7, 1) out of the loop; the original keeps them inside
     alive = GetEnemyAliveMask_800A248C() & (1 << (i + 4));
     if (alive != 0)
@@ -583,12 +583,12 @@ void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
     if (TestBattleFlag_800BC820(4) == 1)
     {
         ClearBattleFlag_800BC850(4);
-        dword_800B1230 = 3;
+        battleResult_800B1230 = 3;
     }
     else if (TestBattleFlag_800BC820(0x80) == 1)
     {
         ClearBattleFlag_800BC850(0x80);
-        dword_800B1230 = 2;
+        battleResult_800B1230 = 2;
     }
     else if (TestBattleFlag_800BC820(0x100) == 1)
     {
@@ -606,11 +606,11 @@ void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
         }
         if (TestBattleFlag_800BC820(0x2000) == 1)
         {
-            dword_800B1230 = 5;
+            battleResult_800B1230 = 5;
         }
         else
         {
-            dword_800B1230 = 4;
+            battleResult_800B1230 = 4;
         }
         ClearBattleFlag_800BC850(0x100);
     }
@@ -622,11 +622,11 @@ void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
         }
         if (TestBattleFlag_800BC820(0x40) == 1)
         {
-            dword_800B1230 = 0;
+            battleResult_800B1230 = 0;
         }
         else
         {
-            dword_800B1230 = 1;
+            battleResult_800B1230 = 1;
         }
     }
     StopBattleWindows_800BFBB8();

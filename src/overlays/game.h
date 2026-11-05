@@ -331,6 +331,16 @@ typedef struct GameEncounter
     char pad_78c[0xa48 - 0x78c];
 } GameEncounter;
 
+// the record of one enemy of the last battle (battleEnemyResults_800B1238; BATTLE fills it, MENU's results use it)
+typedef struct GameEnemyResult
+{
+    int exp_0;
+    short species_4; // -1: no enemy in the slot
+    short killer_6;  // the unit that defeated or captured it
+    short level_8;
+    short kind_A;    // the command that ended it (7: none)
+} GameEnemyResult;
+
 
 // the walls an event toggles (SetWallsEnabled_800A6564)
 typedef struct GameWallPair
@@ -1582,7 +1592,11 @@ extern unsigned char levantOutfitModelOffsets_800B11B8[20];
 extern int levantSavedFtgIds_800B11CC[4];
 extern int levantAnimSets_800B11DC[19];
 extern int battleFlags_800B1228;
-extern int battleHitEnemies_800B122C[13];
+extern unsigned int battleHitEnemies_800B122C; // enemy slots hit in the battle (BATTLE)
+extern int battleResult_800B1230;              // how the last battle ended (BATTLE, EVENTFNC)
+extern int dword_800B1234;
+extern GameEnemyResult battleEnemyResults_800B1238[3]; // the enemies of the last battle (BATTLE, MENU)
+extern int dword_800B125C;
 extern GameEncounter gCtx_800B1260;
 extern GameEnemy eventEnemy_800B1CB8;
 extern int eventHook_800B1D98;

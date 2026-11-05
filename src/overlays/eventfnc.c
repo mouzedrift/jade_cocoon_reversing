@@ -2016,7 +2016,7 @@ int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
 
 int EvCmdIfBattleResult_800BB45C(EvScriptCtx* ctx)
 {
-    if (ctx->pc_8->b_8 == dword_800B1230)
+    if (ctx->pc_8->b_8 == battleResult_800B1230)
     {
         ctx->branch_EC = 0;
     }

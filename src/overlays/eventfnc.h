@@ -363,7 +363,7 @@ extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c);
 
 extern int IsEventPointValid_800A6504(int a, EvVec* v);
 
-extern int dword_800B1230;
+extern int battleResult_800B1230;
 
 extern void StartPadVibration_80036528(int a, int b);
 

@@ -232,7 +232,7 @@ extern int GetUnitTurnSpeed_800BF784();
 
 extern void TurnUnitsToward_800BC468();
 
-// GAME's record of one enemy for the battle result (dword_800B1238)
+// GAME's record of one enemy for the battle result (battleEnemyResults_800B1238)
 typedef struct BatEnemyResult
 {
     int exp_0;
@@ -248,9 +248,9 @@ typedef struct BatRawTiming
     unsigned char bytes_0[4];
 } BatRawTiming;
 
-extern int dword_800B1230;
+extern int battleResult_800B1230;
 
-extern BatEnemyResult dword_800B1238[];
+extern BatEnemyResult battleEnemyResults_800B1238[];
 
 
 

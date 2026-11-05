@@ -383,7 +383,7 @@ extern const int menuOverlayId_800B66C0;
 extern const char aItemsObtained_800B66C4[];
 extern const char aStatus_800B66D0[];
 extern const char aQuit_800B66E0[];
-extern const int dword_800B66EC;
+extern const int emptyHelpLabel_800B66EC;
 extern const char aNoNeedToUseThis_800B66F0[];
 extern const char aThisMinionCanno_800B6724[];
 extern const char aMinionsCannotUs_800B676C[];
@@ -758,7 +758,7 @@ extern void StartEquipMenu_800C47A8(); // MENU passes a 0 that it ignores
 extern int IsConfigMenuActive_800C45D8(void);
 
 /* GAME overlay (resident under MENU), to move to game.h */
-extern MenuEnt enemyResults_800B1238[]; // GAME's record of each enemy of the last battle (battle.h dword_800B1238)
+extern MenuEnt battleEnemyResults_800B1238[]; // GAME's record of each enemy of the last battle (battle.h dword_800B1238)
 extern int GetNthValuable_800AD7F8(int nth);
 extern int RemoveInventory_800AD1E0(int id, int count, int table);
 extern void RequestGameMode_800A6D30(int mode);

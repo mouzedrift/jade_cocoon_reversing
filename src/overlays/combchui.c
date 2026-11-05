@@ -28,7 +28,7 @@ void VersusIntroTask_800A4394(CombatTask* task, int arg)
     short rect[4];
     int menuY;
     UpdateMenuCursor_8003D794(&p2PadYesNoMenu_800A45B0, 0);
-    if (byte_800918F1 == 0xFF)
+    if (pads_800918E8[1][0] == 0xFF)
     {
         p2PadYesNoMenu_800A45B0.cursor_8 = 1;
     }

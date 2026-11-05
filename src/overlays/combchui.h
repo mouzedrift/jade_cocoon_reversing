@@ -35,7 +35,7 @@ void VersusIntroTask_800A4394(CombatTask* task, int arg);
 void DrawTextLines_800A450C(const char** lines, unsigned short* box);
 
 /* exe-side, to move to <exe header> */
-extern unsigned char byte_800918F1;  // pad 2 state, 0xFF: no controller
+extern unsigned char pads_800918E8[2][9]; // main.c; pads_800918E8[1][0]: pad 2 state, 0xFF: no controller
 extern CombChuiWin dword_80082784;   // -> menu data (the yes/no window list)
 extern CombChuiPos dword_80082708;   // -> menu data (its "yes" item)
 extern CombChuiPos dword_80082740;   // -> menu data (its "no" item)

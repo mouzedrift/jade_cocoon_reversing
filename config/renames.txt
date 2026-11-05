@@ -5773,6 +5773,13 @@ sub_800BA880 EvCmdSetMapVariant_800BA880
 dword_800A3A90 sideWins_800A3A90
 dword_800A392C enemyWindowTaskDef_800A392C
 dword_800A3944 announcerTaskDef_800A3944
+[BATTLE EVENTFNC]
+dword_800B1230 battleResult_800B1230
+[BATTLE]
+dword_800B1238 battleEnemyResults_800B1238
+[MENU]
+enemyResults_800B1238 battleEnemyResults_800B1238
+dword_800B66EC emptyHelpLabel_800B66EC
 [ALL]
 word_8008B558 titleMenuState_8008B558
 dword_8008B55C cdReadFlags_8008B55C

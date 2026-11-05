@@ -271,10 +271,10 @@ void ApplyBattleCommand_800BEBB8()
                         if (side == 2)
                         {
                             
-                            dword_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
-                            dword_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
-                            dword_800B1238[i - 4].exp_0 = target->exp_4;
-                            dword_800B1238[i - 4].level_8 = target->level_44;
+                            battleEnemyResults_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
+                            battleEnemyResults_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
+                            battleEnemyResults_800B1238[i - 4].exp_0 = target->exp_4;
+                            battleEnemyResults_800B1238[i - 4].level_8 = target->level_44;
                         }
                     }
                     break;
@@ -299,11 +299,11 @@ void ApplyBattleCommand_800BEBB8()
                             SetBattleFlag_800BC838(2);
                         }
                         
-                        dword_800B1238[i - 4].species_4 = GetEnemySpecies_800A2BE4(i - 4);
-                        dword_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
-                        dword_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
-                        dword_800B1238[i - 4].exp_0 = target->exp_4;
-                        dword_800B1238[i - 4].level_8 = target->level_44;
+                        battleEnemyResults_800B1238[i - 4].species_4 = GetEnemySpecies_800A2BE4(i - 4);
+                        battleEnemyResults_800B1238[i - 4].killer_6 = actingUnit_800C9C7C;
+                        battleEnemyResults_800B1238[i - 4].kind_A = curCommand_800C9C88.kind_0;
+                        battleEnemyResults_800B1238[i - 4].exp_0 = target->exp_4;
+                        battleEnemyResults_800B1238[i - 4].level_8 = target->level_44;
                         if (TestBattleFlag_800BC820(0x100000) == 1)
                         {
                             deathSfx_800C9D80 = 0x1C;
