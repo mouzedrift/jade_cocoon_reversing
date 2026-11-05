@@ -77,7 +77,6 @@ titleMenuTaskDesc_800A2778=0x800a2778; // data
 newGameTaskDesc_800A2790=0x800a2790; // data
 titleSoundTaskDesc_800A27A8=0x800a27a8; // data
 titleTaskList_800A27C0=0x800a27c0; // data
-dword_800A27C4=0x800a27c4;
 titleMenuHandlers_800A27E8=0x800a27e8; // data
 nameOvlRequest_800A2808=0x800a2808; // data
 pulseMax_800A280C=0x800a280c; // data
