@@ -26,6 +26,7 @@
 #include "movie.h"
 #include "ui_sprites.h"
 #include "tim.h"
+#include "effect.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -1026,7 +1027,6 @@ typedef struct GameMapEntrance
 
 
 
-extern void RequestEffect_800148F4(int);
 
 extern int GetWeaponEffect_800189F8();
 

@@ -22,6 +22,7 @@
 #include "msg_window.h"
 #include "util.h"
 #include "unit_query.h"
+#include "effect.h"
 
 
 

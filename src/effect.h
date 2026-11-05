@@ -32,4 +32,23 @@ extern int effectColorYellow_800795EC;
 void FreeEffectTask_800148A0();
 void InitEffectTask_80014618();
 
+int Rand100_80013E30(void);
+void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, int mode);
+int BaseSpeedRatio_80014200(unsigned char* stats);
+void UpdateEffectTask_80014638(EventEntry* entry, void* buf);
+int CountActiveEffectObjects_800147FC(void);
+int GetStatGrowth_80013E00(unsigned int idx, int add);
+int CalcHitBonus_80014114(int value);
+int CalcEvadeBonus_8001413C(int value);
+void CalcUnitEquippedStats_80013E80(unsigned char* out, int unit);
+void CalcMinionEquippedStats_80013EB4(unsigned char* out, int a1, int a2);
+int CriticalRateTransform_80014164(int value);
+int LowestSetBit_80014358(unsigned int mask);
+int IsEffectTaskIdle_800148D4(void);
+Minion* GetUnitMinion_80014444(int unit);
+int RollOilBonus_80013DB0(void);
+void RequestEffect_800148F4(int id);
+void BaseStatRatios_8001419C(unsigned char* stats, short* out);
+int BaseMagicRatio_800142B8(unsigned char* stats);
+int BaseAttackRatio_80014308(unsigned char* stats);
 #endif

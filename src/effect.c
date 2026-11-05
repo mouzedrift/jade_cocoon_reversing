@@ -96,9 +96,8 @@ void CalcMinionEquippedStats_80013EB4(unsigned char* out, int a1, int a2)
 {
     CalcEquippedStats_80033624(out, GetMinionStatus_800107A0(a2)); // sic: one argument (GetMinionStatus_800107A0 is unprototyped)
 }
-int BaseSpeedRatio_80014200(unsigned char* stats);
 // Matched
-void CalcBattleStats_80013EE8(int* out, UnitStatus* status, unsigned char* action, int mode)
+void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, int mode)
 {
     int def;
     int magicDef;
@@ -106,7 +105,7 @@ void CalcBattleStats_80013EE8(int* out, UnitStatus* status, unsigned char* actio
     {
         out[0] = status->stats_2C.cur_0[0];
         out[2] = status->stats_2C.cur_0[2];
-        out[4] = CalcHitBonus_80014114(10) + action[5];
+        out[4] = CalcHitBonus_80014114(10) + action->c5;
         out[6] = CriticalRateTransform_80014164((unsigned char)(status->stats_2C.base_6[5] / 10));
         out[8] = 0;
         def = status->stats_2C.cur_0[1] * (status->stats_2C.cur_0[1] - 20) / 7;
@@ -121,7 +120,7 @@ void CalcBattleStats_80013EE8(int* out, UnitStatus* status, unsigned char* actio
     {
         out[0] = status->stats_2C.cur_0[0];
         out[2] = status->stats_2C.cur_0[2];
-        out[4] = CalcHitBonus_80014114(BaseSpeedRatio_80014200(status->stats_2C.cur_0) / 10) + action[5];
+        out[4] = CalcHitBonus_80014114(BaseSpeedRatio_80014200(status->stats_2C.cur_0) / 10) + action->c5;
         out[6] = CriticalRateTransform_80014164((unsigned char)(status->stats_2C.base_6[5] / 10));
         out[8] = 0;
         out[1] = status->stats_2C.cur_0[1];
@@ -336,7 +335,6 @@ void FirFilterStep_80014588(int* history, FirFilter* filter, unsigned int t)
     }
     filter->output_C.sum >>= 12;
 }
-void UpdateEffectTask_80014638(EventEntry* entry, void* buf);
 // Matched
 void InitEffectTask_80014618(EventEntry* entry, EffectTaskState* state)
 {
@@ -347,7 +345,6 @@ void InitEffectTask_80014618(EventEntry* entry, EffectTaskState* state)
 }
 extern short effectVramOrigin_800795D0[];
 extern short effectFileTable_800795F0[];
-int CountActiveEffectObjects_800147FC(void);
 // Matched
 void UpdateEffectTask_80014638(EventEntry* entry, void* buf)
 {

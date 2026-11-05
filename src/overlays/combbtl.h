@@ -24,6 +24,7 @@
 #include "sound_seq.h"
 #include "ui_sprites.h"
 #include "sound.h"
+#include "effect.h"
 
 typedef struct CombBtlNode
 {

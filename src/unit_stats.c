@@ -1648,8 +1648,6 @@ void ApplyLevelUpsBonus_80011D78(UnitStatus* status)
     ApplyLevelUps_80011D98(status, 1);
 }
 extern int GetGrowthKind_80011D28(int a0);
-extern int BaseMagicRatio_800142B8(unsigned char* p);
-extern int BaseAttackRatio_80014308(unsigned char* p);
 // Matched
 int ApplyLevelUps_80011D98(UnitStatus* status, int mode)
 {

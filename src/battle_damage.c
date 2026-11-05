@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "common_tu.h"
 #include "unit_query.h"
+#include "effect.h"
 
 
 
@@ -40,7 +41,6 @@ typedef struct
     unsigned char damageType_B; // 0 hp, 1 mp (halved), 2 hp + 2/5 as mp, 3 instant death chance
 } AttackDesc;
 extern double sqrt(double);
-extern int Rand100_80013E30(void);
 // Matched
 void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out)
 {

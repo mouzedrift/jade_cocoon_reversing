@@ -22,6 +22,7 @@
 #include "unit_stats.h"
 #include "util.h"
 #include "unit_query.h"
+#include "effect.h"
 
 const ActionData defaultActionData_80071F58 = { 0, 0, 100, 255, 115, 0, 0, 10, { 0, 3 } };
 const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";
@@ -227,9 +228,7 @@ extern const char aCommonC[];
 extern const ActionData defaultActionData_80071F58; // an empty action
 extern int GetUnitSkills_80031B30(int unit);
 extern int GetSkillMpCost_80031A04(int skills, int slot);
-extern void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, int mode);
 extern void CalcActionDamage_80013374(ActionData* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out);
-extern int Rand100_80013E30(void);
 // Matched
 void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out)
 {

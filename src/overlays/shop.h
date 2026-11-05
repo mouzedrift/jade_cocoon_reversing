@@ -23,6 +23,7 @@
 #include "sound_seq.h"
 #include "ui_sprites.h"
 #include "menu_draw.h"
+#include "effect.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel

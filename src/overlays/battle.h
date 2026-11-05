@@ -27,6 +27,7 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "ui_sprites.h"
+#include "effect.h"
 
 
 
@@ -150,7 +151,6 @@ extern int IsLevantIdle_800A89F0(void);
 
 extern int IsEnemyIdle_800A2550();
 
-extern int IsEffectTaskIdle_800148D4();
 
 extern int CalcElementAngle_800C09D4();
 
@@ -1287,7 +1287,6 @@ typedef struct BatCureChance
     unsigned int chance; // % per turn
 } BatCureChance;
 extern BatCureChance statusCureChances_800C9138[1];
-extern unsigned int Rand100_80013E30();
 extern BatXY enemyWindowLayouts_800C9140[9];
 extern int enemyGaugePreview_800C9164[3];
 extern int actorHighlightTime_800C9170;

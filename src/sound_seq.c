@@ -19,6 +19,7 @@
 #include "sound_seq.h"
 #include "skill_anim.h"
 #include "util.h"
+#include "effect.h"
 
 const char aRendWings_8007447C[] = "\202q\202\205\202\216\202\204\201@\202v\202\211\202\216\202\207\202\223"; // Rend Wings
 const char aBreakLegs_80074494[] = "\202a\202\222\202\205\202\201\202\213\201@\202k\202\205\202\207\202\223"; // Break Legs
