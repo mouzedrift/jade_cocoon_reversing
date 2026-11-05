@@ -30,6 +30,7 @@
 #include "minion_init.h"
 #include "party.h"
 #include "effect_data.h"
+#include "battle_damage.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 

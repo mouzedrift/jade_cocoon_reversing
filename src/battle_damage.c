@@ -20,6 +20,7 @@
 #include "effect.h"
 #include "unit_stats.h"
 #include "effect_cmd.h"
+#include "battle_damage.h"
 
 
 

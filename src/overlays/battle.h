@@ -35,6 +35,7 @@
 #include "ability_menu.h"
 #include "ftg_draw.h"
 #include "skills.h"
+#include "battle_damage.h"
 
 
 

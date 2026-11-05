@@ -31,6 +31,7 @@
 #include "party_window.h"
 #include "party.h"
 #include "ability_menu.h"
+#include "battle_damage.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -696,7 +697,6 @@ extern int IsSceneHeld_800A5E68(void);
 /* exe-side, to move to <exe header> */
 // = GetDominantSpecies_800338B0: rename once funcs.h declares it returning int (with its unsigned char return
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
-extern void UseItemOnUnit_80013C28();
 extern unsigned short uiColor_8008B590;
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 extern void DrawFamilyTree_8002D7D0();

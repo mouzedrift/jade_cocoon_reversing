@@ -68,7 +68,6 @@ extern void InitEvents_8001028C(void);
 extern long vsyncEventHandler_800103AC(void);
 
 struct Pool;
-extern int GetSealResultFlags_80013358(int idx);
 extern UnitStatus* GetUnitStatus_80014390(int arg0);
 extern EventEntry* FindModelTask_8001091C();
 struct Pool;
