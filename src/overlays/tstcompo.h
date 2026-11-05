@@ -16,6 +16,7 @@
 #include "minion_init.h"
 #include "party.h"
 #include "model_ftg.h"
+#include "ftg_draw.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
@@ -268,7 +269,6 @@ extern void DrawAnimSkelBlend_80047E28(void* a, void* b, void* c, int d, int e, 
 extern TstCompoBone defaultBones_80079140[];
 /* exe-side, to move to minion_init.h */
 /* exe-side, to move to ftg_draw.h */
-extern void SetGteLightAndCamera_8004D0E8();
 /* exe-side, to move to event.h */
 extern MATRIX lightMatrix_80087114; // event.h
 extern MATRIX colorMatrix_80087134; // event.h

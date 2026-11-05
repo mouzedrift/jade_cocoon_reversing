@@ -12,6 +12,7 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "model_ftg.h"
+#include "ftg_draw.h"
 
 typedef struct TstModelBone
 {
@@ -255,9 +256,7 @@ extern short sinTable_80084540[];
 extern MATRIX lightMatrix_80087114;
 extern TstModelMat colorMatrix_80087134;
 /* exe-side, to move to ftg_draw.h */
-extern MATRIX* RotMatrixZYX_8004D5CC(SVECTOR* r, MATRIX* m);
 extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
-extern void SetGteLightAndCamera_8004D0E8();
 /* exe-side, to move to engine.h */
 /* exe-side, to move to skel_draw.h */
 extern void DrawAnimSkel_80046A58(void* a, void* b, int c);

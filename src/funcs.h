@@ -132,7 +132,6 @@ extern UnitStatus* GetEnemyStatus_800A2B60(int idx);
 extern UnitStatus* GetSlotStatus_800A10C0(int a0);
 extern UnitStats* GetUnitStats_8001449C(int unit);
 extern int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY);
-extern void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* cam, int flags, void* scale);
 
 
 #endif

@@ -33,6 +33,7 @@
 #include "party.h"
 #include "model_ftg.h"
 #include "ability_menu.h"
+#include "ftg_draw.h"
 
 
 

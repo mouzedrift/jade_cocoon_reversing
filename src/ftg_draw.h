@@ -58,4 +58,6 @@ extern int dword_800986A0[78];
 extern int dword_80098184;
 extern int dword_8009AADC;
 
+void SetGteLightAndCamera_8004D0E8(void);
+void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* light, int flags, void* scale);
 #endif

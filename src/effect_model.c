@@ -23,6 +23,7 @@
 #include "cd.h"
 #include "movie.h"
 #include "model_ftg.h"
+#include "ftg_draw.h"
 
 const int off_80072278[0] = {  };
 

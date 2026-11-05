@@ -21,6 +21,7 @@
 #include "main.h"
 #include "cd.h"
 #include "engine.h"
+#include "ftg_draw.h"
 
 extern ShortPair screenOffset_8008D474;
 // Matched
@@ -1061,7 +1062,6 @@ void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos)
     }
 }
 extern SVECTOR cameraRot_8008D4C8;
-extern void SetGteLightAndCamera_8004D0E8(void);
 // Matched
 void UpdateCameraRotation_80039E14(void)
 {
