@@ -974,7 +974,6 @@ void DrawMsgWindowTitle_800359F8(MsgWindow* win)
     }
 }
 extern EventNode* messageWindowTask_8008D640;
-extern void PlayMusic_800300E0(int a, int b);
 // Matched
 MsgWindowEntry* OpenItemMessageWindow_80035AC8(ItemMsgInit* init)
 {

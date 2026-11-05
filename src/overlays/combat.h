@@ -162,7 +162,6 @@ extern int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx);  // -> min
 extern void SetActorStatusTint_80018EBC(void* actor, UnitStatus* status); // -> minion_init.h
 extern ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c); // -> effect_cmd.h
 extern int StartModelTask_80010850(void* params); // -> party.h
-extern int PlayMusic_800300E0(int idx, int unused); // -> sound.h
 extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* text, int ot); // -> party_window.h
 extern void DrawElementIconsRow_8002B1B0(int mask, void* pos, int ot); // -> menu_window.h
 

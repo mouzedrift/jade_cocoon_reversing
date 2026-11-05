@@ -100,7 +100,6 @@ extern void FreeEnemyAi_800A2D28(GameAi* ai);
 extern void SuspendEnemyAi_800A2EC8(GameAi* ai);
 
 
-extern void FreeSeqSlotSound_80030664(void);
 
 
 
@@ -470,7 +469,6 @@ extern void FreeLevantAnimSet_800AC73C();
 
 
 
-extern void PlayMusic_800300E0(int a, int b);
 
 extern void WaitBattleOverlay_800A1474();
 
@@ -568,7 +566,6 @@ extern void GameMainStart_800A6968();
 
 extern void EnableCameraPoints_800A094C(void);
 
-extern void ResetSoundTask_8002FEB8(void);
 
 
 
@@ -635,7 +632,6 @@ typedef struct GameTaskListDef
 
 extern void GameMainExit_800A6CCC();
 
-extern void ApplyAudioOutputFormat_80030988(void);
 
 extern void SwitchGameMode_800A6C00();
 

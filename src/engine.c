@@ -1296,7 +1296,6 @@ void PlayAnimFrameSfx_8001C364(Model* model, int idx, int frame)
         }
     }
 }
-extern int PlayMusic_800300E0(int idx, int a1);
 // Matched
 void RunAnimFrameCues_8001C440(Model* model, int idx, int frame)
 {

@@ -133,7 +133,7 @@ short GetMagicElementIcon_8002A3E0(int magic)
 }
 extern void GetPortraitSprt_800A61CC(int a, void* b, void* c);
 // Matched
-void DrawPortrait_8002A42C(unsigned short* pos, short id, int drawArea, short ot)
+void DrawPortrait_8002A42C(unsigned short* pos, short id, RECT* drawArea, short ot)
 {
     unsigned short buf1[10];
     char buf2[8];

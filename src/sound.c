@@ -25,9 +25,8 @@
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";
 
-extern void DrawPortrait_8002A42C(unsigned short* pos, short a1, int a2, short a3);
 // Matched
-void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short animate, int clipRect)
+void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short animate, RECT* clipRect)
 {
     RECT buf;
     RECT rect;
@@ -100,7 +99,6 @@ void ResetSoundTask_8002FEB8(void)
         task->fades_18[i].active = 0;
     }
 }
-extern void UpdateSoundTask_8002FF64();
 // Matched
 void InitSoundTask_8002FF10(EventEntry* entry, SoundTask* task)
 {
@@ -164,7 +162,6 @@ void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer)
     FreeSound_80030D00(task->sfx_8);
 }
 
-void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader);
 // Matched
 int PlayMusic_800300E0(int idx, int unused)
 {
@@ -249,7 +246,6 @@ int PlayMusic_800300E0(int idx, int unused)
     }
     return 1;
 }
-void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer);
 // Matched
 int LoadSeqSlotSound_800303E8(void)
 {

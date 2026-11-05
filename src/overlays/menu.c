@@ -2311,7 +2311,7 @@ void DrawCursorWindow_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
 void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
 {
     short pos[2];
-    int tmp[2];
+    RECT tmp;
     LevantSummaryArgs summary;
     int openStep = GetWindowOpenStep_800C0990(menu, 2);
     int flag;
@@ -2329,25 +2329,25 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
     summary.highlight_4 = 1;
     summary.time_8 = time;
     DrawLevantSummary_8002E334(&levantStatus_8008BD38, &summary);
-    InterpolateWindowRect_8004196C(tmp, levantSummaryRect_800C2994, (short)openStep, 8, 0);
-    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    InterpolateWindowRect_8004196C(tmp, levantHeaderRect_800C298C, (short)openStep, 8, 0);
-    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    DrawLevantHeaderWindows_8002FD0C(b, (short)openStep, 1, flag, tmp);
+    InterpolateWindowRect_8004196C(&tmp, levantSummaryRect_800C2994, (short)openStep, 8, 0);
+    AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
+    InterpolateWindowRect_8004196C(&tmp, levantHeaderRect_800C298C, (short)openStep, 8, 0);
+    AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
+    DrawLevantHeaderWindows_8002FD0C(b, (short)openStep, 1, flag, &tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     if (menu->state_2 == 0)
     {
         pos[0] = 0x93;
         pos[1] = 0x15;
         DrawUiTiySprt_8002C06C(pos, 0xBB, b);
-        DrawAnimatedWindow_8002BEC8(tmp, menuTitleRect_800C18CC, (short)openStep, b, 0, 0);
+        DrawAnimatedWindow_8002BEC8(&tmp, menuTitleRect_800C18CC, (short)openStep, b, 0, 0);
         pos[0] = 0x84;
         pos[1] = 0xC4;
         DrawUiTiySprt_8002C06C(pos, 0x4F, b);
         if (menu->flags_0 & 4)
-            DrawAnimatedWindow_8002BEC8(tmp, configLabelRect_800C18D4, (short)openStep, b, 1, frameCount_8008D3FC);
+            DrawAnimatedWindow_8002BEC8(&tmp, configLabelRect_800C18D4, (short)openStep, b, 1, frameCount_8008D3FC);
         else
-            DrawAnimatedWindow_8002BEC8(tmp, configLabelRect_800C18D4, (short)openStep, b, 1, 0);
+            DrawAnimatedWindow_8002BEC8(&tmp, configLabelRect_800C18D4, (short)openStep, b, 1, 0);
         if (unknownFlags_8008D678 & 0x20000)
         {
             int v = sub_800B330C();
@@ -2357,7 +2357,7 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
             pos[0] = 0x54;
             pos[1] = 0x19;
             DrawLargeNumber_8002C100(pos, v, b);
-            DrawAnimatedWindow_8002BEC8(tmp, name_800C2984, (short)openStep, b, 0, 0);
+            DrawAnimatedWindow_8002BEC8(&tmp, name_800C2984, (short)openStep, b, 0, 0);
         }
     }
 }
@@ -2403,7 +2403,7 @@ void DrawPartyMinionWindows_800BEFAC(MenuCtx* menu, short b)
 void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
 {
     short pos[2];
-    int tmp[2];
+    RECT tmp;
     LevantSummaryArgs summary;
     short pp[2];
     MenuEquipQ eq;
@@ -2420,16 +2420,16 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
     summary.highlight_4 = 0;
     summary.time_8 = 0;
     DrawLevantSummary_8002E334(lv, &summary);
-    InterpolateWindowRect_8004196C(tmp, levantSummaryRect_800C2994, (short)openStep, 8, 0);
-    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    InterpolateWindowRect_8004196C(tmp, levantHeaderRect_800C298C, (short)openStep, 8, 0);
-    AddDrawAreaPrim_8003326C(tmp, &pOT_8008D454[b]);
-    DrawLevantHeaderWindows_8002FD0C(b, (short)openStep, 0, 0, tmp);
+    InterpolateWindowRect_8004196C(&tmp, levantSummaryRect_800C2994, (short)openStep, 8, 0);
+    AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
+    InterpolateWindowRect_8004196C(&tmp, levantHeaderRect_800C298C, (short)openStep, 8, 0);
+    AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
+    DrawLevantHeaderWindows_8002FD0C(b, (short)openStep, 0, 0, &tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     pos[0] = 0xD1;
     pos[1] = 0x88;
     DrawLevantStats_8002F7D0(pos, 0xE);
-    DrawAnimatedWindow_8002BEC8(tmp, statusStatsRect_800C1BE0, (short)openStep, b, 0, 0);
+    DrawAnimatedWindow_8002BEC8(&tmp, statusStatsRect_800C1BE0, (short)openStep, b, 0, 0);
     eq.sel_0 = -1;
     pp[0] = 0xA;
     pp[1] = 0x88;

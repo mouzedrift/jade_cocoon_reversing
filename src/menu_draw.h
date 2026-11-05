@@ -62,4 +62,5 @@ extern MenuWindowItem* yesNoRows_80082778[3];
 extern MenuWindowList yesNoWindow_80082784;
 
 void DrawUiWindow_8002A384(UiWindowDesc* desc);
+void DrawPortrait_8002A42C(unsigned short* pos, short id, RECT* drawArea, short ot);
 #endif

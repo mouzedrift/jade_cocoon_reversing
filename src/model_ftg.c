@@ -2837,7 +2837,6 @@ extern void SetBattleStageForMap_800A52AC(int a0);
 extern Model* GetLevantModel_800AC38C(void);
 extern int GetEventVar_800AD154(int a0);
 extern void StartEncounter_800B88A4(int a0);
-extern void PlayMusic_800300E0(int a, int b);
 // Matched
 void MapLoaderTask_80027CF8(void* entry, int* state)
 {

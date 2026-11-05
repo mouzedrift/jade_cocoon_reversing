@@ -34,7 +34,6 @@ void CountdownTask_80016BF4(EventEntry* entry, EffectObj* obj)
         PlaySfx_80031494(0x24);
     }
 }
-extern void PlayMusic_800300E0(int idx, int a1);
 // Matched
 void BoneModelFadeTask_80016C3C(int* flags, void* buf)
 {

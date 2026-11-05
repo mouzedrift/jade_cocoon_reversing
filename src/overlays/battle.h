@@ -537,9 +537,7 @@ extern int* GetEncounterLeaderPos_800A1E48(void); // GAME.BIN: an actor's pos_38
 
 extern short* GetEncounterLeaderRot_800A1E68(void); // GAME.BIN: the same actor's rot_5C
 
-extern int LoadSeqSlotSound_800303E8();
 
-extern int IsSoundTaskReady_80030688();
 
 
 
@@ -1554,8 +1552,6 @@ extern int CanFleeFromEnemy_800A28FC(int idx);
 /* exe-side, to move to engine.h */
 /* exe-side, to move to camera.h */
 /* exe-side, to move to sound.h */
-extern void FreeSeqSlotSound_80030664(void);
-extern int PlayMusic_800300E0(int idx, int unused);
 /* exe-side, to move to cd.h */
 /* exe-side, to move to sound_seq.h */
 /* PSY-Q libsnd */

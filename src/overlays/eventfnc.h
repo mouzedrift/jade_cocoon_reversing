@@ -738,7 +738,6 @@ extern void StartSceneFadeOut_8001AA50(int duration);
 extern void StartSceneBrighten_8001AB1C(int duration);
 /* exe-side, to move to sound_seq.h */
 /* exe-side, to move to sound.h */
-extern int PlayMusic_800300E0(int idx, int unused);
 /* exe-side, to move to model_ftg.h */
 /* exe-side, to move to msg_window.h */
 /* PSY-Q library */

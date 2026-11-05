@@ -13,6 +13,8 @@ typedef struct SoundStruct
     unsigned char* field_18_vab_header_ptr;
 } SoundStruct;
 
+#include "soundtask.h"
+
 typedef struct
 {
     int field_0_header_start;
@@ -53,4 +55,19 @@ extern SoundStruct systemSound_80091D40;
 void FreeSoundTask_8003006C();
 void InitSoundTask_8002FF10();
 
+int PlayMusic_800300E0(int idx, int unused);
+void InitSounds_8002FE7C(void);
+void FreeBgmSeqs_800306D8(void);
+int IsSoundTaskReady_800306B0(void);
+void StopSoundSeqById_800306FC(int idx);
+int LoadSeqSlotSound_800303E8(void);
+int IsSoundTaskReady_80030688(void);
+void FreeSeqSlotSound_80030664(void);
+void ApplyBgmVolume_800309D8(SoundStruct* sound);
+void ResetSoundTask_8002FEB8(void);
+void ApplyAudioOutputFormat_80030988(void);
+void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short animate, RECT* clipRect);
+void UpdateSoundTask_8002FF64(int entry, SoundTask* task);
+void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader);
+void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer);
 #endif

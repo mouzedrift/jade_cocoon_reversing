@@ -23,6 +23,7 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "ui_sprites.h"
+#include "sound.h"
 
 typedef struct CombBtlNode
 {
@@ -242,8 +243,5 @@ extern void StartSceneFadeOut_8001AA50(short duration); // -> engine.h
 extern void DrawMpGauge_8002F120(UnitStatus* unit, CombBtlPair* pos, int gaugeArg, short ot); // -> unit_gauges.h
 extern void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot,
                                           int flags); // -> unit_gauges.h
-extern int LoadSeqSlotSound_800303E8(void);        // -> sound.h (sound.c)
-extern void FreeSeqSlotSound_80030664(void);       // -> sound.h (sound.c)
-extern int IsSoundTaskReady_80030688(void);        // -> sound.h (sound.c)
 
 #endif
