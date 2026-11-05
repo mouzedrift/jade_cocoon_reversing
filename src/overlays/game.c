@@ -1778,10 +1778,10 @@ void ClearEncounterGroupFlags_800A4940(int group, int encIndex)
 
 void RollEncounterGroup_800A4DD0(int a, int b, MapList16* c, GameSpawnEntry* p, GameSpawnOut* e, unsigned short* f);
 
-#if 0
-// Not matched (3 words long, registers differ): the original clears e[] with a scratch counter, keeps c in $s7 and
-// encounterSpecies_800AEB6C in $fp, and leaves the 0x8000 loop unrotated (bottom "i < c->count_0" exit, then a jump back to the
-// "i < 3" test); the original also reloads *f for the == 0 test
+// Rolls the encounter groups for an encounter index/entrance into out (members + places), returns how many were rolled.
+// The early exits are 'goto end' to the single final 'return count' (separate 'return count's add refs to count and
+// flip its global-alloc priority against the out->members_0 giv).
+// Matched
 int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, GameSpawnOut* out)
 {
     int count;
@@ -1811,12 +1811,15 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     }
     if (flags == 0)
     {
-        return count;
+        goto end;
     }
-    for (i = 0; i < 3; i++)
     {
-        out->members_0[i] = 0;
-        out->places_C[i] = 0;
+        int n;
+        for (n = 0; n < 3; n++)
+        {
+            out->members_0[n] = 0;
+            out->places_C[n] = 0;
+        }
     }
     tbl = 0;
     if (unknownFlags_8008D678 & 0x20000)
@@ -1833,29 +1836,26 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     }
     if (tbl == 0)
     {
-        return count;
+        goto end;
     }
     if (*flags & 0x8000)
     {
         *flags &= 0x7FFF;
-        for (i = 0; i < groups->count_0; i++, count++)
+        for (i = 0; i < groups->count_0 && i < 3; i++)
         {
-            if (i >= 3)
-            {
-                break;
-            }
             RollEncounterGroup_800A4DD0(count, i, groups, tbl, out, flags);
+            count++;
         }
     }
     else if (*flags == 0)
     {
         if (groups->count_0 == 0)
         {
-            return count;
+            goto end;
         }
         if (rand() % 3 == 0)
         {
-            return count;
+            goto end;
         }
         if (groups->count_0 < 3)
         {
@@ -1871,40 +1871,37 @@ int RollEncounterGroups_800A49CC(int encIndex, int entrance, MapList16* groups, 
     else
     {
         bits = *flags;
-        members = encounterGroups_800AEB00[0];
-        for (j = 0; j < 3; j++, members += 3, bits >>= 5)
+        for (j = 0; j < 3; bits >>= 5, j++)
         {
             if (bits & 0x10)
             {
                 ent = &tbl[bits & 3];
-                members[0].species_0 = encounterSpecies_800AEB6C[ent->species0];
-                members[1].species_0 = encounterSpecies_800AEB6C[ent->species1];
-                members[2].species_0 = encounterSpecies_800AEB6C[ent->species2];
-                members[0].f4 = ent->v0 << 26;
-                members[1].f4 = ent->v1 << 26;
-                members[2].f4 = ent->v2 << 26;
+                encounterGroups_800AEB00[j][0].species_0 = encounterSpecies_800AEB6C[ent->species0];
+                encounterGroups_800AEB00[j][1].species_0 = encounterSpecies_800AEB6C[ent->species1];
+                encounterGroups_800AEB00[j][2].species_0 = encounterSpecies_800AEB6C[ent->species2];
+                encounterGroups_800AEB00[j][0].f4 = ent->v0 << 26;
+                encounterGroups_800AEB00[j][1].f4 = ent->v1 << 26;
+                encounterGroups_800AEB00[j][2].f4 = ent->v2 << 26;
                 if (unknownFlags_8008D678 & 0x20000)
                 {
-                    k = (sub_800B330C() - 1) / 4 + 1;
-                    if (k >= 8)
+                    int lv = (sub_800B330C() - 1) / 4 + 1;
+                    if (lv >= 8)
                     {
-                        k = 7;
+                        lv = 7;
                     }
-                    members[0].f4 = (ent->v0 + k) << 26;
-                    members[1].f4 = (ent->v1 + k) << 26;
-                    members[2].f4 = (ent->v2 + k) << 26;
+                    encounterGroups_800AEB00[j][0].f4 = (ent->v0 + lv) << 26;
+                    encounterGroups_800AEB00[j][1].f4 = (ent->v1 + lv) << 26;
+                    encounterGroups_800AEB00[j][2].f4 = (ent->v2 + lv) << 26;
                 }
-                out->members_0[count] = members;
+                out->members_0[count] = encounterGroups_800AEB00[j];
                 out->places_C[count] = &groups->items_4[j];
                 count++;
             }
         }
     }
+end:
     return count;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(game, RollEncounterGroups_800A49CC);
 
 // rolls one encounter group: picks a GameSpawnEntry by chance, fills encounterGroups_800AEB00[group] and records it in out and *flags
 // Matched
