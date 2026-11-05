@@ -329,7 +329,6 @@ typedef struct GameEncounter
     int f784;
     int f788;
     char pad_78c[0xa48 - 0x78c];
-    int fa48;
 } GameEncounter;
 
 
@@ -1585,7 +1584,6 @@ extern int levantAnimSets_800B11DC[19];
 extern int battleFlags_800B1228;
 extern int battleHitEnemies_800B122C[13];
 extern GameEncounter gCtx_800B1260;
-extern int dword_800B1CAC[3];
 extern GameEnemy eventEnemy_800B1CB8;
 extern int eventHook_800B1D98;
 extern int dword_800B1D9C;
@@ -1634,7 +1632,7 @@ typedef struct GameLevantModelWork
 /* GAME's own functions/data used before their definition or from another of its files */
 void FreeLevantAnimSetAnims_800ACF3C(GameLevantModelWork* work);
 void LoadLevantAnimSetAnims_800ACFB8();
-extern int dword_800B1CA8[];
+extern int dword_800B1CA8[4];
 
 /* code loaded behind GAME (0x800B1E00..0x800B66C0, not an overlay of overlays.py); MENU calls sub_800B330C too */
 extern int sub_800B330C(void);

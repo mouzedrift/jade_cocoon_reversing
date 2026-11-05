@@ -976,7 +976,7 @@ int battleHitEnemies_800B122C[13] = {
     0, 0, 0, 0, 0xB00,
 };
 GameEncounter gCtx_800B1260 = { 0 };
-int dword_800B1CAC[3] = { 0 };
+int dword_800B1CA8[4] = { 0 };
 GameEnemy eventEnemy_800B1CB8 = { 0 };
 int eventHook_800B1D98 = 0;
 int dword_800B1D9C = 0;
