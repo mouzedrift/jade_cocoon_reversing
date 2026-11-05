@@ -104,12 +104,6 @@ typedef struct MenuCtx
     short scroll_62;
 } MenuCtx;
 
-typedef struct MenuWinColor
-{
-    unsigned short col;
-    unsigned char colorSet_2; // window colour set (GetWindowColors_8004226C)
-    unsigned char semiTrans_3;
-} MenuWinColor;
 
 typedef struct MenuPair
 {

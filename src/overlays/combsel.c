@@ -167,14 +167,14 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         DrawMinionNameLevel_800A1844(&rosters_800A1BC8[curPlayer_800A38D9][j + listCursor_800A596C.scroll_A], pt, 0);
     }
     {
-        CombSelBox col;
+        WindowStyle col;
         RECT rect;
         short xs[2];
         unsigned short pos[2];
         xs[0] = 0x100;
         xs[1] = 0x15;
-        col.state_2 = 0;
-        col.frame_3 = 1;
+        col.colorSet_2 = 0;
+        col.semiTrans_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;
         rect.x = xs[curPlayer_800A38D9];
         rect.y = 0x3B;
@@ -191,22 +191,22 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     }
     {
         MenuWindowItem item;
-        CombSelBox col;
+        WindowStyle col;
         item = titleItem_800A4238;
-        col.state_2 = 0;
-        col.frame_3 = 1;
+        col.colorSet_2 = 0;
+        col.semiTrans_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;
         DrawMenuItemWithWindow_8002ADB4(&item, &col, 10, 0);
     }
     {
-        CombSelBox col;
+        WindowStyle col;
         MenuWindowItem item = playerItems_800A4254[0];
         short xs[2] = { 0xA, 0xE9 };
         MenuWindowItem unused; // never used (it keeps the original frame layout)
         item.x_10 = xs[curPlayer_800A38D9];
         item.text_4 = playerIcons_800A59A4[curPlayer_800A38D9];
-        col.state_2 = 0;
-        col.frame_3 = 1;
+        col.colorSet_2 = 0;
+        col.semiTrans_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;
         DrawMenuItemWithWindow_8002ADB4(&item, &col, 10, 0);
         if (selMode_800A38DB == 2)
@@ -226,11 +226,11 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         }
         {
             MenuWindowItem item = listHeaderItem_800A428C;
-            CombSelBox col;
+            WindowStyle col;
             short xs[2] = { 0x9B, 0x73 };
             item.x_10 = xs[curPlayer_800A38D9];
-            col.state_2 = 0;
-            col.frame_3 = 1;
+            col.colorSet_2 = 0;
+            col.semiTrans_3 = 1;
             col.color_0 = saveData_8008B570.uiColor_20.h;
             DrawMenuItemWithWindow_8002ADB4(&item, &col, 10, 0);
         }

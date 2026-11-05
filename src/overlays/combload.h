@@ -12,13 +12,6 @@
 #include "util.h"
 #include "event.h"
 
-// the window colour DrawWindow_80042460 takes (CombSelBox)
-typedef struct CombLoadBox
-{
-    short col_0;
-    char state_2;
-    char frame_3;
-} CombLoadBox;
 
 
 extern int dword_800A4088;

@@ -1468,12 +1468,6 @@ extern void StopSoundSeqs_80030D68(SoundStruct* sound);
 extern void StopSeqSlot_80031334(int idx);
 
 /* battle_5.c: the actor window's box (DrawWindow_80042460's style) */
-typedef struct BatWindowBox
-{
-    short col_0;
-    char c_2;
-    char c_3;
-} BatWindowBox;
 
 /* battle_6.c: the enemy AI (ChooseEnemyCommand_800C4118 calls these before their definitions) */
 int EnemyAiBD_800C4A40(EnemyAi* ai);

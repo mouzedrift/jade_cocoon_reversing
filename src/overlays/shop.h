@@ -144,13 +144,6 @@ typedef struct ShopPos
     short y;
 } ShopPos;
 
-// window style for DrawWindow_80042460
-typedef struct ShopWinColor
-{
-    short color;
-    unsigned char colorSet_2; // window colour set (GetWindowColors_8004226C)
-    unsigned char semiTrans_3;
-} ShopWinColor;
 
 // DrawUiWindow_8002A384's parameter block
 typedef struct ShopUiWin

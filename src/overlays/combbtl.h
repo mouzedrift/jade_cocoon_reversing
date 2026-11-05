@@ -158,13 +158,6 @@ typedef struct CombBtlSideWindow
     RECT cur_10; // the window rect being opened (InterpolateWindowRect_8004196C)
 } CombBtlSideWindow;
 
-// a window style (DrawWindow_80042460, DrawMenuItemWithWindow_8002ADB4)
-typedef struct CombBtlBox
-{
-    short color_0;
-    char state_2;
-    char frame_3;
-} CombBtlBox;
 
 typedef struct CombBtlHitNum
 {

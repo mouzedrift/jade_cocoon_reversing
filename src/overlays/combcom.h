@@ -14,6 +14,7 @@
 #include "menu_window.h"
 #include "engine.h"
 #include "unit_query.h"
+#include "event.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
@@ -65,13 +66,6 @@ typedef struct CombComPos2
     short xy[2][2];
 } CombComPos2;
 
-// the window colour DrawWindow_80042460 takes (CombSelBox)
-typedef struct CombComColor
-{
-    unsigned short color;
-    unsigned char state_2;
-    unsigned char frame_3;
-} CombComColor;
 
 extern int dword_800C9E88;
 

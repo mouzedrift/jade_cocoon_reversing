@@ -32,12 +32,12 @@ const MenuWindowItem minionHpItem_800A40C4 = { 10, 1, 64, &uiTiySprts_8008D620, 
 // Versus mode result screen: per player result, score and minions; any button fades back to the versus task
 void VersusResultTask_800A40E0(CombatTask* task)
 {
-    CombRsltBox box;
+    WindowStyle box;
     MenuWindowItem title = resultTitleItem_800A408C;
     int i;
-    box.state_2 = 0;
-    box.frame_3 = 1;
-    box.col_0 = uiColor_8008B590;
+    box.colorSet_2 = 0;
+    box.semiTrans_3 = 1;
+    box.color_0 = uiColor_8008B590;
     DrawMenuItemWithWindow_8002ADB4(&title, &box, 0xF, 0);
     for (i = 0; i < 2; i++)
     {
@@ -66,7 +66,7 @@ extern void DrawResultMinion_800A4554();
 
 void DrawPlayerResult_800A4240(int player)
 {
-    CombRsltBox box;
+    WindowStyle box;
     short pos[2];
     int j;
     int res;
@@ -75,19 +75,19 @@ void DrawPlayerResult_800A4240(int player)
     {
     case 0:
         resultItems_800A4870[player]->text_4 = 0xE6;
-        box.state_2 = 1;
+        box.colorSet_2 = 1;
         break;
     case 1:
         resultItems_800A4870[player]->text_4 = 0x68;
-        box.state_2 = 2;
+        box.colorSet_2 = 2;
         break;
     case 2:
         resultItems_800A4870[player]->text_4 = 0x41;
-        box.state_2 = 2;
+        box.colorSet_2 = 2;
         break;
     }
-    box.col_0 = uiColor_8008B590;
-    box.frame_3 = 1;
+    box.color_0 = uiColor_8008B590;
+    box.semiTrans_3 = 1;
     DrawMenuItemWithWindow_8002ADB4(playerLabelItems_800A4830[player], &box, 0xF, GetTime30Hz_8002C64C());
     DrawMenuItemWithWindow_8002ADB4(resultItems_800A4870[player], &box, 0xF, GetTime30Hz_8002C64C());
     pos[0] = scoreWindows_800A48B0[player]->x_10;
@@ -97,7 +97,7 @@ void DrawPlayerResult_800A4240(int player)
     j = 0;
     res = sideResult_800A3A98[player];
     if (res < 3 && res != 0)
-        box.state_2 = 0;
+        box.colorSet_2 = 0;
     for (j = 0; j < 3; j++)
         DrawResultMinion_800A4554(player, j + slotCursor_800A47E8.scroll_A, &box);
 }
@@ -155,7 +155,7 @@ void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWin
 extern void DrawHpGauge_8002F078();
 
 // Matched
-void DrawResultMinion_800A4554(int player, int slot, CombRsltBox* box)
+void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box)
 {
     MenuWindowItem label = minionLabelItem_800A40A8;
     MenuWindowItem hp;

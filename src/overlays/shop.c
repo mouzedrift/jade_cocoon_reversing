@@ -1874,7 +1874,7 @@ void DismissShopPrompt_800BC2DC(ShopMenu* menu)
 void DrawShopMenu_800BC380(ShopMenu* menu)
 {
     ShopPos pos;
-    ShopWinColor win;
+    WindowStyle win;
     short i;
     short j;
     short openStep;
@@ -1941,7 +1941,7 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         DrawUiTiySprt_8002C06C(&pos, 0xB5, 0xE);
         win.semiTrans_3 = 1;
         win.colorSet_2 = 0;
-        win.color = saveData_8008B570.uiColor_20.h;
+        win.color_0 = saveData_8008B570.uiColor_20.h;
         DrawWindow_80042460(&partyLabelRect_800BF7A0, &win, pOT_8008D454 + 0xE, 0);
         pos.x = storedLabelRect_800BF7A8.x + 5;
         pos.y = storedLabelRect_800BF7A8.y + 3;
@@ -2025,10 +2025,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
             }
             if (!(menu->flags_24 & 0x1C0))
             {
-                ShopWinColor statusColor;
+                WindowStyle statusColor;
                 statusColor.colorSet_2 = 0;
                 statusColor.semiTrans_3 = 1;
-                statusColor.color = saveData_8008B570.uiColor_20.h;
+                statusColor.color_0 = saveData_8008B570.uiColor_20.h;
                 DrawWindow_80042460(&statusWindowRect_800BF790, &statusColor, pOT_8008D454 + 0xE, 0);
             }
         }
@@ -2067,10 +2067,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                 time = frameCount_8008D3FC;
             }
             {
-                ShopWinColor slotColor;
+                WindowStyle slotColor;
                 slotColor.colorSet_2 = 1;
                 slotColor.semiTrans_3 = 1;
-                slotColor.color = saveData_8008B570.uiColor_20.h;
+                slotColor.color_0 = saveData_8008B570.uiColor_20.h;
                 DrawWindow_80042460(&rect, &slotColor, pOT_8008D454 + 0xE, time);
             }
         }
@@ -2104,10 +2104,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                     time = frameCount_8008D3FC;
                 }
                 {
-                    ShopWinColor slotColor2;
+                    WindowStyle slotColor2;
                     slotColor2.colorSet_2 = 1;
                     slotColor2.semiTrans_3 = 1;
-                    slotColor2.color = saveData_8008B570.uiColor_20.h;
+                    slotColor2.color_0 = saveData_8008B570.uiColor_20.h;
                     DrawWindow_80042460(&slotRect, &slotColor2, pOT_8008D454 + 0xE, time);
                 }
                 if (menu->state_0 == 3 && (menu->flags_24 & 2))

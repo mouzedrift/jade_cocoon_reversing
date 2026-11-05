@@ -332,7 +332,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
     union
     {
         EquipListParams q;
-        EquipBox s;
+        WindowStyle s;
     } u;
     EquipListParams equipList;
     if (unknownFlags_8008D678 < 0)
@@ -389,8 +389,8 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                     DrawEquipmentWindow_800C0E04(&equipList, &rect, 8);
                     DrawEquipStats_800C5314(c);
                     u.s.color_0 = uiColor_8008B590;
-                    u.s.state_2 = 0;
-                    u.s.frame_3 = 1;
+                    u.s.colorSet_2 = 0;
+                    u.s.semiTrans_3 = 1;
                     DrawWindow_80042460(statsWindowRect_800C59A8, &u.s, pOT_8008D454 + 14, 0);
                 }
                 else
@@ -592,7 +592,7 @@ void DrawEquipStats_800C5314(EquipCtx* c)
         union
         {
             EquipArrow p;
-            EquipBox s;
+            WindowStyle s;
         } u;
         EquipRect arrowPos;
         CalcStatsWithEquip_8002E288(levant, c->item_40, c->category_18, newStats);
@@ -605,8 +605,8 @@ void DrawEquipStats_800C5314(EquipCtx* c)
         arrowPos.y = 0x57;
         DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &arrowPos, 0xe);
         u.s.color_0 = uiColor_8008B590;
-        u.s.state_2 = 0;
-        u.s.frame_3 = mode;
+        u.s.colorSet_2 = 0;
+        u.s.semiTrans_3 = mode;
         DrawWindow_80042460(statCompareWindowRect_800C59A0, &u.s, pOT_8008D454 + 14, 0);
     }
 }

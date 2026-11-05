@@ -857,7 +857,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     CfgBoxConfig box1;
     short rect2[4];
     short rect3[4];
-    CfgTailConfig tail;
+    WindowStyle tail;
     CfgBoxConfig box3;
     short i;
     rect[0] = 0x72;
@@ -880,7 +880,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         rect2[1] = i * 38 + 0x2A;
         rect2[2] = 0x12;
         rect2[3] = 0x24;
-        tail.colors_2 = 1;
+        tail.colorSet_2 = 1;
         if (c->uiColor_F == i)
         {
             blink = (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
@@ -889,8 +889,8 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         {
             blink = 0;
         }
-        tail.col_0 = i;
-        tail.frame_3 = 1;
+        tail.color_0 = i;
+        tail.semiTrans_3 = 1;
         DrawWindow_80042460(rect2, &tail, pOT_8008D454 + 14, blink);
         rect3[0] = 0x66;
         rect3[1] = i * 38 + 0x2A;

@@ -193,7 +193,7 @@ void ActorWindowTask_800C0254(EventEntry* task, void* arg)
 {
     BatAnimWindow* win;
     short pos[4];
-    BatWindowBox box;
+    WindowStyle box;
     short rect[4];
     UnitStatus* status;
     if (encounterRecord_800ADE78.active_0 == 1 && actingUnit_800C9C7C == 10)
@@ -221,11 +221,11 @@ void ActorWindowTask_800C0254(EventEntry* task, void* arg)
         pos[0] = 0xD2;
         pos[1] = 0xC0;
         DrawMpGauge_8002F120(status, pos, previewMpChange_800C9182, 0xF);
-        box.c_3 = 1;
+        box.semiTrans_3 = 1;
         rect[2] = 0x64;
         rect[3] = 0x15;
-        box.col_0 = uiColor_8008B590;
-        box.c_2 = 0;
+        box.color_0 = uiColor_8008B590;
+        box.colorSet_2 = 0;
         rect[0] = 0xD2;
         rect[1] = 0xC0;
         DrawWindow_80042460(rect, &box, pOT_8008D454 + 15, 0);

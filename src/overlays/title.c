@@ -365,15 +365,15 @@ void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
     }
 void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
 {
-    TitleWinStyle style;
+    WindowStyle style;
     RECT rect;
     TitleMenuWork* d = c;
     rect.x = 0x4D;
     rect.y = 0xA3;
     rect.w = 0xA6;
     rect.h = 0x12;
-    style.colors_2 = 1;
-    style.frame_3 = 1;
+    style.colorSet_2 = 1;
+    style.semiTrans_3 = 1;
     style.color_0 = 4;
     c->sprts_C[2].x0 = 0x54;
     c->sprts_C[2].y0 = 0xA7;

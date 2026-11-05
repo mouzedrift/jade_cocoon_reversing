@@ -94,13 +94,6 @@ typedef struct TitleMenuWork
     short selected_24;
     short field_26;
 } TitleMenuWork;
-// window style for DrawWindow_80042460 (CombSelBox)
-typedef struct TitleWinStyle
-{
-    short color_0;
-    char colors_2;
-    char frame_3;
-} TitleWinStyle;
 typedef struct
 {
     short x, y, w, h;

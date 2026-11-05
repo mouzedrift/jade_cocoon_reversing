@@ -67,13 +67,6 @@ typedef struct
     short length_44; // length of name_10 in bytes
 } NameEntry;
 
-// window style for DrawWindow_80042460
-typedef struct
-{
-    unsigned short color_0;
-    unsigned char colors_2; // GetWindowColors_8004226C
-    unsigned char frame_3;  // DrawWindowFrame_80041ED0
-} NameWinStyle;
 
 typedef struct
 {
@@ -84,12 +77,6 @@ typedef struct
     short rows_A;
 } NameCursor;
 
-typedef struct
-{
-    unsigned short color;
-    unsigned char colors_2;
-    unsigned char frame_3;
-} NameWinColor;
 
 typedef struct
 {

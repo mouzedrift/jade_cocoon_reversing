@@ -51,12 +51,6 @@ typedef struct CfgBoxConfig
     char frame_B;
 } CfgBoxConfig;
 
-typedef struct CfgTailConfig
-{
-    short col_0;
-    char colors_2;
-    char frame_3;
-} CfgTailConfig;
 
 /* CONFIG functions */
 extern void ConfigMenuTask_800C2F70(EventEntry* t, CfgCtxConfig* ctx);

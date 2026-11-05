@@ -217,13 +217,6 @@ typedef struct TstCompoWork
 } TstCompoWork;
 
 
-// window style for DrawWindow_80042460
-typedef struct TstCompoWinStyle
-{
-    unsigned short color_0;
-    unsigned char colors_2; // GetWindowColors_8004226C
-    unsigned char frame_3;  // DrawWindowFrame_80041ED0
-} TstCompoWinStyle;
 
 /* TSTCOMPO's own functions/data used before their definition or from another of its files */
 void SetDefaultCompoParams_800A0918();

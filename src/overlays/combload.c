@@ -108,7 +108,7 @@ void CardSelectScreen_800A41FC(CombatTask* task)
 void DrawTitleWindow_800A4364()
 {
     RECT rect;
-    CombLoadBox box;
+    WindowStyle box;
     int x = 0x78;
     SPRT* sprt = &uiTiySprts_8008D620[15];
     sprt->x0 = x;
@@ -118,10 +118,10 @@ void DrawTitleWindow_800A4364()
     rect.x = 0x78;
     rect.w = 0x7E;
     rect.h = 0x12;
-    box.frame_3 = 1;
-    box.col_0 = uiColor_8008B590;
+    box.semiTrans_3 = 1;
+    box.color_0 = uiColor_8008B590;
     rect.y = 0x14;
-    box.state_2 = 0;
+    box.colorSet_2 = 0;
     DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
 }
 
@@ -129,7 +129,7 @@ void DrawTitleWindow_800A4364()
 void DrawTitleWindow2_800A4420()
 {
     RECT rect;
-    CombLoadBox box;
+    WindowStyle box;
     int x = 0x78;
     SPRT* sprt = &uiTiySprts_8008D620[15];
     sprt->x0 = x;
@@ -139,10 +139,10 @@ void DrawTitleWindow2_800A4420()
     rect.x = 0x78;
     rect.w = 0x7E;
     rect.h = 0x12;
-    box.frame_3 = 1;
-    box.col_0 = uiColor_8008B590;
+    box.semiTrans_3 = 1;
+    box.color_0 = uiColor_8008B590;
     rect.y = 0x14;
-    box.state_2 = 0;
+    box.colorSet_2 = 0;
     DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
 }
 
@@ -151,7 +151,7 @@ void DrawTitleWindow2_800A4420()
 void DrawDataHeaderWindows_800A44DC()
 {
     short rect[4];
-    CombLoadBox box;
+    WindowStyle box;
     {
         int x = 0x66;
         SPRT* sprt = &uiTiySprts_8008D620[155];
@@ -176,10 +176,10 @@ void DrawDataHeaderWindows_800A44DC()
         AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
         AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
     }
-    box.frame_3 = 1;
+    box.semiTrans_3 = 1;
     rect[0] = 0x64;
-    box.col_0 = uiColor_8008B590;
-    box.state_2 = 0;
+    box.color_0 = uiColor_8008B590;
+    box.colorSet_2 = 0;
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;

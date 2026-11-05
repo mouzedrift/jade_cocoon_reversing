@@ -65,13 +65,6 @@ typedef struct StoreRect
     short x, y, w, h;
 } StoreRect;
 
-// window style for DrawWindow_80042460 (CombSelBox)
-typedef struct StoreWinStyle
-{
-    unsigned short col_0;
-    char state_2;
-    char frame_3;
-} StoreWinStyle;
 
 // DrawScrollArrow_8002B3DC: an arrow kind and an orientation (CombSelArrow)
 typedef struct StoreArrow
@@ -80,13 +73,6 @@ typedef struct StoreArrow
     short dir_2;
 } StoreArrow;
 
-// window colour for DrawWindow_80042460 (CombSelBox)
-typedef struct StoreWinColor
-{
-    short color_0;
-    char state_2;
-    char frame_3;
-} StoreWinColor;
 
 // DrawUiWindow_8002A384's parameter block
 typedef struct StoreUiWindow

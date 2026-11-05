@@ -364,7 +364,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
     union // the text position and the window colour share one slot (case 4)
     {
         LoadTextPos pos;
-        LoadWinColor tail;
+        WindowStyle tail;
     } shared;
     int r;
     UpdateLoadMenuCursor_800B80F8(work);
@@ -543,7 +543,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         DrawText_8003E91C(2, aReturnToTitle_800B6938, &shared.pos, 5);
         {
         LoadWinRect rect;
-        LoadWinColor color;
+        WindowStyle color;
         rect = titlePromptWin_800B6968;
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
@@ -664,7 +664,7 @@ void DrawCardSlotSelect_800B82FC(LoadMenuWork* work)
     int i;
     LoadUiSprite* spr;
     LoadWinRect rect;
-    LoadWinColor color;
+    WindowStyle color;
     if (work->screen_30 == 1)
     {
         for (i = 0; i < 2; i++)
@@ -703,7 +703,7 @@ void DrawCardSlotChosen_800B847C(LoadMenuWork* work)
     int i;
     LoadUiSprite* spr;
     LoadWinRect rect;
-    LoadWinColor color;
+    WindowStyle color;
     for (i = 0; i < 2; i++)
     {
         if (i == loadMenuRows_800BDF4C[1].cursor_C)
@@ -733,7 +733,7 @@ void DrawFormatPrompt_800B85AC(LoadMenuWork* work)
     LoadTextPos p0;
     LoadTextPos p1;
     LoadWinRect rect;
-    LoadWinColor color;
+    WindowStyle color;
     p0.x_0 = 0x13;
     p0.y_2 = 0x49;
     DrawText_8003E91C(2, aMEMORYCARDNotFo_800B682C, &p0, 5);
@@ -840,7 +840,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
     }
     {
         LoadWinRect rect;
-        LoadWinColor color;
+        WindowStyle color;
         rect = helpTextWin_800B6B3C;
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
@@ -953,7 +953,7 @@ const LoadMenuItemPair cardSlotMenuItem2_800B7368 = {
 void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work)
 {
     LoadWinRect rect;
-    LoadWinColor color;
+    WindowStyle color;
     DrawUiTiySprt_8002C06C(&modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C], modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].sprite_4, modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].ot_6);
     rect = modeTitleWin_800B6B8C;
     color.semiTrans_3 = 1;
@@ -968,7 +968,7 @@ void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
     LoadTextPos p0 = { 0xBF, 0x15 };
     LoadTextPos p1;
     LoadWinRect rect;
-    LoadWinColor color;
+    WindowStyle color;
     DrawUiTiySprt_8002C06C(&p0, 0x27, 1);
     p1.x_0 = 0x124;
     p1.y_2 = 0x15;
@@ -986,7 +986,7 @@ void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
     LoadTextPos p1;
     LoadTextPos p2;
     LoadWinRect rect;
-    LoadWinColor color;
+    WindowStyle color;
     p0.x_0 = 0x1C;
     p0.y_2 = 0x24;
     DrawNumberRightAlignedFont1_8003F264(&p0, loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C + 1, 5);
@@ -1949,7 +1949,7 @@ void DrawMessageBox_800BACBC(char** lines)
         }
     }
     {
-        LoadWinColor color;
+        WindowStyle color;
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
         color.color_0 = uiColor_8008B590;

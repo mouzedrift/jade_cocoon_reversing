@@ -461,7 +461,7 @@ int GetSelectedMagic_800CBC58()
 
 void DrawPauseMenu_800CBCA0()
 {
-    CombComColor col;
+    WindowStyle col;
     CombComItem title;
     CombComItem start;
     CombComItem giveUp;
@@ -477,9 +477,9 @@ void DrawPauseMenu_800CBCA0()
     list[0] = &start;
     list[1] = &giveUp;
     list[2] = &ret;
-    col.color = uiColor_8008B590;
-    col.state_2 = 0;
-    col.frame_3 = 1;
+    col.color_0 = uiColor_8008B590;
+    col.colorSet_2 = 0;
+    col.semiTrans_3 = 1;
     DrawMenuItemWithWindow_8002ADB4(&title, &col, 0, GetTime30Hz_8002C64C());
     menu.time_4 = GetTime30Hz_8002C64C();
     menu.items_10 = list;

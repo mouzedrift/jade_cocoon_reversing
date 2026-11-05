@@ -37,14 +37,14 @@ const MenuWindowItem minionLabelItem_800A4154 = { 8, 1, 0, &uiTiySprts_8008D620,
 // Matched
 void VersusSetupTask_800A4170(CombatTask* t, int a)
 {
-    CombStrtBox box;
+    WindowStyle box;
     MenuWindowItem title;
     int i;
     int prevState;
     title = titleItem_800A4138;
-    box.state_2 = 0;
-    box.frame_3 = 1;
-    box.col_0 = uiColor_8008B590;
+    box.colorSet_2 = 0;
+    box.semiTrans_3 = 1;
+    box.color_0 = uiColor_8008B590;
     DrawMenuItemWithWindow_8002ADB4(&title, &box, 0xF, 0);
     HealTeams_800A48C0();
     if (CountTeamMinions_800A1AAC(0) < 2u && CountTeamMinions_800A1AAC(1) < 2u)
@@ -262,11 +262,11 @@ void HealTeams_800A48C0()
 
 void DrawTeam_800A4958(int side)
 {
-    CombStrtBox box;
+    WindowStyle box;
     int slot;
-    box.frame_3 = 1;
-    box.state_2 = 0;
-    box.col_0 = uiColor_8008B590;
+    box.semiTrans_3 = 1;
+    box.colorSet_2 = 0;
+    box.color_0 = uiColor_8008B590;
     DrawMenuItemWithWindow_8002ADB4(playerLabelItems_800A4C50[side], &box, 0xF, 0);
     for (slot = 0; slot < 3; slot++)
     {
@@ -277,13 +277,13 @@ void DrawTeam_800A4958(int side)
 // Matched
 void DrawTeamMinion_800A49DC(int side, int slot)
 {
-    CombStrtBox c1;
+    WindowStyle c1;
     MenuWindowItem label;
     short pos[4];
-    CombStrtBox c2;
+    WindowStyle c2;
     RECT r1;
     short pos2[4];
-    CombStrtBox c3;
+    WindowStyle c3;
     RECT r2;
     Minion* minion = &teams_800A3AA0[side][slot];
     if (IsMinionSlotEmpty_800A1934(minion) != 1)
@@ -292,16 +292,16 @@ void DrawTeamMinion_800A49DC(int side, int slot)
         label.text_4 = slotLabelSprites_800A4C58[slot];
         label.x_10 = minionSlotPos_800A4C64[side][slot][0];
         label.y_12 = minionSlotPos_800A4C64[side][slot][1];
-        c1.state_2 = 0;
-        c1.frame_3 = 1;
-        c1.col_0 = saveData_8008B570.uiColor_20.i;
+        c1.colorSet_2 = 0;
+        c1.semiTrans_3 = 1;
+        c1.color_0 = saveData_8008B570.uiColor_20.i;
         DrawMenuItemWithWindow_8002ADB4(&label, &c1, 0xF, 0);
         pos[0] = minionSlotPos_800A4C64[side][slot][0] + 0x2F;
         pos[1] = minionSlotPos_800A4C64[side][slot][1];
         DrawHpGauge_8002F078(&minion->status_84, pos, 0, 0xF);
-        c2.state_2 = 0;
-        c2.frame_3 = 1;
-        c2.col_0 = saveData_8008B570.uiColor_20.i;
+        c2.colorSet_2 = 0;
+        c2.semiTrans_3 = 1;
+        c2.color_0 = saveData_8008B570.uiColor_20.i;
         r1.x = minionSlotPos_800A4C64[side][slot][0] + 0x32;
         r1.y = minionSlotPos_800A4C64[side][slot][1];
         r1.w = 0x5E;
@@ -310,9 +310,9 @@ void DrawTeamMinion_800A49DC(int side, int slot)
         pos2[0] = minionSlotPos_800A4C64[side][slot][0];
         pos2[1] = minionSlotPos_800A4C64[side][slot][1] + 0x14;
         DrawMinionNameLevel_800A1844(minion, pos2, 0);
-        c3.state_2 = 0;
-        c3.frame_3 = 1;
-        c3.col_0 = saveData_8008B570.uiColor_20.i;
+        c3.colorSet_2 = 0;
+        c3.semiTrans_3 = 1;
+        c3.color_0 = saveData_8008B570.uiColor_20.i;
         r2.x = minionSlotPos_800A4C64[side][slot][0];
         r2.y = minionSlotPos_800A4C64[side][slot][1] + 0x14;
         r2.w = 0x90;

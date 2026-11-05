@@ -689,7 +689,7 @@ void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot)
     union
     {
         unsigned short pos[2];
-        TstCompoWinStyle style;
+        WindowStyle style;
     } scratch; // the text position, then the window style
     if (texts)
     {
@@ -704,8 +704,8 @@ void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot)
     }
     if (rect)
     {
-        scratch.style.colors_2 = 1;
-        scratch.style.frame_3 = 1;
+        scratch.style.colorSet_2 = 1;
+        scratch.style.semiTrans_3 = 1;
         scratch.style.color_0 = uiColor_8008B590;
         DrawWindow_80042460(rect, &scratch.style, pOT_8008D454 + ot, 0);
     }

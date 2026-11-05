@@ -299,12 +299,6 @@ typedef struct CardDirEntry
     long head_20;
     char system_24[4];
 } CardDirEntry;
-typedef struct
-{
-    short color_0; // uiColor_8008B590
-    char colorSet_2; // window colour set (1 pulses, GetWindowColors_8004226C)
-    char semiTrans_3;
-} LoadWinColor;
 // the summary block (file offset 0x280) of a save file
 typedef struct
 {

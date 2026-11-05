@@ -12,13 +12,6 @@
 #include "event.h"
 
 
-// the window colour DrawWindow_80042460 takes (CombSelBox)
-typedef struct CombRsltBox
-{
-    short col_0;
-    char state_2;
-    char frame_3;
-} CombRsltBox;
 
 typedef struct CombRsltPos
 {
@@ -48,7 +41,7 @@ void VersusResultTask_800A40E0(CombatTask* task);
 void VersusResultFadeOut_800A41E4(CombatTask* task, int arg);
 void DrawPlayerResult_800A4240(int player);
 void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWins);
-void DrawResultMinion_800A4554(int player, int slot, CombRsltBox* box);
+void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box);
 
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590; // -> globals.h

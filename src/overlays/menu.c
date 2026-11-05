@@ -1264,8 +1264,8 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
 {
     short pos[2];
     RECT r;
-    MenuWinColor col;
-    MenuWinColor col2;
+    WindowStyle col;
+    WindowStyle col2;
     int ra;
     int rb;
     UnitStatus* lev;
@@ -1279,7 +1279,7 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
     r.h = 0x44;
     col.colorSet_2 = 0;
     col.semiTrans_3 = 1;
-    col.col = saveData_8008B570.uiColor_20.i;
+    col.color_0 = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col, &pOT_8008D454[b], 0);
     pos[0] = 0x61;
     pos[1] = 0x80;
@@ -1293,7 +1293,7 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
     r.h = 0x15;
     col2.colorSet_2 = 0;
     col2.semiTrans_3 = 1;
-    col2.col = saveData_8008B570.uiColor_20.i;
+    col2.color_0 = saveData_8008B570.uiColor_20.i;
     DrawWindow_80042460(&r, &col2, &pOT_8008D454[b], 0);
     lev = &saveData_8008B570.levantStatus_7C8;
     ra = GetLevelRank_800121A8(result->oldStatus_1AC[0].level_44);
@@ -1332,7 +1332,7 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
     }
     }
     {
-        MenuWinColor col3;
+        WindowStyle col3;
         pos[0] = 0x61;
         pos[1] = 0x99;
         DrawUiTiySprt_8002C06C(pos, 0xC2, 0xE);
@@ -1342,7 +1342,7 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
         r.h = 0x15;
         col3.colorSet_2 = 0;
         col3.semiTrans_3 = 1;
-        col3.col = uiColor_8008B590;
+        col3.color_0 = uiColor_8008B590;
         DrawWindow_80042460(&r, &col3, &pOT_8008D454[b], 0);
     }
 }
@@ -1350,7 +1350,7 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
 void DrawMinionLevelUpStatus_800BCEA0(BattleResult* result, int ot, void* status, short unit)
 {
     short pos[2];
-    MenuWinColor col;
+    WindowStyle col;
     if (status)
     {
         int i = unit;
@@ -1359,7 +1359,7 @@ void DrawMinionLevelUpStatus_800BCEA0(BattleResult* result, int ot, void* status
         pos[1] = 0x3E;
         DrawUnitStatusPanel_8002DB48(status, ot, 0, pos, minion, &result->oldStatus_1AC[i]);
     }
-    col.col = uiColor_8008B590;
+    col.color_0 = uiColor_8008B590;
     col.colorSet_2 = 0;
     col.semiTrans_3 = 1;
     DrawWindow_80042460(levelUpStatusRect_800C1060, &col, &pOT_8008D454[ot], 0);
@@ -1578,7 +1578,7 @@ void FieldMenuTask_800BD6C8(MenuTask* task, MenuCtx* menu)
 
 void MinionListScreen_800BD80C(MenuTask* task, char* a)
 {
-    MenuWinColor col;
+    WindowStyle col;
     MenuWindowItem box;
     UiWinArgs win;
     RECT r;
@@ -1603,7 +1603,7 @@ void MinionListScreen_800BD80C(MenuTask* task, char* a)
     if (minionListPage_800C2980 >= 3)
         minionListPage_800C2980 = 0;
     box = minionListTitle_800BB9A4;
-    col.col = uiColor_8008B590;
+    col.color_0 = uiColor_8008B590;
     col.colorSet_2 = 0;
     col.semiTrans_3 = 1;
     DrawMenuItemWithWindow_8002ADB4(&box, &col, 0xA, 0);
@@ -2300,8 +2300,8 @@ void DrawSelectedMinionPanel_800BEBFC(MenuCtx* menu, RECT* rect)
 
 void DrawCursorWindow_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
 {
-    MenuWinColor col;
-    col.col = uiColor_8008B590;
+    WindowStyle col;
+    col.color_0 = uiColor_8008B590;
     col.colorSet_2 = 1;
     col.semiTrans_3 = 1;
     DrawWindow_80042460(a, &col, &pOT_8008D454[b], frameCount_8008D3FC);

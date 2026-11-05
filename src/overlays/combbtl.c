@@ -380,20 +380,20 @@ const MenuWindowItem resultBanner_800A4A70 = { 8, 1, 0xE6, &uiTiySprts_8008D620,
 
 void DrawWinnerBanner_800A5290(CombBtlTask* t)
 {
-    CombBtlBox box;
+    WindowStyle box;
     MenuWindowItem winner = winnerBanner_800A4A54;
     int icons[2];
     MenuWindowItem result;
     icons[0] = 0x33;
     icons[1] = 0xDF;
     winner.text_4 = icons[loserSide_800A85F8 ^ 1];
-    box.state_2 = 1;
-    box.frame_3 = 1;
+    box.colorSet_2 = 1;
+    box.semiTrans_3 = 1;
     box.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(&winner, &box, 0xF, GetTime30Hz_8002C64C());
     result = resultBanner_800A4A70;
-    box.state_2 = 1;
-    box.frame_3 = 1;
+    box.colorSet_2 = 1;
+    box.semiTrans_3 = 1;
     box.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(&result, &box, 0xF, GetTime30Hz_8002C64C());
     if (announcerTask_800A82DC == 0 || (announcerTask_800A82DC->flags & 0x8001) != 1)
@@ -1360,15 +1360,15 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
 {
     MenuWindowItem w0 = sideLabel0_800A4AFC;
     MenuWindowItem w1 = sideLabel1_800A4B18;
-    CombBtlBox box60;
+    WindowStyle box60;
     CombBtlPair pt;
     CombBtlPos2 pos70 = statusIconPos_800A4B34;
-    CombBtlBox box78;
+    WindowStyle box78;
     MenuWindowItem w2;
     union
     {
         CombBtlPos2 pos;
-        CombBtlBox box;
+        WindowStyle box;
     } uA0;
     union
     {
@@ -1426,22 +1426,22 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     {
         if (win->side_0 == actorSide_800A85B8)
         {
-            box60.state_2 = 1;
+            box60.colorSet_2 = 1;
         }
         else
         {
-            box60.state_2 = 0;
+            box60.colorSet_2 = 0;
         }
     }
     else if (win->side_0 == loserSide_800A85F8)
     {
-        box60.state_2 = 0;
+        box60.colorSet_2 = 0;
     }
     else
     {
-        box60.state_2 = 1;
+        box60.colorSet_2 = 1;
     }
-    box60.frame_3 = 1;
+    box60.semiTrans_3 = 1;
     box60.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(label, &box60, 0xF, GetTime30Hz_8002C64C());
     w2 = slotItem_800A4B3C;
@@ -1450,8 +1450,8 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     w2.text_4 = uA8.v.v[sideSlot_800A4078[win->side_0]];
     w2.x_10 = uA0.pos.p[win->side_0].lo;
     w2.y_12 = uA0.pos.p[win->side_0].hi;
-    box78.state_2 = 0;
-    box78.frame_3 = 1;
+    box78.colorSet_2 = 0;
+    box78.semiTrans_3 = 1;
     box78.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(&w2, &box78, 0xF, 0);
     posB8 = mpGaugePos_800A4B6C;
@@ -1469,9 +1469,9 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     {
         DrawMpGauge_8002F120(status, &pt, 0, 0xF);
     }
-    uA0.box.frame_3 = 1;
+    uA0.box.semiTrans_3 = 1;
     uA0.box.color_0 = saveData_8008B570.uiColor_20.h;
-    uA0.box.state_2 = 0;
+    uA0.box.colorSet_2 = 0;
     DrawWindow_80042460(&uA8.r, &uA0.box, &pOT_8008D454[0xF], 0);
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
 }

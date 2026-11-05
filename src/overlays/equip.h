@@ -58,13 +58,6 @@ typedef struct
     short dir_2;
 } EquipArrow;
 
-// the window colour DrawWindow_80042460 takes (CombSelBox)
-typedef struct
-{
-    short color_0;
-    char state_2;
-    char frame_3;
-} EquipBox;
 
 
 typedef struct

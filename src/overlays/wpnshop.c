@@ -636,13 +636,13 @@ const int dword_800BAE08 = 0;
 // Matched
 void DrawStoreWindowFrame_800BB868(StoreMenu* store, StoreRect* rect, int a2, int a3, short idx)
 {
-    StoreWinStyle style;
+    WindowStyle style;
     int bit = 1 << idx;
     if (store->windowsOpen_C & bit)
     {
-        style.col_0 = uiColor_8008B590;
-        style.state_2 = 1;
-        style.frame_3 = 1;
+        style.color_0 = uiColor_8008B590;
+        style.colorSet_2 = 1;
+        style.semiTrans_3 = 1;
         DrawWindow_80042460(rect, &style, dword_8008D454 + 0x38, frameCount_8008D3FC);
     }
 }
@@ -1298,11 +1298,11 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
     unsigned char newStats[0x18];
     StoreRect r40;
     StoreRect r48;
-    StoreWinColor s50;
+    WindowStyle s50;
     union
     {
         StoreArrow p;
-        StoreWinColor s;
+        WindowStyle s;
     } u;
     StoreRect r60;
     int itemId;
@@ -1329,8 +1329,8 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
     r48.y = 0x70;
     r48.w = 0x4B;
     r48.h = 0x4D;
-    s50.state_2 = 0;
-    s50.frame_3 = 1;
+    s50.colorSet_2 = 0;
+    s50.semiTrans_3 = 1;
     s50.color_0 = saveData_8008B570.uiColor_20.h;
     DrawWindow_80042460(&r48, &s50, dword_8008D454 + 0x38, 0);
     if (store->state_0 != 0x11)
@@ -1346,8 +1346,8 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
             r60.y = 0x70;
             r60.w = 0x1D;
             r60.h = 0x4D;
-            u.s.state_2 = 0;
-            u.s.frame_3 = 1;
+            u.s.colorSet_2 = 0;
+            u.s.semiTrans_3 = 1;
             u.s.color_0 = saveData_8008B570.uiColor_20.h;
             DrawWindow_80042460(&r60, &u.s, dword_8008D454 + 0x38, 0);
         }

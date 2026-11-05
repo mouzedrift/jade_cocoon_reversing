@@ -13,13 +13,6 @@
 #include "event.h"
 
 
-// the window colour DrawWindow_80042460 takes
-typedef struct CombSelBox
-{
-    unsigned short color_0;
-    unsigned char state_2; // 0 normal, 1 blinking, 2 selected
-    unsigned char frame_3;
-} CombSelBox;
 
 // DrawScrollArrows_8002B8DC: an arrow kind (scrollArrowIcons_8008279C) and an orientation (quarter turns)
 typedef struct CombSelArrow

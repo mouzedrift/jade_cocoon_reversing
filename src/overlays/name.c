@@ -158,11 +158,11 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
 {
     short pos[2];
     RECT rect;
-    NameWinStyle charStyle;
+    WindowStyle charStyle;
     union
     {
         unsigned short pos[2];
-        NameWinStyle style;
+        WindowStyle style;
     } t; // the help bar position, then the style of the character window
     int k;
     switch (entry->focus_8)
@@ -174,8 +174,8 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
         rect.y = pos[1] - 1;
         rect.w = 0xD;
         rect.h = 0xD;
-        charStyle.colors_2 = 1;
-        charStyle.frame_3 = 1;
+        charStyle.colorSet_2 = 1;
+        charStyle.semiTrans_3 = 1;
         charStyle.color_0 = uiColor_8008B590;
         DrawWindow_80042460(&rect, &charStyle, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
         pageMenu_800B8388.time_4 = 0;
@@ -206,8 +206,8 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
     rect.y = 0x61;
     rect.w = 0xC2;
     rect.h = 0x65;
-    t.style.colors_2 = 1;
-    t.style.frame_3 = 1;
+    t.style.colorSet_2 = 1;
+    t.style.semiTrans_3 = 1;
     t.style.color_0 = uiColor_8008B590;
     DrawWindow_80042460(&rect, &t.style, pOT_8008D454 + 14, 0);
     for (k = 0; charPages_800B8190[entry->page_A][k].chars_4; k++)
@@ -236,8 +236,8 @@ void DrawNameField_800B7414(NameEntry* entry)
     short pos[2];
     short pos2[2];
     RECT rect;
-    NameWinColor fieldStyle;
-    NameWinColor cursorStyle;
+    WindowStyle fieldStyle;
+    WindowStyle cursorStyle;
     short pos3[2];
     int i;
     item.x = 0x74;
@@ -253,17 +253,17 @@ void DrawNameField_800B7414(NameEntry* entry)
     rect.y = 0x24;
     rect.w = 0xB8;
     rect.h = 0x14;
-    fieldStyle.color = saveData_8008B570.uiColor_20.i;
-    fieldStyle.colors_2 = 0;
-    fieldStyle.frame_3 = 1;
+    fieldStyle.color_0 = saveData_8008B570.uiColor_20.i;
+    fieldStyle.colorSet_2 = 0;
+    fieldStyle.semiTrans_3 = 1;
     DrawWindow_80042460(&rect, &fieldStyle, pOT_8008D454 + 14, 0);
     rect.x = MeasureTextWidth_8003E4C8(entry->name_10) + 0x74;
     rect.y = 0x27;
     rect.w = 8;
     rect.h = 0xC;
-    cursorStyle.color = saveData_8008B570.uiColor_20.i;
-    cursorStyle.colors_2 = 1;
-    cursorStyle.frame_3 = 1;
+    cursorStyle.color_0 = saveData_8008B570.uiColor_20.i;
+    cursorStyle.colorSet_2 = 1;
+    cursorStyle.semiTrans_3 = 1;
     DrawWindow_80042460(&rect, &cursorStyle, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
     for (i = 0; i <= 9 - entry->length_44 / 2; i++)
     {
