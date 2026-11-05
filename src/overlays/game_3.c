@@ -2032,7 +2032,7 @@ void RunEventListExit_800A74F0(EventNode* node)
     }
 }
 
-int GameShutdown_800A7574(void)
+enum GameStates GameShutdown_800A7574(void)
 {
     DrawIntroMovie_8001AF64(endMovie_800B0EA4);
     ListFreeAll_8003FEC8(&defaultAllocList_80096090);

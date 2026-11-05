@@ -18,6 +18,7 @@
 #include "model.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "movie.h"
 
 
 // a window row of one item (the item + the row end)

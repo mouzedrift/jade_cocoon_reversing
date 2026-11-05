@@ -268,7 +268,7 @@ INCLUDE_OVERLAY_ASM(title, DrawNameEntrySprites_800A0D18);
 
 // TITLE overlay entry: runs the title tasks, returns the next GameStates value (titleResult_800A2818)
 // Matched
-int TitleMain_800A0EF0(void)
+enum GameStates TitleMain_800A0EF0(void)
 {
     SetFadeMode_8001C19C(3, 0x20);
     drawEnvRed_8008D448[0] = 0;

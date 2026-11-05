@@ -678,7 +678,7 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
 }
 
 // Matched
-int TstCompoMain_800A200C()
+enum GameStates TstCompoMain_800A200C(void)
 {
     DrawIntroMovie_8001AF64(tstCompoTaskList_800A2560);
     return 6;

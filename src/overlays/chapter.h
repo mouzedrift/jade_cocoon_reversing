@@ -8,6 +8,7 @@
 #include "main.h"
 #include "sound.h"
 #include "sound_seq.h"
+#include "movie.h"
 
 typedef struct ChapterEntry
 {

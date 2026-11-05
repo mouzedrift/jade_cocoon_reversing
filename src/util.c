@@ -20,6 +20,7 @@
 #include "font.h"
 #include "unit_query.h"
 #include "model.h"
+#include "movie.h"
 
 
 

@@ -21,6 +21,7 @@
 #include "util.h"
 #include "model.h"
 #include "cd.h"
+#include "movie.h"
 
 const int off_80072278[0] = {  };
 

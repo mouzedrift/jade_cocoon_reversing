@@ -23,6 +23,7 @@
 #include "pad_text.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "movie.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -384,9 +385,7 @@ typedef struct GameFieldModeHandler
     void (*fn)();
 } GameFieldModeHandler;
 
-extern void FreeMdecBuffer_800418CC(void);
 
-extern void ReleaseMdecVLCFileBuffer_800418FC(void);
 
 extern void EvCmdEndScene_800B8A34(GameEvCtx* q);
 
