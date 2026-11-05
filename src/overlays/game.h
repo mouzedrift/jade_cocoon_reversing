@@ -493,12 +493,47 @@ typedef struct GameViewRect
     short x, y, w, h;
 } GameViewRect;
 
+// a primitive's u0, v0, clut, also copied as one word (the SPRT takes the POLY_FT4's)
+typedef union TileUVClut
+{
+    struct
+    {
+        unsigned char u0, v0;
+        unsigned short clut;
+    } f;
+    unsigned long word;
+} TileUVClut;
+// POLY_FT4 / SPRT with the u0, v0, clut word as a TileUVClut
+typedef struct TileFT4
+{
+    unsigned long tag;
+    unsigned char r0, g0, b0, code;
+    short x0, y0;
+    TileUVClut uv0;
+    short x1, y1;
+    unsigned char u1, v1;
+    unsigned short tpage;
+    short x2, y2;
+    unsigned char u2, v2;
+    unsigned short pad1;
+    short x3, y3;
+    unsigned char u3, v3;
+    unsigned short pad2;
+} TileFT4;
+typedef struct TileSprt
+{
+    unsigned long tag;
+    unsigned char r0, g0, b0, code;
+    short x0, y0;
+    TileUVClut uv0;
+    short w, h;
+} TileSprt;
 // the animated map tile layers' work area (DrawTileAnimLayers_800A0A5C), in the scratchpad at 0x1F800214
 typedef struct TileAnimScratch
 {
     unsigned int i_0; // the layer (tileAnim_8008D648.lists_14 index)
-    POLY_FT4 ft4_4;   // a cell, zoomed
-    SPRT sprt_2C;     // a cell at zoom 0x1000
+    TileFT4 ft4_4;    // a cell, zoomed
+    TileSprt sprt_2C; // a cell at zoom 0x1000
     DR_TPAGE tpage_40;
     short x0_48; // the cell's screen corners
     short y0_4A;

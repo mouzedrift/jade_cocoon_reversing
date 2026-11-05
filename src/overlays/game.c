@@ -50,10 +50,15 @@ void TileAnimTask_800A0A04(GameTask* task, short* work)
 }
 
 #if 0
-// Not matched: register pressure / spills differ (the original spills the cell pointer and u0 + 31, keeps 0xFFFFFF hoisted; here the tpage value spills); logic complete.
+// Not matched (459 words, was 490; size 553 vs 558): cleaner rewrite. No type-pun: the SPRT takes the POLY_FT4's u0/v0/clut word through
+// TileUVClut (union in new TileFT4/TileSprt prim structs, needs DrawTileAnimLayers_800A0A5C.src.diff on overlays/game.h). Found: setShadeTex
+// for the codes (cse no longer shares 0x2C/0x64 regs), getTPage(1,1,(tile/8+20)/4*64,0) gives the orig srl, inline tile/8 (no page var)
+// adds a cse path entry so the 2nd tpage recomputes page+20 like orig, setDrawTPage before sprt.x0/y0 makes them reload like orig.
+// Remaining: register allocation (orig spills cells + texU+31 to 8/0xC(sp), frame 0x30, 0xFFFFFF hoisted out of both loops in $t8,
+// pOT hi not hoisted) and sched order of the sprt/tpage stores; structural (register-stripped) diff 186 -> 141 ops.
 // Draws the map's animated tile layers (tileAnim_8008D648.lists_14): steps each layer's frame timer, then builds a
 // zoomed POLY_FT4 (or, unzoomed, a SPRT + DR_TPAGE) for every 32x32 cell of the frame's tile set.
-// Runs on the scratchpad stack (TileAnimTask_800A0A04); *q & 1 freezes the timers.
+// Runs on the scratchpad stack (TileAnimTask_800A0A04); *work & 1 freezes the timers.
 void DrawTileAnimLayers_800A0A5C(short* work)
 {
     TileAnimScratch* s = TILE_ANIM_SCRATCH;
@@ -64,10 +69,10 @@ void DrawTileAnimLayers_800A0A5C(short* work)
     int cell;
     int k;
     int tile;
-    int page;
     int texU;
     int texV;
     int bright;
+
     setPolyFT4(&s->ft4_4);
     setSprt(&s->sprt_2C);
     setDrawTPage(&s->tpage_40, 0, 1, 0);
@@ -77,21 +82,17 @@ void DrawTileAnimLayers_800A0A5C(short* work)
     s->ox_58 = screenOffset_8008D474.a + (display_8008B4D8.w_C / 2 - (viewport_8008D420.x + viewport_8008D420.w / 2));
     s->oy_5C = screenOffset_8008D474.b + (display_8008B4D8.h_E / 2 - (viewport_8008D420.y + viewport_8008D420.h / 2));
     bright = (sceneBrightness_8008D40C << 7) >> 12;
-    s->ft4_4.r0 = bright;
-    s->ft4_4.g0 = bright;
-    s->ft4_4.b0 = bright;
-    s->sprt_2C.r0 = bright;
-    s->sprt_2C.g0 = bright;
-    s->sprt_2C.b0 = bright;
+    setRGB0(&s->ft4_4, bright, bright, bright);
+    setRGB0(&s->sprt_2C, bright, bright, bright);
     if (!(unknownFlags_8008D678 & 0x400) || sceneBrightness_8008D40C == 0x1000)
     {
-        s->ft4_4.code = 0x2D;
-        s->sprt_2C.code = 0x65;
+        setShadeTex(&s->ft4_4, 1);
+        setShadeTex(&s->sprt_2C, 1);
     }
     else
     {
-        s->sprt_2C.code = 0x64;
-        s->ft4_4.code = 0x2C;
+        setShadeTex(&s->sprt_2C, 0);
+        setShadeTex(&s->ft4_4, 0);
     }
     for (s->i_0 = 0; s->i_0 < tileAnim_8008D648.listCount_10; s->i_0++)
     {
@@ -129,10 +130,10 @@ void DrawTileAnimLayers_800A0A5C(short* work)
             setSemiTrans(&s->sprt_2C, 0);
         }
         otz = ((tileAnim_8008D648.field_4 +
-              (unsigned int)((tileAnim_8008D648.field_8 - tileAnim_8008D648.field_4) * (0xFF - s->tiles_60.depth_0)) / 0xFF) >>
-             4) &
-            0x3FF;
-        s->ft4_4.clut = (s->clut_74 + 0x1F0) << 6;
+                (unsigned int)((tileAnim_8008D648.field_8 - tileAnim_8008D648.field_4) * (0xFF - s->tiles_60.depth_0)) / 0xFF) >>
+               4) &
+              0x3FF;
+        s->ft4_4.uv0.f.clut = (s->clut_74 + 0x1F0) << 6;
         for (k = 0, cell = 0; k < s->tiles_60.count; k++)
         {
             tile = (short)cells[k];
@@ -141,9 +142,8 @@ void DrawTileAnimLayers_800A0A5C(short* work)
                 cell += tile & 0x7FFF;
                 continue;
             }
-            page = tile / 8;
+            s->ft4_4.tpage = getTPage(1, 1, (tile / 8 + 20) / 4 * 64, 0);
             s->x0_48 = (cell % (short)s->tiles_60.columns_8) * 32 - (short)s->tiles_60.columns_8 * 16;
-            s->ft4_4.tpage = (((page + 20) / 4) & 0xF) | 0xA0;
             s->y0_4A = (cell / (short)s->tiles_60.columns_8) * 32 - (short)s->tiles_60.rows_A * 16;
             s->x1_4C = s->cx_50 + (s->ox_58 + ((s->x0_48 + 32) * s->zoom_54) / 4096);
             s->y1_4E = s->cy_52 + (s->oy_5C + ((s->y0_4A + 32) * s->zoom_54) / 4096);
@@ -155,11 +155,11 @@ void DrawTileAnimLayers_800A0A5C(short* work)
                 {
                     break;
                 }
-                texU = ((page * 16 + 0x140) % 64) * 2;
+                texU = ((tile / 8 * 16 + 0x140) % 64) * 2;
                 texV = (tile % 32) * 32;
                 s->ft4_4.x0 = s->x0_48;
-                s->ft4_4.u0 = texU;
-                s->ft4_4.v0 = texV;
+                s->ft4_4.uv0.f.u0 = texU;
+                s->ft4_4.uv0.f.v0 = texV;
                 s->ft4_4.u2 = texU;
                 s->ft4_4.v1 = texV;
                 s->ft4_4.v2 = texV + 31;
@@ -175,21 +175,21 @@ void DrawTileAnimLayers_800A0A5C(short* work)
                 s->sprt_2C.w = 32;
                 s->sprt_2C.h = 32;
                 s->ft4_4.u3 = texU + 31;
+                setDrawTPage(&s->tpage_40, 0, 1, getTPage(1, 1, (tile / 8 + 20) / 4 * 64, 0));
                 s->sprt_2C.x0 = s->x0_48;
                 s->sprt_2C.y0 = s->y0_4A;
-                setDrawTPage(&s->tpage_40, 0, 1, (((page + 20) / 4) & 0xF) | 0xA0);
-                *(int*)&s->sprt_2C.u0 = *(int*)&s->ft4_4.u0;
+                s->sprt_2C.uv0 = s->ft4_4.uv0;
                 if (cameraZoom_8008B4F8 != 0x1000)
                 {
-                    *(POLY_FT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->ft4_4;
+                    *(TileFT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->ft4_4;
                     addPrim(&pOT_8008D690[otz], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(POLY_FT4);
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(TileFT4);
                 }
                 else
                 {
-                    *(SPRT*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->sprt_2C;
+                    *(TileSprt*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->sprt_2C;
                     addPrim(&pOT_8008D690[otz], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(SPRT);
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(TileSprt);
                     *(DR_TPAGE*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->tpage_40;
                     addPrim(&pOT_8008D690[otz], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
                     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
