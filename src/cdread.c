@@ -28,7 +28,6 @@ const LoadingIconFrames loadingIconFrames_8007490C = { {
 
 extern EventNode* fileRequestTasks_8008D488;
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* list);
-extern void UpdateFileRequestTask_8003C76C(int* entry, int* task);
 
 // Matched
 int StartFileRequestTask_8003C6C8(FileRequestDesc* req)

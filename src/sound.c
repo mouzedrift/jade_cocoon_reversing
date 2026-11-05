@@ -21,6 +21,7 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "menu_draw.h"
+#include "cdread.h"
 
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";

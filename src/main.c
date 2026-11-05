@@ -21,6 +21,7 @@
 #include "camera.h"
 #include "main.h"
 #include "util.h"
+#include "cdread.h"
 
 const char name[] = "cdrom:\\SLUS_008.54;1";
 const char aAssertionFaile[] = "Assertion failed: file \"%s\", line %d\n";

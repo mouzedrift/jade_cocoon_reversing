@@ -107,7 +107,6 @@ int PickArpatronOrVatolka_80019C84(void)
     return species;
 }
 extern short screenOffset_8008D474[2];
-extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];

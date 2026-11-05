@@ -24,6 +24,7 @@
 #include "model.h"
 #include "cd.h"
 #include "engine.h"
+#include "cdread.h"
 
 extern unsigned long* ringBufferStart_800960B0;
 

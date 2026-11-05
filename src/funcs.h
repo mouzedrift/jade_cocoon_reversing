@@ -62,12 +62,7 @@ extern void CloseEvents_80010328(void);
 extern enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
 
 // Matches
-extern int LoadData001File_8003CD1C(void);
 extern void InitImage_80010428(void);
-extern void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx);
-extern int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFileBuffer);
-extern void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors);
-extern void* DATA_GetFileBuffer_8003CAA0(int idx);
 extern void SetDisplayMode_80040658(int mode);
 extern void InitEvents_8001028C(void);
 extern long vsyncEventHandler_800103AC(void);
@@ -75,17 +70,13 @@ extern int IsSkillLearned_80031954(void* skills, int idx);
 extern void GetMenuItemColor_8002ACE8(int flags, unsigned char* out);
 
 struct Pool;
-extern int CdReadIsIdle_8003C9EC(void);
 extern int GetSealResultFlags_80013358(int idx);
 extern UnitStatus* GetUnitStatus_80014390(int arg0);
 extern EventEntry* FindModelTask_8001091C();
-extern int DATA_GetFileSize_8003C87C(int idx);
 struct Pool;
-extern void CdReadReadyCallback_8003CA30(unsigned char mode);
 extern void DrawNextPrompt_8003CF88(short a0, short a1, int idx);
 extern int DsControlB(unsigned char com, unsigned char* param, unsigned char* result);
 extern void SetMenuItemDigitColor_8002AD80(int flags);
-extern void CdReadSyncCallback_8003C9FC(unsigned char mode);
 extern void AddStatus_80012794(UnitStatus* status, int bits);
 extern void SetMenuItemFont1Clut_8002AD08(int flags);
 extern void SetMenuItemFont2Clut_8002AD44(int flags);
@@ -93,9 +84,7 @@ extern void SeVibOn(void);
 extern void SetVib(void);
 extern void SsUtVibrateOn(void);
 extern void SsUtVibrateOff(void);
-extern void* Data001Reader_LoadIntoGlobal_8003CB40(int idx);
 extern void DrawTextBox_8002AFA0(int text, int pos, int ot, RECT* rect, int count);
-extern int CdSeekIsComplete_8003C900(void);
 extern void DrawLargeTextBox_8002AF10(int text, int pos, int ot);
 extern void DrawSmallTextBox_8002AF58(int text, int pos, int ot);
 extern int IsTargetListed_8002D738(int idx, int self, int mode);
@@ -125,7 +114,6 @@ extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
 extern void ClearPointLight_800C410C(void);
 
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
-extern void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest);
 
 extern void KillUnit_800127B8(UnitStatus* status);
 extern UnitStatus* GetEnemyStatus_800A2B60(int idx);

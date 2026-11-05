@@ -21,6 +21,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "cd.h"
+#include "cdread.h"
 
 
 const char aDWorkPsusEvent[] = "D:/WORK/PSUS/EVENT.C";

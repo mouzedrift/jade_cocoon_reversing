@@ -18,6 +18,7 @@
 #include "unit_stats.h"
 #include "party_window.h"
 #include "model_ftg.h"
+#include "cdread.h"
 
 typedef struct
 {
@@ -478,7 +479,6 @@ extern void RequestGameMode_800A6D30(int a);
 
 /* exe-side, to move to an exe header */
 // main.h has these too, but declares loadMenuTask_8008D480 as int[2]: not included until that is fixed
-extern void DrawLoadingIcon_8003CD5C(void);
 extern int dword_8008BD80;
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
 extern unsigned short uiColor_8008B590;

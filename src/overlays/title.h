@@ -21,6 +21,7 @@
 #include "movie.h"
 #include "ui_sprites.h"
 #include "tim.h"
+#include "cdread.h"
 
 
 // a window row of one item (the item + the row end)
