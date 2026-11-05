@@ -283,8 +283,6 @@ int fn_80024E90(int a, int b);            // model_ftg
 int fn_80024EC8(int a, int b);            // model_ftg
 int fn_80024F00(int a, int b);            // model_ftg
 int fn_80024F38(int a, int b);            // model_ftg
-void DrawTextList_8002A310(void* p, int a);          // menu_draw.h
-void DrawPortraitWindow_8002A4E4(int a);             // menu_draw.h
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
 void DrawAbilityList_8002CE28(ListMenuState* ref, ShopPos* pos); // ability_menu
 void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base); // family_tree.h

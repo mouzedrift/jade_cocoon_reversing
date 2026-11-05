@@ -1360,19 +1360,19 @@ void SetStoreDialogText_800BCED4(StoreMenu* store)
     switch (store->keeperId_4C)
     {
     case 2:
-        dialogLines_800BE134[1] = storeTextsB_800BE3D8[store->textId_3A][0];
-        dialogLines_800BE134[3] = storeTextsB_800BE3D8[store->textId_3A][1];
-        dialogLines_800BE134[5] = storeTextsB_800BE3D8[store->textId_3A][2];
+        dialogLines_800BE134[0].text_4 = storeTextsB_800BE3D8[store->textId_3A][0];
+        dialogLines_800BE134[1].text_4 = storeTextsB_800BE3D8[store->textId_3A][1];
+        dialogLines_800BE134[2].text_4 = storeTextsB_800BE3D8[store->textId_3A][2];
         break;
     case 3:
-        dialogLines_800BE134[1] = storeTextsC_800BE434[store->textId_3A][0];
-        dialogLines_800BE134[3] = storeTextsC_800BE434[store->textId_3A][1];
-        dialogLines_800BE134[5] = storeTextsC_800BE434[store->textId_3A][2];
+        dialogLines_800BE134[0].text_4 = storeTextsC_800BE434[store->textId_3A][0];
+        dialogLines_800BE134[1].text_4 = storeTextsC_800BE434[store->textId_3A][1];
+        dialogLines_800BE134[2].text_4 = storeTextsC_800BE434[store->textId_3A][2];
         break;
     default:
-        dialogLines_800BE134[1] = storeTextsA_800BE37C[store->textId_3A][0];
-        dialogLines_800BE134[3] = storeTextsA_800BE37C[store->textId_3A][1];
-        dialogLines_800BE134[5] = storeTextsA_800BE37C[store->textId_3A][2];
+        dialogLines_800BE134[0].text_4 = storeTextsA_800BE37C[store->textId_3A][0];
+        dialogLines_800BE134[1].text_4 = storeTextsA_800BE37C[store->textId_3A][1];
+        dialogLines_800BE134[2].text_4 = storeTextsA_800BE37C[store->textId_3A][2];
         break;
     }
 }
@@ -2017,7 +2017,7 @@ int AdjustBuyQuantity_800BE084(int count, int max)
 int dword_800BE110 = 0xA000D;
 int dword_800BE114[4] = { 0xC90010 };
 int dword_800BE124[4] = { 0xC90010 };
-int dialogLines_800BE134[8] = { 0x180057, 0, 0x280057, 0, 0x380057 };
+TextListEntry dialogLines_800BE134[4] = { { 0x57, 0x18, 0 }, { 0x57, 0x28, 0 }, { 0x57, 0x38, 0 } };
 void *txtEquipMainA_800BE154[3] = { (void *)aYesWhatDoYouWan_800B66C8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
 void *txtEquipBuyKindA_800BE160[3] = { (void *)aWhatDoYouWantTo_800B66F8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
 void *txtEquipSellKindA_800BE16C[3] = { (void *)aWhichWillYouGet_800B672C, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };

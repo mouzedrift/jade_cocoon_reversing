@@ -20,6 +20,13 @@ typedef struct UiWindowDesc
 } UiWindowDesc;
 
 
+typedef struct
+{
+    unsigned short x;
+    unsigned short y;
+    int text_4;
+} TextListEntry;
+
 void InitReverbTask_8002A1BC();
 
 // an item of a menu window (DrawMenuWindowContents_8002A710 / DrawMenuItemWithWindow_8002ADB4), 0x1C bytes;
@@ -63,4 +70,11 @@ extern MenuWindowList yesNoWindow_80082784;
 
 void DrawUiWindow_8002A384(UiWindowDesc* desc);
 void DrawPortrait_8002A42C(unsigned short* pos, short id, RECT* drawArea, short ot);
+void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* attr, short depth);
+void SetReverbDepthRight_8002A2FC(SpuReverbAttr* attr, short depth);
+void SetReverbMode_8002A280(SpuReverbAttr* attr, short mode);
+void SetReverbDepth_8002A2A0(SpuReverbAttr* attr, short left, short right);
+void UpdateReverb_8002A218(void);
+void DrawTextList_8002A310(TextListEntry* entries, int ot);
+void DrawPortraitWindow_8002A4E4(short ot);
 #endif

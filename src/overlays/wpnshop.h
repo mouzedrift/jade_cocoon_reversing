@@ -170,8 +170,6 @@ void SetEquipment_800AD9EC(int itemId, int category);
 /* exe-side, to move to <exe header> (named in the comment) */
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
-void DrawTextList_8002A310(void* p, int a); // menu_draw.h
-void DrawPortraitWindow_8002A4E4(int a);    // menu_draw.h
 void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
 
 /* WPNSHOP data */
@@ -462,7 +460,7 @@ extern const int dword_800BAE08;
 extern int dword_800BE110;
 extern int dword_800BE114[4];
 extern int dword_800BE124[4];
-extern int dialogLines_800BE134[8];
+extern TextListEntry dialogLines_800BE134[4];
 extern void *txtEquipMainA_800BE154[3];
 extern void *txtEquipBuyKindA_800BE160[3];
 extern void *txtEquipSellKindA_800BE16C[3];

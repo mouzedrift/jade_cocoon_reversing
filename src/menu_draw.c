@@ -37,7 +37,6 @@ const char aNo_80074198[] = "\202m\202\217"; // No
 const int dword_800741A0 = 0;
 
 
-extern void UpdateReverb_8002A218(void);
 // Matched
 void InitReverbTask_8002A1BC(int* task)
 {
@@ -84,12 +83,6 @@ void SetReverbDepthRight_8002A2FC(SpuReverbAttr* attr, short depth)
     attr->mask |= 4;
     attr->depth.right = depth;
 }
-typedef struct
-{
-    unsigned short x;
-    unsigned short y;
-    int text_4;
-} TextListEntry;
 // Matched
 void DrawTextList_8002A310(TextListEntry* entries, int ot)
 {
