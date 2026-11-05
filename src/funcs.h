@@ -83,7 +83,6 @@ extern void SetCurrentArea_800272BC(int a0, int a1);
 extern void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* p, short depth);
 extern void SetReverbDepthRight_8002A2FC(SpuReverbAttr* p, short depth);
 extern int IsSkillLearned_80031954(void* skills, int idx);
-extern int GetMdecEffectLength_800181E8(void);
 extern void SetCameraTarget_80037AC8(int target);
 extern int GetSporeMode_80011B6C(void);
 extern void ApplyLevelUpsBonus_80011D78(UnitStatus* status);
@@ -241,7 +240,6 @@ extern void ClearPointLight_800C410C(void);
 
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
 extern void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest);
-extern void CollectEffectTargets_800182B8(struct ActorEffectReq* req, int mask);
 extern int PlayActorEffect_800184DC(struct ActorEffectReq* req, int slot);
 
 extern void KillUnit_800127B8(UnitStatus* status);

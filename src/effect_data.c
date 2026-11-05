@@ -31,6 +31,7 @@
 #include "util.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "effect_model.h"
 
 int weaponEffectIds_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,
@@ -4187,11 +4188,8 @@ extern void SpawnSpriteTrails_800C2E28(int* pos, void* rot, int sprite, int mode
 extern void SpawnShatterEffect_800C2914(void* src, int id);
 extern void PlayTimedSfx_800C1190(int frames, int sfx);
 extern void PlayTimedSeq_800C10B8(int frames, int slot);
-extern void SpawnMdecEffect_80017A6C(int parent, int frames);
 extern void SpawnLightFlash_80017158(int* pos, void* rgb);
-extern void SpawnPulseModel_800174F8(void* parent, int modelId);
 extern void SpawnGlowModel_80017290(void* parent, int modelId);
-extern void MorphInModelTask_80017E30(EventEntry* entry, void* buf);
 extern void RadialBurstTask_80016E20(int* flags, void* buf);
 extern void QuadBurstTask_80016FC8(int* flags, int* obj);
 extern void GlowTask_800C371C(EventEntry* entry, void* buf);

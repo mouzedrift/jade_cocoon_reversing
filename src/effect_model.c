@@ -25,7 +25,6 @@
 
 const int off_80072278[0] = {  };
 
-void PulseModelTask_8001761C(int* flags, EffectObj* obj);
 // Matched
 void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
 {
@@ -75,7 +74,6 @@ void PulseModelTask_8001761C(int* flags, EffectObj* obj)
         free3_8003FC6C(obj->work_94);
     }
 }
-void MorphModelTask_800178C0(int* flags, EffectObj* obj);
 // Matched
 void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
 {
@@ -139,7 +137,6 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
     DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, 0x10, scale);
 }
 extern EventNode* effectObjects_8008B4A8;
-extern void MdecEffectTask_80017B10(unsigned int* flags, EffectObj* obj);
 // Matched
 void SpawnMdecEffect_80017A6C(int parent, int frames)
 {
@@ -183,7 +180,6 @@ void MdecEffectTask_80017B10(unsigned int* flags, EffectObj* obj)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-extern void WaveModelTask_80017CE4(EventEntry* entry, void* buf);
 // Matched
 void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
 {
@@ -233,7 +229,6 @@ void WaveModelTask_80017CE4(EventEntry* entry, void* buf)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf);
 // Matched
 void MorphInModelTask_80017E30(EventEntry* entry, void* buf)
 {

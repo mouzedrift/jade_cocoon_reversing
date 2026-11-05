@@ -21,6 +21,7 @@
 #include "model.h"
 #include "cd.h"
 #include "sound_seq.h"
+#include "effect_model.h"
 
 const ColorRGBA orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
 const int dword_80072274 = 0;
@@ -69,7 +70,6 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
     }
 }
 extern void SpawnSpriteAnim_800C1A5C(void* pos, short* rot, int sprite, int speed);
-void SpawnMdecEffect_80017A6C(int parent, int frames);
 // Matched
 void RadialBurstTask_80016E20(int* flags, void* buf)
 {
