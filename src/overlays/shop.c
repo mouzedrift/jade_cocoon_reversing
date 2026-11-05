@@ -2212,14 +2212,14 @@ void DrawShopButtonHelp_800BCCD8(ShopMenu* menu)
         break;
     }
 }
-const ShopMenuWindows mainMenuWindow_800B9608 = { 2, 0, 8, 0, 0, 14 };
+const MenuWindowList mainMenuWindow_800B9608 = { 2, 0, 8, 0, 0, 14 };
 const int dword_800B9620 = 0;
 
 void DrawShopMainMenu_800BCEDC(ShopMenu* menu)
 {
-    ShopMenuWindows win = mainMenuWindow_800B9608;
+    MenuWindowList win = mainMenuWindow_800B9608;
     win.time_4 = GetTime30Hz_8002C64C();
-    win.items_10 = (int)mainMenuItems_800C07D4;
+    win.items_10 = mainMenuItems_800C07D4;
     win.flags_0 = (win.flags_0 & ~7) | 2;
     win.cursor_C = menu->listIndex_30;
     win.open_8 = 8;
@@ -2793,7 +2793,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
         break;
     }
 }
-const ShopMenuWindows minionListWindow_800B971C = { 0, 0, 8, 0, 0, 14 };
+const MenuWindowList minionListWindow_800B971C = { 0, 0, 8, 0, 0, 14 };
 
 void ShopWaitAreaReload_800BDD74(EventEntry* task, void* arg)
 {
@@ -3066,7 +3066,7 @@ void DrawPartyList_800BE53C(ShopMenu* menu)
     short r[4];
     short out[4];
     unsigned short p[2];
-    ShopMenuWindows win;
+    MenuWindowList win;
     short sel;
     short h;
     int clut;
@@ -3125,7 +3125,7 @@ void DrawPartyList_800BE53C(ShopMenu* menu)
     win = minionListWindow_800B971C;
     win.time_4 = GetTime30Hz_8002C64C();
     win.open_8 = (short)h;
-    win.items_10 = (int)partyListItems_800BFE24;
+    win.items_10 = partyListItems_800BFE24;
     if (menu->flags_24 & 0x10)
     {
         win.cursor_C = (short)sel;
@@ -3152,7 +3152,7 @@ void DrawStoredList_800BE7F0(ShopMenu* menu)
     short r[4];
     short out[4];
     ShopPair p;
-    ShopMenuWindows win;
+    MenuWindowList win;
     ShopPair pos1;
     ShopPair pos2;
     int base;
@@ -3215,7 +3215,7 @@ void DrawStoredList_800BE7F0(ShopMenu* menu)
     }
     win = minionListWindow_800B971C;
     win.time_4 = GetTime30Hz_8002C64C();
-    win.items_10 = (int)storedListItems_800BFF14;
+    win.items_10 = storedListItems_800BFF14;
     if (menu->flags_24 & 0x10)
     {
         win.cursor_C = -1;
@@ -3350,7 +3350,7 @@ def:
 
 void DrawSkinList_800BED48(short* ref)
 {
-    ShopMenuWindows win;
+    MenuWindowList win;
     short h = 8;
     short prev = ref[0];
     short i;
@@ -3375,11 +3375,11 @@ void DrawSkinList_800BED48(short* ref)
             name = (int)aEmpty_800B6D7C;
             cnt = 0;
         }
-        skinListRows_800C0258[i][0].val_4 = icon;
+        skinListRows_800C0258[i][0].text_4 = icon;
         skinListRows_800C0258[i][0].sprts_8 = &publicTiySprts_8008D434;
         skinListRows_800C0258[i][0].tpages_C = &publicTiyTPages_8008D440;
-        skinListRows_800C0258[i][1].val_4 = name;
-        skinListRows_800C0258[i][2].val_4 = cnt;
+        skinListRows_800C0258[i][1].text_4 = name;
+        skinListRows_800C0258[i][2].text_4 = cnt;
         skinListRows_800C0258[i][0].x_10 = 0x7B;
         y = i * 22 + 0x68;
         skinListRows_800C0258[i][0].y_12 = y;
@@ -3405,7 +3405,7 @@ void DrawSkinList_800BED48(short* ref)
     win.time_4 = frameCount_8008D3FC;
     win.open_8 = h;
     win.cursor_C = prev;
-    win.items_10 = (int)skinListRows_800C0258;
+    win.items_10 = skinListRows_800C0258;
     win.ot_14 = ref[3];
     DrawMenuWindows_8002A5A4(&win);
     SetFontClutOffset_8003F900(2, 0);
@@ -3840,36 +3840,36 @@ unsigned short stateListSlots_800BFD5C[16] = {
     0xFFFF, 0, 1, 0xFFFF, 0xFFFF, 0, 0xFFFF, 0,
     0, 0xFFFF, 1, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF,
 };
-ShopMenuItem partyListItem0_800BFD7C[2] = {
+MenuWindowItem partyListItem0_800BFD7C[2] = {
     { 0x8, 0, 0, 0, 0, 13, 93, 64, 14, 0, 0 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem partyListItem1_800BFDB4[2] = {
+MenuWindowItem partyListItem1_800BFDB4[2] = {
     { 0x8, 0, 0, 0, 0, 13, 108, 64, 14, 0, 0 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem partyListItem2_800BFDEC[2] = {
+MenuWindowItem partyListItem2_800BFDEC[2] = {
     { 0x8, 0, 0, 0, 0, 13, 123, 64, 14, 0, 0 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem *partyListItems_800BFE24[4] = { partyListItem0_800BFD7C, partyListItem1_800BFDB4, partyListItem2_800BFDEC, 0 };
-ShopMenuItem storedListItem0_800BFE34[2] = {
+MenuWindowItem *partyListItems_800BFE24[4] = { partyListItem0_800BFD7C, partyListItem1_800BFDB4, partyListItem2_800BFDEC, 0 };
+MenuWindowItem storedListItem0_800BFE34[2] = {
     { 0x8, 0, 0, 0, 0, 13, 154, 64, 14, 0, 0 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem storedListItem1_800BFE6C[2] = {
+MenuWindowItem storedListItem1_800BFE6C[2] = {
     { 0x8, 0, 0, 0, 0, 13, 169, 64, 14, 0, 0 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem storedListItem2_800BFEA4[2] = {
+MenuWindowItem storedListItem2_800BFEA4[2] = {
     { 0x8, 0, 0, 0, 0, 13, 184, 64, 14, 0, 0 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem storedListItem3_800BFEDC[2] = {
+MenuWindowItem storedListItem3_800BFEDC[2] = {
     { 0x8, 0, 0, 0, 0, 13, 199, 64, 14, 0, 0 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem *storedListItems_800BFF14[5] = { storedListItem0_800BFE34, storedListItem1_800BFE6C, storedListItem2_800BFEA4, storedListItem3_800BFEDC, 0 };
+MenuWindowItem *storedListItems_800BFF14[5] = { storedListItem0_800BFE34, storedListItem1_800BFE6C, storedListItem2_800BFEA4, storedListItem3_800BFEDC, 0 };
 ButtonHelpEntry btnHelpSpinMarked_800BFF28[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aSpin_800B806C }, { -1 } };
 ButtonHelpEntry btnHelpSpin_800BFF48[5] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 94, aRearrange_800B80A8 }, { 110, aViewForm_800B8094 }, { -1 } };
 ButtonHelpEntry btnHelpPartner_800BFF70[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
@@ -3883,31 +3883,31 @@ ButtonHelpEntry btnHelpSelect_800C0048[5] = { { 16, aSelect_800B8084 }, { 167, a
 ButtonHelpEntry btnHelpExchange_800C0070[4] = { { 16, aSelect_800B8084 }, { 167, aQuit_800B8078 }, { 110, aViewForm_800B8094 }, { -1 } };
 char skinListUpArrowPos_800C0090[4] = { 200, 0, 97 };
 char skinListDownArrowPos_800C0094[4] = { 200, 0, 198 };
-ShopMenuItem skinListRow0_800C0098[4] = {
+MenuWindowItem skinListRow0_800C0098[4] = {
     { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
     { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
     { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem skinListRow1_800C0108[4] = {
+MenuWindowItem skinListRow1_800C0108[4] = {
     { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
     { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
     { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem skinListRow2_800C0178[4] = {
+MenuWindowItem skinListRow2_800C0178[4] = {
     { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
     { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
     { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem skinListRow3_800C01E8[4] = {
+MenuWindowItem skinListRow3_800C01E8[4] = {
     { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 104, 21, 21, 3, 3 },
     { 0x10, 3, 0, 0, 0, 104, 104, 107, 21, 4, 4 },
     { 0x4, 8, 0, 0, 0, 211, 104, 28, 21, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem *skinListRows_800C0258[5] = { skinListRow0_800C0098, skinListRow1_800C0108, skinListRow2_800C0178, skinListRow3_800C01E8 };
+MenuWindowItem *skinListRows_800C0258[5] = { skinListRow0_800C0098, skinListRow1_800C0108, skinListRow2_800C0178, skinListRow3_800C01E8 };
 const char *magicDescLines_800C026C[30][4] = {
     { aFireAttackOneEn_800B8BE8, aExtraDamageVsAi_800B8BBC, aHigherFireEleme_800B8B60 },
     { aFireAttackAllEn_800B8B2C, aExtraDamageVsAi_800B8BBC, aHigherFireEleme_800B8B60 },
@@ -3953,23 +3953,23 @@ const char *abilityDescLines_800C044C[39][4] = {
     { aSpecialAttackBr_800B8D70, aMakesItEasierTo_800B8D10, aSlightlyMoreDif_800B8CAC },
     { aSpecialAttackBr_800B8C70, aMakesItEasierTo_800B8C18, aSlightlyMoreDif_800B8CAC },
 };
-ShopMenuItem mainMenuItem0_800C06BC[2] = {
+MenuWindowItem mainMenuItem0_800C06BC[2] = {
     { 0x8, 1, 43, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 77, 56, 20, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem mainMenuItem1_800C06F4[2] = {
+MenuWindowItem mainMenuItem1_800C06F4[2] = {
     { 0x8, 1, 185, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 100, 56, 20, 0, 5 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem mainMenuItem2_800C072C[2] = {
+MenuWindowItem mainMenuItem2_800C072C[2] = {
     { 0x8, 1, 145, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 123, 56, 20, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem mainMenuItem3_800C0764[2] = {
+MenuWindowItem mainMenuItem3_800C0764[2] = {
     { 0x10, 1, 103, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 146, 56, 20, 14, 5 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-ShopMenuItem mainMenuItem4_800C079C[2] = {
+MenuWindowItem mainMenuItem4_800C079C[2] = {
     { 0x8, 1, 53, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 169, 56, 20, 0, 5 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };

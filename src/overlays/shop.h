@@ -23,16 +23,6 @@ typedef struct ShopFormModel
     Actor* actor_3C;   // SpawnFormActor_800BF574
 } ShopFormModel;
 
-// DrawMenuWindows_8002A5A4's parameter block (MenuWindowList in menu_draw.c)
-typedef struct ShopMenuWindows
-{
-    int flags_0;
-    int time_4;
-    int open_8;   // open animation step, 8: open
-    int cursor_C; // highlighted item, -1: none
-    int items_10; // ShopMenuItem* list
-    int ot_14;
-} ShopMenuWindows;
 
 // a line of the shopkeeper's dialog window (DrawTextList_8002A310)
 typedef struct ShopTextLine
@@ -54,21 +44,6 @@ typedef struct ShopRect
     short h;
 } ShopRect;
 
-// a menu item of DrawMenuWindows_8002A5A4 (MenuWindowItem in menu_draw.c)
-typedef struct ShopMenuItem
-{
-    unsigned short flags_0; // 0x40: greyed out
-    short type_2; // 1: TIY sprite
-    int val_4;   // sprite / text / number, by kind
-    void* sprts_8;
-    void* tpages_C;
-    short x_10;
-    short y_12;
-    short w_14;
-    short h_16;
-    short mx_18;
-    short my_1A;
-} ShopMenuItem;
 
 // work area of the shop menu task (EventEntry.buffer)
 typedef struct ShopMenu
@@ -532,10 +507,10 @@ extern const char aVeryEffectiveAg_800B949C[];
 extern const char aSpecialWaterAtt_800B94F4[];
 extern const char aVeryEffectiveAg_800B9520[];
 extern const char aSpecialEarthAtt_800B9578[];
-extern const ShopMenuWindows mainMenuWindow_800B9608;
+extern const MenuWindowList mainMenuWindow_800B9608;
 extern const int dword_800B9620;
 extern const int dword_800B96F0;
-extern const ShopMenuWindows minionListWindow_800B971C;
+extern const MenuWindowList minionListWindow_800B971C;
 extern ShopRect statusWindowRect_800BF790;
 extern ShopRect dialogWindowRect_800BF798;
 extern ShopRect partyLabelRect_800BF7A0;
@@ -618,15 +593,15 @@ extern const char **mainHelpTextsB_800BFD08[5];
 extern short stateIndexSlots_800BFD1C[16];
 extern unsigned short stateScrollSlots_800BFD3C[16];
 extern unsigned short stateListSlots_800BFD5C[16];
-extern ShopMenuItem partyListItem0_800BFD7C[2];
-extern ShopMenuItem partyListItem1_800BFDB4[2];
-extern ShopMenuItem partyListItem2_800BFDEC[2];
-extern ShopMenuItem *partyListItems_800BFE24[4];
-extern ShopMenuItem storedListItem0_800BFE34[2];
-extern ShopMenuItem storedListItem1_800BFE6C[2];
-extern ShopMenuItem storedListItem2_800BFEA4[2];
-extern ShopMenuItem storedListItem3_800BFEDC[2];
-extern ShopMenuItem *storedListItems_800BFF14[5];
+extern MenuWindowItem partyListItem0_800BFD7C[2];
+extern MenuWindowItem partyListItem1_800BFDB4[2];
+extern MenuWindowItem partyListItem2_800BFDEC[2];
+extern MenuWindowItem *partyListItems_800BFE24[4];
+extern MenuWindowItem storedListItem0_800BFE34[2];
+extern MenuWindowItem storedListItem1_800BFE6C[2];
+extern MenuWindowItem storedListItem2_800BFEA4[2];
+extern MenuWindowItem storedListItem3_800BFEDC[2];
+extern MenuWindowItem *storedListItems_800BFF14[5];
 extern ButtonHelpEntry btnHelpSpinMarked_800BFF28[4];
 extern ButtonHelpEntry btnHelpSpin_800BFF48[5];
 extern ButtonHelpEntry btnHelpPartner_800BFF70[4];
@@ -640,18 +615,18 @@ extern ButtonHelpEntry btnHelpSelect_800C0048[5];
 extern ButtonHelpEntry btnHelpExchange_800C0070[4];
 extern char skinListUpArrowPos_800C0090[4];
 extern char skinListDownArrowPos_800C0094[4];
-extern ShopMenuItem skinListRow0_800C0098[4];
-extern ShopMenuItem skinListRow1_800C0108[4];
-extern ShopMenuItem skinListRow2_800C0178[4];
-extern ShopMenuItem skinListRow3_800C01E8[4];
-extern ShopMenuItem *skinListRows_800C0258[5];
+extern MenuWindowItem skinListRow0_800C0098[4];
+extern MenuWindowItem skinListRow1_800C0108[4];
+extern MenuWindowItem skinListRow2_800C0178[4];
+extern MenuWindowItem skinListRow3_800C01E8[4];
+extern MenuWindowItem *skinListRows_800C0258[5];
 extern const char *magicDescLines_800C026C[30][4];
 extern const char *abilityDescLines_800C044C[39][4];
-extern ShopMenuItem mainMenuItem0_800C06BC[2];
-extern ShopMenuItem mainMenuItem1_800C06F4[2];
-extern ShopMenuItem mainMenuItem2_800C072C[2];
-extern ShopMenuItem mainMenuItem3_800C0764[2];
-extern ShopMenuItem mainMenuItem4_800C079C[2];
+extern MenuWindowItem mainMenuItem0_800C06BC[2];
+extern MenuWindowItem mainMenuItem1_800C06F4[2];
+extern MenuWindowItem mainMenuItem2_800C072C[2];
+extern MenuWindowItem mainMenuItem3_800C0764[2];
+extern MenuWindowItem mainMenuItem4_800C079C[2];
 extern char mainMenuItems_800C07D4[28];
 extern unsigned int emptyMinion_800C07F0[62];
 extern Minion mergePreview_800C08E8;
