@@ -18,6 +18,7 @@
 #include "data_decls.h"
 #include "camera.h"
 #include "tim.h"
+#include "model_ftg.h"
 
 
 extern int mapHeap_80091C68[];
@@ -25,8 +26,6 @@ extern int mapHasCode_8008266C;
 extern int dword_80091C5C;
 extern int dword_80091C8C;
 extern void (*mapCallback_80091CB4)(int);
-extern void LoadTileSets_80027778(char* p, int* q);
-extern void LoadTileAnimLayers_800278BC(char* p, int* q);
 extern int mapJustLoaded_80082668;
 // Matched
 void OnRoomDataLoaded_80028C60(int req, char* data)

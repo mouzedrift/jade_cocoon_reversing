@@ -17,6 +17,7 @@
 #include "event.h" // EventDesc
 #include "sound.h"
 #include "unit_stats.h" // eventDescs_80078EB8
+#include "model_ftg.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -532,7 +533,6 @@ extern int CreateEventList_800435B4(EventDesc** p);
 
 
 
-extern void InitMapState_80026FAC(void);
 
 extern void EnableCameraPoints_800A094C(void);
 
@@ -653,7 +653,6 @@ extern int encounterVariantToggle_8008B554;
 
 extern char name_80091C10[];
 
-extern void FreeRecordTables_80026DE8(void* a, int b, void* c);
 
 
 
@@ -1212,7 +1211,6 @@ extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, unsigned long* 
 extern void GetAnimRootMotion_8004D288(void* out, void* s, int k);
 
 extern void InitSporeTask_80011ADC();
-extern void ResetMapLoaderTask_8002830C();
 extern void LevantControlTask_800A818C();
 extern void EnemyAiFlee_800A2EEC();
 extern void EnemyAiWanderChase_800A2FB8();

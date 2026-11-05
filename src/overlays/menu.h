@@ -14,6 +14,7 @@
 #include "STDLIB.H"
 #include "font.h"
 #include "menu_window.h"
+#include "model_ftg.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -739,7 +740,6 @@ extern int IsCurrentMapListed_80034140();
 extern void UseItemOnUnit_80013C28();
 extern void DrawUiTiySprt_8002C06C();
 extern unsigned short uiColor_8008B590;
-extern void SetLoadFadeFlag_80027478();
 extern void DrawWindow_80042460();
 extern void LoadUiTiy_8002BF74();
 extern void AccumulateExpGain_800122A0();

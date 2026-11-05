@@ -13,6 +13,7 @@
 #include "shopctrl.h"
 #include "main.h"
 #include "menu_window.h"
+#include "model_ftg.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -293,7 +294,6 @@ int fn_80024E90(int a, int b);            // model_ftg
 int fn_80024EC8(int a, int b);            // model_ftg
 int fn_80024F00(int a, int b);            // model_ftg
 int fn_80024F38(int a, int b);            // model_ftg
-int IsMapLoading_800272D0();                        // model_ftg
 void DrawTextList_8002A310(void* p, int a);          // menu_draw.h
 void DrawUiWindow_8002A384(ShopUiWin* p);            // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);             // menu_draw.h

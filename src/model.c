@@ -20,6 +20,7 @@
 #include "effect_data.h"
 #include "engine.h"
 #include "main.h"
+#include "model_ftg.h"
 
 extern short screenOffset_8008D474[2];
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -1264,7 +1265,6 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, int a2, int a3, int 
 void LoadEffectModel_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap);
 int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap);
 void AllocMdecBuffers_800216E8(EffectMdecBuffers* a0, int a1, int a2);
-void LoadFtgMatList_80021E4C(int* a0, FtgMatList* a1, unsigned int n);
 // Matched
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
 {

@@ -20,6 +20,7 @@
 #include "effect_data.h"
 #include "engine.h"
 #include "main.h"
+#include "model_ftg.h"
 
 extern short screenOffset_8008D474[2];
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -358,11 +359,6 @@ void MakeFtgSprt_800221DC(FtgPolyFT4* src, SPRT* dst, DR_TPAGE* tpage)
     dst->clut = src->clut;
     SetDrawTPage(tpage, 0, 1, src->tpage);
 }
-void CountFtgSprites_80022B84(unsigned char* cursor, int* sprites, int* texSprites);
-int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h);
-int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* src, FtgSpriteGroups8* groups8, int k, int h);
-int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* src, FtgSpriteGroups9* groups9, int k, int h);
-void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h);
 // Matched
 int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
 {
@@ -2842,7 +2838,6 @@ extern Model* GetLevantModel_800AC38C(void);
 extern int GetEventVar_800AD154(int a0);
 extern void StartEncounter_800B88A4(int a0);
 extern void PlayMusic_800300E0(int a, int b);
-extern void OnMapFileLoaded_80028808(void* a0, int* a1);
 // Matched
 void MapLoaderTask_80027CF8(void* entry, int* state)
 {
@@ -3136,7 +3131,6 @@ typedef struct
 extern void LoadEventData_800A5628(int a0, int* a1, int a2);
 extern void MarkSharedEdges_800B73C0(MapMesh* a0, int a1);
 extern int FindTriAtXZ_800B76B8(MapMesh* a0, Vec3i* a1);
-extern int* LoadMapMeshes_80027A88();
 extern short savedLevantRot_80091CA8[];
 extern EventNode* gameTask_8008B4A4; // the GAME overlay task
 // Matched

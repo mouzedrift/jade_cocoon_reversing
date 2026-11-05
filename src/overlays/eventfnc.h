@@ -10,6 +10,7 @@
 #include "minion_init.h"
 #include "sound.h"
 #include "camera.h"
+#include "model_ftg.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -326,7 +327,6 @@ extern int forceMapReload_80091C9C;
 
 extern int mapStartMode_80091C54;
 
-extern int UsePreloadedArea_80027358(int a);
 
 extern int GetSetReturnEntrance_800A683C(int a);
 
@@ -484,11 +484,8 @@ extern EvTiyData eventTiy_800AEBC0;
 
 extern int eventRecords_800AEBCC[2];
 
-extern void FreeRecordTables_80026DE8(int* a, int b, void* c);
 
-extern void AllocRecordTables_80026D78(int* a, int b, void* c);
 
-extern void LoadRecordTables_80026E74(int a, int b, void* c);
 
 typedef struct EvTaskEntry
 {
@@ -791,7 +788,6 @@ extern void SfxKeyOff_80031574(short voice, short sfx);
 /* exe-side, to move to sound.h */
 extern int PlayMusic_800300E0(int idx, int unused);
 /* exe-side, to move to model_ftg.h */
-extern void SetLoadFadeFlag_80027478(int mask, int set);
 /* exe-side, to move to msg_window.h */
 extern int OpenMessageWindow_8003422C(EvMsgWindowCfg* cfg);
 extern int OpenItemMessageWindow_80035AC8(EvItemMsgCfg* cfg);

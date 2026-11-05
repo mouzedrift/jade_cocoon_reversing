@@ -7,6 +7,7 @@
 #include "globals.h"
 #include "engine.h"
 #include "camera.h"
+#include "model_ftg.h"
 
 /* SHOPCTRL functions */
 void StartShopCtrl_800B66C4(int shopId);
@@ -47,7 +48,6 @@ void ResumeFieldMinions_800A7BF0(int idx);                // GAME.BIN (game.h)
 
 /* exe-side, to move to <exe header> (named in the comment) */
 extern short screenOffset_8008D474[2];    // game.h / eventfnc.h
-void SetLoadFadeFlag_80027478(int a, int b); // model_ftg
 void DrawMenuBackground_8002BE10();       // ui_sprites
 void LoadUiTiy_8002BF74();                // ui_sprites
 void FreeActiveOverlay_8002C014();        // ui_sprites

@@ -686,7 +686,6 @@ typedef struct MapTriRec
     MapVtx v_10[3];
 } MapTriRec;
 
-int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr);
 
 typedef struct MapState
 {
