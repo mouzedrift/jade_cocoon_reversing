@@ -20,6 +20,7 @@
 #include "data_decls.h"
 #include "LIBCD.H"
 #include "movie.h"
+#include "util.h"
 
 extern unsigned long* ringBufferStart_800960B0;
 

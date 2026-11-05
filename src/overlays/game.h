@@ -18,6 +18,7 @@
 #include "sound.h"
 #include "unit_stats.h" // eventDescs_80078EB8
 #include "model_ftg.h"
+#include "util.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -651,7 +652,6 @@ extern int encounterVariantToggle_8008B554;
 
 
 
-extern char name_80091C10[];
 
 
 
@@ -716,6 +716,8 @@ typedef struct GameSubOverlayWork
 } GameSubOverlayWork;
 
 extern unsigned short padPressed_8009194C;
+extern List eventHeap_80091C10;       // main.h (not included: its task pointer types differ from this overlay's views)
+extern List defaultAllocList_80096090; // main.h
 
 extern short areaLoadIds_80091CB8[];
 
@@ -744,7 +746,6 @@ extern void CheckSubOverlayRequests_800A6DAC();
 extern void SsUtAllKeyOff(int a);
 
 
-extern char name_80096090[];
 
 /* ---- GAME second half (G2) ---- */
 
@@ -979,7 +980,6 @@ extern void UpdateLevantQueuedAnim_800AC02C();
 extern int CanAddInventoryCount_800AD670(int have, int count);
 
 
-extern void PoolInit_8003FF1C(void*, unsigned);
 
 extern void LevantModelTask_800ACB64();
 
@@ -1068,7 +1068,6 @@ extern int eventDispatchHalt_8008B540;
 extern void ResetLevantActor_800A9414(void* buf, int action, int anim);
 
 
-extern void PoolDestroy_8003FF7C(void*);
 
 
 

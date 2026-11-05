@@ -26,6 +26,7 @@
 #include "menu_draw.h"
 #include "msg_window.h"
 #include "camera.h"
+#include "util.h"
 
 const char msgAsleep_80071B78[] = "\202\313\202\336\202\301\202\304\202\242\202\351"; // ねむっている
 const char msgParalyzed_80071B88[] = "\203}\203q\202\265\202\304\202\242\202\351"; // マヒしている
@@ -1419,8 +1420,8 @@ int ModelTaskDraw_80010DB0(ModelTaskState* task)
     fused->anims_54->divisor_8 = 0x20;
     fused->anims_54->cueCount_C = 0;
     fused->anims_54->boneCount_4 = fused->ftgCount_3C;
-    fused->anims_54->basePose_14 = HeapAlloc_8003FC8C(fused->ftgCount_3C * 6, (struct Pool*)1);
-    fused->anims_54->frames_18 = HeapAlloc_8003FC8C((fused->ftgCount_3C + 2) * 6, (struct Pool*)1);
+    fused->anims_54->basePose_14 = HeapAlloc_8003FC8C(fused->ftgCount_3C * 6, 1);
+    fused->anims_54->frames_18 = HeapAlloc_8003FC8C((fused->ftgCount_3C + 2) * 6, 1);
     fused->anims_54->cues_10 = 0;
     sk.ftg_0 = (int)ftg0;
     sk.pos_4 = &levantPos_8008BD18.pos;

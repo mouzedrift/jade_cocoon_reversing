@@ -22,6 +22,7 @@
 #include "main.h"
 #include "pad_text.h"
 #include "font.h"
+#include "util.h"
 
 const char aQuit_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
@@ -203,8 +204,6 @@ extern void AddSprtWithTPage_800331C4(unsigned short* a, SPRT* o, DR_TPAGE* b, u
 extern int MeasureTextWidthFont1_8003E6B0(int text);
 extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
-extern void DrawNumberRightAlignedFont1_8003F264(unsigned short* pos, int v, int ot);
-extern void DrawNumberRightAligned_8003EFBC(unsigned short* pos, int v, int ot);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);
 // Matched
 void DrawMenuWindowContents_8002A710(void* item, int ot)

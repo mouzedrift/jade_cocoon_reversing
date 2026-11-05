@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
+#include "util.h"
 
 
 

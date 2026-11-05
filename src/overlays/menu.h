@@ -16,6 +16,7 @@
 #include "menu_window.h"
 #include "model_ftg.h"
 #include "msg_window.h"
+#include "util.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -760,7 +761,6 @@ extern void CloseMsgWindow_80034A84();
 extern void DrawUiWindow_8002A384();
 extern void DrawSmallNumber3_8002C290();
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
-extern void UppercaseSjisName_8003F89C();
 extern void DrawMagicList_8002CAC8();
 extern void DrawAbilityList_8002CE28();
 extern void DrawItemList_8002C728();

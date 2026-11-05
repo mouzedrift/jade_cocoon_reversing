@@ -2,6 +2,7 @@
 #define _MAIN_H_
 #include "globals.h"
 #include "model.h"
+#include "util.h"
 
 extern int gpBase_8008B484;
 extern int dword_8008B498[2];
@@ -86,11 +87,12 @@ extern int dword_800918FC[20];
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern int dword_80091C0C;
-extern int eventHeap_80091C10;
-extern int dword_80091C14[3];
-extern int dword_80091C24[3];
-extern int dword_80091C48;
-extern int dword_80091C4C[2];
+extern List actorHeap_80091990;
+extern List eventHeap_80091C10;
+extern List areaHeap_80091C20;
+extern List mapHeap_80091C68;
+extern List defaultAllocList_80096090;
+extern List heap_80091C48;
 extern int mapStartMode_80091C54;
 extern int dword_80091C58;
 extern int dword_80091C5C;

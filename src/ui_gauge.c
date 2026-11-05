@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "tiy.h"
 #include "effect_data.h"
+#include "util.h"
 
 const CVECTOR colorGrey_800741E4 = { 128, 128, 128 };
 const CVECTOR colorWhite_800741E8 = { 255, 255, 255 };

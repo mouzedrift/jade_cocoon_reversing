@@ -20,6 +20,7 @@
 #include "engine.h"
 #include "minion_init.h"
 #include "effect_data.h"
+#include "util.h"
 
 const char aKlarrgas_80072310[] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
 const char aYolga_80072324[] = "\202x\202\217\202\214\202\207\202\201"; // Yolga
@@ -295,7 +296,6 @@ void SetActorStatusTint_80018EBC(int actor, UnitStatus* status)
 
 extern MinionBaseStats* sub_800B32A4(int a0);
 extern unsigned char* sub_800B32F0(int a0);
-extern void EncodeName_8003F7C8(void* text, unsigned char* out);
 extern void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base);
 extern void InitSpeciesSkills_800199A0(UnitStats* unit);
 extern void InitSpeciesMagic_80019A20(UnitStats* a0);

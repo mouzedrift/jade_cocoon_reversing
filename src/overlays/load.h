@@ -10,6 +10,7 @@
 #include "main.h"
 #include "font.h"
 #include "menu_window.h"
+#include "util.h"
 
 typedef struct
 {
@@ -487,7 +488,6 @@ extern void LoadUiTiy_8002BF74(void);
 extern int dword_8008BD80;
 extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
 extern void FreeActiveOverlay_8002C014(void);
-extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
@@ -500,6 +500,5 @@ extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
 extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);
 extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* name, int ot);
 extern void* memcpy(void* dst, const void* src, unsigned int n);
-extern void IntToText_8003F610(unsigned short* buf, int val);
 
 #endif

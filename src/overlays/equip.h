@@ -10,6 +10,7 @@
 #include "main.h"
 #include "menu_window.h"
 #include "engine.h"
+#include "util.h"
 
 
 /* the types of equip.c */

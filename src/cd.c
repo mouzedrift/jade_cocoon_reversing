@@ -21,6 +21,7 @@
 #include "cdread.h"
 #include "main.h"
 #include "gte.h"
+#include "util.h"
 
 extern void RemoveFileRequest_8003BF18(FileRequest* req);
 

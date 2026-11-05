@@ -18,6 +18,7 @@
 #include "tiy.h"
 #include "pad_text.h"
 #include "main.h"
+#include "util.h"
 
 extern unsigned short padPressed_8009194C[];
 extern unsigned short padReleased_800918D4[];
@@ -429,8 +430,6 @@ int UpdateTextWindow_8003DB74(unsigned int* w, int draw)
     return 0;
 }
 extern int charWidthThresholds_80086898[][12];
-extern void IntToText_8003F610(unsigned short* buf, int val);
-extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
 struct TextWindow
 {
     short x;

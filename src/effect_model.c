@@ -18,6 +18,7 @@
 #include "data_decls.h"
 #include "effect_obj.h"
 #include "effect_model.h"
+#include "util.h"
 
 const int off_80072278[0] = {  };
 

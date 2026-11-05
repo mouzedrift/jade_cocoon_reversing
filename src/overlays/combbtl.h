@@ -15,6 +15,7 @@
 #include "engine.h"
 #include "menu_window.h"
 #include "effect_data.h"
+#include "util.h"
 
 typedef struct CombBtlNode
 {

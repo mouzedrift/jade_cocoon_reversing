@@ -28,6 +28,7 @@
 #include "main.h"
 #include "menu_draw.h"
 #include "menu_window.h"
+#include "util.h"
 
 int weaponEffectIds_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,

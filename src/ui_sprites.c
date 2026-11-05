@@ -19,6 +19,7 @@
 #include "minion_menu.h"
 #include "effect_data.h"
 #include "engine.h"
+#include "util.h"
 
 const int emptyString_800741EC = 0;
 

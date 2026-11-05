@@ -23,6 +23,7 @@
 #include "effect.h"
 #include "event.h"
 #include "main.h"
+#include "util.h"
 
 // the bit masks SetBoneGroupFlags_80019B14 (minion_init.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so SetBoneGroupFlags_80019B14 is probably the first function of this TU
@@ -2117,7 +2118,7 @@ void InitActors_8001D378(void)
     ResetModelLoader_800204D0();
     StopModelLoader_800205F0();
     ClearModelAnimRefs_800201A4();
-    ListInit_8003FDB0(actorHeap_80091990);
+    ListInit_8003FDB0(&actorHeap_80091990);
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
 }
 // Matched
@@ -2129,7 +2130,7 @@ void FreeActors_8001D3C4(int freeModels)
         FreeModelLoaderList_8002052C();
         ResetModelLoader_800204D0();
     }
-    ListFreeAll_8003FEC8(actorHeap_80091990);
+    ListFreeAll_8003FEC8(&actorHeap_80091990);
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
     ClearModelAnimRefs_800201A4();
 }
@@ -2890,7 +2891,7 @@ void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc)
     {
         size += count * 32;
     }
-    mem = ListAlloc_8003FDC0(actorHeap_80091990, size);
+    mem = ListAlloc_8003FDC0(&actorHeap_80091990, size);
     actor->bones_134 = (short*)mem;
     MemCopy_800403E8(mem, desc->bones_34, sz0);
     actor->baseScale_138[0] = desc->baseScale_38[0];
@@ -2936,7 +2937,7 @@ void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc)
 void FreeActorBones_8001EA00(Actor* actor)
 {
     int mem = (int)actor->bones_134;
-    ListFree_8003FE38(actorHeap_80091990, (void*)mem);
+    ListFree_8003FE38(&actorHeap_80091990, (void*)mem);
 }
 // Matched
 void UpdateActorScript_8001EA28(void* actor)

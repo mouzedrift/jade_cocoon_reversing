@@ -1069,5 +1069,5 @@ void ChapterSelect_800B8B5C()
     DrawText_8003E91C(2, aSelChapter_800B6BE0, &textPos, 0);
     numPos.x = base.x + 0x50;
     numPos.y = base.y + 0xA;
-    DrawNumber_8003EF74(&numPos, *sel + 1, 0);
+    DrawNumber_8003EF74(&numPos.x, *sel + 1, 0);
 }

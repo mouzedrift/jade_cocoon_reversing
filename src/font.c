@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "pad_text.h"
 #include "font.h"
+#include "util.h"
 
 extern int charWidthThresholds_80086898[][12];
 

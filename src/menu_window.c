@@ -19,6 +19,7 @@
 #include "effect_data.h"
 #include "pad_text.h"
 #include "font.h"
+#include "util.h"
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 

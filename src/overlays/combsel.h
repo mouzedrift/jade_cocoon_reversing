@@ -9,6 +9,7 @@
 #include "main.h"
 #include "pad_text.h"
 #include "menu_window.h" // MenuWindowItem / MenuWindowList (menu_draw.h)
+#include "util.h"
 
 
 // the window colour DrawWindow_80042460 takes

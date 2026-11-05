@@ -332,7 +332,7 @@ void DrawShelfSelectPage_800B7684(ShelfMenu* menu)
     unsigned short countHdrPos[2];
     unsigned short timeHdrPos[2];
     short i;
-    int ot = 14;
+    short ot = 14;
     row.x = 0x50;
     row.w = 0xa0;
     row.h = 0x12;

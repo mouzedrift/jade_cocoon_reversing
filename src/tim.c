@@ -6,6 +6,7 @@
 #include "LIBAPI.H"
 #include "globals.h"
 #include "model.h"
+#include "main.h"
 #include "STDLIB.H"
 #include "STDIO.H"
 #include "LIBPAD.H"
@@ -19,9 +20,9 @@
 #include "camera.h"
 #include "tim.h"
 #include "model_ftg.h"
+#include "util.h"
 
 
-extern int mapHeap_80091C68[];
 extern int mapHasCode_8008266C;
 extern int dword_80091C5C;
 extern int dword_80091C8C;
@@ -55,7 +56,7 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     if (areaReload_80082670 == 1)
     {
         p = data + 4;
-        LoadTiy_80028E74(0, 0, 0, (int*)p, (int)mapHeap_80091C68);
+        LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&mapHeap_80091C68);
     }
     SetCurrentArea_800272BC(mapState_8008B500.id_0, pendingArea_8008B860);
     if (mapJustLoaded_80082668 && mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
@@ -237,15 +238,15 @@ void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, i
 {
     if (sprts)
     {
-        *sprts = HeapAlloc_8003FC8C(count * sizeof(SPRT), (struct Pool*)heap);
+        *sprts = HeapAlloc_8003FC8C(count * sizeof(SPRT), heap);
     }
     if (polys)
     {
-        *polys = HeapAlloc_8003FC8C(count * sizeof(POLY_FT4), (struct Pool*)heap);
+        *polys = HeapAlloc_8003FC8C(count * sizeof(POLY_FT4), heap);
     }
     if (tpages)
     {
-        *tpages = HeapAlloc_8003FC8C(count * sizeof(DR_TPAGE), (struct Pool*)heap);
+        *tpages = HeapAlloc_8003FC8C(count * sizeof(DR_TPAGE), heap);
     }
 }
 // Matched

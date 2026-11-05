@@ -670,7 +670,7 @@ int EvCmdNop_800B89A8(EvScriptCtx* ctx)
 
 int EvCmdWaitButton_800B89C0(EvScriptCtx* ctx)
 {
-    if (padPressed_8009194C & 0x100)
+    if (padPressed_8009194C[0] & 0x100)
     {
         ctx->pc_8++;
         return 1;
@@ -2828,12 +2828,12 @@ void LoadRelocBlob_800BC854(int* src)
     int* entry;
     if (eventReloc_800AEBBC.p_0)
     {
-        ListFree_8003FE38(eventHeap_80091C10, eventReloc_800AEBBC.p_0);
+        ListFree_8003FE38(&eventHeap_80091C10, eventReloc_800AEBBC.p_0);
         eventReloc_800AEBBC.p_0 = 0;
     }
     size = *src;
     data = src + 1;
-    eventReloc_800AEBBC.p_0 = ListAlloc_8003FDC0(eventHeap_80091C10, size);
+    eventReloc_800AEBBC.p_0 = ListAlloc_8003FDC0(&eventHeap_80091C10, size);
     MemCopy_800403E8(eventReloc_800AEBBC.p_0, data, size);
     n = eventReloc_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
@@ -2864,21 +2864,21 @@ void LoadEventTiy_800BC98C(int* tiy)
 {
     if (eventTiy_800AEBC0.sprts_0)
     {
-        ListFree_8003FE38(eventHeap_80091C10, eventTiy_800AEBC0.sprts_0);
+        ListFree_8003FE38(&eventHeap_80091C10, eventTiy_800AEBC0.sprts_0);
         eventTiy_800AEBC0.sprts_0 = 0;
     }
     if (eventTiy_800AEBC0.tpages_4)
     {
-        ListFree_8003FE38(eventHeap_80091C10, eventTiy_800AEBC0.tpages_4);
+        ListFree_8003FE38(&eventHeap_80091C10, eventTiy_800AEBC0.tpages_4);
         eventTiy_800AEBC0.tpages_4 = 0;
     }
-    LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, tiy, (int)eventHeap_80091C10);
+    LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, tiy, (int)&eventHeap_80091C10);
 }
 
 // Matched
 void CopyEventData_800BCA18(unsigned int* src, unsigned int size)
 {
-    unsigned int* buf = ListAlloc_8003FDC0(eventHeap_80091C10, size);
+    unsigned int* buf = ListAlloc_8003FDC0(&eventHeap_80091C10, size);
     eventDataBuf_800AEBC8 = (int)buf;
     MemCopy_800403E8(buf, src, size);
 }
@@ -2887,12 +2887,12 @@ void LoadEventRecordTables_800BCA68(int data)
 {
     if (eventRecords_800AEBCC[1] != 0)
     {
-        FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], eventHeap_80091C10);
+        FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], (int)&eventHeap_80091C10);
         eventRecords_800AEBCC[0] = 0;
     }
     eventRecords_800AEBCC[0] = GetRecordTableCount_80026D6C((int*)data);
-    AllocRecordTables_80026D78(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], eventHeap_80091C10);
-    LoadRecordTables_80026E74(eventRecords_800AEBCC[1], data, eventHeap_80091C10);
+    AllocRecordTables_80026D78(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], (int)&eventHeap_80091C10);
+    LoadRecordTables_80026E74(eventRecords_800AEBCC[1], data, (int)&eventHeap_80091C10);
 }
 
 void ReturnWarpStart_800BCB00(EvTaskEntry* task, int* state)

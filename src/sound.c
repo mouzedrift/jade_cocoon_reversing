@@ -16,6 +16,7 @@
 #include "sound.h"
 #include "soundtask.h"
 #include "data_decls.h"
+#include "util.h"
 
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";

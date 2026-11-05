@@ -20,6 +20,7 @@
 #include "main.h"
 #include "font.h"
 #include "menu_window.h"
+#include "util.h"
 
 
 
@@ -832,7 +833,6 @@ extern void SpawnOrb_800C3B50(int* pos, int id);
 
 
 
-extern void free3_8003FC6C(void* p);
 
 extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
 
@@ -1509,7 +1509,6 @@ extern void DrawWindow_80042460(short* rect, BatWindowBox* style, void* ot, int 
 extern void DrawUiColorWindow_800424C0(void* rect, short colorSet, void* ot, int time);
 /* exe-side, to move to font.h */
 /* exe-side, to move to util.h */
-extern void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot);
 /* exe-side, to move to menu_window.h */
 extern void DrawTextLinesWindow_8002AE38(int* lines, short* pos, int ot, short* rect, int count);
 /* exe-side, to move to globals.h / data_decls.h */

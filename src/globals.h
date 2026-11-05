@@ -236,7 +236,7 @@ typedef struct
 {
     int count_0;
     int field_4;
-    int records_8; // unsigned short (*)[4], heap allocated
+    unsigned short* records_8; // count_0 records of 4 halfwords, heap allocated
 } RecordTable;
 
 
@@ -324,7 +324,6 @@ extern int fileBufferInUse_80086564;
 extern int dword_80098688;
 extern MagicData magicData_8007C438[];
 extern ActionData magicActions_8007C5A0[];
-extern int areaHeap_80091C20;
 extern int loadFade_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
@@ -403,7 +402,6 @@ extern int cameraZoom_8008B4F8;
 extern int motionBlurOn_800918C4;
 extern unsigned short padHeld_800918D0[];
 extern void* mdecVLCBuffer_80086F94;
-extern int actorHeap_80091990[4];
 extern Font fonts_80095FB0[];
 extern unsigned char magicIcons_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
@@ -421,7 +419,6 @@ extern int primBufferOffset_8008B550;
 extern int primBufferStart_800960A0[2];
 extern int primAllocPtr_800960A8[2];
 extern unsigned long* decodedImageData_8008B4A0;
-extern int defaultAllocList_80096090[4];
 extern enum GameStates currentGameState_8008D4B4;
 extern volatile int unknownFlags_8008D678;
 extern short titleMenuState_8008B558[2]; // [0]: title screen entry (0 press start, 1 menu); [1]: title menu selection (GAME GetGameStartMode_800A72C8)

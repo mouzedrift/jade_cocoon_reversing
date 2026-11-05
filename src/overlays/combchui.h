@@ -9,6 +9,7 @@
 #include "combat.h"
 #include "font.h"
 #include "menu_draw.h"
+#include "util.h"
 
 
 extern int dword_800A4088;

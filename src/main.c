@@ -20,6 +20,7 @@
 #include "tiy.h"
 #include "camera.h"
 #include "main.h"
+#include "util.h"
 
 const char name[] = "cdrom:\\SLUS_008.54;1";
 const char aAssertionFaile[] = "Assertion failed: file \"%s\", line %d\n";
@@ -185,24 +186,24 @@ unsigned char pads_800918E8[2][9] BSS = { 0 };
 int dword_800918FC[20] BSS = { 0 };
 unsigned short padPressed_8009194C[2] BSS = { 0 };
 unsigned short padHoldFrames_80091950[2][16] BSS = { 0 };
-int actorHeap_80091990[4] BSS = { 0 };
+List actorHeap_80091990 BSS = { 0 };
+int actorHeapPad_8009199C BSS = 0;
 ModelAnimRef modelAnimRefs_800919A0[7] BSS = { 0 };
 EffectFile effectFile_80091BD0 BSS = { 0 };
 int dword_80091C0C BSS = 0;
-int eventHeap_80091C10 BSS = 0;
-int dword_80091C14[3] BSS = { 0 };
-int areaHeap_80091C20 BSS = 0;
-int dword_80091C24[3] BSS = { 0 };
+List eventHeap_80091C10 BSS = { 0 };
+int eventHeapPad_80091C1C BSS = 0;
+List areaHeap_80091C20 BSS = { 0 };
+int areaHeapPad_80091C2C BSS = 0;
 int loadFade_80091C30[4] BSS = { 0 };
 short areaPreload_80091C40[2] BSS = { 0 };
 int currentArea_80091C44 BSS = 0;
-int dword_80091C48 BSS = 0;
-int dword_80091C4C[2] BSS = { 0 };
+List heap_80091C48 BSS = { 0 };
 int mapStartMode_80091C54 BSS = 0;
 int dword_80091C58 BSS = 0;
 int dword_80091C5C BSS = 0;
 MapList16 mapSpawns_80091C60 BSS = { 0 };
-int mapHeap_80091C68[3] BSS = { 0 };
+List mapHeap_80091C68 BSS = { 0 };
 int levantAnimSet_80091C74 BSS = 0;
 int savedLevantPos_80091C78[4] BSS = { 0 };
 int currentAreaMap_80091C88 BSS = 0;
@@ -239,7 +240,8 @@ Font fonts_80095FB0[3] BSS = { 0 };
 short word_80096034 BSS = 0;
 short word_80096036 BSS = 0;
 int textNumberArgs_80096038[22] BSS = { 0 };
-int defaultAllocList_80096090[4] BSS = { 0 };
+List defaultAllocList_80096090 BSS = { 0 };
+int defaultAllocListPad_8009609C BSS = 0;
 
 // Matched
 int main(void)
@@ -266,7 +268,7 @@ int main(void)
 
     InitEvents_8001028C();
     ExitCriticalSection();
-    ListInit_8003FDB0(defaultAllocList_80096090);
+    ListInit_8003FDB0(&defaultAllocList_80096090);
     InitImage_80010428();
     SetGameBootState_80040470();
     GameLoop_8004047C();

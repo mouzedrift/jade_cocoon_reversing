@@ -8,6 +8,7 @@
 #include "pad_text.h"
 #include "combat.h"
 #include "menu_window.h"
+#include "util.h"
 
 // the window colour DrawWindow_80042460 takes (CombSelBox)
 typedef struct CombStrtBox

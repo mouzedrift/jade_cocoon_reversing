@@ -10,6 +10,7 @@
 #include "pad_text.h"
 #include "font.h"
 #include "engine.h"
+#include "util.h"
 
 // a destination of a map area (MapRow.dests_14[])
 typedef struct MapElem
@@ -226,7 +227,6 @@ extern void StartMapOverlay_800A75F8();
 
 /* exe-side, to move to an exe header */
 extern void DrawCursorHand_8003D034(void*, int);
-extern void DrawNumber_8003EF74(void*, int, int);
 extern void PlayMusic_800300E0(int, int);
 // state of the map select (SceneSelect_800B860C)
 extern void QueueFileRequest_8003BC84(FileRequestDesc* req);

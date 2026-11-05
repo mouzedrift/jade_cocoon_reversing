@@ -21,6 +21,7 @@
 #include "engine.h"
 #include "main.h"
 #include "model_ftg.h"
+#include "util.h"
 
 extern short screenOffset_8008D474[2];
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -42,7 +43,7 @@ int GetFtgObjectCount_80021738(int* file)
 // Matched
 void AllocFtgObjects_80021744(FtgObject** out, int count, int heap)
 {
-    *out = HeapAlloc_8003FC8C(count * 0x54, (struct Pool*)heap);
+    *out = HeapAlloc_8003FC8C(count * 0x54, heap);
 }
 // Matched
 void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, int heap)
@@ -91,7 +92,7 @@ void CopyFtgObject_800218A8(FtgObject* src, FtgObject* dst, int heap)
     size += src->texSpriteCount_48 * 0x14;
     if (size)
     {
-        buf = HeapAlloc_8003FC8C(size, (struct Pool*)heap);
+        buf = HeapAlloc_8003FC8C(size, heap);
     }
     else
     {
@@ -178,14 +179,14 @@ int GetFtgMatCount_80021DE4(int* file)
 void AllocFtgMatList_80021DF0(FtgMatList* list, int count, int heap)
 {
     list->count_0 = count;
-    list->items_4 = HeapAlloc_8003FC8C(count * 16, (struct Pool*)heap);
+    list->items_4 = HeapAlloc_8003FC8C(count * 16, heap);
 }
 // p is volatile to keep the store before the load
 // Matched
 void FreeFtgMatList_80021E24(volatile FtgMatList* list, int h)
 {
     list->count_0 = 0;
-    HeapFree_8003FD18(list->items_4);
+    HeapFree_8003FD18(list->items_4, h);
 }
 // Matched
 void LoadFtgMatList_80021E4C(int* file, FtgMatList* out, unsigned int count)
@@ -488,7 +489,7 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     count = hdr->counts_0[8];
     if (count)
     {
-        groups8->groups = HeapAlloc_8003FC8C(count << 3, (struct Pool*)heap);
+        groups8->groups = HeapAlloc_8003FC8C(count << 3, heap);
     }
     else
     {
@@ -499,7 +500,7 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     count += m;
     if (m)
     {
-        groups9->groups = HeapAlloc_8003FC8C(m * 12, (struct Pool*)heap);
+        groups9->groups = HeapAlloc_8003FC8C(m * 12, heap);
     }
     else
     {
@@ -1146,10 +1147,10 @@ void InitModelList_80024ADC(ModelList** out, ModelVramSlot* vram, int heap)
 {
     ModelList* l;
     int i;
-    l = *out = HeapAlloc_8003FC8C(0x10, (struct Pool*)heap);
+    l = *out = HeapAlloc_8003FC8C(0x10, heap);
     l->count_0 = CountModelVramSlots_80026600(vram);
     l->heap_4 = heap;
-    l->items_8 = HeapAlloc_8003FC8C(l->count_0 * 0x70, (struct Pool*)heap);
+    l->items_8 = HeapAlloc_8003FC8C(l->count_0 * 0x70, heap);
     l->vram_C = vram;
     for (i = 0; i < l->count_0; i++)
     {
@@ -1348,7 +1349,7 @@ void SaveModelFtgs_80024FFC(Model* model, int* ids)
     }
     heap = model->list_0->heap_4;
     model->savedCount_40 = count;
-    model->saved_64 = HeapAlloc_8003FC8C(count * sizeof(ModelSavedFtg), (struct Pool*)heap);
+    model->saved_64 = HeapAlloc_8003FC8C(count * sizeof(ModelSavedFtg), heap);
     count--;
     while (count >= 0)
     {
@@ -1886,7 +1887,7 @@ void LoadModelHeader_80026014(ModelLoadParams* params)
     int size = section->size_0;
     void* buf;
     model->headerSize_48 = size;
-    buf = HeapAlloc_8003FC8C(size, (struct Pool*)h);
+    buf = HeapAlloc_8003FC8C(size, h);
     model->header_4C = buf;
     MemCopy_800403E8(buf, params->header_1C->data_4, size);
 }
@@ -1933,7 +1934,7 @@ void LoadModelAnims_800261C8(ModelLoadParams* params)
     {
         HeapFree_8003FD18(model->animLoaded_44, h);
     }
-    model->animLoaded_44 = HeapAlloc_8003FC8C(model->animCount_3E, (struct Pool*)h);
+    model->animLoaded_44 = HeapAlloc_8003FC8C(model->animCount_3E, h);
     for (i = 0; i < model->animCount_3E; i++)
     {
         mode = params->mode_C;
@@ -2010,7 +2011,7 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* params)
     Model* model = params->model_14;
     int count = section->count_0;
     int h = model->list_0->heap_4;
-    int* list = HeapAlloc_8003FC8C((count + 1) * 4, (struct Pool*)h);
+    int* list = HeapAlloc_8003FC8C((count + 1) * 4, h);
     int i;
     int id;
     int src;
@@ -2052,7 +2053,7 @@ void LoadModelFtgSwaps_8002659C(ModelLoadParams* params)
     void* buf;
     model->swapCount_43 = *src;
     src += 4;
-    buf = HeapAlloc_8003FC8C(model->swapCount_43 << 2, (struct Pool*)h);
+    buf = HeapAlloc_8003FC8C(model->swapCount_43 << 2, h);
     model->swaps_6C = buf;
     MemCopy_800403E8(buf, src, model->swapCount_43 << 2);
 }
@@ -2128,7 +2129,7 @@ int GetModelAnimCount_80026724(int* section)
 // Matched
 void AllocModelAnims_80026730(ModelAnim** out, int count, int heap)
 {
-    ModelAnim* anims = HeapAlloc_8003FC8C(count * 28, (struct Pool*)heap);
+    ModelAnim* anims = HeapAlloc_8003FC8C(count * 28, heap);
     int i;
     *out = anims;
     for (i = 0; i < count; i++)
@@ -2246,8 +2247,8 @@ void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, int heap)
     {
         anim->cueCount_C = 0;
     }
-    anim->basePose_14 = HeapAlloc_8003FC8C(m * 6, (struct Pool*)heap);
-    anim->frames_18 = HeapAlloc_8003FC8C((m + 2) * (frames << 1) * 3, (struct Pool*)heap);
+    anim->basePose_14 = HeapAlloc_8003FC8C(m * 6, heap);
+    anim->frames_18 = HeapAlloc_8003FC8C((m + 2) * (frames << 1) * 3, heap);
     dst = anim->basePose_14;
     for (i = 0; i < m; i++)
     {
@@ -2287,7 +2288,7 @@ void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, int heap)
         }
         anim->cueCount_C = *(int*)cur;
         cur += 2;
-        anim->cues_10 = HeapAlloc_8003FC8C(anim->cueCount_C * 8, (struct Pool*)heap);
+        anim->cues_10 = HeapAlloc_8003FC8C(anim->cueCount_C * 8, heap);
         k = 0;
         while (k < anim->cueCount_C)
         {
@@ -2360,7 +2361,7 @@ void LoadRecordTable_80026EF8(RecordTable* table, unsigned short* src, int heap)
     table->field_4 = *(int*)src;
     src += 2;
     d = HeapAlloc_8003FC8C(table->count_0 * 8, heap);
-    table->records_8 = (int)d;
+    table->records_8 = d;
     for (i = 0; i < table->count_0; i++)
     {
         d[0] = src[0];
@@ -2378,14 +2379,13 @@ typedef struct
 } SavedLevantPos;
 extern SavedLevantPos savedLevantPos_80091C78;
 extern int gameStartMode_800B1DC8;
-extern int mapHeap_80091C68;
 // Matched
 void InitMapState_80026FAC(void)
 {
     ListInit_8003FDB0(&mapHeap_80091C68);
     ListInit_8003FDB0(&areaHeap_80091C20);
     ListInit_8003FDB0(&eventHeap_80091C10);
-    ListInit_8003FDB0(&dword_80091C48);
+    ListInit_8003FDB0(&heap_80091C48);
     loadFade_80091C30[0] = 0x3A;
     loadFade_80091C30[1] = 0;
     loadFade_80091C30[2] = 0;
@@ -2479,7 +2479,7 @@ void UnloadMap_80027118(void)
     ListFreeAll_8003FEC8(&mapHeap_80091C68);
     if (!(unknownFlags_8008D678 & 0x20000))
     {
-        ListFreeAll_8003FEC8(&dword_80091C48);
+        ListFreeAll_8003FEC8(&heap_80091C48);
     }
 }
 // Matched
@@ -2638,7 +2638,7 @@ int UpdateLoadFade_80027540(void)
     return 1;
 }
 // Matched
-void AllocMapWallFlags_800275E8(unsigned char** out, int count, int heap)
+void AllocMapWallFlags_800275E8(unsigned char** out, int count, List* heap)
 {
     unsigned char* flags;
     unsigned char* cur;
@@ -2655,7 +2655,7 @@ void AllocMapWallFlags_800275E8(unsigned char** out, int count, int heap)
     }
 }
 // Matched
-int* LoadMapSpawns_80027650(int* file, int unused, int h)
+int* LoadMapSpawns_80027650(int* file, int unused, List* h)
 {
     int* src;
     int (*d)[4];
@@ -2694,7 +2694,7 @@ void LoadMapFtg_80027708(int* file, int heap)
     }
 }
 // Matched
-void LoadTileSets_80027778(int* data, int heap)
+void LoadTileSets_80027778(int* data, List* heap)
 {
     TileSet* arr;
     unsigned int i;
@@ -2724,7 +2724,7 @@ void LoadTileSets_80027778(int* data, int heap)
     tileAnim_8008D648.items_C = arr;
 }
 // Matched
-void LoadTileAnimLayers_800278BC(int* data, int heap)
+void LoadTileAnimLayers_800278BC(int* data, List* heap)
 {
     int* file = data;
     unsigned int i;
@@ -2758,7 +2758,7 @@ void LoadTileAnimLayers_800278BC(int* data, int heap)
     }
 }
 // Matched
-int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, void* heap, MapMeshFile* hdr)
+int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, List* heap, MapMeshFile* hdr)
 {
     MapMesh* arr;
     unsigned int i;
@@ -3172,12 +3172,12 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     MarkSharedEdges_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
     cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
-    AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10, (int)&mapHeap_80091C68);
+    AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10, &mapHeap_80091C68);
     cur = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
     cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
-    AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C, (int)&mapHeap_80091C68);
+    AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C, &mapHeap_80091C68);
     cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
     cnt = cur[0];
@@ -3185,7 +3185,7 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     cur = (int*)((char*)cur + cnt);
     cnt = *cur++;
     LoadTiy_80028E74(0, 0, 0, (int*)cur, (int)&mapHeap_80091C68);
-    cur = LoadMapSpawns_80027650((int*)((char*)cur + cnt), 0, (int)&mapHeap_80091C68);
+    cur = LoadMapSpawns_80027650((int*)((char*)cur + cnt), 0, &mapHeap_80091C68);
     mapAreas_80082674 = ListAlloc_8003FDC0(&mapHeap_80091C68, mapState_8008B500.nMeshes_4 * 12);
     MemCopy_800403E8(mapAreas_80082674, cur, mapState_8008B500.nMeshes_4 * 12);
     if (mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)

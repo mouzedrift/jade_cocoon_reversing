@@ -2035,7 +2035,7 @@ void RunEventListExit_800A74F0(EventNode* node)
 int GameShutdown_800A7574(void)
 {
     DrawIntroMovie_8001AF64(endMovie_800B0EA4);
-    ListFreeAll_8003FEC8(name_80096090);
+    ListFreeAll_8003FEC8(&defaultAllocList_80096090);
     SsUtAllKeyOff(0);
     if (unknownFlags_8008D678 & 0x40000000)
     {

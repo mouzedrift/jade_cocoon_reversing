@@ -11,6 +11,7 @@
 #include "font.h"
 #include "engine.h"
 #include "menu_draw.h"
+#include "util.h"
 
 
 // a window row of one item (the item + the row end)
@@ -161,7 +162,6 @@ extern void StartConfigMenu_800C2EB4(void);
 extern int IsConfigMenuActive_800C45D8(void);
 
 /* exe-side, to move to an exe header */
-extern void EncodeName_8003F7C8(void* text, void* out);
 extern void SsSepSetDecrescendo(short, short, short, long);
 extern void PulseColor_80033394(void* out, void* c0, void* c1, int t, int period, int half);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);

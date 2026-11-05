@@ -21,6 +21,7 @@
 #include "engine.h"
 #include "main.h"
 #include "model_ftg.h"
+#include "util.h"
 
 extern short screenOffset_8008D474[2];
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
@@ -1219,7 +1220,7 @@ void LoadEffectFile_80020DDC(int fileId, EffectFile* out, short* tpagePos, short
     arg.reloc_4[4] = clutPos[0];
     arg.reloc_4[5] = clutPos[1];
     arg.sel_10 = sel;
-    ListInit_8003FDB0(out->list_4);
+    ListInit_8003FDB0(&out->list_4);
     req.flags_0 = 0x28;
     if (flag)
     {
@@ -1246,7 +1247,7 @@ int IsEffectFileLoaded_80020EBC(EffectFile* file)
 // Matched
 void FreeEffectFile_80020EE0(EffectFile* file)
 {
-    ListFreeAll_8003FEC8(file->list_4);
+    ListFreeAll_8003FEC8(&file->list_4);
 }
 // Matched
 int FindEffectIndex_80020F00(EffectFile* file, int kind, int id)
@@ -1261,10 +1262,10 @@ int FindEffectIndex_80020F00(EffectFile* file, int kind, int id)
     }
     return -1;
 }
-void LoadEffectSprite_80021298(int* src, EffectSprite* out, int a2, int a3, int heap);
-void LoadEffectModel_80021464(int* hdr, EffectModel* out, int a2, int a3, int heap);
-int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap);
-void AllocMdecBuffers_800216E8(EffectMdecBuffers* a0, int a1, int a2);
+void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, List* heap);
+void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, List* heap);
+int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, List* heap);
+void AllocMdecBuffers_800216E8(EffectMdecBuffers* out, int maxSize, List* heap);
 // Matched
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
 {
@@ -1285,13 +1286,13 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     out->spriteCount_1C = 0;
     out->modelCount_24 = 0;
     out->imageSetCount_2C = 0;
-    out->data_10 = ListAlloc_8003FDC0(out->list_4, dataSec[0]);
+    out->data_10 = ListAlloc_8003FDC0(&out->list_4, dataSec[0]);
     MemCopy_800403E8(out->data_10, dataSec + 1, dataSec[0]);
     count = pointSec[0];
     if (count)
     {
         out->pointCount_14 = count;
-        out->points_18 = ListAlloc_8003FDC0(out->list_4, count * 12);
+        out->points_18 = ListAlloc_8003FDC0(&out->list_4, count * 12);
         src = pointSec + 1;
         for (i = 0; i < out->pointCount_14; i++)
         {
@@ -1305,40 +1306,40 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     if (count)
     {
         out->spriteCount_1C = count;
-        out->sprites_20 = ListAlloc_8003FDC0(out->list_4, count * 0x34);
+        out->sprites_20 = ListAlloc_8003FDC0(&out->list_4, count * 0x34);
         for (i = 0; i < out->spriteCount_1C; i++)
         {
             EffectSprite* d = &out->sprites_20[i];
-            LoadEffectSprite_80021298((int*)((char*)spriteSec + spriteSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
+            LoadEffectSprite_80021298((int*)((char*)spriteSec + spriteSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, &out->list_4);
         }
     }
     count = modelSec[0];
     if (count)
     {
         out->modelCount_24 = count;
-        out->models_28 = ListAlloc_8003FDC0(out->list_4, count * 0x1C);
+        out->models_28 = ListAlloc_8003FDC0(&out->list_4, count * 0x1C);
         for (i = 0; i < out->modelCount_24; i++)
         {
             EffectModel* d = &out->models_28[i];
-            LoadEffectModel_80021464((int*)((char*)modelSec + modelSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, (int)out->list_4);
+            LoadEffectModel_80021464((int*)((char*)modelSec + modelSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, &out->list_4);
         }
     }
     count = imageSec[0];
     if (count)
     {
         out->imageSetCount_2C = count;
-        out->imageSets_30 = ListAlloc_8003FDC0(out->list_4, count * 8);
+        out->imageSets_30 = ListAlloc_8003FDC0(&out->list_4, count * 8);
         i = 0;
         max = i;
         for (; i < out->imageSetCount_2C; i++)
         {
-            bufSize = LoadMdecImages_800215E8((int*)((char*)imageSec + imageSec[i + 1]), &out->imageSets_30[i], (int)out->list_4);
+            bufSize = LoadMdecImages_800215E8((int*)((char*)imageSec + imageSec[i + 1]), &out->imageSets_30[i], &out->list_4);
             if (max < bufSize)
             {
                 max = bufSize;
             }
         }
-        AllocMdecBuffers_800216E8(&out->mdec_34, max, (int)out->list_4);
+        AllocMdecBuffers_800216E8(&out->mdec_34, max, &out->list_4);
     }
     if (GetTiyFileCount_80028E68(tiySec))
     {
@@ -1346,7 +1347,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     }
 }
 // Matched
-void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, int heap)
+void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, List* heap)
 {
     POLY_FT4 buf;
     int i;
@@ -1381,19 +1382,19 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, 
     InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
 // Matched
-void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, int heap)
+void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, List* heap)
 {
     int* models = (int*)((char*)hdr + hdr[1]);
     int* images = (int*)((char*)hdr + hdr[2]);
     if (GetFtgObjectCount_80021738(models))
     {
         out->ftgCount_0 = GetFtgObjectCount_80021738(models);
-        AllocFtgObjects_80021744(&out->ftg_4, out->ftgCount_0, heap);
-        LoadFtgObjects_80021824(models, out->ftg_4, out->ftgCount_0, heap, reloc);
+        AllocFtgObjects_80021744(&out->ftg_4, out->ftgCount_0, (int)heap);
+        LoadFtgObjects_80021824(models, out->ftg_4, out->ftgCount_0, (int)heap, reloc);
     }
     if (GetFtgMatCount_80021DE4(models))
     {
-        AllocFtgMatList_80021DF0(&out->mats_8, GetFtgMatCount_80021DE4(models), heap);
+        AllocFtgMatList_80021DF0(&out->mats_8, GetFtgMatCount_80021DE4(models), (int)heap);
         LoadFtgMatList_80021E4C(models, &out->mats_8, GetFtgMatCount_80021DE4(models));
     }
     else
@@ -1412,7 +1413,7 @@ void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, in
     }
 }
 // Matched
-int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
+int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, List* heap)
 {
     int i;
     int max;
@@ -1439,7 +1440,7 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, int heap)
     return max;
 }
 // Matched
-void AllocMdecBuffers_800216E8(EffectMdecBuffers* out, int maxSize, int heap)
+void AllocMdecBuffers_800216E8(EffectMdecBuffers* out, int maxSize, List* heap)
 {
     out->dct_0 = ListAlloc_8003FDC0(heap, (maxSize + 1) * 4);
     out->work_4 = ListAlloc_8003FDC0(heap, 0x2000);

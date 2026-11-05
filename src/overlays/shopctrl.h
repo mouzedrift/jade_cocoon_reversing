@@ -8,6 +8,7 @@
 #include "engine.h"
 #include "camera.h"
 #include "model_ftg.h"
+#include "util.h"
 
 /* SHOPCTRL functions */
 void StartShopCtrl_800B66C4(int shopId);

@@ -18,6 +18,7 @@
 #include "tiy.h"
 #include "cdread.h"
 #include "cd.h"
+#include "util.h"
 
 const LoadingIconFrames loadingIconFrames_8007490C = { {
         7, 8, 9, 10, 11, 12, 13, 14,

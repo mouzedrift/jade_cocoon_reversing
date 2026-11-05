@@ -16,48 +16,16 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "util.h"
+#include "main.h"
 #include "font.h"
 
-extern void IntToText_8003F610(unsigned short* buf, int val);
 
-extern unsigned short* DecodeText_8003F748(int mode, unsigned short* s);
-extern void IntToSjisReversed_8003F58C(unsigned char* buf, int val);
-extern int WStrLen_8003FB60(unsigned short* s);
 
-typedef struct ListNode { struct ListNode* prev; struct ListNode* next; } ListNode;
-typedef struct List { int count; ListNode* head; ListNode* tail; } List;
 
-struct Pool;
-typedef struct PoolBlock
-{
-    int magic;
-    unsigned int size;
-    struct PoolBlock* prev;
-    struct PoolBlock* next;
-} PoolBlock;
-
-typedef struct Pool
-{
-    int magic;
-    int inited;
-    unsigned int size;
-    int count;
-    int field_10;
-    unsigned int used;
-    void* buffer;
-    PoolBlock* head;
-    PoolBlock* tail;
-} Pool;
-
-extern PoolBlock* PoolFindFreeSpace_80040150(Pool* pool, unsigned int size);
-extern void* PoolAlloc_8003FFD0(Pool* pool, unsigned int size);
-extern void PoolFree_800400B4(Pool* pool, void* ptr);
-extern void* ListAlloc_8003FDC0(List* list, int size);
-extern void ListFree_8003FE38(void* list, void* ptr);
 
 
 // Matched
-void DrawNumber_8003EF74(int pos, int val, int ot)
+void DrawNumber_8003EF74(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, val);
@@ -167,7 +135,7 @@ void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 // Matched
-void DrawNumber_8003F544(int pos, int val, int ot)
+void DrawNumber_8003F544(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, val);
@@ -445,12 +413,13 @@ void free3_8003FC6C(void* block)
     free3(block);
 }
 // Matched
-void* HeapAlloc_8003FC8C(int size, Pool* pool)
+void* HeapAlloc_8003FC8C(int size, int heap)
 {
-    switch ((int)pool)
+    Pool* pool = (Pool*)heap;
+    switch (heap)
     {
     case 0:
-        return ListAlloc_8003FDC0((List*)defaultAllocList_80096090, size);
+        return ListAlloc_8003FDC0(&defaultAllocList_80096090, size);
     case 1:
         return malloc3_8003FC4C(size);
     default:
@@ -467,41 +436,42 @@ void* HeapAlloc_8003FC8C(int size, Pool* pool)
     return ListAlloc_8003FDC0((List*)pool, size);
 }
 // Matched
-void HeapFree_8003FD18(int ptr, Pool* pool)
+void HeapFree_8003FD18(void* ptr, int heap)
 {
-    switch ((int)pool)
+    Pool* pool = (Pool*)heap;
+    switch (heap)
     {
     case 0:
-        ListFree_8003FE38(defaultAllocList_80096090, (void*)ptr);
+        ListFree_8003FE38(&defaultAllocList_80096090, ptr);
         break;
     case 1:
-        free3_8003FC6C((void*)ptr);
+        free3_8003FC6C(ptr);
         break;
     default:
         if (pool->magic == (int)0x8FFFFFFF)
         {
-            if (IsPoolBlock_80040274((int)pool, (int*)ptr))
+            if (IsPoolBlock_80040274(pool, ptr))
             {
-                PoolFree_800400B4(pool, (void*)ptr);
+                PoolFree_800400B4(pool, ptr);
             }
             else
             {
-                free3_8003FC6C((void*)ptr);
+                free3_8003FC6C(ptr);
             }
         }
         else
         {
-            ListFree_8003FE38(pool, (void*)ptr);
+            ListFree_8003FE38((List*)pool, ptr);
         }
         break;
     }
 }
 // Matched
-void ListInit_8003FDB0(int* list)
+void ListInit_8003FDB0(List* list)
 {
-    list[0] = 0;
-    list[1] = 0;
-    list[2] = 0;
+    list->count = 0;
+    list->head = 0;
+    list->tail = 0;
 }
 // Matched
 void* ListAlloc_8003FDC0(List* list, int size)
@@ -523,9 +493,8 @@ void* ListAlloc_8003FDC0(List* list, int size)
     return node + 1;
 }
 // Matched
-void ListFree_8003FE38(void* list, void* ptr)
+void ListFree_8003FE38(List* l, void* ptr)
 {
-    List* l = (List*)list;
     ListNode* node = ptr;
     node--;
     if (l->count)
@@ -551,9 +520,8 @@ void ListFree_8003FE38(void* list, void* ptr)
     }
 }
 // Matched
-void ListFreeAll_8003FEC8(void* list)
+void ListFreeAll_8003FEC8(List* l)
 {
-    List* l = (List*)list;
     ListNode* node = l->tail;
     while (node)
     {
@@ -561,7 +529,7 @@ void ListFreeAll_8003FEC8(void* list)
         node = node->prev;
         free3_8003FC6C(cur);
     }
-    ListInit_8003FDB0((int*)l);
+    ListInit_8003FDB0(l);
 }
 // Matched
 void PoolInit_8003FF1C(Pool* pool, unsigned int size)
@@ -646,9 +614,9 @@ void PoolFree_800400B4(Pool* pool, void* ptr)
     }
 }
 // Matched
-void PoolSetInited_80040148(int* pool, int inited)
+void PoolSetInited_80040148(Pool* pool, int inited)
 {
-    pool[1] = inited;
+    pool->inited = inited;
 }
 // Matched
 PoolBlock* PoolFindFreeSpace_80040150(Pool* pool, unsigned int size)
@@ -713,9 +681,9 @@ PoolBlock* PoolFindFreeSpace_80040150(Pool* pool, unsigned int size)
     return (PoolBlock*)best;
 }
 // Matched
-int IsPoolBlock_80040274(int pool, int* ptr)
+int IsPoolBlock_80040274(Pool* pool, void* ptr)
 {
-    return ptr[-4] == 0x8FFFFFFF;
+    return ((PoolBlock*)ptr)[-1].magic == 0x8FFFFFFF;
 }
 // Matched
 void sub_8004028C(void)

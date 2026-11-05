@@ -7,6 +7,8 @@
 #include "globals.h"
 #include "sound.h"
 #include "main.h"
+#include "util.h"
+#include "font.h"
 
 typedef struct
 {
@@ -65,9 +67,6 @@ void DrawElementIconsRow_8002B1B0(short mask, void* pos, short ot); // menu_wind
 void DrawMenuBackground_8002BE10(void);        // ui_sprites
 void DrawSmallText_8002FAA0(int align, void* pos, void* text, short ot); // party_window.h
 void UpdateMenuCursor_8003D794(ShelfMenu* menu, int arg1); // pad_text.h
-void DrawText_8003E91C(int mode, const char* text, void* pos, short ot); // font.h has int ot: this overlay was built with a short one (its callers sign-extend ot)
-void DrawNumber_8003EF74(void* pos, int val, short ot); // util.h
-void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, short ot); // util.h
 
 /* SHOPENTR data */
 

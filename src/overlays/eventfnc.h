@@ -5,12 +5,14 @@
 #include "funcs.h"
 
 #include "globals.h"
+#include "main.h"
 #include "model.h"
 #include "engine.h"
 #include "minion_init.h"
 #include "sound.h"
 #include "camera.h"
 #include "model_ftg.h"
+#include "util.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -120,7 +122,6 @@ extern void SetTempFlags_800BBDA0(int mask, int on);
 
 extern int TestTempFlags_800BBDD8(int mask);
 
-extern char eventHeap_80091C10[];
 
 // the low halves of cameraEye_8008D600 (VECTOR camera eye), read with lhu by IsActorLeftOf_800BC5C8
 extern unsigned short word_8008D600[];
@@ -234,7 +235,6 @@ extern void ClearEnemySlots_800A1794();
 
 extern void EncounterSpawnTask_800B844C();
 
-extern unsigned short padPressed_8009194C;
 
 extern int EvCmdEndScene_800B8A34(EvScriptCtx* ctx);
 

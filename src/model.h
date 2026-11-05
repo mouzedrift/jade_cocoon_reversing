@@ -2,6 +2,7 @@
 #define _TU_8001EA48_H_
 
 #include "actor.h"
+#include "util.h"
 
 // ---------------------------------------------------------------------------------------------
 // FTG model objects (LoadFtgObject_80022458). A file object is a 0x28-byte header of ten
@@ -559,7 +560,7 @@ typedef struct
 typedef struct EffectFile
 {
     int request_0;
-    int list_4[3]; // ListInit_8003FDB0 heap the file's data lives in
+    List list_4; // heap the file's data lives in
     void* data_10;
     int pointCount_14;
     EffectPoint* points_18;

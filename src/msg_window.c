@@ -20,6 +20,7 @@
 #include "effect_data.h"
 #include "pad_text.h"
 #include "font.h"
+#include "util.h"
 
 const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -353,7 +354,6 @@ EventEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     e->flags = (e->flags | 1) & ~0x8000;
     return e;
 }
-extern unsigned short* EncodeText_8003F684(int mode, unsigned short* s);
 // Matched
 short** FindTextResumePage_80034900(short** list)
 {
@@ -1065,8 +1065,6 @@ typedef struct
 extern const int aMoney_80074850[];
 extern const int aEmptyCocoon_8007485C[];
 extern const int aTimesSign_80074864[];
-extern void DrawNumberRightAlignedFont1_8003F264(void* pos, int val, int ot);
-extern void DrawNumber_8003EF74(void* pos, int val, int ot);
 extern void GetPublicTiySprt_80032470(int idx, SPRT* spr, TPageWords* tp);
 extern void RemoveInventory_800AD1E0(int a, int b, int c);
 extern void AddMoney_800AD058(int a);
@@ -1150,7 +1148,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p78.x = r.x + r.w - 4;
             p78.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawNumberRightAlignedFont1_8003F264(&p78, o->entries[i].count, 0);
+            DrawNumberRightAlignedFont1_8003F264(&p78.x, o->entries[i].count, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             line++;
         }
@@ -1171,7 +1169,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 p90.x = r.x + 0x8D;
                 p90.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawNumber_8003EF74(&p90, o->entries[i].count, 0);
+                DrawNumber_8003EF74(&p90.x, o->entries[i].count, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             }
             line++;
@@ -1224,7 +1222,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 pA0.x = r.x + 0x8D;
                 pA0.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawNumber_8003EF74(&pA0, o->entries[i].count, 0);
+                DrawNumber_8003EF74(&pA0.x, o->entries[i].count, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             }
             line++;

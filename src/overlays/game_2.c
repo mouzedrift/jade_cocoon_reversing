@@ -62,33 +62,33 @@ void FreeEventData_800A56BC(int kind)
     case 1:
         if (eventReloc_800AEBBC)
         {
-            ListFree_8003FE38(name_80091C10, eventReloc_800AEBBC);
+            ListFree_8003FE38(&eventHeap_80091C10, eventReloc_800AEBBC);
             eventReloc_800AEBBC = 0;
         }
         break;
     case 2:
         if (eventTiy_800AEBC0[0])
         {
-            ListFree_8003FE38(name_80091C10, eventTiy_800AEBC0[0]);
+            ListFree_8003FE38(&eventHeap_80091C10, eventTiy_800AEBC0[0]);
             eventTiy_800AEBC0[0] = 0;
         }
         if (eventTiy_800AEBC0[1])
         {
-            ListFree_8003FE38(name_80091C10, eventTiy_800AEBC0[1]);
+            ListFree_8003FE38(&eventHeap_80091C10, eventTiy_800AEBC0[1]);
             eventTiy_800AEBC0[1] = 0;
         }
         break;
     case 3:
         if (eventDataBuf_800AEBC8)
         {
-            ListFree_8003FE38(name_80091C10, eventDataBuf_800AEBC8);
+            ListFree_8003FE38(&eventHeap_80091C10, eventDataBuf_800AEBC8);
             eventDataBuf_800AEBC8 = 0;
         }
         break;
     case 4:
         if (eventRecords_800AEBCC[1])
         {
-            FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], name_80091C10);
+            FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], (int)&eventHeap_80091C10);
             eventRecords_800AEBCC[0] = 0;
         }
         break;

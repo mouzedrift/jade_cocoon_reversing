@@ -18,6 +18,7 @@
 #include "party_window.h"
 #include "effect_data.h"
 #include "font.h"
+#include "util.h"
 
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
@@ -142,9 +143,7 @@ short GetLevantLevel_8002FA70(void)
 {
     return GetLevel_80033514(GetLevantStatus_80033ABC(&saveData_8008B570));
 }
-extern void DecodeText_8003F748(int a, NameBuf* b);
 extern short MeasureTextWidth_8003E4C8(NameBuf* b); // this TU was built against a short-returning prototype (pad_text.h: int)
-extern void UppercaseSjisName_8003F89C(NameBuf* b);
 extern short MeasureTextWidthFont1_8003E6B0(NameBuf* b);
 // Matched
 void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text, int ot)
@@ -153,8 +152,8 @@ void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text,
     NameBuf buf = emptyNameBuf_80074434;
     int offset;
     CopyPlayerName_8003F860(text, buf.s);
-    DecodeText_8003F748(1, &buf);
-    UppercaseSjisName_8003F89C(&buf);
+    DecodeText_8003F748(1, buf.s);
+    UppercaseSjisName_8003F89C(buf.s);
     if (align == 1)
     {
         offset = MeasureTextWidthFont1_8003E6B0(&buf);
@@ -178,7 +177,7 @@ void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text,
     NameBuf buf = emptyNameBuf_80074434;
     int offset;
     CopyPlayerName_8003F860(text, buf.s);
-    DecodeText_8003F748(1, &buf);
+    DecodeText_8003F748(1, buf.s);
     if (align == 1)
     {
         offset = MeasureTextWidth_8003E4C8(&buf);

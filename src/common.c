@@ -20,6 +20,7 @@
 #include "engine.h"
 #include "skills.h"
 #include "unit_stats.h"
+#include "util.h"
 
 const ActionData defaultActionData_80071F58 = { 0, 0, 100, 255, 115, 0, 0, 10, { 0, 3 } };
 const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";

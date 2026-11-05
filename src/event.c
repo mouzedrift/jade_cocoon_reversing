@@ -18,6 +18,7 @@
 #include "tiy.h"
 #include "event.h"
 #include "winframe.h"
+#include "util.h"
 
 
 const char aDWorkPsusEvent[] = "D:/WORK/PSUS/EVENT.C";

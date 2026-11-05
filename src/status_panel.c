@@ -18,6 +18,7 @@
 #include "unit.h"
 #include "status_panel.h"
 #include "effect_data.h"
+#include "util.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 

@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "event.h"
 #include "winframe.h"
+#include "util.h"
 
 const CVECTOR windowFrameGrey_80074BA0 = { 128, 128, 128 };
 

@@ -19,6 +19,7 @@
 #include "effect_data.h"
 #include "skills.h"
 #include "msg_window.h"
+#include "util.h"
 
 extern int CheckSkillUsable_80033C98(ListMenuState* menu);
 int GetAbilityIcon_8002D1A4(int type, short slot);

@@ -20,6 +20,7 @@
 #include "minion_menu.h"
 #include "engine.h"
 #include "msg_window.h"
+#include "util.h"
 
 
 
