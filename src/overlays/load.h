@@ -23,32 +23,13 @@ typedef struct
     short clutY_6;
 } SaveIconSrc;
 
-typedef struct
-{
-    unsigned short flags_0;
-    short kind_2;  // 1: a UI TIY sprite, 3: a text
-    int data_4;    // the sprite index or the text
-    int sprts_8;   // the sprite set (uiTiySprts_8008D620)
-    int tpages_C;  // its texture pages (uiTiyTPages_8008D3F4)
-    short x_10;
-    short y_12;
-    char window_14[8]; // the window around it
-} LoadMenuItem;
 
+// a window row of one item (the item + the row end)
 typedef struct
 {
-    LoadMenuItem items_0[2];
+    MenuWindowItem items_0[2];
 } LoadMenuItemPair;
 
-typedef struct
-{
-    int flags_0;  // 1 plain, 2 blinking cursor, 4 fixed cursor (DrawMenuItemWindow_8002AAF0)
-    int time_4;   // blink timer (GetTime30Hz_8002C64C), 0 = no highlight
-    int open_8;   // window open step out of 8 (InterpolateWindowRect_8004196C)
-    int cursor_C; // the highlighted item
-    LoadMenuItem** items_10;
-    int ot_14;
-} LoadMenuWin;
 
 typedef struct
 {
@@ -227,37 +208,37 @@ extern LoadUiSprite cardSlotSprites_800BD9A8[8];
 extern LoadUiSprite saveIconSprites_800BD9E8[4];
 extern char *saveListPrompts_800BDA08[2];
 extern RECT saveListClip_800BDA10;
-extern LoadMenuItem saveListRow0_800BDA18[2];
-extern LoadMenuItem saveListRow1_800BDA50[2];
-extern LoadMenuItem saveListRow2_800BDA88[2];
-extern LoadMenuItem saveListRow3_800BDAC0[2];
-extern LoadMenuItem *saveListRows_800BDAF8[5];
-extern LoadMenuWin saveListWin_800BDB0C;
-extern LoadMenuItem cardSlot1Item_800BDB24[2];
-extern LoadMenuItem *cardSlot1Items_800BDB5C[2];
-extern LoadMenuWin cardSlot1Win_800BDB64;
-extern LoadMenuItem cardSlot2Item_800BDB7C[2];
-extern LoadMenuItem *cardSlot2Items_800BDBB4[2];
-extern LoadMenuWin cardSlot2Win_800BDBBC;
-extern LoadMenuWin *cardSlotWins_800BDBD4[2];
-extern LoadMenuItem topMenuSave_800BDBDC[2];
-extern LoadMenuItem topMenuLoad_800BDC14[2];
-extern LoadMenuItem topMenuExit_800BDC4C[2];
-extern LoadMenuItem topMenuTitle_800BDC84[2];
-extern LoadMenuItem *topMenuItems_800BDCBC[5];
-extern LoadMenuWin topMenuWin_800BDCD0;
-extern LoadMenuItem formatYes_800BDCE8[2];
-extern LoadMenuItem formatNo_800BDD20[2];
-extern LoadMenuItem *formatItems_800BDD58[3];
-extern LoadMenuWin formatWin_800BDD64;
-extern LoadMenuItem confirmYes_800BDD7C[2];
-extern LoadMenuItem confirmNo_800BDDB4[2];
-extern LoadMenuItem *confirmItems_800BDDEC[3];
-extern LoadMenuWin confirmWin_800BDDF8;
-extern LoadMenuItem titleYes_800BDE10[2];
-extern LoadMenuItem titleNo_800BDE48[2];
-extern LoadMenuItem *titleItems_800BDE80[3];
-extern LoadMenuWin titleWin_800BDE8C;
+extern MenuWindowItem saveListRow0_800BDA18[2];
+extern MenuWindowItem saveListRow1_800BDA50[2];
+extern MenuWindowItem saveListRow2_800BDA88[2];
+extern MenuWindowItem saveListRow3_800BDAC0[2];
+extern MenuWindowItem *saveListRows_800BDAF8[5];
+extern MenuWindowList saveListWin_800BDB0C;
+extern MenuWindowItem cardSlot1Item_800BDB24[2];
+extern MenuWindowItem *cardSlot1Items_800BDB5C[2];
+extern MenuWindowList cardSlot1Win_800BDB64;
+extern MenuWindowItem cardSlot2Item_800BDB7C[2];
+extern MenuWindowItem *cardSlot2Items_800BDBB4[2];
+extern MenuWindowList cardSlot2Win_800BDBBC;
+extern MenuWindowList *cardSlotWins_800BDBD4[2];
+extern MenuWindowItem topMenuSave_800BDBDC[2];
+extern MenuWindowItem topMenuLoad_800BDC14[2];
+extern MenuWindowItem topMenuExit_800BDC4C[2];
+extern MenuWindowItem topMenuTitle_800BDC84[2];
+extern MenuWindowItem *topMenuItems_800BDCBC[5];
+extern MenuWindowList topMenuWin_800BDCD0;
+extern MenuWindowItem formatYes_800BDCE8[2];
+extern MenuWindowItem formatNo_800BDD20[2];
+extern MenuWindowItem *formatItems_800BDD58[3];
+extern MenuWindowList formatWin_800BDD64;
+extern MenuWindowItem confirmYes_800BDD7C[2];
+extern MenuWindowItem confirmNo_800BDDB4[2];
+extern MenuWindowItem *confirmItems_800BDDEC[3];
+extern MenuWindowList confirmWin_800BDDF8;
+extern MenuWindowItem titleYes_800BDE10[2];
+extern MenuWindowItem titleNo_800BDE48[2];
+extern MenuWindowItem *titleItems_800BDE80[3];
+extern MenuWindowList titleWin_800BDE8C;
 extern ButtonHelpEntry loadMenuButtonHelp_800BDEA4[3];
 extern char *msgCardFull_800BDEBC[4];
 extern char *msgFormatting_800BDECC[4];

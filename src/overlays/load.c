@@ -47,85 +47,85 @@ LoadUiSprite saveIconSprites_800BD9E8[4] = {
 };
 char *saveListPrompts_800BDA08[2] = { aSelectSaveLocat_800B66F0, aSelectGameToLoa_800B66C4 };
 RECT saveListClip_800BDA10 = { 10, 49, 0x12C, 129 };
-LoadMenuItem saveListRow0_800BDA18[2] = {
-    { 64, 0, 0, 0, 0, 10, 49, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem saveListRow0_800BDA18[2] = {
+    { 64, 0, 0, NULL, NULL, 10, 49, 300, 31, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem saveListRow1_800BDA50[2] = {
-    { 64, 0, 0, 0, 0, 10, 82, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem saveListRow1_800BDA50[2] = {
+    { 64, 0, 0, NULL, NULL, 10, 82, 300, 31, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem saveListRow2_800BDA88[2] = {
-    { 64, 0, 0, 0, 0, 10, 115, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem saveListRow2_800BDA88[2] = {
+    { 64, 0, 0, NULL, NULL, 10, 115, 300, 31, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem saveListRow3_800BDAC0[2] = {
-    { 64, 0, 0, 0, 0, 10, 148, { 44, 1, 31 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem saveListRow3_800BDAC0[2] = {
+    { 64, 0, 0, NULL, NULL, 10, 148, 300, 31, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem *saveListRows_800BDAF8[5] = { saveListRow0_800BDA18, saveListRow1_800BDA50, saveListRow2_800BDA88, saveListRow3_800BDAC0 };
-LoadMenuWin saveListWin_800BDB0C = { 2, 0, 8, 0, saveListRows_800BDAF8, 5 };
-LoadMenuItem cardSlot1Item_800BDB24[2] = {
-    { 64, 0, 0, 0, 0, 33, 90, { 105, 0, 36 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem *saveListRows_800BDAF8[5] = { saveListRow0_800BDA18, saveListRow1_800BDA50, saveListRow2_800BDA88, saveListRow3_800BDAC0 };
+MenuWindowList saveListWin_800BDB0C = { 2, 0, 8, 0, saveListRows_800BDAF8, 5 };
+MenuWindowItem cardSlot1Item_800BDB24[2] = {
+    { 64, 0, 0, NULL, NULL, 33, 90, 105, 36, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem *cardSlot1Items_800BDB5C[2] = { cardSlot1Item_800BDB24 };
-LoadMenuWin cardSlot1Win_800BDB64 = { 2, 0, 8, 0, cardSlot1Items_800BDB5C, 5 };
-LoadMenuItem cardSlot2Item_800BDB7C[2] = {
-    { 64, 0, 0, 0, 0, 182, 90, { 105, 0, 36 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem *cardSlot1Items_800BDB5C[2] = { cardSlot1Item_800BDB24 };
+MenuWindowList cardSlot1Win_800BDB64 = { 2, 0, 8, 0, cardSlot1Items_800BDB5C, 5 };
+MenuWindowItem cardSlot2Item_800BDB7C[2] = {
+    { 64, 0, 0, NULL, NULL, 182, 90, 105, 36, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem *cardSlot2Items_800BDBB4[2] = { cardSlot2Item_800BDB7C };
-LoadMenuWin cardSlot2Win_800BDBBC = { 2, 0, 8, 0, cardSlot2Items_800BDBB4, 5 };
-LoadMenuWin *cardSlotWins_800BDBD4[2] = { &cardSlot1Win_800BDB64, &cardSlot2Win_800BDBBC };
-LoadMenuItem topMenuSave_800BDBDC[2] = {
-    { 8, 1, 190, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 69, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem *cardSlot2Items_800BDBB4[2] = { cardSlot2Item_800BDB7C };
+MenuWindowList cardSlot2Win_800BDBBC = { 2, 0, 8, 0, cardSlot2Items_800BDBB4, 5 };
+MenuWindowList *cardSlotWins_800BDBD4[2] = { &cardSlot1Win_800BDB64, &cardSlot2Win_800BDBBC };
+MenuWindowItem topMenuSave_800BDBDC[2] = {
+    { 8, 1, 190, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 69, 108, 19, 0, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem topMenuLoad_800BDC14[2] = {
-    { 8, 1, 197, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 90, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem topMenuLoad_800BDC14[2] = {
+    { 8, 1, 197, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 90, 108, 19, 0, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem topMenuExit_800BDC4C[2] = {
-    { 8, 1, 198, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 111, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem topMenuExit_800BDC4C[2] = {
+    { 8, 1, 198, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 111, 108, 19, 0, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem topMenuTitle_800BDC84[2] = {
-    { 8, 1, 196, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 106, 132, { 108, 0, 19, 0, 0, 0, 4 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem topMenuTitle_800BDC84[2] = {
+    { 8, 1, 196, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 132, 108, 19, 0, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem *topMenuItems_800BDCBC[5] = { topMenuSave_800BDBDC, topMenuLoad_800BDC14, topMenuExit_800BDC4C, topMenuTitle_800BDC84 };
-LoadMenuWin topMenuWin_800BDCD0 = { 2, 0, 8, 0, topMenuItems_800BDCBC, 5 };
-LoadMenuItem formatYes_800BDCE8[2] = {
-    { 8, 3, (int)aYES_800B671C, 0, 0, 126, 106, { 56, 0, 18, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem *topMenuItems_800BDCBC[5] = { topMenuSave_800BDBDC, topMenuLoad_800BDC14, topMenuExit_800BDC4C, topMenuTitle_800BDC84 };
+MenuWindowList topMenuWin_800BDCD0 = { 2, 0, 8, 0, topMenuItems_800BDCBC, 5 };
+MenuWindowItem formatYes_800BDCE8[2] = {
+    { 8, 3, (int)aYES_800B671C, NULL, NULL, 126, 106, 56, 18, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem formatNo_800BDD20[2] = {
-    { 8, 3, (int)aNO_800B6724, 0, 0, 126, 126, { 56, 0, 18, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem formatNo_800BDD20[2] = {
+    { 8, 3, (int)aNO_800B6724, NULL, NULL, 126, 126, 56, 18, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem *formatItems_800BDD58[3] = { formatYes_800BDCE8, formatNo_800BDD20 };
-LoadMenuWin formatWin_800BDD64 = { 2, 0, 8, 1, formatItems_800BDD58 };
-LoadMenuItem confirmYes_800BDD7C[2] = {
-    { 8, 3, (int)aYES_800B671C, 0, 0, 215, 193, { 46, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem *formatItems_800BDD58[3] = { formatYes_800BDCE8, formatNo_800BDD20 };
+MenuWindowList formatWin_800BDD64 = { 2, 0, 8, 1, formatItems_800BDD58 };
+MenuWindowItem confirmYes_800BDD7C[2] = {
+    { 8, 3, (int)aYES_800B671C, NULL, NULL, 215, 193, 46, 19, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem confirmNo_800BDDB4[2] = {
-    { 8, 3, (int)aNO_800B6724, 0, 0, 0x105, 193, { 48, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem confirmNo_800BDDB4[2] = {
+    { 8, 3, (int)aNO_800B6724, NULL, NULL, 0x105, 193, 48, 19, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem *confirmItems_800BDDEC[3] = { confirmYes_800BDD7C, confirmNo_800BDDB4 };
-LoadMenuWin confirmWin_800BDDF8 = { 2, 0, 8, 1, confirmItems_800BDDEC };
-LoadMenuItem titleYes_800BDE10[2] = {
-    { 8, 3, (int)aYES_800B671C, 0, 0, 106, 121, { 52, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem *confirmItems_800BDDEC[3] = { confirmYes_800BDD7C, confirmNo_800BDDB4 };
+MenuWindowList confirmWin_800BDDF8 = { 2, 0, 8, 1, confirmItems_800BDDEC };
+MenuWindowItem titleYes_800BDE10[2] = {
+    { 8, 3, (int)aYES_800B671C, NULL, NULL, 106, 121, 52, 19, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem titleNo_800BDE48[2] = {
-    { 8, 3, (int)aNO_800B6724, 0, 0, 163, 121, { 52, 0, 19, 0, 2, 0, 2 } },
-    { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+MenuWindowItem titleNo_800BDE48[2] = {
+    { 8, 3, (int)aNO_800B6724, NULL, NULL, 163, 121, 52, 19, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-LoadMenuItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
-LoadMenuWin titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
+MenuWindowItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
+MenuWindowList titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
 ButtonHelpEntry loadMenuButtonHelp_800BDEA4[3] = { { 16, aSelect_800B6738 }, { 167, aExit_800B672C }, { -1 } };
 char *msgCardFull_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
 char *msgFormatting_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
@@ -938,15 +938,15 @@ const CardTag aCRD0_800B7300 = { "CRD0" };
 const char aMemoryCard1Jp_800B7308[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202P"; // メモリーカード１
 const LoadMenuItemPair cardSlotMenuItem1_800B731C = {
     {
-        { 8, 3, (int)aMemoryCard1Jp_800B7308, 0, 0, 40, 100, { 100, 0, 34, 0, 2, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 3, (int)aMemoryCard1Jp_800B7308, NULL, NULL, 40, 100, 100, 34, 2, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const char aMemoryCard2Jp_800B7354[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202Q"; // メモリーカード２
 const LoadMenuItemPair cardSlotMenuItem2_800B7368 = {
     {
-        { 8, 3, (int)aMemoryCard2Jp_800B7354, 0, 0, 180, 100, { 100, 0, 34, 0, 2, 0, 2 } },
-        { 1, 0, 0, 0, 0, -1, -1, { 255, 255, 255, 255, 255, 255, 255, 255 } },
+        { 8, 3, (int)aMemoryCard2Jp_800B7354, NULL, NULL, 180, 100, 100, 34, 2, 2 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 
@@ -2218,8 +2218,8 @@ void DrawCardSlotMenu_800BB4A8(short sel)
 {
     LoadMenuItemPair slot1 = cardSlotMenuItem1_800B731C;
     LoadMenuItemPair slot2 = cardSlotMenuItem2_800B7368;
-    LoadMenuItem* list[3];
-    LoadMenuWin win;
+    MenuWindowItem* list[3];
+    MenuWindowList win;
     int i;
     list[0] = slot1.items_0;
     list[1] = slot2.items_0;
