@@ -44,32 +44,30 @@ NameGrid cursorGrids_800B8200[3] = {
     { 1, 14, 1, 1, 2, 0, 54, 10, 209, 99 },
     { 2, 10, 1, 1, 3, 0, 54, 10, 209, 99 },
 };
-int cmdItemDefault_800B823C[14] = {
-    0x10008, 5, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x6100F6, 0x130040, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem cmdItemDefault_800B823C[2] = {
+    { 8, 1, 5, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x61, 0x40, 0x13, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int cmdItemRestore_800B8274[14] = {
-    0x10008, 142, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x7500F6, 0x130040, 0x30000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem cmdItemRestore_800B8274[2] = {
+    { 8, 1, 142, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x75, 0x40, 0x13, 0, 3 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int cmdItemOk_800B82AC[14] = {
-    0x10008, 47, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x8E00F6, 0x130040, 0x40000, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem cmdItemOk_800B82AC[2] = {
+    { 8, 1, 47, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x8E, 0x40, 0x13, 0, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-void *cmdItemLists_800B82E4[4] = { (void *)cmdItemDefault_800B823C, (void *)cmdItemRestore_800B8274, (void *)cmdItemOk_800B82AC };
-NameMenu cmdMenu_800B82F4 = { 2, 0, 8 };
-void *cmdMenuItems_800B8304[2] = { (void *)cmdItemLists_800B82E4 };
-int pageItemAbc_800B830C[14] = {
-    0x20008, (int)aABC_800B6E00, 0, 0, 0x6100CE, 0xD0026, 0, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem* cmdItemLists_800B82E4[4] = { cmdItemDefault_800B823C, cmdItemRestore_800B8274, cmdItemOk_800B82AC, NULL };
+MenuWindowList cmdMenu_800B82F4 = { 2, 0, 8, 0, cmdItemLists_800B82E4, 0 };
+MenuWindowItem pageItemAbc_800B830C[2] = {
+    { 8, 2, (int)aABC_800B6E00, NULL, NULL, 0xCE, 0x61, 0x26, 0xD, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-int pageItem123_800B8344[14] = {
-    0x20008, (int)a123_800B6E08, 0, 0, 0x6F00CE, 0xD0026, 0, 1,
-    0, 0, 0, -1, -1, -1,
+MenuWindowItem pageItem123_800B8344[2] = {
+    { 8, 2, (int)a123_800B6E08, NULL, NULL, 0xCE, 0x6F, 0x26, 0xD, 0, 0 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
-void *pageItemLists_800B837C[3] = { (void *)pageItemAbc_800B830C, (void *)pageItem123_800B8344 };
-NameMenu pageMenu_800B8388 = { 2, 0, 8 };
-void *pageMenuItems_800B8398[2] = { (void *)pageItemLists_800B837C };
+MenuWindowItem* pageItemLists_800B837C[3] = { pageItemAbc_800B830C, pageItem123_800B8344, NULL };
+MenuWindowList pageMenu_800B8388 = { 2, 0, 8, 0, pageItemLists_800B837C, 0 };
 char helpBar_800B83A0[24] = { 16, 0, 0, 0, 32, 110, 11, 128, 167, 0, 0, 0, 16, 110, 11, 128, 255, 255, 255, 255 };
 char defaultName_800B83B8[0x10] = { 0 }; // ResetNameToDefault_800B7FA0 copies 0x14 bytes from it
 // WrapGridCursor_800B8020: the NameCursor flag that lets the cursor wrap, per direction (1 left .. 4 down)
@@ -182,19 +180,19 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
         DrawWindow_80042460(&rect, &charStyle, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
         pageMenu_800B8388.time_4 = 0;
         cmdMenu_800B82F4.time_4 = 0;
-        pageMenu_800B8388.mode_0 = 4;
+        pageMenu_800B8388.flags_0 = 4;
         break;
     case 1:
         entry->page_A = entry->cursor_C;
         pageMenu_800B8388.time_4 = GetTime30Hz_8002C64C();
         cmdMenu_800B82F4.time_4 = 0;
-        pageMenu_800B8388.mode_0 = 2;
+        pageMenu_800B8388.flags_0 = 2;
         break;
     case 2:
         cmdMenu_800B82F4.cursor_C = entry->cursor_C;
         cmdMenu_800B82F4.time_4 = GetTime30Hz_8002C64C();
         pageMenu_800B8388.time_4 = 0;
-        pageMenu_800B8388.mode_0 = 4;
+        pageMenu_800B8388.flags_0 = 4;
         break;
     }
     pageMenu_800B8388.cursor_C = entry->page_A;

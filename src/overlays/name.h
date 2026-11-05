@@ -33,14 +33,6 @@ typedef struct
     char* chars_4;
 } NameCharRow;
 
-// header of a DrawMenuWindows_8002A5A4 menu (followed by its item lists and OT index)
-typedef struct
-{
-    int mode_0;
-    int time_4;
-    int anim_8;
-    int cursor_C;
-} NameMenu;
 
 typedef struct NameBuf
 {
@@ -147,17 +139,15 @@ extern const NameBuf nameBufInit_800B6E30;
 extern const char nameUnderlineChar_800B6E48[];
 extern NameCharRow charPages_800B8190[2][7];
 extern NameGrid cursorGrids_800B8200[3];
-extern int cmdItemDefault_800B823C[14];
-extern int cmdItemRestore_800B8274[14];
-extern int cmdItemOk_800B82AC[14];
-extern void *cmdItemLists_800B82E4[4];
-extern NameMenu cmdMenu_800B82F4;
-extern void *cmdMenuItems_800B8304[2];
-extern int pageItemAbc_800B830C[14];
-extern int pageItem123_800B8344[14];
-extern void *pageItemLists_800B837C[3];
-extern NameMenu pageMenu_800B8388;
-extern void *pageMenuItems_800B8398[2];
+extern MenuWindowItem cmdItemDefault_800B823C[2];
+extern MenuWindowItem cmdItemRestore_800B8274[2];
+extern MenuWindowItem cmdItemOk_800B82AC[2];
+extern MenuWindowItem* cmdItemLists_800B82E4[4];
+extern MenuWindowList cmdMenu_800B82F4;
+extern MenuWindowItem pageItemAbc_800B830C[2];
+extern MenuWindowItem pageItem123_800B8344[2];
+extern MenuWindowItem* pageItemLists_800B837C[3];
+extern MenuWindowList pageMenu_800B8388;
 extern char helpBar_800B83A0[24];
 extern char defaultName_800B83B8[0x10];
 extern short cursorWrapMasks_800B83C8[4];
