@@ -24,6 +24,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "movie.h"
+#include "cd.h"
 
 
 
@@ -137,12 +138,6 @@ extern int AnyHitNumberActive_800BF47C();
 
 extern int IsUnitInBattle_800BC784();
 
-typedef struct BatVec3
-{
-    int x;
-    int y;
-    int z;
-} BatVec3;
 
 extern unsigned int battleHitEnemies_800B122C;
 
@@ -160,7 +155,6 @@ extern int CalcElementAngle_800C09D4();
 
 extern int sub_800B4318();
 
-extern void Midpoint3D_8003B95C();
 
 extern void BattleNextTurn_800BAE74();
 
@@ -570,7 +564,7 @@ extern void ResetTurnResults_800BB7D4();
 
 extern void PrepareCommandInput_800BB860();
 
-extern BatVec3* AveragePositions_800BC5EC();
+extern Vec3i* AveragePositions_800BC5EC();
 
 extern void ApplyBattleCommand_800BEBB8();
 
@@ -765,7 +759,6 @@ typedef struct BatShatterSource
     int* pos_1C;
 } BatShatterSource;
 
-extern void VectorToAngles_8003B5D4(int* v, short* rot);
 
 extern void SpriteTrailTask_800C2FC8();
 
@@ -776,7 +769,7 @@ typedef struct BatSpriteTrail
     short speed_8;
     char padA[0x3A];
     int pos_44[3];
-    BatVec3 trail_50[4];
+    Vec3i trail_50[4];
     short rot_80[4];
     EffectSprite* anim_88;
     EffectModel* clip_8C;
@@ -860,7 +853,6 @@ typedef struct BatHero
 } BatHero;
 
 
-extern int DistanceSquared3D_8003B80C(int* a, int* b);
 
 
 
@@ -1572,7 +1564,6 @@ extern int CanFleeFromEnemy_800A28FC(int idx);
 extern void FreeSeqSlotSound_80030664(void);
 extern int PlayMusic_800300E0(int idx, int unused);
 /* exe-side, to move to cd.h */
-extern int ratan2Degrees_8003B56C(int x, int y);
 /* exe-side, to move to sound_seq.h */
 extern void SfxKeyOff_80031574(short voice, short sfx);
 extern short SfxKeyOn_800314F4(int sfx);

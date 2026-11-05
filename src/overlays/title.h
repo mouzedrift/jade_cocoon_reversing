@@ -16,6 +16,7 @@
 #include "event.h"
 #include "pad_text.h"
 #include "model.h"
+#include "cd.h"
 
 
 // a window row of one item (the item + the row end)
@@ -162,7 +163,6 @@ extern int IsConfigMenuActive_800C45D8(void);
 extern void SsSepSetDecrescendo(short, short, short, long);
 extern void PlayMusicSeq_80031260(void* a0, int a1, int a2);
 extern void srand(unsigned int seed); // PSY-Q LIBC
-extern void CheckMemCards_8003BB1C(void);
 extern unsigned short word_8008B55A;
 extern int dword_8008BD80;
 

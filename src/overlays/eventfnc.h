@@ -16,6 +16,7 @@
 #include "msgwin.h"
 #include "msg_window.h"
 #include "event.h"
+#include "cd.h"
 
 // one event script instruction: op_0 indexes eventFuncs_800BCDBC (GAME's RunEventScript_800A6060 runs them until one returns 0)
 typedef struct EvInstr
@@ -357,7 +358,6 @@ extern EvViewRect viewport_8008D420;
 
 extern int GetFieldMinionCount_800A7790(void);
 
-extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* c);
 
 extern int IsEventPointValid_800A6504(int a, EvVec* v);
 

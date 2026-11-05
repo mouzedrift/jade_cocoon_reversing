@@ -21,6 +21,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "pad_text.h"
+#include "cd.h"
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -257,7 +258,6 @@ typedef struct GameMapLoc
     unsigned short area, map, entrance; // mapTable_800B0608[area][map][entrance]
 } GameMapLoc;
 
-extern int IsWithinDistance_8003B740(int* a, int* b, unsigned int* out);
 
 
 extern void FindMapEntrance_800ADCEC();
@@ -664,7 +664,6 @@ extern int ApplySporeToEnemyAi_800A4278();
 
 extern void SetEnemyAiState_800A433C();
 
-extern unsigned int DistanceSquaredXZ_8003B860(void* a, void* b);
 
 extern int GetLevantMoveCmd_800AB39C();
 
@@ -767,7 +766,6 @@ extern void StartShopRequest_800A7204();
 
 extern void StartSaveMenuRequest_800A7280();
 
-extern int GetFileRequestStatus_8003BE30();
 
 
 
@@ -1089,7 +1087,6 @@ extern int IsFieldMinionVisible_800A79C8(int idx);
 
 extern int* GetFieldMinionPos_800A7940(int idx);
 
-extern int IsWithinDistance_8003B740();
 
 
 extern int GetGameMode_800A6D50(int which);

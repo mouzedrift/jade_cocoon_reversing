@@ -22,6 +22,7 @@
 #include "movie.h"
 #include "util.h"
 #include "model.h"
+#include "cd.h"
 
 extern unsigned long* ringBufferStart_800960B0;
 

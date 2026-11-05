@@ -20,6 +20,7 @@
 #include "effect_model.h"
 #include "util.h"
 #include "model.h"
+#include "cd.h"
 
 const int off_80072278[0] = {  };
 

@@ -1140,7 +1140,7 @@ void EnemyAiFlee_800A2EEC(int unused, GameAi* ai)
             break;
         case 5:
             EnemyAiFleeStep_800A459C(ai);
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) > 0x155CC0)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0x155CC0)
                 ai->state_c = -1;
             break;
         }
@@ -1151,7 +1151,7 @@ void EnemyAiWanderChase_800A2FB8(int unused, GameAi* ai)
 {
     if (ApplySporeToEnemyAi_800A4278(ai) == 0)
     {
-        if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) <= 0xDBB9F && ai->state_c != 0xf)
+        if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0xDBB9F && ai->state_c != 0xf)
         {
             SetEnemyAiState_800A433C(ai, 0xf, 2, 0, -1, 1, 2);
             SetActorSpeedScale_8001DB58(ai->actor_8, 0x2000, 1);
@@ -1176,7 +1176,7 @@ void EnemyAiWanderChase_800A2FB8(int unused, GameAi* ai)
             break;
         case 0xf:
             EnemyAiChaseStep_800A45F8(ai);
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) > 0x155CC0)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0x155CC0)
             {
                 ai->state_c = -1;
                 SetActorSpeedScale_8001DB58(ai->actor_8, 0x1000, 1);
@@ -1201,7 +1201,7 @@ void EnemyAiWatchFlee_800A31DC(int unused, GameAi* ai)
             break;
         case 1:
             TurnActorTowards_8001DDFC(ai->actor_8, &levantPos_8008BD18.pos, 0x155);
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0xDBB9F)
             {
                 SetEnemyAiState_800A433C(ai, 5, 2, 0, -1, state, 2);
                 SetActorSpeedScale_8001DB58(ai->actor_8, 0x3000, 1);
@@ -1209,7 +1209,7 @@ void EnemyAiWatchFlee_800A31DC(int unused, GameAi* ai)
             break;
         case 5:
             EnemyAiFleeStep_800A459C(ai);
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) > 0x155CC0)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0x155CC0)
                 aiCopy->state_c = -1;
             break;
         }
@@ -1229,7 +1229,7 @@ void EnemyAiSleepChase_800A333C(int unused, GameAi* ai)
         case -1:
             SetEnemyAiState_800A433C(ai, 0xd, 0x17, 0, -2, 0, 2);
         case 0xd:
-            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0xDBB9F)
             {
                 moveCmd = GetLevantMoveCmd_800AB39C() & 0xFFFFFFF;
                 if (moveCmd == 1)
@@ -1238,7 +1238,7 @@ void EnemyAiSleepChase_800A333C(int unused, GameAi* ai)
             break;
         case 0xf:
             EnemyAiChaseStep_800A45F8(ai);
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) > 0x1CFDE0)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0x1CFDE0)
                 SetEnemyAiState_800A433C(ai, 1, 1, 0x32, -1, 1, 2);
             break;
         case 1:
@@ -1319,7 +1319,7 @@ void EnemyAiAlertChase_800A3804(int unused, GameAi* ai)
             SetEnemyAiState_800A433C(ai, 1, 1, 0, state, 1, 2);
             break;
         case 1:
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0xDBB9F)
                 SetEnemyAiState_800A433C(ai, 0xa, 4, 0x28, -1, 1, 2);
             break;
         case 0xa:
@@ -1328,7 +1328,7 @@ void EnemyAiAlertChase_800A3804(int unused, GameAi* ai)
             break;
         case 0xf:
             EnemyAiChaseStep_800A45F8(ai);
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) > 0x1CFDE0)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0x1CFDE0)
                 ai->state_c = -1;
             break;
         }
@@ -1347,12 +1347,12 @@ void EnemyAiChaseAlert_800A3954(int unused, GameAi* ai)
             break;
         case 0xf:
             EnemyAiChaseStep_800A45F8(ai);
-            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0xDBB9F)
                 SetEnemyAiState_800A433C(ai, 0xa, 4, 0x46, -1, 1, 2);
             break;
         case 0xa:
             TurnActorTowards_8001DDFC(aiCopy->actor_8, &levantPos_8008BD18.pos, 0x155);
-            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos) > 0xDBBA0)
+            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0xDBBA0)
                 aiCopy->state_c = -1;
             break;
         }
@@ -1457,7 +1457,7 @@ void EnemyAiHideFlee_800A3E88(int unused, GameAi* ai)
         case -1:
             SetEnemyAiState_800A433C(ai, 0x10, 0x12, 0, ai->state_c, 1, 2);
         case 0x10:
-            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos) <= 0xDBB9F)
+            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0xDBB9F)
             {
                 SetEnemyAiState_800A433C(aiCopy, 5, 2, 0, -1, 1, 2);
                 SetActorSpeedScale_8001DB58(aiCopy->actor_8, 0x2000, 1);
@@ -1465,7 +1465,7 @@ void EnemyAiHideFlee_800A3E88(int unused, GameAi* ai)
             break;
         case 5:
             EnemyAiFleeTurnStep_800A44C0(aiCopy);
-            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos) > 0x155CC0)
+            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0x155CC0)
                 aiCopy->state_c = -1;
             break;
         }
@@ -1514,12 +1514,12 @@ void EnemyAiAmbush_800A4124(int unused, GameAi* ai)
             SetEnemyAiState_800A433C(ai, 2, 1, 0, ai->state_c, 1, 2);
         case 2:
             SetActorAnimPaused_8001D6EC(aiCopy->actor_8, 1);
-            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos) <= 0x61A7F)
+            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0x61A7F)
                 SetEnemyAiState_800A433C(aiCopy, 0xf, 2, 0, -1, 1, 2);
             break;
         case 0xf:
             EnemyAiChaseStep_800A45F8(aiCopy);
-            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos) > 0xDBBA0)
+            if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0xDBBA0)
                 SetEnemyAiState_800A433C(aiCopy, 2, 1, 0, -1, 1, 2);
             break;
         }

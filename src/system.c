@@ -17,6 +17,7 @@
 #include "data_decls.h"
 #include "model.h"
 #include "party.h"
+#include "cd.h"
 
 
 extern unsigned long SpuSetTransferStartAddr(unsigned long addr);

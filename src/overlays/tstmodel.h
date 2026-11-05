@@ -9,6 +9,7 @@
 #include "main.h"
 #include "engine.h"
 #include "pad_text.h"
+#include "cd.h"
 
 typedef struct TstModelBone
 {

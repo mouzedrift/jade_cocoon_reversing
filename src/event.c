@@ -20,6 +20,7 @@
 #include "winframe.h"
 #include "util.h"
 #include "unit_query.h"
+#include "cd.h"
 
 
 const char aDWorkPsusEvent[] = "D:/WORK/PSUS/EVENT.C";
@@ -265,7 +266,6 @@ void DrawWindowBorder_80042B38(RECT* rect, int ot)
         AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[85], 10);
     }
 }
-extern int SetCdXaLock_8003C0A4(int lock);
 extern int xaStartPos_80096108;
 extern int xaEndPos_8009610C;
 

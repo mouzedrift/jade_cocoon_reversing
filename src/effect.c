@@ -20,6 +20,7 @@
 #include "effect.h"
 #include "unit_query.h"
 #include "model.h"
+#include "cd.h"
 
 const char aAssertionFaile_3[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEffectC[] = "EFFECT.C";

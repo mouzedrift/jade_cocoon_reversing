@@ -19,6 +19,7 @@
 #include "camera.h"
 #include "effect_data.h"
 #include "main.h"
+#include "cd.h"
 
 extern ShortPair screenOffset_8008D474;
 // the buffer of a pad vibration task (vibrationTasks_8008D4B8, one per port)
@@ -280,7 +281,6 @@ void CameraSplineTask_80036BB0(EventEntry* entry, CameraCtrl* cam)
     DrawBattleStage_800BC90C(ctrl);
 }
 #undef SPLINE
-extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 // Matched
 void CameraOrbitTask_800374E0(EventEntry* entry, CameraCtrl* cam)
 {
@@ -798,7 +798,6 @@ void SetupCameraOrbit_80038CA8(CameraCtrl* cam)
     cam->geomScreenDst_180 = cameraState_8008D4F0.geomScreen_2E;
     ComputeCameraMoveAngles_80038D64(ctrl, &saveData_8008B570.levant_7A8.pos.x);
 }
-extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 
 // Matched
 void ComputeCameraMoveAngles_80038D64(CameraCtrl* cam, int* center)
@@ -840,7 +839,6 @@ void MoveCameraToFocusPreset_80038E2C(CameraCtrl* cam, int preset, int eyeRaise)
     ComputeCameraMoveAngles_80038D64(ctrl, (int*)&cam->pos_38);
 }
 extern int actorSide_800A85B8;
-extern int DistanceSquared3D_8003B80C(int* a, int* b);
 // Matched
 void MoveBattleCamera_800390F4(CameraCtrl* cam, int mode)
 {

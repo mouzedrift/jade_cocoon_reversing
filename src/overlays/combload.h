@@ -12,6 +12,7 @@
 #include "util.h"
 #include "event.h"
 #include "model.h"
+#include "cd.h"
 
 
 

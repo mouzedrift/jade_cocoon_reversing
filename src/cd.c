@@ -23,7 +23,6 @@
 #include "gte.h"
 #include "util.h"
 
-extern void RemoveFileRequest_8003BF18(FileRequest* req);
 
 const char aDataData0011[] = "\\DATA\\DATA.001;1";
 const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
@@ -329,7 +328,7 @@ int DistanceSquared3D_8003B80C(int* a, int* b)
     return dx * dx + dy * dy + dz * dz;
 }
 // Matched
-int DistanceSquaredXZ_8003B860(int* a, int* b)
+unsigned int DistanceSquaredXZ_8003B860(int* a, int* b)
 {
     int dx = a[0] - b[0];
     int dz = a[2] - b[2];
@@ -693,17 +692,6 @@ int CancelFileRequest_8003C060(int key)
     }
     return 2;
 }
-typedef struct FileTask FileTask;
-struct FileTask
-{
-    FileRequest* cur;
-    Data001File file;
-    char pad_10[0xC];
-    int state;
-    void* buf;
-    int sectors;
-    int retry;
-};
 // Matched
 int SetCdXaLock_8003C0A4(int lock)
 {
@@ -726,7 +714,6 @@ int SetCdXaLock_8003C0A4(int lock)
     }
     return 0;
 }
-void ProcessFileRequests_8003C184(int* entry, FileTask* task);
 // Matched
 void InitFileRequestTask_8003C128(int* entry, FileTask* task)
 {

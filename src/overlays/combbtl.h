@@ -20,6 +20,7 @@
 #include "unit_query.h"
 #include "movie.h"
 #include "model.h"
+#include "cd.h"
 
 typedef struct CombBtlNode
 {

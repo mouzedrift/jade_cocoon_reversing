@@ -27,7 +27,6 @@ const LoadingIconFrames loadingIconFrames_8007490C = { {
     } };
 
 extern EventNode* fileRequestTasks_8008D488;
-extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* list);
 extern void UpdateFileRequestTask_8003C76C(int* entry, int* task);
 

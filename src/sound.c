@@ -18,6 +18,7 @@
 #include "data_decls.h"
 #include "util.h"
 #include "movie.h"
+#include "cd.h"
 
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";
@@ -172,7 +173,6 @@ void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer)
 
 extern void PlaySoundSeq_8003105C(SoundStruct* s, int idx, short loops);
 extern void PlayMusicSeq_80031260(SoundStruct* s, int idx, short loops);
-extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader);
 // Matched
 int PlayMusic_800300E0(int idx, int unused)
@@ -258,7 +258,6 @@ int PlayMusic_800300E0(int idx, int unused)
     }
     return 1;
 }
-extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer);
 // Matched
 int LoadSeqSlotSound_800303E8(void)

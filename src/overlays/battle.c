@@ -1145,10 +1145,10 @@ void WaitBtlExecLoaded_800BC324(BatTaskEntry* task, int buffer)
     }
 }
 
-int GetUnitsCenter_800BC378(unsigned int mask, BatVec3* out)
+int GetUnitsCenter_800BC378(unsigned int mask, Vec3i* out)
 {
-    BatVec3 pos[7];
-    BatVec3 center;
+    Vec3i pos[7];
+    Vec3i center;
     unsigned int i;
     int count;
     int bit;
@@ -1158,7 +1158,7 @@ int GetUnitsCenter_800BC378(unsigned int mask, BatVec3* out)
         bit = 1 << i;
         if (mask & bit)
         {
-            BatVec3* unitPos = (BatVec3*)GetUnitPos_800BC6CC(i);
+            Vec3i* unitPos = (Vec3i*)GetUnitPos_800BC6CC(i);
             if (unitPos)
             {
                 pos[count].x = unitPos->x;
@@ -1234,10 +1234,10 @@ int IsUnitOnField_800BC570(int unit)
     return (GetEnemyAliveMask_800A248C() & (bit = 1 << unit)) != 0;
 }
 
-BatVec3* AveragePositions_800BC5EC(BatVec3* dst, BatVec3* src, unsigned int n)
+Vec3i* AveragePositions_800BC5EC(Vec3i* dst, Vec3i* src, unsigned int n)
 {
     unsigned char i;
-    BatVec3 mid;
+    Vec3i mid;
     if (n == 1)
     {
         *dst = *src;
@@ -1250,7 +1250,7 @@ BatVec3* AveragePositions_800BC5EC(BatVec3* dst, BatVec3* src, unsigned int n)
             i = 0;
             do
             {
-                BatVec3* cur = &src[i];
+                Vec3i* cur = &src[i];
                 Midpoint3D_8003B95C(&mid, cur, &src[i + 1]);
                 *cur = mid;
                 i++;

@@ -10,6 +10,7 @@
 #include "model_ftg.h"
 #include "util.h"
 #include "model.h"
+#include "cd.h"
 
 /* SHOPCTRL functions */
 void StartShopCtrl_800B66C4(int shopId);

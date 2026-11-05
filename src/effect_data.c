@@ -29,6 +29,7 @@
 #include "menu_draw.h"
 #include "menu_window.h"
 #include "util.h"
+#include "cd.h"
 
 int weaponEffectIds_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,
@@ -4177,7 +4178,6 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-extern int DistanceSquared3D_8003B80C(int* a, int* b);
 extern void SpawnSpriteAnim_800C1A5C(void* pos, void* rot, int sprite, int speed);
 extern void SpawnBounceSparks_800C1C5C(void* pos, void* rot, int sprite, int a3);
 extern void SpawnHomingSparks_800C1654(void* pos, void* rot, int sprite, int speed, int* target, int* offset);

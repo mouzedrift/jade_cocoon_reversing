@@ -24,6 +24,7 @@
 #include "event.h"
 #include "main.h"
 #include "util.h"
+#include "cd.h"
 
 // the bit masks SetBoneGroupFlags_80019B14 (minion_init.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so SetBoneGroupFlags_80019B14 is probably the first function of this TU
@@ -101,7 +102,6 @@ int PickArpatronOrVatolka_80019C84(void)
     return species;
 }
 extern short screenOffset_8008D474[2];
-extern int QueueFileRequest_8003BC84(FileRequestDesc* req);
 extern int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
@@ -110,7 +110,6 @@ extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
-extern int DistanceSquaredXZ_8003B860(int* a, int* b);
 // index of the camera point nearest to pos (XZ plane)
 // Matched
 int FindNearestCameraPoint_80019CC4(int* pos)
@@ -2476,7 +2475,7 @@ int ApproachActorTarget_8001DC60(Actor* actor, VECTOR* target, int turnStep, int
     {
         dz = prevZ - curZ;
     }
-    if (IsWithinDistance_8003B740(actor->pos_38, target, &dist))
+    if (IsWithinDistance_8003B740(actor->pos_38, (int*)&target->vx, &dist))
     {
         if (dist < dz * dz)
         {
@@ -2589,7 +2588,7 @@ int IsActorNear_8001DFC8(Actor* actor, VECTOR* target, int range, int checkLevan
     if (checkLevant)
     {
         dist = 0xFFF;
-        if (IsWithinDistance_8003B740((VECTOR*)actor->pos_38, (VECTOR*)&levantPos_8008BD18.pos, &dist) != 0 && dist < range * range)
+        if (IsWithinDistance_8003B740(actor->pos_38, &levantPos_8008BD18.pos.x, &dist) != 0 && dist < range * range)
         {
             return 1;
         }
@@ -2602,7 +2601,7 @@ int IsActorNear_8001DFC8(Actor* actor, VECTOR* target, int range, int checkLevan
         if ((entry->flags & 0x8001) == 1 && actor->task_0 != (other = (Actor*)entry->buffer)->task_0)
         {
             dist = 0xFFF;
-            if (IsWithinDistance_8003B740((VECTOR*)actor->pos_38, (VECTOR*)other->pos_38, &dist) != 0 && dist < range * range)
+            if (IsWithinDistance_8003B740(actor->pos_38, other->pos_38, &dist) != 0 && dist < range * range)
             {
                 return 1;
             }
@@ -2618,7 +2617,7 @@ int IsInFrontWithinRange_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned 
     unsigned int dist;
     int angleDiff;
     dist = 0xFFF;
-    if (IsWithinDistance_8003B740(from, to, &dist) == 1 && dist < range)
+    if (IsWithinDistance_8003B740((int*)&from->vx, (int*)&to->vx, &dist) == 1 && dist < range)
     {
         delta.vx = to->vx - from->vx;
         delta.vz = to->vz - from->vz;

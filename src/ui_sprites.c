@@ -22,6 +22,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "movie.h"
+#include "cd.h"
 
 const int emptyString_800741EC = 0;
 
@@ -74,7 +75,6 @@ void DrawAnimatedWindow_8002BEC8(int outRect, int rect, short step, short ot, in
     DrawUiWindow_8002A384(&desc);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
 }
-extern void QueueFileRequest_8003BC84(FileRequestDesc* req);
 // Matched
 void LoadUiTiy_8002BF74(void)
 {

@@ -19,6 +19,7 @@
 #include "event.h"
 #include "movie.h"
 #include "pad_text.h"
+#include "cd.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
