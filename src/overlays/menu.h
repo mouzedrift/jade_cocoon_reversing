@@ -28,6 +28,7 @@
 #include "unit_gauges.h"
 #include "status_panel.h"
 #include "unit_stats.h"
+#include "party_window.h"
 
 // a battle drop table row (RollDrop_800BD358): two chances against rand(), each with an item kind and id
 typedef struct ItemDropRow
@@ -130,19 +131,6 @@ typedef struct MenuEquipQ
     short fA;
     int z;
 } MenuEquipQ;
-
-// what DrawPartySlotWindow_8002F8E4 takes
-typedef struct PartySlotArgs
-{
-    short step_0;   // window open step
-    short count_2;  // party minions
-    short cursor_4; // the highlighted slot (-1: none)
-    short ot_6;
-    int time_8;
-    short slot_C;
-    short pad_1E;
-    int g;
-} PartySlotArgs;
 
 typedef struct MenuEnt
 {
@@ -708,15 +696,10 @@ extern int IsSceneHeld_800A5E68(void);
 // OnMinionLevelUp_800BCF74 gets an extra andi; the callee returns an lbu value either way)
 extern void UseItemOnUnit_80013C28();
 extern unsigned short uiColor_8008B590;
-extern void DrawPartySlotWindow_8002F8E4();
-extern int GetPartyWindowX_8002FA0C();
-extern void DrawLargeText_8002FBD8();
-extern int GetRankName_8002FCD8();
 extern void DrawScrollArrow_8002B3DC(MenuPair p, int t, void* pos, int ot);
 extern void DrawAbilityList_8002CE28();
 extern void DrawFamilyTree_8002D7D0();
 extern int DrawTargetSelectMenu_8002D250();
-extern void DrawLevantStats_8002F7D0();
 
 /* the jump table of CheckMenuAction_800BF540 (asm) and its targets, labels in the generated asm */
 

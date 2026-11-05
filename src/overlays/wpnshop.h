@@ -19,6 +19,7 @@
 #include "ui_sprites.h"
 #include "menu_draw.h"
 #include "status_panel.h"
+#include "party_window.h"
 
 
 // a list panel of the store (StoreMenu.panel_34)
@@ -172,7 +173,6 @@ extern char* dword_8008D454;
 void DrawTextList_8002A310(void* p, int a); // menu_draw.h
 void DrawPortraitWindow_8002A4E4(int a);    // menu_draw.h
 void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
-void DrawLevantStats_8002F7D0(void* pos, int ot); // party_window.h
 
 /* WPNSHOP data */
 

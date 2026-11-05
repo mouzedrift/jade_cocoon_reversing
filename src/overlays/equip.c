@@ -585,7 +585,7 @@ void DrawEquipStats_800C5314(EquipCtx* c)
     CalcEquippedStats_80033624(baseStats, levant);
     pos.x = 0xc2;
     pos.y = 0x31;
-    DrawLevantStats_8002F7D0(&pos, 0xe);
+    DrawLevantStats_8002F7D0(&pos.x, 0xe);
     mode = c->mode_1C;
     if (mode == 1 && c->item_40 != 0xff)
     {

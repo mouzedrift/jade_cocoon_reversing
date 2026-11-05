@@ -25,6 +25,7 @@
 #include "effect.h"
 #include "unit_gauges.h"
 #include "unit_stats.h"
+#include "party_window.h"
 
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
@@ -51,7 +52,6 @@ void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
     loc[1] = pos[1];
     DrawStatIcons_8002E0D8(loc, ot);
 }
-extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 // Matched
 void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsigned short* pos, Minion* minion, UnitStatus* cmp)
@@ -281,7 +281,6 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
     CalcEquippedStats_80033624(outStats, copy);
 }
 extern int GetEmptyCocoons_800AD8E4(void);
-extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawGauge_8002BA54(void* a, int b, void* c, int d);
 // Matched
 void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)

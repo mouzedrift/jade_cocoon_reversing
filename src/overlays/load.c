@@ -1082,7 +1082,7 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                     AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
                     p3.x_0 = saveSlotFieldPos_800BD93C[6].x_0;
                     p3.y_2 = saveSlotFieldPos_800BD93C[6].y_2 + i * 33;
-                    DrawSmallText_8002FAA0(0, &p3, work->summaries_0[save].name_0, 1);
+                    DrawSmallText_8002FAA0(0, &p3.x_0, work->summaries_0[save].name_0, 1);
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
                 }
                 else if (j == 7)

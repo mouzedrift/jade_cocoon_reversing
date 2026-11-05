@@ -27,6 +27,7 @@
 #include "event.h"
 #include "movie.h"
 #include "ui_sprites.h"
+#include "party_window.h"
 
 const char aQuit_8007415C[] = "\202p\202\225\202\211\202\224"; // Quit
 const char aSelect_80074168[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
@@ -187,8 +188,6 @@ typedef struct
     unsigned short y;
 } Pt;
 extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
-extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, int name, int a3);
-extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
 // Matched
 void DrawMenuWindowContents_8002A710(void* item, int ot)
 {
@@ -243,16 +242,16 @@ void DrawMenuWindowContents_8002A710(void* item, int ot)
         loc[1] = rect[1];
         if (desc->flags_0 & 4)
         {
-            DrawSmallText_8002FAA0(1, loc, desc->text_4, ot);
+            DrawSmallText_8002FAA0(1, loc, (unsigned char*)desc->text_4, ot);
         }
         else if (desc->flags_0 & 8)
         {
             loc[0] += (short)rect[2] / 2;
-            DrawSmallText_8002FAA0(2, loc, desc->text_4, ot);
+            DrawSmallText_8002FAA0(2, loc, (unsigned char*)desc->text_4, ot);
         }
         else
         {
-            DrawSmallText_8002FAA0(0, loc, desc->text_4, ot);
+            DrawSmallText_8002FAA0(0, loc, (unsigned char*)desc->text_4, ot);
         }
         break;
     case 5:
@@ -261,16 +260,16 @@ void DrawMenuWindowContents_8002A710(void* item, int ot)
         loc[1] = rect[1];
         if (desc->flags_0 & 4)
         {
-            DrawLargeText_8002FBD8(1, loc, desc->text_4, ot);
+            DrawLargeText_8002FBD8(1, loc, (unsigned char*)desc->text_4, ot);
         }
         else if (desc->flags_0 & 8)
         {
             loc[0] += (short)rect[2] / 2;
-            DrawLargeText_8002FBD8(2, loc, desc->text_4, ot);
+            DrawLargeText_8002FBD8(2, loc, (unsigned char*)desc->text_4, ot);
         }
         else
         {
-            DrawLargeText_8002FBD8(0, loc, desc->text_4, ot);
+            DrawLargeText_8002FBD8(0, loc, (unsigned char*)desc->text_4, ot);
         }
         break;
     case 6:

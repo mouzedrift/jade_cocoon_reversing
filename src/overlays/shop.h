@@ -26,6 +26,7 @@
 #include "effect.h"
 #include "status_panel.h"
 #include "unit_stats.h"
+#include "party_window.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -286,7 +287,6 @@ void DrawPortraitWindow_8002A4E4(int a);             // menu_draw.h
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
 void DrawAbilityList_8002CE28(ListMenuState* ref, ShopPos* pos); // ability_menu
 void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base); // family_tree.h
-void DrawSmallText_8002FAA0(int align, unsigned short* pos, char* name, int ot); // party_window.h
 void* memset(void* p, int c, unsigned int n);        // libc
 
 /* SHOP data */

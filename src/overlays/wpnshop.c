@@ -1324,7 +1324,7 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
     }
     r40.x = 0xC2;
     r40.y = 0x70;
-    DrawLevantStats_8002F7D0(&r40, 0xE);
+    DrawLevantStats_8002F7D0(&r40.x, 0xE);
     r48.x = 0xC2;
     r48.y = 0x70;
     r48.w = 0x4B;

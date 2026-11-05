@@ -22,6 +22,7 @@
 #include "event.h"
 #include "ui_sprites.h"
 #include "menu_draw.h"
+#include "party_window.h"
 
 const MenuWindowItem statusIcon0_800743D4 = { 0x10, 1, 151, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 210, 172, 21, 20, 3, 4 };
 const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 3, 5 };
@@ -170,7 +171,6 @@ void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight
     DrawUiWindow_8002A384(&desc);
 }
 
-extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, unsigned char* name, int a3);
 extern void DrawElementIconsGrid_8002B228(short a, unsigned short* pos, int ot, int flags);
 // Matched
 void DrawUnitStatus_8002F23C(UnitStatus* unit, int gaugeArg, int time, unsigned short* pos, int ot, int flags)

@@ -180,7 +180,6 @@ extern void SeVibOn(void);
 extern void SetVib(void);
 extern void SsUtVibrateOn(void);
 extern void SsUtVibrateOff(void);
-extern short GetLevantLevel_8002FA70(void);
 extern void* Data001Reader_LoadIntoGlobal_8003CB40(int idx);
 extern void LoadModelAnimData_80026A8C(struct ModelAnim* anim, int src, int heap);
 extern void RestoreCameraState_80039698(struct CameraCtrl* cam);

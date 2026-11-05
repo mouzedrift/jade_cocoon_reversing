@@ -16,6 +16,7 @@
 #include "sound_seq.h"
 #include "ui_sprites.h"
 #include "unit_stats.h"
+#include "party_window.h"
 
 typedef struct
 {
@@ -482,7 +483,6 @@ extern char* strcpy_8004E2D8(char* dst, char* src); // PSY-Q strcpy (not in symb
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
-extern void DrawSmallText_8002FAA0(int align, void* pos, unsigned char* name, int ot);
 extern void* memcpy(void* dst, const void* src, unsigned int n);
 
 #endif

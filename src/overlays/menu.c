@@ -1005,7 +1005,7 @@ void DrawResultParty_800BC2A8(BattleResult* result)
     short pos[2];
     MenuDrawArgs q20;
     MenuDrawArgs q30;
-    PartySlotArgs loc;
+    PartySlotWindow loc;
     void* st;
     short i;
     pos[0] = 0xA;
@@ -1056,13 +1056,13 @@ void DrawResultParty_800BC2A8(BattleResult* result)
                 cursor = i;
             }
         }
-        loc.step_0 = 8;
-        loc.count_2 = result->count_44 - 1;
+        loc.open_0 = 8;
+        loc.partySize_2 = result->count_44 - 1;
         loc.cursor_4 = cursor;
         loc.ot_6 = 0xE;
         loc.time_8 = time;
         loc.slot_C = i;
-        loc.g = highlight;
+        loc.highlight_10 = highlight;
         DrawPartySlotWindow_8002F8E4(st, &loc);
     }
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 14);
@@ -2365,7 +2365,7 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
 
 void DrawPartyMinionWindows_800BEFAC(MenuCtx* menu, short b)
 {
-    PartySlotArgs loc;
+    PartySlotWindow loc;
     int openStep = GetWindowOpenStep_800C0990(menu, 4);
     short j = 0;
     if (menu->partyCount_8 - 1 > 0)
@@ -2386,13 +2386,13 @@ void DrawPartyMinionWindows_800BEFAC(MenuCtx* menu, short b)
                 time = 0;
             }
             AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
-            loc.step_0 = openStep;
-            loc.count_2 = (unsigned short)menu->partyCount_8 - 1;
+            loc.open_0 = openStep;
+            loc.partySize_2 = (unsigned short)menu->partyCount_8 - 1;
             loc.cursor_4 = cursor;
             loc.ot_6 = b;
             loc.time_8 = time;
             loc.slot_C = j;
-            loc.g = 1;
+            loc.highlight_10 = 1;
             DrawPartySlotWindow_8002F8E4(status, &loc);
             AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
             j++;

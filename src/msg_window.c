@@ -26,6 +26,7 @@
 #include "movie.h"
 #include "sound_seq.h"
 #include "engine.h"
+#include "party_window.h"
 
 const char aItSEmpty_8007474C[] = "\202h\202\224\201f\202\223\201@\202\205\202\215\202\220\202\224\202\231\201D"; // It's empty.
 const char aItSLocked_80074764[] = "\202h\202\224\201f\202\223\201@\202\214\202\217\202\203\202\213\202\205\202\204\201D"; // It's locked.
@@ -833,7 +834,6 @@ void HandleMsgWindowInput_800353A0(MsgWindow* win)
     }
 }
 extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
-extern void DrawPulsingWindow_8002F6F8(void* a0, void* st, int a2);
 // Matched
 void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
 {

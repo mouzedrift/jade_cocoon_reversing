@@ -30,7 +30,7 @@ const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
 
 // Matched
-void DrawPulsingWindow_8002F6F8(int rect, int* st)
+void DrawPulsingWindow_8002F6F8(RECT* rect, int* st, int unused)
 {
     unsigned char col[4];
     UiWindowDesc desc;
@@ -78,19 +78,8 @@ void DrawLevantStats_8002F7D0(unsigned short* pos, short ot)
         DrawLargeNumber_8002C100(loc, stats[i], ot);
     }
 }
-typedef struct
-{
-    short open_0;      // open animation step, 8: open
-    short partySize_2; // partyWindowRects_80082E90 row + 1
-    short cursor_4;    // the selected slot
-    short ot_6;
-    int time_8;        // window pulse time of the selected slot
-    short slot_C;
-    short pad_E;
-    unsigned int highlight_10;
-} PartySlotWindow;
 // Matched
-void DrawPartySlotWindow_8002F8E4(int unit, PartySlotWindow* win)
+void DrawPartySlotWindow_8002F8E4(UnitStatus* unit, PartySlotWindow* win)
 {
     unsigned short loc[2];
     RECT buf;

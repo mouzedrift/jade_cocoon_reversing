@@ -17,6 +17,7 @@
 #include "sound_seq.h"
 #include "ui_sprites.h"
 #include "status_panel.h"
+#include "party_window.h"
 
 
 /* the types of equip.c */
@@ -239,7 +240,6 @@ extern int SetEquipment_800AD9EC(int id, int slot);
 
 /* exe-side, to move to <exe header> */
 extern short uiColor_8008B590;
-extern void DrawLevantStats_8002F7D0(void* pos, int ot);
 extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
 
 #endif
