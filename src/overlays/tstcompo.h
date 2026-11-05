@@ -10,6 +10,7 @@
 #include "font.h"
 #include "util.h"
 #include "event.h"
+#include "pad_text.h"
 
 
 // the first 8 bytes of a menu cursor (UpdateMenuCursor_8003D794)
@@ -249,9 +250,6 @@ extern int dword_8007DC74;
 /* exe-side: data_decls.h declares it (that header needs LIBSND.H) */
 extern short sinTable_80084540[];
 /* exe-side, to move to pad_text.h */
-extern int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx);
-extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
-extern int UpdateMenuCursor_8003D794(void* p, int idx); // the exe def takes one arg, but this caller sets a1 = 0
 /* exe-side, to move to cursor.h */
 extern void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx);
 /* exe-side, to move to font.h */

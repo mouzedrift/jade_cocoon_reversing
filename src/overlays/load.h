@@ -391,11 +391,6 @@ typedef struct
 } LoadMenuWork;
 typedef struct
 {
-    short w_0;
-    short h_2;
-} TextSize;
-typedef struct
-{
     short x_0;
     short y_2;
     short w_4;
@@ -487,7 +482,6 @@ extern void FreeActiveOverlay_8002C014(void);
 extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 extern void DrawUiTiySprt_8002C06C(void* pos, int sprite, int ot);
-extern TextSize MeasureTextLines_8003E3B4(int* list);
 extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
 extern void DrawSmallNumber3_8002C290(void* p, int n, int ot);
 extern void DrawSmallNumber9_8002C414(void* p, int n, int ot);

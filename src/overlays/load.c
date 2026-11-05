@@ -1930,13 +1930,13 @@ void DrawMessageBox_800BACBC(char** lines)
     MsgBoxRect box;
     int i;
     sz = MeasureTextLines_8003E3B4((int*)lines);
-    box.x_0 = (0x13A - sz.w_0) / 2;
-    box.y_2 = (0xEA - sz.h_2) / 2;
-    box.w_4 = sz.w_0 + 6;
-    box.h_6 = sz.h_2 + 3;
-    if (sz.h_2 >= 0x10)
+    box.x_0 = (0x13A - sz.w) / 2;
+    box.y_2 = (0xEA - sz.h) / 2;
+    box.w_4 = sz.w + 6;
+    box.h_6 = sz.h + 3;
+    if (sz.h >= 0x10)
     {
-        box.h_6 = sz.h_2 + 6;
+        box.h_6 = sz.h + 6;
     }
     for (i = 0; i < 3; i++)
     {

@@ -190,7 +190,7 @@ void TstModelResetCamera_800A0BC0(TstModelWork* work)
 
 void TstModelSelectModel_800A0C00(TstModelWork* c)
 {
-    GridCursor cur;
+    TstGridCursor cur;
     TstModelBone tmp;
     int i;
     TstModelTbl* tbl;
@@ -427,7 +427,7 @@ void TstModelDrawModel_800A1428(TstModelWork* c)
 
 void TstModelBoneEdit_800A1614(TstModelWork* c)
 {
-    GridCursor cur;
+    TstGridCursor cur;
     TstModelBone tmp;
     int n;
     int i;
@@ -603,7 +603,7 @@ int TstModelMain_800A1B24()
     return 6;
 }
 
-int MoveGridCursor_800A1B48(GridCursor* cursor)
+int MoveGridCursor_800A1B48(TstGridCursor* cursor)
 {
     int idx = 0;
     if (cursor->sel_6 < 0)
@@ -645,7 +645,7 @@ int MoveGridCursor_800A1B48(GridCursor* cursor)
     return 0;
 }
 
-void WrapGridCursor_800A1CAC(GridCursor* cursor, int dir)
+void WrapGridCursor_800A1CAC(TstGridCursor* cursor, int dir)
 {
     if (cursor->flags_0 & gridWrapMask_800A37F4[dir - 1])
     {
@@ -660,7 +660,7 @@ void WrapGridCursor_800A1CAC(GridCursor* cursor, int dir)
     }
 }
 
-int UpdateGridCursor_800A1D70(GridCursor* cursor)
+int UpdateGridCursor_800A1D70(TstGridCursor* cursor)
 {
     int prevSel = cursor->sel_6;
     int dir = MoveGridCursor_800A1B48(cursor);

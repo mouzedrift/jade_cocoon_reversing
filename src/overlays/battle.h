@@ -969,7 +969,6 @@ extern int GetUnitSkills_80031B30(int a);
 
 
 
-extern int IsCircleHeldP1_8003D480(void);
 
 
 extern void DrawAbilityDescription_8002C670(void* a0, int a1, void* a2, int a3, int a4);

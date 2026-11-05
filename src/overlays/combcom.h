@@ -15,6 +15,7 @@
 #include "engine.h"
 #include "unit_query.h"
 #include "event.h"
+#include "pad_text.h"
 
 // up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
 typedef struct CombComDlg
@@ -176,8 +177,6 @@ extern unsigned char actorSlot_800A85BD;
 /* exe-side, to move to <exe header> */
 extern unsigned short uiColor_8008B590;          // -> globals.h
 extern void* memset(void* p, int c, unsigned int n);
-extern int GetMenuCursorIndex_8003DA54(void* cursor);        // -> pad_text.h (MenuCursor*)
-extern int UpdateMenuCursor_8003D794(void* cursor, int pad); // -> pad_text.h: defined (MenuCursor*) but a1 (pad) passes through to MenuCursorInput_8003D830
 extern int MeasureTextWidth_8003E4C8(const char* str);       // -> pad_text.h
 extern int DrawAbilityDescription_8002C670();                // -> tiy.h (ui_sprites.c): (char* minion, int pos, int texts, short slot, short ot)
 extern void DrawAbilityList_8002CE28(ListMenuState* menu, void* origin); // -> ability_menu

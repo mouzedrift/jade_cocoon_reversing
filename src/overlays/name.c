@@ -70,7 +70,7 @@ MenuWindowItem* pageItemLists_800B837C[3] = { pageItemAbc_800B830C, pageItem123_
 MenuWindowList pageMenu_800B8388 = { 2, 0, 8, 0, pageItemLists_800B837C, 0 };
 ButtonHelpEntry helpBar_800B83A0[3] = { { 16, aSelect_800B6E20 }, { 167, aCancel_800B6E10 }, { -1 } };
 char defaultName_800B83B8[0x10] = { 0 }; // ResetNameToDefault_800B7FA0 copies 0x14 bytes from it
-// WrapGridCursor_800B8020: the NameCursor flag that lets the cursor wrap, per direction (1 left .. 4 down)
+// WrapGridCursor_800B8020: the GridCursor flag that lets the cursor wrap, per direction (1 left .. 4 down)
 short cursorWrapMasks_800B83C8[4] = { 1, 1, 2, 2 };
 short cursorWrapDirs_800B83D0[4] = { -1, 1, 1, -1 };
 NameCursorTbl cursorExitTbl_800B83D8[4] = {
@@ -329,13 +329,13 @@ void DrawCharRow_800B75EC(NameCharRow row)
 
 void MoveNameCursor_800B78EC(NameEntry* entry)
 {
-    NameCursor cur;
+    GridCursor cur;
     if (entry->focus_8 == 0)
     {
         entry->gridCursor_E = entry->cursor_C;
     }
-    cur.flags = cursorGrids_800B8200[entry->focus_8].cursorFlags_2;
-    cur.unused_4 = 0;
+    cur.flags_0 = cursorGrids_800B8200[entry->focus_8].cursorFlags_2;
+    cur.field_4 = 0;
     cur.cols_8 = cursorGrids_800B8200[entry->focus_8].cols_6;
     cur.rows_A = cursorGrids_800B8200[entry->focus_8].rows_8;
     cur.pos_6 = entry->cursor_C;
@@ -598,29 +598,29 @@ void NameEntryNop_800B8018(void* name)
 }
 
 // on a move off an edge (k = direction 1..4) of a wrapping area, jump to the opposite edge
-void WrapGridCursor_800B8020(NameCursor* cursor, int dir)
+void WrapGridCursor_800B8020(GridCursor* cursor, int dir)
 {
-    if (cursor->flags & cursorWrapMasks_800B83C8[dir - 1])
+    if (cursor->flags_0 & cursorWrapMasks_800B83C8[dir - 1])
     {
-        if ((cursor->flags & 1) && (unsigned)(dir - 1) < 2)
+        if ((cursor->flags_0 & 1) && (unsigned)(dir - 1) < 2)
         {
             cursor->pos_6 += cursorWrapDirs_800B83D0[dir - 1] * (cursor->cols_8 - 1);
         }
-        else if ((cursor->flags & 2) && (unsigned)(dir - 3) < 2)
+        else if ((cursor->flags_0 & 2) && (unsigned)(dir - 3) < 2)
         {
             cursor->pos_6 += cursorWrapDirs_800B83D0[dir - 1] * cursor->cols_8 * (cursor->rows_A - 1);
         }
     }
 }
 
-int MoveCursorWithSfx_800B80E4(NameCursor* cursor)
+int MoveCursorWithSfx_800B80E4(GridCursor* cursor)
 {
     int prevPos = (short)cursor->pos_6;
-    int dir = MoveGridCursorP1_8003D630();
+    int dir = MoveGridCursorP1_8003D630(cursor);
     if (dir)
     {
         WrapGridCursor_800B8020(cursor, dir);
-        if (cursor->flags & cursorExitTbl_800B83D8[dir - 1].mask)
+        if (cursor->flags_0 & cursorExitTbl_800B83D8[dir - 1].mask)
         {
             PlaySfx_80031494(0x7F);
             return cursorExitTbl_800B83D8[dir - 1].result;

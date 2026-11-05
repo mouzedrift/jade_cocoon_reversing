@@ -18,6 +18,7 @@
 #include "unit_query.h"
 #include "event.h"
 #include "movie.h"
+#include "pad_text.h"
 
 // the minion model of the shop's form view (LoadFormModel_800BF4B8 .. EndFormView_800BF750)
 typedef struct ShopFormModel
@@ -303,7 +304,6 @@ void DrawAbilityList_8002CE28(ListMenuState* ref, ShopPos* pos); // ability_menu
 void DrawFamilyTree_8002D7D0(Minion* m, int ot, ShopPos* base); // family_tree.h
 void DrawUnitStatusPanel_8002DB48(UnitStatus* m, int ot, void* rect, ShopPos* pos, Minion* mn, UnitStatus* cmp); // status_panel.h
 void DrawSmallText_8002FAA0(int align, unsigned short* pos, char* name, int ot); // party_window.h
-int UpdateMenuCursor_8003D794(void* p, int a);       // pad_text.h
 void* memset(void* p, int c, unsigned int n);        // libc
 
 /* SHOP data */

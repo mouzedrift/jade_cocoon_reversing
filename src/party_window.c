@@ -21,6 +21,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "movie.h"
+#include "pad_text.h"
 
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
@@ -142,8 +143,6 @@ short GetLevantLevel_8002FA70(void)
 {
     return GetLevel_80033514(GetLevantStatus_80033ABC(&saveData_8008B570));
 }
-extern short MeasureTextWidth_8003E4C8(NameBuf* b); // this TU was built against a short-returning prototype (pad_text.h: int)
-extern short MeasureTextWidthFont1_8003E6B0(NameBuf* b);
 // Matched
 void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text, int ot)
 {
@@ -155,11 +154,11 @@ void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text,
     UppercaseSjisName_8003F89C(buf.s);
     if (align == 1)
     {
-        offset = MeasureTextWidthFont1_8003E6B0(&buf);
+        offset = (short)MeasureTextWidthFont1_8003E6B0((int)buf.s); // built against a short-returning prototype
     }
     else if (align == 2)
     {
-        offset = MeasureTextWidthFont1_8003E6B0(&buf) / 2;
+        offset = (short)MeasureTextWidthFont1_8003E6B0((int)buf.s) / 2;
     }
     else
     {
@@ -179,7 +178,7 @@ void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text,
     DecodeText_8003F748(1, buf.s);
     if (align == 1)
     {
-        offset = MeasureTextWidth_8003E4C8(&buf);
+        offset = (short)MeasureTextWidth_8003E4C8((const char*)buf.s); // built against a short-returning prototype
     }
     else
     {

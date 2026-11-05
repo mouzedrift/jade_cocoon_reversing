@@ -112,13 +112,6 @@ int IsCurrentMapListed_80034140(void)
     return 0;
 }
 extern EventNode* messageWindowTask_8008D640;
-typedef struct
-{
-    short w;
-    short h;
-} TextSize;
-extern TextSize MeasureTextLines_8003E3B4(int* list);
-extern TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask);
 extern void GetPortraitPoly_800A6308(int a, void* b);
 extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
 // Matched
@@ -238,22 +231,22 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
         w->choiceCount_B0 = CountMaskedUntilZero_80034B40((int*)w->lines_1B4, w->mask_14);
     }
     c = -1;
-    w->clip_1B8.x = 0;
-    w->clip_1B8.y = 0;
-    w->clip_1B8.w = 0;
-    w->clip_1B8.h = 0;
-    w->field_1C8 = 0;
-    w->field_1D4 = 0;
-    w->field_1D8 = 0;
-    w->field_1DC = 0;
-    w->field_1E0 = 1;
+    w->text_1B8.clip_4.x = 0;
+    w->text_1B8.clip_4.y = 0;
+    w->text_1B8.clip_4.w = 0;
+    w->text_1B8.clip_4.h = 0;
+    w->text_1B8.ot_10 = 0;
+    w->text_1B8.limit_1C = 0;
+    w->text_1B8.shown_20 = 0;
+    w->text_1B8.timer_24 = 0;
+    w->text_1B8.state_28 = 1;
     for (i = 0; i < 0x30; i++)
     {
-        w->marks_1E4[i] = c;
+        w->text_1B8.marks_2C[i] = c;
     }
-    w->field_1CC = cfg->field_10;
-    w->field_1C4 = (int)w->list_B4[w->page_78];
-    w->field_1D0 = cfg->field_38;
+    w->text_1B8.field_14 = cfg->field_10;
+    w->text_1B8.lines_C = w->list_B4[w->page_78];
+    w->text_1B8.field_18 = cfg->field_38;
     w->rect_38.h = 0x38;
     w->rect_38.w = 0xDB;
     w->rect_40.h = 0x43;
@@ -350,8 +343,8 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     w->rect_38.y -= 2;
     w->x_64 = w->rect_40.x + 3;
     w->y_66 = w->rect_40.y + 2;
-    w->clip_1B8.promptX_0 = w->rect_38.x + 7;
-    w->clip_1B8.promptY_2 = w->rect_38.y + 4;
+    w->text_1B8.x_0 = w->rect_38.x + 7;
+    w->text_1B8.y_2 = w->rect_38.y + 4;
     e->cb_8 = (EventEntryFn)UpdateMessageWindow_80034BB8;
     e->flags = (e->flags | 1) & ~0x8000;
     return (MsgWindowEntry*)e;
@@ -436,9 +429,9 @@ void SetMsgWindowChoiceMask_80034AD0(MsgWindowEntry* entry, int mask)
 int ConsumeMsgWindowMark_80034ADC(MsgWindowEntry* entry, int idx)
 {
     MsgWindow* win = entry->win_14;
-    if (win->marks_1E4[idx] == -2 || win->marks_1E4[idx] >= 0)
+    if (win->text_1B8.marks_2C[idx] == -2 || win->text_1B8.marks_2C[idx] >= 0)
     {
-        win->marks_1E4[idx] = -2;
+        win->text_1B8.marks_2C[idx] = -2;
         return 1;
     }
     return 0;
@@ -529,7 +522,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             }
             if (!(w->flags_4 & 0x40000))
             {
-                DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->clip_1B8);
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->text_1B8);
             }
         }
         if (w->flags_4 & 0x200)
@@ -542,15 +535,15 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->flags_4 &= ~0x8000;
             w->flags_4 &= ~0x200;
             c = -1;
-            w->field_1C4 = (int)w->list_B4[w->page_78];
-            w->field_1C8 = 0;
-            w->field_1D4 = 0;
-            w->field_1D8 = 0;
-            w->field_1DC = 0;
-            w->field_1E0 = 1;
+            w->text_1B8.lines_C = w->list_B4[w->page_78];
+            w->text_1B8.ot_10 = 0;
+            w->text_1B8.limit_1C = 0;
+            w->text_1B8.shown_20 = 0;
+            w->text_1B8.timer_24 = 0;
+            w->text_1B8.state_28 = 1;
             for (i = 0; i < 0x30; i++)
             {
-                w->marks_1E4[i] = c;
+                w->text_1B8.marks_2C[i] = c;
             }
             w->mode_8 = 0;
             w->field_C = 2;
@@ -565,7 +558,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             }
             if (!(w->flags_4 & 0x40000))
             {
-                DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->clip_1B8);
+                DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->text_1B8);
             }
         }
         if (w->flags_4 & 0x200)
@@ -625,7 +618,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
         }
         if (!(w->flags_4 & 0x40000))
         {
-            DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->clip_1B8);
+            DrawMsgWindowNextPrompt_8003E268((unsigned short*)&w->text_1B8);
         }
         break;
     case 5:
@@ -671,15 +664,15 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
                     if (w->list_B4[w->page_78 + 1] == 0 && w->lines_1B4)
                     {
                         c = -1;
-                        w->field_1C4 = (int)w->list_B4[w->page_78];
-                        w->field_1C8 = 0;
-                        w->field_1D4 = 0;
-                        w->field_1D8 = 0;
-                        w->field_1DC = 0;
-                        w->field_1E0 = v;
+                        w->text_1B8.lines_C = w->list_B4[w->page_78];
+                        w->text_1B8.ot_10 = 0;
+                        w->text_1B8.limit_1C = 0;
+                        w->text_1B8.shown_20 = 0;
+                        w->text_1B8.timer_24 = 0;
+                        w->text_1B8.state_28 = v;
                         for (j = 0; j < 0x30; j++)
                         {
-                            w->marks_1E4[j] = c;
+                            w->text_1B8.marks_2C[j] = c;
                         }
                         w->field_C = 1;
                         w->field_34 = 0;
@@ -839,7 +832,6 @@ void HandleMsgWindowInput_800353A0(MsgWindow* win)
     }
 }
 extern void DrawColorText_8003EC2C(unsigned short* text, unsigned short* pos, int ot);
-extern int MoveGridCursorP1_8003D630(short* m);
 extern void DrawPulsingWindow_8002F6F8(void* a0, void* st, int a2);
 // Matched
 void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
@@ -852,8 +844,7 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
         struct
         {
             int pad[2];
-            int f0;
-            short m[4];
+            GridCursor grid;
         } menu;
     } u;
     RECT cursorRect;
@@ -885,17 +876,17 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
     }
     if (win->mode_8 == 3)
     {
-        u.menu.f0 = 0;
-        u.menu.m[0] = 0;
-        u.menu.m[2] = 1;
-        u.menu.m[3] = win->choiceCount_B0;
-        u.menu.m[1] = win->choice_B2;
-        MoveGridCursorP1_8003D630((short*)&u.menu.f0);
-        if (win->choice_B2 != u.menu.m[1])
+        u.menu.grid.flags_0 = 0;
+        u.menu.grid.field_4 = 0;
+        u.menu.grid.cols_8 = 1;
+        u.menu.grid.rows_A = win->choiceCount_B0;
+        u.menu.grid.pos_6 = win->choice_B2;
+        MoveGridCursorP1_8003D630(&u.menu.grid);
+        if (win->choice_B2 != u.menu.grid.pos_6)
         {
             PlaySfx_80031494(0x7F);
         }
-        win->choice_B2 = u.menu.m[1];
+        win->choice_B2 = u.menu.grid.pos_6;
     }
     sel = win->choice_B2;
     u.st[0] = (int)&win->pulse_6C;
@@ -908,17 +899,16 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
     DrawPulsingWindow_8002F6F8(&cursorRect, u.st, 0);
     win->res_18.sel_1A = NthMaskedIndex_80034B88(win->choice_B2, win->mask_14);
 }
-extern int UpdateTextWindow_8003DB74(MsgTextClip* p, int a);
 // Matched
 int DrawMsgWindowText_8003580C(MsgWindow* win, RECT* rect)
 {
-    win->clip_1B8.x = rect->x + 6;
-    win->clip_1B8.y = rect->y + 4;
-    win->clip_1B8.w = rect->w - 6;
-    win->clip_1B8.h = rect->h - 7;
-    if ((short)win->clip_1B8.h > 0 && (short)win->clip_1B8.w > 0)
+    win->text_1B8.clip_4.x = rect->x + 6;
+    win->text_1B8.clip_4.y = rect->y + 4;
+    win->text_1B8.clip_4.w = rect->w - 6;
+    win->text_1B8.clip_4.h = rect->h - 7;
+    if (win->text_1B8.clip_4.h > 0 && win->text_1B8.clip_4.w > 0)
     {
-        return UpdateTextWindow_8003DB74(&win->clip_1B8, ((win->flags_4 >> 18) ^ 1) & 1);
+        return UpdateTextWindow_8003DB74(&win->text_1B8, ((win->flags_4 >> 18) ^ 1) & 1);
     }
     return 1;
 }

@@ -9,6 +9,7 @@
 #include "main.h"
 #include "menu_window.h"
 #include "event.h"
+#include "pad_text.h"
 
 // the first 8 bytes of a menu cursor (CombSelCursor: cols, rows, count, flags)
 typedef struct { char b[8]; } CfgCursorHead;
@@ -35,11 +36,6 @@ typedef struct CfgCtxConfig
     short scroll_46;
 } CfgCtxConfig;
 
-typedef struct CfgSpinConfig
-{
-    int flags_0;
-    short unused_4, pos_6, cols_8, rows_A;
-} CfgSpinConfig;
 
 typedef struct CfgBoxConfig
 {
@@ -171,7 +167,5 @@ extern unsigned short uiColor_8008B590;
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, short ot);
 extern void ApplyBgmVolume_800309D8(void* p);
 extern void DrawMenuBackground_8002BE10();
-extern void UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.c defines it with one argument (returns int)
-extern void MoveGridCursorP1_8003D630(CfgSpinConfig* p); // pad_text.c: int MoveGridCursorP1_8003D630(short* grid)
 
 #endif

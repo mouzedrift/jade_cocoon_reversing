@@ -14,6 +14,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "event.h"
+#include "pad_text.h"
 
 
 // a list panel of the store (StoreMenu.panel_34)
@@ -189,8 +190,6 @@ void DrawSmallNumber9_8002C414(void* p, int a, short b); // ui_sprites
 void DrawStatCompare_8002E188(void* before, void* after, void* pos, int ot); // status_panel.h
 void CalcStatsWithEquip_8002E288(UnitStatus* unit, int itemId, int category, unsigned char* out); // status_panel.h
 void DrawLevantStats_8002F7D0(void* pos, int ot); // party_window.h
-void UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.h
-int AdjustByShoulderButtons_8003D198(int a, int b, int c, int d); // pad_text.h
 
 /* WPNSHOP data */
 

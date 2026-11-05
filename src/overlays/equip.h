@@ -13,6 +13,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "event.h"
+#include "pad_text.h"
 
 
 /* the types of equip.c */
@@ -234,7 +235,6 @@ extern int GetLastInventorySlot_800AD308(int table);
 extern int SetEquipment_800AD9EC(int id, int slot);
 
 /* exe-side, to move to <exe header> */
-extern int UpdateMenuCursor_8003D794(void* cursor, int pad); // pad_text.c defines it with one argument; the callers pass two
 extern void DrawMenuBackground_8002BE10();
 extern short uiColor_8008B590;
 extern void DrawLevantStats_8002F7D0(void* pos, int ot);

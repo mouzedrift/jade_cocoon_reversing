@@ -68,14 +68,6 @@ typedef struct
 } NameEntry;
 
 
-typedef struct
-{
-    int flags;
-    unsigned short unused_4;
-    unsigned short pos_6;
-    short cols_8;
-    short rows_A;
-} NameCursor;
 
 
 typedef struct
@@ -106,8 +98,8 @@ extern int SavedNameLength_800B7F70(NameEntry* entry);
 extern void ResetNameToDefault_800B7FA0(NameEntry* entry);
 extern int IsNameBlank_800B7FD8(unsigned char* name);
 extern void NameEntryNop_800B8018(void* name); // empty; called with the name buffer
-extern void WrapGridCursor_800B8020(NameCursor* cursor, int dir);
-extern int MoveCursorWithSfx_800B80E4(NameCursor* cursor);
+extern void WrapGridCursor_800B8020(GridCursor* cursor, int dir);
+extern int MoveCursorWithSfx_800B80E4(GridCursor* cursor);
 
 /* NAME data */
 extern int nameOverlayId_800B6D00;
@@ -152,6 +144,5 @@ extern unsigned short uiColor_8008B590;
 extern void DrawMenuBackground_8002BE10();
 extern void DrawUiTiySprt_8002C06C(void* pos, int idx, int ot);
 extern int charWidthThresholds_80086898[][12];
-extern int MoveGridCursorP1_8003D630();
 
 #endif

@@ -193,7 +193,6 @@ typedef struct
     unsigned short y;
 } Pt;
 extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
-extern int MeasureTextWidthFont1_8003E6B0(int text);
 extern void DrawSmallText_8002FAA0(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeText_8002FBD8(int a0, unsigned short* pos, int name, int a3);
 extern void DrawLargeNumber_8002C100(unsigned short* pos, int v, int ot);

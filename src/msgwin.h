@@ -1,17 +1,10 @@
 #ifndef MSGWIN_H
 #define MSGWIN_H
 
+#include "pad_text.h"
+
 /* message windows (msg_window.c): the buffer of a messageWindowTask_8008D640 entry */
 
-typedef struct
-{
-    unsigned short promptX_0; // DrawMsgWindowNextPrompt_8003E268 position
-    unsigned short promptY_2;
-    unsigned short x;
-    unsigned short y;
-    unsigned short w;
-    unsigned short h;
-} MsgTextClip;
 
 /* 0x18..0x27, copied out by GetMsgWindowResultIfDone_800349B4 / GetMsgWindowResult_80034A00 */
 typedef struct
@@ -107,16 +100,7 @@ typedef struct MsgWindow
     short choice_B2;
     int* list_B4[0x40];
     unsigned short** lines_1B4;
-    MsgTextClip clip_1B8;
-    int field_1C4;
-    int field_1C8;
-    int field_1CC;
-    int field_1D0;
-    int field_1D4;
-    int field_1D8;
-    int field_1DC;
-    int field_1E0;
-    signed char marks_1E4[0x30];
+    TextWindow text_1B8;
     ItemMsgInit item_214;
     int pad_264[0x10];
     int voiced_2A4; // 1: advances by itself when the XA voice ends

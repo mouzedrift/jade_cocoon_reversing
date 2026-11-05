@@ -214,44 +214,44 @@ int MoveGridCursor_8003D4C0(short* grid, int idx)
     return result;
 }
 // Matched
-int MoveGridCursorP1_8003D630(short* grid)
+int MoveGridCursorP1_8003D630(GridCursor* grid)
 {
     int idx = 0;
-    if (grid[3] < 0)
+    if (grid->pos_6 < 0)
     {
-        grid[3] = 0;
+        grid->pos_6 = 0;
     }
     if (padRepeat_800918CC[idx] & 0x2000)
     {
-        if (grid[3] % grid[4] == grid[4] - 1)
+        if (grid->pos_6 % grid->cols_8 == grid->cols_8 - 1)
         {
             return 1;
         }
-        grid[3]++;
+        grid->pos_6++;
     }
     if (padRepeat_800918CC[idx] & 0x8000)
     {
-        if (grid[3] % grid[4] == 0)
+        if (grid->pos_6 % grid->cols_8 == 0)
         {
             return 2;
         }
-        grid[3]--;
+        grid->pos_6--;
     }
     if (padRepeat_800918CC[idx] & 0x1000)
     {
-        if (grid[3] < grid[4])
+        if (grid->pos_6 < grid->cols_8)
         {
             return 3;
         }
-        grid[3] -= grid[4];
+        grid->pos_6 -= grid->cols_8;
     }
     if (padRepeat_800918CC[idx] & 0x4000)
     {
-        if (grid[3] > grid[4] * (grid[5] - 1) - 1)
+        if (grid->pos_6 > grid->cols_8 * (grid->rows_A - 1) - 1)
         {
             return 4;
         }
-        grid[3] = grid[3] + grid[4];
+        grid->pos_6 = grid->pos_6 + grid->cols_8;
     }
     return 0;
 }
@@ -393,34 +393,32 @@ void InitFonts_8003DA70(void)
         font->clutOffset_2A = 0;
     }
 }
-typedef struct TextWindow TextWindow;
-void DrawTextWindow_8003DCA4(int draw, TextWindow* w);
 // Matched
-int UpdateTextWindow_8003DB74(unsigned int* w, int draw)
+int UpdateTextWindow_8003DB74(TextWindow* w, int draw)
 {
-    if (w[9] >= 3 - (settingsFlags_8008B58C.word & 7))
+    if (w->timer_24 >= 3 - (settingsFlags_8008B58C.word & 7))
     {
-        w[9] = 0;
-        w[7]++;
+        w->timer_24 = 0;
+        w->limit_1C++;
     }
-    if (w[5] == 0)
+    if (w->field_14 == 0)
     {
-        w[7] = 0x0FFFFFFF;
+        w->limit_1C = 0x0FFFFFFF;
     }
-    w[8] = w[7];
+    w->shown_20 = w->limit_1C;
     AddClipDrawAreaPrim_80033308(pOT_8008D454);
-    DrawTextWindow_8003DCA4(draw, (TextWindow*)w);
-    AddDrawAreaPrim_8003326C(w + 1, pOT_8008D454);
-    switch (w[10])
+    DrawTextWindow_8003DCA4(draw, w);
+    AddDrawAreaPrim_8003326C(&w->clip_4, pOT_8008D454);
+    switch (w->state_28)
     {
     case 1:
-        if (w[6] == 1 && ((padHeld_800918D0[0] & 0x60F) || (padPressed_8009194C[0] & 0xF0)))
+        if (w->field_18 == 1 && ((padHeld_800918D0[0] & 0x60F) || (padPressed_8009194C[0] & 0xF0)))
         {
-            w[7] = 0x0FFFFFFF;
+            w->limit_1C = 0x0FFFFFFF;
         }
         else
         {
-            w[9]++;
+            w->timer_24++;
         }
         break;
     case 10:
@@ -429,19 +427,6 @@ int UpdateTextWindow_8003DB74(unsigned int* w, int draw)
     return 0;
 }
 extern int charWidthThresholds_80086898[][12];
-struct TextWindow
-{
-    short x;
-    short y;
-    char pad_4[8];
-    int* lines;
-    int ot;
-    char pad_14[8];
-    int limit;
-    char pad_20[8];
-    int state;
-    signed char flags[1];
-};
 // Matched
 void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
 {
@@ -466,11 +451,11 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
     sub = emptyText_80074994;
     count = 0;
     name = emptyNameBuf_80074998;
-    x = w->x;
-    y = w->y;
+    x = w->x_0;
+    y = w->y_2;
     font = &fonts_80095FB0[2];
-    lines = w->lines;
-    limit = w->limit;
+    lines = w->lines_C;
+    limit = w->limit_1C;
     nl = 0;
     while (*lines != 0)
     {
@@ -508,7 +493,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
-                    addPrim(&pOT_8008D454[w->ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+                    addPrim(&pOT_8008D454[w->ot_10], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
                     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
                     for (k = 12; k != 0; k--)
                     {
@@ -564,11 +549,11 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                     {
                         for (i = 0; i < (int)(ch - 0x91); i++)
                         {
-                            w->flags[i] = -2;
+                            w->marks_2C[i] = -2;
                         }
-                        if (w->flags[ch - 0x91] == -1)
+                        if (w->marks_2C[ch - 0x91] == -1)
                         {
-                            w->flags[ch - 0x91] = ch - 0x91;
+                            w->marks_2C[ch - 0x91] = ch - 0x91;
                         }
                         nl = 1;
                     }
@@ -582,18 +567,18 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
         }
         else
         {
-            x = w->x;
+            x = w->x_0;
             y += 12;
         }
     }
-    w->state = 10;
+    w->state_28 = 10;
 done:
     if (draw)
     {
         SetFontClutOffset_8003F900(2, 0);
         ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
         ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
-        addPrim(&pOT_8008D454[w->ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
+        addPrim(&pOT_8008D454[w->ot_10], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
     }
 }
@@ -604,11 +589,6 @@ void DrawMsgWindowNextPrompt_8003E268(unsigned short* pos)
     short y = pos[1] + 0x23;
     DrawNextPrompt_8003CF88(x, y, 0);
 }
-typedef struct
-{
-    short w;
-    short h;
-} TextSize;
 // Matched
 TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
 {

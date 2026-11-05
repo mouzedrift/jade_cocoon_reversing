@@ -9,6 +9,7 @@
 #include "main.h"
 #include "util.h"
 #include "font.h"
+#include "pad_text.h"
 
 typedef struct
 {
@@ -66,7 +67,6 @@ void DrawGauge_8002BA54(void* gauge, int arg1, void* pos, int ot); // ui_gauge
 void DrawElementIconsRow_8002B1B0(short mask, void* pos, short ot); // menu_window.h
 void DrawMenuBackground_8002BE10(void);        // ui_sprites
 void DrawSmallText_8002FAA0(int align, void* pos, void* text, short ot); // party_window.h
-void UpdateMenuCursor_8003D794(ShelfMenu* menu, int arg1); // pad_text.h
 
 /* SHOPENTR data */
 

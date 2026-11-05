@@ -999,14 +999,14 @@ int IsConfigMenuActive_800C45D8(void)
 
 void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
 {
-    CfgSpinConfig v10;
-    CfgSpinConfig v20;
-    CfgSpinConfig v30;
-    CfgSpinConfig v40;
-    CfgSpinConfig v50;
-    CfgSpinConfig v60;
-    CfgSpinConfig v70;
-    CfgSpinConfig v80;
+    GridCursor v10;
+    GridCursor v20;
+    GridCursor v30;
+    GridCursor v40;
+    GridCursor v50;
+    GridCursor v60;
+    GridCursor v70;
+    GridCursor v80;
     int sel;
     DrawMenuBackground_8002BE10();
     DrawConfigPage_800C383C(c);
@@ -1019,7 +1019,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 0:
             sel = saveData_8008B570.settings_1C.bits.bgmVol_7 / 16;
             v10.flags_0 = 0;
-            v10.unused_4 = 0;
+            v10.field_4 = 0;
             v10.cols_8 = 8;
             v10.rows_A = 1;
             v10.pos_6 = sel;
@@ -1034,7 +1034,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 1:
             sel = saveData_8008B570.settings_1C.bits.sfxVol_14 / 16;
             v20.flags_0 = 0;
-            v20.unused_4 = 0;
+            v20.field_4 = 0;
             v20.cols_8 = 8;
             v20.rows_A = 1;
             v20.pos_6 = sel;
@@ -1048,7 +1048,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
             break;
         case 2:
             v30.flags_0 = 0;
-            v30.unused_4 = 0;
+            v30.field_4 = 0;
             v30.cols_8 = 2;
             v30.rows_A = 1;
             v30.pos_6 = c->outputFormat_C;
@@ -1068,7 +1068,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 0:
             {
             v10.flags_0 = 0;
-            v10.unused_4 = 0;
+            v10.field_4 = 0;
             v10.cols_8 = 4;
             v10.rows_A = 1;
             v10.pos_6 = c->displaySpeed_8;
@@ -1083,7 +1083,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 1:
             {
             v20.flags_0 = 0;
-            v20.unused_4 = 0;
+            v20.field_4 = 0;
             v20.cols_8 = 2;
             v20.rows_A = 1;
             v20.pos_6 = c->animSkip_9;
@@ -1098,7 +1098,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 2:
             {
             v40.flags_0 = 0;
-            v40.unused_4 = 0;
+            v40.field_4 = 0;
             v40.cols_8 = 2;
             v40.rows_A = 1;
             v40.pos_6 = c->speech_11;
@@ -1113,7 +1113,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 3:
             {
             v50.flags_0 = 0;
-            v50.unused_4 = 0;
+            v50.field_4 = 0;
             v50.cols_8 = 2;
             v50.rows_A = 1;
             v50.pos_6 = c->autoMessage_13;
@@ -1128,7 +1128,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 4:
             {
             v60.flags_0 = 0;
-            v60.unused_4 = 0;
+            v60.field_4 = 0;
             v60.cols_8 = 2;
             v60.rows_A = 1;
             v60.pos_6 = c->subtitles_14;
@@ -1143,7 +1143,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 5:
             {
             v70.flags_0 = 0;
-            v70.unused_4 = 0;
+            v70.field_4 = 0;
             v70.cols_8 = 2;
             v70.rows_A = 1;
             v70.pos_6 = c->magicEffects_B;
@@ -1158,7 +1158,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
         case 6:
             {
             v80.flags_0 = 0;
-            v80.unused_4 = 0;
+            v80.field_4 = 0;
             v80.cols_8 = 2;
             v80.rows_A = 1;
             v80.pos_6 = c->captureEffects_10;
@@ -1175,7 +1175,7 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
     else if (c->page_2 == 4)
     {
         v10.flags_0 = 0;
-        v10.unused_4 = 0;
+        v10.field_4 = 0;
         v10.cols_8 = 2;
         v10.rows_A = 1;
         v10.pos_6 = c->vibration_12;

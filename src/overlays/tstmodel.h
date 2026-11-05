@@ -8,6 +8,7 @@
 #include "model.h"
 #include "main.h"
 #include "engine.h"
+#include "pad_text.h"
 
 typedef struct TstModelBone
 {
@@ -214,7 +215,7 @@ typedef struct TstModelWork
     SVECTOR rot_1F0;
 } TstModelWork;
 
-typedef struct GridCursor
+typedef struct TstGridCursor
 {
     int flags_0; // 1: wrap left/right, 2: wrap up/down
     unsigned short unused_4;
@@ -223,7 +224,7 @@ typedef struct GridCursor
     short rows_A;
     short count_C;
     unsigned short scroll_E;
-} GridCursor;
+} TstGridCursor;
 
 /* TSTMODEL's own functions/data used before their definition or from another of its files */
 void TstModelResetCamera_800A0BC0(TstModelWork* work);
@@ -259,7 +260,6 @@ extern void SetGteLightAndCamera_8004D0E8();
 extern void DrawAnimSkel_80046A58(void* a, void* b, int c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 /* exe-side, to move to pad_text.h */
-extern int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx);
 /* exe-side, to move to sound_seq.h */
 extern void PlaySfx_80031494(int id); // sound.h declares it too
 /* PSY-Q library */
