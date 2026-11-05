@@ -19,6 +19,7 @@
 #include "unit_query.h"
 #include "effect.h"
 #include "unit_stats.h"
+#include "effect_cmd.h"
 
 
 

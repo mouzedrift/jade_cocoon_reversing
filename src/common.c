@@ -23,6 +23,7 @@
 #include "util.h"
 #include "unit_query.h"
 #include "effect.h"
+#include "effect_cmd.h"
 
 const ActionData defaultActionData_80071F58 = { 0, 0, 100, 255, 115, 0, 0, 10, { 0, 3 } };
 const char aAssertionFaile_2[] = "Assertion failed: file \"%s\", line %d\n";

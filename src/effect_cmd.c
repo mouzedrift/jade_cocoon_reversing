@@ -25,6 +25,7 @@
 #include "engine.h"
 #include "model.h"
 #include "sound_seq.h"
+#include "effect_cmd.h"
 
 typedef struct
 {
@@ -43,7 +44,6 @@ extern EffectRow* effectRows_80091BE0;
 extern int effectSfxStarted_8008D784;
 extern int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
 extern void SpawnEffectObject_800149A4(EffectArgs* args);
-void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags);
 // Matched
 void SetHitVariant_80018430(short variant)
 {
@@ -224,12 +224,6 @@ int GetWeaponEffect_800189F8(void)
     SetHitVariantForCommand_800BFAF8(*((unsigned char*)sd + 0x7E4));
     return weaponEffectIds_80079708[weapon->kind_2];
 }
-typedef struct
-{
-    short a;
-    short b;
-} ShortPair;
-extern int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts);
 // Matched
 ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c)
 {

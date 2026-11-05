@@ -146,7 +146,6 @@ extern void CdReadSyncCallback_8003C9FC(unsigned char mode);
 extern void InitMapLoaderTask_80027CC0(EventEntry* p, int* q);
 extern void InitAreaLoaderTask_80028388(EventEntry* p, int* q);
 extern void AddStatus_80012794(UnitStatus* status, int bits);
-extern void SetTargetHitFlag_800184A0(int arg, int bit);
 extern void GetModelFtg_800251A0(void* dst, Model* src, int a2, int idx);
 extern void GetModelAltFtg_80025B20(void* dst, Model* src, int idx);
 extern void SetMenuItemFont1Clut_8002AD08(int flags);
@@ -218,7 +217,6 @@ extern void ClearPointLight_800C410C(void);
 
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
 extern void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest);
-extern int PlayActorEffect_800184DC(struct ActorEffectReq* req, int slot);
 
 extern void KillUnit_800127B8(UnitStatus* status);
 extern UnitStatus* GetEnemyStatus_800A2B60(int idx);
