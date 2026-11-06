@@ -73,7 +73,7 @@ extern void EnterChapterMap_800B6B18();
 void ChapterIntroTask_800B66F4(ChapterTask* task, int* st);
 
 /* GAME overlay (resident below this one), to move to game.h */
-extern int dword_800B0624[6];
+extern int areaMapCounts_800B0624[6];
 extern void SetEventVar_800AD16C(int, int);
 extern void SetMapVar_800ADC5C(ChapterMapKey*, int);
 extern void FindMapEntrance_800ADCEC(ChapterMapKey*, int);

@@ -152,7 +152,7 @@ extern int IsUnitInBattle_800BC784();
 
 extern unsigned int battleHitEnemies_800B122C;
 
-extern int dword_800ADE88;
+extern int encounterChainMsgId_800ADE88;
 
 extern int IsSummonedMinionIdle_800C0D60();
 

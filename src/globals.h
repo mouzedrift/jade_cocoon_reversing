@@ -146,9 +146,9 @@ typedef struct
                                  // equipped weapon / armor / accessory, level_44 the rank (saveData_8008B570.levantStatus_7C8.level_44)
     int field_810; // == dword_8008BD80
     unsigned int allMinionsBitfields_814[7]; // bits counted by GetCapturedMinionsCount_800125B8
-    int field_830; // model index (GAME's LevantModelTask_800ACB64)
-    short field_834;
-    short field_836;
+    int hasArmor_830; // SetLevantHasArmor_800AC380 (GAME), picks the model
+    short weaponKind_834; // GAME: SetLevantWeaponKind_800AC3A4
+    short outfit_836;     // GAME: SetLevantOutfit_800AC3B0
     unsigned short tbl_838[12]; // the tables GAME's GetMapEncounterFlags_800A53CC picks by mapId_2E4[0]/[1] (TITLE fills them with 0x8000)
     unsigned short tbl_850[18];
     unsigned short tbl_874[44];

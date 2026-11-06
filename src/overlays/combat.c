@@ -263,7 +263,7 @@ void FreeCombatSlots_800A0A6C(void)
 void StartSlotModel_800A0ACC(int i, Minion* minion)
 {
     CombatSlot* slot = &combatSlots_800A3A08[i];
-    BuildMinionModelParams_800A05E0(minion, &slot->params_8, (int)(dword_8007DC78 + (i << 6)));
+    BuildMinionModelParams_800A05E0(minion, &slot->params_8, (int)(combatSlotModelParams_8007DC78 + (i << 6)));
     slot->minion_4 = minion;
     slot->task_0 = StartModelTask_80010850(&slot->params_8);
     slot->actor_3C = 0;
@@ -795,12 +795,12 @@ void GetCombatPortraitPoly_800A1B2C(int i, void* poly)
     TimInfo tim;
     tim.mode_valid = 1;
     tim.mode = 1;
-    tim.prect.x = dword_8007DCAC[i].x;
-    tim.prect.y = dword_8007DCAC[i].y;
+    tim.prect.x = combatPortraitImagePos_8007DCAC[i].x;
+    tim.prect.y = combatPortraitImagePos_8007DCAC[i].y;
     tim.prect.w = 0x20;
     tim.prect.h = 0x40;
-    tim.crect.x = dword_8007DCBC[i].x;
-    tim.crect.y = dword_8007DCBC[i].y;
+    tim.crect.x = combatPortraitClutPos_8007DCBC[i].x;
+    tim.crect.y = combatPortraitClutPos_8007DCBC[i].y;
     tim.crect.w = 0x100;
     tim.crect.h = 1;
     InitPolyFT4_80029A10(poly, &tim);

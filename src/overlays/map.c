@@ -934,7 +934,7 @@ void SceneSelect_800B860C()
         {
             st->map_8 = map + 1;
         }
-        st->map_8 = st->map_8 < 0 ? 0 : (dword_800B0624[st->area_4] - 1 < st->map_8 ? dword_800B0624[st->area_4] - 1 : st->map_8);
+        st->map_8 = st->map_8 < 0 ? 0 : (areaMapCounts_800B0624[st->area_4] - 1 < st->map_8 ? areaMapCounts_800B0624[st->area_4] - 1 : st->map_8);
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
             st->step_0++;
@@ -947,7 +947,7 @@ void SceneSelect_800B860C()
         r2.x = 0x1E;
         r2.y = 0x14;
         DrawText_8003E91C(2, aSelSceneGroup_800B6BAC, &r2, 0);
-        for (i = 0; i < dword_800B0624[st->area_4]; i++)
+        for (i = 0; i < areaMapCounts_800B0624[st->area_4]; i++)
         {
             str = debugSceneNames_800B93E0[st->area_4][i];
             shift = i == st->map_8 ? (frameCount_8008D3FC & 0xF) : 0;

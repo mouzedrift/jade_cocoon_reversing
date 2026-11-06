@@ -258,7 +258,7 @@ void LoadMenuInit_800B7674(int mode, int b)
         task->next_8 = LoadMenuWaitUiTiy_800B7894;
         break;
     }
-    if (dword_8008BD80 == -1 && !(work->flags_54 & 8))
+    if (saveData_8008B570.field_810 == -1 && !(work->flags_54 & 8))
     {
         work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 0;

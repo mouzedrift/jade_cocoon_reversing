@@ -265,7 +265,7 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     }
     return result;
 }
-extern int dword_800B129C[];
+extern int encounterSwapped_800B129C[];
 int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)
 {
     int animIdx;
@@ -356,13 +356,13 @@ int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd*
         break;
     case 21:
         desc->hitAnim_E = 0x1A;
-        desc->effect_10 = dword_800B129C[0] ? 0x3A : 0x39;
+        desc->effect_10 = encounterSwapped_800B129C[0] ? 0x3A : 0x39;
         desc->script_4 = scripts[17];
         desc->effectKinds_18 = cmd[2];
         break;
     case 22:
         desc->hitAnim_E = 0x1B;
-        desc->effect_10 = dword_800B129C[0] ? 0x39 : 0x3A;
+        desc->effect_10 = encounterSwapped_800B129C[0] ? 0x39 : 0x3A;
         desc->script_4 = scripts[18];
         desc->effectKinds_18 = cmd[2];
         break;

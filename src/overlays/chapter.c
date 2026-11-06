@@ -108,7 +108,7 @@ void SetAreaMapVars_800B69BC(int** areaVars)
         map = 0;
         if (vars)
         {
-            while (map < dword_800B0624[area])
+            while (map < areaMapCounts_800B0624[area])
             {
                 key.area = area;
                 key.map = map;

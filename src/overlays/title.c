@@ -585,7 +585,7 @@ void InitNewGameData_800A1BCC(void)
     InitSaveData_800A211C();
     ClearCapturedMinions_800A2214();
     ClearMinionSlots_800A2450();
-    if (word_8008B55A == 1)
+    if (titleStartMode_8008B55A == 1)
     {
         ResetMapIds_800A242C();
     }
@@ -593,10 +593,10 @@ void InitNewGameData_800A1BCC(void)
 
 void MenuLoadGame_800A1C18(TitleTask* t)
 {
-    word_8008B55A = 1;
+    titleStartMode_8008B55A = 1;
     LoadOverlay_80020BF8(2, 0x10);
     SetDisplayMode_80040658(1);
-    dword_8008BD80 = -2;
+    saveData_8008B570.field_810 = -2;
     LoadMenuInit_800B7674(1, 0);
     t->next_8 = LoadGameWait_800A1CC0;
 }
@@ -604,7 +604,7 @@ void MenuLoadGame_800A1C18(TitleTask* t)
 // menu entry 4: fresh save data, straight into the game (no name entry)
 void MenuQuickStart_800A1C7C(TitleTask* t)
 {
-    word_8008B55A = 4;
+    titleStartMode_8008B55A = 4;
     InitNewGameData_800A1BCC();
     SetNewGameStartMap_800A2650();
     TitleExit_800A1AFC(t, 0xC);
@@ -618,7 +618,7 @@ void LoadGameWait_800A1CC0(TitleTask* t)
         {
             if (saveData_8008B570.flags_0 & 0x80)
             {
-                word_8008B55A = 4;
+                titleStartMode_8008B55A = 4;
                 SetNewGameStartMap_800A2650();
                 saveData_8008B570.flags_0 |= 0x80;
                 StartNewGameTask_800A1B74(t);
@@ -756,7 +756,7 @@ void InitSaveData_800A211C(void)
     s->playTime_4 = 0;
     s->chapter_2DC = 0;
     s->levant_7A8.pos = levantStartPos_800B069C;
-    s->levant_7A8.rot = dword_800B06A8;
+    s->levant_7A8.rot = levantStartRot_800B06A8;
     s->levantStatus_7C8 = levantInitStatus_800A2730;
     saveData_8008B570.field_810 = -2;
     ClearInventory_800A2358();
@@ -928,7 +928,7 @@ void SetNewGameStartMap_800A2650(void)
     s->mapId_2E4[2].field_0 = 0;
     s->mapId_2E4[3].field_0 = 0;
     s->levant_7A8.pos = levantStartPos_800B069C;
-    s->levant_7A8.rot = dword_800B06A8;
+    s->levant_7A8.rot = levantStartRot_800B06A8;
     ClearMapVars_800A2110();
     InitFlagTables_800A2540();
 }

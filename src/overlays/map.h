@@ -222,7 +222,7 @@ void GetNthOpenDest_800B8128(short nth, short area, MapDest* out);
 extern int TestEventFlag_800AD0D4(int);
 extern int GetMapVar_800ADC1C(MapQuery*);
 extern MapEntry** mapTable_800B0608[];
-extern int dword_800B0624[];
+extern int areaMapCounts_800B0624[];
 extern void ResetLevantActorToIdle_800A8DEC();
 extern void RequestGameMode_800A6D30(int);
 extern int SetEventVar_800AD16C(int var, int value);

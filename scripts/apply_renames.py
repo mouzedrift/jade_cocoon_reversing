@@ -130,7 +130,18 @@ def main():
             text = open(path, encoding="latin-1", newline="").read()
         except OSError:
             continue
-        new = pat.sub(lambda m: final[m.group(1)], text)
+        if os.path.basename(path) == "aliases.txt":
+            # each line belongs to the image in its first column
+            def line_sub(line):
+                f = line.split()
+                u = f[0] if f and not line.startswith("#") else "EXE"
+                if u not in cache:
+                    cache[u] = build_pattern(renames, u)
+                p, fin = cache[u]
+                return p.sub(lambda m: fin[m.group(1)], line) if p is not None else line
+            new = "".join(line_sub(l) for l in text.splitlines(True))
+        else:
+            new = pat.sub(lambda m: final[m.group(1)], text)
         if new != text:
             changed.append(os.path.relpath(path, REPO))
             if not check:

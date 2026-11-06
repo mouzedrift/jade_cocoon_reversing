@@ -157,9 +157,9 @@ void VersusIntroTask_800A4394();  // COMBCHUI.BIN
 void CombBtlStart_800A4B8C();     // COMBBTL.BIN
 
 /* exe-side, to move to <exe header> */
-extern char* dword_8007DC78;                   // -> globals.h: the combat slots' model vram areas (0x40 bytes each)
-extern CombatVramPos dword_8007DCAC[];         // -> globals.h: portrait image vram positions
-extern CombatVramPos dword_8007DCBC[];         // -> globals.h: portrait clut vram positions
+extern char* combatSlotModelParams_8007DC78;                   // -> globals.h: the combat slots' model vram areas (0x40 bytes each)
+extern CombatVramPos combatPortraitImagePos_8007DCAC[];         // -> globals.h: portrait image vram positions
+extern CombatVramPos combatPortraitClutPos_8007DCBC[];         // -> globals.h: portrait clut vram positions
 extern Minion saveMinions_8008BEF8[];          // -> globals.h
 extern short defaultBones_80079140[];          // -> globals.h: default bone table
 

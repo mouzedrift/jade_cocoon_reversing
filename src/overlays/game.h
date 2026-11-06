@@ -217,7 +217,7 @@ typedef struct GameMemberCb
 typedef struct GameActorDesc
 {
     char pad_0[0x30];
-    int clut_30; // index into name_8007DCAC / name_8007DCBC
+    int clut_30; // index into combatPortraitImagePos_8007DCAC / combatPortraitClutPos_8007DCBC
 } GameActorDesc;
 
 // a party member (fieldMinions_800B0EC4.a)
@@ -678,7 +678,7 @@ extern int encounterVariantToggle_8008B554;
 
 
 
-extern unsigned int name_80091C38;
+extern unsigned int loadFadeFlags_80091C38;
 
 extern int (*eventFuncs_800BCDBC[])(GameEvCtx*);
 
@@ -697,20 +697,20 @@ typedef struct GameTimImage
     u_long* paddr;
 } GameTimImage;
 
-// a VRAM position (the portrait images: name_8007DCA4..name_8007DCBC)
+// a VRAM position (the portrait images: fieldModelImagePos_8007DCA4..combatPortraitClutPos_8007DCBC)
 typedef struct GameVramXY
 {
     unsigned short x;
     unsigned short y;
 } GameVramXY;
 
-extern GameVramXY name_8007DCA4;
+extern GameVramXY fieldModelImagePos_8007DCA4;
 
-extern GameVramXY name_8007DCA8;
+extern GameVramXY fieldModelClutPos_8007DCA8;
 
-extern GameVramXY name_8007DCAC[];
+extern GameVramXY combatPortraitImagePos_8007DCAC[];
 
-extern GameVramXY name_8007DCBC[];
+extern GameVramXY combatPortraitClutPos_8007DCBC[];
 
 
 
@@ -909,18 +909,15 @@ extern GameLevantActorNode* gameTask_8008B4A4;
 
 
 
-extern int dword_8008BDA0;
 
-extern short word_8008BDA4;
 
-extern short word_8008BDA6;
 
 
 
 extern void SetLevantHasArmor_800AC380(int has);
 
 
-extern ModelList* dword_8007DC60; // the GAME overlay's model list
+extern ModelList* gameModelList_8007DC60; // the GAME overlay's model list
 
 extern int PlaceWindowAwayFromQuadrant_800A88E0();
 
@@ -958,7 +955,7 @@ extern void EndLevantPath_800ABAD4();
 extern void ExitLevantActorBattle_800AB444();
 
 
-extern int dword_800795C0[]; // FIR coefficients of Levant's turn filter
+extern int levantTurnFilterCoeffs_800795C0[]; // FIR coefficients of Levant's turn filter
 
 // a window's screen rectangle (PlaceWindowAwayFromQuadrant_800A88E0)
 typedef struct GameWinRect
@@ -971,7 +968,6 @@ typedef struct GameWinRect
 
 
 
-extern unsigned char byte_8008BD56;
 
 extern InvSlot* FindInventorySlotForAdd_800AD4D8();
 
@@ -1054,13 +1050,13 @@ extern G2V12 statusTintPoisonLevel6_8007A140;
 
 extern G2V12 statusTintPoisonLevel7_8007A14C;
 
-extern G2V12 dword_8007A164;
+extern G2V12 statusTint_8007A164;
 
-extern char dword_8007DC80;
+extern char tintImageRect_8007DC80;
 
-extern char dword_8007DC88;
+extern char tintClutRect_8007DC88;
 
-extern unsigned int dword_8008BD38;
+extern unsigned int levantStatusBits_8008BD38;
 
 
 
@@ -1207,9 +1203,9 @@ typedef struct GameSkelDraw
 
 
 
-extern short word_8007DC82;
+extern short tintImageRectY_8007DC82;
 
-extern short word_8007DC8A;
+extern short tintClutRectY_8007DC8A;
 
 
 extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
@@ -1635,11 +1631,11 @@ typedef struct GameLevantModelWork
 {
     int state;
     int flags; // 1: reload the model, 2: reload the outfit, 4: load the weapon's animations, 8 / 0x10: FTG save / swaps
-    int model_8; // saveData_8008B570.field_830 (levantModelIds_800B1164 index)
+    int model_8; // saveData_8008B570.hasArmor_830 (levantModelIds_800B1164 index)
     int prevModel_C;
-    int f10; // saveData_8008B570.field_834
+    int f10; // saveData_8008B570.weaponKind_834
     int weaponKind_14;
-    int f18; // saveData_8008B570.field_836
+    int f18; // saveData_8008B570.outfit_836
     int outfit_1C;
 } GameLevantModelWork;
 
@@ -1662,7 +1658,7 @@ extern void LoadEventRecordTables_800BCA68(int data);
 /* exe-side, to move to effect_data.h (declared there as ActorScriptCmd* commandScripts_8007A024[]) */
 extern int name_8007A024[];
 /* exe-side, to move to effect_data.h */
-extern ModelVramSlot* dword_8007DC6C;
+extern ModelVramSlot* gameModelVramSlots_8007DC6C;
 
 /* GAME: functions called before their definition (or from another of its files) */
 /* (the task definitions at the top of game_3.c point to these) */

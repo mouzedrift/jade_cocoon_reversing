@@ -958,7 +958,7 @@ GameLevantBattleAction levantBattleActions_800B1084[28] = {
     { 2, 8 },
     { 0x1A0000, 0 },
 };
-// model id of Levant per saveData_8008B570.field_830 (LevantModelTask_800ACB64)
+// model id of Levant per saveData_8008B570.hasArmor_830 (LevantModelTask_800ACB64)
 int levantModelIds_800B1164[2] = { 0x28, 0x27 };
 int levantBaseModels_800B116C[19] = {
     5, 6, 4, 1, 3, 2, 0, 12,
@@ -1045,7 +1045,7 @@ void StopAllEventScripts_800A58B4(void)
     eventTempFlags_800AEBD4 = 0;
     StopAllEventEntries_80043B40(eventScripts_8008D410);
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
-    if (!(name_80091C38 & 0x40))
+    if (!(loadFadeFlags_80091C38 & 0x40))
     {
         view = &viewport_8008D420;
         view->x = 0;
@@ -1388,12 +1388,12 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
     {
         tim.mode_valid = 1;
         tim.mode = 1;
-        tim.prect.x = name_8007DCA4.x;
-        tim.prect.y = name_8007DCA4.y;
+        tim.prect.x = fieldModelImagePos_8007DCA4.x;
+        tim.prect.y = fieldModelImagePos_8007DCA4.y;
         tim.prect.w = 0x20;
         tim.prect.h = 0x40;
-        tim.crect.x = name_8007DCA8.x;
-        tim.crect.y = name_8007DCA8.y;
+        tim.crect.x = fieldModelClutPos_8007DCA8.x;
+        tim.crect.y = fieldModelClutPos_8007DCA8.y;
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
@@ -1402,12 +1402,12 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
         desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
         tim.mode_valid = 1;
         tim.mode = 1;
-        tim.prect.x = name_8007DCAC[desc->clut_30].x;
-        tim.prect.y = name_8007DCAC[desc->clut_30].y;
+        tim.prect.x = combatPortraitImagePos_8007DCAC[desc->clut_30].x;
+        tim.prect.y = combatPortraitImagePos_8007DCAC[desc->clut_30].y;
         tim.prect.w = 0x20;
         tim.prect.h = 0x40;
-        tim.crect.x = name_8007DCBC[desc->clut_30].x;
-        tim.crect.y = name_8007DCBC[desc->clut_30].y;
+        tim.crect.x = combatPortraitClutPos_8007DCBC[desc->clut_30].x;
+        tim.crect.y = combatPortraitClutPos_8007DCBC[desc->clut_30].y;
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
@@ -1422,12 +1422,12 @@ void GetPortraitPoly_800A6308(int who, void* poly)
     {
         tim.mode_valid = 1;
         tim.mode = 1;
-        tim.prect.x = name_8007DCA4.x;
-        tim.prect.y = name_8007DCA4.y;
+        tim.prect.x = fieldModelImagePos_8007DCA4.x;
+        tim.prect.y = fieldModelImagePos_8007DCA4.y;
         tim.prect.w = 0x20;
         tim.prect.h = 0x40;
-        tim.crect.x = name_8007DCA8.x;
-        tim.crect.y = name_8007DCA8.y;
+        tim.crect.x = fieldModelClutPos_8007DCA8.x;
+        tim.crect.y = fieldModelClutPos_8007DCA8.y;
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
@@ -1436,12 +1436,12 @@ void GetPortraitPoly_800A6308(int who, void* poly)
         desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
         tim.mode_valid = 1;
         tim.mode = 1;
-        tim.prect.x = name_8007DCAC[desc->clut_30].x;
-        tim.prect.y = name_8007DCAC[desc->clut_30].y;
+        tim.prect.x = combatPortraitImagePos_8007DCAC[desc->clut_30].x;
+        tim.prect.y = combatPortraitImagePos_8007DCAC[desc->clut_30].y;
         tim.prect.w = 0x20;
         tim.prect.h = 0x40;
-        tim.crect.x = name_8007DCBC[desc->clut_30].x;
-        tim.crect.y = name_8007DCBC[desc->clut_30].y;
+        tim.crect.x = combatPortraitClutPos_8007DCBC[desc->clut_30].x;
+        tim.crect.y = combatPortraitClutPos_8007DCBC[desc->clut_30].y;
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
@@ -2418,7 +2418,7 @@ void EmptyCallback_800A8138()
 void InitLevantControl_800A8140()
 {
     GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
-    FirFilterInit_8001450C(ctl->turnBuf_5C, &ctl->turn_4C, dword_800795C0, 4);
+    FirFilterInit_8001450C(ctl->turnBuf_5C, &ctl->turn_4C, levantTurnFilterCoeffs_800795C0, 4);
     ctl->flags_0 = 0;
     ctl->f9C = 0;
     ctl->state_C6 = 0;
@@ -3139,7 +3139,7 @@ void ResetLevantActor_800A9414(void* buf, int action, int anim)
 {
     GameLevantActor* lev = (GameLevantActor*)buf;
     ApplyModelFtgSwaps_80025C38(lev->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
-    FirFilterInit_8001450C(lev->turnBuf_780, &lev->turn_770, dword_800795C0, 4);
+    FirFilterInit_8001450C(lev->turnBuf_780, &lev->turn_770, levantTurnFilterCoeffs_800795C0, 4);
     SetLevantAnim_800AB010(lev, action, anim, 0);
     lev->mode_C = 0;
     if (IsLevantAnimLoadedOrFree_800AAFD8(lev->prevAnim_1E) != 1)
@@ -3166,8 +3166,8 @@ void InitLevantActor_800A94CC(void)
     ResetLevantActor_800A9414(lev, 0, 3);
     ClearLevantFade_800AB150((GameLevantFade*)lev);
     FindLevantMesh_800B80C8(lev);
-    lev->status_3C = dword_8008BD38;
-    SetLevantStatusTint_800ABECC(dword_8008BD38);
+    lev->status_3C = levantStatusBits_8008BD38;
+    SetLevantStatusTint_800ABECC(levantStatusBits_8008BD38);
 }
 
 void LevantActorTaskExit_800A955C()
@@ -3233,7 +3233,7 @@ void DrawLevantModel_800A9708(GameLevantActor* lev)
     anim = &lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)];
     if (*(int*)(sd + 0x7c8) & 0x3fd)
     {
-        flags = (word_8007DC8A - word_8007DC82) << 8;
+        flags = (tintClutRectY_8007DC8A - tintImageRectY_8007DC82) << 8;
     }
     else
     {
@@ -4344,8 +4344,8 @@ void RunLevantActionCues_800ABDF0(GameLevantActor* lev)
 
 void SetLevantStatusTint_800ABECC()
 {
-    G2V12* tint = &dword_8007A164;
-    unsigned int status = dword_8008BD38;
+    G2V12* tint = &statusTint_8007A164;
+    unsigned int status = levantStatusBits_8008BD38;
     if (status & 0x200)
     {
         if (status & 1)
@@ -4399,7 +4399,7 @@ void SetLevantStatusTint_800ABECC()
     {
         tint = &statusTintPoison_8007A0F8;
     }
-    TintVramImage_800292D0(&dword_8007DC80, &dword_8007DC88, tint);
+    TintVramImage_800292D0(&tintImageRect_8007DC80, &tintClutRect_8007DC88, tint);
 }
 
 void UpdateLevantQueuedAnim_800AC02C(GameLevantActor* lev)
@@ -4517,22 +4517,22 @@ void SetLevantLastCapture_800AC340(int on)
 
 void SetLevantHasArmor_800AC380(int has)
 {
-    dword_8008BDA0 = has;
+    saveData_8008B570.hasArmor_830 = has;
 }
 
 Model* GetLevantModel_800AC38C()
 {
-    return dword_8007DC60->items_8;
+    return gameModelList_8007DC60->items_8;
 }
 
 void SetLevantWeaponKind_800AC3A4(short kind)
 {
-    word_8008BDA4 = kind;
+    saveData_8008B570.weaponKind_834 = kind;
 }
 
 void SetLevantOutfit_800AC3B0(int outfit)
 {
-    word_8008BDA6 = outfit;
+    saveData_8008B570.outfit_836 = outfit;
     SetLevantHasArmor_800AC380(1);
 }
 
@@ -4543,27 +4543,27 @@ char* GetLevantByte_800AC3D8()
 
 int GetLevantWeaponKind_800AC3E4()
 {
-    return word_8008BDA4;
+    return saveData_8008B570.weaponKind_834;
 }
 
 int GetLevantModelId_800AC3F4()
 {
     SaveData* sd = &saveData_8008B570;
     int model;
-    if (sd->field_830)
+    if (sd->hasArmor_830)
     {
-        model = GetArmorOutfit_8001D060(sd->levantStatus_7C8.equipment_1C[1]) + levantOutfitModelOffsets_800B11B8[sd->field_834];
+        model = GetArmorOutfit_8001D060(sd->levantStatus_7C8.equipment_1C[1]) + levantOutfitModelOffsets_800B11B8[sd->weaponKind_834];
     }
     else
     {
-        model = levantBaseModels_800B116C[sd->field_834];
+        model = levantBaseModels_800B116C[sd->weaponKind_834];
     }
     return model;
 }
 
 int GetLevantOutfit_800AC464()
 {
-    return word_8008BDA6;
+    return saveData_8008B570.outfit_836;
 }
 
 int GetLevantAnimSet_800AC474(int anim)
@@ -4573,54 +4573,54 @@ int GetLevantAnimSet_800AC474(int anim)
 
 int GetLevantAnimFile_800AC4A8(int anim)
 {
-    GameLevantAnim* anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    GameLevantAnim* anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()])].fileId_0;
 }
 
 int IsLevantAnimLoaded_800AC518(int anim)
 {
-    GameLevantAnim* anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    GameLevantAnim* anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     if (anims[idx].resident_1)
         return 1;
-    return IsAnimInModelAnimSet_80025924(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]));
+    return IsAnimInModelAnimSet_80025924(gameModelList_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]));
 }
 
 int LoadLevantAnim_800AC5D0(int fileId, int resident)
 {
-    return LoadModelAnim_80025440(dword_8007DC60->items_8, fileId, resident) != 0;
+    return LoadModelAnim_80025440(gameModelList_8007DC60->items_8, fileId, resident) != 0;
 }
 
 int LoadLevantAnimById_800AC604(int anim, int resident)
 {
     int set = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
-    return LoadModelAnim_80025440(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set), resident) != 0;
+    return LoadModelAnim_80025440(gameModelList_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set), resident) != 0;
 }
 
 void FreeLevantAnim_800AC678(int fileId)
 {
-    FreeModelAnim_8002556C(dword_8007DC60->items_8, fileId);
+    FreeModelAnim_8002556C(gameModelList_8007DC60->items_8, fileId);
 }
 
 void FreeLevantAnimById_800AC6A8(int anim)
 {
     int set = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
-    FreeModelAnim_8002556C(dword_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set));
+    FreeModelAnim_8002556C(gameModelList_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set));
 }
 
 void LoadLevantAnimSet_800AC708(int set, int flag)
 {
-    LoadModelAnimSet_80025780(dword_8007DC60->items_8, set, flag);
+    LoadModelAnimSet_80025780(gameModelList_8007DC60->items_8, set, flag);
 }
 
 void FreeLevantAnimSet_800AC73C()
 {
-    FreeModelAnimSet_80025884(dword_8007DC60->items_8);
+    FreeModelAnimSet_80025884(gameModelList_8007DC60->items_8);
 }
 
 int AreLevantFilesLoaded_800AC768()
 {
-    return AreFileRequestsDone_80024DC4(dword_8007DC60->items_8);
+    return AreFileRequestsDone_80024DC4(gameModelList_8007DC60->items_8);
 }
 
 int GetLevantAnimIndex_800AC794(int anim, int set)
@@ -4632,14 +4632,14 @@ int GetLevantAnimIndex_800AC794(int anim, int set)
 
 unsigned char* GetLevantAnimSetTable_800AC7B4(int set)
 {
-    return (unsigned char*)GetModelActorAnims_80024E38(dword_8007DC60->items_8) + ((set << 10) + 0x380);
+    return (unsigned char*)GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8) + ((set << 10) + 0x380);
 }
 
 short GetLevantAnimStartFrame_800AC7F0(int anim, int set)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].start_4;
 }
 
@@ -4647,7 +4647,7 @@ short GetLevantAnimLoopStart_800AC834(int anim, int set)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].loopStart_6;
 }
 
@@ -4655,7 +4655,7 @@ short GetLevantAnimLoopEnd_800AC878(int anim, int set)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].loopEnd_8;
 }
 
@@ -4663,7 +4663,7 @@ unsigned short GetLevantAnimLastFrame_800AC8BC(int anim, int set)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].lastFrame_A;
 }
 
@@ -4671,7 +4671,7 @@ int GetLevantAnimFlags_800AC900(int anim, int set)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].flags_3;
 }
 
@@ -4679,7 +4679,7 @@ short GetLevantAnimEventFrame_800AC944(int anim, int set)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].hitTimes_C[0].start_0;
 }
 
@@ -4687,7 +4687,7 @@ unsigned char GetLevantAnimFileId_800AC988(int anim, int set)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, set);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].fileId_0;
 }
 
@@ -4695,7 +4695,7 @@ HitTimes* GetLevantAnimHitFrames_800AC9CC(int anim)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return anims[idx].hitTimes_C;
 }
 
@@ -4703,7 +4703,7 @@ int* GetLevantAnimF34_800ACA38(int anim)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
-    anims = GetModelActorAnims_80024E38(dword_8007DC60->items_8);
+    anims = GetModelActorAnims_80024E38(gameModelList_8007DC60->items_8);
     return &anims[idx].f34;
 }
 
@@ -4737,13 +4737,13 @@ void LevantModelTask_800ACB64(int* task, void* buf)
         switch (work->state)
         {
         case 0:
-            if (work->model_8 != saveData_8008B570.field_830)
+            if (work->model_8 != saveData_8008B570.hasArmor_830)
             {
                 work->f10 = -1;
                 work->flags |= 0xd;
-                SetLevantWeaponKind_800AC3A4(saveData_8008B570.field_834);
+                SetLevantWeaponKind_800AC3A4(saveData_8008B570.weaponKind_834);
             }
-            if (work->f10 != saveData_8008B570.field_834 || work->f18 != saveData_8008B570.field_836)
+            if (work->f10 != saveData_8008B570.weaponKind_834 || work->f18 != saveData_8008B570.outfit_836)
             {
                 work->flags |= 0x16;
                 FreeLevantAnimSetAnims_800ACF3C(work);
@@ -4761,24 +4761,24 @@ void LevantModelTask_800ACB64(int* task, void* buf)
         case 1:
             if (work->flags & 1)
             {
-                if (dword_8007DC60)
+                if (gameModelList_8007DC60)
                 {
-                    FreeModelList_80024BB0(&dword_8007DC60);
+                    FreeModelList_80024BB0(&gameModelList_8007DC60);
                 }
-                InitModelList_80024ADC(&dword_8007DC60, dword_8007DC6C, (int)&levantPool_800B1DD0);
-                LoadModel_80025200(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830], 0, 2, 1);
+                InitModelList_80024ADC(&gameModelList_8007DC60, gameModelVramSlots_8007DC6C, (int)&levantPool_800B1DD0);
+                LoadModel_80025200(gameModelList_8007DC60, levantModelIds_800B1164[saveData_8008B570.hasArmor_830], 0, 2, 1);
                 work->prevModel_C = work->model_8;
-                work->model_8 = saveData_8008B570.field_830;
+                work->model_8 = saveData_8008B570.hasArmor_830;
                 work->flags &= ~1;
             }
             else if (work->flags & 2)
             {
-                model = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
+                model = AcquireModel_80024D70(gameModelList_8007DC60, levantModelIds_800B1164[saveData_8008B570.hasArmor_830]);
                 LoadModelAltFtgs_80025974(model, GetLevantModelId_800AC3F4(), 1);
                 work->weaponKind_14 = GetLevantWeaponKind_800AC3E4();
-                work->f10 = saveData_8008B570.field_834;
+                work->f10 = saveData_8008B570.weaponKind_834;
                 work->outfit_1C = GetLevantOutfit_800AC464();
-                work->f18 = saveData_8008B570.field_836;
+                work->f18 = saveData_8008B570.outfit_836;
                 work->flags &= ~2;
             }
             else if (work->flags & 4)
@@ -4792,7 +4792,7 @@ void LevantModelTask_800ACB64(int* task, void* buf)
             work->state = 2;
             break;
         case 2:
-            if (AreFileRequestsDone_80024DC4(dword_8007DC60->items_8) == 1)
+            if (AreFileRequestsDone_80024DC4(gameModelList_8007DC60->items_8) == 1)
             {
                 work->state = 3;
             }
@@ -4805,13 +4805,13 @@ void LevantModelTask_800ACB64(int* task, void* buf)
         case 3:
             if ((work->flags & 9) == 8)
             {
-                model = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
+                model = AcquireModel_80024D70(gameModelList_8007DC60, levantModelIds_800B1164[saveData_8008B570.hasArmor_830]);
                 SaveModelFtgs_80024FFC(model, levantSavedFtgIds_800B11CC);
                 work->flags &= ~8;
             }
             if ((work->flags & 0x12) == 0x10)
             {
-                model = AcquireModel_80024D70(dword_8007DC60, levantModelIds_800B1164[saveData_8008B570.field_830]);
+                model = AcquireModel_80024D70(gameModelList_8007DC60, levantModelIds_800B1164[saveData_8008B570.hasArmor_830]);
                 ApplyModelFtgSwaps_80025C38(model, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 work->flags &= ~0x10;
             }
@@ -4831,7 +4831,7 @@ void LevantModelTask_800ACB64(int* task, void* buf)
 
 void LevantModelTaskExit_800ACF0C()
 {
-    FreeModelList_80024BB0(&dword_8007DC60);
+    FreeModelList_80024BB0(&gameModelList_8007DC60);
     PoolDestroy_8003FF7C(&levantPool_800B1DD0);
 }
 
@@ -5215,7 +5215,7 @@ unsigned int GetEquippedId_800AD990(int slot)
         id = saveData_8008B570.levantStatus_7C8.equipment_1C[1];
         break;
     case 2:
-        id = byte_8008BD56;
+        id = saveData_8008B570.levantStatus_7C8.equipment_1C[2];
         break;
     }
     return id;
@@ -5268,7 +5268,7 @@ int SetEquipment_800AD9EC(int id, int slot)
     fail:
         return 0;
     case 2:
-        byte_8008BD56 = id;
+        saveData_8008B570.levantStatus_7C8.equipment_1C[2] = id;
         RemoveInventory_800AD1E0(id, 1, 3);
         if (old != 0xFF)
             AddInventory_800AD184(old, 1, 3);
