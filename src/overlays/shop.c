@@ -536,10 +536,7 @@ void MergeExp_800BA6D0(Minion* out, Minion* base, Minion* partner)
     out->status_84.exp_4 += CombinedExpDelta_80012204(base->status_84.level_44, base->status_84.exp_4, partner->status_84.level_44, partner->status_84.exp_4);
 }
 
-#if 0
-// Not matched (25 words): only the registers of &skills.slot[i] (a3 in the original) and m (t0) are swapped.
-// (When writing this in C, delete the C table jpt_800B6D4C behind the function.)
-
+// Matched
 void MergeSkills_800BA72C(Minion* out, Minion* partner)
 {
     UnitSkills skills;
@@ -594,6 +591,8 @@ void MergeSkills_800BA72C(Minion* out, Minion* partner)
             switch (ae[i].id_1)
             {
             case 0:
+                r = ae[i].id_1;
+                break;
             case 1:
                 r = ae[i].id_1;
                 break;
@@ -701,11 +700,6 @@ void MergeSkills_800BA72C(Minion* out, Minion* partner)
     }
     MemCopy_800403E8(&out->skills_DE, &skills, sizeof(UnitSkills));
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, MergeSkills_800BA72C);
-// the jump table of MergeSkills_800BA72C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in shop.h when the function is C, the switch emits it then
-void* const jpt_800B6D4C[12] = { jtgt_800BA8C8, jtgt_800BA8C8, jtgt_800BA8A4, jtgt_800BA8AC, jtgt_800BA8B4, jtgt_800BA8BC, jtgt_800BA958, jtgt_800BA958, jtgt_800BA910, jtgt_800BA918, jtgt_800BA920, jtgt_800BA928 };
 const char aEmpty_800B6D7C[4] = { 0 };
 const char aWhatDoYouWantTo_800B6D80[] = "\202v\202\210\202\201\202\224\201@\202\204\202\217\201@\202\231\202\217\202\225\201@\202\227\202\201\202\216\202\224\201@\202\224\202\217\201@\202\204\202\217\201H"; // What do you want to do?
 const char aForTheNewMinion_800B6DB0[] = "\202\206\202\217\202\222\201@\202\224\202\210\202\205\201@\202\216\202\205\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201D"; // for the new minion.
@@ -1642,16 +1636,14 @@ void SetShopHelpText_800BBB54(ShopMenu* menu, int mode)
     }
 }
 
-#if 0
-// Not matched (34 words): only the f24 & 8 block differs. The original passes snd (in s1) to
-// UpdateMenuCursor instead of a folded 0 (that needs int snd), keeps r in a1, and stores snd to
-// s28/s7E through a copy; with int snd the copies and the r register still differ.
+// Matched
 void ShopMenuInput_800BBE24(ShopMenu* menu)
 {
-    short snd;
+    int snd;
     int r;
     int k;
     unsigned int bit;
+    unsigned int marks;
     if (menu->flags_24 & 8)
     {
         UpdateSelectedMinions_800BEBC8(menu);
@@ -1659,20 +1651,20 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
         r = (short)UpdateMenuCursor_8003D794(&menu->listCols_28, snd);
         if (r == 4)
         {
-            snd = 1;
+            menu->listCols_28 = 1;
             menu->listCount_2C = 0x18;
-            menu->listFlags_2E = 0x50;
-            menu->listCols_28 = snd;
-            menu->list_7E = snd;
-            menu->listRows_2A = r;
-            menu->listIndex_30 = 0;
+            menu->list_7E = 1;
             menu->flags_24 &= ~0x10;
+            menu->listRows_2A = r;
+            menu->listFlags_2E = 0x50;
+            menu->listIndex_30 = 0;
             SaveShopCursor_800BB798(menu);
+            snd = 1;
         }
         else if (r == 3)
         {
+            menu->listCols_28 = 1;
             snd = 1;
-            menu->listCols_28 = snd;
             menu->listFlags_2E = 0x20;
             menu->listRows_2A = r;
             menu->listCount_2C = r;
@@ -1742,7 +1734,8 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
                 {
                     k = (short)(menu->listIndex_30 + menu->listScroll_32);
                     bit = 1 << k;
-                    if (!(menu->storedMarks_8C & bit))
+                    marks = menu->storedMarks_8C;
+                    if (!(marks & bit))
                     {
                         menu->storedMarks_8C |= bit;
                         menu->marks_84 |= 1 << (k + 3);
@@ -1793,8 +1786,6 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, ShopMenuInput_800BBE24);
 
 void CycleInfoPage_800BC1A8(ShopMenu* menu)
 {
@@ -1870,7 +1861,14 @@ void DismissShopPrompt_800BC2DC(ShopMenu* menu)
 }
 
 #if 0
-// Not matched: stack layout matches; loop-invariant constant 2 is not hoisted (the original keeps it in a spilled pseudo, rematerialised in $t1), so a few registers differ
+// Not matched (597 words instead of 598, the rest differs in registers): stack layout matches; the loop-invariant constant 2 is
+// not hoisted. In the original all register uses of 2 (the i == 2 compare, abilityRef/magicRef/skinRef.windowFlags_4,
+// case 2 of the j switch) share one pseudo that loop.c hoists out of the i loop and that is then spilled and
+// rematerialised in $t1 (the magicRef block has its own `addiu $t1,$zero,2`, one extra word). Here cse1 replaces the
+// 2 stored to abilityRef/magicRef.windowFlags_4 by (subreg:HI) of the sign-extended i (known == 2 from the compare),
+// which leaves 4 matching loads of 2 (loop dump: "savings 4 ... not desirable") instead of 6, so nothing is hoisted.
+// Tried: int/short i, (short)i == 2, 2 == i, switch (i) case 2, ternary/if-else openStep, if-wrapped loop body
+// instead of continue, i == 2 folded into the two inner conditions, permuter (~1500 iterations, no gain).
 void DrawShopMenu_800BC380(ShopMenu* menu)
 {
     Pos16 pos;
@@ -1981,10 +1979,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                         abilityPos.y = 0x5E;
                         abilityRef.cursor_0 = menu->pageIndex_48;
                         abilityRef.scroll_2 = menu->pageScroll_4A;
-                        abilityRef.field_4 = 2;
+                        abilityRef.windowFlags_4 = 2;
                         abilityRef.ot_6 = 0xE;
                         abilityRef.field_8 = 0;
-                        abilityRef.field_A = 1;
+                        abilityRef.fieldMenu_A = 1;
                         abilityRef.minion_C = menu->shown_54;
                         DrawAbilityList_8002CE28(&abilityRef, &abilityPos);
                     }
@@ -1994,10 +1992,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                         p40.y = 0x6D;
                         magicRef.cursor_0 = menu->pageIndex_48;
                         magicRef.scroll_2 = menu->pageScroll_4A;
-                        magicRef.field_4 = 2;
+                        magicRef.windowFlags_4 = 2;
                         magicRef.ot_6 = 0xE;
                         magicRef.field_8 = 0;
-                        magicRef.field_A = 1;
+                        magicRef.fieldMenu_A = 1;
                         magicRef.minion_C = menu->shown_54;
                         DrawMagicList_8002CAC8(&magicRef, &p40);
                     }
@@ -2128,10 +2126,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
             ListMenuState skinRef;
             skinRef.cursor_0 = menu->savedIndex_5E[8];
             skinRef.scroll_2 = menu->savedScroll_72[2];
-            skinRef.field_4 = 2;
+            skinRef.windowFlags_4 = 2;
             skinRef.ot_6 = 0xE;
             skinRef.field_8 = 0;
-            skinRef.field_A = 1;
+            skinRef.fieldMenu_A = 1;
             skinRef.minion_C = 0;
             DrawSkinList_800BED48(&skinRef);
         }

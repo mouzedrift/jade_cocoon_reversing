@@ -603,10 +603,5 @@ extern unsigned int emptyMinion_800C07F0[62];
 extern Minion mergePreview_800C08E8;
 extern ShopFormModel formModel_800C09E0;
 
-/* the jump table of MergeSkills_800BA72C (asm) and its targets, labels in the generated asm */
-extern char jtgt_800BA8A4[], jtgt_800BA8AC[], jtgt_800BA8B4[], jtgt_800BA8BC[], jtgt_800BA8C8[], jtgt_800BA910[], jtgt_800BA918[], jtgt_800BA920[], jtgt_800BA928[], jtgt_800BA958[];
-extern void* const jpt_800B6D4C[12];
-
-
 
 #endif
