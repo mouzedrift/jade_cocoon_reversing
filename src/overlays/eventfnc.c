@@ -1730,18 +1730,27 @@ int EvCmdSetReturnPoint_800BAB14(EvScriptCtx* ctx)
     return 1;
 }
 
-#if 0
+// the fade call is in a do/while(0) and duplicated in both arms of a dead test: jump2 cross-jumps the arms and drops the
+// branch but leaves its li $v0,1, and the loop note keeps sched2 from hoisting that above the $ra save, as in the original
+// Matched
 int EvCmdOpenMapSelect_800BAB5C(EvScriptCtx* ctx)
 {
-    SetFadeMode_8001C19C(1, 0x20);
+    do
+    {
+        if ((int)ctx == 1)
+        {
+            SetFadeMode_8001C19C(1, 0x20);
+        }
+        else
+        {
+            SetFadeMode_8001C19C(1, 0x20);
+        }
+    } while (0);
     RequestGameMode_800A6D30(8);
     eventDispatchHalt_8008B540 = 1;
     ctx->pc_8++;
     return 1;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(eventfnc, EvCmdOpenMapSelect_800BAB5C);
 
 // opens a shop (GAME loads WPNSHOP / SHOPCTRL / SHOP by b's high half) and waits for it to close
 int EvCmdOpenShop_800BABB0(EvScriptCtx* ctx)

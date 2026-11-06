@@ -1491,10 +1491,6 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
     }
 }
 
-// the jump table of FieldMinionCommand_800A7D40 (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in game.h when the function is C, the switch emits it then
-void* const dword_800A06B8[14] = { jtgt_800A7E18, jtgt_800A7E48, jtgt_800A7E78, jtgt_800A7EC8, jtgt_800A7EC8, jtgt_800A7EE4, jtgt_800A7EF4, jtgt_800A7F08, jtgt_800A7F1C, jtgt_800A7F30, jtgt_800A7F30, jtgt_800A7FBC, jtgt_800A8078, jtgt_800A8078 };
-
 // Matched
 int IsEventPointValid_800A6504(int point, int* pos)
 {
@@ -2318,8 +2314,7 @@ int IsFieldMinionReady_800A7CFC(int idx)
     return 0;
 }
 
-#if 0
-// Not matched: 6 words: in case 9/10 the ((f14 >> 2) & 1) result is allocated to $v1 (original $v0) and the f14 reload swaps with it. Switch table: remove the C table dword_800A06B8 when enabling
+// Matched
 void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
 {
     ActorActionDesc desc;
@@ -2329,7 +2324,7 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
     int start;
     int flags;
     int flags2;
-    int w;
+    int flags3;
     if (idx < GetFieldMinionCount_800A7790())
     {
         hdr = GetFieldMinion_800A77F4(idx)->hdr_10;
@@ -2347,7 +2342,7 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
         desc.field_1C = 1;
         desc.nextAnim_24 = -1;
         desc.nextAnim_26 = -1;
-        desc.field_28 = -1;
+        desc.anim_28 = -1;
         desc.queuedAnim_2A = -1;
         desc.field_2C = 0;
         desc.path_30 = 0;
@@ -2405,19 +2400,19 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
             break;
         case 9:
         case 10:
-            desc.field_28 = cmd->arg_C;
+            desc.anim_28 = cmd->arg_C;
             desc.queuedAnim_2A = (cmd->kind_4 == 10) ? cmd->arg2_10 : -1;
             desc.turnStep_C = (cmd->opts_14 & 1) ? -1 : -2;
             desc.field_2C = (cmd->opts_14 >> 3) & 1;
-            start = 1;
             desc.flags_0 = (cmd->opts_14 >> 2) & 1;
+            flags3 = desc.flags_0;
             if (cmd->opts_14 & 0x10)
-            {
-                desc.flags_0 |= 2;
-            }
+                flags3 |= 2;
+            desc.flags_0 = flags3;
+            start = 1;
             break;
         case 11:
-            desc.field_28 = cmd->arg_C;
+            desc.anim_28 = cmd->arg_C;
             if (cmd->arg2_10 >= 0)
                 desc.queuedAnim_2A = cmd->arg2_10;
             else
@@ -2449,8 +2444,6 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(game, FieldMinionCommand_800A7D40);
 
 // the jump table of LevantControlTask_800A818C (asm; its targets are labels of the generated asm, gen_asm.jump_label):
 // delete it and its externs in game.h when the function is C, the switch emits it then
