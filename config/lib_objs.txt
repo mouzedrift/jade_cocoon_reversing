@@ -1,7 +1,6 @@
 # PSY-Q objects of the main executable in link order (scripts/lib_match.py --write).
 # 'LIB MODULE' links that module of libs/psyq4.4/LIB/LIB; 'asm ADDR SIZE' is code that is
 # not a 4.4 module (kept as assembly from the executable).
-asm 8004D924 4a4 .rdata 80074BE0 c   # game code (uses the game sine table) linked behind the game TUs
 LIBAPI.LIB C57
 LIBAPI.LIB C81
 LIBAPI.LIB C113

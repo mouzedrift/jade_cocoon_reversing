@@ -17,7 +17,7 @@ python scripts/check_match.py SLUS_008.54 --all   # every "// Matched" function 
 
 Everything the linker places is identical to the original: 126464 of 126464 words (code, `.rdata`,
 `.data`, `.bss`), all 3516 symbols at their original address (library code and data linked from the
-PSY-Q 4.4 objects), 903 functions compiled from C.
+PSY-Q 4.4 objects), every game function compiled from C.
 What is not reproduced: the executable header's size field and the 250 KB of trailing bss/garbage
 after the linked image (7 non-zero bytes at 0x800A05A0..0x800C9E88), so the file hash differs.
 
@@ -39,8 +39,8 @@ after the linked image (7 non-zero bytes at 0x800A05A0..0x800C9E88), so the file
 `config/lib_objs.txt` is the link order of the library part: `LIB MODULE` lines are modules of
 `libs/psyq4.4/LIB/*.LIB` (build.py extracts them to `build_psyq/libobj/`), `asm ADDR SIZE [SECTION ADDR
 SIZE ...]` lines are code that is no 4.4 module and stays assembly from the executable (`asm/lib/text_ADDR.s`):
-a piece of game code with its own `.rdata` that is linked behind the game TUs (0x8004D924), `strchr`/`strrchr`
-(the game's copy has less alignment padding) and `MCXDSR` (see bsshead). 312 modules, everything else is
+`strchr`/`strrchr` (the game's copy has less alignment padding) and `MCXDSR` (see bsshead). (The game code at
+0x8004D924..0x8004DDC8 that used to be such a piece is the end of `ftg_draw.c` now.) 312 modules, everything else is
 `asm`. `scripts/lib_match.py SLUS_008.54` finds the modules again (`--write` rewrites the file).
 
 Two things psylink 2.73 does differently from the linker the game was built with, worked around in build.py:

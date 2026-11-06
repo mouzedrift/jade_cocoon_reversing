@@ -948,6 +948,65 @@ void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
     }
     out->vz = (a->vz + diff * t / 4096) & 0xFFF;
 }
+// Matched
+void ResetFtgSpriteVtx_8004D924(void)
+{
+    ftgSpriteVtxNext_80098180 = ftgSpriteVtxPool_80096628;
+}
+// Matched
+// RotMatrixZYX_8004D5CC's matrix with its rows 1 and 2 turned by roll (a rotation about X applied after it)
+void RotMatrixZYXRollX_8004D938(short roll, SVECTOR* rot, MATRIX* m)
+{
+    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
+    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
+    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
+    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int a = (cz * sy) >> 12;
+    int b = (sz * sy) >> 12;
+    int m21 = (sx * cy) >> 12;
+    int m22 = (cx * cy) >> 12;
+    int m10 = (cy * sz) >> 12;
+    int m11 = ((cz * cx) >> 12) + ((b * sx) >> 12);
+    int m12 = -((cz * sx) >> 12) + ((b * cx) >> 12);
+    int m00 = (cz * cy) >> 12;
+    int m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
+    int m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
+    int cr = SIN_TABLE[(roll + 0x400) & 0xFFF];
+    int sr = SIN_TABLE[roll & 0xFFF];
+    int r10 = ((m10 * cr) >> 12) + ((sy * sr) >> 12);
+    int r11 = ((m11 * cr) >> 12) - ((m21 * sr) >> 12);
+    int r12 = ((m12 * cr) >> 12) - ((m22 * sr) >> 12);
+    int r20 = ((m10 * sr) >> 12) - ((sy * cr) >> 12);
+    int r21 = ((m11 * sr) >> 12) + ((m21 * cr) >> 12);
+    int r22 = ((m12 * sr) >> 12) + ((m22 * cr) >> 12);
+    m->m[0][0] = m00;
+    m->m[0][1] = m01;
+    m->m[0][2] = m02;
+    m->m[1][0] = r10;
+    m->m[1][1] = r11;
+    m->m[1][2] = r12;
+    m->m[2][0] = r20;
+    m->m[2][1] = r21;
+    m->m[2][2] = r22;
+}
+// Matched
+void PrintMatrix_8004DC54(MATRIX* m)
+{
+    printf("%d,%d,%d\r", m->m[0][0], m->m[0][1], m->m[0][2]);
+    printf("%d,%d,%d\r", m->m[1][0], m->m[1][1], m->m[1][2]);
+    printf("%d,%d,%d\r", m->m[2][0], m->m[2][1], m->m[2][2]);
+}
+// Matched
+void ProjectFtgSprites_8004DCC0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx, int slot)
+{
+    if (obj->spriteCount_40 == 0)
+    {
+        return;
+    }
+    FtgDrawSprites(obj, ctx, slot);
+}
 
 FtgSpriteVtx *ftgSpriteVtxNext_80098180 BSS = 0;
 int dword_80098184 BSS = 0;

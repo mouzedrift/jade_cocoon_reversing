@@ -56,7 +56,6 @@ typedef struct
 } Data001File;
 
 // Stubs
-extern void sub_8004D924(void);
 extern void ShutdownSystems_80010228(void);
 extern void CloseEvents_80010328(void);
 extern enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);

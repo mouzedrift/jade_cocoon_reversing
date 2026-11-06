@@ -2,7 +2,7 @@
 """
 Split the original executable into translation units, "INCLUDE_ASM" style.
 
-  asm/f/<symbol>.s        one file per code symbol of the game code (0x80010000 - 0x8004D924)
+  asm/f/<symbol>.s        one file per code symbol of the game code (0x80010000 - 0x8004DDC8)
   asm/d/<symbol>.s        one file per data symbol (.rdata / .data / .bss) of the game's data
   asm/lib/*.s             the PSY-Q library part (code, data, bss) as raw blobs: library code is not decompiled,
                           but it has to be there so the data of the game lands at its real address

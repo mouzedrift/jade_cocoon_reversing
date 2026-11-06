@@ -168,7 +168,6 @@ extern MATRIX boneMatrices_80096120[]; // per-bone draw matrices
 
 // draws an FTG object at pos / rot (optional per-axis scale) through DrawFtgObject_8004C7BC
 extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot);
-extern int dword_80096628[1750];
 
 extern int dword_80096620[2];
 

@@ -505,7 +505,7 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
         ctx->ref_28++;
     }
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_14;
-    sub_8004D924();
+    ResetFtgSpriteVtx_8004D924();
 }
 // Matched
 void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
@@ -565,7 +565,7 @@ void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int 
         ctx->ref_44++;
     }
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_30;
-    sub_8004D924();
+    ResetFtgSpriteVtx_8004D924();
 }
 /* inline copy of GetBonePos_8004D224 */
 static inline void GetBonePos(SVECTOR* out, AnimPose* pose, int bone)
@@ -1517,4 +1517,4 @@ void GetRotationAxis_8004AD44(MATRIX* in, VECTOR* out)
 
 MATRIX boneMatrices_80096120[40] BSS = { 0 };
 int dword_80096620[2] BSS = { 0 };
-int dword_80096628[1750] BSS = { 0 };
+FtgSpriteVtx ftgSpriteVtxPool_80096628[350] BSS = { 0 };

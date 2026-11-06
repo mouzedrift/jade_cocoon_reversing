@@ -26,6 +26,7 @@ typedef struct FtgSpriteVtx
     unsigned long rgbc_C;
     long pad_10;
 } FtgSpriteVtx;
+extern FtgSpriteVtx ftgSpriteVtxPool_80096628[350];      // the sprite vertices of a frame (ResetFtgSpriteVtx_8004D924)
 extern FtgSpriteVtx* ftgSpriteVtxNext_80098180;        // next free sprite vertex
 extern FtgSpriteVtx* ftgSpriteVtxSlots_800987D8[][56];  // per slot: the projected vertices, three per triple
 typedef union
@@ -60,4 +61,8 @@ extern int dword_8009AADC;
 
 void SetGteLightAndCamera_8004D0E8(void);
 void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* light, int flags, void* scale);
+void ResetFtgSpriteVtx_8004D924(void);
+void RotMatrixZYXRollX_8004D938(short roll, SVECTOR* rot, MATRIX* m);
+void PrintMatrix_8004DC54(MATRIX* m);
+void ProjectFtgSprites_8004DCC0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx, int slot);
 #endif

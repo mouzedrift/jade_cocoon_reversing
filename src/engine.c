@@ -770,7 +770,7 @@ void RestartDisplay_8001B230(void)
 // Matched
 void ClearOTagRAll_8001B260(void)
 {
-    sub_8004D924();
+    ResetFtgSpriteVtx_8004D924();
     pOT_8008D788 = OT_8008D798[bDoubleBuffer_8008D428];
     pOT_8008D4AC = OT_80091868[bDoubleBuffer_8008D428];
     pOT_8008D454 = OT_800917D8[bDoubleBuffer_8008D428];
