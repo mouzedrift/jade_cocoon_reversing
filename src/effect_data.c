@@ -2182,15 +2182,14 @@ ModelVramSlot* modelLoaderVram_8007DC70 = vramSlots_8007DB50;
 ModelVramSlot* modelVramSlotLists_8007DC74[3] = { vramSlots_8007DBA0, vramSlots_8007DBE0, vramSlots_8007DC20 };
 RECT tintImageRect_8007DC80 = { 0x300, 0x100, 0x100, 1 };  // GAME's SetLevantStatusTint_800ABECC (TintVramImage_800292D0)
 short tintClutRect_8007DC88[2] = { 0x300, 0x189 };
-unsigned short actorImageRect_8007DC8C[2] = { 0x300, 0x181 };
-short unused_8007DC90 = 0x100;
-short unused_8007DC92 = 1;
-unsigned short actorClutPos_8007DC94[28] = {
-    0x300, 0x18A, 0x300, 0x303, 0x100, 1, 0x300, 0x18D,
-    0x340, 0, 0x300, 0x101, 0x160, 0x1C0, 0x1A0, 0x1C0,
-    0x1E0, 0x1C0, 0x220, 0x1C0, 0x300, 0x182, 0x300, 0x184,
-    0x300, 0x186, 0x300, 0x188,
-};
+unsigned short actorImageRect_8007DC8C[4] = { 0x300, 0x181, 0x100, 1 }; // x, y, w, h (y + the slot's reloc_4[5])
+unsigned short actorClutPos_8007DC94[2] = { 0x300, 0x18A };              // x, y (y + the model's clut row)
+unsigned short unused_8007DC98[4] = { 0x300, 0x303, 0x100, 1 };
+unsigned short unused_8007DCA0[2] = { 0x300, 0x18D };
+unsigned short fieldModelImagePos_8007DCA4[2] = { 0x340, 0 };            // GAME's field minion models
+unsigned short fieldModelClutPos_8007DCA8[2] = { 0x300, 0x101 };
+unsigned short combatPortraitImagePos_8007DCAC[4][2] = { { 0x160, 0x1C0 }, { 0x1A0, 0x1C0 }, { 0x1E0, 0x1C0 }, { 0x220, 0x1C0 } };
+unsigned short combatPortraitClutPos_8007DCBC[4][2] = { { 0x300, 0x182 }, { 0x300, 0x184 }, { 0x300, 0x186 }, { 0x300, 0x188 } };
 int modelDesc341_8007DCCC[38] = {
     0x341, 0x30003, 0x140011, 0x250011, 0x150018, 0x10001, 0x10001, 1,
     0, 0, 0, 0, 0x10000, 0, 0x10001, 0x3D0000,
