@@ -17,12 +17,8 @@ COMBAT   combatPortraitClutPos_8007DCBC                 actorClutPos_8007DC94   
 COMBAT   saveMinions_8008BEF8           saveData_8008B570            0x988    # saveData_8008B570 + 0x988
 GAME     levantTurnFilterCoeffs_800795C0                 turnFilterCoeffs_800795A0    0x20     # turnFilterCoeffs_800795A0 + 0x20
 GAME     statusTint_8007A164                 statusTintPoisonLevel7_8007A14C 0x18     # statusTintPoisonLevel7_8007A14C + 0x18
-GAME     gameModelList_8007DC60                 modelVramSlots_8007DC10      0x50     # modelVramSlots_8007DC10 + 0x50
-GAME     gameModelVramSlots_8007DC6C                 modelVramSlots_8007DC10      0x5C     # modelVramSlots_8007DC10 + 0x5C
-GAME     tintImageRect_8007DC80                 modelVramSlotLists_8007DC74               0xC      # modelVramSlotLists_8007DC74 + 0xC
-GAME     tintImageRectY_8007DC82                  modelVramSlotLists_8007DC74               0xE      # modelVramSlotLists_8007DC74 + 0xE
-GAME     tintClutRect_8007DC88                 modelVramSlotLists_8007DC74               0x14     # modelVramSlotLists_8007DC74 + 0x14
-GAME     tintClutRectY_8007DC8A                  modelVramSlotLists_8007DC74               0x16     # modelVramSlotLists_8007DC74 + 0x16
+GAME     tintImageRectY_8007DC82                  tintImageRect_8007DC80        0x2
+GAME     tintClutRectY_8007DC8A                  tintClutRect_8007DC88         0x2
 GAME     fieldModelImagePos_8007DCA4                  actorClutPos_8007DC94        0x10     # actorClutPos_8007DC94 + 0x10
 GAME     fieldModelClutPos_8007DCA8                  actorClutPos_8007DC94        0x14     # actorClutPos_8007DC94 + 0x14
 GAME     combatPortraitImagePos_8007DCAC                  actorClutPos_8007DC94        0x18     # actorClutPos_8007DC94 + 0x18

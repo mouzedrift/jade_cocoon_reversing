@@ -2168,23 +2168,20 @@ FtgPrimRelocFn ftgPrimRelocators_8007DB08[10] = {
     0, 0, (FtgPrimRelocFn)RelocFtgPolyFT4_8002467C, (FtgPrimRelocFn)RelocFtgPolyGT4_80024AB8,
     0, (FtgPrimRelocFn)RelocFtgTexSprites_80023460,
 };
-int modelVramSlots_8007DB30[8] = { 0, 0, 0, 0, 0xFFFF0000 };
-int modelVramSlots_8007DB50[13] = {
-    0, 0, 0, 0, 0, 64, 16, 0x20000,
-    0, 128, 32, 0x40000,
-};
-int modelVramSlots_8007DB84[16] = {
-    192, 48, 0x60000, 0xFFFF0000, 0, 0, 0, 0,
-    192, 48, 0x60000, 0, 192, 48, 0x60000,
-};
-int modelVramSlots_8007DBC4[19] = { 192, 48, 0x60000, 0xFFFF0000 };
-int modelVramSlots_8007DC10[24] = {
-    0xFFFF0000, 0, 0, 0, 0, 64, 16, 0x20000,
-    0, 64, 16, 0x20000, 0, 64, 16, 0x20000,
-    0xFFFF0000, 0, 0, 0, 0, 0, 0, (int)&modelVramSlots_8007DB30,
-};
-ModelVramSlot *modelLoaderVram_8007DC70 = (void *)modelVramSlots_8007DB50;
-int modelVramSlotLists_8007DC74[6] = { (int)&modelVramSlots_8007DB84[7], (int)&modelVramSlots_8007DBC4[7], (int)&modelVramSlots_8007DC10[4], 0x1000300, 0x10100, 0x1890300 };
+// model VRAM slot tables (an id_2 of -1 ends each), the ModelList the GAME overlay sets up, and the table lists
+ModelVramSlot vramSlots_8007DB30[2] = { { 0 }, { 0, -1 } };
+ModelVramSlot vramSlots_8007DB50[5] = { { 0 }, { 0, 0, { 64, 0, 16, 0, 0, 2 } }, { 0, 0, { 128, 0, 32, 0, 0, 4 } }, { 0, 0, { 192, 0, 48, 0, 0, 6 } }, { 0, -1 } };
+ModelVramSlot vramSlots_8007DBA0[4] = { { 0, 0, { 192, 0, 48, 0, 0, 6 } }, { 0, 0, { 192, 0, 48, 0, 0, 6 } }, { 0, 0, { 192, 0, 48, 0, 0, 6 } }, { 0, -1 } };
+ModelVramSlot vramSlots_8007DBE0[4] = { { 0 }, { 0 }, { 0 }, { 0, -1 } };
+ModelVramSlot vramSlots_8007DC20[4] = { { 0, 0, { 64, 0, 16, 0, 0, 2 } }, { 0, 0, { 64, 0, 16, 0, 0, 2 } }, { 0, 0, { 64, 0, 16, 0, 0, 2 } }, { 0, -1 } };
+ModelList* gameModelList_8007DC60 = 0; // GAME: InitModelList_80024ADC(&gameModelList_8007DC60, gameModelVramSlots_8007DC6C, ...)
+int unused_8007DC64 = 0;
+int unused_8007DC68 = 0;
+ModelVramSlot* gameModelVramSlots_8007DC6C = vramSlots_8007DB30;
+ModelVramSlot* modelLoaderVram_8007DC70 = vramSlots_8007DB50;
+ModelVramSlot* modelVramSlotLists_8007DC74[3] = { vramSlots_8007DBA0, vramSlots_8007DBE0, vramSlots_8007DC20 };
+RECT tintImageRect_8007DC80 = { 0x300, 0x100, 0x100, 1 };  // GAME's SetLevantStatusTint_800ABECC (TintVramImage_800292D0)
+short tintClutRect_8007DC88[2] = { 0x300, 0x189 };
 unsigned short actorImageRect_8007DC8C[2] = { 0x300, 0x181 };
 short unused_8007DC90 = 0x100;
 short unused_8007DC92 = 1;

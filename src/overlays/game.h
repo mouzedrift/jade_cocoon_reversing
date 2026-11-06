@@ -1053,9 +1053,7 @@ extern G2V12 statusTintPoisonLevel7_8007A14C;
 
 extern G2V12 statusTint_8007A164;
 
-extern char tintImageRect_8007DC80;
 
-extern char tintClutRect_8007DC88;
 
 extern unsigned int levantStatusBits_8008BD38;
 
