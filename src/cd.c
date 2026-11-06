@@ -781,7 +781,11 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             }
             else
             {
-                goto wait;
+                loop = 0;
+                if (!(task->cur->flags_C & 0x400) && !(unknownFlags_8008D678 & 0x4000000))
+                {
+                    DrawLoadingIcon_8003CD5C();
+                }
             }
             break;
         case 5:
@@ -805,7 +809,6 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             }
             else
             {
-            wait:
                 loop = 0;
                 if (!(task->cur->flags_C & 0x400) && !(unknownFlags_8008D678 & 0x4000000))
                 {

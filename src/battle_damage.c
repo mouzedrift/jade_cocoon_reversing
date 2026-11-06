@@ -177,7 +177,7 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
                 }
                 else
                 {
-                    goto miss;
+                    out->kind_0 = 5;
                 }
             }
             else if (action->damageType_B == 2)
@@ -189,7 +189,6 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
         }
         else
         {
-        miss:
             out->kind_0 = 5;
         }
     }
@@ -213,9 +212,9 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
             }
             if (statusChance > statusRoll)
             {
-                goto status;
+                out->status_8 |= action->flags_0;
             }
-            if (action->flags_0 & 0x7FB)
+            else if (action->flags_0 & 0x7FB)
             {
                 SetTargetHitFlag_800184A0(targetUnit, 2);
             }
@@ -224,7 +223,6 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
         {
             if (action->flags_0 & 0x3800)
             {
-            status:
                 out->status_8 |= action->flags_0;
             }
             else

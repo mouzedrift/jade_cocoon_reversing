@@ -178,18 +178,16 @@ void CameraBattleTask_80036AB4(EventEntry* entry, CameraCtrl* cam)
         {
             cam->t_C = 0;
         }
-        if (cam->flags_4 & 4)
-        {
-            goto run;
-        }
     }
-    UpdateCameraFollow_80037918(ctrl);
-    TrackCameraTarget_8003891C(ctrl, &levantPos_8008BD18.pos);
-    ctrl->flags_4 &= ~0x1000;
-    ctrl->mode_8 = 0;
-    entry->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
-    return;
-run:
+    if (!(cam->flags_4 & 4))
+    {
+        UpdateCameraFollow_80037918(ctrl);
+        TrackCameraTarget_8003891C(ctrl, &levantPos_8008BD18.pos);
+        ctrl->flags_4 &= ~0x1000;
+        ctrl->mode_8 = 0;
+        entry->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
+        return;
+    }
     DrawBattleStage_800BC90C(ctrl);
     if (ctrl->flags_4 & 8)
     {
