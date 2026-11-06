@@ -469,7 +469,7 @@ void FormatPromptInput_800B9470(LoadMenuWork* work);
 void SaveListInput_800B952C(LoadMenuWork* work);
 void ConfirmPromptInput_800B9654(LoadMenuWork* work);
 int ReadSaveSummaries_800B9724(LoadMenuWork* work);
-extern void BuildCardHeader_800BB2AC(CardHeader* header,int idx, char* title);
+extern void BuildCardHeader_800BB2AC(void* buf, int idx, char* title);
 extern int PlayTimeHours_800BAC14(int frames);
 extern int PlayTimeMinutes_800BAC68(int frames);
 
