@@ -1860,15 +1860,7 @@ void DismissShopPrompt_800BC2DC(ShopMenu* menu)
     }
 }
 
-#if 0
-// Not matched (597 words instead of 598, the rest differs in registers): stack layout matches; the loop-invariant constant 2 is
-// not hoisted. In the original all register uses of 2 (the i == 2 compare, abilityRef/magicRef/skinRef.windowFlags_4,
-// case 2 of the j switch) share one pseudo that loop.c hoists out of the i loop and that is then spilled and
-// rematerialised in $t1 (the magicRef block has its own `addiu $t1,$zero,2`, one extra word). Here cse1 replaces the
-// 2 stored to abilityRef/magicRef.windowFlags_4 by (subreg:HI) of the sign-extended i (known == 2 from the compare),
-// which leaves 4 matching loads of 2 (loop dump: "savings 4 ... not desirable") instead of 6, so nothing is hoisted.
-// Tried: int/short i, (short)i == 2, 2 == i, switch (i) case 2, ternary/if-else openStep, if-wrapped loop body
-// instead of continue, i == 2 folded into the two inner conditions, permuter (~1500 iterations, no gain).
+// Matched
 void DrawShopMenu_800BC380(ShopMenu* menu)
 {
     Pos16 pos;
@@ -1975,8 +1967,14 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                 {
                     if (menu->flags_24 & 0x40)
                     {
-                        abilityPos.x = 0x5C;
-                        abilityPos.y = 0x5E;
+                        // do-while(0) block (as from a position macro): its loop notes end cse's extended
+                        // basic block, so the 2 stored to abilityRef.windowFlags_4 is not tied to i (known == 2)
+                        // and loop.c hoists the shared constant 2 as in the original
+                        do
+                        {
+                            abilityPos.x = 0x5C;
+                            abilityPos.y = 0x5E;
+                        } while (0);
                         abilityRef.cursor_0 = menu->pageIndex_48;
                         abilityRef.scroll_2 = menu->pageScroll_4A;
                         abilityRef.windowFlags_4 = 2;
@@ -2143,8 +2141,6 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
         DrawShopButtonHelp_800BCCD8(menu);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, DrawShopMenu_800BC380);
 
 void DrawShopButtonHelp_800BCCD8(ShopMenu* menu)
 {
