@@ -415,7 +415,7 @@ void TitleMenu_800A1310(TitleTask* t, TitleMenuWork* c)
             if (c->selected_24 == 0)
             {
                 LoadOverlay_80020BF8(2, 0x10);
-                sub_800BB5DC();
+                MemCardStart();
                 t->next_8 = NewGameCheckMemCards_800A14A8;
             }
         }
@@ -439,8 +439,8 @@ void NewGameCheckMemCards_800A14A8(TitleTask* t)
     t->next_8 = NoMemCardWarning_800A158C;
     for (i = 0; i < 2; i++)
     {
-        sub_800BB9F4(i << 4);
-        sub_800BC9DC(0, &a, &b);
+        MemCardAccept(i << 4);
+        MemCardSync(0, &a, &b);
         if (b != 0)
         {
             if (b < 0)
@@ -478,7 +478,7 @@ void NoMemCardWarning_800A158C(TitleTask* t)
     RECT r1;
     RECT r2;
     RECT r3;
-    sub_800BB64C();
+    MemCardStop();
     r0.x = 0x10;
     r0.y = 0x5A;
     DrawText_8003E91C(2, aCaution_800A05A8, &r0, 0);
@@ -502,7 +502,7 @@ void NoMemCardWarning_800A158C(TitleTask* t)
 void NoFreeBlocksWarning_800A166C(TitleTask* t)
 {
     TitleRect r1, r2, r3;
-    sub_800BB64C();
+    MemCardStop();
     r1.x = 0x10;
     r1.y = 0x5A;
     DrawText_8003E91C(2, aCaution_800A05A8, &r1, 0);
@@ -522,7 +522,7 @@ void NoFreeBlocksWarning_800A166C(TitleTask* t)
 // Matched
 void NewGameMemCardOk_800A1728(TitleTask* t)
 {
-    sub_800BB64C();
+    MemCardStop();
     t->next_8 = TitleMenu_800A1310;
     StartNewGameTask_800A1B74(t);
 }
@@ -793,7 +793,7 @@ void InitSaveData_800A211C(void)
     s->chapterNext_2DE = -1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;
-    s->levant_7A8.pos = dword_800B069C;
+    s->levant_7A8.pos = levantStartPos_800B069C;
     s->levant_7A8.rot = dword_800B06A8;
     s->levantStatus_7C8 = levantInitStatus_800A2730;
     saveData_8008B570.field_810 = -2;
@@ -967,7 +967,7 @@ void SetNewGameStartMap_800A2650(void)
     s->mapId_2E4[0].field_0 = 0;
     s->mapId_2E4[2].field_0 = 0;
     s->mapId_2E4[3].field_0 = 0;
-    s->levant_7A8.pos = dword_800B069C;
+    s->levant_7A8.pos = levantStartPos_800B069C;
     s->levant_7A8.rot = dword_800B06A8;
     ClearMapVars_800A2110();
     InitFlagTables_800A2540();

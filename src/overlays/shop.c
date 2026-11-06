@@ -1216,13 +1216,13 @@ void InitShopMenu_800BB148(ShopMenu* menu)
     menu->windowsOpen_20 = 0;
     SetShopHelpText_800BBB54(menu, 0);
     SetupShopCursor_800BD854(menu);
-    fn_80011CD0(&saveData_8008B570.levantStatus_7C8);
+    Heal_80011CD0(&saveData_8008B570.levantStatus_7C8);
     for (i = 0; i < 12; i++)
     {
         r = GetSaveItem_80033AE4(&saveData_8008B570, i);
         if (r)
         {
-            fn_80011CD0(r);
+            Heal_80011CD0(r);
         }
     }
     for (i = 0; i < 3; i++)
@@ -1230,7 +1230,7 @@ void InitShopMenu_800BB148(ShopMenu* menu)
         mn = GetMinion_80010598(3, i);
         if (mn)
         {
-            fn_80011CD0(&mn->status_84);
+            Heal_80011CD0(&mn->status_84);
         }
     }
     BuildShopMinionList_800B9920();
@@ -2713,7 +2713,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
         menu->fadeAction_94 = 1;
         menu->flags_24 |= 0x800;
         tk = &shopMenuTask_8008D670->entry;
-        fn_8001ABEC(1);
+        SetSceneFadeFrontOT_8001ABEC(1);
         tk->cb_8 = ShopWaitDarken_800BDE44;
         StartSceneDarken_8001AAA8(0x20);
         break;
@@ -2754,7 +2754,7 @@ void ShopMenuExecute_800BD9DC(ShopMenu* menu)
             menu->fadeAction_94 = 2;
             menu->flags_24 |= 0x800;
             tk = &shopMenuTask_8008D670->entry;
-            fn_8001ABEC(1);
+            SetSceneFadeFrontOT_8001ABEC(1);
             tk->cb_8 = ShopWaitDarken_800BDE44;
             StartSceneDarken_8001AAA8(0x20);
         }
@@ -2889,7 +2889,7 @@ void ShopWaitBrighten_800BDEA8(EventEntry* task, void* buffer)
             SetFadeMode_8001C19C(0, 0x20);
         }
         menu->flags_24 &= ~0x800;
-        fn_8001ABEC(0);
+        SetSceneFadeFrontOT_8001ABEC(0);
         menu->fadeAction_94 = 0;
     }
 }

@@ -176,7 +176,7 @@ typedef struct CombBtlHitNum
     int side_18;
 } CombBtlHitNum;
 
-extern int dword_8008D610;
+extern int gnFrame_8008D610;
 void CombBtlStart_800A4B8C(CombBtlTask* t, int a);
 void CombBtlWaitFile_800A4C40(CombBtlTask* t, int a);
 void ResetSides_800A4CFC(void);

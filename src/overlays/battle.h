@@ -1468,7 +1468,7 @@ void BossAi02_800C5A7C(EnemyAi* ai);
 void EnemyAiDefend_800C58AC(EnemyAi* ai);
 
 /* exe-side, to move to unit_gauges.h */
-extern void DrawStatusIcons_8002F480(UnitStatus* unit, short* pos, int ot, int reverse);
+extern void DrawMenuWindowItems_8002F480(UnitStatus* unit, short* pos, int ot, int reverse);
 /* exe-side, to move to event.h */
 /* exe-side, to move to font.h */
 /* exe-side, to move to util.h */

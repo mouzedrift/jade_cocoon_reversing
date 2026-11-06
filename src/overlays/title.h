@@ -145,7 +145,7 @@ extern void InitStub_800A2424(void);
 extern void InitLevantEquipment_800A20F4(void);
 extern void ClearMapVars_800A2110(void);
 extern void InitFlagTables_800A2540(void);
-extern Vec3i dword_800B069C; // Levant's start position
+extern Vec3i levantStartPos_800B069C; // Levant's start position
 extern SVECTOR dword_800B06A8; // Levant's start rotation
 
 /* other overlays resident with TITLE: LOAD (and its LIBMCRD modules), NAME, CONFIG */
@@ -155,10 +155,10 @@ extern int GetLoadMenuLoaded_800B7914(void);
 extern void ScanCardSaves_800BAFB0(int slot);
 extern int GetCardFreeBlocks_800BAE2C(void);
 extern int GetCardSaveCount_800BAE3C(void);
-extern void sub_800BB5DC(void); // LOAD's MemCardStart (PSY-Q LIBMCRD)
-extern void sub_800BB64C(void); // LOAD's MemCardStop
-extern void sub_800BB9F4(int chan); // LOAD's MemCardAccept
-extern void sub_800BC9DC(int mode, int* cmd, int* result); // LOAD's MemCardSync
+extern void MemCardStart(void); // LOAD's MemCardStart (PSY-Q LIBMCRD)
+extern void MemCardStop(void); // LOAD's MemCardStop
+extern void MemCardAccept(int chan); // LOAD's MemCardAccept
+extern void MemCardSync(int mode, int* cmd, int* result); // LOAD's MemCardSync
 extern void StartNameEntry_800B6E4C(void* a0, int a1);
 extern int IsNameEntryActive_800B6FC8(void);
 extern void StartConfigMenu_800C2EB4(void);

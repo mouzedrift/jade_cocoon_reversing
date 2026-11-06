@@ -2194,11 +2194,11 @@ void BuildCardHeader_800BB2AC(void* buf, int idx, char* title)
     }
     if (title)
     {
-        strcpy_8004E2D8(header->title_4, title);
+        strcpy(header->title_4, title);
     }
     else
     {
-        strcpy_8004E2D8(header->title_4, cardTitles_800BDFB0[idx]);
+        strcpy(header->title_4, cardTitles_800BDFB0[idx]);
     }
     for (i = 0; i < 12; i++)
     {

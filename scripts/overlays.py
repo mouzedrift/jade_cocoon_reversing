@@ -188,6 +188,13 @@ def main(argv):
     # extra defines for experiments, e.g. JC_DEFINES=DEBUG_TTY (see docs/testing_in_emulator.md); unset = matching build
     inc += ["-D" + d for d in os.environ.get("JC_DEFINES", "").split()]
     objs = []
+    sys.path.insert(0, REPO)
+    import build as bp  # JC_SHIFT padding, config/aliases.txt
+    if bp.shift_padding():
+        bp.write_if_changed(os.path.join(b, tag + "_shift.s"), bp.shift_asm())
+        run([os.path.join(BIN, "ASPSX.EXE"), "-G0", "-q", "-0", os.path.join(b, tag + "_shift.s"), "-o",
+             os.path.join(b, tag + "_shift.obj")])
+        objs.append(os.path.join(b, tag + "_shift.obj"))
     for i, src in enumerate(srcs):
         pre, cc, obj = (os.path.join(b, tag + ("_%d" % (i + 1) if i else "") + e) for e in (".preproc", ".o", ".obj"))
         run([os.path.join(BIN, "CPPPSX.EXE"), "-undef", "-D__GNUC__=2", "-v", "-D__OPTIMIZE__"] + inc + [
@@ -199,18 +206,14 @@ def main(argv):
         objs.append(obj)
     link = os.path.join(b, tag + "_link.txt")
     # the executable's symbols where its link put them (build.py first), so that the overlays follow the
-    # executable when it moves (its own equates for this overlay's range aside)
+    # executable when it moves (only what is in its image: the map also lists its equates of overlay names)
     equ = {m.group(2): int(m.group(1), 16) for m in re.finditer(
         r"^ ([0-9A-F]{8})  (\w+)$", open(os.path.join(BUILD, "jade_cocoon.map")).read(), re.M)}
-    equ = {n: a for n, a in equ.items() if not base <= a < base + len(data)}
-    # names of the source outside of the executable and of this overlay: other overlays' symbols (overlays/*.sym),
-    # else buffers by their _XXXXXXXX suffix
+    equ = {n: a for n, a in equ.items() if 0x80010000 <= a < EXE_END}
+    # names of the source outside of the executable and of this overlay: other overlays' symbols (where their
+    # last link put them, see build.overlay_symbols), else buffers by their _XXXXXXXX suffix
     own = {n for _, n in syms}
-    others = {}
-    for path in glob.glob(os.path.join(REPO, "overlays", "*.sym")):
-        if os.path.basename(path) != name.lower() + ".sym":
-            for a, n in load_symbols(os.path.relpath(path, REPO)):
-                others.setdefault(n, set()).add(a)
+    others = bp.overlay_symbols(exclude=name)
     for n in sorted(set(re.findall(r"\b[A-Za-z_]\w*\b", src_text)) - own - set(equ)):
         if n in others:
             if len(others[n]) > 1:
@@ -220,8 +223,6 @@ def main(argv):
             m = re.match(r"\w+_([0-9A-F]{8})$", n)
             if m and not base <= int(m.group(1), 16) < base + len(data):
                 equ[n] = int(m.group(1), 16)
-    sys.path.insert(0, REPO)
-    import build as bp  # config/aliases.txt
     aliases = bp.read_aliases(name)
 
     def map_symbols():

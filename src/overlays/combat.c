@@ -165,7 +165,7 @@ void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, 
             params->weights_10[2] = tmpWeight;
         }
     }
-    params->modelId_1C = Cbt_80019A80(minion->status_84.level_44);
+    params->modelId_1C = GetRankForLevel_80019A80(minion->status_84.level_44);
     params->texPart_20 = params->count_0 - 1;
     params->texId_28 = GetSpeciesModelDesc_80019C70(minion->field_3)->modelId_0;
     params->vram_30 = vram;

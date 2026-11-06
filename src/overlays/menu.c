@@ -2479,7 +2479,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
         tmp.f8 = 1;
         InitItemUse_800C00D4(&tmp, item, menu->cursors_2A[5]);
         tmp.f0 = 4;
-        unit = name_80014390(*(unsigned char*)&menu->cursors_2A[5]);
+        unit = GetUnitStatus_80014390(*(unsigned char*)&menu->cursors_2A[5]);
         if (unit)
             UseItemOnUnit_80013C28(&saveData_8008B570.levantStatus_7C8, unit, &tmp, &tmp.d_10);
         ApplyItemUseDelta_800C00F8(&tmp, &tmp.d_10);

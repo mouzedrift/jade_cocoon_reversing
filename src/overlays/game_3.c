@@ -888,7 +888,7 @@ EventDesc* gameEventListDefs_800B0DA4[58] = {
 };
 EventDesc gameMainTaskDef_800B0E8C = { 1, 1, 64, (void *)&gameMainTask_8008D46C, (EventEntryFn)GameMainInit_800A68CC };
 char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
-GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())name_800BCB00 } };
+GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())ReturnWarpStart_800BCB00 } };
 int fieldMode_800B0EC0 = 1;
 GameFieldMinions fieldMinions_800B0EC4 = { 0 };
 char levantBones_800B0EF8 = 0;
@@ -1494,7 +1494,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
 // Matched
 int IsEventPointValid_800A6504(int point, int* pos)
 {
-    return sub_800B76B8((char *)&mapState_8008B500.meshes20_20[point], pos) >= 0;
+    return FindTriAtXZ_800B76B8((char *)&mapState_8008B500.meshes20_20[point], pos) >= 0;
 }
 
 // Matched
@@ -2072,7 +2072,7 @@ void WaitChapterOverlay_800A76D8(GameTask* task, int* work)
 {
     if (GetFileRequestStatus_8003BE30(work[0]) == 0)
     {
-        task->next_8 = sub_800B66DC;
+        task->next_8 = ChapterStartTask_800B66DC;
     }
 }
 
@@ -3216,7 +3216,7 @@ void InitLevantActor_800A94CC(void)
     UpdateLevantActorModel_800AB8DC();
     ResetLevantActor_800A9414(lev, 0, 3);
     ClearLevantFade_800AB150((GameLevantFade*)lev);
-    sub_800B80C8(lev);
+    FindLevantMesh_800B80C8(lev);
     lev->status_3C = dword_8008BD38;
     SetLevantStatusTint_800ABECC(dword_8008BD38);
 }
@@ -3409,7 +3409,7 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
     if (!(lev->flags_0 & 0x84000))
     {
         div = lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)].divisor_8;
-        sub_800B80C8(lev);
+        FindLevantMesh_800B80C8(lev);
         slope = mapState_8008B500.meshes_C[lev->mesh_84].tris_4[lev->tri_80].nx_18 * sinTable_80084540[saveData_8008B570.levant_7A8.rot.vy & 0xfff] / 4096 +
             mapState_8008B500.meshes_C[lev->mesh_84].tris_4[lev->tri_80].nz_1C * sinTable_80084540[(saveData_8008B570.levant_7A8.rot.vy + 0x400) & 0xfff] / 4096;
         slope = 0x1000 - slope * slope / 4096;
@@ -4445,7 +4445,7 @@ void SetLevantStatusTint_800ABECC()
     else if (status & 8)
     {
         if (status & 1)
-            tint = &dword_8007A104;
+            tint = &statusTintPoisonLevel1_8007A104;
         else
             tint = &statusTintLevel1_8007A0A4;
     }

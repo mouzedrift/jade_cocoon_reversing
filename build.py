@@ -86,27 +86,77 @@ def aliases_resolved():
     return all(n in syms and b in syms and syms[n] == syms[b] + off for n, b, off in read_aliases())
 
 
-def external_symbols(src_dir):
-    """[(name, address)] of the names in the executable's C sources (src/*.c, *.h, not src/overlays) that are
-    outside of its image: from overlays/*.sym, or by the name's _XXXXXXXX suffix (buffers behind the image)"""
-    ovl = {}
+def overlay_maps():
+    """{overlay: {name: address}} of the overlays' last links (build_psyq/overlay_NAME.map)"""
+    out = {}
+    for path in glob.glob(os.path.join(BUILD_DIR, "overlay_*.map")):
+        out[os.path.basename(path)[8:-4]] = {m.group(2): int(m.group(1), 16) for m in re.finditer(
+            r"^ ([0-9A-F]{8})  (\w+)$", open(path).read(), re.M)}
+    return out
+
+
+def overlay_symbols(exclude=None):
+    """{name: {address}} of the overlays' symbols (overlays/NAME.sym tells which overlay has a name), where the
+    overlay's last link put them (build_psyq/overlay_NAME.map), else the address in the .sym file"""
+    import json
+    snapshot = os.environ.get("JC_OVERLAY_MAPS")  # build_all: the maps as the round started (overlays build in parallel)
+    maps = json.load(open(snapshot)) if snapshot else overlay_maps()
+    out = {}
     for path in glob.glob(os.path.join(CURRENT_DIR, "overlays", "*.sym")):
+        ovl = os.path.basename(path)[:-4]
+        if exclude and ovl == exclude.lower():
+            continue
+        built = maps.get(ovl, {})
         for line in open(path):
             m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
             if m:
-                ovl[m.group(1)] = int(m.group(2), 16)
+                out.setdefault(m.group(1), set()).add(built.get(m.group(1), int(m.group(2), 16)))
+    return out
+
+
+def external_symbols(src_dir):
+    """[(name, address)] of the names in the executable's C sources (src/*.c, *.h, not src/overlays) that are
+    outside of its image: overlay symbols (overlay_symbols), or by the name's _XXXXXXXX suffix (buffers
+    behind the image)"""
+    ovl = overlay_symbols()
     names = set()
     for path in glob.glob(os.path.join(src_dir, "*.[ch]")):
         names |= set(re.findall(r"\b[A-Za-z_]\w*\b", open(path).read()))
     out = {}
     for n in names:
         if n in ovl:
-            out[n] = ovl[n]
+            if len(ovl[n]) > 1:
+                sys.exit("%s is at several addresses in the overlays" % n)
+            out[n] = next(iter(ovl[n]))
         else:
             m = re.match(r"\w+_([0-9A-F]{8})$", n)
             if m and int(m.group(1), 16) >= IMAGE_END:
                 out[n] = int(m.group(1), 16)
     return sorted(out.items(), key=lambda x: (x[1], x[0]))
+
+
+def shift_padding():
+    """JC_SHIFT=N (bytes, a multiple of 8): N bytes in every section in front of the game code, to check that
+    everything still links and points where it should when things move (scripts/shift_check.py)"""
+    n = int(os.environ.get("JC_SHIFT", "0"), 0)
+    if n % 8:
+        sys.exit("JC_SHIFT must be a multiple of 8")
+    return n
+
+
+def shift_asm():
+    n = shift_padding()
+    return "".join("\t.section\t%s\r\n\t.space\t%d\r\n" % (s, n) for s in (".text", ".rdata", ".data", ".bss")) + "\t.text\r\n"
+
+
+def shift_object(ninja, name):
+    """the JC_SHIFT padding object (None without JC_SHIFT)"""
+    if not shift_padding():
+        return None
+    out_path = os.path.join(BUILD_DIR, name)
+    write_if_changed(out_path + ".s", shift_asm())
+    ninja.build(out_path + ".obj", "assemble", out_path + ".s")
+    return out_path + ".obj"
 
 
 def write_if_changed(path, text):
@@ -203,6 +253,9 @@ def generate_ninja():
         bss_tail = None
         objs = []
         headers = [os.path.join(project_src, f) for f in sorted(os.listdir(project_src)) if f.endswith(".h")]
+        shift = shift_object(ninja, "shift")
+        if shift:
+            linker_deps.append(shift)
         for c_file in c_files:
             if c_file.startswith("obj "):
                 linker_deps.append(os.path.join(CURRENT_DIR, "libs", "psyq4.4", "LIB", c_file[4:]))
@@ -318,12 +371,37 @@ def read_hashes():
     return {k: h for k, h in (l.split() for l in open(path) if l.strip() and not l.startswith("#"))}
 
 
-def verify_hashes(iso):
-    """SHA-1 of the linked exe image and of every overlay (scripts/overlays.py, built from build_psyq/NAME.orig
-    or from the disc image with --iso) against config/hashes.txt. Returns True if everything matches."""
+def link_files():
+    """the linker command files of the executable and the overlays (to see when another round changes nothing)"""
+    return {p: open(p).read() for p in glob.glob(os.path.join(BUILD_DIR, "*link.txt"))}
+
+
+def build_all(iso):
+    """the executable and every overlay (scripts/overlays.py, from build_psyq/NAME.orig or from the disc image
+    with --iso). The images refer to each other's symbols (the overlays to the executable's, the executable and
+    overlays to overlays' code), which only changes equate values, never a layout: link again until a round
+    changes no linker command file. Returns {image: SHA-1 or "BUILD FAILED: ..."}"""
+    import json
+    for _ in range(3):
+        before = link_files()
+        snapshot = os.path.join(BUILD_DIR, "overlay_maps.json")
+        json.dump(overlay_maps(), open(snapshot, "w"))
+        os.environ["JC_OVERLAY_MAPS"] = snapshot
+        try:
+            results = build_overlays(iso)
+        finally:
+            del os.environ["JC_OVERLAY_MAPS"]
+        generate_ninja()
+        if build() != 0:
+            sys.exit(1)
+        if link_files() == before:
+            return results
+    sys.exit("the images' symbols did not settle after 3 rounds")
+
+
+def build_overlays(iso):
     import concurrent.futures
     import hashlib
-    expected = read_hashes()
     results = {}
     exe = open(os.path.join(BUILD_DIR, f"{EXE_NAME}.exe"), "rb").read()[0x800:]
     results["exe-image"] = hashlib.sha1(exe).hexdigest()
@@ -344,6 +422,12 @@ def verify_hashes(iso):
     with concurrent.futures.ThreadPoolExecutor(8) as pool:
         for name, h in pool.map(one, names):
             results["overlay-" + name] = h
+    return results
+
+
+def verify_hashes(results):
+    """the SHA-1s of build_all against config/hashes.txt. Returns True if everything matches."""
+    expected = read_hashes()
     bad = 0
     for k, h in results.items():
         want = expected.get(k)
@@ -449,8 +533,12 @@ def main():
     if not aliases_resolved():
         sys.exit("aliases (config/aliases.txt) still not at BASE + OFFSET after relinking")
 
-    if not args.no_verify and not verify_hashes(args.iso):
-        sys.exit(1)
+    if not args.no_verify:
+        results = build_all(args.iso)
+        if shift_padding():
+            print("JC_SHIFT build: no hash check (scripts/shift_check.py compares it with the normal build)")
+        elif not verify_hashes(results):
+            sys.exit(1)
 
     if args.exec:
         exec_pcsx(args.iso)

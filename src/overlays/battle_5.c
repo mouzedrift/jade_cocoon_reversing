@@ -235,7 +235,7 @@ void ActorWindowTask_800C0254(EventEntry* task, void* arg)
     {
         win->frame_0 = 4;
     }
-    DrawStatusIcons_8002F480(status, 0, 0xF, 0);
+    DrawMenuWindowItems_8002F480(status, 0, 0xF, 0);
     AddDrawAreaPrim_8003326C(win->rect_C, pOT_8008D454 + 10);
 }
 

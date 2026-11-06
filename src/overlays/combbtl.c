@@ -568,7 +568,7 @@ void ChooseNextActor_800A599C(CombBtlTask* t, int side)
     targetSide_800A8620 = -1;
     if (sideGauges_800A84D0[0] == 0 && sideGauges_800A84D0[1] == 0)
     {
-        sideGauges_800A84D0[(dword_8008D610 & 2) >> 1] += 100;
+        sideGauges_800A84D0[(gnFrame_8008D610 & 2) >> 1] += 100;
     }
     for (i = 0; i < 2; i++)
     {
@@ -1395,7 +1395,7 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     AddDrawAreaPrim_8003326C(&win->cur_10, pOT_8008D454);
     pt.lo = pos70.p[win->side_0].lo;
     pt.hi = pos70.p[win->side_0].hi;
-    DrawStatusIcons_8002F480(status, &pt, 0xF, win->side_0);
+    DrawMenuWindowItems_8002F480(status, &pt, 0xF, win->side_0);
     if (win->side_0)
     {
         label = &w1;

@@ -170,7 +170,7 @@ typedef struct GameEvEnt
 
 extern EventEntry* StartEventScript_800A59D0(int script);
 
-extern int sub_800B76B8(char* p, int* pos);
+extern int FindTriAtXZ_800B76B8(char* p, int* pos);
 
 
 
@@ -357,7 +357,7 @@ typedef struct GameBattleWork
 {
     int req_0; // file request
     int fadeWait_4; // frames to wait before fading back in
-    int battleTask_8; // StartBattle_800BA9E4 / sub_800BBB94
+    int battleTask_8; // StartBattle_800BA9E4 / dword_800BBB94
 } GameBattleWork;
 
 
@@ -550,9 +550,9 @@ extern int GameFn_8003B9E0(int* a, int* b);
 
 extern void MapSelectStart_800B6BFC();
 
-extern void sub_800B66DC();
+extern void ChapterStartTask_800B66DC();
 
-extern int sub_800BBB94(void);
+extern int dword_800BBB94(void);
 
 
 extern void GameMainStart_800A6968();
@@ -1042,7 +1042,7 @@ extern G2V12 statusTintLevel7_8007A0EC;
 
 extern G2V12 statusTintPoison_8007A0F8;
 
-extern G2V12 dword_8007A104;
+extern G2V12 statusTintPoisonLevel1_8007A104;
 
 extern G2V12 statusTintPoisonLevel2_8007A110;
 
@@ -1188,7 +1188,7 @@ typedef struct GameLevantActorInit
     int status_3C;
 } GameLevantActorInit;
 
-extern void sub_800B80C8(void* p);
+extern void FindLevantMesh_800B80C8(void* p);
 
 // skeleton draw arguments (skel_draw.h AnimSkel)
 typedef struct GameSkelDraw
@@ -1263,7 +1263,7 @@ extern EventNode* hitNumberTasks_8008D778;
 extern EventNode* equipTask_8008D4C4;
 extern EventNode* configTask_8008B4B8;
 extern int dword_8008D62C;
-extern char name_800BCB00[];
+extern char ReturnWarpStart_800BCB00[];
 extern const int dword_800A05A0;
 extern const char aAssertionFaile_800A05A4[];
 extern const char aEnmbatleC_800A05CC[12];

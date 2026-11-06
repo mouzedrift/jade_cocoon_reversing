@@ -268,9 +268,9 @@ extern char defaultBones_80079140[];
 extern short sinTable_80084540[];        // data_decls.h
 extern Minion name_8008EF18[];
 int fn_80010A44(int a);                   // party.h
-void fn_80011CD0(UnitStatus* p);          // unit_stats.h
+void Heal_80011CD0(UnitStatus* p);          // unit_stats.h
 void fn_80019B14(int a, int b, int c);    // minion_init.h
-void fn_8001ABEC(int a);                  // engine.h
+void SetSceneFadeFrontOT_8001ABEC(int a);                  // engine.h
 void* fn_8001D45C(void* p);               // engine.h (CreateActor)
 void fn_8001D68C(void* p, int on);        // engine.h
 int fn_80024E38(int a);                   // model_ftg
