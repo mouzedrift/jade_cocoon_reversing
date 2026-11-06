@@ -14,6 +14,7 @@
 #include "minion_init.h"
 
 #include "model.h"
+#include "skel_draw.h"
 #include "camera.h"
 #include "sound.h"
 #include "pad_text.h"
@@ -725,6 +726,9 @@ typedef struct BatDropTrail
 
 extern int* DrawRotSprite_80044010();
 
+/* battle_2.c */
+void DrawBattleStage_800BC90C(CameraCtrl* ctrl);
+
 extern void SpriteAnimTask_800C1B2C();
 
 extern void BounceSparkTask_800C1DA4();
@@ -1007,7 +1011,6 @@ extern void CmdEnemySwap_800BBFFC();
 extern void CmdSimple_800BC0FC();
 
 extern int dword_800B66C0;
-extern const int dword_800B6700[4];
 extern const char aAttackWithReadi_800B68AC[];
 extern const char aDefendToReduceD_800B68E4[];
 extern const char aSummonDivineMin_800B6914[];
@@ -1418,10 +1421,6 @@ extern int menuTarget_800C9E54;
 extern BattleCmd menuCommand_800C9E58;
 extern unsigned char targetFlags_800C9E68;
 extern BatMenuItem *menuItems_800C9E6C;
-
-/* the jump table of DrawBattleStage_800BC90C (asm) and its targets, labels in the generated asm */
-extern char jtgt_800BD0F4[], jtgt_800BD4F0[];
-extern void* const dword_800B6710[25];
 
 /* battle.c: the battle end task (BattleEnd_800BA254 and its next steps) */
 typedef struct BatEndWork

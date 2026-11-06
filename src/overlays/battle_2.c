@@ -1,37 +1,21 @@
 // BATTLE.BIN, source file 2 of 6 from 0x800BC90C (.rdata from 0x800B6700)
 #include "battle.h"
 
-const int dword_800B6700[4] = { 0x1000, 0x1000, 0x1000 };
-// the jump table of DrawBattleStage_800BC90C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in battle.h when the function is C, the switch emits it then
-void* const dword_800B6710[25] = { jtgt_800BD0F4, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD4F0, jtgt_800BD0F4, jtgt_800BD0F4 };
-
-#if 0 // Not matched: ~900 of 1095 instructions identical; control flow, stack frame and most blocks match; left are
-      // register allocation / loop-invariant hoisting differences (light, saveData and 1/240 constant bases) in every block.
-      // Its .rdata (initializer at 0x800B6700, switch table at 0x800B6710) comes out right since this file was split off.
-
-extern short cameraRot_8008D4C8;
-extern void DrawBillboardRgb_80043DE0(void* a0, void* a1, void* a2, void* a3);
-typedef struct BatStageObj
-{
-    char pad0[0x38];
-    int x_38;
-    int y_3C;
-    int z_40;
-} BatStageObj;
-
-void DrawBattleStage_800BC90C(BatStageObj* obj)
+// Matched
+// Draws the battle stage: its model, the sprite list, the 32 floor columns, the animated sprites and up to 3 extra models.
+// Some statements are split up only for the match: `frame = frames_8[j]; frame += k;` keeps the frame address unreduced
+// (computed fresh per iteration, as in the original), and the floor column x is built from separate terms so the
+// constant stays on `i * 96`.
+void DrawBattleStage_800BC90C(CameraCtrl* ctrl)
 {
     int scale[3] = { 0x1000, 0x1000, 0x1000 };
     int idx;
-    int i;
 
     unknownFlags_8008D678 &= ~0x10000;
     idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, battleStages_800C8EAC[battleStageId_80083BD0].model_6);
-    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &obj->x_38, &stageRot_800C9124, pointLights_8008D534, 1, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &ctrl->pos_38, &stageRot_800C9124, pointLights_8008D534, 1, scale);
     {
         unsigned short* list = battleStages_800C8EAC[battleStageId_80083BD0].list_0;
-        SaveData* sd = &saveData_8008B570;
         for (; *list != 0xFFFF; list++)
         {
             EffectSprite* sprite = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, *list)];
@@ -44,19 +28,19 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     VECTOR pos;
                     CVECTOR col;
                     short sz[2];
-                    EffectSpriteFrame* frame = &sprite->frames_8[j][k];
-                    CameraView* light = &cameraState_8008D4F0;
-                    pos.vx = obj->x_38;
-                    pos.vy = obj->y_3C;
-                    pos.vz = obj->z_40;
+                    EffectSpriteFrame* frame = sprite->frames_8[j];
+                    frame += k;
+                    pos.vx = ctrl->pos_38.x;
+                    pos.vy = ctrl->pos_38.y;
+                    pos.vz = ctrl->pos_38.z;
                     pos.vx += frame->pos_10[0];
                     pos.vz += frame->pos_10[2];
-                    pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
+                    pos.vy = saveData_8008B570.levant_7A8.pos.y + frame->pos_10[1];
                     if (frame->size_C[1] != 0)
                     {
-                        col.r = light->ambientR_30 + frame->rgb_18[0] * light->ent_44[0].color_C.vx / 4096;
-                        col.g = light->ambientG_31 + frame->rgb_18[1] * light->ent_44[0].color_C.vy / 4096;
-                        col.b = light->ambientB_32 + frame->rgb_18[2] * light->ent_44[0].color_C.vz / 4096;
+                        col.r = cameraState_8008D4F0.ambientR_30 + frame->rgb_18[0] * cameraState_8008D4F0.ent_44[0].color_C.vx / 4096;
+                        col.g = cameraState_8008D4F0.ambientG_31 + frame->rgb_18[1] * cameraState_8008D4F0.ent_44[0].color_C.vy / 4096;
+                        col.b = cameraState_8008D4F0.ambientB_32 + frame->rgb_18[2] * cameraState_8008D4F0.ent_44[0].color_C.vz / 4096;
                         if (battleStageId_80083BD0 == 0x10)
                         {
                             SetSemiTrans(&sprite->poly_C, 1);
@@ -69,7 +53,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                         }
                         else
                         {
-                            DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
+                            DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col.r);
                         }
                     }
                 }
@@ -78,6 +62,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
     }
     if (battleStages_800C8EAC[battleStageId_80083BD0].floor_8 >= 0)
     {
+        int i;
         for (i = 0; i < 32; i++)
         {
             DVECTOR sxy;
@@ -86,33 +71,35 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
             SVECTOR sv;
             long depth;
             long flag;
-            int yaw;
             int sx;
+            int yaw;
+            int column;
             int size;
-            short* cam = &cameraRot_8008D4C8;
-            rel.vx = obj->x_38;
-            rel.vy = obj->y_3C;
-            rel.vz = obj->z_40;
-            yaw = -cam[1];
-            rel.vx += sinTable_80084540[yaw & 0xFFF];
+            rel.vx = ctrl->pos_38.x;
+            rel.vy = ctrl->pos_38.y;
+            rel.vz = ctrl->pos_38.z;
+            rel.vx += sinTable_80084540[-cameraRot_8008D4C8.vy & 0xFFF];
+            rel.vz += sinTable_80084540[(-cameraRot_8008D4C8.vy + 0x400) & 0xFFF];
             rel.vy = levantPos_8008BD18.pos.y - 0x352;
             rel.vx -= cameraEye_8008D600.vx;
             rel.vy -= cameraEye_8008D600.vy;
-            rel.vz += sinTable_80084540[(yaw + 0x400) & 0xFFF];
             rel.vz -= cameraEye_8008D600.vz;
             sv.vx = rel.vx;
             sv.vy = rel.vy;
             sv.vz = rel.vz;
             RotTransPers(&sv, (long*)&sxy, &depth, &flag);
             poly = battleEffectFile_80095468.sprites_20[battleStages_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
-            sx = ((cam[1] & 0xFFF) / 4 + i * 96 - 0x400) * cameraState_8008D4F0.geomScreen_2E / 240;
+            yaw = (cameraRot_8008D4C8.vy & 0xFFF) / 4;
+            column = i * 96 - 0x400;
+            sx = yaw + column;
+            sx = sx * cameraState_8008D4F0.geomScreen_2E / 240;
             if ((unsigned int)(sx + 0x60) < 0x1A0)
             {
-                size = cameraState_8008D4F0.geomScreen_2E * 96 / 240;
                 poly.r0 = poly.r0 * sceneBrightness_8008D40C >> 12;
                 poly.g0 = poly.g0 * sceneBrightness_8008D40C >> 12;
                 poly.b0 = poly.b0 * sceneBrightness_8008D40C >> 12;
                 setShadeTex(&poly, 0);
+                size = cameraState_8008D4F0.geomScreen_2E * 96 / 240;
                 setXYWH(&poly, sx, sxy.vy - size, size + 1, size + 1);
                 *(POLY_FT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = poly;
                 addPrim(&pOT_8008B4C8[0x3FF], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
@@ -154,7 +141,7 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
             for (j = 0; j < sprite->count_0; j++)
             {
                 int half = period >> 1;
-                int phase = (stageAnimPhases_800C911C[j % 8] + (unsigned int)frameCount_8008D3FC) % period;
+                int phase = ((unsigned int)frameCount_8008D3FC + stageAnimPhases_800C911C[j % 8]) % period;
                 int k;
                 if (battleStageId_80083BD0 == 0x13 && half < phase)
                 {
@@ -172,13 +159,12 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                 {
                     VECTOR pos;
                     CVECTOR col;
-                    EffectSpriteFrame* frame = &sprite->frames_8[j][k];
+                    EffectSpriteFrame* frame = sprite->frames_8[j];
                     int du;
                     int dv;
                     int uu;
                     int vv;
-                    SaveData* sd;
-                    CameraView* light;
+                    frame += k;
                     if (stageAnimUv_800C9D8C[1] < 0 && stageAnimUv_800C9D8C[0] < 0)
                     {
                         stageAnimUv_800C9D8C[0] = sprite->poly_C.u0;
@@ -186,13 +172,12 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     }
                     du = phase % cols;
                     dv = phase / cols;
-                    sd = &saveData_8008B570;
-                    pos.vx = obj->x_38;
-                    pos.vy = obj->y_3C;
-                    pos.vz = obj->z_40;
+                    pos.vx = ctrl->pos_38.x;
+                    pos.vy = ctrl->pos_38.y;
+                    pos.vz = ctrl->pos_38.z;
                     pos.vx += frame->pos_10[0];
                     pos.vz += frame->pos_10[2];
-                    pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
+                    pos.vy = saveData_8008B570.levant_7A8.pos.y + frame->pos_10[1];
                     du = du * (frame->w_4 + 1);
                     dv = dv * (frame->h_6 + 1);
                     uu = frame->u_0 + du;
@@ -211,12 +196,11 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     sprite->poly_C.v3 = stageAnimUv_800C9D8C[1] + vv + frame->h_6;
                     if (frame->size_C[1] != 0)
                     {
-                        light = &cameraState_8008D4F0;
-                        col.r = light->ambientR_30 + frame->rgb_18[0] * light->ent_44[0].color_C.vx / 4096;
-                        col.g = light->ambientG_31 + frame->rgb_18[1] * light->ent_44[0].color_C.vy / 4096;
-                        col.b = light->ambientB_32 + frame->rgb_18[2] * light->ent_44[0].color_C.vz / 4096;
+                        col.r = cameraState_8008D4F0.ambientR_30 + frame->rgb_18[0] * cameraState_8008D4F0.ent_44[0].color_C.vx / 4096;
+                        col.g = cameraState_8008D4F0.ambientG_31 + frame->rgb_18[1] * cameraState_8008D4F0.ent_44[0].color_C.vy / 4096;
+                        col.b = cameraState_8008D4F0.ambientB_32 + frame->rgb_18[2] * cameraState_8008D4F0.ent_44[0].color_C.vz / 4096;
                         SetSemiTrans(&sprite->poly_C, 1);
-                        DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
+                        DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col.r);
                     }
                 }
             }
@@ -225,28 +209,28 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
         default:
         {
             EffectSprite* sprite = &battleEffectFile_80095468.sprites_20[FindEffectIndex_80020F00(&battleEffectFile_80095468, 0, battleStages_800C8EAC[battleStageId_80083BD0].anim_A)];
-            int j = ((unsigned int)frameCount_8008D3FC % (sprite->count_0 * 2)) / 2;
+            int j = (unsigned int)frameCount_8008D3FC % (sprite->count_0 * 2);
             int k;
+            j /= 2;
             for (k = 0; k < sprite->frameCounts_4[j]; k++)
             {
+                EffectSpriteFrame* frame = sprite->frames_8[j];
                 int m;
+                frame += k;
                 for (m = 0; m < 8; m++)
                 {
                     VECTOR pos;
                     CVECTOR col;
                     int dist;
                     int ang;
-                    EffectSpriteFrame* frame = &sprite->frames_8[j][k];
-                    SaveData* sd = &saveData_8008B570;
-                    CameraView* light = &cameraState_8008D4F0;
-                    pos.vx = obj->x_38;
-                    pos.vy = obj->y_3C;
-                    pos.vz = obj->z_40;
+                    pos.vx = ctrl->pos_38.x;
+                    pos.vy = ctrl->pos_38.y;
+                    pos.vz = ctrl->pos_38.z;
                     dist = ISqrt_8003B918(frame->pos_10[0] * frame->pos_10[0] + frame->pos_10[2] * frame->pos_10[2]);
                     ang = ratan2_8003B548(frame->pos_10[0], frame->pos_10[2]) + m * 512;
                     pos.vx += sinTable_80084540[(ang + 0x400) & 0xFFF] * dist / 4096;
                     pos.vz += sinTable_80084540[ang & 0xFFF] * dist / 4096;
-                    pos.vy = sd->levant_7A8.pos.y + frame->pos_10[1];
+                    pos.vy = saveData_8008B570.levant_7A8.pos.y + frame->pos_10[1];
                     sprite->poly_C.u0 = frame->u_0;
                     sprite->poly_C.v0 = frame->v_2;
                     sprite->poly_C.u1 = frame->u_0 + frame->w_4;
@@ -257,10 +241,10 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
                     sprite->poly_C.v3 = frame->v_2 + frame->h_6;
                     if (frame->size_C[1] != 0)
                     {
-                        col.r = light->ambientR_30 + frame->rgb_18[0] * light->ent_44[0].color_C.vx / 4096;
-                        col.g = light->ambientG_31 + frame->rgb_18[1] * light->ent_44[0].color_C.vy / 4096;
-                        col.b = light->ambientB_32 + frame->rgb_18[2] * light->ent_44[0].color_C.vz / 4096;
-                        DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col);
+                        col.r = cameraState_8008D4F0.ambientR_30 + frame->rgb_18[0] * cameraState_8008D4F0.ent_44[0].color_C.vx / 4096;
+                        col.g = cameraState_8008D4F0.ambientG_31 + frame->rgb_18[1] * cameraState_8008D4F0.ent_44[0].color_C.vy / 4096;
+                        col.b = cameraState_8008D4F0.ambientB_32 + frame->rgb_18[2] * cameraState_8008D4F0.ent_44[0].color_C.vz / 4096;
+                        DrawBillboardRgb_80043DE0(&sprite->poly_C, &pos, frame->size_C, &col.r);
                     }
                 }
             }
@@ -270,27 +254,28 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
     }
     if (battleStages_800C8EAC[battleStageId_80083BD0].models_C != 0)
     {
+        int i;
         for (i = 0; i < 3; i++)
         {
-            unsigned short* ent = &battleStages_800C8EAC[battleStageId_80083BD0].models_C[i * 4];
-            int id = ent[0];
-            int flags = ent[1];
+            unsigned short* ent = battleStages_800C8EAC[battleStageId_80083BD0].models_C;
+            int id = ent[i * 4];
+            int flags = ent[i * 4 + 1];
             unsigned long* ot = pOT_8008B4C8;
             if (id != 0xFF)
             {
-                int sc[3] = { 0x1000, 0x1000, 0x1000 };
-                VECTOR pos;
-                SVECTOR rot;
                 EffectModel* mdl = &battleEffectFile_80095468.models_28[FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, id)];
+                VECTOR pos;
+                int sc[3] = { 0x1000, 0x1000, 0x1000 };
+                SVECTOR rot;
                 int k;
                 memset(&rot, 0, 8);
                 if (battleStageId_80083BD0 == 0x10)
                 {
                     rot.vy = frameCount_8008D3FC * 100;
                 }
-                pos.vx = obj->x_38;
-                pos.vy = obj->y_3C;
-                pos.vz = obj->z_40;
+                pos.vx = ctrl->pos_38.x;
+                pos.vy = ctrl->pos_38.y;
+                pos.vz = ctrl->pos_38.z;
                 pos.vy = levantPos_8008BD18.pos.y;
                 if (battleStageId_80083BD0 == 0x13 && i == 0)
                 {
@@ -310,9 +295,6 @@ void DrawBattleStage_800BC90C(BatStageObj* obj)
         }
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, DrawBattleStage_800BC90C);
 
 void ActionStart_800BDA28(BatTaskEntry* task)
 {
