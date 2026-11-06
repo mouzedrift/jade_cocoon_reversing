@@ -1619,7 +1619,12 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
 }
 
 #if 0
-// Not matched: prologue scheduling only: the original sets $a0 = 1 before saving $s1 / copying the second argument
+// Not matched: prologue scheduling only (the original sets $a0 = 1 before saving $s1 / copying the second argument).
+// Tried: the WriteSaveTask_800B98C4 shape (void* t, void* buf copied into typed locals) fixes the scheduling but swaps
+// task/chan ($s3/$s4): gcc 2.8 global alloc ranks task (5 refs / 52 insns, or 4/49 with the two 0xF failures
+// shared via goto) above chan (2 refs / 13 insns), the original needs chan first. Making chan's life shorter
+// (save computed first, unsigned short save, a port temp) gets the registers right but then the three lbu's of
+// chan/save are scheduled in the wrong order; ~500 declaration-order/type/goto/temp combinations tried.
 void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work)
 {
     int cmd = 0;
@@ -2156,7 +2161,11 @@ int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir)
 }
 
 #if 0
-// Not matched: register allocation (h/i/table pointer in $s0/$s1/$s2 in the original) and the clearing loops are not strength-reduced to a decrementing pointer here
+// Not matched: register allocation only, plus the scheduling of the i++/icon-offset increments in the first loop
+// (header/i/table pointer are $s0/$s1/$s2 in the original, $s2/$s0/$s1 here). The clearing loops match now: they are
+// counting-up loops that gcc reverses into the decrementing-pointer form. gcc 2.8 ranks i (14 refs / 59 insns) and the
+// table giv (11/48) above header (19/188); field_44 loop variable, pointer-walk/do-while/while loop shapes, statement
+// order and the strcpy ternary/if forms tried without changing that order.
 void BuildCardHeader_800BB2AC(CardHeader* header, int idx, char* title)
 {
     int i;
@@ -2183,12 +2192,9 @@ void BuildCardHeader_800BB2AC(CardHeader* header, int idx, char* title)
     header->magic_0[1] = 'C';
     header->type_2 = 0x13;
     header->blocks_3 = 1;
+    for (j = 0; j < 64; j++)
     {
-        char* titleBuf = header->title_4;
-        for (j = 63; j >= 0; j--)
-        {
-            titleBuf[j] = 0;
-        }
+        header->title_4[j] = 0;
     }
     if (title)
     {
@@ -2198,7 +2204,7 @@ void BuildCardHeader_800BB2AC(CardHeader* header, int idx, char* title)
     {
         strcpy_8004E2D8(header->title_4, cardTitles_800BDFB0[idx]);
     }
-    for (i = 11; i >= 0; i--)
+    for (i = 0; i < 12; i++)
     {
         header->field_44[i] = 0;
     }
