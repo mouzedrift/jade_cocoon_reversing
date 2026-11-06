@@ -54,8 +54,11 @@ void TileAnimTask_800A0A04(GameTask* task, short* work)
 // TileUVClut (union in new TileFT4/TileSprt prim structs, needs DrawTileAnimLayers_800A0A5C.src.diff on overlays/game.h). Found: setShadeTex
 // for the codes (cse no longer shares 0x2C/0x64 regs), getTPage(1,1,(tile/8+20)/4*64,0) gives the orig srl, inline tile/8 (no page var)
 // adds a cse path entry so the 2nd tpage recomputes page+20 like orig, setDrawTPage before sprt.x0/y0 makes them reload like orig.
-// Remaining: register allocation (orig spills cells + texU+31 to 8/0xC(sp), frame 0x30, 0xFFFFFF hoisted out of both loops in $t8,
-// pOT hi not hoisted) and sched order of the sprt/tpage stores; structural (register-stripped) diff 186 -> 141 ops.
+// An unused 8-byte local (buf) gives the original 0x30 frame and puts the cells spill at 8(sp) like the original.
+// Remaining: register allocation (orig also spills texU+31 to 0xC(sp) and reloads it with lbu for u1/u3, and its pOT hi
+// pseudo gets no register so the lui is rematerialized before each addPrim, ours hoists it into $s3; the block-copy
+// spill regs are $s7/$t3/$s5/$s6, ours $s4-$s7) and sched order of the ft4 u1/u3 stores (ours stores them right after
+// computing texU+31); 449 of 558 words differ, mostly register names; register-stripped diff 79 ops.
 // Draws the map's animated tile layers (tileAnim_8008D648.lists_14): steps each layer's frame timer, then builds a
 // zoomed POLY_FT4 (or, unzoomed, a SPRT + DR_TPAGE) for every 32x32 cell of the frame's tile set.
 // Runs on the scratchpad stack (TileAnimTask_800A0A04); *work & 1 freezes the timers.
@@ -72,6 +75,7 @@ void DrawTileAnimLayers_800A0A5C(short* work)
     int texU;
     int texV;
     int bright;
+    char buf[8];
 
     setPolyFT4(&s->ft4_4);
     setSprt(&s->sprt_2C);
