@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """usage: ovl_fdiff.py NAME FUNC  -- side-by-side disassembly of FUNC in build_psyq/NAME.BIN vs the disc's NAME.orig
 
-Build first (python build.py --no-verify is enough). The function is located by its address in overlays/NAME.sym in
+Build first with the full `python build.py` (--no-verify does not rebuild the overlays, the BINs would be stale). The function is located by its address in overlays/NAME.sym in
 the original and by the symbol table of the built overlay's map (falls back to the same address). Lines that differ
 are marked with '*'. Exit code 0 when the function is identical."""
 import os
@@ -19,7 +19,7 @@ def syms_of(name):
         m = re.match(r"(\w+)=0x([0-9a-f]+);", l)
         if m:
             out.append((int(m.group(2), 16), m.group(1)))
-    return sorted(out)
+    return out
 
 
 def built_addr(name, func):
@@ -51,9 +51,10 @@ def dis(data, addr):
 def main():
     name, func = sys.argv[1].upper(), sys.argv[2]
     syms = syms_of(name)
+    base = syms[0][0]  # the first entry of the .sym file is the overlay start (not the lowest address)
+    syms = sorted(syms)
     orig = open("%s/build_psyq/%s.orig" % (REPO, name), "rb").read()
     built = open("%s/build_psyq/%s.BIN" % (REPO, name), "rb").read()
-    base = syms[0][0]
     idx = [i for i, (a, n) in enumerate(syms) if n == func]
     if not idx:
         sys.exit("no symbol " + func)
