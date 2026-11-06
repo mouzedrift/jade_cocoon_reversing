@@ -120,7 +120,7 @@ extern const TstModelBone dword_800A09B8;
 extern MATRIX lightDirs_800A1E84;
 extern MATRIX lightColors_800A1EA4;
 extern int tstModelTaskDesc_800A1EC4[6];
-extern char tstModelTaskList_800A1EDC[12];
+extern EventDesc* tstModelTaskList_800A1EDC[3];
 extern char modelLight_800A1EE8[24];
 extern int minionBones_800A1F00[52];
 extern int humanBones_800A1FD0[46];

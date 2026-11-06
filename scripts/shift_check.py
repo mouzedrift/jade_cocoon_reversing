@@ -121,7 +121,7 @@ def check(name, old, new, f, bad, stats, deltas, bases):
         sym, off = o.symbol_at(a)
         return n.syms[sym] + off if sym in n.syms else None
 
-    def expect(where, old_target, new_target, kind):
+    def expect(where, old_target, new_target, kind=""):
         want = f(old_target)
         stats["refs"] += want is not None
         moved = (new_target - old_target) & 0xFFFFFFFF
@@ -167,7 +167,7 @@ def check(name, old, new, f, bad, stats, deltas, bases):
                 continue
             if op == 0x0F:
                 hi_o[rt], hi_n[rt] = (ow & 0xFFFF) << 16, (nw & 0xFFFF) << 16
-                last_o[rt], last_n[rt] = hi_o[rt], hi_n[rt]
+                last_o.setdefault(rt, []).insert(0, (hi_o[rt], hi_n[rt]))
                 if ow >> 16 != nw >> 16:
                     bad.append("%s %08X: lui changed register" % (name, a))
                 continue
@@ -187,10 +187,13 @@ def check(name, old, new, f, bad, stats, deltas, bases):
             if ow != nw:
                 lo_op = op in (0x09, 0x20, 0x21, 0x23, 0x24, 0x25, 0x28, 0x29, 0x2B, 0x22, 0x26, 0x2A, 0x2E, 0x32, 0x3A)
                 if lo_op and ow >> 16 == nw >> 16 and rs in last_o:
-                    # a %lo whose lui is on another path: the last lui of that register before it
+                    # a %lo whose lui is on another path (a jump table case, ...): one of the luis of that
+                    # register before it in the function, the latest one that explains the change
                     so, sn = ow & 0xFFFF, nw & 0xFFFF
                     so, sn = so - 0x10000 if so & 0x8000 else so, sn - 0x10000 if sn & 0x8000 else sn
-                    expect(a, (last_o[rs] + so) & 0xFFFFFFFF, (last_n[rs] + sn) & 0xFFFFFFFF, "%hi/%lo")
+                    pairs = [((ho + so) & 0xFFFFFFFF, (hn + sn) & 0xFFFFFFFF) for ho, hn in last_o[rs]]
+                    good = [p for p in pairs if f(p[0]) not in (None, "?") and f(p[0]) == p[1]]
+                    expect(a, *(good[0] if good else pairs[0]), kind="%hi/%lo")
                 elif not (lo_op and ow >> 16 == nw >> 16 and ((nw - ow) & 0xFFFF) in {d & 0xFFFF for d in deltas}):
                     bad.append("%s %08X: %08X -> %08X" % (name, a, ow, nw))
     for start, end in o.data_ranges():
@@ -207,7 +210,12 @@ def check(name, old, new, f, bad, stats, deltas, bases):
 def compare(old, new):
     deltas = {(new[i].syms[s] - a) & 0xFFFFFFFF for i in old if i in new for s, a in old[i].syms.items()
               if s in new[i].syms and not LINKER_SYMBOL.match(s)} - {0}
+    # the overlays' load addresses and config/fixed_symbols.txt are fixed on purpose
     bases = set(LOAD_ADDRESSES.values())
+    for line in open(os.path.join(REPO, "config", "fixed_symbols.txt")):
+        f = line.split("#")[0].split()
+        if f:
+            bases.add(int(f[1], 16))
     bad, stats = [], {"words": 0, "refs": 0, "ambiguous": 0}
     for name in old:
         if name in new:

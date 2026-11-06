@@ -313,7 +313,7 @@ extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
 extern int sealResultFlags_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
-extern ActionData abilityActions_80083594[];
+extern ActionData abilityActions_80083594[39];
 extern PadVibration padVibration_80095460[];
 extern int personNames_8007CB20[];
 extern unsigned char personMergeInfo_8007CB4C[][4]; // per person (GetPersonMergeInfo_8001CD58); [0] != 0xFF: what a merge turns the minion into (MergeMinions_800B9FC8)

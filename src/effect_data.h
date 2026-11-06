@@ -277,7 +277,7 @@ extern int battleCamSpline0_80083D00[];
 extern int battleCamSpline1_80084330[];
 extern short battleCamSpline1Tail_80084350[];
 
-extern void (*dword_80083780[1])();
+extern void (*polyFT4Transforms_80083768[7])();
 
 void SpawnEffectObject_800149A4(EffectArgs* args);
 void EffectObjectTask_80015478(EventEntry* entry, void* buf);

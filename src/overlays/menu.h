@@ -605,7 +605,15 @@ extern const int dword_800BBA7C;
 extern const MenuWindowList menuHdrActive_800BBB7C;
 extern const int dword_800BBB94[2];
 extern int dword_800C1050[4];
-extern char levelUpStatusRect_800C1060[32];
+// a window rect with a title (only the rect is read here)
+typedef struct MenuTitledRect
+{
+    RECT rect_0;
+    short layout_8[6];
+    const char* title_14;
+    int pad_18[2];
+} MenuTitledRect;
+extern MenuTitledRect levelUpStatusRect_800C1060;
 extern ItemDropRow itemDropTable_800C1080[211];
 extern short dword_800C1718[10];
 extern int resultHelpBar_800C172C[7];
@@ -658,12 +666,12 @@ extern MenuWindowItem keyItemRow1_800C27C8[3];
 extern MenuWindowItem keyItemRow2_800C281C[3];
 extern MenuWindowItem keyItemRow3_800C2870[3];
 extern MenuWindowItem* keyItemRows_800C28C4[5];
-extern char helpBarParty_800C28D8[24];
-extern char helpBarPartyList_800C28F0[32];
-extern char helpBarTopList_800C2910[32];
-extern char helpBarItems_800C2930[40];
-extern char helpBarBack_800C2958[16];
-extern char helpBarDescription_800C2968[24];
+extern ButtonHelpEntry helpBarParty_800C28D8[3];
+extern ButtonHelpEntry helpBarPartyList_800C28F0[4];
+extern ButtonHelpEntry helpBarTopList_800C2910[4];
+extern ButtonHelpEntry helpBarItems_800C2930[5];
+extern ButtonHelpEntry helpBarBack_800C2958[2];
+extern ButtonHelpEntry helpBarDescription_800C2968[3];
 extern int minionListPage_800C2980;
 extern char name_800C2984[8];
 extern char levantHeaderRect_800C298C[8];

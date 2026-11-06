@@ -732,12 +732,12 @@ EventDesc enemyAiTasksDef_800B0894 = { 3, 0x8000, 48, (void *)&enemyAiTasks_8008
 EventDesc dword_800B08AC = { 1, 0x8000, 12, (void *)dword_800B1DA8 };
 EventDesc eventEntitiesDef_800B08C4 = { 25, 0x8000, 148, (void *)&eventEntities_8008D400 };
 EventDesc prevModeTaskDef_800B08DC = { 1, 1, 4, (void *)prevModeTask_800B1DC0, (EventEntryFn)ReturnToPrevGameMode_800A8108 };
-EventDesc mapOverlayTaskDef_800B08F4 = { 1, 1, 0x100, (void *)mapOverlayTask_800B1DA4, (EventEntryFn)StartMapOverlay_800A75F8, (EventEntryFn)0x800B6F60 };
-EventDesc fieldMenuTaskDef_800B090C = { 1, 0x8000, 124, (void *)&fieldMenuTask_8008D498, (EventEntryFn)0x800BD40C };
-EventDesc shopCtrlTaskDef_800B0924 = { 1, 0x8000, 0, (void *)&shopCtrlTask_8008D438, (EventEntryFn)0x800B67C0 };
-EventDesc shopMenuTaskDef_800B093C = { 1, 0x8000, 156, (void *)&shopMenuTask_8008D670, (EventEntryFn)0x800BB444 };
-EventDesc shelfMenuTaskDef_800B0954 = { 1, 0x8000, 24, (void *)&shelfMenuTask_8008D4A8, (EventEntryFn)0x800B7000 };
-EventDesc storeTaskDef_800B096C = { 1, 0x8000, 84, (void *)&storeTask_8008D3E0, (EventEntryFn)0x800BB1F4 };
+EventDesc mapOverlayTaskDef_800B08F4 = { 1, 1, 0x100, (void *)mapOverlayTask_800B1DA4, (EventEntryFn)StartMapOverlay_800A75F8, (EventEntryFn)MapSelectEnd_800B6F60 };
+EventDesc fieldMenuTaskDef_800B090C = { 1, 0x8000, 124, (void *)&fieldMenuTask_8008D498, (EventEntryFn)StartFieldMenu_800BD40C };
+EventDesc shopCtrlTaskDef_800B0924 = { 1, 0x8000, 0, (void *)&shopCtrlTask_8008D438, (EventEntryFn)ShopCtrlInit_800B67C0 };
+EventDesc shopMenuTaskDef_800B093C = { 1, 0x8000, 156, (void *)&shopMenuTask_8008D670, (EventEntryFn)ShopMenuTask_800BB444 };
+EventDesc shelfMenuTaskDef_800B0954 = { 1, 0x8000, 24, (void *)&shelfMenuTask_8008D4A8, (EventEntryFn)ShelfMenuTask_800B7000 };
+EventDesc storeTaskDef_800B096C = { 1, 0x8000, 84, (void *)&storeTask_8008D3E0, (EventEntryFn)StoreTask_800BB1F4 };
 EventDesc dword_800B0984 = { 1, 0x8000, 0, (void *)(&screenOffset_8008D474 + 1) };
 EventDesc chapterOverlayTaskDef_800B099C = { 1, 1, 8, (void *)chapterOverlayTask_800B1DB0, (EventEntryFn)StartChapterOverlay_800A7690 };
 EventDesc sporeTaskDef_800B09B4 = { 1, 1, 8, (void *)&sporeTask_8008D464, (EventEntryFn)InitSporeTask_80011ADC };
@@ -887,7 +887,9 @@ EventDesc* gameEventListDefs_800B0DA4[58] = {
     &subOverlayTaskDef_800B09E4,
 };
 EventDesc gameMainTaskDef_800B0E8C = { 1, 1, 64, (void *)&gameMainTask_8008D46C, (EventEntryFn)GameMainInit_800A68CC };
-char endMovie_800B0EA4[20] = { 184, 142, 7, 128, 208, 142, 7, 128, 48, 143, 7, 128, 140, 14, 11, 128 };
+EventDesc* endMovie_800B0EA4[5] = {
+    &eventDescs_80078EB8[0], &eventDescs_80078EB8[1], &eventDescs_80078EB8[5], &gameMainTaskDef_800B0E8C, 0,
+};
 GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())ReturnWarpStart_800BCB00 } };
 int fieldMode_800B0EC0 = 1;
 GameFieldMinions fieldMinions_800B0EC4 = { 0 };

@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "sound.h"
 #include <LIBSND.H>
+#include "unit_stats.h" // eventDescs_80078EB8
 #include "soundtst.h"
 
 int dword_800A05A0 SDATA = 15;
@@ -3831,5 +3832,7 @@ short xaTracks_800A70F0[1607][4] = {
     { 0, 18, 0x525, 22 },
 };
 int soundTestTaskDesc_800AA328[6] = { 1, 1, 28, 0, (int)SoundTestInit_800A51D8 };
-char soundTestTaskList_800AA340[16] = { 184, 142, 7, 128, 48, 143, 7, 128, 40, 163, 10, 128 };
+EventDesc* soundTestTaskList_800AA340[4] = {
+    &eventDescs_80078EB8[0], &eventDescs_80078EB8[5], &soundTestTaskDesc_800AA328, 0,
+};
 char *soundTestLabels_800AA350[8] = { strSoundNumber_800A519C, strSeFile_800A518C, strSeNumber_800A5180, strReverbDepth_800A5170, strXaNumber_800A5164, strLeftRightCircle_800A5138, strTriangleToStop_800A511C, strCrossToQuit_800A5108 };

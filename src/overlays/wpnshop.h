@@ -27,7 +27,9 @@
 typedef struct StorePanel
 {
     unsigned short* cursor_0; // MenuCursor setup: columns, rows, count, flags
-    char pad_4[16];
+    TextListEntry* lines_4;   // text drawn in the panel
+    RECT rect_8;
+    int ot_10;
 } StorePanel;
 
 
@@ -457,8 +459,8 @@ extern const int dword_800BAD50;
 extern const MenuWindowList menuWindow_800BADF0;
 extern const int dword_800BAE08;
 extern int dword_800BE110;
-extern int dword_800BE114[4];
-extern int dword_800BE124[4];
+extern TextListEntry dword_800BE114[2];
+extern TextListEntry dword_800BE124[2];
 extern TextListEntry dialogLines_800BE134[4];
 extern void *txtEquipMainA_800BE154[3];
 extern void *txtEquipBuyKindA_800BE160[3];

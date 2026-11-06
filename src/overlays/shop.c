@@ -3967,7 +3967,10 @@ MenuWindowItem mainMenuItem4_800C079C[2] = {
     { 0x8, 1, 53, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 169, 56, 20, 0, 5 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
-char mainMenuItems_800C07D4[28] = { 188, 6, 12, 128, 244, 6, 12, 128, 44, 7, 12, 128, 100, 7, 12, 128, 156, 7, 12, 128, 0, 0, 0, 0, 11, 128, 2, 60 };
+MenuWindowItem* mainMenuItems_800C07D4[6] = {
+    &mainMenuItem0_800C06BC, &mainMenuItem1_800C06F4, &mainMenuItem2_800C072C, &mainMenuItem3_800C0764, &mainMenuItem4_800C079C, 0,
+};
+int dword_800C07EC = 0x3C02800B; // unreferenced (the word reads as the instruction lui $v0, 0x800B)
 unsigned int emptyMinion_800C07F0[62] = { 0 };
 Minion mergePreview_800C08E8 = { 0 };
 ShopFormModel formModel_800C09E0 = { 0 };

@@ -588,7 +588,7 @@ extern MenuWindowItem mainMenuItem1_800C06F4[2];
 extern MenuWindowItem mainMenuItem2_800C072C[2];
 extern MenuWindowItem mainMenuItem3_800C0764[2];
 extern MenuWindowItem mainMenuItem4_800C079C[2];
-extern char mainMenuItems_800C07D4[28];
+extern MenuWindowItem* mainMenuItems_800C07D4[6];
 extern unsigned int emptyMinion_800C07F0[62];
 extern Minion mergePreview_800C08E8;
 extern ShopFormModel formModel_800C09E0;

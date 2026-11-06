@@ -3281,7 +3281,7 @@ int abilityNames_800834E4[39] = {
     (int)&aFleshToStone_80074520, (int)&aDestroyMana_80074504, (int)&aAbsorbHP_800744F0, (int)&aAbsorbMana_800744D8, (int)&aAllEnemies_800744C0, (int)&aCritical_800744AC, (int)&aBreakLegs_80074494, (int)&aRendWings_8007447C,
 };
 int abilityBonusNames_80083580[5] = { (int)&aDashes3_80074610, (int)&aDashes3_80074610, (int)&aPlusPower_80074600, (int)&aPlusAccuracy_800745E8, (int)&aPlusCritical_800745D0 };
-ActionData abilityActions_80083594[41] = {
+ActionData abilityActions_80083594[39] = {
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },
     { 0, 0, 120, 255, 100, 0, 0, 2, { 0, 3 } },
@@ -3321,10 +3321,12 @@ ActionData abilityActions_80083594[41] = {
     { 0, 0, 0, 2, 125, 0, 0, 10, { 0, 3 } },
     { 0, 0, 0, 3, 125, 0, 0, 10, { 0, 3 } },
     { 0, 0, 180, 255, 125, 0, 0, 3, { 0, 3 } },
-    { 28, 48, 0x8003, 120, 46, 3, 128, 252, { 45, 3, 128 } },
-    { 52, 45, 0x8003, 244, 46, 3, 128, 120, { 46, 3, 128 } },
 };
-void (*dword_80083780[1])() = { AddPolyFT4Rot90Cw_80032F88 };
+// the POLY_FT4 copy/flip/rotate variants (unit_query.c), by transform index
+void (*polyFT4Transforms_80083768[7])() = {
+    AddPolyFT4Copy_8003301C, AddPolyFT4FlipY_80032E78, AddPolyFT4FlipX_80032DFC, AddPolyFT4FlipXY_80032D34,
+    AddPolyFT4Rot90Ccw_80032EF4, AddPolyFT4FlipY_80032E78, AddPolyFT4Rot90Cw_80032F88,
+};
 int mapListAny_80083784 = 0xFFC8;
 int mapListData_80083788[15] = {
     0x8070605, 255, 0x3020100, 0x7060504, 0xC0A0908, 255, 0xFFC8, 0xFFC8,

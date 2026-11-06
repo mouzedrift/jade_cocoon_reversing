@@ -3,6 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "model.h"
+#include "unit_stats.h" // eventDescs_80078EB8
 #include "tstcompo.h"
 
 
@@ -773,7 +774,9 @@ TstCompoPage compoPages_800A250C[3] = {
     { (void *)compoMenu2_800A24FC, (void *)compoTexts2_800A24CC, { 200, 16, 64, 212 } },
 };
 int tstCompoTaskDesc_800A2548[6] = { 1, 1, 0x230, 0, (int)TstCompoInit_800A0800 };
-char tstCompoTaskList_800A2560[16] = { 184, 142, 7, 128, 128, 144, 7, 128, 72, 37, 10, 128 };
+EventDesc* tstCompoTaskList_800A2560[4] = {
+    &eventDescs_80078EB8[0], &eventDescs_80078EB8[19], &tstCompoTaskDesc_800A2548, 0,
+};
 char compoLight_800A2570[24] = { 0 };
 char compoBonePos_800A2588[480] = { 0 };
 TstCompoModelParams compoModelParams_800A2768 = { 0 };

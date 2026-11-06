@@ -57,10 +57,6 @@ LOAD_ADDRESSES = {
 }
 
 
-# end of the executable's image (.bss included), where GAME/TITLE/... are loaded
-EXE_END = 0x800A05A0
-
-
 def file_id(name):
     for line in open(os.path.join(REPO, "src", "enums.h")):
         m = re.match(r"\s*OVER_%s_BIN = (\d+)u" % name, line)
@@ -207,9 +203,13 @@ def main(argv):
     link = os.path.join(b, tag + "_link.txt")
     # the executable's symbols where its link put them (build.py first), so that the overlays follow the
     # executable when it moves (only what is in its image: the map also lists its equates of overlay names)
-    equ = {m.group(2): int(m.group(1), 16) for m in re.finditer(
-        r"^ ([0-9A-F]{8})  (\w+)$", open(os.path.join(BUILD, "jade_cocoon.map")).read(), re.M)}
-    equ = {n: a for n, a in equ.items() if 0x80010000 <= a < EXE_END}
+    exe_map = open(os.path.join(BUILD, "jade_cocoon.map")).read()
+    exe_end = max(int(m.group(1), 16) + 1 for m in re.finditer(r"^ [0-9A-F]{8} ([0-9A-F]{8}) [0-9A-F]{8} [0-9A-F]{8} ", exe_map, re.M))
+    equ = {m.group(2): int(m.group(1), 16) for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", exe_map, re.M)}
+    # (not the names the executable's link equates: other images' symbols; its own aliases are its symbols)
+    exe_equates = {l.split("\t")[0] for l in open(os.path.join(BUILD, "link.txt")) if "\tequ\t" in l}
+    exe_equates -= {n for n, _, _ in bp.read_aliases("EXE")}
+    equ = {n: a for n, a in equ.items() if 0x80010000 <= a < exe_end and n not in exe_equates}
     # names of the source outside of the executable and of this overlay: other overlays' symbols (where their
     # last link put them, see build.overlay_symbols) and the fixed addresses (config/fixed_symbols.txt)
     own = {n for _, n in syms}

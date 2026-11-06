@@ -3,6 +3,7 @@
 #include "funcs.h"
 #include "globals.h"
 #include "model.h"
+#include "unit_stats.h" // eventDescs_80078EB8
 #include "tstmodel.h"
 
 
@@ -702,7 +703,9 @@ MATRIX lightDirs_800A1E84 = {
 };
 MATRIX lightColors_800A1EA4 = { { { 0x1000, 0x800, 0x800 }, { 0x1000, 0x800, 0x800 }, { 0x1000, 0x800, 0x800 } } };
 int tstModelTaskDesc_800A1EC4[6] = { 1, 1, 0x1F8, 0, (int)TstModelInit_800A09C0 };
-char tstModelTaskList_800A1EDC[12] = { 184, 142, 7, 128, 196, 30, 10, 128 };
+EventDesc* tstModelTaskList_800A1EDC[3] = {
+    &eventDescs_80078EB8[0], &tstModelTaskDesc_800A1EC4, 0,
+};
 char modelLight_800A1EE8[24] = { 0 };
 int minionBones_800A1F00[52] = {
     0, 0x20000, 0x10001, 1, 0x1020002, 0xB0002, 0x2030003, 0xB0003,

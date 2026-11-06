@@ -228,7 +228,7 @@ extern short cursorAreas_800C59C0[16];
 extern const char* weaponDescs_800C59E0[23][4];
 extern const char* armorDescs_800C5B50[15][4];
 extern const char* accessoryDescs_800C5C40[17][4];
-extern char cannotUnequipBox_800C5D50[16];
+extern const char* cannotUnequipBox_800C5D50[4];
 
 /* MENU overlay (resident under EQUIP): DrawEquipmentWindow_800C0E04(MenuEquipQ* eq, short* pos, short openStep) */
 extern void DrawEquipmentWindow_800C0E04(void* a0, void* a1, int a2);

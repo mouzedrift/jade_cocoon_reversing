@@ -5,6 +5,10 @@
 #include "minion_menu.h"
 #include "msg_window.h" // TargetQuery
 
+void AddPolyFT4FlipXY_80032D34(unsigned short* poly, void* ot);
+void AddPolyFT4FlipX_80032DFC(short* poly, void* ot);
+void AddPolyFT4FlipY_80032E78(unsigned short* poly, void* ot);
+void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* poly, void* ot);
 void AddPolyFT4Rot90Cw_80032F88(unsigned short* poly, void* ot);
 
 int CheckSkillUsable_80033C98(ListMenuState* menu);

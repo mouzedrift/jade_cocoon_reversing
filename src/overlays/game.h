@@ -1584,7 +1584,7 @@ extern GameTaskListDef gameModeLoadingTasks_800B0D5C[3];
 extern GameTaskListDef *gameModeTaskLists_800B0D74[12];
 extern EventDesc* gameEventListDefs_800B0DA4[58];
 extern EventDesc gameMainTaskDef_800B0E8C;
-extern char endMovie_800B0EA4[20];
+extern EventDesc* endMovie_800B0EA4[5];
 extern GameFieldModeHandler fieldModeHandlers_800B0EB8[1];
 extern int fieldMode_800B0EC0;
 extern GameFieldMinions fieldMinions_800B0EC4;
@@ -1727,3 +1727,11 @@ void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
 /* libc (PSY-Q) */
 extern int printf(const char* fmt, ...);
 extern int rand(void);
+
+// event callbacks of the sub-overlays GAME starts (MAP, MENU, SHOPCTRL, SHOP, SHOPENTR, WPNSHOP)
+void StartFieldMenu_800BD40C();
+void ShopCtrlInit_800B67C0();
+void ShopMenuTask_800BB444();
+void ShelfMenuTask_800B7000();
+void StoreTask_800BB1F4();
+void MapSelectEnd_800B6F60();

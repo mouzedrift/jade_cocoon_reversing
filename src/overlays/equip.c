@@ -221,7 +221,9 @@ const char* accessoryDescs_800C5C40[17][4] = {
     { aOrnamentalItem_800C4764, aReleasesCleanAi_800C40EC, aIncreasesBodySR_800C3FB8, 0 },
     { aOrnamentalItem_800C4764, aMadeOfWhiteCoco_800C3F5C, aForSafeTravelPr_800C3EF4, 0 },
 };
-char cannotUnequipBox_800C5D50[16] = { 136, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128 };
+const char* cannotUnequipBox_800C5D50[4] = {
+    aCannotUnequip_800C4788, emptyText_800C4784, emptyText_800C4784, emptyText_800C4784,
+};
 
 // Matched
 void StartEquipMenu_800C47A8(void)
@@ -531,7 +533,7 @@ void TryEquipItem_800C5064(EquipCtx* c)
 // Matched
 void CannotUnequipTask_800C50F0(EventEntry* t, EquipCtx* c)
 {
-    char* box = cannotUnequipBox_800C5D50;
+    const char** box = cannotUnequipBox_800C5D50;
     DrawMenuBackground_8002BE10();
     DrawEquipMenu_800C4A94(c);
     DrawLargeTextBox_8002AF10(box, 0, 0xe);

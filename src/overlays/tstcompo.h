@@ -140,7 +140,7 @@ extern int compoMenu1_800A24EC[4];
 extern int compoMenu2_800A24FC[4];
 extern TstCompoPage compoPages_800A250C[3];
 extern int tstCompoTaskDesc_800A2548[6];
-extern char tstCompoTaskList_800A2560[16];
+extern EventDesc* tstCompoTaskList_800A2560[4];
 extern char compoLight_800A2570[24];
 extern char compoBonePos_800A2588[480];
 extern TstCompoModelParams compoModelParams_800A2768;

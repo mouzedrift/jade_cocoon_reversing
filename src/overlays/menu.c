@@ -309,7 +309,7 @@ const char minionListBullet_800BB9C0[] = "\201E"; // ・
 const int dword_800BB9C4 = 0;
 
 int dword_800C1050[4] = { 0x2C000A, 0x4400CE, 0x540028, 0x4400F0 };
-char levelUpStatusRect_800C1060[32] = { 51, 0, 62, 0, 218, 0, 117, 0, 100, 0, 40, 0, 100, 0, 18, 0, 102, 0, 42, 0, 196, 102, 11, 128 };
+MenuTitledRect levelUpStatusRect_800C1060 = { { 51, 62, 218, 117 }, { 100, 40, 100, 18, 102, 42 }, aItemsObtained_800B66C4 };
 ItemDropRow itemDropTable_800C1080[211] = {
     { 0x1999, 0, 9, 0x147, 0, 4 },
     { 0xCCC, 2, 5, 0x147, 0, 3 },
@@ -851,12 +851,12 @@ MenuWindowItem keyItemRow3_800C2870[3] = {
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* keyItemRows_800C28C4[5] = { keyItemRow0_800C2774, keyItemRow1_800C27C8, keyItemRow2_800C281C, keyItemRow3_800C2870, NULL };
-char helpBarParty_800C28D8[24] = { 16, 0, 0, 0, 56, 185, 11, 128, 167, 0, 0, 0, 44, 185, 11, 128, 255, 255, 255, 255 };
-char helpBarPartyList_800C28F0[32] = { 16, 0, 0, 0, 56, 185, 11, 128, 167, 0, 0, 0, 44, 185, 11, 128, 94, 0, 0, 0, 80, 185, 11, 128, 255, 255, 255, 255 };
-char helpBarTopList_800C2910[32] = { 16, 0, 0, 0, 104, 185, 11, 128, 167, 0, 0, 0, 44, 185, 11, 128, 94, 0, 0, 0, 80, 185, 11, 128, 255, 255, 255, 255 };
-char helpBarItems_800C2930[40] = { 16, 0, 0, 0, 104, 185, 11, 128, 167, 0, 0, 0, 44, 185, 11, 128, 110, 0, 0, 0, 140, 185, 11, 128, 94, 0, 0, 0, 120, 185, 11, 128, 255, 255, 255, 255 };
-char helpBarBack_800C2958[16] = { 167, 0, 0, 0, 44, 185, 11, 128, 255, 255, 255, 255 };
-char helpBarDescription_800C2968[24] = { 167, 0, 0, 0, 44, 185, 11, 128, 110, 0, 0, 0, 140, 185, 11, 128, 255, 255, 255, 255 };
+ButtonHelpEntry helpBarParty_800C28D8[3] = { { 16, aViewStatus_800BB938 }, { 167, aQuit_800BB92C }, { -1 } };
+ButtonHelpEntry helpBarPartyList_800C28F0[4] = { { 16, aViewStatus_800BB938 }, { 167, aQuit_800BB92C }, { 94, aMinionList_800BB950 }, { -1 } };
+ButtonHelpEntry helpBarTopList_800C2910[4] = { { 16, aSelect_800BB968 }, { 167, aQuit_800BB92C }, { 94, aMinionList_800BB950 }, { -1 } };
+ButtonHelpEntry helpBarItems_800C2930[5] = { { 16, aSelect_800BB968 }, { 167, aQuit_800BB92C }, { 110, aDescription_800BB98C }, { 94, aRearrange_800BB978 }, { -1 } };
+ButtonHelpEntry helpBarBack_800C2958[2] = { { 167, aQuit_800BB92C }, { -1 } };
+ButtonHelpEntry helpBarDescription_800C2968[3] = { { 167, aQuit_800BB92C }, { 110, aDescription_800BB98C }, { -1 } };
 int minionListPage_800C2980 = 0;
 char name_800C2984[8] = { 10, 0, 15, 0, 79, 0, 28 };
 char levantHeaderRect_800C298C[8] = { 10, 0, 44, 0, 68, 0, 68 };
@@ -1399,7 +1399,7 @@ void DrawMinionLevelUpStatus_800BCEA0(BattleResult* result, int ot, void* status
     col.color_0 = saveData_8008B570.uiColor_20.h;
     col.colorSet_2 = 0;
     col.semiTrans_3 = 1;
-    DrawWindow_80042460(levelUpStatusRect_800C1060, &col, &pOT_8008D454[ot], 0);
+    DrawWindow_80042460(&levelUpStatusRect_800C1060.rect_0, &col, &pOT_8008D454[ot], 0);
 }
 
 // GetDominantSpecies_800338B0 under a second name: declared returning int here (no zero-extension of the result)
@@ -2267,7 +2267,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
 
 void DrawMenuHelpBar_800BEAE0(MenuCtx* menu)
 {
-    char* s;
+    ButtonHelpEntry* s;
     switch (menu->state_2)
     {
     case 0:
