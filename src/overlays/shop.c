@@ -1861,7 +1861,14 @@ void DismissShopPrompt_800BC2DC(ShopMenu* menu)
 }
 
 #if 0
-// Not matched: stack layout matches; loop-invariant constant 2 is not hoisted (the original keeps it in a spilled pseudo, rematerialised in $t1), so a few registers differ
+// Not matched (597 words instead of 598, the rest differs in registers): stack layout matches; the loop-invariant constant 2 is
+// not hoisted. In the original all register uses of 2 (the i == 2 compare, abilityRef/magicRef/skinRef.windowFlags_4,
+// case 2 of the j switch) share one pseudo that loop.c hoists out of the i loop and that is then spilled and
+// rematerialised in $t1 (the magicRef block has its own `addiu $t1,$zero,2`, one extra word). Here cse1 replaces the
+// 2 stored to abilityRef/magicRef.windowFlags_4 by (subreg:HI) of the sign-extended i (known == 2 from the compare),
+// which leaves 4 matching loads of 2 (loop dump: "savings 4 ... not desirable") instead of 6, so nothing is hoisted.
+// Tried: int/short i, (short)i == 2, 2 == i, switch (i) case 2, ternary/if-else openStep, if-wrapped loop body
+// instead of continue, i == 2 folded into the two inner conditions, permuter (~1500 iterations, no gain).
 void DrawShopMenu_800BC380(ShopMenu* menu)
 {
     Pos16 pos;
@@ -1972,10 +1979,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                         abilityPos.y = 0x5E;
                         abilityRef.cursor_0 = menu->pageIndex_48;
                         abilityRef.scroll_2 = menu->pageScroll_4A;
-                        abilityRef.field_4 = 2;
+                        abilityRef.windowFlags_4 = 2;
                         abilityRef.ot_6 = 0xE;
                         abilityRef.field_8 = 0;
-                        abilityRef.field_A = 1;
+                        abilityRef.fieldMenu_A = 1;
                         abilityRef.minion_C = menu->shown_54;
                         DrawAbilityList_8002CE28(&abilityRef, &abilityPos);
                     }
@@ -1985,10 +1992,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
                         p40.y = 0x6D;
                         magicRef.cursor_0 = menu->pageIndex_48;
                         magicRef.scroll_2 = menu->pageScroll_4A;
-                        magicRef.field_4 = 2;
+                        magicRef.windowFlags_4 = 2;
                         magicRef.ot_6 = 0xE;
                         magicRef.field_8 = 0;
-                        magicRef.field_A = 1;
+                        magicRef.fieldMenu_A = 1;
                         magicRef.minion_C = menu->shown_54;
                         DrawMagicList_8002CAC8(&magicRef, &p40);
                     }
@@ -2119,10 +2126,10 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
             ListMenuState skinRef;
             skinRef.cursor_0 = menu->savedIndex_5E[8];
             skinRef.scroll_2 = menu->savedScroll_72[2];
-            skinRef.field_4 = 2;
+            skinRef.windowFlags_4 = 2;
             skinRef.ot_6 = 0xE;
             skinRef.field_8 = 0;
-            skinRef.field_A = 1;
+            skinRef.fieldMenu_A = 1;
             skinRef.minion_C = 0;
             DrawSkinList_800BED48(&skinRef);
         }
