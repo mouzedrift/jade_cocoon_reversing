@@ -536,10 +536,7 @@ void MergeExp_800BA6D0(Minion* out, Minion* base, Minion* partner)
     out->status_84.exp_4 += CombinedExpDelta_80012204(base->status_84.level_44, base->status_84.exp_4, partner->status_84.level_44, partner->status_84.exp_4);
 }
 
-#if 0
-// Not matched (25 words): only the registers of &skills.slot[i] (a3 in the original) and m (t0) are swapped.
-// (When writing this in C, delete the C table jpt_800B6D4C behind the function.)
-
+// Matched
 void MergeSkills_800BA72C(Minion* out, Minion* partner)
 {
     UnitSkills skills;
@@ -594,6 +591,8 @@ void MergeSkills_800BA72C(Minion* out, Minion* partner)
             switch (ae[i].id_1)
             {
             case 0:
+                r = ae[i].id_1;
+                break;
             case 1:
                 r = ae[i].id_1;
                 break;
@@ -701,11 +700,6 @@ void MergeSkills_800BA72C(Minion* out, Minion* partner)
     }
     MemCopy_800403E8(&out->skills_DE, &skills, sizeof(UnitSkills));
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, MergeSkills_800BA72C);
-// the jump table of MergeSkills_800BA72C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in shop.h when the function is C, the switch emits it then
-void* const jpt_800B6D4C[12] = { jtgt_800BA8C8, jtgt_800BA8C8, jtgt_800BA8A4, jtgt_800BA8AC, jtgt_800BA8B4, jtgt_800BA8BC, jtgt_800BA958, jtgt_800BA958, jtgt_800BA910, jtgt_800BA918, jtgt_800BA920, jtgt_800BA928 };
 const char aEmpty_800B6D7C[4] = { 0 };
 const char aWhatDoYouWantTo_800B6D80[] = "\202v\202\210\202\201\202\224\201@\202\204\202\217\201@\202\231\202\217\202\225\201@\202\227\202\201\202\216\202\224\201@\202\224\202\217\201@\202\204\202\217\201H"; // What do you want to do?
 const char aForTheNewMinion_800B6DB0[] = "\202\206\202\217\202\222\201@\202\224\202\210\202\205\201@\202\216\202\205\202\227\201@\202\215\202\211\202\216\202\211\202\217\202\216\201D"; // for the new minion.
