@@ -160,7 +160,7 @@ int IsBossSpecies_800BF9B4(int species)
 void MarkSpeciesCaptured_800BF9F0(int species)
 {
     unsigned int id = species;
-    unsigned int* bits = allMinionsBitfields_8008BD84;
+    unsigned int* bits = saveData_8008B570.allMinionsBitfields_814;
     if (id < 0xE0)
     {
         unsigned int* word = &bits[id >> 5];

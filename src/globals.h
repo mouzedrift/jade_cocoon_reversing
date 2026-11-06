@@ -145,7 +145,7 @@ typedef struct
     UnitStatus levantStatus_7C8; // saveData_8008B570.levantStatus_7C8: name_10 == saveData_8008B570.levantStatus_7C8.name_10, field_1C[0..2] the
                                  // equipped weapon / armor / accessory, level_44 the rank (saveData_8008B570.levantStatus_7C8.level_44)
     int field_810; // == dword_8008BD80
-    unsigned int allMinionsBitfields_814[7]; // allMinionsBitfields_8008BD84
+    unsigned int allMinionsBitfields_814[7]; // bits counted by GetCapturedMinionsCount_800125B8
     int field_830; // model index (GAME's LevantModelTask_800ACB64)
     short field_834;
     short field_836;
@@ -435,7 +435,6 @@ extern volatile int unpausedFrames_8008D404;
 extern SaveData saveData_8008B570;
 extern SaveInventory playerYan_8008B594; // == saveData_8008B570.inv_24
 extern LevantPos levantPos_8008BD18; // == saveData_8008B570.levant_7A8
-extern unsigned int allMinionsBitfields_8008BD84[7];
 extern unsigned long bDoubleBuffer_8008D428;
 extern unsigned long OT_8008D798[2][8];
 extern unsigned long OT_8008D7D8[2][1024];

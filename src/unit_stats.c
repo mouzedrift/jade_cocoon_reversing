@@ -1874,16 +1874,14 @@ int TotalExpToPacked_8001247C(double x)
 unsigned int GetCapturedMinionsCount_800125B8(void)
 {
     unsigned int totalMinions;
-    unsigned int currentBitfield;
     int i;
+    unsigned int* bits;
 
     totalMinions = 0;
-    for (i = 0; i < COUNTOF_S(allMinionsBitfields_8008BD84); i++)
+    for (i = 0, bits = saveData_8008B570.allMinionsBitfields_814; i < 7; i++)
     {
-        currentBitfield = allMinionsBitfields_8008BD84[i];
-        totalMinions += GetCapturedMinionsFromBitfield_8003BA58(currentBitfield);
-    };
-
+        totalMinions += GetCapturedMinionsFromBitfield_8003BA58(*bits++);
+    }
     return totalMinions;
 }
 // Matched
