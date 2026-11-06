@@ -1482,17 +1482,15 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
 }
 
 
-#if 0 // Not matched: regalloc only: the 0xFFFF7FFF mask and the effect-file base swap saved registers (orig s0/s3); body and schedule otherwise match
-extern void OrbHomingTask_800C3DF8();
-extern void OrbFadeTask_800C3D34();
+// Matched
 void SpawnOrb_800C3B50(int* pos, int id)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     BatOrb* orb;
     EffectModel* model;
     BatHero* hero;
-    int outcome;
     int idx;
+    short* flag;
     if (entry == 0)
     {
         return;
@@ -1511,26 +1509,26 @@ void SpawnOrb_800C3B50(int* pos, int id)
     orb->vel_38[0] = 0;
     orb->vel_38[1] = -0xC8;
     orb->vel_38[2] = 0;
-    outcome = effectOutcomeFlag_8008D780[1];
     entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
-    if (outcome == 0)
+    flag = &effectOutcomeFlag_8008D780[1];
+    if (*flag == 0)
     {
-    idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x1F);
-    entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
-    model = &effectFile_80091BD0.models_28[idx];
-    orb->clip_88 = model;
-    orb->model_94 = malloc3_8003FC4C(0x54);
-    CopyFtgObject_800218A8(model->ftg_4, orb->model_94, 1);
-    DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, orb->model_94);
-    hero = gameTask_8008B4A4->entry.buffer;
-    orb->pos_44[0] = hero->pos_5E4[0];
-    orb->pos_44[1] = hero->pos_5E4[1];
-    orb->pos_44[2] = hero->pos_5E4[2];
-    orb->pos_44[0] += levantPos_8008BD18.pos.x;
-    orb->pos_44[1] += levantPos_8008BD18.pos.y;
-    orb->pos_44[2] += levantPos_8008BD18.pos.z;
-    entry->cb_8 = (EventEntryFn)OrbFadeTask_800C3D34;
-    PlaySfx_80031494(0x3F);
+        idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x1F);
+        entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
+        model = &effectFile_80091BD0.models_28[idx];
+        orb->clip_88 = model;
+        orb->model_94 = malloc3_8003FC4C(0x54);
+        CopyFtgObject_800218A8(model->ftg_4, orb->model_94, 1);
+        DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, orb->model_94);
+        hero = gameTask_8008B4A4->entry.buffer;
+        orb->pos_44[0] = hero->pos_5E4[0];
+        orb->pos_44[1] = hero->pos_5E4[1];
+        orb->pos_44[2] = hero->pos_5E4[2];
+        orb->pos_44[0] += levantPos_8008BD18.pos.x;
+        orb->pos_44[1] += levantPos_8008BD18.pos.y;
+        orb->pos_44[2] += levantPos_8008BD18.pos.z;
+        entry->cb_8 = (EventEntryFn)OrbFadeTask_800C3D34;
+        PlaySfx_80031494(0x3F);
     }
     else
     {
@@ -1538,9 +1536,6 @@ void SpawnOrb_800C3B50(int* pos, int id)
         entry->cb_8 = (EventEntryFn)OrbHomingTask_800C3DF8;
     }
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, SpawnOrb_800C3B50);
 
 void OrbFadeTask_800C3D34(EventEntry* task, BatOrb* orb)
 {

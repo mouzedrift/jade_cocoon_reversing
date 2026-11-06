@@ -846,6 +846,9 @@ typedef struct BatOrb
     FtgObject* model_94; // malloc'd copy of the clip's first model
 } BatOrb;
 
+extern void OrbFadeTask_800C3D34(EventEntry* task, BatOrb* orb);
+extern void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb* orb);
+
 typedef struct BatHero
 {
     char pad0[0x5E4];
