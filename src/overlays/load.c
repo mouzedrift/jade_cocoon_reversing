@@ -531,7 +531,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
             shared.tail.semiTrans_3 = 1;
             shared.tail.colorSet_2 = 0;
             shared.tail.color_0 = saveData_8008B570.uiColor_20.h;
-            DrawWindow_80042460(&rect, &shared.tail, dword_8008D454 + 0x38, 0);
+            DrawWindow_80042460(&rect, &shared.tail, pOT_8008D454 + 14, 0);
         }
         ConfirmPromptInput_800B9654(work);
         break;
@@ -548,7 +548,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
         color.color_0 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+        DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
         }
         DrawMenuWindows_8002A5A4(&titleWin_800BDE8C);
         if (IsConfirmPressed_8003D288(0, (work->flags_54 >> 6) & 1))
@@ -695,7 +695,7 @@ void DrawCardSlotSelect_800B82FC(LoadMenuWork* work)
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawCardSlotChosen_800B847C(LoadMenuWork* work)
@@ -725,7 +725,7 @@ void DrawCardSlotChosen_800B847C(LoadMenuWork* work)
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawFormatPrompt_800B85AC(LoadMenuWork* work)
@@ -744,7 +744,7 @@ void DrawFormatPrompt_800B85AC(LoadMenuWork* work)
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
     DrawMenuWindows_8002A5A4(&formatWin_800BDD64);
 }
 
@@ -845,7 +845,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
         color.color_0 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+        DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
     }
 }
 const LoadWinRect modeTitleWin_800B6B8C = { { 63, 0, 18, 0, 108, 0, 18 } };
@@ -959,7 +959,7 @@ void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work)
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -977,7 +977,7 @@ void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
@@ -1000,7 +1000,7 @@ void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -1952,7 +1952,7 @@ void DrawMessageBox_800BACBC(char** lines)
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
         color.color_0 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(&box, &color, dword_8008D454 + 0x38, 0);
+        DrawWindow_80042460(&box, &color, pOT_8008D454 + 14, 0);
     }
 }
 

@@ -267,18 +267,8 @@ void AddEmptyCocoons_800AD8F4(int a);
 extern char defaultBones_80079140[];
 extern short sinTable_80084540[];        // data_decls.h
 extern Minion name_8008EF18[];
-int fn_80010A44(int a);                   // party.h
 void Heal_80011CD0(UnitStatus* p);          // unit_stats.h
-void fn_80019B14(int a, int b, int c);    // minion_init.h
 void SetSceneFadeFrontOT_8001ABEC(int a);                  // engine.h
-void* fn_8001D45C(void* p);               // engine.h (CreateActor)
-void fn_8001D68C(void* p, int on);        // engine.h
-int fn_80024E38(int a);                   // model_ftg
-int fn_80024E64(int a);                   // model_ftg
-int fn_80024E90(int a, int b);            // model_ftg
-int fn_80024EC8(int a, int b);            // model_ftg
-int fn_80024F00(int a, int b);            // model_ftg
-int fn_80024F38(int a, int b);            // model_ftg
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
 void* memset(void* p, int c, unsigned int n);        // libc
 

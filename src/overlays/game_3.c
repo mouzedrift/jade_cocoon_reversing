@@ -1535,7 +1535,7 @@ int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int ra
     IsWithinDistance_8003B740(eye, point, &dist);
     if (dist < (unsigned int)(range * range))
     {
-        int angle = GameFn_8003B9E0(eye, point);
+        int angle = Ratan2DifferenceInt_8003B9E0(eye, point);
         if ((unsigned int)(WrapAngle_8003BA18((short)(rot[1] - angle)) + 0x198) < 0x331)
         {
             return 1;
@@ -1549,7 +1549,7 @@ int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot)
 {
     if (point[0] >= 0 && IsEventPointValid_800A6504(point[0], eye))
     {
-        int angle = GameFn_8003B9E0(eye, point + 1);
+        int angle = Ratan2DifferenceInt_8003B9E0(eye, point + 1);
         if ((unsigned int)((short)WrapAngle_8003BA18((short)(rot[1] - angle)) + 0x198) < 0x331)
         {
             return 1;

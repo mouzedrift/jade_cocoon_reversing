@@ -3625,7 +3625,7 @@ void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
 {
     FormActorDesc desc;
     ShopFormModel* form = &formModel_800C09E0;
-    int model = fn_80010A44(form->task_0);
+    int model = GetModelTaskModel_80010A44(form->task_0);
     int stage;
     int levels;
     desc.modelId_0 = -1;
@@ -3645,15 +3645,15 @@ void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
     desc.model_48 = model;
     desc.bones_34 = (int)defaultBones_80079140;
     stage = form->desc_8[7];
-    desc.baseScale_38 = fn_80024E90(model, stage);
-    desc.boneScale_3C = fn_80024EC8(model, stage);
-    desc.anims_40 = fn_80024E38(model);
-    desc.effectTbl_44 = fn_80024E64(model);
-    form->actor_3C = fn_8001D45C(&desc);
-    levels = fn_80024F00(model, stage);
-    model = fn_80024F38(model, stage);
-    fn_80019B14((int)form->actor_3C->bones_134, levels, model);
-    fn_8001D68C(form->actor_3C, 0);
+    desc.baseScale_38 = GetModelBaseScale_80024E90(model, stage);
+    desc.boneScale_3C = GetModelBoneScale_80024EC8(model, stage);
+    desc.anims_40 = GetModelActorAnims_80024E38(model);
+    desc.effectTbl_44 = GetModelEffectTable_80024E64(model);
+    form->actor_3C = CreateActor_8001D45C(&desc);
+    levels = GetModelBoneGroupLevels_80024F00(model, stage);
+    model = GetModelBoneGroupFlags_80024F38(model, stage);
+    SetBoneGroupFlags_80019B14((int)form->actor_3C->bones_134, levels, model);
+    SetActorGroundMove_8001D68C(form->actor_3C, 0);
 }
 
 void DestroyFormActor_800BF6C4()

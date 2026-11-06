@@ -133,7 +133,6 @@ extern int TestTempFlags_800BBDD8(int mask);
 
 
 // the low halves of cameraEye_8008D600 (VECTOR camera eye), read with lhu by IsActorLeftOf_800BC5C8
-extern unsigned short word_8008D600[];
 
 extern int sceneScriptId_800AEBD8;
 
@@ -419,7 +418,6 @@ extern EvXaClip* currentVoice_800AEBEC;
 extern EvVoiceCue* voiceTable_800AEBF0;
 
 
-extern void sub_8005BBC8();
 
 typedef struct EvItemMsgSrc
 {

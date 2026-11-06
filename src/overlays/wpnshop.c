@@ -643,7 +643,7 @@ void DrawStoreWindowFrame_800BB868(StoreMenu* store, RECT* rect, int a2, int a3,
         style.color_0 = saveData_8008B570.uiColor_20.h;
         style.colorSet_2 = 1;
         style.semiTrans_3 = 1;
-        DrawWindow_80042460(rect, &style, dword_8008D454 + 0x38, frameCount_8008D3FC);
+        DrawWindow_80042460(rect, &style, pOT_8008D454 + 14, frameCount_8008D3FC);
     }
 }
 
@@ -903,7 +903,7 @@ void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
     box.x_0 = pos->x + 0x61;
     box.y_2 = pos->y + 4;
     DrawUiTiySprt_8002C06C(&box, 0xEA, 0xE);
-    DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -926,7 +926,7 @@ void DrawHeldCountWindow_800BBFD4(int count)
     DrawSmallNumber9_8002C414(&box, count, 0xE);
     box.x_0 = 0x77;
     box.y_2 = 0x4D;
-    DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -956,7 +956,7 @@ void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
     DrawSmallNumber9_8002C414(&box, store->quantity_18, 0xE);
     box.x_0 = 0x77;
     box.y_2 = 0x5E;
-    DrawWindow_80042460(&rect, &box.col_8, dword_8008D454 + 0x38, frameCount_8008D3FC);
+    DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
 }
 
 
@@ -1158,7 +1158,7 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     u30.b.state_A = 0;
     u30.b.y_2 = 0xC8;
     DrawUiTiySprt_8002C06C(&u30.b, 0x80, 0xE);
-    DrawWindow_80042460(&r28, &u30.b.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&r28, &u30.b.col_8, pOT_8008D454 + 14, 0);
     if (panel == store->panel_34)
     {
         if (store->cursorScroll_32 != 0)
@@ -1218,7 +1218,7 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     b48.x_0 = r28.x + 0xD;
     b48.y_2 = r28.y + 0x4F;
     DrawUiTiySprt_8002C06C(&b48, sprt, 0xE);
-    DrawWindow_80042460(&u30.r, &b48.col_8, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&u30.r, &b48.col_8, pOT_8008D454 + 14, 0);
 }
 
 // Matched
@@ -1332,7 +1332,7 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
     s50.colorSet_2 = 0;
     s50.semiTrans_3 = 1;
     s50.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&r48, &s50, dword_8008D454 + 0x38, 0);
+    DrawWindow_80042460(&r48, &s50, pOT_8008D454 + 14, 0);
     if (store->state_0 != 0x11)
     {
         u.p.kind_0 = 2;
@@ -1349,7 +1349,7 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
             u.s.colorSet_2 = 0;
             u.s.semiTrans_3 = 1;
             u.s.color_0 = saveData_8008B570.uiColor_20.h;
-            DrawWindow_80042460(&r60, &u.s, dword_8008D454 + 0x38, 0);
+            DrawWindow_80042460(&r60, &u.s, pOT_8008D454 + 14, 0);
         }
     }
 }
@@ -1432,7 +1432,7 @@ void DrawTotalPrice_800BCFCC(StoreMenu* store)
         b.x_0 = 0x11E;
         b.y_2 = 0x62;
         DrawUiTiySprt_8002C06C(&b, 0xEA, 0xE);
-        DrawWindow_80042460(&r, &b.col_8, dword_8008D454 + 0x38, 0);
+        DrawWindow_80042460(&r, &b.col_8, pOT_8008D454 + 14, 0);
     }
 }
 

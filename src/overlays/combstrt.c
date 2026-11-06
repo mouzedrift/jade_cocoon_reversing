@@ -130,7 +130,7 @@ void SetupShuffleInput_800A4498()
         setupState_800A4C14 = 3;
         shuffleTimer_800A4C94 = 0;
         shufflePhase_800A4C92 = 0;
-        shuffleLimit_800A4C90 = (word_8008D3FC & 0xF) + 0x2D;
+        shuffleLimit_800A4C90 = (frameCount_8008D3FC & 0xF) + 0x2D;
     }
 }
 

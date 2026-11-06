@@ -6,3 +6,4 @@
 EXE      playerYan_8008B594     saveData_8008B570    0x24     # saveData_8008B570.inv_24
 EXE      levantPos_8008BD18     saveData_8008B570    0x7A8    # saveData_8008B570.levant_7A8
 GAME     enemySlots_800B19F0    gCtx_800B1260        0x790    # gCtx_800B1260.enemySlots_790
+GAME     Ratan2DifferenceInt_8003B9E0  ratan2Difference_8003B9E0  0  # two GAME callers use it as returning int (no sign extension)

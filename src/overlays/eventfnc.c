@@ -2746,18 +2746,18 @@ int IsActorLeftOf_800BC5C8(int actorA, int actorB)
     rel[0] = posA[0];
     rel[1] = posA[2];
     rel[2] = posA[4];
-    rel[0] -= word_8008D600[0];
-    rel[1] -= word_8008D600[2];
-    rel[2] -= word_8008D600[4];
-    sub_8005BBC8(rel, scr1, scratch, scratch);
+    rel[0] -= (unsigned short)cameraEye_8008D600.vx;
+    rel[1] -= (unsigned short)cameraEye_8008D600.vy;
+    rel[2] -= (unsigned short)cameraEye_8008D600.vz;
+    RotTransPers(rel, scr1, scratch, scratch);
     posB = (unsigned short*)GetActorPos_800BBBA0(actorB);
     rel[0] = posB[0];
     rel[1] = posB[2];
     rel[2] = posB[4];
-    rel[0] -= word_8008D600[0];
-    rel[1] -= word_8008D600[2];
-    rel[2] -= word_8008D600[4];
-    sub_8005BBC8(rel, scr2, scratch, scratch);
+    rel[0] -= (unsigned short)cameraEye_8008D600.vx;
+    rel[1] -= (unsigned short)cameraEye_8008D600.vy;
+    rel[2] -= (unsigned short)cameraEye_8008D600.vz;
+    RotTransPers(rel, scr2, scratch, scratch);
     return scr1[0] < scr2[0];
 }
 

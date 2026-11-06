@@ -546,7 +546,7 @@ extern ShortPair screenOffset_8008D474;
 extern TileAnimLayers tileAnim_8008D648;
 extern void DrawTileAnimLayers_800A0A5C(short* work);
 
-extern int GameFn_8003B9E0(int* a, int* b);
+extern int Ratan2DifferenceInt_8003B9E0(int* a, int* b); // ratan2Difference_8003B9E0 as GAME declared it (config/aliases.txt)
 
 extern void MapSelectStart_800B6BFC();
 

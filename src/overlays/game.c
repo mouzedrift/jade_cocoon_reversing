@@ -558,7 +558,7 @@ void SetupEncounter_800A1BD0(void)
             done = 0;
             anims = s->data_8.anims_C8[0];
             ai = s->ai_4;
-            anims = anims ? anims : name_8007A024;
+            anims = anims ? anims : commandScripts_8007A024;
             if (!found && gCtx_800B1260.leader_4 == s)
             {
                 SuspendEnemyAi_800A2EC8(ai);
