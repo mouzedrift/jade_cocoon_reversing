@@ -1618,17 +1618,15 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
     BuildCardHeader_800BB2AC(&work->fileBuf_4->header_0, idx, saveTitle_800BDFAC->str);
 }
 
-#if 0
-// Not matched: prologue scheduling only (the original sets $a0 = 1 before saving $s1 / copying the second argument).
-// Tried: the WriteSaveTask_800B98C4 shape (void* t, void* buf copied into typed locals) fixes the scheduling but swaps
-// task/chan ($s3/$s4): gcc 2.8 global alloc ranks task (5 refs / 52 insns, or 4/49 with the two 0xF failures
-// shared via goto) above chan (2 refs / 13 insns), the original needs chan first. Making chan's life shorter
-// (save computed first, unsigned short save, a port temp) gets the registers right but then the three lbu's of
-// chan/save are scheduled in the wrong order; ~500 declaration-order/type/goto/temp combinations tried.
-void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work)
+// the load task: reads the save file from the card and unpacks it, then back to the menu (task callback: the
+// second parameter is copied into a typed local after the other locals; declared first it would be merged into
+// the incoming argument move and the call setup scheduled differently)
+// Matched
+void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf)
 {
     int cmd = 0;
     int res = 0;
+    LoadMenuWork* work = buf;
     int chan = loadMenuRows_800BDF4C[1].cursor_C << 4;
     int save = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
     char* name;
@@ -1686,8 +1684,6 @@ void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work)
     DrawMessageBox_800BACBC(msgLoading_800BDEDC);
     DrawMenuBackground_8002BE10();
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, LoadSaveTask_800BA234);
 
 // unpacks the loaded save file into saveData_8008B570; 0 when the checksum or the version is wrong
 // Matched

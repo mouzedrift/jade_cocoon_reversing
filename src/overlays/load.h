@@ -426,7 +426,7 @@ extern void LoadMenuTask_800B794C(LoadMenuTaskEntry* task, LoadMenuWork* work);
 extern void LoadMenuScreen_800B79F8(LoadMenuWork* work);
 extern void PackSaveFile_800B9A8C(LoadMenuWork* work);
 extern void WriteSaveTask_800B98C4(void* t, void* buf);
-extern void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work);
+extern void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf);
 extern void FormatCardWait1_800BA968(LoadMenuTaskEntry* task);
 extern void LoadMenuExit_800BAAE0(LoadMenuTaskEntry* task, LoadMenuWork* work);
 extern void FormatCardWait2_800BA9AC(LoadMenuTaskEntry* task);
