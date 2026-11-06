@@ -1,1 +1,0 @@
-# asm data symbols whose tail is emitted by C instead (switch jump tables of decompiled functions): name, bytes kept

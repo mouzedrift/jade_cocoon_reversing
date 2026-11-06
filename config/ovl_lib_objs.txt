@@ -1,5 +1,3 @@
-# PSY-Q library modules linked into an overlay from the 4.4 .LIB files (scripts/overlays.py).
-# OVERLAY LIB MODULE,MODULE,... then the address of the first module's .rdata/.text/.data/.bss (the modules'
-# sections follow each other in link order) and gamebss=, where the overlay's own .bss starts (in front of the
-# modules' .bss). The overlay's symbols in those ranges are not split or built from the C source.
-LOAD LIBMCRD.LIB LIBMCRD,USERFUNC,BIOS rdata=800B73A0 text=800BB5DC data=800BE154 bss=800BE1C4 gamebss=800BE184
+# PSY-Q library modules linked into an overlay from the 4.4 .LIB files (scripts/overlays.py), behind its C objects.
+# OVERLAY LIB MODULE,MODULE,...
+LOAD LIBMCRD.LIB LIBMCRD,USERFUNC,BIOS

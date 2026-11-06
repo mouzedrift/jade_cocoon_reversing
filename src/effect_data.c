@@ -34,6 +34,7 @@
 #include "effect_model.h"
 #include "effect_light.h"
 #include "model_ftg.h"
+#include "tiy.h"
 
 int weaponEffectIds_80079708[19] = {
     0, 1, 2, 3, 4, 5, 6, 7,
@@ -1641,14 +1642,14 @@ void* dword_8007C330[6] = {
     &dword_8007C32C, &dword_8007C32C,
 };
 int magicNames_8007C348[0x1E * 2] = {
-    0x800731EC, 0x800731E8, 0x800731DC, 0x800731E8, 0x800731D0, 0x800731E8, 0x800731C4, 0x800731E8,
-    0x800731B4, 0x800731E8, 0x800731A4, 0x800731E8, 0x80073198, 0x800731E8, 0x8007318C, 0x800731E8,
-    0x80073180, 0x800731E8, 0x80073174, 0x800731E8, 0x80073164, 0x800731E8, 0x80073154, 0x800731E8,
-    0x80073138, 0x800731E8, 0x80073128, 0x800731E8, 0x80073118, 0x800731E8, 0x80073108, 0x800731E8,
-    0x800730F0, 0x800731E8, 0x800730DC, 0x800731E8, 0x800730C8, 0x800731E8, 0x800730B4, 0x800731E8,
-    0x800730A0, 0x800731E8, 0x8007308C, 0x800731E8, 0x80073078, 0x800731E8, 0x80073064, 0x800731E8,
-    0x8007304C, 0x800731E8, 0x80073048, 0x800731E8, 0x80073048, 0x800731E8, 0x80073048, 0x800731E8,
-    0x80073048, 0x800731E8, 0x80073048, 0x800731E8,
+    (int)&aAgni_800731EC, (int)&dword_800731E8, (int)&aAgnis_800731DC, (int)&dword_800731E8, (int)&aAgnia_800731D0, (int)&dword_800731E8, (int)&aVahli_800731C4, (int)&dword_800731E8,
+    (int)&aVahlis_800731B4, (int)&dword_800731E8, (int)&aVahlia_800731A4, (int)&dword_800731E8, (int)&aUlvi_80073198, (int)&dword_800731E8, (int)&aUlvis_8007318C, (int)&dword_800731E8,
+    (int)&aUlvia_80073180, (int)&dword_800731E8, (int)&aMalti_80073174, (int)&dword_800731E8, (int)&aMaltis_80073164, (int)&dword_800731E8, (int)&aMaltia_80073154, (int)&dword_800731E8,
+    (int)&aSelahmVenon_80073138, (int)&dword_800731E8, (int)&aMedina_80073128, (int)&dword_800731E8, (int)&aMedinia_80073118, (int)&dword_800731E8, (int)&aSelahm_80073108, (int)&dword_800731E8,
+    (int)&aSelSelahm_800730F0, (int)&dword_800731E8, (int)&aAdVenon_800730DC, (int)&dword_800731E8, (int)&aAdSlahm_800730C8, (int)&dword_800731E8, (int)&aAdRoqua_800730B4, (int)&dword_800731E8,
+    (int)&aAdMumuls_800730A0, (int)&dword_800731E8, (int)&aDevaAgni_8007308C, (int)&dword_800731E8, (int)&aDevaVali_80073078, (int)&dword_800731E8, (int)&aDevaUlvi_80073064, (int)&dword_800731E8,
+    (int)&aDevaMalti_8007304C, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8,
+    (int)&dword_80073048, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8,
 };
 MagicData magicData_8007C438[30] = {
     { 130, 10, 7, 26, 5 },
@@ -1851,8 +1852,8 @@ unsigned short defaultButtonConfig_8007CAF4[0xa] = {
 };
 char *(*nameGetters_8007CB08[6])(int id) = { (char *(*)(int))GetItemName_8001CE20, (char *(*)(int))GetWeaponName_8001CF20, (char *(*)(int))GetArmorName_8001CFDC, (char *(*)(int))GetAccessoryName_8001D0A4, (char *(*)(int))GetPersonName_8001CD3C, (char *(*)(int))GetKeyItemName_8001D318 };
 int personNames_8007CB20[11] = {
-    0x800732A8, 0x80073298, 0x80073288, 0x8007327C, 0x80073268, 0x80073258, 0x8007324C, 0x80073238,
-    0x80073234, 0x80073234, 0x80073234,
+    (int)&aPalooja_800732A8, (int)&aTicker_80073298, (int)&aJeechwo_80073288, (int)&aKolna_8007327C, (int)&aSicanjal_80073268, (int)&aTimaios_80073258, (int)&aYolga_8007324C, (int)&aKlarrgas_80073238,
+    (int)&dword_80073234, (int)&dword_80073234, (int)&dword_80073234,
 };
 unsigned char personMergeInfo_8007CB4C[11][4] = {
     { 201, 255, 255, 255 },
@@ -1868,12 +1869,12 @@ unsigned char personMergeInfo_8007CB4C[11][4] = {
     { 255, 255, 255, 255 },
 };
 int itemNames_8007CB78[0x2b] = {
-    0x8007377C, 0x80073760, 0x80073740, 0x80073724, 0x80073708, 0x800736EC, 0x800736D0, 0x800736B4,
-    0x8007369C, 0x80073684, 0x8007366C, 0x80073648, 0x80073628, 0x8007360C, 0x800735EC, 0x800735D0,
-    0x800735B4, 0x80073598, 0x80073578, 0x8007355C, 0x8007353C, 0x8007351C, 0x800734FC, 0x800734DC,
-    0x800734B8, 0x8007349C, 0x80073480, 0x80073464, 0x80073448, 0x8007342C, 0x80073410, 0x800733F0,
-    0x800733D0, 0x800733B8, 0x8007339C, 0x80073388, 0x80073370, 0x80073350, 0x80073330, 0x80073310,
-    0x800732F4, 0x800732D8, 0x800732B8,
+    (int)&aMugwort_8007377C, (int)&aMetaMugwort_80073760, (int)&aBitterMugwort_80073740, (int)&aGreatWalnut_80073724, (int)&aChestnutOil_80073708, (int)&aShishiudoOil_800736EC, (int)&aKukumiraOil_800736D0, (int)&aBletillaOil_800736B4,
+    (int)&aIchishiOil_8007369C, (int)&aShabLiquor_80073684, (int)&aFineLiquor_8007366C, (int)&aExcellentLiquor_80073648, (int)&aSpecialLiquor_80073628, (int)&aTendaiUyaku_8007360C, (int)&aValerianPowder_800735EC, (int)&aIkariPowder_800735D0,
+    (int)&aRingOfVenom_800735B4, (int)&aRingOfSleep_80073598, (int)&aRingOfStoning_80073578, (int)&aRingOfDeath_8007355C, (int)&aMirrorOfDeva_8007353C, (int)&aUrvySBlessing_8007351C, (int)&aVarySBlessing_800734FC, (int)&aAgniSBlessing_800734DC,
+    (int)&aMaltySBlessing_800734B8, (int)&aUrvySSeal1_8007349C, (int)&aUrvySSeal2_80073480, (int)&aVarySSeal1_80073464, (int)&aVarySSeal2_80073448, (int)&aAgniSSeal1_8007342C, (int)&aAgniSSeal2_80073410, (int)&aMaltySSeal1_800733F0,
+    (int)&aMaltySSeal2_800733D0, (int)&aCloudSilk_800733B8, (int)&aThunderSilk_8007339C, (int)&aLilySilk_80073388, (int)&aPearlSilk_80073370, (int)&aFirstSnowSilk_80073350, (int)&aAngelwingSilk_80073330, (int)&aMoonlightSilk_80073310,
+    (int)&aSkeletonKey_800732F4, (int)&aSleepSpores_800732D8, (int)&aAttractSpores_800732B8,
 };
 unsigned char itemEffects_8007CC24[0x2b] = { 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 56, 55, 54, 68, 67, 69, 33, 43, 50, 48, 42, 49, 28, 28, 25, 25, 26, 26, 27, 27, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34 };
 unsigned short itemFlags_8007CC50[44] = {
@@ -1952,9 +1953,9 @@ char *keyItemNames_8007CF30[0x26] = {
 };
 unsigned char keyItemIcons_8007CFC8[0x26] = { 49, 31, 67, 63, 64, 50, 62, 40, 38, 27, 30, 61, 44, 33, 32, 34, 28, 46, 29, 39, 39, 58, 59, 57, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28 };
 int weaponNames_8007CFF0[0x17] = {
-    0x80073D54, 0x80073D44, 0x80073D34, 0x80073D18, 0x80073CF8, 0x80073CE0, 0x80073CCC, 0x80073CB0,
-    0x80073C98, 0x80073C80, 0x80073C6C, 0x80073C58, 0x80073C3C, 0x80073C24, 0x80073C14, 0x80073BF4,
-    0x80073BDC, 0x80073BC4, 0x80073BB0, 0x80073BA0, 0x80073B90, 0x80073B78, 0x80073B68,
+    (int)&aKnife_80073D54, (int)&aDagger_80073D44, (int)&aAquazor_80073D34, (int)&aBronzeSword_80073D18, (int)&aSwordOfSpeed_80073CF8, (int)&aIronSword_80073CE0, (int)&aIronAxe_80073CCC, (int)&aLifeStealer_80073CB0,
+    (int)&aWhiteHorn_80073C98, (int)&aLittleBird_80073C80, (int)&aWhistler_80073C6C, (int)&aNightglow_80073C58, (int)&aBluePhantom_80073C3C, (int)&aThunderbolt_80073C24, (int)&aTsunami_80073C14, (int)&aSpringBlossom_80073BF4,
+    (int)&aDragoncrest_80073BDC, (int)&aCloudcover_80073BC4, (int)&aPalemoon_80073BB0, (int)&aReaper_80073BA0, (int)&aDrainer_80073B90, (int)&aAutumnMoon_80073B78, (int)&aIcicle_80073B68,
 };
 EquipmentData weaponData_8007D04C[0x17] = {
     { 0, 0, { 2, 0, 0, 0, 3 }, { 0 }, 5 },
@@ -2012,8 +2013,8 @@ int weaponPrices_8007D388[0x17] = {
     0x157C, 0x157C, 0x157C, 0x157C, 0x1388, 0x1388, 0x1869F,
 };
 int armorNames_8007D3E4[0xf] = {
-    0x80073ED8, 0x80073EBC, 0x80073E9C, 0x80073E88, 0x80073E68, 0x80073E48, 0x80073E30, 0x80073E18,
-    0x80073DFC, 0x80073DE8, 0x80073DD0, 0x80073DB0, 0x80073D98, 0x80073D7C, 0x80073D60,
+    (int)&aHunterSVest_80073ED8, (int)&aLeatherVest_80073EBC, (int)&aChainMailVest_80073E9C, (int)&aWireVest_80073E88, (int)&aPlateMailVest_80073E68, (int)&aReflectingVest_80073E48, (int)&aSilverVest_80073E30, (int)&aDivineVest_80073E18,
+    (int)&aRiketzGarb_80073DFC, (int)&aNagiGarb_80073DE8, (int)&aBloodyGarb_80073DD0, (int)&aNavyBlueGarb_80073DB0, (int)&aForestGarb_80073D98, (int)&aDivineGarb1_80073D7C, (int)&aDivineGarb2_80073D60,
 };
 EquipmentData armorData_8007D420[0xf] = {
     { 1, 0, { 0, 1 } },
@@ -2055,9 +2056,9 @@ unsigned short armorPrices_8007D64C[0xf] = {
     0x7D0, 0x2710, 100, 0x3A98, 0x4E20, 0x7530, 0x7530,
 };
 int accessoryNames_8007D66C[0x11] = {
-    0x8007408C, 0x80074070, 0x80074050, 0x8007403C, 0x80074024, 0x8007400C, 0x80073FF8, 0x80073FDC,
-    0x80073FC0, 0x80073FA4, 0x80073F8C, 0x80073F78, 0x80073F5C, 0x80073F40, 0x80073F24, 0x80073F08,
-    0x80073EF4,
+    (int)&aLeatherHeadband_8007408C, (int)&aIronHeadband_80074070, (int)&aSilverHeadband_80074050, (int)&aBlueBead_8007403C, (int)&aGreenBead_80074024, (int)&aYellowBead_8007400C, (int)&aRedBead_80073FF8, (int)&aSparrowRuff_80073FDC,
+    (int)&aIronBracelet_80073FC0, (int)&aSilverCrown_80073FA4, (int)&aHollyRuff_80073F8C, (int)&aHawkRuff_80073F78, (int)&aPoisonChoker_80073F5C, (int)&aSleepChoker_80073F40, (int)&aStoneChoker_80073F24, (int)&aSuperChoker_80073F08,
+    (int)&aNagiBelt_80073EF4,
 };
 EquipmentData accessoryData_8007D6B0[0x11] = {
     { 2, 0, { 0, 2 }, { 0 }, 1 },
@@ -2180,10 +2181,10 @@ int modelVramSlots_8007DBC4[19] = { 192, 48, 0x60000, 0xFFFF0000 };
 int modelVramSlots_8007DC10[24] = {
     0xFFFF0000, 0, 0, 0, 0, 64, 16, 0x20000,
     0, 64, 16, 0x20000, 0, 64, 16, 0x20000,
-    0xFFFF0000, 0, 0, 0, 0, 0, 0, 0x8007DB30,
+    0xFFFF0000, 0, 0, 0, 0, 0, 0, (int)&modelVramSlots_8007DB30,
 };
 ModelVramSlot *modelLoaderVram_8007DC70 = (void *)modelVramSlots_8007DB50;
-int dword_8007DC74[6] = { 0x8007DBA0, 0x8007DBE0, 0x8007DC20, 0x1000300, 0x10100, 0x1890300 };
+int dword_8007DC74[6] = { (int)&modelVramSlots_8007DB84[7], (int)&modelVramSlots_8007DBC4[7], (int)&modelVramSlots_8007DC10[4], 0x1000300, 0x10100, 0x1890300 };
 unsigned short actorImageRect_8007DC8C[2] = { 0x300, 0x181 };
 short word_8007DC90 = 0x100;
 short word_8007DC92 = 1;
@@ -2945,13 +2946,13 @@ int abilityTypeIcons_800827F8[5] = { 0x48F120A4, 0x46EF1EA2, 0x45EE1AA1, 0x4CF42
 unsigned char *abilityIconsByType_8008280C[5] = { (void *)abilityTypeIcons_800827F8, (void *)&abilityTypeIcons_800827F8[1], (void *)&abilityTypeIcons_800827F8[2], (void *)&abilityTypeIcons_800827F8[3], (void *)&abilityTypeIcons_800827F8[4] };
 short itemScrollUpPos_80082820[2] = { 0xA0, 0x2F }; // arrow x, y
 short itemScrollDownPos_80082824[2] = { 0xA0, 0x94 };
-int itemListRowData_80082828[11] = { 0x10010, 0, 0x8008D434, 0x8008D440, 0x360053, 0x150015, 0x50003, 0x30010 };
+int itemListRowData_80082828[11] = { 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053, 0x150015, 0x50003, 0x30010 };
 int aH6p[14] = {
     0x360068, 0x150070, 0x40004, 0x80004, 0, 0, 0, 0x3600D8,
     0x150017, 0x30000, 1,
 };
 int itemListRowData_8008288C[14] = {
-    -1, -1, -1, 0x10010, 0, 0x8008D434, 0x8008D440, 0x360053,
+    -1, -1, -1, 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053,
     0x150015, 0x50003, 0x30010,
 };
 int aH6p_0[14] = {
@@ -2959,7 +2960,7 @@ int aH6p_0[14] = {
     0x150017, 0x30000, 1,
 };
 int itemListRowData_800828FC[14] = {
-    -1, -1, -1, 0x10010, 0, 0x8008D434, 0x8008D440, 0x360053,
+    -1, -1, -1, 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053,
     0x150015, 0x50003, 0x30010,
 };
 int aH6p_1[14] = {
@@ -2967,7 +2968,7 @@ int aH6p_1[14] = {
     0x150017, 0x30000, 1,
 };
 int itemListRowData_8008296C[14] = {
-    -1, -1, -1, 0x10010, 0, 0x8008D434, 0x8008D440, 0x360053,
+    -1, -1, -1, 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053,
     0x150015, 0x50003, 0x30010,
 };
 int aH6p_2[17] = {
@@ -2978,20 +2979,20 @@ int aH6p_2[17] = {
 MenuWindowItem *itemListRows_800829E8[5] = { (void *)itemListRowData_80082828, (void *)&itemListRowData_8008288C[3], (void *)&itemListRowData_800828FC[3], (void *)&itemListRowData_8008296C[3] };
 unsigned short magicScrollUpPos_800829FC[2] = { 160, 47 };
 unsigned short magicScrollDownPos_80082A00[2] = { 160, 148 };
-int magicListRowData_80082A04[11] = { 0x10010, 0, 0x8008D620, 0x8008D3F4, 0x360060, 0x150015, 0x40004, 0x30010 };
+int magicListRowData_80082A04[11] = { 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060, 0x150015, 0x40004, 0x30010 };
 int aU6k[7] = { 0x360075, 0x15006B, 0x40003, 1 };
 int magicListRowData_80082A4C[14] = {
-    -1, -1, -1, 0x10010, 0, 0x8008D620, 0x8008D3F4, 0x360060,
+    -1, -1, -1, 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060,
     0x150015, 0x40004, 0x30010,
 };
 int aU6k_0[7] = { 0x360075, 0x15006B, 0x40003, 1 };
 int magicListRowData_80082AA0[14] = {
-    -1, -1, -1, 0x10010, 0, 0x8008D620, 0x8008D3F4, 0x360060,
+    -1, -1, -1, 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060,
     0x150015, 0x40004, 0x30010,
 };
 int aU6k_1[7] = { 0x360075, 0x15006B, 0x40003, 1 };
 int magicListRowData_80082AF4[14] = {
-    -1, -1, -1, 0x10010, 0, 0x8008D620, 0x8008D3F4, 0x360060,
+    -1, -1, -1, 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060,
     0x150015, 0x40004, 0x30010,
 };
 int aU6k_2[10] = {
@@ -2999,31 +3000,31 @@ int aU6k_2[10] = {
     -1, -1,
 };
 MenuWindowItem *magicListRows_80082B54[5] = { (void *)magicListRowData_80082A04, (void *)&magicListRowData_80082A4C[3], (void *)&magicListRowData_80082AA0[3], (void *)&magicListRowData_80082AF4[3] };
-int abilityListRowData_80082B68[4] = { 0x10008, 0, 0x8008D620, 0x8008D3F4 };
+int abilityListRowData_80082B68[4] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
 int a8[21] = {
     0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
     0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
     0x40000, 1,
 };
-int abilityListRowData_80082BCC[7] = { -1, -1, -1, 0x10008, 0, 0x8008D620, 0x8008D3F4 };
+int abilityListRowData_80082BCC[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
 int a8_0[21] = {
     0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
     0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
     0x40000, 1,
 };
-int abilityListRowData_80082C3C[7] = { -1, -1, -1, 0x10008, 0, 0x8008D620, 0x8008D3F4 };
+int abilityListRowData_80082C3C[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
 int a8_1[21] = {
     0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
     0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
     0x40000, 1,
 };
-int abilityListRowData_80082CAC[7] = { -1, -1, -1, 0x10008, 0, 0x8008D620, 0x8008D3F4 };
+int abilityListRowData_80082CAC[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
 int a8_2[21] = {
     0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
     0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
     0x40000, 1,
 };
-int abilityListRowData_80082D1C[7] = { -1, -1, -1, 0x10008, 0, 0x8008D620, 0x8008D3F4 };
+int abilityListRowData_80082D1C[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
 int a8_3[24] = {
     0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
     0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
@@ -3276,10 +3277,10 @@ SeqSlot seqSlots_800833E4[32] = {
     { 1, 15 },
 };
 int abilityNames_800834E4[39] = {
-    0x800745C4, 0x800745C4, 0x800745A8, 0x8007458C, 0x80074574, 0x8007455C, 0x8007454C, 0x80074540,
-    0x80074520, 0x80074504, 0x800744F0, 0x800744D8, 0x800744C0, 0x800744AC, 0x80074494, 0x8007447C,
+    (int)&aDashes4_800745C4, (int)&aDashes4_800745C4, (int)&aEarthAttack_800745A8, (int)&aWaterAttack_8007458C, (int)&aFireAttack_80074574, (int)&aWindAttack_8007455C, (int)&aPoison_8007454C, (int)&aSleep_80074540,
+    (int)&aFleshToStone_80074520, (int)&aDestroyMana_80074504, (int)&aAbsorbHP_800744F0, (int)&aAbsorbMana_800744D8, (int)&aAllEnemies_800744C0, (int)&aCritical_800744AC, (int)&aBreakLegs_80074494, (int)&aRendWings_8007447C,
 };
-int abilityBonusNames_80083580[5] = { 0x80074610, 0x80074610, 0x80074600, 0x800745E8, 0x800745D0 };
+int abilityBonusNames_80083580[5] = { (int)&aDashes3_80074610, (int)&aDashes3_80074610, (int)&aPlusPower_80074600, (int)&aPlusAccuracy_800745E8, (int)&aPlusCritical_800745D0 };
 ActionData abilityActions_80083594[41] = {
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },

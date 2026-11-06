@@ -205,8 +205,8 @@ void DrawDemoDisclaimer_80040B94(void)
 }
 
 char copyright_80086948[8] = { 48, 105, 8, 128 };
-int genkiMovieData_80086950[6] = { 1, 1, 0, 0, 0x80040AC4 };
+int genkiMovieData_80086950[6] = { 1, 1, 0, 0, (int)&PlayGenkiMovie_80040AC4 };
 char genkiMovie_80086968[8] = { 80, 105, 8, 128 };
-int craveEntertainmentData_80086970[6] = { 1, 1, 0, 0, 0x80040B2C };
+int craveEntertainmentData_80086970[6] = { 1, 1, 0, 0, (int)&PlayCraveMovie_80040B2C };
 char craveEntertainmentMovie_80086988[8] = { 112, 105, 8, 128 };
-int demoDisclaimerData_80086990[6] = { 1, 1, 0, 0, 0x80040B94 };
+int demoDisclaimerData_80086990[6] = { 1, 1, 0, 0, (int)&DrawDemoDisclaimer_80040B94 };

@@ -18,11 +18,6 @@ enum foo
 
 #define MAX_PLAYER_NAME_LENGTH 10
 
-/* pull in the assembly generated from the original executable (scripts/split.py), run from the repository root */
-#define INCLUDE_ASM(name) __asm__(".include \"asm/f/" #name ".s\"")
-#define INCLUDE_OVERLAY_ASM(dir, name) __asm__(".include \"asm/overlays/" #dir "/" #name ".s\"")
-#define INCLUDE_DATA(name) __asm__(".include \"asm/d/" #name ".s\"")
-
 /* uninitialised variables are defined straight into .bss, with a zero initialiser: `int x BSS = 0;`. A tentative
    definition would be a common symbol (also with the attribute, once the file declares the variable extern too), and
    psylink aligns every .bss contribution to 8 bytes as soon as there are commons (the game's .bss is packed, see

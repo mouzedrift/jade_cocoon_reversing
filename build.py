@@ -21,30 +21,23 @@ def read_tus():
 
 c_files = [tu if tu.startswith("obj ") else tu + ".c" for tu in read_tus()]
 
-# the PSY-Q library part of the executable, as raw blobs (see scripts/split.py)
-lib_files = ["text", "lib_pad", "lib_rdata", "lib_data", "lib_sbss", "lib_bss"]
-
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "scripts"))
 
 
 def read_lib_objs():
-    """config/lib_objs.txt: the PSY-Q modules in link order, ("obj", LIB, MODULE) or ("asm", addr, size)"""
-    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config", "lib_objs.txt")
-    if not os.path.exists(path):
-        return None
+    """config/lib_objs.txt: the PSY-Q modules in link order, ("obj", LIB, MODULE), ("src", FILE) for src/lib/FILE,
+    ("bsshead", SIZE) / ("bsstail", SIZE)"""
     out = []
-    for line in open(path):
+    for line in open(os.path.join(CURRENT_DIR, "config", "lib_objs.txt")):
         f = line.split("#")[0].split()
         if not f:
             continue
-        if f[0] == "bsshead":
-            out.append(("bsshead",))
-            continue
-        if f[0] == "bsstail":
-            out.append(("bsstail", int(f[2], 16)))
-            continue
-        out.append(("asm", int(f[1], 16), int(f[2], 16)) if f[0] == "asm" else ("obj", f[0], f[1]))
-        # an asm line may go on with "SECTION ADDR SIZE" for data of that piece (split.py puts it in the .s)
+        if f[0] in ("bsshead", "bsstail"):
+            out.append((f[0], int(f[1], 16)))
+        elif f[0] == "src":
+            out.append(("src", f[1]))
+        else:
+            out.append(("obj", f[0], f[1]))
     return out
 
 
@@ -62,7 +55,7 @@ def read_lib_commons():
 
 
 def game_bss_end():
-    """end of the game's .bss (the PSY-Q modules' .bss follows); the game's variables are C (BSS) and INCLUDE_DATA pieces"""
+    """end of the game's .bss (the PSY-Q modules' .bss follows); the game's variables are all C"""
     import layout
     return layout.BSS_GAME_END
 
@@ -192,83 +185,76 @@ def generate_ninja():
             out_path = os.path.join(BUILD_DIR, file_name)
 
             # headers are not tracked by the preprocessor, so rebuild everything when any of them change
-            # INCLUDE_ASM / INCLUDE_DATA pull in generated assembly, rebuild when it changes
-            text = open(os.path.join(project_src, c_file)).read()
-            inc = [os.path.join(CURRENT_DIR, "asm", "f" if k == "ASM" else "d", n + ".s")
-                   for k, n in re.findall(r"INCLUDE_(ASM|DATA)\((\w+)\)", text)]
-            ninja.build(f"{out_path}.preproc", "pre_process", os.path.join(project_src, c_file), implicit=headers + inc)
+            ninja.build(f"{out_path}.preproc", "pre_process", os.path.join(project_src, c_file), implicit=headers)
             ninja.build(f"{out_path}.o", "compile" + cc43[file_name] if file_name in cc43 else "compile", f"{out_path}.preproc")
             ninja.build(f"{out_path}.obj", "assemble", f"{out_path}.o")
             linker_deps.append(f"{out_path}.obj")
 
         lib_objs = read_lib_objs()
         lib_syms = set()
-        if lib_objs is None:
-            for lib in lib_files:
-                out_path = os.path.join(BUILD_DIR, "lib_" + lib if not lib.startswith("lib_") else lib)
-                ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", lib + ".s"))
-                linker_deps.append(f"{out_path}.obj")
-        else:
-            # the PSY-Q modules themselves, from the .LIB files; the code that is no 4.4 module stays assembly
-            from objlib.sections import parse_obj_sections
-            commons = read_lib_commons()
-            bss_pos = game_bss_end()
-            paths = extract_lib_objs(psyq_lib, os.path.join(BUILD_DIR, "libobj"),
-                                     [(o[1], o[2]) for o in lib_objs if o[0] == "obj"])
-            for o in lib_objs:
+        # the PSY-Q modules themselves, from the .LIB files; the code that is no 4.4 module is src/lib/*.s
+        from objlib.sections import parse_obj_sections
+        commons = read_lib_commons()
+        bss_pos = game_bss_end()
+        paths = extract_lib_objs(psyq_lib, os.path.join(BUILD_DIR, "libobj"),
+                                 [(o[1], o[2]) for o in lib_objs if o[0] == "obj"])
+        for o in lib_objs:
+            if o[0] in ("bsshead", "bsstail"):
+                # bsshead: linked in front of the game so that it starts the bss group (the original's
+                # commons made psylink 8-align the .bss); bsstail: padding behind everything (the original's
+                # .bss group ends on 8 bytes, and the start-up clears the bss up to that end)
+                out_path = os.path.join(BUILD_DIR, "lib_" + o[0])
+                write_if_changed(out_path + ".s", "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % o[1])
+                ninja.build(f"{out_path}.obj", "assemble", out_path + ".s")
                 if o[0] == "bsshead":
-                    # linked in front of the game so that it starts the bss group
-                    out_path = os.path.join(BUILD_DIR, "lib_bss_head")
-                    ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", "bss_head.s"))
                     linker_deps.insert(0, f"{out_path}.obj")
-                elif o[0] == "bsstail":
-                    # padding behind everything: the original's .bss group ends on 8 bytes (its commons made
-                    # psylink 8-align the .bss), and the start-up clears the bss up to that end
-                    src = os.path.join(BUILD_DIR, "lib_bss_tail.s")
-                    write_if_changed(src, "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % o[1])
-                    bss_tail = os.path.join(BUILD_DIR, "lib_bss_tail.obj")
-                    ninja.build(bss_tail, "assemble", src)
-                elif o[0] == "asm":
-                    name = "text_%08X" % o[1]
-                    out_path = os.path.join(BUILD_DIR, "lib_" + name)
-                    ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", name + ".s"))
-                    linker_deps.append(f"{out_path}.obj")
-                    for l in open(os.path.join(CURRENT_DIR, "asm", "lib", name + ".s")):
-                        if l.startswith("\t.globl\t"):
-                            lib_syms.add(l.split()[1])
                 else:
-                    secs = parse_obj_sections(paths[(o[1], o[2])])
-                    if ".bss" in secs and secs[".bss"].size and bss_pos % 8:
-                        # the .bss of the PSY-Q modules is on 8 bytes (psylink does that itself only with commons)
-                        name = "libpad_%08X" % bss_pos
-                        src = os.path.join(BUILD_DIR, name + ".s")
-                        write_if_changed(src, "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % (8 - bss_pos % 8))
-                        ninja.build(os.path.join(BUILD_DIR, name + ".obj"), "assemble", src)
-                        linker_deps.append(os.path.join(BUILD_DIR, name + ".obj"))
-                        bss_pos += 8 - bss_pos % 8
-                    linker_deps.append(paths[(o[1], o[2])])
-                    lib_syms.update(secs["__xdefs__"])
-                    bss_pos += secs[".bss"].size if ".bss" in secs else 0
-                    own = commons.get((o[1], o[2]))
-                    if own:
-                        # its common symbols, defined right behind it (see read_lib_commons)
-                        name = "libcom_%s_%s" % (o[1].split(".")[0], o[2])
-                        src = os.path.join(BUILD_DIR, name + ".s")
-                        lines = ["\t.section\t.bss"]
-                        for n, size, a in own:
-                            if not 0 <= a - bss_pos < 8:
-                                print("lib_commons: %s at %08X, but the .bss is at %08X there" % (n, a, bss_pos))
-                            if a > bss_pos:
-                                lines.append("\t.space\t%d" % (a - bss_pos))
-                            lines += ["\t.globl\t%s" % n, "%s:" % n, "\t.space\t%d" % size]
-                            bss_pos = a + size
-                        lines.append("\t.text")
-                        write_if_changed(src, "\r\n".join(lines) + "\r\n")
-                        ninja.build(os.path.join(BUILD_DIR, name + ".obj"), "assemble", src)
-                        linker_deps.append(os.path.join(BUILD_DIR, name + ".obj"))
-            out_path = os.path.join(BUILD_DIR, "lib_pad")
-            ninja.build(f"{out_path}.obj", "assemble", os.path.join(CURRENT_DIR, "asm", "lib", "lib_pad.s"))
-            linker_deps.append(f"{out_path}.obj")
+                    bss_tail = f"{out_path}.obj"
+            elif o[0] == "src":
+                src = os.path.join(CURRENT_DIR, "src", "lib", o[1])
+                out_path = os.path.join(BUILD_DIR, "lib_" + o[1][:-2])
+                # ASPSX wants CRLF
+                write_if_changed(out_path + ".s", open(src).read().replace("\r\n", "\n").replace("\n", "\r\n"))
+                ninja.build(f"{out_path}.obj", "assemble", out_path + ".s", implicit=[src])
+                linker_deps.append(f"{out_path}.obj")
+                for l in open(src):
+                    if l.startswith("\t.globl\t"):
+                        lib_syms.add(l.split()[1])
+            else:
+                secs = parse_obj_sections(paths[(o[1], o[2])])
+                if ".bss" in secs and secs[".bss"].size and bss_pos % 8:
+                    # the .bss of the PSY-Q modules is on 8 bytes (psylink does that itself only with commons)
+                    name = "libpad_%08X" % bss_pos
+                    src = os.path.join(BUILD_DIR, name + ".s")
+                    write_if_changed(src, "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % (8 - bss_pos % 8))
+                    ninja.build(os.path.join(BUILD_DIR, name + ".obj"), "assemble", src)
+                    linker_deps.append(os.path.join(BUILD_DIR, name + ".obj"))
+                    bss_pos += 8 - bss_pos % 8
+                linker_deps.append(paths[(o[1], o[2])])
+                lib_syms.update(secs["__xdefs__"])
+                bss_pos += secs[".bss"].size if ".bss" in secs else 0
+                own = commons.get((o[1], o[2]))
+                if own:
+                    # its common symbols, defined right behind it (see read_lib_commons)
+                    name = "libcom_%s_%s" % (o[1].split(".")[0], o[2])
+                    src = os.path.join(BUILD_DIR, name + ".s")
+                    lines = ["\t.section\t.bss"]
+                    for n, size, a in own:
+                        if not 0 <= a - bss_pos < 8:
+                            print("lib_commons: %s at %08X, but the .bss is at %08X there" % (n, a, bss_pos))
+                        if a > bss_pos:
+                            lines.append("\t.space\t%d" % (a - bss_pos))
+                        lines += ["\t.globl\t%s" % n, "%s:" % n, "\t.space\t%d" % size]
+                        bss_pos = a + size
+                    lines.append("\t.text")
+                    write_if_changed(src, "\r\n".join(lines) + "\r\n")
+                    ninja.build(os.path.join(BUILD_DIR, name + ".obj"), "assemble", src)
+                    linker_deps.append(os.path.join(BUILD_DIR, name + ".obj"))
+        # the 3 words of padding behind the library code
+        out_path = os.path.join(BUILD_DIR, "lib_pad")
+        write_if_changed(out_path + ".s", "\t.text\r\n\t.word\t0,0,0\r\n")
+        ninja.build(f"{out_path}.obj", "assemble", out_path + ".s")
+        linker_deps.append(f"{out_path}.obj")
 
         if bss_tail:
             linker_deps.append(bss_tail)

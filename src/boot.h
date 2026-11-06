@@ -13,4 +13,5 @@ void PlayGenkiMovie_80040AEC(void);
 void PlayCraveEntertainmentMovie_80040B54(void);
 void PlayGenkiMovie_80040AC4(void);
 void PlayCraveMovie_80040B2C(void);
+void InitCopyrightScreen_80040A10(int *entry);
 #endif

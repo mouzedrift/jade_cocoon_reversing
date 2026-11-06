@@ -25,6 +25,7 @@
 #include "cd.h"
 #include "engine.h"
 #include "cdread.h"
+#include "main.h"
 
 extern unsigned long* ringBufferStart_800960B0;
 
@@ -469,7 +470,7 @@ int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int m
 }
 
 char demoDisclaimer_800869A8[8] = { 144, 105, 8, 128 };
-int introAnimeData_800869B0[6] = { 1, 1, 0, 0x8008D3E4, 0x80040D34 };
+int introAnimeData_800869B0[6] = { 1, 1, 0, (int)&dword_8008D3E4, (int)&StartIntroAnime_80040D34 };
 char introAnime_800869C8[8] = { 176, 105, 8, 128 };
 enum GameStates (*overlayCallbacks_800869D0[31])(void) = { TitleMain_800A0EF0, CombatMain_800A1324, SoundTestMain_800A51AC, TstModelMain_800A1B24, TstCompoMain_800A200C, GameShutdown_800A7574 };
 MovieInfo strMovies_80086A4C[26] = {

@@ -22,7 +22,10 @@
 #include "model.h"
 #include "movie.h"
 #include "boot.h"
+#include "pad_text.h"
 #include "party.h"
+#include "boot.h"
+#include "pad_text.h"
 
 
 
@@ -871,7 +874,7 @@ void GameLoop_8004047C(void)
     } while ((unknownFlags_8008D678 & 4) == 0);
 }
 
-int dword_8008686C[3] = { 112, 138, 0x800866D4 };
+int dword_8008686C[3] = { 112, 138, (int)&font2CharCodes_800865B8[71] };
 int dword_80086878[8] = { 126, 194, 0x808080, 0x8080, 0x404040, 128, 0x8000, 0x800000 };
 int charWidthThresholds_80086898[3][12] = {
     { 112, 112, 96, 48, 32 },
@@ -881,4 +884,4 @@ int charWidthThresholds_80086898[3][12] = {
     },
 };
 int dword_80086928[2] = { 0 };
-int copyrightData_80086930[6] = { 1, 1, 0, 0, 0x80040A10 };
+int copyrightData_80086930[6] = { 1, 1, 0, 0, (int)&InitCopyrightScreen_80040A10 };
