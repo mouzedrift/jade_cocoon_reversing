@@ -179,7 +179,6 @@ extern void ResumeEnemyAi_800A2D48(GameAi* ai);
 extern int AssertEnemyIndex_800A2CA8(int idx, int noExit);
 
 
-extern char* dword_8008B520;
 
 extern void ResetEncounter_800A170C(void);
 
@@ -972,9 +971,7 @@ typedef struct GameWinRect
     unsigned short h_6;
 } GameWinRect;
 
-extern unsigned char equippedWeaponId_8008BD54;
 
-extern unsigned char equippedArmor_8008BD55;
 
 extern unsigned char byte_8008BD56;
 

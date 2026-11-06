@@ -1494,7 +1494,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
 // Matched
 int IsEventPointValid_800A6504(int point, int* pos)
 {
-    return sub_800B76B8(dword_8008B520 + (point << 3), pos) >= 0;
+    return sub_800B76B8((char *)&mapState_8008B500.meshes20_20[point], pos) >= 0;
 }
 
 // Matched
@@ -5264,10 +5264,10 @@ unsigned int GetEquippedId_800AD990(int slot)
     switch ((unsigned)slot)
     {
     case 0:
-        id = equippedWeaponId_8008BD54;
+        id = saveData_8008B570.levantStatus_7C8.equipment_1C[0];
         break;
     case 1:
-        id = equippedArmor_8008BD55;
+        id = saveData_8008B570.levantStatus_7C8.equipment_1C[1];
         break;
     case 2:
         id = byte_8008BD56;

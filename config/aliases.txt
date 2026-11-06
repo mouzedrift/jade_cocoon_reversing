@@ -1,9 +1,6 @@
 # names the C code uses for places inside data objects that are defined in C: build.py makes them link-time
 # equates of their address (the asm data used to define them as labels). name  # what it is
-dword_8008B520                   # == mapState_8008B500.meshes20_20
 playerYan_8008B594               # == saveData_8008B570.inv_24
 levantPos_8008BD18               # == saveData_8008B570.levant_7A8
-equippedWeaponId_8008BD54        # == saveData_8008B570.levantStatus_7C8.field_1C
-equippedArmor_8008BD55           # == saveData_8008B570.levantStatus_7C8.field_1C[1]
 allMinionsBitfields_8008BD84     # == saveData_8008B570.allMinionsBitfields_814
 miscTasks_8008D60C                   # == cameraEye_8008D600.pad
