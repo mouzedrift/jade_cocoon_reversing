@@ -1304,11 +1304,9 @@ int IsUnitInBattle_800BC784(int unit)
     return 1;
 }
 
-#if 0 // Not matched: original has a dead 'li v0,7' (beqz delay slot) before the last return and uses v0 for unit-4.
-      // The 7 is the constant of a deleted 'unit == 7' test: returns for 0..2 plus 'if (unit == 7) return 3;' and no final
-      // return (or an uninitialized side set only for 7) give the exact layout incl. 'li v0,7' but keep a 'bne a0,v0' + li 3;
-      // with 'if (unit == 7) side = 3; return side;' combine empties the arm and jump2 deletes bne and li 7 together.
-      // Original needs the bne deleted later (in reorg, after li 7 went into the slot). Also tried switch/case ranges.
+// 'side = 3' (a pseudo) and 'return 3' (v0) only become the same 'v0 = 3' after reload, too short for jump2 to merge;
+// reorg then drops the redundant 'unit == 7' branch after its 'li v0,7' went into the previous branch's delay slot
+// Matched
 int GetUnitSide_800BC7DC(int unit)
 {
     int side;
@@ -1324,15 +1322,16 @@ int GetUnitSide_800BC7DC(int unit)
     {
         side = 2;
     }
-    else
+    else if (unit == 7)
     {
         side = 3;
     }
+    else
+    {
+        return 3;
+    }
     return side;
 }
-#endif
-
-INCLUDE_OVERLAY_ASM(battle, GetUnitSide_800BC7DC);
 
 int TestBattleFlag_800BC820(unsigned int mask)
 {
