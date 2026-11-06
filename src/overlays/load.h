@@ -392,7 +392,7 @@ typedef struct
                        // 0x20 end of game save, bit 6 the pad
     char* place_58;   // the save place text of the summary (SetLoadMenuSavePlace_800B78B8)
     int field_5C;
-    int field_60;
+    int pad_60;
     LoadMenuRow* rows_64[6];
 } LoadMenuWork;
 typedef struct

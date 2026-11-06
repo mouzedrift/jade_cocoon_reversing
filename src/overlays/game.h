@@ -162,10 +162,10 @@ typedef struct GameEvEnt
     char pad_54[0x24];
     int armed_78; // waits for a trigger (FireEventTrigger_800A5C40)
     int f7C;
-    int f80;
+    int pad_80;
     int trigger_84; // the trigger it waits for (-1: any; 0x40000000: compare with the fired one)
     int script_88;  // the event script it starts when triggered
-    int f8C;
+    int pad_8C;
 } GameEvEnt;
 
 extern EventEntry* StartEventScript_800A59D0(int script);
@@ -787,7 +787,7 @@ typedef struct GameLevantCtl
     int turnBuf_5C[4];
     char pad_6C[0x30];
     int f9C;
-    int fA0;
+    int pad_A0;
     int targetX_A4; // targetX_A4..targetZ_AC: the point Levant walks to / turns toward
     int targetY_A8;
     int targetZ_AC;
@@ -1634,9 +1634,9 @@ typedef struct GameLevantModelWork
     int flags; // 1: reload the model, 2: reload the outfit, 4: load the weapon's animations, 8 / 0x10: FTG save / swaps
     int model_8; // saveData_8008B570.hasArmor_830 (levantModelIds_800B1164 index)
     int prevModel_C;
-    int f10; // saveData_8008B570.weaponKind_834
+    int weaponKind_10; // saveData_8008B570.weaponKind_834
     int weaponKind_14;
-    int f18; // saveData_8008B570.outfit_836
+    int outfit_18; // saveData_8008B570.outfit_836
     int outfit_1C;
 } GameLevantModelWork;
 

@@ -138,21 +138,21 @@ typedef struct Actor
     short fCE;                  // 0xCE
     ActorScriptCmd* script_D0;  // 0xD0
     unsigned int flags_D4;      // 0xD4
-    int fD8;                    // 0xD8
+    int pad_D8;                    // 0xD8
     int* pathTarget_DC;         // 0xDC
     short turnStep_E0;          // 0xE0: ActorActionDesc.turnStep_C
-    short fE2;                  // 0xE2
-    int fE4;                    // 0xE4
+    short pad_E2;                  // 0xE2
+    int pad_E4;                    // 0xE4
     int effectMask_E8;          // 0xE8
     int effectKinds_EC;         // 0xEC
-    int fF0;                    // 0xF0
+    int pad_F0;                    // 0xF0
     short loopCount_F4;         // 0xF4
     short scaleTarget_F6;       // 0xF6
-    int fF8;                    // 0xF8
+    int pad_F8;                    // 0xF8
     short fFC;                  // 0xFC
     short queuedAnim_FE;        // 0xFE
     int f100;                   // 0x100
-    int f104;                   // 0x104
+    int pad_104;                   // 0x104
     HitTimes hitTimes_108[10]; // 0x108: (start, end) frames, GetActorHitFrame_80018E5C
     int effect_130;             // 0x130
     short* bones_134;           // 0x134: 4 shorts per bone, -1 terminated; start of the actor's allocation
@@ -165,7 +165,7 @@ typedef struct Actor
     Model* model_15C;           // 0x15C
     ActorPath* path_160;        // 0x160
     ActorDrawArgs draw_164;     // 0x164
-    int f190;                   // 0x190
+    int pad_190;                   // 0x190
     FirFilter turn_194;         // 0x194: input_8 is the turn speed, output_C.low the smoothed one
     int turnFilterBuf_1A4[8];   // 0x1A4
     int* bonePos_1C4;           // 0x1C4: int[3] per bone

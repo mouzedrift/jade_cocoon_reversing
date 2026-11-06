@@ -4739,11 +4739,11 @@ void LevantModelTask_800ACB64(int* task, void* buf)
         case 0:
             if (work->model_8 != saveData_8008B570.hasArmor_830)
             {
-                work->f10 = -1;
+                work->weaponKind_10 = -1;
                 work->flags |= 0xd;
                 SetLevantWeaponKind_800AC3A4(saveData_8008B570.weaponKind_834);
             }
-            if (work->f10 != saveData_8008B570.weaponKind_834 || work->f18 != saveData_8008B570.outfit_836)
+            if (work->weaponKind_10 != saveData_8008B570.weaponKind_834 || work->outfit_18 != saveData_8008B570.outfit_836)
             {
                 work->flags |= 0x16;
                 FreeLevantAnimSetAnims_800ACF3C(work);
@@ -4776,9 +4776,9 @@ void LevantModelTask_800ACB64(int* task, void* buf)
                 model = AcquireModel_80024D70(gameModelList_8007DC60, levantModelIds_800B1164[saveData_8008B570.hasArmor_830]);
                 LoadModelAltFtgs_80025974(model, GetLevantModelId_800AC3F4(), 1);
                 work->weaponKind_14 = GetLevantWeaponKind_800AC3E4();
-                work->f10 = saveData_8008B570.weaponKind_834;
+                work->weaponKind_10 = saveData_8008B570.weaponKind_834;
                 work->outfit_1C = GetLevantOutfit_800AC464();
-                work->f18 = saveData_8008B570.outfit_836;
+                work->outfit_18 = saveData_8008B570.outfit_836;
                 work->flags &= ~2;
             }
             else if (work->flags & 4)

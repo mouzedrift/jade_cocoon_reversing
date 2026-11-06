@@ -61,7 +61,7 @@ typedef struct
     unsigned char name_60[0xC];
     UnitSkills skills_6C;
     unsigned int magicBits_80; // TestMagicBit_8001AE2C
-    int field_84;
+    int pad_84;
 } UnitStats;
 
 /* a minion as kept in SaveData.minions (0xF8 bytes, filled by UnitStatsToMinion_800B9E94 from a UnitStats) */

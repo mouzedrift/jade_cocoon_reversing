@@ -19,8 +19,8 @@ int CollideLevantWithMap_800B6DD4(EvEntity* ent)
     ret = 0;
     CollideWithMapEnts_800B82C8(&levantPos_8008BD18.pos.x, (int*)&ent->pos_48, mapState_8008B500.ents_14,
                  mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10);
-    ent->f8C_8C = -1;
-    ent->f88_88 = -1;
+    ent->slideEdge_8C = -1;
+    ent->slideTri_88 = -1;
     for (i = 0;; i++)
     {
         if (EvFindLevantMesh(ent))
@@ -36,21 +36,21 @@ int CollideLevantWithMap_800B6DD4(EvEntity* ent)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
-        SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int)&ent->pos_48, (int)&mapState_8008B500.meshes_C[ent->mesh_84], &ent->f88_88, &ent->f8C_8C, normal);
-        verts = mapState_8008B500.meshes_C[ent->mesh_84].tris_4[ent->f88_88].v_0;
-        (edgePts + i * 2)->x_0 = verts[ent->f8C_8C % 3].x_0;
-        (edgePts + i * 2)->y_2 = verts[ent->f8C_8C % 3].y_2;
-        (edgePts + i * 2)->z_4 = verts[ent->f8C_8C % 3].z_4;
-        (edgePts + i * 2 + 1)->x_0 = verts[(ent->f8C_8C + 1) % 3].x_0;
-        (edgePts + i * 2 + 1)->y_2 = verts[(ent->f8C_8C + 1) % 3].y_2;
-        (edgePts + i * 2 + 1)->z_4 = verts[(ent->f8C_8C + 1) % 3].z_4;
+        SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int)&ent->pos_48, (int)&mapState_8008B500.meshes_C[ent->mesh_84], &ent->slideTri_88, &ent->slideEdge_8C, normal);
+        verts = mapState_8008B500.meshes_C[ent->mesh_84].tris_4[ent->slideTri_88].v_0;
+        (edgePts + i * 2)->x_0 = verts[ent->slideEdge_8C % 3].x_0;
+        (edgePts + i * 2)->y_2 = verts[ent->slideEdge_8C % 3].y_2;
+        (edgePts + i * 2)->z_4 = verts[ent->slideEdge_8C % 3].z_4;
+        (edgePts + i * 2 + 1)->x_0 = verts[(ent->slideEdge_8C + 1) % 3].x_0;
+        (edgePts + i * 2 + 1)->y_2 = verts[(ent->slideEdge_8C + 1) % 3].y_2;
+        (edgePts + i * 2 + 1)->z_4 = verts[(ent->slideEdge_8C + 1) % 3].z_4;
     }
-    GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &mapState_8008B500.meshes_C[ent->mesh_84], ent->f80_80);
-    if (ent->f88_88 == -1)
+    GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &mapState_8008B500.meshes_C[ent->mesh_84], ent->tri_80);
+    if (ent->slideTri_88 == -1)
     {
         return ret;
     }
-    if (ent->f8C_8C == -1)
+    if (ent->slideEdge_8C == -1)
     {
         return ret;
     }
@@ -433,7 +433,7 @@ int FindLevantMesh_800B80C8(EvEntity* ent)
         tri = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[mesh], (EvVec*)&levantPos_8008BD18.pos);
         if (tri >= 0)
         {
-            ent->f80_80 = tri;
+            ent->tri_80 = tri;
             if (ent->mesh_84 != mesh)
             {
                 ent->mesh_84 = mesh;
@@ -1294,7 +1294,7 @@ int EvCmdSetEntityState_800B9DE0(EvScriptCtx* ctx)
 int EvCmdWaitEntityState_800B9E48(EvScriptCtx* ctx)
 {
     EvEntity* ent = FindEventEntity_800A5DDC(ctx->pc_8->c_C, ctx->pc_8->a_4, 0);
-    if (ent != 0 && ent->f80_80 == ctx->pc_8->b_8)
+    if (ent != 0 && ent->tri_80 == ctx->pc_8->b_8)
     {
         ctx->pc_8++;
         return 1;
@@ -1311,7 +1311,7 @@ int EvCmdSetOwnEntityState_800B9EB0(EvScriptCtx* ctx)
 
 int EvCmdWaitOwnEntityState_800B9EDC(EvScriptCtx* ctx)
 {
-    if (ctx->ent_120->f80_80 == ctx->pc_8->b_8)
+    if (ctx->ent_120->tri_80 == ctx->pc_8->b_8)
     {
         ctx->pc_8++;
         return 1;
@@ -1966,13 +1966,13 @@ int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
     {
     case 0:
         args = (EvBattleArgs*)ctx->pc_8->c_C;
-        eventBattleLoseWarp_800AEBE4 = args->f14_14;
+        eventBattleLoseWarp_800AEBE4 = args->loseWarp_14;
         eventEnemy_800B1CB8.f0_0[0] = args->f0_0[0];
         eventEnemy_800B1CB8.f0_0[1] = args->f0_0[1];
         eventEnemy_800B1CB8.f0_0[2] = args->f0_0[2];
         eventEnemy_800B1CB8.f0_0[3] = args->f0_0[3];
         eventEnemy_800B1CB8.f0_0[4] = args->f0_0[4];
-        eventEnemy_800B1CB8.f14_14 = -1;
+        eventEnemy_800B1CB8.loseWarp_14 = -1;
         eventEnemy_800B1CB8.useMinion_18 = 0;
         for (i = 0; i < 3; i++)
         {
@@ -2384,7 +2384,7 @@ int GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx)
 {
     if (ctx->ent_120 != 0)
     {
-        return ctx->ent_120->f8C_8C;
+        return ctx->ent_120->slideEdge_8C;
     }
     return 0;
 }

@@ -52,7 +52,7 @@ typedef struct CameraCtrl
     int counter_14;
     int field_18;
     int field_1C;
-    int field_20;
+    int pad_20;
     short blend_24;
     short blendStep_26;
     Vec3i blendTarget_28;

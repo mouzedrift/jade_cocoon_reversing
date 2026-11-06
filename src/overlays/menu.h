@@ -163,7 +163,7 @@ typedef struct MenuStatDelta
     int pad_C[4];
     int hp_1C; // HP change (negated)
     int mp_20; // MP change (negated)
-    int f24;
+    int pad_24;
 } MenuStatDelta;
 
 // an item use command (InitItemUse_800C00D4, UseItemOnUnit_80013C28) followed by the stat changes it works out

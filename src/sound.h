@@ -25,9 +25,9 @@ typedef struct
     unsigned int field_14_sep_size;
     int field_18_sep_data2_ptr;
     unsigned int field_1C_sep_size;
-    int field_20;
+    int pad_20;
     int field_24;
-    int field_28;
+    int pad_28;
     int field_2C;
     int field_30;
     int field_34;

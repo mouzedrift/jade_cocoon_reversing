@@ -278,7 +278,7 @@ typedef struct
     short field_8;
     short field_A;
     short field_C;
-    short field_E;
+    short pad_E;
 } struct_pair_obj;
 
 // 0x70-byte element with an id at +0x38 (0xFFFF = unused)
@@ -490,7 +490,7 @@ typedef struct
     int field_8;
     int field_C;
     char pad_10[0x120];
-    int field_130;
+    int pad_130;
 } struct_obj_F;
 
 extern EventNode* modelTasks_8008D618;

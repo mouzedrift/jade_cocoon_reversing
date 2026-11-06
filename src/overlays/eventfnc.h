@@ -45,10 +45,10 @@ typedef struct EvEntity
     EvVec pos_48;
     char pad_54[0x28];
     int f7C_7C;
-    int f80_80;
+    int tri_80;
     int mesh_84;
-    int f88_88;
-    int f8C_8C;
+    int slideTri_88;
+    int slideEdge_8C;
 } EvEntity;
 
 
@@ -178,7 +178,7 @@ static inline int EvFindLevantMesh(EvEntity* ent)
         tri = FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[mesh], (EvVec*)&levantPos_8008BD18.pos);
         if (tri >= 0)
         {
-            ent->f80_80 = tri;
+            ent->tri_80 = tri;
             if (ent->mesh_84 != mesh)
             {
                 ent->mesh_84 = mesh;
@@ -633,7 +633,7 @@ typedef struct EvEncounterWork
 typedef struct EvBattleArgs
 {
     int f0_0[5];
-    int f14_14;
+    int loseWarp_14;
     int ids_18[3];
     struct
     {
@@ -646,7 +646,7 @@ typedef struct EvBattleArgs
 typedef struct EvBattleEnemy
 {
     int f0_0[5];
-    int f14_14;
+    int loseWarp_14;
     int useMinion_18;
     char pad_1C[0xA4 - 0x1C];
     int actors_A4[3];
@@ -692,9 +692,9 @@ typedef struct EvMsgOptions
     EvSpeaker pair_A8;
     EvItemMsgSrc src_B0;
     int* list_B8;
-    int fBC;
-    int fC0;
-    int fC4;
+    int pad_BC;
+    int pad_C0;
+    int pad_C4;
     int fC8;
     int fCC;
 } EvMsgOptions;

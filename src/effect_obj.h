@@ -52,7 +52,7 @@ typedef struct EffectObj
     int bone_98;
     SVECTOR* boneScales_9C;
     int* scale_A0; // scale (or 0)
-    char field_A4;
+    char pad_A4;
     signed char hitVariant_A5; // EffectTaskState.hitVariant_40 (sprite choice for some kinds)
     short hitParam_A6;         // EffectTaskState.hitParam_42
     unsigned char rgb_A8[4];

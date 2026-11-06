@@ -283,7 +283,7 @@ typedef struct BatStage
     unsigned short* list_0;
     unsigned short effect_4; // effect file to load
     unsigned char model_6;
-    unsigned char f7;
+    unsigned char pad_7;
     short floor_8;
     short anim_A;
     unsigned short* models_C;

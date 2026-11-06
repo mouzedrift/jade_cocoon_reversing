@@ -93,7 +93,7 @@ typedef struct MsgWindow
     char* title_74;
     int page_78; // current page of list_B4
     int count_7C;
-    int field_80;
+    int pad_80;
     int portraitKind_84; // 1: portrait poly prim_88 is drawn
     POLY_FT4 prim_88;
     unsigned short choiceCount_B0; // shown lines of lines_1B4
