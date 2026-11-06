@@ -321,22 +321,14 @@ void SetEquipCursorArea_800C497C(EquipCtx* c)
 }
 
 
-#if 0
-// Not matched (16 of 175 words differ, control flow/scheduling otherwise identical):
-// - the three loop-invariant registers: original preheader is `li s4,1; lui s3,%hi(pOT); li s5,0x38`,
-//   here `li s5,0x38; lui s4,%hi(pOT); li s3,1` (constant 1 and the pOT high part swapped between s3/s4,
-//   ofs set before the hoisted ones). The 1 pseudo (insn from the switch's case-1 compare) is hoisted
-//   after the pOT high part and so lives 2 insns less -> wins global-alloc priority (both 9 refs).
-//   In the original the 0x38 is itself a hoisted loop constant (set after the others) yet all three
-//   AddClip calls use it unfolded; `ofs = 0x38` at the top of the loop body (short ofs) gives the right
-//   preheader position for 0x38 but cse folds the first AddClip to addiu.
-// - case 1: k2 (4/2) lands in a3 instead of v0 and the lhu category_18 / li a2,8 are scheduled differently.
+// Matched
 void DrawEquipMenu_800C4A94(EquipCtx* c)
 {
     short i;
-    int ofs;
+    int ot;
     int k;
-    short k2;
+    int semiTrans;
+    int listMode;
     EquipRect rect;
     union
     {
@@ -349,12 +341,15 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
         DrawButtonHelpBar_8002B004(helpBarSelectQuitDesc_800826B0, 0, 0xe);
     }
     i = 0;
-    ofs = 0x38;
+    ot = 0xe;
     while (i < 4)
     {
+        // set at the top of every iteration: loop.c then hoists this 1 first (before %hi(pOT) and the
+        // AddClip offset 0x38) and every other constant 1 of the loop shares its register, as in the original
+        semiTrans = 1;
         if ((c->activeWindows_1E >> i) & 1)
         {
-            AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
+            AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
             switch (i)
             {
             case 0:
@@ -382,16 +377,26 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                 {
                     DrawEquipDescription_800C5440(GetEquippedId_800AD990(c->category_18), c->category_18, 0);
                 }
-                AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
+                AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
                 break;
             case 1:
                 if (!(c->flags_44 & 2))
                 {
                     rect.x = 0xa;
                     rect.y = 0x3d;
-                    k2 = (c->mode_1C == 0) ? 2 : 4;
+                    // the test on listMode itself keeps jump.c from turning the if/else into "x = 4; if (...) x = 2;",
+                    // so listMode does not overlap the loaded mode and gets $v0
+                    listMode = c->mode_1C;
+                    if (listMode == 0)
+                    {
+                        listMode = 2;
+                    }
+                    else
+                    {
+                        listMode = 4;
+                    }
                     equipList.cursor = c->category_18;
-                    equipList.mode = k2;
+                    equipList.mode = listMode;
                     equipList.scroll = 0;
                     equipList.ot = 0xe;
                     equipList.e = 0;
@@ -400,7 +405,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                     DrawEquipStats_800C5314(c);
                     u.s.color_0 = uiColor_8008B590;
                     u.s.colorSet_2 = 0;
-                    u.s.semiTrans_3 = 1;
+                    u.s.semiTrans_3 = semiTrans;
                     DrawWindow_80042460(statsWindowRect_800C59A8, &u.s, pOT_8008D454 + 14, 0);
                 }
                 else
@@ -409,7 +414,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                     short slot = c->stepCursor_0[j] + c->stepScroll_C[j];
                     DrawEquipDescription_800C5440(GetInventorySlotId_800AD288(slot, c->category_18 + 1), c->category_18, (int)descBoxPos_800C599C);
                 }
-                AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
+                AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
                 break;
             }
             if (c->openTimer_42 == 8)
@@ -420,8 +425,6 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
         i++;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(equip, DrawEquipMenu_800C4A94);
 
 
 // Matched
