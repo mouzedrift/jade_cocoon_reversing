@@ -1642,16 +1642,14 @@ void SetShopHelpText_800BBB54(ShopMenu* menu, int mode)
     }
 }
 
-#if 0
-// Not matched (34 words): only the f24 & 8 block differs. The original passes snd (in s1) to
-// UpdateMenuCursor instead of a folded 0 (that needs int snd), keeps r in a1, and stores snd to
-// s28/s7E through a copy; with int snd the copies and the r register still differ.
+// Matched
 void ShopMenuInput_800BBE24(ShopMenu* menu)
 {
-    short snd;
+    int snd;
     int r;
     int k;
     unsigned int bit;
+    unsigned int marks;
     if (menu->flags_24 & 8)
     {
         UpdateSelectedMinions_800BEBC8(menu);
@@ -1659,20 +1657,20 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
         r = (short)UpdateMenuCursor_8003D794(&menu->listCols_28, snd);
         if (r == 4)
         {
-            snd = 1;
+            menu->listCols_28 = 1;
             menu->listCount_2C = 0x18;
-            menu->listFlags_2E = 0x50;
-            menu->listCols_28 = snd;
-            menu->list_7E = snd;
-            menu->listRows_2A = r;
-            menu->listIndex_30 = 0;
+            menu->list_7E = 1;
             menu->flags_24 &= ~0x10;
+            menu->listRows_2A = r;
+            menu->listFlags_2E = 0x50;
+            menu->listIndex_30 = 0;
             SaveShopCursor_800BB798(menu);
+            snd = 1;
         }
         else if (r == 3)
         {
+            menu->listCols_28 = 1;
             snd = 1;
-            menu->listCols_28 = snd;
             menu->listFlags_2E = 0x20;
             menu->listRows_2A = r;
             menu->listCount_2C = r;
@@ -1742,7 +1740,8 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
                 {
                     k = (short)(menu->listIndex_30 + menu->listScroll_32);
                     bit = 1 << k;
-                    if (!(menu->storedMarks_8C & bit))
+                    marks = menu->storedMarks_8C;
+                    if (!(marks & bit))
                     {
                         menu->storedMarks_8C |= bit;
                         menu->marks_84 |= 1 << (k + 3);
@@ -1793,8 +1792,6 @@ void ShopMenuInput_800BBE24(ShopMenu* menu)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(shop, ShopMenuInput_800BBE24);
 
 void CycleInfoPage_800BC1A8(ShopMenu* menu)
 {
