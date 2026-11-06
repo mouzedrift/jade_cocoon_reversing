@@ -5,7 +5,7 @@
 #include "sound.h"
 #include "title.h"
 
-int dword_800A05A0 SDATA = 13;
+int unused_800A05A0 SDATA = 13;
 const TitleColor nameCursorPulseColor_800A05A4 = { "$$$" };
 const char aCaution_800A05A8[] = "\202b\202\201\202\225\202\224\202\211\202\217\202\216\201I"; // Caution!
 const char str_800A05BC[] = "\202s\202\210\202\205\202\222\202\205\201@\202\211\202\223\201@\202\216\202\217\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\224\202\210\202\205\201@\202r\202k\202n\202s"; // There is no MEMORY CARD in the SLOT
@@ -64,7 +64,7 @@ const TitleMenuWindow titleMenuWin7_800A0860 = {
 const MenuWindowList titleMenuCfg_800A0898 = { 0x2102, 0, 8, 0, 0, 14 };
 const TitleColor logoPulseColor_800A08B0 = { "ZZZ" };
 const char debugLevantName_800A08B4[] = "\203\214\203o\203\223\203g"; // レバント
-const int dword_800A08C0[2] = { 0, 0x8940000 };
+const int unused_800A08C0[2] = { 0, 0x8940000 };
 
 void NewGameInit_800A08C8(TitleTask* t, NameEntryWork* c)
 {
@@ -934,8 +934,8 @@ void SetNewGameStartMap_800A2650(void)
 }
 
 char levantName_800A2718[] = "\202k\202\205\202\226\202\201\202\216\202\224"; // Levant
-int dword_800A2728 = 0;
-int dword_800A272C = 0;
+int unused_800A2728 = 0;
+int unused_800A272C = 0;
 UnitStatus levantInitStatus_800A2730 = {
     0,
     0,

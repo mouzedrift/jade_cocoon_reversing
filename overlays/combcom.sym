@@ -1,4 +1,4 @@
-dword_800C9E88=0x800c9e88; // overlay header / data
+unused_800C9E88=0x800c9e88; // overlay header / data
 aUseNormalAttack_800C9E8C=0x800c9e8c; // data
 aDefendToReduceD_800C9EB0=0x800c9eb0; // data
 aUseSpecialAttac_800C9EE0=0x800c9ee0; // data

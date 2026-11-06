@@ -10,7 +10,7 @@ typedef struct CharTable
 } CharTable;
 extern CharTable charTables_8008685C[];
 
-extern void *dword_80086868[1];
+extern void *unused_80086868[1];
 
 void DrawText_8003E91C(int font, const char* str, short* pos, int ot);
 void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot);

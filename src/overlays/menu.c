@@ -306,9 +306,9 @@ const char aRearrange_800BB978[] = "\202q\202\205\202\201\202\222\202\222\202\20
 const char aDescription_800BB98C[] = "\202c\202\205\202\223\202\203\202\222\202\211\202\220\202\224\202\211\202\217\202\216"; // Description
 const MenuWindowItem minionListTitle_800BB9A4 = { 0x10, 1, 111, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x74, 0x10, 0x58, 0x12, 14, 2 };
 const char minionListBullet_800BB9C0[] = "\201E"; // ・
-const int dword_800BB9C4 = 0;
+const int unused_800BB9C4 = 0;
 
-int dword_800C1050[4] = { 0x2C000A, 0x4400CE, 0x540028, 0x4400F0 };
+int unused_800C1050[4] = { 0x2C000A, 0x4400CE, 0x540028, 0x4400F0 };
 MenuTitledRect levelUpStatusRect_800C1060 = { { 51, 62, 218, 117 }, { 100, 40, 100, 18, 102, 42 }, aItemsObtained_800B66C4 };
 ItemDropRow itemDropTable_800C1080[211] = {
     { 0x1999, 0, 9, 0x147, 0, 4 },
@@ -523,10 +523,10 @@ ItemDropRow itemDropTable_800C1080[211] = {
     { 0x1999, 4, 8, 0x147, 0, 13 },
     { 0x1999, 4, 9, 0x147, 5, 36 },
 };
-short dword_800C1718[10] = { 68, 69, 70, 71, 72, 72, 72, 72, 72, 0 };
+short unused_800C1718[10] = { 68, 69, 70, 71, 72, 72, 72, 72, 72, 0 };
 // the button help of the battle result screen (BattleResultTask_800BBF48)
 int resultHelpBar_800C172C[7] = { 16, (int)&emptyHelpLabel_800B66EC, 167, (int)aQuit_800B66E0, 110, (int)aStatus_800B66D0, -1 };
-char dword_800C1748[12] = { 0, 0, 0, 0, 78, 0, 44, 0, 141, 0, 68 };
+char unused_800C1748[12] = { 0, 0, 0, 0, 78, 0, 44, 0, 141, 0, 68 };
 int equipSlotLabels_800C1754[3] = { 22, 20, 3 }; // DrawEquipmentWindow_800C0E04: the label sprite of each equipment row
 MenuWindowItem equipRowWeapon_800C1760[4] = {
     { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x3D, 0x32, 0x15, 10, 5 },
@@ -547,7 +547,7 @@ MenuWindowItem equipRowAccessory_800C1840[4] = {
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* equipRows_800C18B0[4] = { equipRowWeapon_800C1760, equipRowArmor_800C17D0, equipRowAccessory_800C1840, NULL };
-short dword_800C18C0[2] = { 0xD2, 0xA7 };
+short unused_800C18C0[2] = { 0xD2, 0xA7 };
 char levantStatsRect_800C18C4[8] = { 194, 0, 49, 0, 75, 0, 77 };
 char menuTitleRect_800C18CC[8] = { 139, 0, 18, 0, 43, 0, 19 };
 char configLabelRect_800C18D4[8] = { 125, 0, 193, 0, 70, 0, 19 };
@@ -2015,7 +2015,7 @@ void RestoreMenuCursor_800BE38C(MenuCtx* menu)
 }
 const char aLeaveTheForest_800BBA44[] = "\202k\202\205\202\201\202\226\202\205\201@\202\224\202\210\202\205\201@\202\206\202\217\202\222\202\205\202\223\202\224\201H"; // Leave the forest?
 const char aYesNo_800BBA68[] = "\201@\201@\202x\202\205\202\223\201@\201@\202m\202\217"; //   Yes  No
-const int dword_800BBA7C = 0;
+const int unused_800BBA7C = 0;
 
 void DrawFieldMenu_800BE4A0(MenuCtx* menu)
 {

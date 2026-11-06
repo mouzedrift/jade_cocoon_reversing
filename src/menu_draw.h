@@ -8,7 +8,7 @@ extern const char aSelect_80074168[];
 extern const char aDescription_80074178[];
 extern const char aYes_80074190[];
 extern const char aNo_80074198[];
-extern const int dword_800741A0;
+extern const int unused_800741A0;
 
 /* DrawUiWindow_8002A384's parameter block */
 typedef struct UiWindowDesc

@@ -25,7 +25,7 @@
 #include "ftg_draw.h"
 
 const ColorRGBA orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
-const int dword_80072274 = 0;
+const int unused_80072274 = 0;
 
 void CountdownTask_80016BF4(EventEntry* entry, EffectObj* obj)
 {

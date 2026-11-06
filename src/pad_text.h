@@ -10,7 +10,7 @@ typedef struct
 extern const unsigned short emptyText_80074994[];
 extern const TextBuf22 emptyNameBuf_80074998;
 
-extern const int dword_800749B0;
+extern const int unused_800749B0;
 
 extern int fontDef2_800865A4[5];
 extern int font2CharCodes_800865B8[169];

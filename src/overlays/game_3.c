@@ -3,7 +3,7 @@
 
 const char aAssertionFaile_800A0660[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEventcomC_800A0688[] = "EVENTCOM.C";
-const int dword_800A0694 = 0;
+const int unused_800A0694 = 0;
 
 GameBattleChain encounterRecord_800ADE78 = { 0 };
 short formation1_800ADE8C[2] = { 0 };
@@ -708,7 +708,7 @@ int gameModeChanged_800B0698 = 0;
 int levantStartPos_800B069C[5] = { 0x462, -0x2B2, 0x772, 0xFC000000 };
 int shopRequest_800B06B0[3] = { 0 };
 int saveRequest_800B06BC = 0;
-int dword_800B06C0[3] = { 0 };
+int unused_800B06C0[3] = { 0 };
 EventDesc mapLoaderTaskDef_800B06CC = { 1, 5, 8, (void *)&mapLoaderTask_800B1DC4, (EventEntryFn)InitMapLoaderTask_80027CC0, (EventEntryFn)ResetMapLoaderTask_8002830C };
 EventDesc areaLoaderTaskDef_800B06E4 = { 1, 1, 8, (void *)&areaLoaderTask_800B1DB8, (EventEntryFn)InitAreaLoaderTask_80028388 };
 EventDesc levantModelTaskDef_800B06FC = { 1, 5, 40, (void *)levantModelTask_800B1DA0, (EventEntryFn)LevantModelTaskInit_800ACAA4, (EventEntryFn)LevantModelTaskExit_800ACF0C };
@@ -894,7 +894,7 @@ GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())ReturnW
 int fieldMode_800B0EC0 = 1;
 GameFieldMinions fieldMinions_800B0EC4 = { 0 };
 char levantBones_800B0EF8 = 0;
-int dword_800B0EFC[45] = {
+int unused_800B0EFC[45] = {
     0x460000, 0x10001, 1, 0x1020002, 0xB0002, 0x2030003, 0xB0003, 0x3040004,
     0xB0004, 0x4050005, 0xB0005, 0x5060005, 0xB0006, 0x6070006, 0xB0007, 0x2080003,
     0xB0008, 0x8090004, 0xB0009, 0x90A0005, 0xB000A, 0xA0B0005, 0xB000B, 0xB0C0006,
@@ -926,7 +926,7 @@ SVECTOR levantBoneScale_800B0FB0[22] = {
     { 0x1000, 0x1000, 0x1000 },
     { 0x1000, 0x1000, 0x1000 },
 };
-int dword_800B1060[9] = { 0, 0, 0, 0, 0, -0x10000, 0, 0, 0 };
+int unused_800B1060[9] = { 0, 0, 0, 0, 0, -0x10000, 0, 0, 0 };
 // control state (0x10: StartLevantAction_800A8A30 starts nothing) and animation of each Levant battle command
 GameLevantBattleAction levantBattleActions_800B1084[28] = {
     { 2, 0x10 },
@@ -975,14 +975,14 @@ int levantAnimSets_800B11DC[19] = {
 int battleFlags_800B1228 = 0;
 unsigned int battleHitEnemies_800B122C = 0;
 int battleResult_800B1230 = 0;
-int dword_800B1234 = 0;
+int unused_800B1234 = 0;
 GameEnemyResult battleEnemyResults_800B1238[3] = { 0 };
-int dword_800B125C = 0xB00;
+int unused_800B125C = 0xB00;
 GameEncounter gCtx_800B1260 = { 0 };
 int dword_800B1CA8[4] = { 0 };
 GameEnemy eventEnemy_800B1CB8 = { 0 };
 int eventHook_800B1D98 = 0;
-int dword_800B1D9C = 0;
+int unused_800B1D9C = 0;
 EventNode *levantModelTask_800B1DA0[1] = { 0 };
 EventNode *mapOverlayTask_800B1DA4[1] = { 0 };
 EventNode *dword_800B1DA8[1] = { 0 };
@@ -995,9 +995,9 @@ EventNode *prevModeTask_800B1DC0[1] = { 0 };
 int** mapLoaderTask_800B1DC4 = 0;
 int gameStartMode_800B1DC8[2] = { 0 };
 char levantPool_800B1DD0 = 0;
-int dword_800B1DD4[9] = { 0 };
-char dword_800B1DF8 = 0;
-int dword_800B1DFC[304] = { 0 };
+int unused_800B1DD4[9] = { 0 };
+char levantByte_800B1DF8 = 0;
+int unused_800B1DFC[304] = { 0 };
 
 void AllocMdecBuffer_800A5804(int mode)
 {
@@ -2117,7 +2117,7 @@ int GetFieldMinionModelId_800A78A8(int idx)
     return 0;
 }
 
-int sub_800A78F4(int idx)
+int GetFieldMinionHeaderF2A_800A78F4(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
@@ -2827,11 +2827,11 @@ GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
     }
     if (cmd[0] == 0x10)
     {
-        sub_800AB2B4();
+        SetLevantFlag10000_800AB2B4();
     }
     else
     {
-        sub_800AB2DC();
+        ClearLevantFlag10000_800AB2DC();
     }
     frames.hit = GetLevantActionHitFrame_800AB750(ctl->anim_CC);
     frames.end = GetLevantActionEndFrame_800AB4D8(ctl->anim_CC);
@@ -2969,11 +2969,11 @@ void LevantCommand_800A8EC4(GameActorCmd* cmd)
     case 10:
         if (cmd->opts_14 & 1)
         {
-            sub_800ABB98(0);
+            SetLevantFlag100000_800ABB98(0);
         }
         else
         {
-            sub_800ABB98(1);
+            SetLevantFlag100000_800ABB98(1);
         }
         nextAnim = -1;
         if (cmd->kind_4 == 10)
@@ -2992,7 +2992,7 @@ void LevantCommand_800A8EC4(GameActorCmd* cmd)
     case 11:
         SetLevantRootMotionMode_800ABC78(1);
         SetLevantPath_800ABAA4(cmd->data_24);
-        sub_800ABB98(1);
+        SetLevantFlag100000_800ABB98(1);
         PlayLevantScriptAnim_800AB9A8(cmd->arg_C, -1, 1);
     set:
         ctl->state_C6 = 9;
@@ -3998,12 +3998,12 @@ void ClearLevantDefending_800AB28C()
     gameTask_8008B4A4->buffer_24->flags_0 &= ~0x400;
 }
 
-void sub_800AB2B4()
+void SetLevantFlag10000_800AB2B4()
 {
     gameTask_8008B4A4->buffer_24->flags_0 |= 0x10000;
 }
 
-void sub_800AB2DC()
+void ClearLevantFlag10000_800AB2DC()
 {
     gameTask_8008B4A4->buffer_24->flags_0 &= ~0x10000;
 }
@@ -4237,7 +4237,7 @@ int IsLevantScriptAnimWaiting_800ABB70()
     return gameTask_8008B4A4->buffer_24->action_8 == 0x17;
 }
 
-void sub_800ABB98(int fromLoop)
+void SetLevantFlag100000_800ABB98(int fromLoop)
 {
     GameLevantActor* lev = gameTask_8008B4A4->buffer_24;
     if (fromLoop == 1)
@@ -4536,9 +4536,9 @@ void SetLevantOutfit_800AC3B0(int outfit)
     SetLevantHasArmor_800AC380(1);
 }
 
-char* sub_800AC3D8()
+char* GetLevantByte_800AC3D8()
 {
-    return &dword_800B1DF8;
+    return &levantByte_800B1DF8;
 }
 
 int GetLevantWeaponKind_800AC3E4()
@@ -4699,7 +4699,7 @@ HitTimes* GetLevantAnimHitFrames_800AC9CC(int anim)
     return anims[idx].hitTimes_C;
 }
 
-int* sub_800ACA38(int anim)
+int* GetLevantAnimF34_800ACA38(int anim)
 {
     GameLevantAnim* anims;
     int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);

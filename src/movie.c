@@ -875,8 +875,8 @@ short movieWidth_80086F98 = 0;
 short movieHeight_80086F9A = 0;
 
 unsigned long *ringBufferStart_800960B0 BSS = 0;
-int dword_800960B4[3] BSS = { 0 };
+int unused_800960B4[3] BSS = { 0 };
 MovieCtx movieCtx_800960C0 BSS = { 0 };
 int bMovieFinished_800960FC BSS = 0;
 int movieSliceFirst_80096100 BSS = 0;
-int dword_80096104 BSS = 0;
+int unused_80096104 BSS = 0;

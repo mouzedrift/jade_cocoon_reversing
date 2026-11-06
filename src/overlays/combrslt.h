@@ -26,7 +26,7 @@ extern const MenuWindowItem resultTitleItem_800A408C;
 extern const MenuWindowItem minionLabelItem_800A40A8;
 extern const MenuWindowItem minionHpItem_800A40C4;
 extern MenuCursor slotCursor_800A47E8;
-extern int dword_800A47F4;
+extern int unused_800A47F4;
 extern MenuWindowItem playerLabelItemP1_800A47F8;
 extern MenuWindowItem playerLabelItemP2_800A4814;
 extern MenuWindowItem* playerLabelItems_800A4830[2];

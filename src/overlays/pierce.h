@@ -6,7 +6,7 @@
 #include "funcs.h"
 #include "globals.h"
 
-extern int dword_800C6F40;
+extern int unused_800C6F40;
 
 typedef struct PierceTask
 {

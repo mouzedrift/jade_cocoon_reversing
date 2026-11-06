@@ -71,7 +71,7 @@ Minion* GetShopMinion_800B9C5C(int i);         // SHOP.BIN (shop.h), not loaded 
 
 /* SHOPENTR data */
 
-extern int dword_800B6D00;
+extern int unused_800B6D00;
 extern const char aSaved_800B6D04[];
 extern const char aSaving_800B6D14[];
 extern const char aNoSpace_800B6D24[];
@@ -87,7 +87,7 @@ extern const char aDataSpaceBlock_800B6DEC[];
 extern const char aCardCheck2_800B6E10[];
 extern const char aSlotSelect_800B6E24[];
 extern const char aCardCheck1_800B6E34[];
-extern const int dword_800B6E48;
+extern const int unused_800B6E48;
 extern const char aCardChecking_800B6E74[];
 extern const char aCardSelect_800B6E90[];
 extern const char aSlot1_800B6EA4[];
@@ -102,15 +102,15 @@ extern const char aRank_800B6EF4[];
 extern const char aElement_800B6EFC[];
 extern const char aSlash_800B6F04[];
 extern const char aColon_800B6F08[];
-extern int dword_800B7CC0[2];
+extern int unused_800B7CC0[2];
 extern unsigned short cardCheckTextPos_800B7CC8[2];
-extern int dword_800B7CCC;
+extern int unused_800B7CCC;
 extern unsigned short cardSelectTitlePos_800B7CD0[2];
-extern int dword_800B7CD4;
+extern int unused_800B7CD4;
 extern unsigned short slot1TextPos_800B7CD8[2];
-extern int dword_800B7CDC;
+extern int unused_800B7CDC;
 extern unsigned short slot2TextPos_800B7CE0[2];
-extern int dword_800B7CE4;
+extern int unused_800B7CE4;
 extern ShelfRect shelfCursorRects_800B7CE8[4];
 extern ShelfMenuState shelfMenuStates_800B7D08[15];
 extern unsigned int shelfStatePages_800B7E34[30];

@@ -96,18 +96,18 @@ const char* battleHelpTexts_800793DC[41] = {
     msgParalyzed_80071B88,
     msgAsleep_80071B78,
 };
-int dword_80079480[16] = {
+int unused_80079480[16] = {
     256, 256, 256, 256, 256, 256, 256, 256,
     256, 256, 256, 256, 256, 256, 256, 256,
 };
-int dword_800794C0[16] = {
+int unused_800794C0[16] = {
     200, 325, 450, 475, 500, 475, 450, 375,
     300, 250, 200, 150, 100, 80, 55, 0,
 };
-int dword_80079500[8] = {
+int unused_80079500[8] = {
     -50, -75, -100, -70, -40, -25, -10, -5,
 };
-int dword_80079520[32] = {
+int unused_80079520[32] = {
     20, 30, 40, 50, 59, 79, 98, 128,
     157, 177, 197, 206, 216, 226, 236, 238,
     236, 226, 216, 206, 197, 177, 157, 128,
@@ -442,4 +442,4 @@ int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd
 }
 
 // zero word at the end of this TU's .rdata, in front of the jump table of UseItemOnUnit_80013C28 (battle_damage)
-const int dword_800720E4 = 0;
+const int unused_800720E4 = 0;

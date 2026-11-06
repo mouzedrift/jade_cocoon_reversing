@@ -7,7 +7,7 @@
 int dword_800A4088 SDATA = 23; // first word of the overlay
 
 MenuCursor slotCursor_800A47E8 = { 1, 1, 1, 0x40, 0, 0 };
-int dword_800A47F4 = 0;
+int unused_800A47F4 = 0;
 MenuWindowItem playerLabelItemP1_800A47F8 = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 20, 0x32, 0x14, 2, 4 };
 MenuWindowItem playerLabelItemP2_800A4814 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 20, 0x32, 0x14, 2, 4 };
 MenuWindowItem* playerLabelItems_800A4830[2] = { &playerLabelItemP1_800A47F8, &playerLabelItemP2_800A4814 };

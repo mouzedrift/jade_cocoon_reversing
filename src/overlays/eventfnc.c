@@ -36,8 +36,8 @@ int CollideLevantWithMap_800B6DD4(EvEntity* ent)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
-        SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int)&ent->pos_48, (int)&mapState_8008B500.meshes_C[ent->f84_84], &ent->f88_88, &ent->f8C_8C, normal);
-        verts = mapState_8008B500.meshes_C[ent->f84_84].tris_4[ent->f88_88].v_0;
+        SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int)&ent->pos_48, (int)&mapState_8008B500.meshes_C[ent->mesh_84], &ent->f88_88, &ent->f8C_8C, normal);
+        verts = mapState_8008B500.meshes_C[ent->mesh_84].tris_4[ent->f88_88].v_0;
         (edgePts + i * 2)->x_0 = verts[ent->f8C_8C % 3].x_0;
         (edgePts + i * 2)->y_2 = verts[ent->f8C_8C % 3].y_2;
         (edgePts + i * 2)->z_4 = verts[ent->f8C_8C % 3].z_4;
@@ -45,7 +45,7 @@ int CollideLevantWithMap_800B6DD4(EvEntity* ent)
         (edgePts + i * 2 + 1)->y_2 = verts[(ent->f8C_8C + 1) % 3].y_2;
         (edgePts + i * 2 + 1)->z_4 = verts[(ent->f8C_8C + 1) % 3].z_4;
     }
-    GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &mapState_8008B500.meshes_C[ent->f84_84], ent->f80_80);
+    GetTriHeight_800B83E4(&levantPos_8008BD18.pos.x, &mapState_8008B500.meshes_C[ent->mesh_84], ent->f80_80);
     if (ent->f88_88 == -1)
     {
         return ret;
@@ -425,7 +425,7 @@ int FindDuplicatePoint_800B8028(int* out, EvSVec* pts)
 int FindLevantMesh_800B80C8(EvEntity* ent)
 {
     unsigned int i;
-    unsigned int mesh = ent->f84_84;
+    unsigned int mesh = ent->mesh_84;
     int tri;
     for (i = 0; i < mapState_8008B500.nMeshes_4; i++, mesh++)
     {
@@ -434,9 +434,9 @@ int FindLevantMesh_800B80C8(EvEntity* ent)
         if (tri >= 0)
         {
             ent->f80_80 = tri;
-            if (ent->f84_84 != mesh)
+            if (ent->mesh_84 != mesh)
             {
-                ent->f84_84 = mesh;
+                ent->mesh_84 = mesh;
             }
             return 1;
         }
@@ -2389,11 +2389,11 @@ int GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx)
     return 0;
 }
 
-int sub_800BBE18(EvScriptCtx* ctx)
+int GetCtxEntityMesh_800BBE18(EvScriptCtx* ctx)
 {
     if (ctx->ent_120 != 0)
     {
-        return ctx->ent_120->f84_84;
+        return ctx->ent_120->mesh_84;
     }
     return -1;
 }
@@ -2542,7 +2542,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         cfg.f3C = 0;
         cfg.f40 = 0;
         cfg.fC = GetFieldMinionModelId_800A78A8(pc->a_4 - 1);
-        cfg.f2C = sub_800A78F4(pc->a_4 - 1);
+        cfg.f2C = GetFieldMinionHeaderF2A_800A78F4(pc->a_4 - 1);
         voice = voiceTable_800AEBF0;
         cfg.voice_44 = 0;
         if (voice != 0)
@@ -2585,7 +2585,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         srcArg = pc->a_4;
         if (srcArg == -1)
         {
-            srcArg = sub_800BBE18(ctx);
+            srcArg = GetCtxEntityMesh_800BBE18(ctx);
         }
         src.a_0 = pc->c_C;
         src.b_2 = srcArg;

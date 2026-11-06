@@ -5,7 +5,7 @@
 #include "sound.h"
 #include "shopentr.h"
 
-int dword_800B6D00 SDATA = 40;
+int unused_800B6D00 SDATA = 40;
 const char aSaved_800B6D04[] = "\203Z\201[\203u\202\265\202\334\202\265\202\275"; // セーブしました
 const char aSaving_800B6D14[] = "\203Z\201[\203u\202\265\202\304\202\242\202\351"; // セーブしている
 const char aNoSpace_800B6D24[] = "\213\363\202\253\202\252\226\263\202\242"; // 空きが無い
@@ -21,7 +21,7 @@ const char aDataSpaceBlock_800B6DEC[] = "\203f\201[\203^\201i\202\314\213\363\20
 const char aCardCheck2_800B6E10[] = "\203J\201[\203h\203`\203F\203b\203N\202Q"; // カードチェック２
 const char aSlotSelect_800B6E24[] = "\203X\203\215\203b\203g\221I\221\360\201H"; // スロット選択？
 const char aCardCheck1_800B6E34[] = "\203J\201[\203h\203`\203F\203b\203N\202P"; // カードチェック１
-const int dword_800B6E48 = 0;
+const int unused_800B6E48 = 0;
 
 int IsShelfMenuActive_800B6F0C(void)
 {
@@ -478,15 +478,15 @@ void DrawZeroTime_800B7C08(ShelfRect* pos)
     DrawNumberRightAlignedFont1_8003F264(minutesOnesPos, 0, 14);
 }
 
-int dword_800B7CC0[2] = { 0xC80010, 0xC0120 };
+int unused_800B7CC0[2] = { 0xC80010, 0xC0120 };
 unsigned short cardCheckTextPos_800B7CC8[2] = { 16, 120 };
-int dword_800B7CCC = 0x120120;
+int unused_800B7CCC = 0x120120;
 unsigned short cardSelectTitlePos_800B7CD0[2] = { 80, 32 };
-int dword_800B7CD4 = 0x1200A0;
+int unused_800B7CD4 = 0x1200A0;
 unsigned short slot1TextPos_800B7CD8[2] = { 40, 120 };
-int dword_800B7CDC = 0x12003C;
+int unused_800B7CDC = 0x12003C;
 unsigned short slot2TextPos_800B7CE0[2] = { 200, 120 };
-int dword_800B7CE4 = 0x12003C;
+int unused_800B7CE4 = 0x12003C;
 ShelfRect shelfCursorRects_800B7CE8[4] = {
     { 1, 1, 1 },
     { 2, 1, 2, 1 },

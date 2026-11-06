@@ -611,7 +611,7 @@ void DrawConfigPage_800C383C(CfgCtxConfig* c)
 }
 const MenuWindowList menuHdrActive_800C2CD0 = { 2, 0, 8, 0, 0, 14 };
 const MenuWindowList menuHdrIdle_800C2CE8 = { 0, 0, 8, 0, 0, 14 };
-const int dword_800C2D00 = 0;
+const int unused_800C2D00 = 0;
 
 void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
 {

@@ -295,7 +295,7 @@ void DrawBlinkSprite_8003CE18(short x, short y)
         break;
     }
 }
-const int dword_80074960 = 0;
+const int unused_80074960 = 0;
 
 CdReadState cdReadState_80086550 = { 1 };
 int fileBufferInUse_80086564 = 0;

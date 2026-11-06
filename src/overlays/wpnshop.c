@@ -290,7 +290,7 @@ const char aBandWithIronWov_800BAC70[] = "\202a\202\201\202\216\202\204\201@\202
 const char aProtectsHeadFro_800BACA4[] = "\202o\202\222\202\217\202\224\202\205\202\203\202\224\202\223\201@\202\210\202\205\202\201\202\204\201@\202\206\202\222\202\217\202\215\201@\202\201\202\216\202\211\202\215\202\201\202\214\201@\202\203\202\214\202\201\202\227\201@\202\223\202\203\202\222\202\201\202\224\202\203\202\210\202\205\202\223\201D"; // Protects head from animal claw scratches.
 const char aBandWithLeather_800BACF8[] = "\202a\202\201\202\216\202\204\201@\202\227\202\211\202\224\202\210\201@\202\214\202\205\202\201\202\224\202\210\202\205\202\222\201@\202\227\202\217\202\226\202\205\202\216\201@\202\211\202\216\201D"; // Band with leather woven in.
 const char aOrnamentalItem_800BAD30[] = "\202n\202\222\202\216\202\201\202\215\202\205\202\216\202\224\202\201\202\214\201@\202h\202\224\202\205\202\215"; // Ornamental Item
-const int dword_800BAD50 = 0;
+const int unused_800BAD50 = 0;
 
 // GAME starts it for a store: kind 0 equipment, 1 items; keeper selects the texts and the stock
 void StartStore_800BAE2C(int kind, short keeper)
@@ -626,7 +626,7 @@ void StoreInput_800BB664(StoreMenu* store)
     DrawStoreButtonHelp_800BCF80(store);
 }
 const MenuWindowList menuWindow_800BADF0 = { 2, 0, 8, 0, 0, 14 };
-const int dword_800BAE08 = 0;
+const int unused_800BAE08 = 0;
 
 void DrawStoreWindowFrame_800BB868(StoreMenu* store, RECT* rect, int a2, int a3, short idx)
 {
@@ -1970,7 +1970,7 @@ int AdjustBuyQuantity_800BE084(int count, int max)
     return count;
 }
 
-int dword_800BE110 = 0xA000D;
+int unused_800BE110 = 0xA000D;
 TextListEntry dword_800BE114[2] = { { 0x10, 0xC9, 0 } };
 TextListEntry dword_800BE124[2] = { { 0x10, 0xC9, 0 } };
 TextListEntry dialogLines_800BE134[4] = { { 0x57, 0x18, 0 }, { 0x57, 0x28, 0 }, { 0x57, 0x38, 0 } };

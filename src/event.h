@@ -19,18 +19,18 @@ typedef struct XaTask
 } XaTask;
 
 extern unsigned char windowBgColor0_80086FEC;
-extern unsigned char byte_80086FED;
-extern unsigned char byte_80086FEE;
-extern unsigned char byte_80086FEF;
+extern unsigned char unused_80086FED;
+extern unsigned char unused_80086FEE;
+extern unsigned char unused_80086FEF;
 extern int windowBgColorData_80086FF0[9];
 extern int windowPulseColorData_80087014[5];
 extern void *windowColorsAlt_8008703C[5];
 extern int windowFrameQuadEdges_80087070[][8];
-extern int dword_80087110;
+extern int unused_80087110;
 extern MATRIX lightMatrix_80087114;
 extern MATRIX colorMatrix_80087134;
 
-extern int dword_8009611C;
+extern int unused_8009611C;
 
 /* how CreateEventList_800435B4 makes an event list (eventDescs_80078EB8) */
 typedef struct

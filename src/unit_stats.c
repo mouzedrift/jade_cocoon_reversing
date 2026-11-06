@@ -72,7 +72,7 @@ const char helpUseItem_80071EC0[] = "\203A\203C\203e\203\200\202\360\216g\202\24
 const char helpDefend_80071ED0[] = "\226h\214\344\202\360\214\230\202\337\203_\203\201\201[\203W\202\360\224\274\225\252\202\311\202\267\202\351"; // 防御を堅めダメージを半分にする
 const char helpAttackMenu_80071EF0[] = "\215U\214\202\203\201\203j\203\205\201[\202\326"; // 攻撃メニューへ
 const char helpEmpty_80071F00[] = ""; // no help line
-const int dword_80071F04 = 0;
+const int unused_80071F04 = 0;
 
 Data001File Data001Files_80075AA0[1108] = {{{0u, 2u, 35u, 0u}, 367, 751616},
                                            {{0u, 7u, 22u, 0u}, 1, 1},
@@ -1182,7 +1182,7 @@ Data001File Data001Files_80075AA0[1108] = {{{0u, 2u, 35u, 0u}, 367, 751616},
                                            {{85u, 56u, 57u, 0u}, 5977, 13962272},
                                            {{86u, 88u, 22u, 0u}, 1035, 2417760},
                                            {{87u, 18u, 1u, 0u}, 21750, 50808000}};
-int dword_80078E90[10] = {
+int unused_80078E90[10] = {
     0xA0A0F, 0xA0A0F, 0xA0A0F, 0xA0A0F, 0xAF3F3F, 0xAF3F3F, 0xAF3F3F, 0xAF3F3F,
     0xC8C8C8, 0xA280A,
 };

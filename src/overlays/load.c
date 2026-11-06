@@ -183,7 +183,7 @@ int cardSaveCount_800BE150 = 0;
 int loadMenuActive_800BE184 BSS = 0;
 char *cardSaveNames_800BE188[15] BSS = { 0 };
 
-int dword_800B66C0 SDATA = 24;
+int unused_800B66C0 SDATA = 24;
 const char aSelectGameToLoa_800B66C4[44] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\207\202\201\202\215\202\205\201@\202\224\202\217\201@\202\214\202\217\202\201\202\204\201D";
 const char aSelectSaveLocat_800B66F0[44] = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\223\202\201\202\226\202\205\201@\202\214\202\217\202\203\202\201\202\224\202\211\202\217\202\216\201D";
 const char aYES_800B671C[] = "\202x\202d\202r"; // YES
@@ -350,7 +350,7 @@ const char aSaveGame_800B6918[] = "\202r\202\201\202\226\202\205\201@\202\207\20
 const LoadWinRect confirmTextWin_800B6930 = { { 10, 0, 193, 0, 204, 0, 20 } };
 const char aReturnToTitle_800B6938[] = "\202q\202\205\202\224\202\225\202\222\202\216\201@\202\224\202\217\201@\202\224\202\211\202\224\202\214\202\205\201@\202\223\202\203\202\222\202\205\202\205\202\216\201H"; // Return to title screen?
 const LoadWinRect titlePromptWin_800B6968 = { { 92, 0, 100, 0, 140, 0, 19 } };
-const int dword_800B6970 = 0;
+const int unused_800B6970 = 0;
 
 // draws the current screen (LoadMenuWork.screen_30) and handles its input:
 //  0 top menu (Save / Load / Exit / Title), 1 card slot select, 2 format the card?, 3 the save list,
@@ -854,9 +854,9 @@ const char aMiddleDot_800B6BA8[] = "\201E"; // ・
 const char aJadeCocoonLevel_800B6BAC[] = "\202i\202\201\202\204\202\205\201@\202b\202\217\202\203\202\217\202\217\202\216\201^\202k\202\205\202\226\202\205\202\214\201@\202X\202X\201^\202k\202\201\202\224\202\205\202\223\202\224\201@\202f\202\201\202\215\202\205"; // Jade Cocoon/Level 99/Latest Game
 const char aCORRIDOR_800B6BF0[] = "\202b\202n\202q\202q\202h\202c\202n\202q"; // CORRIDOR
 const char aEND_800B6C04[] = "\202d\202m\202c"; // END
-const int dword_800B6C0C = 0;
-const int dword_800B6C10 = 0;
-const int dword_800B6C14 = 0;
+const int unused_800B6C0C = 0;
+const int unused_800B6C10 = 0;
+const int unused_800B6C14 = 0;
 const unsigned short aLatestGame_800B6C18[12] = {
     0x6B82, 0x8182, 0x9482, 0x8582, 0x9382, 0x9482, 0x4081, 0x6682,
     0x8182, 0x8D82, 0x8582,

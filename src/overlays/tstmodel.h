@@ -115,7 +115,7 @@ extern const char aMDLMABA_800A096C[];
 extern const char aMDLGAR_800A0978[];
 extern const char aMDLLEB2_800A0980[];
 extern const char aMDLLEBANT_800A098C[];
-extern const int dword_800A0998;
+extern const int unused_800A0998;
 extern const TstModelBone dword_800A09B8;
 extern MATRIX lightDirs_800A1E84;
 extern MATRIX lightColors_800A1EA4;

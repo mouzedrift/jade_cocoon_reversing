@@ -27,7 +27,7 @@
 const char aDataData0011[] = "\\DATA\\DATA.001;1";
 const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
 const char aCdC[] = "CD.C";
-const int dword_800748DC = 0;
+const int unused_800748DC = 0;
 
 void SetBattleStageId_80039FA4(int id)
 {

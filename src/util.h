@@ -28,12 +28,12 @@ typedef struct Pool
     PoolBlock* tail;
 } Pool;
 
-extern int dword_8008686C[3];
-extern int dword_80086878[8];
-extern int dword_80086928[2];
+extern int unused_8008686C[3];
+extern int unused_80086878[8];
+extern int unused_80086928[2];
 extern EventDesc copyrightData_80086930;
 
-extern int dword_80086928[2];
+extern int unused_80086928[2];
 
 void* malloc3_8003FC4C(unsigned int size);
 void free3_8003FC6C(void* block);
@@ -51,7 +51,7 @@ void HeapFree_8003FD18(void* ptr, int heap);
 void* AddPrimCopy_80040298(void* ot, void* prim, int words);
 void ListInit_8003FDB0(List* list);
 int IsPoolBlock_80040274(Pool* pool, void* ptr);
-void sub_8004028C(void);
+void ClearUnusedWord_8004028C(void);
 /* heap: 0 = defaultAllocList_80096090, 1 = malloc3, else the address of a Pool (magic 0x8FFFFFFF) or of a List */
 void* HeapAlloc_8003FC8C(int size, int heap);
 void PoolSetInited_80040148(Pool* pool, int inited);

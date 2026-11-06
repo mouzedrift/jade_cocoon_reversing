@@ -41,7 +41,7 @@ const char aPlusCritical_800745D0[] = "\201{\201@\202b\202\222\202\211\202\224\2
 const char aPlusAccuracy_800745E8[] = "\201{\201@\202`\202\203\202\203\202\225\202\222\202\201\202\203\202\231"; // + Accuracy
 const char aPlusPower_80074600[] = "\201{\201@\202o\202\217\202\227\202\205\202\222"; // + Power
 const char aDashes3_80074610[] = "\201[\201[\201["; // ーーー
-const int dword_80074618 = 0;
+const int unused_80074618 = 0;
 
 void FreeSound_80030D00(SoundStruct* sound)
 {
@@ -401,4 +401,4 @@ int GetSkillEffect_800316EC(unsigned int slot, int actorMask)
     }
     return effect;
 }
-const int dword_800746B8 = 0;
+const int unused_800746B8 = 0;

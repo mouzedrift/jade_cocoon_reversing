@@ -1637,7 +1637,7 @@ unsigned char rankLevelThresholds_8007C2E4[8] = { 1, 7, 13, 22, 27 };
 MATRIX defaultLightMatrix_8007C2EC = { { { 0x7FC, -0xAA6, 0x8DE } } };
 MATRIX defaultColorMatrix_8007C30C = { { { 0x1000 }, { 0x1000 }, { 0x1000 } } };
 int dword_8007C32C = 0x4D4D4D;
-void* dword_8007C330[6] = {
+void* unused_8007C330[6] = {
     &defaultLightMatrix_8007C2EC, &defaultLightMatrix_8007C2EC, &defaultColorMatrix_8007C30C, &defaultColorMatrix_8007C30C,
     &dword_8007C32C, &dword_8007C32C,
 };
@@ -2122,13 +2122,13 @@ ActorScriptCmd playAnimScript_8007D9A4[2] = {
     { 15, 1, -2, 0x103, -1, 0x201, -1 },
     { 0, 0, 0x4003, 0x115, -2, 0x110, -2 },
 };
-int dword_8007D9BC = 0xFFFE0100;
+int unused_8007D9BC = 0xFFFE0100;
 ActorScriptCmd playQueuedAnimScript_8007D9C0[3] = {
     { 15, 1, -2, 0x103, -1, 0x201, -1 },
     { 0, 0, 0x4003, 0x115, -2, 0x110, -2 },
     { 3, 1, -1, 0x201, -1, 0, 0x4003 },
 };
-int dword_8007D9E4 = 0xFFFE0100;
+int unused_8007D9E4 = 0xFFFE0100;
 OverlayEntry overlays_8007D9E8[31] = {
     { 23, (void *)&overlayAddr3_80073200 },
     { 28, (void *)&overlayAddr3_80073200 },
@@ -2186,8 +2186,8 @@ int modelVramSlots_8007DC10[24] = {
 ModelVramSlot *modelLoaderVram_8007DC70 = (void *)modelVramSlots_8007DB50;
 int dword_8007DC74[6] = { (int)&modelVramSlots_8007DB84[7], (int)&modelVramSlots_8007DBC4[7], (int)&modelVramSlots_8007DC10[4], 0x1000300, 0x10100, 0x1890300 };
 unsigned short actorImageRect_8007DC8C[2] = { 0x300, 0x181 };
-short word_8007DC90 = 0x100;
-short word_8007DC92 = 1;
+short unused_8007DC90 = 0x100;
+short unused_8007DC92 = 1;
 unsigned short actorClutPos_8007DC94[28] = {
     0x300, 0x18A, 0x300, 0x303, 0x100, 1, 0x300, 0x18D,
     0x340, 0, 0x300, 0x101, 0x160, 0x1C0, 0x1A0, 0x1C0,
@@ -2910,7 +2910,7 @@ int mapHasCode_8008266C = 0;
 int areaReload_80082670 = 0;
 int *mapAreas_80082674 = 0;
 int areaPreloading_80082678 = 0;
-int dword_8008267C = 0;
+int unused_8008267C = 0;
 ButtonHelpEntry helpBarSelectQuit_80082680[3] = { { 16, aSelect_80074168 }, { 167, aQuit_8007415C }, { -1 } };
 ButtonHelpEntry helpBarSelectDesc_80082698[3] = { { 16, aSelect_80074168 }, { 110, aDescription_80074178 }, { -1 } };
 ButtonHelpEntry helpBarSelectQuitDesc_800826B0[4] = { { 16, aSelect_80074168 }, { 167, aQuit_8007415C }, { 110, aDescription_80074178 }, { -1 } };
@@ -2938,7 +2938,7 @@ short scrollArrowIcons_8008279C[16] = {
 };
 int elementIcons_800827BC[5] = { 61, 231, 101, 222, 129 };
 int elementIconsUnlit_800827D0[4] = { 80, 95, 204, 121 };
-int dword_800827E0 = 129;
+int unused_800827E0 = 129;
 char portraitWindowRect_800827E4[8] = { 10, 0, 9, 0, 70, 0, 66 };
 unsigned short portraitWindowPos_800827EC[2] = { 13, 9 };
 unsigned char abilityIconsNoType_800827F0[8] = { 81, 62, 41, 199, 63 };
@@ -3334,12 +3334,12 @@ int mapListData_80083788[15] = {
 };
 void *mapLists0_800837C4[5] = { 0, 0, 0, (void *)&mapListAny_80083784 };
 unsigned char *mapLists4_800837D8 = (void *)mapListData_80083788;
-void *dword_800837DC[4] = { (void *)&mapListData_80083788[2], (void *)&mapListData_80083788[6], (void *)&mapListData_80083788[7], (void *)&mapListData_80083788[8] };
+void *unused_800837DC[4] = { (void *)&mapListData_80083788[2], (void *)&mapListData_80083788[6], (void *)&mapListData_80083788[7], (void *)&mapListData_80083788[8] };
 void *mapLists5_800837EC[5] = { 0, (void *)&mapListData_80083788[12], (void *)&mapListData_80083788[13], (void *)&mapListData_80083788[14] };
 unsigned char **mapListTable_80083800[6] = { (void *)mapLists0_800837C4, 0, 0, 0, &mapLists4_800837D8, (void *)mapLists5_800837EC };
 char *itemMessageSuffixes_80083818[2] = { aPickedUp_80074800, aReceived_800747E8 };
 char *itemMessageDefaultSuffix_80083820 = aPickedUp_80074800;
-const char *dword_80083824[8] = { aReturned_800747D0, aUsed_800747C0, aReturned_800747D0, aHandedOver_800747A4, aGiven_80074794, aNeeded_80074780, aItSLocked_80074764, aItSEmpty_8007474C };
+const char *unused_80083824[8] = { aReturned_800747D0, aUsed_800747C0, aReturned_800747D0, aHandedOver_800747A4, aGiven_80074794, aNeeded_80074780, aItSLocked_80074764, aItSEmpty_8007474C };
 unsigned char padActAlign_80083844[8] = { 0, 1, 255, 255, 255, 255 };
 int vibrationPatternData_8008384C[185] = {
     0x1E010002, 0x6400000A, 0x5A000009, 0x50000006, 0xFFFF, 0x8C010003, 0xC800000F, 0xB400000C,

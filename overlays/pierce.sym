@@ -1,4 +1,4 @@
-dword_800C6F40=0x800c6f40; // overlay header / data
+unused_800C6F40=0x800c6f40; // overlay header / data
 jpt_800C6F44=0x800c6f44; // jump table of PierceEventTask_800C6F58
 PierceEventTask_800C6F58=0x800c6f58;
 PierceEventStart_800C7124=0x800c7124;

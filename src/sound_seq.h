@@ -22,8 +22,8 @@ extern const char aPlusCritical_800745D0[];
 extern const char aPlusAccuracy_800745E8[];
 extern const char aPlusPower_80074600[];
 extern const char aDashes3_80074610[];
-extern const int dword_80074618;
-extern const int dword_800746B8;
+extern const int unused_80074618;
+extern const int unused_800746B8;
 
 int GetSkillEffect_800316EC(unsigned int slot, int actorMask);
 void PlaySeqSlot_80031160(unsigned int idx, short loops);

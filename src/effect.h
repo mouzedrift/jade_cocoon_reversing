@@ -19,7 +19,7 @@ extern void FirFilterInit_8001450C(int* history, FirFilter* filter, int* coefs, 
 extern void FirFilterSetup_80014574(FirFilter* filter, int* coefs, int taps);
 extern void FirFilterStep_80014588(int* history, FirFilter* filter, unsigned int t);
 
-extern const int dword_80072134;
+extern const int unused_80072134;
 
 extern int turnFilterCoeffs_800795A0[];
 extern SVECTOR zeroSvector_800795D4;

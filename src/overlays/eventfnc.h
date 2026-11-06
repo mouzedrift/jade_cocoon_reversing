@@ -46,7 +46,7 @@ typedef struct EvEntity
     char pad_54[0x28];
     int f7C_7C;
     int f80_80;
-    int f84_84;
+    int mesh_84;
     int f88_88;
     int f8C_8C;
 } EvEntity;
@@ -170,7 +170,7 @@ extern int FindTriAtXZ_800B76B8(MapMesh* mesh, EvVec* pos);
 static inline int EvFindLevantMesh(EvEntity* ent)
 {
     unsigned int i;
-    unsigned int mesh = ent->f84_84;
+    unsigned int mesh = ent->mesh_84;
     int tri;
     for (i = 0; i < mapState_8008B500.nMeshes_4; mesh++, i++)
     {
@@ -179,9 +179,9 @@ static inline int EvFindLevantMesh(EvEntity* ent)
         if (tri >= 0)
         {
             ent->f80_80 = tri;
-            if (ent->f84_84 != mesh)
+            if (ent->mesh_84 != mesh)
             {
-                ent->f84_84 = mesh;
+                ent->mesh_84 = mesh;
             }
             return 1;
         }
@@ -724,7 +724,7 @@ extern int FinishLevantCommand_800A9008(int* p);
 extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
 extern int GetEventString_800A6738(int a);
 extern int GetFieldMinionModelId_800A78A8(int a);
-extern int sub_800A78F4(int a);
+extern int GetFieldMinionHeaderF2A_800A78F4(int a);
 extern EvRelocBlob eventReloc_800AEBBC;
 extern int eventDataBuf_800AEBC8;
 /* exe-side, to move to unit_stats.h */

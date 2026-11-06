@@ -30,7 +30,7 @@ extern unsigned short padRepeat_800918CC[];
 
 const unsigned short emptyText_80074994[2] = { 0 };
 const TextBuf22 emptyNameBuf_80074998 = { { 0xFFFF } };
-const int dword_800749B0 = 0;
+const int unused_800749B0 = 0;
 
 int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx)
 {

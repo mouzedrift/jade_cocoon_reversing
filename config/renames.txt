@@ -19,3 +19,173 @@
 # GAME). The same old name may appear in several sections as long as their units do not overlap.
 
 # (the pairs of the earlier naming passes are applied; see the git history of this file)
+
+# --- cleanup pass: the last sub_ names ---
+[GAME]
+sub_800AB2B4 SetLevantFlag10000_800AB2B4
+sub_800AB2DC ClearLevantFlag10000_800AB2DC
+sub_800ABB98 SetLevantFlag100000_800ABB98
+sub_800ACA38 GetLevantAnimF34_800ACA38
+sub_800AC3D8 GetLevantByte_800AC3D8
+dword_800B1DF8 levantByte_800B1DF8
+[GAME EVENTFNC]
+sub_800A78F4 GetFieldMinionHeaderF2A_800A78F4
+[EVENTFNC]
+sub_800BBE18 GetCtxEntityMesh_800BBE18
+f84_84 mesh_84
+[ALL]
+sub_80033AC4 GetSaveDataField7BC_80033AC4
+sub_80033A68 NextUnitStatus_80033A68
+sub_8004028C ClearUnusedWord_8004028C
+dword_80098688 unusedWord_80098688
+sub_8001ACC0 GetMagicField5_8001ACC0
+
+# --- cleanup pass: data nothing refers to ---
+[BATTLE]
+dword_800C8B2C unused_800C8B2C
+dword_800C9184 unused_800C9184
+dword_800C92FC unused_800C92FC
+dword_800C9C5C unused_800C9C5C
+dword_800C9C84 unused_800C9C84
+dword_800C9C9C unused_800C9C9C
+dword_800C9D88 unused_800C9D88
+dword_800C9E04 unused_800C9E04
+[COMBAT]
+dword_800A38E0 unused_800A38E0
+dword_800A4074 unused_800A4074
+[COMBBTL]
+dword_800A847C unused_800A847C
+dword_800A84AC unused_800A84AC
+dword_800A85A4 unused_800A85A4
+dword_800A85C4 unused_800A85C4
+[COMBCOM]
+dword_800C9E88 unused_800C9E88
+[COMBRSLT]
+dword_800A47F4 unused_800A47F4
+[COMBSEL]
+dword_800A4088 unused_800A4088
+dword_800A4348 unused_800A4348
+[CONFIG]
+dword_800C2D00 unused_800C2D00
+[EXE]
+byte_80086FED unused_80086FED
+byte_80086FEE unused_80086FEE
+byte_80086FEF unused_80086FEF
+dword_80071F04 unused_80071F04
+dword_800720E4 unused_800720E4
+dword_80072134 unused_80072134
+dword_80072274 unused_80072274
+dword_800741A0 unused_800741A0
+dword_80074618 unused_80074618
+dword_800746B8 unused_800746B8
+dword_800746D0 unused_800746D0
+dword_800748DC unused_800748DC
+dword_80074960 unused_80074960
+dword_800749B0 unused_800749B0
+dword_80078E90 unused_80078E90
+dword_80079480 unused_80079480
+dword_800794C0 unused_800794C0
+dword_80079500 unused_80079500
+dword_80079520 unused_80079520
+dword_8007C330 unused_8007C330
+dword_8007D9BC unused_8007D9BC
+dword_8007D9E4 unused_8007D9E4
+dword_8008267C unused_8008267C
+dword_800827E0 unused_800827E0
+dword_800837DC unused_800837DC
+dword_80083824 unused_80083824
+dword_80086868 unused_80086868
+dword_8008686C unused_8008686C
+dword_80086878 unused_80086878
+dword_80086928 unused_80086928
+dword_80087110 unused_80087110
+dword_8008B498 unused_8008B498
+dword_8008B4C4 unused_8008B4C4
+dword_8008B4D4 unused_8008B4D4
+dword_8008B4F0 unused_8008B4F0
+dword_8008B4FC unused_8008B4FC
+dword_8008B56C unused_8008B56C
+dword_8008D408 unused_8008D408
+dword_8008D44C unused_8008D44C
+dword_8008D4D4 unused_8008D4D4
+dword_8008D4E0 unused_8008D4E0
+dword_8008D634 unused_8008D634
+dword_8008D644 unused_8008D644
+dword_8008D664 unused_8008D664
+dword_8008D67C unused_8008D67C
+dword_8008D68C unused_8008D68C
+dword_8008D694 unused_8008D694
+dword_8008D77C unused_8008D77C
+dword_8008D790 unused_8008D790
+dword_80091860 unused_80091860
+dword_800918FC unused_800918FC
+dword_80091C0C unused_80091C0C
+dword_80091CA4 unused_80091CA4
+dword_80091CDC unused_80091CDC
+dword_80091D1C unused_80091D1C
+dword_80091D3C unused_80091D3C
+dword_80091D5C unused_80091D5C
+dword_800954A4 unused_800954A4
+dword_800960B4 unused_800960B4
+dword_80096104 unused_80096104
+dword_8009611C unused_8009611C
+dword_80096620 unused_80096620
+dword_80098184 unused_80098184
+dword_8009868C unused_8009868C
+dword_800986A0 unused_800986A0
+dword_8009AADC unused_8009AADC
+off_80072278 unused_80072278
+word_8007DC90 unused_8007DC90
+word_8007DC92 unused_8007DC92
+word_80091CAC unused_80091CAC
+word_80096034 unused_80096034
+word_80096036 unused_80096036
+[GAME]
+dword_800A0694 unused_800A0694
+dword_800B06C0 unused_800B06C0
+dword_800B0EFC unused_800B0EFC
+dword_800B1060 unused_800B1060
+dword_800B1234 unused_800B1234
+dword_800B125C unused_800B125C
+dword_800B1D9C unused_800B1D9C
+dword_800B1DD4 unused_800B1DD4
+dword_800B1DFC unused_800B1DFC
+[LOAD]
+dword_800B66C0 unused_800B66C0
+dword_800B6970 unused_800B6970
+dword_800B6C0C unused_800B6C0C
+dword_800B6C10 unused_800B6C10
+dword_800B6C14 unused_800B6C14
+[MENU]
+dword_800BB9C4 unused_800BB9C4
+dword_800BBA7C unused_800BBA7C
+dword_800C1050 unused_800C1050
+dword_800C1718 unused_800C1718
+dword_800C1748 unused_800C1748
+dword_800C18C0 unused_800C18C0
+[PIERCE]
+dword_800C6F40 unused_800C6F40
+[SHOP]
+dword_800B6D48 unused_800B6D48
+dword_800B9620 unused_800B9620
+dword_800B96F0 unused_800B96F0
+dword_800C07EC unused_800C07EC
+[SHOPENTR]
+dword_800B6D00 unused_800B6D00
+dword_800B6E48 unused_800B6E48
+dword_800B7CC0 unused_800B7CC0
+dword_800B7CCC unused_800B7CCC
+dword_800B7CD4 unused_800B7CD4
+dword_800B7CDC unused_800B7CDC
+dword_800B7CE4 unused_800B7CE4
+[TITLE]
+dword_800A05A0 unused_800A05A0
+dword_800A08C0 unused_800A08C0
+dword_800A2728 unused_800A2728
+dword_800A272C unused_800A272C
+[TSTMODEL]
+dword_800A0998 unused_800A0998
+[WPNSHOP]
+dword_800BAD50 unused_800BAD50
+dword_800BAE08 unused_800BAE08
+dword_800BE110 unused_800BE110

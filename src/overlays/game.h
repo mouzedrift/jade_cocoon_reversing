@@ -1022,7 +1022,6 @@ typedef struct GameMapEntrance
 extern int GetWeaponEffect_800189F8();
 
 
-extern void sub_8004ED78(int);
 
 
 extern G2V12 statusTintLevel1_8007A0A4;
@@ -1268,7 +1267,7 @@ extern const char aAssertionFaile_800A05A4[];
 extern const char aEnmbatleC_800A05CC[12];
 extern const char aAssertionFaile_800A0660[];
 extern const char aEventcomC_800A0688[];
-extern const int dword_800A0694;
+extern const int unused_800A0694;
 /* the jump table of LevantControlTask_800A818C (asm) and its targets, labels in the generated asm */
 extern const char aAssertionFailed_800A07E0[];
 extern const char aPLDISPC_800A0808[];
@@ -1533,7 +1532,7 @@ extern int gameModeChanged_800B0698;
 extern int levantStartPos_800B069C[5];
 extern int shopRequest_800B06B0[3];
 extern int saveRequest_800B06BC;
-extern int dword_800B06C0[3];
+extern int unused_800B06C0[3];
 extern EventDesc mapLoaderTaskDef_800B06CC;
 extern EventDesc areaLoaderTaskDef_800B06E4;
 extern EventDesc levantModelTaskDef_800B06FC;
@@ -1589,7 +1588,7 @@ extern GameFieldModeHandler fieldModeHandlers_800B0EB8[1];
 extern int fieldMode_800B0EC0;
 extern GameFieldMinions fieldMinions_800B0EC4;
 extern char levantBones_800B0EF8;
-extern int dword_800B0EFC[45];
+extern int unused_800B0EFC[45];
 extern SVECTOR levantBoneScale_800B0FB0[22];
 extern int dword_800B1168;
 extern int levantBaseModels_800B116C[19];
@@ -1599,13 +1598,13 @@ extern int levantAnimSets_800B11DC[19];
 extern int battleFlags_800B1228;
 extern unsigned int battleHitEnemies_800B122C; // enemy slots hit in the battle (BATTLE)
 extern int battleResult_800B1230;              // how the last battle ended (BATTLE, EVENTFNC)
-extern int dword_800B1234;
+extern int unused_800B1234;
 extern GameEnemyResult battleEnemyResults_800B1238[3]; // the enemies of the last battle (BATTLE, MENU)
-extern int dword_800B125C;
+extern int unused_800B125C;
 extern GameEncounter gCtx_800B1260;
 extern GameEnemy eventEnemy_800B1CB8;
 extern int eventHook_800B1D98;
-extern int dword_800B1D9C;
+extern int unused_800B1D9C;
 extern EventNode *levantModelTask_800B1DA0[1];
 extern EventNode *mapOverlayTask_800B1DA4[1];
 extern EventNode *dword_800B1DA8[1];
@@ -1616,9 +1615,9 @@ extern EventNode *tileAnimTask_800B1DBC;
 extern EventNode *prevModeTask_800B1DC0[1];
 extern int gameStartMode_800B1DC8[2];
 extern char levantPool_800B1DD0;
-extern int dword_800B1DD4[9];
-extern char dword_800B1DF8;
-extern int dword_800B1DFC[304];
+extern int unused_800B1DD4[9];
+extern char levantByte_800B1DF8;
+extern int unused_800B1DFC[304];
 
 /* the jump table of UpdateLevantBattleAction_800AA51C (asm) and its targets, labels in the generated asm */
 extern GameActionFrames StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c);
@@ -1704,9 +1703,9 @@ void SetLevantLastCapture_800AC340(int on);
 void SetLevantPath_800ABAA4(G2Path* path);
 void SetLevantRootMotion_800AA140(GameLevantActor* lev);
 void SetLevantStatusTint_800ABECC();
-void sub_800AB2B4();
-void sub_800AB2DC();
-void sub_800ABB98(int fromLoop);
+void SetLevantFlag10000_800AB2B4();
+void ClearLevantFlag10000_800AB2DC();
+void SetLevantFlag100000_800ABB98(int fromLoop);
 void UpdateLevantActionState_800AAF58(GameLevantActor* lev);
 void UpdateLevantActorModel_800AB8DC();
 void UpdateLevantTurn_800A99DC(GameLevantActor* lev);

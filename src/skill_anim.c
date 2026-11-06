@@ -37,4 +37,4 @@ int SkillSlotToAnimIndex_80031870(int slot)
     }
     return 0;
 }
-const int dword_800746D0 = 0;
+const int unused_800746D0 = 0;

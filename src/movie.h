@@ -64,9 +64,9 @@ enum GameStates TstCompoMain_800A200C(void);
 enum GameStates SoundTestMain_800A51AC(void);
 enum GameStates GameShutdown_800A7574(void);
 
-extern int dword_800960B4[3];
+extern int unused_800960B4[3];
 
-extern int dword_80096104;
+extern int unused_80096104;
 
 int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode);
 void ShowDemoDisclaimer_80040C8C(void);

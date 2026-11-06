@@ -77,7 +77,7 @@ extern unsigned char curPlayer_800A38D9;
 extern unsigned char rosterFill_800A38DA;
 extern unsigned char selMode_800A38DB;
 extern unsigned char battleResult_800A38DC;
-extern int dword_800A38E0;
+extern int unused_800A38E0;
 extern int combatTaskDesc_800A38E4[6];
 extern int combatModelLoaderDesc_800A38FC[6];
 extern int combatActorTaskDesc_800A3914[6];
@@ -94,7 +94,7 @@ extern unsigned char sideWins_800A3A90[4];
 extern int curPad_800A3A94;
 extern unsigned char sideResult_800A3A98[8];
 extern int prevStage_800A4070;
-extern int dword_800A4074;
+extern int unused_800A4074;
 extern int sideSlot_800A4078[2];
 extern int stageOvlRequest_800A4080;
 

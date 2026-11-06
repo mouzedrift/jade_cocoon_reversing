@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "combsel.h"
 
-int dword_800A4088 SDATA = 19; // first word of the overlay
+int unused_800A4088 SDATA = 19; // first word of the overlay
 
 MenuWindowItem teamRow0_800A55C4[2] = {
     { 0, 0, 0, 0, 0, 10, 39, 144, 19, 2, 4 },
@@ -315,7 +315,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     }
 }
 
-const int dword_800A4348 = 0; // (.rdata after CombSelMain_800A4360's strings)
+const int unused_800A4348 = 0; // (.rdata after CombSelMain_800A4360's strings)
 
 void PlaceSideWindows_800A4C74()
 {

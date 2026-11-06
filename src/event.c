@@ -601,9 +601,9 @@ int windowPulseScale_80086FB0[5][3] = {
     { 100, 100, 100 },
 };
 unsigned char windowBgColor0_80086FEC = 42;
-unsigned char byte_80086FED = 38;
-unsigned char byte_80086FEE = 110;
-unsigned char byte_80086FEF = 0;
+unsigned char unused_80086FED = 38;
+unsigned char unused_80086FEE = 110;
+unsigned char unused_80086FEF = 0;
 int windowBgColorData_80086FF0[9] = {
     0x5A266E, 0x666E26, 0x254470, 0x293A55, 0xD81FF, 0xFFFF0A, 0xD81FF, 0x73FF0A,
     0x254470,
@@ -620,7 +620,7 @@ int windowFrameQuadEdges_80087070[5][8] = {
     { 2, 1, 3, 0, 2, 2, 3, 3 },
     { 1, 1, 2, 1, 1, 2, 2, 2 },
 };
-int dword_80087110 = 0x439;
+int unused_80087110 = 0x439;
 MATRIX lightMatrix_80087114 = { {
         { 0x50F, 0, 0xF2E },
         { 0x446, -0xCD4, 0x88D },
@@ -636,4 +636,4 @@ int xaStartPos_80096108 BSS = 0;
 int xaEndPos_8009610C BSS = 0;
 XaRequest xaRequest_80096110 BSS = { 0 };
 unsigned int xaRequestPending_80096118 BSS = 0;
-int dword_8009611C BSS = 0;
+int unused_8009611C BSS = 0;

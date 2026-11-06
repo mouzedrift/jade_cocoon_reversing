@@ -16,7 +16,7 @@ extern CdReadState cdReadState_80086550;
 
 extern int CdSeekStart_8003C8A0(DslLOC* loc);
 extern int CdReadStart_8003C944(DslLOC* loc, void* buf, int sectors);
-extern const int dword_80074960;
+extern const int unused_80074960;
 
 typedef struct
 {

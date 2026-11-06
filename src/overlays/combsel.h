@@ -65,11 +65,11 @@ extern int AllSlotsEmpty_800A5560(Minion* team, int count);
 /* exe-side, to move to <exe header> */
 extern void DrawScrollArrows_8002B8DC(CombSelArrow arrow, void* cursor, void* pos, int ot);
 
-extern int dword_800A4088;
+extern int unused_800A4088;
 extern const MenuWindowItem titleItem_800A4238;
 extern const MenuWindowItem playerItems_800A4254[2];
 extern const MenuWindowItem listHeaderItem_800A428C;
-extern const int dword_800A4348;
+extern const int unused_800A4348;
 extern MenuWindowItem teamRow0_800A55C4[2];
 extern MenuWindowItem teamRow1_800A55FC[2];
 extern MenuWindowItem teamRow2_800A5634[2];

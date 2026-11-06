@@ -826,7 +826,7 @@ void* GetStatsStatus_80033A60(void* stats)
 {
     return stats;
 }
-char* sub_80033A68(char* stats)
+char* NextUnitStatus_80033A68(char* stats)
 {
     return stats + 0x48;
 }
@@ -846,7 +846,7 @@ UnitStatus* GetLevantStatus_80033ABC(SaveData* save)
 {
     return &save->levantStatus_7C8;
 }
-char* sub_80033AC4(SaveData* save)
+char* GetSaveDataField7BC_80033AC4(SaveData* save)
 {
     return save->field_7BC;
 }

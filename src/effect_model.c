@@ -25,7 +25,7 @@
 #include "model_ftg.h"
 #include "ftg_draw.h"
 
-const int off_80072278[0] = {  };
+const int unused_80072278[0] = {  };
 
 void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
 {

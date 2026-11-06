@@ -86,7 +86,7 @@ extern const char aExit_800C2C50[];
 extern const char aSelect_800C2C5C[];
 extern const MenuWindowList menuHdrActive_800C2CD0;
 extern const MenuWindowList menuHdrIdle_800C2CE8;
-extern const int dword_800C2D00;
+extern const int unused_800C2D00;
 extern int topMenuHelp_800C4C80[4];
 extern int audioPageHelp_800C4C90[3];
 extern int subtitlePageHelp_800C4C9C[7];

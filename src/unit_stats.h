@@ -52,12 +52,12 @@ extern const char helpUseItem_80071EC0[];
 extern const char helpDefend_80071ED0[];
 extern const char helpAttackMenu_80071EF0[];
 extern const char helpEmpty_80071F00[];
-extern const int dword_80071F04;
+extern const int unused_80071F04;
 
 // the event lists of the game's tasks (CreateEventList_800435B4)
 extern EventDesc eventDescs_80078EB8[];
 
-extern int dword_80078E90[10];
+extern int unused_80078E90[10];
 
 typedef struct
 {

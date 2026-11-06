@@ -140,7 +140,7 @@ typedef struct
     int nMapVars_2F4;
     SaveMapVar mapVars_2F8[150];
     LevantPos levant_7A8; // == levantPos_8008BD18
-    char field_7BC[0xC]; // returned by sub_80033AC4
+    char field_7BC[0xC]; // returned by GetSaveDataField7BC_80033AC4
     // Levant's 0x48-byte status block (same layout as a minion's status_84)
     UnitStatus levantStatus_7C8; // saveData_8008B570.levantStatus_7C8: name_10 == saveData_8008B570.levantStatus_7C8.name_10, field_1C[0..2] the
                                  // equipped weapon / armor / accessory, level_44 the rank (saveData_8008B570.levantStatus_7C8.level_44)
@@ -322,7 +322,7 @@ extern int eventDispatchHalt_8008B540;
 extern int freeActorModels_80091CA0;
 extern int frozenFrames_800918B8;
 extern int fileBufferInUse_80086564;
-extern int dword_80098688;
+extern int unusedWord_80098688;
 extern MagicData magicData_8007C438[];
 extern ActionData magicActions_8007C5A0[];
 extern int loadFade_80091C30[];

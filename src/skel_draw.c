@@ -1499,5 +1499,5 @@ void GetRotationAxis_8004AD44(MATRIX* in, VECTOR* out)
 }
 
 MATRIX boneMatrices_80096120[40] BSS = { 0 };
-int dword_80096620[2] BSS = { 0 };
+int unused_80096620[2] BSS = { 0 };
 FtgSpriteVtx ftgSpriteVtxPool_80096628[350] BSS = { 0 };

@@ -25,7 +25,7 @@
 
 const char aAssertionFaile_3[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEffectC[] = "EFFECT.C";
-const int dword_80072134 = 0x80E8E8;
+const int unused_80072134 = 0x80E8E8;
 int turnFilterCoeffs_800795A0[12] = {
     0x200, 0x200, 0x200, 0x200, 0x200, 0x200, 0x200, 0x200,
     0x400, 0x400, 0x400, 0x400,

@@ -598,13 +598,13 @@ extern const char aRearrange_800BB978[];
 extern const char aDescription_800BB98C[];
 extern const MenuWindowItem minionListTitle_800BB9A4;
 extern const char minionListBullet_800BB9C0[];
-extern const int dword_800BB9C4;
+extern const int unused_800BB9C4;
 extern const char aLeaveTheForest_800BBA44[];
 extern const char aYesNo_800BBA68[];
-extern const int dword_800BBA7C;
+extern const int unused_800BBA7C;
 extern const MenuWindowList menuHdrActive_800BBB7C;
 extern const int dword_800BBB94[2];
-extern int dword_800C1050[4];
+extern int unused_800C1050[4];
 // a window rect with a title (only the rect is read here)
 typedef struct MenuTitledRect
 {
@@ -615,15 +615,15 @@ typedef struct MenuTitledRect
 } MenuTitledRect;
 extern MenuTitledRect levelUpStatusRect_800C1060;
 extern ItemDropRow itemDropTable_800C1080[211];
-extern short dword_800C1718[10];
+extern short unused_800C1718[10];
 extern int resultHelpBar_800C172C[7];
-extern char dword_800C1748[12];
+extern char unused_800C1748[12];
 extern int equipSlotLabels_800C1754[3];
 extern MenuWindowItem equipRowWeapon_800C1760[4];
 extern MenuWindowItem equipRowArmor_800C17D0[4];
 extern MenuWindowItem equipRowAccessory_800C1840[4];
 extern MenuWindowItem* equipRows_800C18B0[4];
-extern short dword_800C18C0[2];
+extern short unused_800C18C0[2];
 extern char levantStatsRect_800C18C4[8];
 extern char menuTitleRect_800C18CC[8];
 extern char configLabelRect_800C18D4[8];

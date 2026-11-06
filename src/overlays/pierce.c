@@ -5,7 +5,7 @@
 #include "globals.h"
 #include "pierce.h"
 
-int dword_800C6F40 SDATA = 216;
+int unused_800C6F40 SDATA = 216;
 
 
 

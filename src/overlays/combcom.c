@@ -5,7 +5,7 @@
 #include "minion_menu.h"
 #include "combcom.h"
 
-int dword_800C9E88 SDATA = 34; // first word of the overlay
+int unused_800C9E88 SDATA = 34; // first word of the overlay
 
 short cmdCursor_800CD28C[4] = { 2, 2, 4 };
 short cmdCursorSel_800CD294 = 0;

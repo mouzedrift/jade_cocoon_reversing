@@ -1,4 +1,4 @@
-dword_800A4088=0x800a4088; // overlay header / data
+unused_800A4088=0x800a4088; // overlay header / data
 aReturnToTitleSc_800A408C=0x800a408c; // data
 aDeleteEnteredMi_800A40BC=0x800a40bc; // data
 aEnterMinionFrom_800A40EC=0x800a40ec; // data
@@ -15,7 +15,7 @@ listHeaderItem_800A428C=0x800a428c; // data
 aSelectSpaceToEn_800A42A8=0x800a42a8; // data
 aSelectMinionToD_800A42E4=0x800a42e4; // data
 aSelectMinionToE_800A4318=0x800a4318; // data
-dword_800A4348=0x800a4348;
+unused_800A4348=0x800a4348;
 jpt_800A434C=0x800a434c; // jump table of MainMenuInput_800A4E94
 CombSelMain_800A4360=0x800a4360;
 PlaceSideWindows_800A4C74=0x800a4c74;

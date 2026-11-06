@@ -3,7 +3,7 @@
 
 #include "unit.h"
 
-extern const int dword_800720E4;
+extern const int unused_800720E4;
 
 // outcome of a battle action (ResolveBattleAction_80012BB0)
 typedef struct ActionResult
@@ -35,10 +35,10 @@ typedef struct BattleCmd
 extern unsigned char sealRatioThresholds_800793C4[4];
 extern unsigned char sealOutcomeTable_800793C8[5][4];
 extern const char* battleHelpTexts_800793DC[41];
-extern int dword_80079480[16];
-extern int dword_800794C0[16];
-extern int dword_80079500[8];
-extern int dword_80079520[32];
+extern int unused_80079480[16];
+extern int unused_800794C0[16];
+extern int unused_80079500[8];
+extern int unused_80079520[32];
 
 void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask);
 void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out);

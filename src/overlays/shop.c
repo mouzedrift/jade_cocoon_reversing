@@ -18,7 +18,7 @@ int dword_800B6D00 SDATA = 38;
 const char aAssertFmt_800B6D04[] = "Assertion failed: file \"%s\", line %d\n";
 const char aCmpactC_800B6D2C[] = "CMPACT.C";
 const ShopElementOrder elementOrder_800B6D38 = { { 0, 1, 2, 3 } };
-const int dword_800B6D48 = 0;
+const int unused_800B6D48 = 0;
 
 int CompactStoredMinions_800B97B0()
 {
@@ -2201,7 +2201,7 @@ void DrawShopButtonHelp_800BCCD8(ShopMenu* menu)
     }
 }
 const MenuWindowList mainMenuWindow_800B9608 = { 2, 0, 8, 0, 0, 14 };
-const int dword_800B9620 = 0;
+const int unused_800B9620 = 0;
 
 void DrawShopMainMenu_800BCEDC(ShopMenu* menu)
 {
@@ -2549,7 +2549,7 @@ int IsNoChosen_800BD6C4(ShopMenu* menu)
     }
     return 0;
 }
-const int dword_800B96F0 = 0; // the alignment of jpt_800B96F4 (delete it with that table)
+const int unused_800B96F0 = 0; // the alignment of jpt_800B96F4 (delete it with that table)
 
 void PreviewMerge_800BD720(ShopMenu* menu)
 {
@@ -3959,7 +3959,7 @@ MenuWindowItem mainMenuItem4_800C079C[2] = {
 MenuWindowItem* mainMenuItems_800C07D4[6] = {
     &mainMenuItem0_800C06BC, &mainMenuItem1_800C06F4, &mainMenuItem2_800C072C, &mainMenuItem3_800C0764, &mainMenuItem4_800C079C, 0,
 };
-int dword_800C07EC = 0x3C02800B; // unreferenced (the word reads as the instruction lui $v0, 0x800B)
+int unused_800C07EC = 0x3C02800B; // unreferenced (the word reads as the instruction lui $v0, 0x800B)
 unsigned int emptyMinion_800C07F0[62] = { 0 };
 Minion mergePreview_800C08E8 = { 0 };
 ShopFormModel formModel_800C09E0 = { 0 };

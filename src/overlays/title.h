@@ -33,7 +33,7 @@ typedef struct
 
 typedef struct { char rgb[4]; } TitleColor;
 
-extern int dword_800A05A0;
+extern int unused_800A05A0;
 extern const TitleColor nameCursorPulseColor_800A05A4;
 extern const char aCaution_800A05A8[];
 extern const char str_800A05BC[];
@@ -52,10 +52,10 @@ extern const TitleMenuWindow titleMenuWin7_800A0860;
 extern const MenuWindowList titleMenuCfg_800A0898;
 extern const TitleColor logoPulseColor_800A08B0;
 extern const char debugLevantName_800A08B4[];
-extern const int dword_800A08C0[2];
+extern const int unused_800A08C0[2];
 extern char levantName_800A2718[];
-extern int dword_800A2728;
-extern int dword_800A272C;
+extern int unused_800A2728;
+extern int unused_800A272C;
 extern EventDesc titleMenuTaskDesc_800A2778;
 extern EventDesc newGameTaskDesc_800A2790;
 extern EventDesc titleSoundTaskDesc_800A27A8;

@@ -1,7 +1,7 @@
 #ifndef _TU_80016BF4_H_
 #define _TU_80016BF4_H_
 
-extern const int dword_80072274;
+extern const int unused_80072274;
 
 void SpawnLightFlash_80017158(int* pos, unsigned char* rgb);
 void SpawnGlowModel_80017290(EffectObj* parent, int modelId);

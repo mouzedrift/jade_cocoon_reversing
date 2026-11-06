@@ -531,7 +531,7 @@ int GetMagicEffect_8001AC8C(int idx)
     }
     return 0x1A;
 }
-int sub_8001ACC0(int idx)
+int GetMagicField5_8001ACC0(int idx)
 {
     return magicData_8007C438[idx].field_5;
 }

@@ -986,12 +986,12 @@ void ProjectFtgSprites_8004DCC0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* c
 }
 
 FtgSpriteVtx *ftgSpriteVtxNext_80098180 BSS = 0;
-int dword_80098184 BSS = 0;
+int unused_80098184 BSS = 0;
 MATRIX boneMatrices_80098188[40] BSS = { 0 };
-int dword_80098688 BSS = 0;
-int dword_8009868C BSS = 0;
+int unusedWord_80098688 BSS = 0;
+int unused_8009868C BSS = 0;
 SVECTOR boneOffsets_80098690[2] BSS = { 0 };
-int dword_800986A0[78] BSS = { 0 };
+int unused_800986A0[78] BSS = { 0 };
 FtgSpriteVtx *ftgSpriteVtxSlots_800987D8[40][56] BSS = { 0 };
 FtgTPageClut ftgSpriteTPageClut_8009AAD8 BSS = { 0 };
-int dword_8009AADC BSS = 0;
+int unused_8009AADC BSS = 0;

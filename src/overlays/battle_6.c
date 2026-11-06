@@ -1,7 +1,7 @@
 // BATTLE.BIN, source file 6 of 6 from 0x800C4118 (enemy AI; .rdata from 0x800B684C)
 #include "battle.h"
 
-int dword_800C8B2C = 0xFFFF;
+int unused_800C8B2C = 0xFFFF;
 unsigned char aiCounter_800C8B30[4] = { 0 };
 int aiAllyCalled_800C8B34 = 0;
 unsigned char commandHandlerIdx_800C8B38[28] = { 0, 0, 1, 2, 0, 3, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 6, 0, 0, 0, 3 };
@@ -164,7 +164,7 @@ int actorHighlightTime_800C9170 = 0;
 int enemyHighlightTimes_800C9174[3] = { 0 };
 short previewHpChange_800C9180 = 0;
 short previewMpChange_800C9182 = 0;
-int dword_800C9184 = 0x24639300;
+int unused_800C9184 = 0x24639300;
 Minion *summonedMinion_800C9188 = 0;
 int summonedMinionSlot_800C918C = -1;
 BatSummonedActor summonedActor_800C9190 = { 0 };
@@ -193,7 +193,7 @@ EnemyAiFn enemyAi_800C9204[53] = {
 MenuCursor commandMenu_800C92D8[1] = { { 2, 3 } };
 MenuCursor skillMenu_800C92E4[1] = { { 1, 5, 5 } };
 MenuCursor magicMenu_800C92F0[1] = { { 1, 4, 4, 64 } };
-int dword_800C92FC[3] = { 0x10001, 1 };
+int unused_800C92FC[3] = { 0x10001, 1 };
 MenuCursor itemMenu_800C9308[1] = { { 1, 4, 4, 64 } };
 MenuCursor enemyTargetMenu_800C9314[1] = { { 0, 1 } };
 MenuCursor targetMenu_800C9320[1] = { { 1 } };
@@ -382,18 +382,18 @@ const char* skillDescriptions_800C9B58[16][4] = {
     { aSpecialAttackBr_800B9840, aMakesItEasierTo_800B97E8, aSlightlyMoreDif_800B987C, 0 },
 };
 int battleLoadState_800C9C58 = 0;
-int dword_800C9C5C[3] = { 0 };
+int unused_800C9C5C[3] = { 0 };
 short turnGauges_800C9C68[8] = { 0 };
 int *chainEntry_800C9C78 = 0;
 unsigned char actingUnit_800C9C7C = 0;
 short actorHpChange_800C9C7E = 0;
 short actorMpChange_800C9C80 = 0;
 unsigned char summonedUnit_800C9C82 = 0;
-int dword_800C9C84 = 0;
+int unused_800C9C84 = 0;
 BattleCmd curCommand_800C9C88 = { 0 };
 unsigned char commandUnit_800C9C98 = 0;
 unsigned char shownUnit_800C9C99 = 0;
-int dword_800C9C9C = 0;
+int unused_800C9C9C = 0;
 int unitStatusInflicted_800C9CA0[7] = { 0 };
 char unitHitKinds_800C9CBC[12] = { 0 };
 BattleCmd unitReactions_800C9CC8[7] = { { 0 } };
@@ -408,7 +408,7 @@ short deathSfx_800C9D80 = 0;
 signed char shownAreaElement_800C9D82 = 0;
 char fixedStageElement_800C9D83 = 0;
 signed char areaElement_800C9D84 = 0;
-int dword_800C9D88 = 0;
+int unused_800C9D88 = 0;
 short stageAnimUv_800C9D8C[2] = { 0 };
 int removedEnemyCount_800C9D90 = 0;
 short actionFrame_800C9D94 = 0;
@@ -421,7 +421,7 @@ int enemyWindowFlags_800C9DF8 = 0;
 char enemyWindowsHighlight_800C9DFC = 0;
 char actorWindowHighlight_800C9DFD = 0;
 unsigned int enemyWindowSlide_800C9E00 = 0;
-int dword_800C9E04 = 0;
+int unused_800C9E04 = 0;
 EventEntry *enemyWindowTasks_800C9E08[4] = { 0 };
 BatXY enemyWindowPos_800C9E18[3] = { { 0 } };
 int enemyWindowMask_800C9E24 = 0;

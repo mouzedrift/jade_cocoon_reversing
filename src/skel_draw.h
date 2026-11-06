@@ -161,7 +161,7 @@ extern MATRIX boneMatrices_80096120[]; // per-bone draw matrices
 // draws an FTG object at pos / rot (optional per-axis scale) through DrawFtgObject_8004C7BC
 extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot);
 
-extern int dword_80096620[2];
+extern int unused_80096620[2];
 
 // billboard sprite with an RGB tint (DrawBillboardRgb_80043DE0)
 int DrawBillboardRgb_80043DE0(POLY_FT4* poly, VECTOR* pos, short* size, unsigned char* rgb);

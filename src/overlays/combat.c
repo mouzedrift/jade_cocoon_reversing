@@ -54,7 +54,7 @@ unsigned char curPlayer_800A38D9 = 0;
 unsigned char rosterFill_800A38DA = 0;
 unsigned char selMode_800A38DB = 0;
 unsigned char battleResult_800A38DC = 0;
-int dword_800A38E0 = 0xDF0033;
+int unused_800A38E0 = 0xDF0033;
 int combatTaskDesc_800A38E4[6] = { 1, 5, 0, 0, (int)CombatInit_800A13A0, (int)CombatFree_800A148C };
 int combatModelLoaderDesc_800A38FC[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
 int combatActorTaskDesc_800A3914[6] = { 2, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
@@ -79,7 +79,7 @@ int curPad_800A3A94 = 0; // the pad of the player whose turn it is (COMBSEL)
 unsigned char sideResult_800A3A98[8] = { 0 }; // per side
 Minion teams_800A3AA0[2][3] = { { { 0 } } };
 int prevStage_800A4070 = 0;
-int dword_800A4074 = 0;
+int unused_800A4074 = 0;
 int sideSlot_800A4078[2] = { 0 }; // per side: the teams_800A3AA0 slot of the minion in the arena, -1 none
 int stageOvlRequest_800A4080 = 0;
 

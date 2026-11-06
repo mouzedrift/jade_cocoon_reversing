@@ -72,7 +72,7 @@ typedef struct CombComPos2
 } CombComPos2;
 
 
-extern int dword_800C9E88;
+extern int unused_800C9E88;
 
 /* .data */
 extern short cmdCursor_800CD28C[4];

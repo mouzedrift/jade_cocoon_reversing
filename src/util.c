@@ -655,9 +655,9 @@ int IsPoolBlock_80040274(Pool* pool, void* ptr)
 {
     return ((PoolBlock*)ptr)[-1].magic == 0x8FFFFFFF;
 }
-void sub_8004028C(void)
+void ClearUnusedWord_8004028C(void)
 {
-    dword_80098688 = 0;
+    unusedWord_80098688 = 0;
 }
 extern unsigned long* primAllocPtrs_800960A8[];
 void* AddPrimCopy_80040298(void* ot, void* prim, int words)
@@ -827,8 +827,8 @@ void GameLoop_8004047C(void)
     } while ((unknownFlags_8008D678 & 4) == 0);
 }
 
-int dword_8008686C[3] = { 112, 138, (int)&font2CharCodes_800865B8[71] };
-int dword_80086878[8] = { 126, 194, 0x808080, 0x8080, 0x404040, 128, 0x8000, 0x800000 };
+int unused_8008686C[3] = { 112, 138, (int)&font2CharCodes_800865B8[71] };
+int unused_80086878[8] = { 126, 194, 0x808080, 0x8080, 0x404040, 128, 0x8000, 0x800000 };
 int charWidthThresholds_80086898[3][12] = {
     { 112, 112, 96, 48, 32 },
     {
@@ -836,5 +836,5 @@ int charWidthThresholds_80086898[3][12] = {
         36, 36, 18,
     },
 };
-int dword_80086928[2] = { 0 };
+int unused_80086928[2] = { 0 };
 EventDesc copyrightData_80086930 = { 1, 1, 0, 0, (EventEntryFn)InitCopyrightScreen_80040A10 };

@@ -98,7 +98,7 @@ const char aMDLMABA_800A096C[] = "MDL_MABA";
 const char aMDLGAR_800A0978[] = "MDL_GAR";
 const char aMDLLEB2_800A0980[] = "MDL_LEB2";
 const char aMDLLEBANT_800A098C[] = "MDL_LEBANT";
-const int dword_800A0998 = 0;
+const int unused_800A0998 = 0;
 
 void TstModelInit_800A09C0(EventEntry* task, TstModelWork* c)
 {

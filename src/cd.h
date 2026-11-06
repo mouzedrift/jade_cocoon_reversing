@@ -2,7 +2,7 @@
 #define _CD_H_
 
 extern const char aDataData0011[];
-extern const int dword_800748DC;
+extern const int unused_800748DC;
 
 extern int fileRequestNextKey_80086544;
 
