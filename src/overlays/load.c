@@ -1618,17 +1618,15 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
     BuildCardHeader_800BB2AC(&work->fileBuf_4->header_0, idx, saveTitle_800BDFAC->str);
 }
 
-#if 0
-// Not matched: prologue scheduling only (the original sets $a0 = 1 before saving $s1 / copying the second argument).
-// Tried: the WriteSaveTask_800B98C4 shape (void* t, void* buf copied into typed locals) fixes the scheduling but swaps
-// task/chan ($s3/$s4): gcc 2.8 global alloc ranks task (5 refs / 52 insns, or 4/49 with the two 0xF failures
-// shared via goto) above chan (2 refs / 13 insns), the original needs chan first. Making chan's life shorter
-// (save computed first, unsigned short save, a port temp) gets the registers right but then the three lbu's of
-// chan/save are scheduled in the wrong order; ~500 declaration-order/type/goto/temp combinations tried.
-void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work)
+// the load task: reads the save file from the card and unpacks it, then back to the menu (task callback: the
+// second parameter is copied into a typed local after the other locals; declared first it would be merged into
+// the incoming argument move and the call setup scheduled differently)
+// Matched
+void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf)
 {
     int cmd = 0;
     int res = 0;
+    LoadMenuWork* work = buf;
     int chan = loadMenuRows_800BDF4C[1].cursor_C << 4;
     int save = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
     char* name;
@@ -1686,8 +1684,6 @@ void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work)
     DrawMessageBox_800BACBC(msgLoading_800BDEDC);
     DrawMenuBackground_8002BE10();
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, LoadSaveTask_800BA234);
 
 // unpacks the loaded save file into saveData_8008B570; 0 when the checksum or the version is wrong
 // Matched
@@ -2160,14 +2156,14 @@ int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir)
     return res;
 }
 
-#if 0
-// Not matched: register allocation only, plus the scheduling of the i++/icon-offset increments in the first loop
-// (header/i/table pointer are $s0/$s1/$s2 in the original, $s2/$s0/$s1 here). The clearing loops match now: they are
-// counting-up loops that gcc reverses into the decrementing-pointer form. gcc 2.8 ranks i (14 refs / 59 insns) and the
-// table giv (11/48) above header (19/188); field_44 loop variable, pointer-walk/do-while/while loop shapes, statement
-// order and the strcpy ternary/if forms tried without changing that order.
-void BuildCardHeader_800BB2AC(CardHeader* header, int idx, char* title)
+// fills the memory card file header: the save icon (bitmap and clut read back from VRAM), magic, title and tag
+// (the header comes in as a void* copied into a typed local: as a typed parameter it gets a REG_EQUIV note to its
+// stack slot, which doubles its live length for global alloc and gives i / the icon table pointer $s0 first; rect.y
+// adds poly->v0 last, the original reads it after the tp / 16 rounding branch)
+// Matched
+void BuildCardHeader_800BB2AC(void* buf, int idx, char* title)
 {
+    CardHeader* header = buf;
     int i;
     int j;
     RECT rect;
@@ -2176,7 +2172,7 @@ void BuildCardHeader_800BB2AC(CardHeader* header, int idx, char* title)
         POLY_FT4* poly = &publicTiyPolyFT4s_8008D430[saveIconSrc_800BE0A0[i].poly_0];
         int tp = poly->tpage & 0x1F;
         rect.x = (poly->u0 >> 2) + ((tp << 6) & 0x3FF);
-        rect.y = poly->v0 + ((tp / 16) << 8);
+        rect.y = ((tp / 16) << 8) + poly->v0;
         rect.w = 4;
         rect.h = 0x10;
         StoreImage(&rect, (u_long*)header->icon_80[i]);
@@ -2215,8 +2211,6 @@ void BuildCardHeader_800BB2AC(CardHeader* header, int idx, char* title)
     header->field_5C = 0;
     MemCopy_800403E8(header->field_200, cardHeaderTail_800BE0B8.icon_0, 0x80);
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, BuildCardHeader_800BB2AC);
 
 void DrawCardSlotMenu_800BB4A8(short sel)
 {

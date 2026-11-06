@@ -426,7 +426,7 @@ extern void LoadMenuTask_800B794C(LoadMenuTaskEntry* task, LoadMenuWork* work);
 extern void LoadMenuScreen_800B79F8(LoadMenuWork* work);
 extern void PackSaveFile_800B9A8C(LoadMenuWork* work);
 extern void WriteSaveTask_800B98C4(void* t, void* buf);
-extern void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, LoadMenuWork* work);
+extern void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf);
 extern void FormatCardWait1_800BA968(LoadMenuTaskEntry* task);
 extern void LoadMenuExit_800BAAE0(LoadMenuTaskEntry* task, LoadMenuWork* work);
 extern void FormatCardWait2_800BA9AC(LoadMenuTaskEntry* task);
@@ -469,7 +469,7 @@ void FormatPromptInput_800B9470(LoadMenuWork* work);
 void SaveListInput_800B952C(LoadMenuWork* work);
 void ConfirmPromptInput_800B9654(LoadMenuWork* work);
 int ReadSaveSummaries_800B9724(LoadMenuWork* work);
-extern void BuildCardHeader_800BB2AC(CardHeader* header,int idx, char* title);
+extern void BuildCardHeader_800BB2AC(void* buf, int idx, char* title);
 extern int PlayTimeHours_800BAC14(int frames);
 extern int PlayTimeMinutes_800BAC68(int frames);
 
