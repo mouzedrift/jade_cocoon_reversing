@@ -25,7 +25,6 @@
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
-extern short uiColor_8008B590;
 // Matched
 void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
 {
@@ -87,7 +86,7 @@ void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
     flags = list->flags_0;
     if (!(flags & 0x100))
     {
-        style.color_0 = uiColor_8008B590;
+        style.color_0 = saveData_8008B570.uiColor_20.s;
     }
     else if (flags & 0x2000)
     {
@@ -189,7 +188,6 @@ void DrawMenuItemWithWindow_8002ADB4(MenuWindowItem* item, void* window, int ot,
     SetFontClutOffset_8003F900(1, 0);
     DrawWindow_80042460(&item->x_10, window, &pOT_8008D454[ot], time);
 }
-extern short uiColor_8008B590;
 // Matched
 void DrawTextLinesWindow_8002AE38(const char** lines, Pos16* pos, int ot, RECT* rect, int count)
 {
@@ -210,7 +208,7 @@ void DrawTextLinesWindow_8002AE38(const char** lines, Pos16* pos, int ot, RECT* 
     {
         style.semiTrans_3 = 1;
         style.colorSet_2 = 0;
-        style.color_0 = uiColor_8008B590;
+        style.color_0 = saveData_8008B570.uiColor_20.s;
         DrawWindow_80042460(rect, &style, &pOT_8008D454[ot], 0);
     }
 }
@@ -282,7 +280,7 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
     rect.h = 0xE;
     style.semiTrans_3 = 1;
     style.colorSet_2 = 0;
-    style.color_0 = uiColor_8008B590;
+    style.color_0 = saveData_8008B570.uiColor_20.s;
     DrawWindow_80042460(&rect, &style, &pOT_8008D454[ot], 0);
 }
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);

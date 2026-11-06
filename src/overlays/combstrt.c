@@ -44,7 +44,7 @@ void VersusSetupTask_800A4170(CombatTask* t, int a)
     title = titleItem_800A4138;
     box.colorSet_2 = 0;
     box.semiTrans_3 = 1;
-    box.color_0 = uiColor_8008B590;
+    box.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(&title, &box, 0xF, 0);
     HealTeams_800A48C0();
     if (CountTeamMinions_800A1AAC(0) < 2u && CountTeamMinions_800A1AAC(1) < 2u)
@@ -266,7 +266,7 @@ void DrawTeam_800A4958(int side)
     int slot;
     box.semiTrans_3 = 1;
     box.colorSet_2 = 0;
-    box.color_0 = uiColor_8008B590;
+    box.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(playerLabelItems_800A4C50[side], &box, 0xF, 0);
     for (slot = 0; slot < 3; slot++)
     {

@@ -118,9 +118,10 @@ typedef struct
     Settings settings_1C; // == saveData_8008B570.settings_1C.word
     union
     {
-        int i;            // uiColor_8008B590
+        int i;
         unsigned char b;  // read as a byte by CONFIG
-        unsigned short h; // read as a halfword by WPNSHOP
+        unsigned short h; // the colour as most of the menus read it
+        short s;          // ... and as the field windows read it
         struct UiColorBytes
         {
             unsigned char b_0[4];
@@ -410,7 +411,6 @@ extern int fadeFlags_800918B0;
 extern XaRequest xaRequest_80096110;
 extern int currentAreaMap_80091C88;
 extern int currentArea_80091C44;
-extern int* mdecEffectSchedule_80091C00;
 extern int fadeFrame_800918B4;
 extern unsigned char armorOutfits_8007D588[16];
 extern int primBufferOffset_8008B550;

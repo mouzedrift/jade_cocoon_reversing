@@ -98,13 +98,12 @@ void DrawTextList_8002A310(TextListEntry* entries, int ot)
         }
     }
 }
-extern short uiColor_8008B590;
 // Matched
 void DrawUiWindow_8002A384(UiWindowDesc* desc)
 {
     WindowStyle style;
     unsigned char colorSet = desc->colorSet_8;
-    short col = uiColor_8008B590;
+    short col = saveData_8008B570.uiColor_20.s;
     style.semiTrans_3 = 1;
     style.colorSet_2 = colorSet;
     style.color_0 = col;

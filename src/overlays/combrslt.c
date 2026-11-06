@@ -37,7 +37,7 @@ void VersusResultTask_800A40E0(CombatTask* task)
     int i;
     box.colorSet_2 = 0;
     box.semiTrans_3 = 1;
-    box.color_0 = uiColor_8008B590;
+    box.color_0 = saveData_8008B570.uiColor_20.h;
     DrawMenuItemWithWindow_8002ADB4(&title, &box, 0xF, 0);
     for (i = 0; i < 2; i++)
     {
@@ -86,7 +86,7 @@ void DrawPlayerResult_800A4240(int player)
         box.colorSet_2 = 2;
         break;
     }
-    box.color_0 = uiColor_8008B590;
+    box.color_0 = saveData_8008B570.uiColor_20.h;
     box.semiTrans_3 = 1;
     DrawMenuItemWithWindow_8002ADB4(playerLabelItems_800A4830[player], &box, 0xF, GetTime30Hz_8002C64C());
     DrawMenuItemWithWindow_8002ADB4(resultItems_800A4870[player], &box, 0xF, GetTime30Hz_8002C64C());

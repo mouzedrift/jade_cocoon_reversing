@@ -224,7 +224,7 @@ void ActorWindowTask_800C0254(EventEntry* task, void* arg)
         box.semiTrans_3 = 1;
         rect[2] = 0x64;
         rect[3] = 0x15;
-        box.color_0 = uiColor_8008B590;
+        box.color_0 = saveData_8008B570.uiColor_20.h;
         box.colorSet_2 = 0;
         rect[0] = 0xD2;
         rect[1] = 0xC0;

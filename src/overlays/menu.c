@@ -1167,7 +1167,7 @@ void DrawLevantLevelUp_800BC8A8(void)
     DrawUiTiySprt_8002C06C(&box, 0xE4, 0xE);
     box.colorSet_A = 1;
     box.semiTrans_B = 1;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
 }
 
@@ -1187,7 +1187,7 @@ void DrawMinionLevelUp_800BC934(int unit, int count)
         DrawUiTiySprt_8002C06C(&bx, 0x5D, 0xE);
         bx.colorSet_A = 1;
         bx.semiTrans_B = 1;
-        bx.col_8 = uiColor_8008B590;
+        bx.col_8 = saveData_8008B570.uiColor_20.h;
         DrawWindow_80042460(rect, &bx.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
     }
 }
@@ -1339,7 +1339,7 @@ void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
         r.h = 0x15;
         col3.colorSet_2 = 0;
         col3.semiTrans_3 = 1;
-        col3.color_0 = uiColor_8008B590;
+        col3.color_0 = saveData_8008B570.uiColor_20.h;
         DrawWindow_80042460(&r, &col3, &pOT_8008D454[b], 0);
     }
 }
@@ -1356,7 +1356,7 @@ void DrawMinionLevelUpStatus_800BCEA0(BattleResult* result, int ot, void* status
         pos[1] = 0x3E;
         DrawUnitStatusPanel_8002DB48(status, ot, 0, pos, minion, &result->oldStatus_1AC[i]);
     }
-    col.color_0 = uiColor_8008B590;
+    col.color_0 = saveData_8008B570.uiColor_20.h;
     col.colorSet_2 = 0;
     col.semiTrans_3 = 1;
     DrawWindow_80042460(levelUpStatusRect_800C1060, &col, &pOT_8008D454[ot], 0);
@@ -1600,7 +1600,7 @@ void MinionListScreen_800BD80C(MenuTask* task, char* a)
     if (minionListPage_800C2980 >= 3)
         minionListPage_800C2980 = 0;
     box = minionListTitle_800BB9A4;
-    col.color_0 = uiColor_8008B590;
+    col.color_0 = saveData_8008B570.uiColor_20.h;
     col.colorSet_2 = 0;
     col.semiTrans_3 = 1;
     DrawMenuItemWithWindow_8002ADB4(&box, &col, 0xA, 0);
@@ -2298,7 +2298,7 @@ void DrawSelectedMinionPanel_800BEBFC(MenuCtx* menu, RECT* rect)
 void DrawCursorWindow_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
 {
     WindowStyle col;
-    col.color_0 = uiColor_8008B590;
+    col.color_0 = saveData_8008B570.uiColor_20.h;
     col.colorSet_2 = 1;
     col.semiTrans_3 = 1;
     DrawWindow_80042460(a, &col, &pOT_8008D454[b], frameCount_8008D3FC);

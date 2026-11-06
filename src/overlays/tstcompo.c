@@ -706,7 +706,7 @@ void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot)
     {
         scratch.style.colorSet_2 = 1;
         scratch.style.semiTrans_3 = 1;
-        scratch.style.color_0 = uiColor_8008B590;
+        scratch.style.color_0 = saveData_8008B570.uiColor_20.h;
         DrawWindow_80042460(rect, &scratch.style, pOT_8008D454 + ot, 0);
     }
 }

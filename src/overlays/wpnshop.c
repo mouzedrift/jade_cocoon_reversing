@@ -640,7 +640,7 @@ void DrawStoreWindowFrame_800BB868(StoreMenu* store, RECT* rect, int a2, int a3,
     int bit = 1 << idx;
     if (store->windowsOpen_C & bit)
     {
-        style.color_0 = uiColor_8008B590;
+        style.color_0 = saveData_8008B570.uiColor_20.h;
         style.colorSet_2 = 1;
         style.semiTrans_3 = 1;
         DrawWindow_80042460(rect, &style, dword_8008D454 + 0x38, frameCount_8008D3FC);
@@ -891,7 +891,7 @@ void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
     rect.y = pos->y;
     rect.w = 0x79;
     rect.h = 0x10;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     box.state_A = 0;
     box.frame_B = 1;
     box.x_0 = pos->x + 4;
@@ -915,7 +915,7 @@ void DrawHeldCountWindow_800BBFD4(int count)
     rect.y = 0x4D;
     rect.w = 0x45;
     rect.h = 0x10;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     box.state_A = 0;
     box.frame_B = 1;
     box.x_0 = 0x7B;
@@ -948,7 +948,7 @@ void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
     }
     box.frame_B = 1;
     box.x_0 = 0x7B;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     box.y_2 = 0x61;
     DrawUiTiySprt_8002C06C(&box, 0x53, 0xE);
     box.x_0 = 0xB8;
@@ -1154,7 +1154,7 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     r28.h = 0x10;
     u30.b.frame_B = 1;
     u30.b.x_0 = 0x9B;
-    u30.b.col_8 = uiColor_8008B590;
+    u30.b.col_8 = saveData_8008B570.uiColor_20.h;
     u30.b.state_A = 0;
     u30.b.y_2 = 0xC8;
     DrawUiTiySprt_8002C06C(&u30.b, 0x80, 0xE);
@@ -1212,7 +1212,7 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     u30.r.y = 0x4D;
     u30.r.w = 0x2F;
     u30.r.h = 0x12;
-    b48.col_8 = uiColor_8008B590;
+    b48.col_8 = saveData_8008B570.uiColor_20.h;
     b48.frame_B = 1;
     b48.state_A = 0;
     b48.x_0 = r28.x + 0xD;
@@ -1422,7 +1422,7 @@ void DrawTotalPrice_800BCFCC(StoreMenu* store)
         r.h = 0x10;
         b.frame_B = 1;
         b.x_0 = 0xC1;
-        b.col_8 = uiColor_8008B590;
+        b.col_8 = saveData_8008B570.uiColor_20.h;
         b.state_A = 0;
         b.y_2 = 0x60;
         DrawUiTiySprt_8002C06C(&b, 0xCE, 0xE);

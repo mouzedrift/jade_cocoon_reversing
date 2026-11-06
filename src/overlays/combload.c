@@ -119,7 +119,7 @@ void DrawTitleWindow_800A4364()
     rect.w = 0x7E;
     rect.h = 0x12;
     box.semiTrans_3 = 1;
-    box.color_0 = uiColor_8008B590;
+    box.color_0 = saveData_8008B570.uiColor_20.h;
     rect.y = 0x14;
     box.colorSet_2 = 0;
     DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
@@ -140,7 +140,7 @@ void DrawTitleWindow2_800A4420()
     rect.w = 0x7E;
     rect.h = 0x12;
     box.semiTrans_3 = 1;
-    box.color_0 = uiColor_8008B590;
+    box.color_0 = saveData_8008B570.uiColor_20.h;
     rect.y = 0x14;
     box.colorSet_2 = 0;
     DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
@@ -178,7 +178,7 @@ void DrawDataHeaderWindows_800A44DC()
     }
     box.semiTrans_3 = 1;
     rect[0] = 0x64;
-    box.color_0 = uiColor_8008B590;
+    box.color_0 = saveData_8008B570.uiColor_20.h;
     box.colorSet_2 = 0;
     rect[1] = 0x28;
     rect[2] = 0x20;

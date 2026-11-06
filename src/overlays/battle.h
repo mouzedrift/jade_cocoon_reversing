@@ -1475,7 +1475,6 @@ extern void DrawStatusIcons_8002F480(UnitStatus* unit, short* pos, int ot, int r
 /* exe-side, to move to menu_window.h */
 /* exe-side, to move to globals.h / data_decls.h */
 /* exe-side: main.h declares it (main.h itself conflicts with battle.h types) */
-extern unsigned short uiColor_8008B590;
 
 /* battle_6.c: the enemy AI scripts and battle menu steps its tables (enemyAi_800C9204, menuStateFns_800C966C) point to */
 int EnemyAi00_800C4D38(EnemyAi* ai);

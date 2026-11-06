@@ -147,7 +147,7 @@ void SpawnMdecEffect_80017A6C(int parent, int frames)
     if (entry)
     {
         obj = entry->buffer;
-        obj->field_8C = (int)mdecEffectSchedule_80091C00;
+        obj->field_8C = (int)effectFile_80091BD0.imageSets_30;
         obj->frame_0 = 0;
         if (frames > 0)
         {
@@ -299,7 +299,7 @@ void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
 // Matched
 int GetMdecEffectLength_800181E8(void)
 {
-    return *mdecEffectSchedule_80091C00;
+    return effectFile_80091BD0.imageSets_30->count_0;
 }
 // Matched
 HitTimes* RepeatHitTimes_80018200(HitTimes* src, unsigned short loopStart, unsigned short loopEnd, short loops, int effect)

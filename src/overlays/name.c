@@ -176,7 +176,7 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
         rect.h = 0xD;
         charStyle.colorSet_2 = 1;
         charStyle.semiTrans_3 = 1;
-        charStyle.color_0 = uiColor_8008B590;
+        charStyle.color_0 = saveData_8008B570.uiColor_20.h;
         DrawWindow_80042460(&rect, &charStyle, pOT_8008D454 + 14, GetTime30Hz_8002C64C());
         pageMenu_800B8388.time_4 = 0;
         cmdMenu_800B82F4.time_4 = 0;
@@ -208,7 +208,7 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
     rect.h = 0x65;
     t.style.colorSet_2 = 1;
     t.style.semiTrans_3 = 1;
-    t.style.color_0 = uiColor_8008B590;
+    t.style.color_0 = saveData_8008B570.uiColor_20.h;
     DrawWindow_80042460(&rect, &t.style, pOT_8008D454 + 14, 0);
     for (k = 0; charPages_800B8190[entry->page_A][k].chars_4; k++)
     {

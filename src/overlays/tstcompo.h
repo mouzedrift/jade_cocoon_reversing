@@ -251,7 +251,6 @@ extern int cameraEye_8008D600[];
 extern short screenOffset_8008D474[];
 extern MATRIX defaultLightMatrix_8007C2EC; // effect_data.h
 extern MATRIX defaultColorMatrix_8007C30C; // effect_data.h
-extern unsigned short uiColor_8008B590;
 /* exe-side: effect_data.h declares it as int dword_8007DC74[6] */
 extern int dword_8007DC74;
 /* exe-side: data_decls.h declares it (that header needs LIBSND.H) */

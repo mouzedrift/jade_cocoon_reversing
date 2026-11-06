@@ -50,7 +50,6 @@ void DrawTeamMinion_800A49DC(int side, int slot);
 
 /* exe-side, to move to <exe header> */
 extern unsigned short word_8008D3FC; // low half of frameCount_8008D3FC (globals.h), read with lhu
-extern unsigned short uiColor_8008B590; // -> globals.h
 extern int rand(void);
 
 #endif

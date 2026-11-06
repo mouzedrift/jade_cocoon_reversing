@@ -229,7 +229,6 @@ short ElementLevelsToMask_8002F424(unsigned char* levels)
     }
     return mask;
 }
-extern short uiColor_8008B590;
 // Matched
 void DrawMenuWindowItems_8002F480(int* status, unsigned short* pos, int ot, int reverse)
 {
@@ -257,7 +256,7 @@ void DrawMenuWindowItems_8002F480(int* status, unsigned short* pos, int ot, int 
     }
     style.colorSet_2 = 0;
     style.semiTrans_3 = 1;
-    style.color_0 = uiColor_8008B590;
+    style.color_0 = saveData_8008B570.uiColor_20.s;
     for (i = 0; i < 3; i++)
     {
         j = i;

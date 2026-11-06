@@ -46,6 +46,5 @@ void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWin
 void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box);
 
 /* exe-side, to move to <exe header> */
-extern unsigned short uiColor_8008B590; // -> globals.h
 
 #endif

@@ -477,7 +477,7 @@ void DrawPauseMenu_800CBCA0()
     list[0] = &start;
     list[1] = &giveUp;
     list[2] = &ret;
-    col.color_0 = uiColor_8008B590;
+    col.color_0 = saveData_8008B570.uiColor_20.h;
     col.colorSet_2 = 0;
     col.semiTrans_3 = 1;
     DrawMenuItemWithWindow_8002ADB4(&title, &col, 0, GetTime30Hz_8002C64C());

@@ -29,7 +29,6 @@ extern const char aDWorkPsusEvent[];
 #define malloc3_dbg ((void* (*)(int, const char*, int))malloc3_8003FC4C)
 #define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
 
-extern short uiColor_8008B590;
 
 extern unsigned char** windowColorSets_80087064[];
 extern unsigned char* windowPulseColors_80087050[];
@@ -95,7 +94,7 @@ void DrawWindow_80042460(RECT* rect, WindowStyle* style, u_long* ot, int time)
 void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, u_long* ot, int time)
 {
     unsigned char rgb[8];
-    GetWindowColors_8004226C(colorSet, rgb, time, uiColor_8008B590);
+    GetWindowColors_8004226C(colorSet, rgb, time, saveData_8008B570.uiColor_20.s);
     DrawWindowFrame_80041ED0(rect, rgb, ot, 1);
 }
 // Matched

@@ -169,7 +169,6 @@ int TestValuableFlag_800AD73C(int a);
 void SetEquipment_800AD9EC(int itemId, int category);
 
 /* exe-side, to move to <exe header> (named in the comment) */
-extern unsigned short uiColor_8008B590;
 extern char* dword_8008D454;
 void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
 

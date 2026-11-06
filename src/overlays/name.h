@@ -142,7 +142,6 @@ extern int nameEntryActive_800B83F8;
 extern void ShopCtrlRequestShop_800B6CA0();
 
 /* exe-side, to move to <exe header> */
-extern unsigned short uiColor_8008B590;
 extern int charWidthThresholds_80086898[][12];
 
 #endif

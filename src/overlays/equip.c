@@ -403,7 +403,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                     equipList.f = 0;
                     DrawEquipmentWindow_800C0E04(&equipList, &rect, 8);
                     DrawEquipStats_800C5314(c);
-                    u.s.color_0 = uiColor_8008B590;
+                    u.s.color_0 = saveData_8008B570.uiColor_20.s;
                     u.s.colorSet_2 = 0;
                     u.s.semiTrans_3 = semiTrans;
                     DrawWindow_80042460(statsWindowRect_800C59A8, &u.s, pOT_8008D454 + 14, 0);
@@ -620,7 +620,7 @@ void DrawEquipStats_800C5314(EquipCtx* c)
         arrowPos.x = 0x112;
         arrowPos.y = 0x57;
         DrawScrollArrow_8002B3DC(u.p, frameCount_8008D3FC, &arrowPos, 0xe);
-        u.s.color_0 = uiColor_8008B590;
+        u.s.color_0 = saveData_8008B570.uiColor_20.s;
         u.s.colorSet_2 = 0;
         u.s.semiTrans_3 = mode;
         DrawWindow_80042460(statCompareWindowRect_800C59A0, &u.s, pOT_8008D454 + 14, 0);

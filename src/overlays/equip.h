@@ -239,7 +239,6 @@ extern int GetLastInventorySlot_800AD308(int table);
 extern int SetEquipment_800AD9EC(int id, int slot);
 
 /* exe-side, to move to <exe header> */
-extern short uiColor_8008B590;
 extern void DrawScrollArrow_8002B3DC(EquipArrow arrow, int time, void* pos, int ot);
 
 #endif

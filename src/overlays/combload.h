@@ -46,6 +46,5 @@ extern int IsCardReady_800BAE24(int slot);
 extern void DrawCardSlotMenu_800BB4A8(int slot);
 
 /* exe-side, to move to <exe header> */
-extern unsigned short uiColor_8008B590; // -> globals.h
 
 #endif

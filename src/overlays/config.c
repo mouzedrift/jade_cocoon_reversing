@@ -444,7 +444,7 @@ void ApplyConfigSetting_800C31DC(CfgCtxConfig* c)
     case 3:
         if (configMenuActive_800C5944 != 0)
         {
-            uiColor_8008B590 = c->uiColor_F;
+            saveData_8008B570.uiColor_20.h = c->uiColor_F;
         }
         break;
     case 4:
@@ -572,7 +572,7 @@ void OpenConfigPage_800C378C(CfgCtxConfig* c)
     case 3:
         if (c->page_2 == 0)
         {
-            c->cursorPos_44 = uiColor_8008B590;
+            c->cursorPos_44 = saveData_8008B570.uiColor_20.h;
             c->scroll_46 = 0;
         }
         break;
@@ -633,7 +633,7 @@ void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
     rect[3] = 0x12;
     box.frame_B = 1;
     box.x_0 = 0x84;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&box, 0x4F, 0xE);
@@ -709,7 +709,7 @@ void DrawAudioPage_800C39C4(CfgCtxConfig* c)
     box.frame_B = 1;
     box.x_0 = 0x93;
     box.y_2 = 0x15;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.x_0 = 0x8B;
     DrawUiTiySprt_8002C06C(&box, 0xDD, 0xE);
@@ -843,7 +843,7 @@ done:
     rect[3] = 0x12;
     box.frame_B = 1;
     box.x_0 = 0x78;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&box, 0xE8, 0xE);
@@ -867,7 +867,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     box1.frame_B = 1;
     box1.colors_A = 0;
     box1.x_0 = 0x8C;
-    box1.col_8 = uiColor_8008B590;
+    box1.col_8 = saveData_8008B570.uiColor_20.h;
     box1.y_2 = 0x14;
     DrawUiTiySprt_8002C06C(&box1, 0x2A, 0xE);
     box1.x_0 = 0x8C;
@@ -947,7 +947,7 @@ void DrawVibrationPage_800C4390(CfgCtxConfig* c)
     rect[3] = 0x12;
     box.frame_B = 1;
     box.x_0 = 0x85;
-    box.col_8 = uiColor_8008B590;
+    box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.y_2 = 0x15;
     DrawUiTiySprt_8002C06C(&box, 0xAB, 0xE);
