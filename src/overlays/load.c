@@ -1162,10 +1162,10 @@ void TopMenuInput_800B9220(LoadMenuWork* work)
     }
 }
 
-#if 0
-// Not matched: only a dead byte load (lbu $v1) of the options struct in the prologue is missing
+// the self-assignment is the dead lbu of the original: reload drops the store as a no-op, the load stays
 void CardSlotInput_800B92C0(LoadMenuWork* work)
 {
+    loadMenuRows_800BDF4C[1].cursor_C = loadMenuRows_800BDF4C[1].cursor_C;
     if (IsConfirmPressed_8003D288(0, (work->flags_54 >> 6) & 1))
     {
         PlaySfx_80031494(0x7E);
@@ -1184,8 +1184,6 @@ void CardSlotInput_800B92C0(LoadMenuWork* work)
         }
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(load, CardSlotInput_800B92C0);
 
 void CheckCardTask_800B9360(LoadMenuWork* work)
 {
