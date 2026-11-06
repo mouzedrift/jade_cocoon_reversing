@@ -70,17 +70,14 @@ const int overlayAddr6_8007320C = 0x800B6D00;
 unsigned int *const mapCodeAddr_80073210 = (unsigned int *)0x800B22C0;
 /* char* data001Path_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
 
-// Matched
 signed char GetMinionElement_80019BF0(int idx)
 {
     return minionBaseStats_8007A4B4[idx].element;
 }
-// Matched
 unsigned char GetMinionEnhancementBody_80019C0C(int idx)
 {
     return minionBaseStats_8007A4B4[idx].enhancementBody;
 }
-// Matched
 UnitSkills* GetSpeciesSkills_80019C28(unsigned int idx)
 {
     if (0xC9 > idx)
@@ -89,13 +86,11 @@ UnitSkills* GetSpeciesSkills_80019C28(unsigned int idx)
     }
     return sub_800B3274(idx - 0x39);
 }
-// Matched
 MinionModelDesc* GetSpeciesModelDesc_80019C70(int idx)
 
 {
     return &speciesModelDescs_8007BD30[idx];
 }
-// Matched
 int PickArpatronOrVatolka_80019C84(void)
 {
     int species = 0x24;
@@ -115,7 +110,6 @@ extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
 // index of the camera point nearest to pos (XZ plane)
-// Matched
 int FindNearestCameraPoint_80019CC4(int* pos)
 {
     unsigned int i;
@@ -144,7 +138,6 @@ int FindNearestCameraPoint_80019CC4(int* pos)
 extern int pointLightRange_8008D3F0;      // range of the global point light (0: none)
 // Sets the GTE light and colour matrices for a model at pos + ofs, lit by the scene light (lightMatrix_80087114 row 0,
 // colour from cameraState), the global point light and the given point light; m is the model's rotation.
-// Matched
 void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATRIX* m)
 {
     MATRIX* sm;
@@ -247,7 +240,6 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
     gte_SetLightMatrix((MATRIX*)0x1F800000);
     gte_SetColorMatrix(&colorMatrix_80087134);
 }
-// Matched
 void InitSceneFade_8001A38C(void)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
@@ -262,7 +254,6 @@ void InitSceneFade_8001A38C(void)
     colorMatrix_80087134.m[1][2] = cam->lightColor_3C.vy / 4;
     colorMatrix_80087134.m[2][2] = cam->lightColor_3C.vz / 4;
 }
-// Matched
 void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
 {
     unsigned long* ot;
@@ -422,7 +413,6 @@ void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
         backColor_8008D460[2] = cameraState_8008D4F0.ambientB_32;
     }
 }
-// Matched
 void ResetSceneFade_8001A9A4(void)
 {
     SceneFade* fade;
@@ -434,13 +424,11 @@ void ResetSceneFade_8001A9A4(void)
     fade->count = 0;
     fade->flags = flags & 0xFFF0;
 }
-// Matched
 void SetSceneDark_8001A9E4(void)
 {
     unknownFlags_8008D678 |= 0x400;
     sceneBrightness_8008D40C = 0;
 }
-// Matched
 void StartSceneFadeIn_8001AA04(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
@@ -451,7 +439,6 @@ void StartSceneFadeIn_8001AA04(int duration)
     fade->flags |= 1;
     SceneFadeTask_8001A41C(task, fade);
 }
-// Matched
 void StartSceneFadeOut_8001AA50(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
@@ -463,7 +450,6 @@ void StartSceneFadeOut_8001AA50(int duration)
     fade->flags |= 2;
     SceneFadeTask_8001A41C(task, fade);
 }
-// Matched
 void StartSceneDarken_8001AAA8(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
@@ -474,13 +460,11 @@ void StartSceneDarken_8001AAA8(int duration)
     fade->flags |= 4;
     SceneFadeTask_8001A41C(task, fade);
 }
-// Matched
 void StopSceneDarken_8001AAF4(void)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
     fade->flags &= ~4;
 }
-// Matched
 void StartSceneBrighten_8001AB1C(int duration)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
@@ -491,14 +475,12 @@ void StartSceneBrighten_8001AB1C(int duration)
     fade->flags |= 8;
     SceneFadeTask_8001A41C(task, fade);
 }
-// Matched
 void StartSceneFlash_8001AB68(void)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
     fade->count = 8;
     fade->flags |= 0x10;
 }
-// Matched
 int IsSceneFadeDone_8001AB94(void)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
@@ -513,7 +495,6 @@ int IsSceneFadeDone_8001AB94(void)
     }
     return 1;
 }
-// Matched
 void SetSceneFadeFrontOT_8001ABEC(int on)
 {
     SceneFade* fade = fadeTask_8008D628->entry.buffer;
@@ -526,7 +507,6 @@ void SetSceneFadeFrontOT_8001ABEC(int on)
         fade->flags &= ~0x20;
     }
 }
-// Matched
 int GetMagicName_8001AC2C(int idx)
 {
     if (idx >= 0x1E)
@@ -535,7 +515,6 @@ int GetMagicName_8001AC2C(int idx)
     }
     return magicNames_8007C348[idx * 2];
 }
-// Matched
 int GetMagicMpCost_8001AC58(int idx)
 {
     if (idx < 0x1E)
@@ -544,7 +523,6 @@ int GetMagicMpCost_8001AC58(int idx)
     }
     return 0;
 }
-// Matched
 int GetMagicEffect_8001AC8C(int idx)
 {
     if (idx < 0x1E)
@@ -553,12 +531,10 @@ int GetMagicEffect_8001AC8C(int idx)
     }
     return 0x1A;
 }
-// Matched
 int sub_8001ACC0(int idx)
 {
     return magicData_8007C438[idx].field_5;
 }
-// Matched
 int GetMagicTargetFlags_8001ACE4(int idx)
 {
     unsigned int flags = magicData_8007C438[idx].flags_0;
@@ -573,7 +549,6 @@ int GetMagicTargetFlags_8001ACE4(int idx)
     }
     return targetFlags;
 }
-// Matched
 int GetMagicElement_8001AD30(int idx)
 {
     if (idx < 0x1E)
@@ -582,7 +557,6 @@ int GetMagicElement_8001AD30(int idx)
     }
     return 0xB;
 }
-// Matched
 ActionData* GetMagicAction_8001AD64(unsigned int idx)
 {
     if (idx < 0x1E)
@@ -591,7 +565,6 @@ ActionData* GetMagicAction_8001AD64(unsigned int idx)
     }
     return 0;
 }
-// Matched
 void ClearMagicBits_8001AD90(unsigned int* bits)
 {
     int i;
@@ -600,13 +573,11 @@ void ClearMagicBits_8001AD90(unsigned int* bits)
         bits[i] = 0;
     }
 }
-// Matched
 void SetMagicBit_8001ADAC(unsigned int* bits, unsigned int idx)
 {
     unsigned int* word = bits + (idx >> 5);
     *word |= 1 << (idx & 0x1F);
 }
-// Matched
 void OrMagicBits_8001ADD4(unsigned int* dst, unsigned int* src)
 {
     int i;
@@ -615,19 +586,16 @@ void OrMagicBits_8001ADD4(unsigned int* dst, unsigned int* src)
         *dst++ |= *src++;
     }
 }
-// Matched
 void ClearMagicBit_8001AE00(unsigned int* bits, unsigned int idx)
 {
     unsigned int* word = bits + (idx >> 5);
     *word &= ~(1 << (idx & 0x1F));
 }
-// Matched
 int TestMagicBit_8001AE2C(unsigned int* bits, unsigned int idx)
 {
     unsigned int* word = bits + (idx >> 5);
     return (*word & (1 << (idx & 0x1F))) != 0;
 }
-// Matched
 int CountMagicBits_8001AE54(unsigned int* bits)
 {
     int i = 0;
@@ -642,11 +610,9 @@ int CountMagicBits_8001AE54(unsigned int* bits)
     return count;
 }
 // called by MENU's OnMinionLevelUp_800BCF74 with the minion's dominant species, status and magic bits
-// Matched
 void MinionLevelUpHook_8001AEB8(int species, UnitStatus* status, int magicBits)
 {
 }
-// Matched
 int FindNthMagicBit_8001AEC0(unsigned int* bits, int n)
 {
     int cnt = 0;
@@ -664,7 +630,6 @@ int FindNthMagicBit_8001AEC0(unsigned int* bits, int n)
     }
     return 0x1E;
 }
-// Matched
 int GetMagicIcon_8001AF3C(int idx)
 {
     if (idx < 0x1E)
@@ -673,7 +638,6 @@ int GetMagicIcon_8001AF3C(int idx)
     }
     return 0;
 }
-// Matched
 void DrawIntroMovie_8001AF64(void* descs)
 {
     void* list;
@@ -745,7 +709,6 @@ void DrawIntroMovie_8001AF64(void* descs)
     DrawSync(0);
     FreeEventList_80043A5C(list);
 }
-// Matched
 void InitMovie_8001B1B0(void)
 {
     bStopDrawingMovie_8008D45C = 0;
@@ -760,14 +723,12 @@ void InitMovie_8001B1B0(void)
     unknownFlags_8008D678 &= ~0x200;
     RestartDisplay_8001B230();
 }
-// Matched
 void RestartDisplay_8001B230(void)
 {
     unknownFlags_8008D678 &= ~0x10;
     displayStartFrames_800918BC = 0;
     unknownFlags_8008D678 |= 0x40;
 }
-// Matched
 void ClearOTagRAll_8001B260(void)
 {
     ResetFtgSpriteVtx_8004D924();
@@ -789,7 +750,6 @@ void ClearOTagRAll_8001B260(void)
     ClearOTagR(pOT_8008D78C, 1);
     ClearOTagR(pOT_8008D3EC, 1);
 }
-// Matched
 void AddPrimsAll_8001B3C8(void)
 {
     char pad[20];
@@ -820,7 +780,6 @@ void AddPrimsAll_8001B3C8(void)
         }
     }
 }
-// Matched
 void DrawFrozenFrame_8001B540(void)
 {
     if (unknownFlags_8008D678 & 8)
@@ -842,7 +801,6 @@ void DrawFrozenFrame_8001B540(void)
         unknownFlags_8008D678 &= ~0x80;
     }
 }
-// Matched
 void Draw_8001B5EC(void)
 {
     int ode;
@@ -867,7 +825,6 @@ void Draw_8001B5EC(void)
     vsyncCounter_8008B4B4 = 0;
     vsyncCounter_8008B4B4 = 0;
 }
-// Matched
 int WaitVSync_8001B6E8()
 {
     int snapshot = vsyncCounter_8008B4B4;
@@ -876,7 +833,6 @@ int WaitVSync_8001B6E8()
     } while (vsyncCounter_8008B4B4 <= snapshot);
     return gnFrame_8008D610;
 }
-// Matched
 void StartDisplay_8001B714(void)
 {
     if ((unsigned int)displayStartFrames_800918BC < 2)
@@ -900,7 +856,6 @@ extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
 extern DRAWENV* SetDefDrawEnv(DRAWENV* env, int x, int y, int w, int h);
 extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
-// Matched
 void InitEnvironments_8001B7B4(void)
 {
     int interlace;
@@ -937,7 +892,6 @@ void InitEnvironments_8001B7B4(void)
     SetGeomScreen(geomScreenDistance_8008B548);
     SetFarColor(0, 0, 0);
 }
-// Matched
 void InitSprt_8001B9A0(int buffer)
 {
     SPRT sprt;
@@ -980,7 +934,6 @@ void InitSprt_8001B9A0(int buffer)
         }
     }
 }
-// Matched
 void FadeToBlackStep_8001BB28(void)
 {
     POLY_F4 poly;
@@ -1014,7 +967,6 @@ void FadeToBlackStep_8001BB28(void)
         fadeFlags_800918B0 &= ~1;
     }
 }
-// Matched
 void FadeToWhiteStep_8001BC00(void)
 {
     POLY_F4 poly;
@@ -1048,12 +1000,10 @@ void FadeToWhiteStep_8001BC00(void)
         fadeFlags_800918B0 &= ~2;
     }
 }
-// Matched
 void SetMotionBlur_8001BCD8(int on)
 {
     motionBlurOn_800918C4 = on;
 }
-// Matched
 void DrawMotionBlur_8001BCE4(int buffer)
 {
     SPRT sprt;
@@ -1102,7 +1052,6 @@ void DrawMotionBlur_8001BCE4(int buffer)
         }
     }
 }
-// Matched
 void LoadDecodedImage_8001BEC8(void)
 {
     RECT rect;
@@ -1120,7 +1069,6 @@ void LoadDecodedImage_8001BEC8(void)
         data += 0x200;
     } while (rect.x < 0x280);
 }
-// Matched
 void ProcessPads_8001BF50(void)
 {
     int i;
@@ -1130,7 +1078,6 @@ void ProcessPads_8001BF50(void)
         UpdatePadVibration_80036820(i);
     }
 }
-// Matched
 void InitPrimBuffers_8001BF90(void)
 {
     if (unknownFlags_8008D678 & 0x200)
@@ -1148,7 +1095,6 @@ void InitPrimBuffers_8001BF90(void)
         primBufferStart_800960A0[1] = 0x801E8000;
     }
 }
-// Matched
 void StartScreenFlash_8001C02C(unsigned char* rgb)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(screenFlashTasks_8008D61C);
@@ -1163,7 +1109,6 @@ void StartScreenFlash_8001C02C(unsigned char* rgb)
         entry->cb_8 = (EventEntryFn)ScreenFlashTask_8001C0B4;
     }
 }
-// Matched
 void ScreenFlashTask_8001C0B4(EventEntry* entry, int* state)
 {
     POLY_F4 poly;
@@ -1199,7 +1144,6 @@ void ScreenFlashTask_8001C0B4(EventEntry* entry, int* state)
     dr.code[0] = 0xE1000220;
     AddPrimCopy_80040298(pOT_8008D5F4, &dr, 2);
 }
-// Matched
 void SetFadeMode_8001C19C(unsigned int mode, int frames) // frames is unused
 {
     switch (mode)
@@ -1220,18 +1164,15 @@ void SetFadeMode_8001C19C(unsigned int mode, int frames) // frames is unused
         break;
     }
 }
-// Matched
 void FreezeScreen_8001C224(void)
 {
     unknownFlags_8008D678 |= 8;
     frozenFrames_800918B8 = 0;
 }
-// Matched
 void CancelFade_8001C244(void)
 {
     unknownFlags_8008D678 &= ~2;
 }
-// Matched
 void BeginFade_8001C260(void)
 {
     if (!(unknownFlags_8008D678 & 2))
@@ -1239,31 +1180,26 @@ void BeginFade_8001C260(void)
         unknownFlags_8008D678 |= 2;
     }
 }
-// Matched
 void EndFade_8001C290(void)
 {
     unknownFlags_8008D678 &= ~2;
     unknownFlags_8008D678 |= 0x10;
     unknownFlags_8008D678 |= 0x80;
 }
-// Matched
 void StartFadeToBlack_8001C2CC(void)
 {
     fadeFlags_800918B0 = 1;
     fadeFrame_800918B4 = 0;
 }
-// Matched
 void StartFadeToWhite_8001C2E4(void)
 {
     fadeFlags_800918B0 = 2;
     fadeFrame_800918B4 = 0;
 }
-// Matched
 int IsFadeDone_8001C2FC()
 {
     return (fadeFlags_800918B0 & 3) == 0;
 }
-// Matched
 IdEntry* FindItemById_8001C314(IdEntryList* list, int id)
 {
     IdEntry* found = 0;
@@ -1277,7 +1213,6 @@ IdEntry* FindItemById_8001C314(IdEntryList* list, int id)
     }
     return found;
 }
-// Matched
 void PlayAnimFrameSfx_8001C364(Model* model, int idx, int frame)
 {
     ModelAnim* anim = &model->anims_54[idx];
@@ -1299,7 +1234,6 @@ void PlayAnimFrameSfx_8001C364(Model* model, int idx, int frame)
         }
     }
 }
-// Matched
 void RunAnimFrameCues_8001C440(Model* model, int idx, int frame)
 {
     ModelAnim* anim = (ModelAnim*)(idx * 28 + (int)model->anims_54); // integer sum: the original adds the base second
@@ -1365,7 +1299,6 @@ void RunAnimFrameCues_8001C440(Model* model, int idx, int frame)
         }
     }
 }
-// Matched
 void ResetPadAnalogMax_8001C69C(void)
 {
     int i;
@@ -1375,7 +1308,6 @@ void ResetPadAnalogMax_8001C69C(void)
         padAnalogMax_800918E0[i][0] = 0;
     }
 }
-// Matched
 void ResetButtonConfig_8001C6C8(void)
 {
     unsigned short* config = saveData_8008B570.buttonConfig_8;
@@ -1386,12 +1318,10 @@ void ResetButtonConfig_8001C6C8(void)
         SetButtonConfigEntry_8001C810((short*)config++, *defaults++);
     }
 }
-// Matched
 int TestAnyBits_8001C72C(unsigned int value, unsigned int mask)
 {
     return (value & (unsigned short)mask) != 0;
 }
-// Matched
 int TestAllBits_8001C73C(unsigned int value, unsigned int mask)
 {
     mask = (unsigned short)mask;
@@ -1401,7 +1331,6 @@ int TestAllBits_8001C73C(unsigned int value, unsigned int mask)
     }
     return (value & mask) == mask;
 }
-// Matched
 int FindButtonConfig_8001C75C(unsigned int button)
 {
     unsigned short* config = saveData_8008B570.buttonConfig_8;
@@ -1417,7 +1346,6 @@ int FindButtonConfig_8001C75C(unsigned int button)
     }
     return -1;
 }
-// Matched
 void SwapButtonConfig_8001C79C(int i, int j)
 {
     unsigned short* base = saveData_8008B570.buttonConfig_8;
@@ -1428,17 +1356,14 @@ void SwapButtonConfig_8001C79C(int i, int j)
     SetButtonConfigEntry_8001C810((short*)entryI, bj);
     SetButtonConfigEntry_8001C810((short*)entryJ, bi);
 }
-// Matched
 void SetButtonConfigEntry_8001C810(short* entry, unsigned short button)
 {
     *entry = button;
 }
-// Matched
 unsigned short GetButtonConfigEntry_8001C818(unsigned short* entry)
 {
     return *entry;
 }
-// Matched
 int GetButtonConfigBitIndex_8001C824(int idx)
 {
     int i;
@@ -1452,7 +1377,6 @@ int GetButtonConfigBitIndex_8001C824(int idx)
     }
     return i;
 }
-// Matched
 unsigned int GetButtonConfig_8001C874(int idx)
 {
     unsigned short* config = saveData_8008B570.buttonConfig_8;
@@ -1463,7 +1387,6 @@ unsigned int GetButtonConfig_8001C874(int idx)
     }
     return *config;
 }
-// Matched
 unsigned int FirstPadButtonBit_8001C8A0(short mask)
 {
     unsigned int found = 1;
@@ -1484,7 +1407,6 @@ unsigned int FirstPadButtonBit_8001C8A0(short mask)
     } while (i < 10);
     return found;
 }
-// Matched
 void ProcessPad_8001C8E8(int port)
 {
     int i;
@@ -1690,7 +1612,6 @@ const char aBlueBead_8007403C[] = "\202a\202\214\202\225\202\205\201@\202a\202\2
 const char aSilverHeadband_80074050[] = "\202r\202\211\202\214\202\226\202\205\202\222\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Silver Headband
 const char aIronHeadband_80074070[] = "\202h\202\222\202\217\202\216\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Iron Headband
 const char aLeatherHeadband_8007408C[] = "\202k\202\205\202\201\202\224\202\210\202\205\202\222\201@\202g\202\205\202\201\202\204\202\202\202\201\202\216\202\204"; // Leather Headband
-// Matched
 void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate)
 {
     int i;
@@ -1721,7 +1642,6 @@ void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rat
         }
     }
 }
-// Matched
 void UpdatePadAnalog_8001CC04(int port)
 {
     signed char* stick;
@@ -1775,7 +1695,6 @@ void UpdatePadAnalog_8001CC04(int port)
         max[1] = value;
     }
 }
-// Matched
 void ResetPadHoldFrames_8001CD04(int port)
 {
     int i;
@@ -1784,27 +1703,22 @@ void ResetPadHoldFrames_8001CD04(int port)
         padHoldFrames_80091950[port][i] = 0;
     }
 }
-// Matched
 int ReturnZero_8001CD34(void)
 {
     return 0;
 }
-// Matched
 int GetPersonName_8001CD3C(int idx)
 {
     return personNames_8007CB20[idx];
 }
-// Matched
 unsigned char* GetPersonMergeInfo_8001CD58(int idx)
 {
     return personMergeInfo_8007CB4C[idx];
 }
-// Matched
 int GetPersonIcon_8001CD6C(int idx)
 {
     return 0x36;
 }
-// Matched
 unsigned char* GetAccessoryModifiers_8001CD74(unsigned int idx)
 {
     if (idx >= 0x11)
@@ -1813,7 +1727,6 @@ unsigned char* GetAccessoryModifiers_8001CD74(unsigned int idx)
     }
     return accessoryModifiers_8007D848[idx];
 }
-// Matched
 unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx)
 {
     if (idx >= 0xF)
@@ -1822,7 +1735,6 @@ unsigned char* GetArmorModifiers_8001CDA0(unsigned int idx)
     }
     return armorModifiers_8007D598[idx];
 }
-// Matched
 unsigned char GetItemEffect_8001CDCC(unsigned int idx)
 {
     if (idx < 0x2B)
@@ -1831,7 +1743,6 @@ unsigned char GetItemEffect_8001CDCC(unsigned int idx)
     }
     return 0x22;
 }
-// Matched
 ActionData* GetItemData_8001CDF4(unsigned int idx)
 {
     if (idx < 0x2B)
@@ -1840,7 +1751,6 @@ ActionData* GetItemData_8001CDF4(unsigned int idx)
     }
     return 0;
 }
-// Matched
 int GetItemName_8001CE20(unsigned int idx)
 {
     if (idx >= 0x2B)
@@ -1849,22 +1759,18 @@ int GetItemName_8001CE20(unsigned int idx)
     }
     return itemNames_8007CB78[idx];
 }
-// Matched
 int ReturnZero_8001CE4C(void)
 {
     return 0;
 }
-// Matched
 int GetItemPrice_8001CE54(int idx)
 {
     return itemPrices_8007CED8[idx];
 }
-// Matched
 unsigned short GetItemFlags_8001CE70(int idx)
 {
     return itemFlags_8007CC50[idx];
 }
-// Matched
 int GetItemTargetFlags_8001CE8C(int idx)
 {
     unsigned short flags = itemFlags_8007CC50[idx];
@@ -1879,17 +1785,14 @@ int GetItemTargetFlags_8001CE8C(int idx)
     }
     return targetFlags;
 }
-// Matched
 unsigned char GetItemFlagsLow_8001CED0(int idx)
 {
     return *(unsigned char*)&itemFlags_8007CC50[idx];
 }
-// Matched
 int ReturnOne_8001CEEC(void)
 {
     return 1;
 }
-// Matched
 int* GetWeaponStatBonus_8001CEF4(unsigned int idx)
 {
     if (idx >= 0x17)
@@ -1898,7 +1801,6 @@ int* GetWeaponStatBonus_8001CEF4(unsigned int idx)
     }
     return (int*)weaponData_8007D04C[idx].statBonus_4;
 }
-// Matched
 int GetWeaponName_8001CF20(unsigned int idx)
 {
     if (idx >= 0x17)
@@ -1907,7 +1809,6 @@ int GetWeaponName_8001CF20(unsigned int idx)
     }
     return weaponNames_8007CFF0[idx];
 }
-// Matched
 int GetWeaponPrice_8001CF4C(unsigned int idx)
 {
     if (idx >= 0x17)
@@ -1916,7 +1817,6 @@ int GetWeaponPrice_8001CF4C(unsigned int idx)
     }
     return weaponPrices_8007D388[idx] * 10;
 }
-// Matched
 EquipmentData* GetWeaponData_8001CF84(unsigned int idx)
 {
     if (idx >= 0x17)
@@ -1925,7 +1825,6 @@ EquipmentData* GetWeaponData_8001CF84(unsigned int idx)
     }
     return &weaponData_8007D04C[idx];
 }
-// Matched
 int* GetArmorStatBonus_8001CFB0(unsigned int idx)
 {
     if (idx >= 0xF)
@@ -1934,7 +1833,6 @@ int* GetArmorStatBonus_8001CFB0(unsigned int idx)
     }
     return (int*)armorData_8007D420[idx].statBonus_4;
 }
-// Matched
 int GetArmorName_8001CFDC(unsigned int idx)
 {
     if (idx >= 0xF)
@@ -1943,7 +1841,6 @@ int GetArmorName_8001CFDC(unsigned int idx)
     }
     return armorNames_8007D3E4[idx];
 }
-// Matched
 int GetArmorPrice_8001D008(unsigned int idx)
 {
     if (idx >= 0xF)
@@ -1952,7 +1849,6 @@ int GetArmorPrice_8001D008(unsigned int idx)
     }
     return armorPrices_8007D64C[idx];
 }
-// Matched
 EquipmentData* GetArmorData_8001D034(unsigned int idx)
 {
     if (idx >= 0xF)
@@ -1961,12 +1857,10 @@ EquipmentData* GetArmorData_8001D034(unsigned int idx)
     }
     return &armorData_8007D420[idx];
 }
-// Matched
 int GetArmorOutfit_8001D060(int idx)
 {
     return armorOutfits_8007D588[idx];
 }
-// Matched
 int* GetAccessoryStatBonus_8001D078(unsigned int idx)
 {
     if (idx >= 0x11)
@@ -1975,7 +1869,6 @@ int* GetAccessoryStatBonus_8001D078(unsigned int idx)
     }
     return (int*)accessoryData_8007D6B0[idx].statBonus_4;
 }
-// Matched
 int GetAccessoryName_8001D0A4(unsigned int idx)
 {
     if (idx >= 0x11)
@@ -1984,7 +1877,6 @@ int GetAccessoryName_8001D0A4(unsigned int idx)
     }
     return accessoryNames_8007D66C[idx];
 }
-// Matched
 int GetAccessoryPrice_8001D0D0(unsigned int idx)
 {
     if (idx >= 0x11)
@@ -1993,7 +1885,6 @@ int GetAccessoryPrice_8001D0D0(unsigned int idx)
     }
     return accessoryPrices_8007D914[idx];
 }
-// Matched
 EquipmentData* GetAccessoryData_8001D0FC(unsigned int idx)
 {
     if (idx >= 0x11)
@@ -2002,7 +1893,6 @@ EquipmentData* GetAccessoryData_8001D0FC(unsigned int idx)
     }
     return &accessoryData_8007D6B0[idx];
 }
-// Matched
 int GetEquipmentName_8001D128(int idx, unsigned int kind)
 {
     int name = 0;
@@ -2020,7 +1910,6 @@ int GetEquipmentName_8001D128(int idx, unsigned int kind)
     }
     return name;
 }
-// Matched
 EquipmentData* GetEquipmentData_8001D190(unsigned int idx, unsigned int kind)
 {
     EquipmentData* data = 0;
@@ -2038,7 +1927,6 @@ EquipmentData* GetEquipmentData_8001D190(unsigned int idx, unsigned int kind)
     }
     return data;
 }
-// Matched
 int GetEquipmentPrice_8001D1F8(int idx, unsigned int kind)
 {
     int price = 0;
@@ -2056,7 +1944,6 @@ int GetEquipmentPrice_8001D1F8(int idx, unsigned int kind)
     }
     return price;
 }
-// Matched
 ActionData* GetLevantWeaponAction_8001D260(void)
 {
     unsigned int weapon = GetEquippedId_800AD990(0);
@@ -2066,7 +1953,6 @@ ActionData* GetLevantWeaponAction_8001D260(void)
     }
     return 0;
 }
-// Matched
 int GetItemIcon_8001D2AC(int idx)
 {
     if (idx < 0x2B)
@@ -2075,7 +1961,6 @@ int GetItemIcon_8001D2AC(int idx)
     }
     return 0xFF;
 }
-// Matched
 int GetEquipmentIcon_8001D2D4(int idx, int kind)
 {
     EquipmentData* data = GetEquipmentData_8001D190(idx, kind);
@@ -2085,7 +1970,6 @@ int GetEquipmentIcon_8001D2D4(int idx, int kind)
     }
     return 0x24;
 }
-// Matched
 char* GetKeyItemName_8001D318(unsigned int idx)
 {
     if (idx >= 0x26)
@@ -2094,7 +1978,6 @@ char* GetKeyItemName_8001D318(unsigned int idx)
     }
     return keyItemNames_8007CF30[idx];
 }
-// Matched
 int GetKeyItemIcon_8001D344(int idx)
 {
     if (idx < 0x26)
@@ -2103,12 +1986,10 @@ int GetKeyItemIcon_8001D344(int idx)
     }
     return 0x24;
 }
-// Matched
 int IsKnowledgeKeyItem_8001D36C(int id)
 {
     return (unsigned int)(id - 0x19) < 0xD;
 }
-// Matched
 void InitActors_8001D378(void)
 {
     ResetModelLoader_800204D0();
@@ -2117,7 +1998,6 @@ void InitActors_8001D378(void)
     ListInit_8003FDB0(&actorHeap_80091990);
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
 }
-// Matched
 void FreeActors_8001D3C4(int freeModels)
 {
     if (freeModels != 0)
@@ -2130,7 +2010,6 @@ void FreeActors_8001D3C4(int freeModels)
     StopAllEventEntries_80043B40(actorTasks_8008D43C);
     ClearModelAnimRefs_800201A4();
 }
-// Matched
 void UpdateActorCb_8001D41C(EventEntry* entry, void* actor)
 {
     UpdateActorScript_8001EA28(actor);
@@ -2138,7 +2017,6 @@ void UpdateActorCb_8001D41C(EventEntry* entry, void* actor)
     UpdateActorAnimLoad_8001F918(actor);
     UpdateActor_8001F9AC(actor);
 }
-// Matched
 Actor* CreateActor_8001D45C(ActorDesc* desc)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(actorTasks_8008D43C);
@@ -2154,7 +2032,6 @@ Actor* CreateActor_8001D45C(ActorDesc* desc)
     }
     return 0;
 }
-// Matched
 Actor* CloneActor_8001D4DC(Actor* src, int kind, int clutRow, int hasMatrices)
 {
     ActorDesc desc;
@@ -2184,7 +2061,6 @@ Actor* CloneActor_8001D4DC(Actor* src, int kind, int clutRow, int hasMatrices)
     SetActorGroundMove_8001D68C(clone, (src->flags_4 >> 18) & 1);
     return clone;
 }
-// Matched
 void DestroyActor_8001D600(Actor* actor)
 {
     EventEntry* entry = actor->task_0;
@@ -2192,7 +2068,6 @@ void DestroyActor_8001D600(Actor* actor)
     FreeActorBones_8001EA00(actor);
     entry->flags = (entry->flags & ~1) | 0x8000;
 }
-// Matched
 void SetActorActive_8001D658(Actor* actor, int on)
 {
     EventEntry* entry = actor->task_0;
@@ -2205,7 +2080,6 @@ void SetActorActive_8001D658(Actor* actor, int on)
         entry->flags |= 0x8000;
     }
 }
-// Matched
 void SetActorGroundMove_8001D68C(Actor* actor, int on)
 {
     if (on)
@@ -2217,7 +2091,6 @@ void SetActorGroundMove_8001D68C(Actor* actor, int on)
         actor->flags_4 &= ~0x40000;
     }
 }
-// Matched
 void SetActorRootMotion_8001D6BC(Actor* actor, int on)
 {
     if (on)
@@ -2229,7 +2102,6 @@ void SetActorRootMotion_8001D6BC(Actor* actor, int on)
         actor->flags_4 &= ~0x1000000;
     }
 }
-// Matched
 void SetActorAnimPaused_8001D6EC(Actor* actor, int on)
 {
     if (on)
@@ -2241,12 +2113,10 @@ void SetActorAnimPaused_8001D6EC(Actor* actor, int on)
         actor->flags_4 &= ~4;
     }
 }
-// Matched
 void RestartActorMotion_8001D71C(Actor* actor)
 {
     actor->flags_4 |= 8;
 }
-// Matched
 void SetActorVisible_8001D730(Actor* actor, int on)
 {
     if (on)
@@ -2258,7 +2128,6 @@ void SetActorVisible_8001D730(Actor* actor, int on)
         actor->flags_4 |= 0x2000;
     }
 }
-// Matched
 void SetActorAnim_8001D760(Actor* actor, int idx, int mode, int restart)
 {
     int base;
@@ -2294,12 +2163,10 @@ void SetActorAnim_8001D760(Actor* actor, int idx, int mode, int restart)
         actor->flags_4 |= 0x10;
     }
 }
-// Matched
 int IsActorAnimLoadIdle_8001D8A8(Actor* actor)
 {
     return actor->animLoadState_10 == 0;
 }
-// Matched
 void RequestActorAnim_8001D8B4(Actor* actor, int idx)
 {
     if (actor->anims_148[idx].kind_1 == 0)
@@ -2311,7 +2178,6 @@ void RequestActorAnim_8001D8B4(Actor* actor, int idx)
         }
     }
 }
-// Matched
 void ReleaseActorAnim_8001D92C(Actor* actor, int idx)
 {
     ActorAnim* anim;
@@ -2331,7 +2197,6 @@ void ReleaseActorAnim_8001D92C(Actor* actor, int idx)
     }
     ReleaseModelAnim_800203B0(actor->modelRef_16, actor->task_0->index_4, key);
 }
-// Matched
 void SkipActorAnimToEnd_8001D9B0(Actor* actor)
 {
     if (!(actor->flags_D4 & 2))
@@ -2341,7 +2206,6 @@ void SkipActorAnimToEnd_8001D9B0(Actor* actor)
         actor->flags_4 |= 0x4000;
     }
 }
-// Matched
 void StartActorFadeIn_8001D9E4(Actor* actor, int div, int flags)
 {
     actor->fade_20 = 0;
@@ -2350,7 +2214,6 @@ void StartActorFadeIn_8001D9E4(Actor* actor, int div, int flags)
     actor->flags_4 |= flags;
     actor->flags_4 &= ~0x40;
 }
-// Matched
 void StartActorFadeOut_8001DA08(Actor* actor, int div, int flags)
 {
     actor->fade_20 = 0;
@@ -2359,14 +2222,12 @@ void StartActorFadeOut_8001DA08(Actor* actor, int div, int flags)
     actor->flags_4 |= flags;
     actor->flags_4 &= ~0x20;
 }
-// Matched
 void StopActorFade_8001DA2C(Actor* actor)
 {
     actor->fade_20 = 0;
     actor->fadeDiv_22 = 0;
     actor->flags_4 &= 0xBFFFF81F;
 }
-// Matched
 void StartActorScale_8001DA4C(Actor* actor, int div, int from, int to)
 {
     if (from < 0)
@@ -2388,7 +2249,6 @@ void StartActorScale_8001DA4C(Actor* actor, int div, int from, int to)
         actor->flags_4 |= 3;
     }
 }
-// Matched
 void SetActorTint_8001DAAC(Actor* actor, int tint)
 {
     if (tint != 0)
@@ -2401,7 +2261,6 @@ void SetActorTint_8001DAAC(Actor* actor, int tint)
         actor->flags_4 &= ~0x800;
     }
 }
-// Matched
 void SetActorTurnTarget_8001DB00(Actor* actor, int* target, int step)
 {
     if (target != 0)
@@ -2417,7 +2276,6 @@ void SetActorTurnTarget_8001DB00(Actor* actor, int* target, int step)
         actor->flags_4 &= ~0x4000000;
     }
 }
-// Matched
 void SetActorSpeedScale_8001DB58(Actor* actor, int scale, int on)
 {
     if (on)
@@ -2431,7 +2289,6 @@ void SetActorSpeedScale_8001DB58(Actor* actor, int scale, int on)
         actor->flags_4 &= ~0x20000000;
     }
 }
-// Matched
 void SetActorScript_8001DB98(Actor* actor, unsigned char* script)
 {
     unsigned char* cmd;
@@ -2454,13 +2311,11 @@ void SetActorScript_8001DB98(Actor* actor, unsigned char* script)
         cmd += cmd[1] * 4;
     }
 }
-// Matched
 void StartActorScript_8001DC34(void* actor, void* script)
 {
     SetActorScript_8001DB98(actor, script);
     RunActorScript_8001EA48(actor);
 }
-// Matched
 int ApproachActorTarget_8001DC60(Actor* actor, VECTOR* target, int turnStep, int range)
 {
     unsigned int dist;
@@ -2495,7 +2350,6 @@ int ApproachActorTarget_8001DC60(Actor* actor, VECTOR* target, int turnStep, int
     TurnActorTowards_8001DDFC(actor, target, turnStep);
     return 0;
 }
-// Matched
 int TurnActorBy_8001DD44(Actor* actor, int dir, int amount, int maxStep)
 {
     int step;
@@ -2519,7 +2373,6 @@ int TurnActorBy_8001DD44(Actor* actor, int dir, int amount, int maxStep)
     left = amount - maxStep;
     return left < 0 ? 0 : (amount < left ? amount : left);
 }
-// Matched
 int TurnActorTowards_8001DDFC(Actor* actor, VECTOR* target, int step)
 {
     VECTOR delta;
@@ -2545,7 +2398,6 @@ int TurnActorTowards_8001DDFC(Actor* actor, VECTOR* target, int step)
     actor->rot_5C[1] += actor->turn_194.output_C.low;
     return 0;
 }
-// Matched
 int FindActorInFront_8001DECC(Actor* actor, int range, int checkLevant)
 {
     EventNode* node;
@@ -2578,7 +2430,6 @@ int FindActorInFront_8001DECC(Actor* actor, int range, int checkLevant)
     }
     return found;
 }
-// Matched
 int IsActorNear_8001DFC8(Actor* actor, VECTOR* target, int range, int checkLevant)
 {
     EventNode* node;
@@ -2612,7 +2463,6 @@ int IsActorNear_8001DFC8(Actor* actor, VECTOR* target, int range, int checkLevan
     }
     return 0;
 }
-// Matched
 int IsInFrontWithinRange_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned int range)
 {
     VECTOR delta;
@@ -2635,12 +2485,10 @@ int IsInFrontWithinRange_8001E0F4(VECTOR* from, int angle, VECTOR* to, unsigned 
     }
     return 0;
 }
-// Matched
 int IsActorIdle_8001E1C8(Actor* actor)
 {
     return (actor->flags_4 & 0x280000) == 0;
 }
-// Matched
 int IsActorActionReady_8001E1DC(Actor* actor)
 {
     if (actor->effect_130 >= 0)
@@ -2663,13 +2511,11 @@ int IsActorActionReady_8001E1DC(Actor* actor)
     }
     return 1;
 }
-// Matched
 int StartActorAction_8001E254(Actor* actor, void* desc)
 {
     actor->flags_4 = (actor->flags_4 & 0xFFFDFFFF) | 0x600000;
     return SetActorAction_8001E34C(actor, desc);
 }
-// Matched
 void TriggerActorEffect_8001E28C(Actor* actor)
 {
     ActorEffectReq req;
@@ -2693,7 +2539,6 @@ void TriggerActorEffect_8001E28C(Actor* actor)
         StopActorScript_8001EFC4(actor);
     }
 }
-// Matched
 int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
 {
     int hitStart;
@@ -2770,7 +2615,6 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
     actor->flags_4 = flags;
     return hitStart;
 }
-// Matched
 void InitActor_8001E574(Actor* actor, ActorDesc* desc)
 {
     Model* m;
@@ -2861,7 +2705,6 @@ void InitActor_8001E574(Actor* actor, ActorDesc* desc)
     FirFilterInit_8001450C(actor->turnFilterBuf_1A4, &actor->turn_194, turnFilterCoeffs_800795A0, 8);
     SetActorAnim_8001D760(actor, desc->animIdx_20, desc->frame_24, 0);
 }
-// Matched
 void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc)
 {
     short* bones;
@@ -2929,13 +2772,11 @@ void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc)
         actor->boneMatrices_1C8 = 0;
     }
 }
-// Matched
 void FreeActorBones_8001EA00(Actor* actor)
 {
     int mem = (int)actor->bones_134;
     ListFree_8003FE38(&actorHeap_80091990, (void*)mem);
 }
-// Matched
 void UpdateActorScript_8001EA28(void* actor)
 {
     RunActorScript_8001EA48(actor);

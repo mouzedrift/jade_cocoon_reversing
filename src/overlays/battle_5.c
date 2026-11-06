@@ -136,7 +136,6 @@ void EnemyWindowsLayoutTask_800BFDEC()
     }
 }
 
-// Matched
 void EnemyWindowTask_800C0074(EventEntry* task, void* arg)
 {
     int slot;
@@ -188,7 +187,6 @@ void StartActorWindow_800C01D8()
 }
 
 
-// Matched
 void ActorWindowTask_800C0254(EventEntry* task, void* arg)
 {
     BatAnimWindow* win;
@@ -252,7 +250,6 @@ void StartHelpWindow_800C0440()
 }
 
 // Draws the battle help window text (with the empty-cocoon count for help text 9); the void* task buffer is copied into a typed local
-// Matched
 void HelpWindowTask_800C04A4(EventEntry* task, void* buf)
 {
     BatAnimWindow* win = buf;
@@ -450,7 +447,6 @@ int GetElementModelAngle_800C0904(unsigned char* elements)
     return angle;
 }
 
-// Matched
 int CalcElementAngle_800C09D4(unsigned char* elements)
 {
     int t2, t1, t4, t3, t5, t6, t7, t8;
@@ -578,7 +574,6 @@ void TurnSummonedMinionToward_800C0DB0(int pos)
     SetActorTurnTarget_8001DB00(summonedActor_800C9190.actor_0, pos, 0x55);
 }
 
-// Matched
 BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BattleCmd* cmd, int isReaction)
 {
     BatRawTiming timing;
@@ -741,7 +736,6 @@ typedef struct BatDrop
     EffectSprite* anim_40;
 } BatDrop;
 
-// Matched
 void DropSpriteTask_800C1220(EventEntry* task, BatDrop* drop)
 {
     int pos[3];
@@ -777,7 +771,6 @@ void DropSpriteTask_800C1220(EventEntry* task, BatDrop* drop)
     DrawRotSprite_80044010(&sprite->poly_C, pos, drop->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, size, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
-// Matched
 void DropTrailTask_800C1450(EventEntry* task, BatDropTrail* trail)
 {
     int pos[3];
@@ -927,7 +920,6 @@ void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
 
 // SpriteAnimTask_800C1B2C: draws the current frame of a sprite animation at spark->pos_10 and advances it by speed_8; ends the task after the last frame
 // (the buffer arrives as void* and is copied into a typed local: a typed param keeps its doubled REG_EQUIV live length and loses s0)
-// Matched
 void SpriteAnimTask_800C1B2C(EventEntry* task, void* buf)
 {
     BatSpark* spark = buf;
@@ -1084,7 +1076,6 @@ void RisingSparkTask_800C2170(EventEntry* task, BatSpark* spark)
 
 // ShatterTask_800C23D0: after 30 frames plays sfx 0x4F, spawns a burst sprite and 24 ShardTask_800C273C shards flying out from src->pos_10
 // (the buffer arrives as void* and is copied into a typed local: a typed param keeps its doubled REG_EQUIV live length and loses s5)
-// Matched
 void ShatterTask_800C23D0(EventEntry* task, void* buf)
 {
     int i;
@@ -1373,7 +1364,6 @@ int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY)
 }
 
 // Plays one frame of an effect clip's keyed model animation; the void* task buffer is copied into a typed local
-// Matched
 void ModelAnimTask_800C33E4(EventEntry* task, void* buf)
 {
     BatModelAnim* anim = buf;
@@ -1482,7 +1472,6 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
 }
 
 
-// Matched
 void SpawnOrb_800C3B50(int* pos, int id)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);

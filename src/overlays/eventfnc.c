@@ -8,7 +8,6 @@ const char aColiC_800B6D2C[8] = "COLI.C\000$";
 
 // FindLevantMesh_800B80C8 is inlined; the edge points are written through `(edgePts + i * 2)->` so the address is
 // expanded as an address sum (index term first), as in the original.
-// Matched
 int CollideLevantWithMap_800B6DD4(EvEntity* ent)
 {
     EvSVec edgePts[4];
@@ -137,7 +136,6 @@ int CollideWithMap_800B716C(EvVec* pos, int* prevPos, SVECTOR* rot)
 // clears the pad_6 edge flag of every vertex, then sets it to -1 where the edge (v, v+1) of a triangle is shared
 // (same x/z, either direction) with another triangle of the same mesh. The vertices are re-indexed in every test
 // (a named pointer to t's vertex gets its loads hoisted out of the b loop)
-// Matched
 void MarkSharedEdges_800B73C0(MapMesh* m, int n)
 {
     int i;
@@ -272,7 +270,6 @@ int FindTriAtXZ_800B76B8(MapMesh* mesh, EvVec* pos)
 
 // finds the first unshared edge (pad_6 == 0) of mesh m crossed by the segment p-q in x/z and returns it in
 // *tri / *edge, unless it is the one already there
-// Matched
 void FindCrossedEdge_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge)
 {
     VECTOR e;
@@ -523,7 +520,6 @@ void EncounterSpawnTask_800B844C(EvTaskEntry* task)
 }
 
 
-// Matched
 void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* place, int aiArg, int index)
 {
     ActorDesc desc;
@@ -745,7 +741,6 @@ int EvCmdEndScene_800B8A34(EvScriptCtx* ctx)
     return 0;
 }
 
-// Matched
 int EvCmdBeginScene_800B8BE8(EvScriptCtx* ctx)
 {
     int r;
@@ -856,7 +851,6 @@ int EvCmdGotoLabel_800B8E9C(EvScriptCtx* ctx)
     return 0;
 }
 
-// Matched
 int EvCmdJumpScript_800B8F14(EvScriptCtx* ctx)
 {
     EvInstr* p = (EvInstr*)ctx->pc_8[ctx->branch_EC].c_C;
@@ -1212,7 +1206,6 @@ int EvCmdRemoveItemCat1_800B9B4C(EvScriptCtx* ctx)
 }
 
 // a == 0: wait for trigger b (GAME's FireEventTrigger_800A5C40 sets flags 4); else branch_EC = !valuable flag b
-// Matched
 int EvCmdWaitTrigger_800B9B98(EvScriptCtx* ctx)
 {
     unsigned int f;
@@ -1631,7 +1624,6 @@ int EvCmdCallSelect_800BA7A4(EvScriptCtx* ctx)
     return 0;
 }
 
-// Matched
 int EvCmdSetChapter_800BA82C(EvScriptCtx* ctx)
 {
     SaveData* s = &saveData_8008B570;
@@ -1732,7 +1724,6 @@ int EvCmdSetReturnPoint_800BAB14(EvScriptCtx* ctx)
 
 // the fade call is in a do/while(0) and duplicated in both arms of a dead test: jump2 cross-jumps the arms and drops the
 // branch but leaves its li $v0,1, and the loop note keeps sched2 from hoisting that above the $ra save, as in the original
-// Matched
 int EvCmdOpenMapSelect_800BAB5C(EvScriptCtx* ctx)
 {
     do
@@ -1966,7 +1957,6 @@ int EvCmdWaitActorInRegion_800BB214(EvScriptCtx* ctx)
 
 // fD4 is stored in both branches (cross-jumping merges the tails); that keeps the loop big enough that a giv is
 // "not worth while", so the counter i is not eliminated, as in the original
-// Matched
 int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
 {
     EvBattleArgs* args;
@@ -2039,7 +2029,6 @@ int EvCmdIfBattleResult_800BB45C(EvScriptCtx* ctx)
 
 
 // a selects: 0..9 scene fades / darken, 10/11 GAME hooks, 12 music, 13..15 sfx, 16 XA, 17 load fade, 18 motion blur
-// Matched
 int EvCmdFadeSound_800BB4A4(EvScriptCtx* ctx)
 {
     int done = 1;
@@ -2172,7 +2161,6 @@ int EvCmdPadVibration_800BB7D8(EvScriptCtx* ctx)
     return 1;
 }
 
-// Matched
 int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
 {
     int step;
@@ -2292,7 +2280,6 @@ int IsActorCmdDone_800BBAE4(int actor)
     return ret;
 }
 
-// Matched
 int StartActorCmd_800BBB18(int* cmd)
 {
     int ret;
@@ -2308,7 +2295,6 @@ int StartActorCmd_800BBB18(int* cmd)
     return ret;
 }
 
-// Matched
 int FinishActorCmd_800BBB5C(int* cmd)
 {
     int ret;
@@ -2418,7 +2404,6 @@ int IsActorLeftOf_800BC5C8(int a, int b);
 void SetupItemMsgSlots_800BC6C4(ItemMsgInit* cfg, EvItemMsgSrc* src, int n);
 
 // Opens the message/item window for the current say/ask instruction (ops 0x37-0x3E) and resets the per-message options
-// Matched
 int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
 {
     EvMsgWindowCfg cfg;
@@ -2761,7 +2746,6 @@ int IsActorLeftOf_800BC5C8(int actorA, int actorB)
     return scr1[0] < scr2[0];
 }
 
-// Matched
 void SetupItemMsgSlots_800BC6C4(ItemMsgInit* cfg, EvItemMsgSrc* src, int n)
 {
     int local[8];
@@ -2824,7 +2808,6 @@ void LoadEventEffectFile_800BC7A8(int* file)
     }
 }
 
-// Matched
 void LoadRelocBlob_800BC854(int* src)
 {
     int size;
@@ -2884,7 +2867,6 @@ void LoadEventTiy_800BC98C(int* tiy)
     LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, tiy, (int)&eventHeap_80091C10);
 }
 
-// Matched
 void CopyEventData_800BCA18(unsigned int* src, unsigned int size)
 {
     unsigned int* buf = ListAlloc_8003FDC0(&eventHeap_80091C10, size);

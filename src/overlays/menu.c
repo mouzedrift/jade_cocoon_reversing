@@ -1296,7 +1296,6 @@ void HandleLevelUpInput_800BC9E8(BattleResult* result)
 }
 
 // Draws the Levant rank-up panel (portrait, name, old/new rank name with fade)
-// Matched
 void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
 {
     short pos[2];
@@ -1759,7 +1758,6 @@ void DrawMinionListPage_800BDBFC(char* work, int page)
     }
 }
 
-// Matched
 int IsMinionListed_800BDD94(int species)
 {
     if ((unsigned)(species - 0x29) < 0x10 || (unsigned)(species - 0xC9) < 0xA)
@@ -2019,7 +2017,6 @@ const char aLeaveTheForest_800BBA44[] = "\202k\202\205\202\201\202\226\202\205\2
 const char aYesNo_800BBA68[] = "\201@\201@\202x\202\205\202\223\201@\201@\202m\202\217"; //   Yes  No
 const int dword_800BBA7C = 0;
 
-// Matched
 void DrawFieldMenu_800BE4A0(MenuCtx* menu)
 {
     short i;
@@ -2344,7 +2341,6 @@ void DrawCursorWindow_800BEC8C(MenuCtx* unused, RECT* a, short b, int unused2)
     DrawWindow_80042460(a, &col, &pOT_8008D454[b], frameCount_8008D3FC);
 }
 
-// Matched
 void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
 {
     short pos[2];
@@ -2504,7 +2500,6 @@ void UseSpore_800BF3AC(int item)
 }
 
 // Runs the confirmed menu action: use an item, a valuable (event trigger / leave the forest) or leave the forest
-// Matched
 void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
 {
     ItemUseWork tmp;
@@ -2543,7 +2538,6 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
     }
 }
 
-// Matched
 int CheckMenuAction_800BF540(MenuCtx* menu)
 {
     MenuUseQ q;
@@ -2790,7 +2784,6 @@ int TopMenuCursorDown_800BFB10(MenuCtx* menu)
     return 0;
 }
 
-// Matched
 int TopMenuCursorUp_800BFBE0(MenuCtx* menu)
 {
     int n = *(unsigned short*)&menu->partyCount_8 - 1;
@@ -3249,7 +3242,6 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq)
         DrawScrollArrow_8002C6DC(keyItemsDownArrowPos_800C2770, 1, eq->ot_6);
 }
 
-// Matched
 int IsKeyItemUsable_800C0C3C(int item)
 {
     int r;

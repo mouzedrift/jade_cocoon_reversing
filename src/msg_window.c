@@ -38,7 +38,6 @@ const char aReturned_800747D0[] = "\201@\202\222\202\205\202\224\202\225\202\222
 const char aReceived_800747E8[] = "\201@\202\222\202\205\202\203\202\205\202\211\202\226\202\205\202\204\201D"; //  received.
 const char aPickedUp_80074800[] = "\201@\202\220\202\211\202\203\202\213\202\205\202\204\201@\202\225\202\220\201D"; //  picked up.
 
-// Matched
 int CheckMagicUsable_80034068(TargetQuery* q)
 {
     UnitStatus* target = GetUnitStatus_80014390((unsigned char)q->actor_2);
@@ -62,12 +61,10 @@ int CheckMagicUsable_80034068(TargetQuery* q)
     }
     return 0;
 }
-// Matched
 int CheckUsableStub_80034124(TargetQuery* q)
 {
     return 0;
 }
-// Matched
 int GetUnitElementMask_8003412C(UnitStatus* unit)
 {
     if (unit)
@@ -76,7 +73,6 @@ int GetUnitElementMask_8003412C(UnitStatus* unit)
     }
     return 0;
 }
-// Matched
 int IsCurrentMapListed_80034140(void)
 {
     unsigned char*** table = mapListTable_80083800;
@@ -117,7 +113,6 @@ int IsCurrentMapListed_80034140(void)
 extern EventNode* messageWindowTask_8008D640;
 extern void GetPortraitPoly_800A6308(int a, void* b);
 extern void GetCombatPortraitPoly_800A1B2C(int a, void* b);
-// Matched
 MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
 {
     EventEntry* e;
@@ -352,7 +347,6 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     e->flags = (e->flags | 1) & ~0x8000;
     return (MsgWindowEntry*)e;
 }
-// Matched
 short** FindTextResumePage_80034900(short** list)
 {
     short** cur = list;
@@ -377,7 +371,6 @@ short** FindTextResumePage_80034900(short** list)
     }
     return list;
 }
-// Matched
 int GetMsgWindowResultIfDone_800349B4(MsgWindowEntry* entry, MsgResult* out)
 {
     MsgWindow* win = entry->win_14;
@@ -388,12 +381,10 @@ int GetMsgWindowResultIfDone_800349B4(MsgWindowEntry* entry, MsgResult* out)
     }
     return 0;
 }
-// Matched
 void GetMsgWindowResult_80034A00(MsgWindowEntry* entry, MsgResult* out)
 {
     *out = entry->win_14->res_18;
 }
-// Matched
 int IsMsgWindowWaiting_80034A30(MsgWindowEntry* entry)
 {
     MsgWindow* win = entry->win_14;
@@ -403,32 +394,26 @@ int IsMsgWindowWaiting_80034A30(MsgWindowEntry* entry)
     }
     return 0;
 }
-// Matched
 void EnableMsgWindowAdvance_80034A68(MsgWindowEntry* entry)
 {
     entry->win_14->flags_4 |= 0x800;
 }
-// Matched
 void CloseMsgWindow_80034A84(MsgWindowEntry* entry)
 {
     entry->win_14->flags_4 |= 0x4000;
 }
-// Matched
 void KillMsgWindow_80034AA0(MsgWindowEntry* entry)
 {
     entry->flags_0 = (entry->flags_0 & ~1) | 0x8000;
 }
-// Matched
 int IsMsgWindowAlive_80034AB8(MsgWindowEntry* entry)
 {
     return (entry->flags_0 & 0x8001) == 1;
 }
-// Matched
 void SetMsgWindowChoiceMask_80034AD0(MsgWindowEntry* entry, int mask)
 {
     entry->win_14->mask_14 = mask;
 }
-// Matched
 int ConsumeMsgWindowMark_80034ADC(MsgWindowEntry* entry, int idx)
 {
     MsgWindow* win = entry->win_14;
@@ -439,7 +424,6 @@ int ConsumeMsgWindowMark_80034ADC(MsgWindowEntry* entry, int idx)
     }
     return 0;
 }
-// Matched
 int CountUntilZero_80034B14(int* list)
 {
     int count = 0;
@@ -450,7 +434,6 @@ int CountUntilZero_80034B14(int* list)
     }
     return count;
 }
-// Matched
 int CountMaskedUntilZero_80034B40(int* list, unsigned int mask)
 {
     int count = 0;
@@ -469,7 +452,6 @@ int CountMaskedUntilZero_80034B40(int* list, unsigned int mask)
     }
     return count;
 }
-// Matched
 int NthMaskedIndex_80034B88(int n, unsigned int mask)
 {
     int i = 0;
@@ -486,7 +468,6 @@ int NthMaskedIndex_80034B88(int n, unsigned int mask)
     }
     return i - 1;
 }
-// Matched
 void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
 {
     UpdateMsgWindowState_80034C18(win);
@@ -497,7 +478,6 @@ void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
     }
 }
 /* defined below (their parameter types are declared there) */
-// Matched
 void UpdateMsgWindowState_80034C18(MsgWindow* w)
 {
     RECT r;
@@ -777,7 +757,6 @@ const int aMoney_80074850[3] = { 0x8F826C82, 0x85828E82, 0x9982 };
 const int aEmptyCocoon_8007485C[2] = { 0x9A96F38B };
 const int aTimesSign_80074864[2] = { 0x7782 };
 
-// Matched
 void HandleMsgWindowInput_800353A0(MsgWindow* win)
 {
     switch (win->mode_8)
@@ -833,7 +812,6 @@ void HandleMsgWindowInput_800353A0(MsgWindow* win)
         break;
     }
 }
-// Matched
 void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
 {
     RECT clip;
@@ -899,7 +877,6 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
     DrawPulsingWindow_8002F6F8(&cursorRect, u.st, 0);
     win->res_18.sel_1A = NthMaskedIndex_80034B88(win->choice_B2, win->mask_14);
 }
-// Matched
 int DrawMsgWindowText_8003580C(MsgWindow* win, RECT* rect)
 {
     win->text_1B8.clip_4.x = rect->x + 6;
@@ -912,7 +889,6 @@ int DrawMsgWindowText_8003580C(MsgWindow* win, RECT* rect)
     }
     return 1;
 }
-// Matched
 void DrawMsgWindowBackground_80035898(MsgWindow* win, RECT* rect, int ot)
 {
     if (!(win->flags_4 & 0x40000))
@@ -920,7 +896,6 @@ void DrawMsgWindowBackground_80035898(MsgWindow* win, RECT* rect, int ot)
         DrawWindowBackground_800429F8(rect, 2);
     }
 }
-// Matched
 void DrawMsgWindowBorder_800358CC(MsgWindow* win, RECT* rect, int ot)
 {
     if (!(win->flags_4 & 0x40000))
@@ -928,7 +903,6 @@ void DrawMsgWindowBorder_800358CC(MsgWindow* win, RECT* rect, int ot)
         DrawWindowBorder_80042B38(rect, 2);
     }
 }
-// Matched
 void DrawMsgWindowPortrait_80035900(MsgWindow* win)
 {
     if (!(win->flags_4 & 0x40000) && win->portraitKind_84 == 1)
@@ -952,7 +926,6 @@ void DrawMsgWindowPortrait_80035900(MsgWindow* win)
     }
 }
 
-// Matched
 void DrawMsgWindowTitle_800359F8(MsgWindow* win)
 {
     short pos[2];
@@ -974,7 +947,6 @@ void DrawMsgWindowTitle_800359F8(MsgWindow* win)
     }
 }
 extern EventNode* messageWindowTask_8008D640;
-// Matched
 MsgWindowEntry* OpenItemMessageWindow_80035AC8(ItemMsgInit* init)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(messageWindowTask_8008D640);
@@ -1045,7 +1017,6 @@ extern void AddMoney_800AD058(int a);
 extern void AddEmptyCocoons_800AD8F4(int a);
 extern void SetValuableFlag_800AD68C(int a);
 extern void AddInventory_800AD184(int a, int b, int c);
-// Matched
 void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 {
     ItemMsgWindow* o;
@@ -1308,7 +1279,6 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         e->flags = (e->flags & ~1) | 0x8000;
     }
 }
-// Matched
 void InitPadVibration_800364E4(int* entry)
 {
     padVibration_80095460[entry[1]].flags_0 = 0;

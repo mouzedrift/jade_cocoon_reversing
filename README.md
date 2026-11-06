@@ -1,5 +1,5 @@
 ## Contributing
-Anyone who likes to contribute to this project is welcome to do so, but keep in mind that, as of the time of writing this, it is a semi-matching project with no way to check if functions still match locally.
+Anyone who likes to contribute to this project is welcome to do so. The executable and all overlays are built from C and match the original: every build checks their hashes (see [docs/build.md](docs/build.md)).
 Currently I use [decomp.me](https://decomp.me/) for matching game functions. I do have an IDA Pro database I'm working on, so if you're interested, I'd recommend joining. [The Jade Cocoon Project](https://discord.gg/QUMyJmHYnc) Discord server and contacting me there.
 
 ## Building
@@ -30,7 +30,7 @@ pip install -r requirements.txt
 python3 build.py
 ```
 
-Objects and binaries will be output to the `build_psyq` directory.
+Objects and binaries will be output to the `build_psyq` directory. How the build fits together: [docs/build.md](docs/build.md).
 
 Every build ends with a hash check of the executable and all overlays against `config/hashes.txt` and fails if
 anything differs. The overlays are built from `build_psyq/<NAME>.orig`, which `scripts/overlays.py` saves the first
@@ -58,10 +58,9 @@ python3 scripts/patch_disc.py "Jade Cocoon (USA).bin" MENU=file.bin -o out.bin
 The input image is never modified. Overlays that outgrow their slot are appended to the end of the image and the
 executable's file table is updated.
 
-**Limit:** code that is not decompiled yet is assembled with absolute addresses, so a rebuild that changes the
-size of anything (e.g. adding a `DEBUG_PRINTF` from `src/debug_tty.h`) moves code and data behind it and breaks
-those references. Same-size changes (a constant, a swapped branch) are safe. To find out what struct fields mean
-without rebuilding, use the Lua watches in `scripts/pcsx-redux/pcsx.lua`.
+Rebuilds may change the size of anything (e.g. adding a `DEBUG_PRINTF` from `src/debug_tty.h`): every reference
+into an image is a symbol, so code and data behind a change move consistently (`scripts/shift_check.py` checks
+this; see [docs/build.md](docs/build.md)). Each image must still fit where the game loads it.
 
 Details: [docs/testing_in_emulator.md](docs/testing_in_emulator.md).
 

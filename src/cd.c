@@ -29,17 +29,14 @@ const char aAssertionFaile_1[] = "Assertion failed: file \"%s\", line %d\n";
 const char aCdC[] = "CD.C";
 const int dword_800748DC = 0;
 
-// Matched
 void SetBattleStageId_80039FA4(int id)
 {
     battleStageId_80083BD0 = id;
 }
-// Matched
 int GetBattleStageId_80039FB0(void)
 {
     return battleStageId_80083BD0;
 }
-// Matched
 void FreeStageEffects_80039FC0(void)
 {
     FreeEffectFile_80020EE0(&battleEffectFile_80095468);
@@ -85,7 +82,6 @@ typedef struct
         }                                                                         \
     }
 
-// Matched
 void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct FtgObject* out)
 {
     PolyGroups* pa = (PolyGroups*)a;
@@ -176,7 +172,6 @@ void DiffFtgObjects_80039FE4(struct FtgObject* a, struct FtgObject* b, struct Ft
         }                                                                         \
     }
 
-// Matched
 void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, struct FtgObject* d)
 {
     PolyGroups* po = (PolyGroups*)out;
@@ -218,12 +213,10 @@ void LerpFtgObject_8003A6C4(int t, struct FtgObject* out, struct FtgObject* a, s
         }
     }
 }
-// Matched
 short ratan2_8003B548(long y, long x)
 {
     return ratan2(y, x);
 }
-// Matched
 int ratan2Degrees_8003B56C(int x, int y)
 {
     int angle = ratan2(y, x);
@@ -239,7 +232,6 @@ int ratan2Degrees_8003B56C(int x, int y)
     }
     return degrees;
 }
-// Matched
 int VectorToAngles_8003B5D4(int* v, short* out)
 {
     int len;
@@ -254,7 +246,6 @@ int VectorToAngles_8003B5D4(int* v, short* out)
     out[2] = 0;
     return len;
 }
-// Matched
 int Sign_8003B664(int x)
 {
     if (x > 0)
@@ -267,7 +258,6 @@ int Sign_8003B664(int x)
     }
     return 0;
 }
-// Matched
 void ScaleVectorToFit_8003B684(int* v)
 {
     int minLzc = 0x20;
@@ -294,7 +284,6 @@ void ScaleVectorToFit_8003B684(int* v)
         v[2] >>= shift;
     }
 }
-// Matched
 int IsWithinDistance_8003B740(int* a, int* b, unsigned int* dist)
 {
     unsigned int sum = -1;
@@ -319,7 +308,6 @@ int IsWithinDistance_8003B740(int* a, int* b, unsigned int* dist)
     *dist = sum;
     return ok;
 }
-// Matched
 int DistanceSquared3D_8003B80C(int* a, int* b)
 {
     int dx = a[0] - b[0];
@@ -327,31 +315,26 @@ int DistanceSquared3D_8003B80C(int* a, int* b)
     int dz = a[2] - b[2];
     return dx * dx + dy * dy + dz * dz;
 }
-// Matched
 unsigned int DistanceSquaredXZ_8003B860(int* a, int* b)
 {
     int dx = a[0] - b[0];
     int dz = a[2] - b[2];
     return dx * dx + dz * dz;
 }
-// Matched
 int DistanceSquared2D_8003B898(int x0, int y0, int x1, int y1)
 {
     int dx = x1 - x0;
     int dy = y1 - y0;
     return dx * dx + dy * dy;
 }
-// Matched
 int LengthSquared2D_8003B8BC(int x, int y)
 {
     return x * x + y * y;
 }
-// Matched
 int LengthSquared3D_8003B8DC(int* v)
 {
     return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 }
-// Matched
 unsigned int ISqrt_8003B918(unsigned int value)
 {
     int next;
@@ -372,7 +355,6 @@ unsigned int ISqrt_8003B918(unsigned int value)
     }
     return 0;
 }
-// Matched
 Vec3i* Midpoint3D_8003B95C(Vec3i* out, Vec3i* a, Vec3i* b)
 {
     Vec3i mid;
@@ -382,12 +364,10 @@ Vec3i* Midpoint3D_8003B95C(Vec3i* out, Vec3i* a, Vec3i* b)
     *out = mid;
     return out;
 }
-// Matched
 short ratan2Difference_8003B9E0(int* a, int* b)
 {
     return ratan2(b[0] - a[0], b[2] - a[2]);
 }
-// Matched
 short WrapAngle_8003BA18(int angle)
 {
     short wrapped = angle & 0xFFF;
@@ -397,7 +377,6 @@ short WrapAngle_8003BA18(int angle)
     }
     return wrapped;
 }
-// Matched
 int CompareUInt_8003BA38(unsigned int a, unsigned int b)
 {
     if (a > b)
@@ -410,7 +389,6 @@ int CompareUInt_8003BA38(unsigned int a, unsigned int b)
     }
     return a < b;
 }
-// Matched
 int GetCapturedMinionsFromBitfield_8003BA58(int bits)
 {
     int result;
@@ -428,7 +406,6 @@ int GetCapturedMinionsFromBitfield_8003BA58(int bits)
     }
     return result;
 }
-// Matched
 void DelayLoop_8003BA90(void)
 {
     float count = 0;
@@ -437,7 +414,6 @@ void DelayLoop_8003BA90(void)
         count += 1.0f;
     }
 }
-// Matched
 int GetMemCardInfoSync_8003BADC(int port)
 {
     int out[2];
@@ -447,7 +423,6 @@ int GetMemCardInfoSync_8003BADC(int port)
     }
     return out[1];
 }
-// Matched
 void CheckMemCards_8003BB1C(void)
 {
     int i;
@@ -463,14 +438,12 @@ void CheckMemCards_8003BB1C(void)
         unknownFlags_8008D678 &= ~0x1000;
     }
 }
-// Matched
 long cdRomEventErrorHandler_8003BBAC(void)
 {
     unknownFlags_8008D678 |= 0x100u;
     printf(aAssertionFaile_1, aCdC, 79);
     exit(1);
 }
-// Matched
 void InitFileRequestQueue_8003BBE4(void)
 {
     int freeId = 0x10000;
@@ -486,12 +459,10 @@ void InitFileRequestQueue_8003BBE4(void)
     fileBufferInUse_80086564 = 0;
     cdXaLock_80086568 = 0;
 }
-// Matched
 int GetFileRequestCount_8003BC34(void)
 {
     return fileRequestQueue_80086540;
 }
-// Matched
 int FindFreeFileRequest_8003BC44(void)
 {
     int i;
@@ -511,7 +482,6 @@ typedef struct
     FileRequest* first;
     FileRequest* last;
 } FileRequestQueue;
-// Matched
 int QueueFileRequest_8003BC84(FileRequestDesc* req)
 {
     FileRequestQueue* head = (FileRequestQueue*)&fileRequestQueue_80086540;
@@ -566,11 +536,9 @@ int QueueFileRequest_8003BC84(FileRequestDesc* req)
     head->nextkey++;
     return node->key;
 }
-// Matched
 void EmptyCallback_8003BE28(void)
 {
 }
-// Matched
 int GetFileRequestStatus_8003BE30(int key)
 {
     FileRequest* node = FindFileRequest_8003BED4(key);
@@ -588,7 +556,6 @@ int GetFileRequestStatus_8003BE30(int key)
     }
     return 0;
 }
-// Matched
 int CancelFileRequest_8003BE88(int key)
 {
     FileRequest* node = FindFileRequest_8003BED4(key);
@@ -599,7 +566,6 @@ int CancelFileRequest_8003BE88(int key)
     }
     return 0;
 }
-// Matched
 FileRequest* FindFileRequest_8003BED4(int key)
 {
     FileRequest* node;
@@ -612,7 +578,6 @@ FileRequest* FindFileRequest_8003BED4(int key)
     }
     return 0;
 }
-// Matched
 void RemoveFileRequest_8003BF18(FileRequest* req)
 {
     // req->next (offset 0) is the previous node, req->newer_4 the next one
@@ -636,7 +601,6 @@ void RemoveFileRequest_8003BF18(FileRequest* req)
     req->fileId_10 = 0x10000;
     list->count--;
 }
-// Matched
 int IsFileRequestQueueIdle_8003BF88(void)
 {
     if (fileRequestQueue_80086540 == 0 && fileBufferInUse_80086564 == 0)
@@ -645,13 +609,11 @@ int IsFileRequestQueueIdle_8003BF88(void)
     }
     return 0;
 }
-// Matched
 void* SetFileBufferInUse_8003BFB8(int inUse)
 {
     fileBufferInUse_80086564 = inUse;
     return fileBuffer_8008656C;
 }
-// Matched
 int ConsumeFileRequest_8003BFD0(int key, int flag)
 {
     FileRequest* node = FindFileRequest_8003BED4(key);
@@ -678,7 +640,6 @@ int ConsumeFileRequest_8003BFD0(int key, int flag)
     }
     return 2;
 }
-// Matched
 int CancelFileRequest_8003C060(int key)
 {
     FileRequest* node = FindFileRequest_8003BED4(key);
@@ -690,7 +651,6 @@ int CancelFileRequest_8003C060(int key)
     }
     return 2;
 }
-// Matched
 int SetCdXaLock_8003C0A4(int lock)
 {
     FileTask* task = fileRequestTask_8008B544->entry.buffer;
@@ -712,7 +672,6 @@ int SetCdXaLock_8003C0A4(int lock)
     }
     return 0;
 }
-// Matched
 void InitFileRequestTask_8003C128(int* entry, FileTask* task)
 {
     InitFileRequestQueue_8003BBE4();
@@ -724,7 +683,6 @@ void InitFileRequestTask_8003C128(int* entry, FileTask* task)
     entry[2] = (int)ProcessFileRequests_8003C184;
 }
 extern FileRequest* fileRequestHead_80086548;
-// Matched
 void ProcessFileRequests_8003C184(int* entry, FileTask* task)
 {
     int loop;
@@ -917,7 +875,6 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
         }
     }
 }
-// Matched
 void AssertFileRequestQueueEmpty_8003C684(void)
 {
     if (fileRequestQueue_80086540)

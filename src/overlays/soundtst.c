@@ -1624,7 +1624,6 @@ const char strSeNumber_800A5180[] = "\202r\202d\224\324\215\206"; // ＳＥ番�
 const char strSeFile_800A518C[] = "\202r\202d\203t\203@\203C\203\213"; // ＳＥファイル
 const char strSoundNumber_800A519C[16] = "\203T\203E\203\223\203h\224\324\215\206\000\000\000\314";
 
-// Matched
 enum GameStates SoundTestMain_800A51AC(void)
 {
     EndFade_8001C290();
@@ -1646,7 +1645,6 @@ void SoundTestInit_800A51D8(int* task, SndTest* st)
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
 }
 
-// Matched
 void SoundTestUpdate_800A5238(int* task, SndTest* st)
 {
     SVECTOR pos[12];

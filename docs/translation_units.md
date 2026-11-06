@@ -17,8 +17,8 @@ The `assert()` macro embeds `__FILE__`, and those strings sit in `.rdata` in TU 
 | `CD.C` | 0x800748D4 | `cdRomEventErrorHandler_8003BBAC`, `AssertFileRequestQueueEmpty_8003C684` | |
 | `D:/WORK/PSUS/EVENT.C` | 0x80074BA4 | `CreateEventList_800435B4` .. `FreeEventList_80043A5C` | full path, built outside the usual setup |
 
-Rodata references rise monotonically with function address across the whole game area
-(see `scripts/tu_hints.py`), which confirms the TUs are laid out in address order and gives the
+Rodata references rise monotonically with function address across the whole game area,
+which confirms the TUs are laid out in address order and gives the
 ordering `MAIN < COMMON < EFFECT < ... < SOUND < ... < CD < ... < EVENT`.
 
 ## Rough ranges
@@ -49,7 +49,6 @@ Other signals seen so far:
   function and look for jumps in the reference sequence.
 * `.data`/`.bss` locals (non-shared symbols) must appear in the same order as the code that uses them.
 * Jump tables (`switch`) are emitted into the owning TU's `.rdata`.
-* `scripts/tu_hints.py SLUS_008.54` lists these references per function.
 
 Note: the build does not track header dependencies; use `python build.py -r` after editing a `.h`.
 

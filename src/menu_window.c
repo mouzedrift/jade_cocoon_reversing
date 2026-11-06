@@ -25,7 +25,6 @@
 
 const Block16 elementIconRowOffsets_800741C4 = { { 0, 0, 14, 0, 28, 0, 42 } };
 
-// Matched
 void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
 {
     WindowStyle style;
@@ -110,7 +109,6 @@ void DrawMenuItemWindow_8002AAF0(MenuWindowList* list, int i, int j, RECT* rect)
     }
     DrawWindow_80042460(rect, &style, &pOT_8008D454[list->ot_14], time);
 }
-// Matched
 void AlignMenuItem_8002AC88(int flags, short* rect, int width, short* out)
 {
     if (flags & 4)
@@ -128,7 +126,6 @@ void AlignMenuItem_8002AC88(int flags, short* rect, int width, short* out)
     out[0] = rect[0];
     out[1] = rect[1];
 }
-// Matched
 void GetMenuItemColor_8002ACE8(int flags, unsigned char* out)
 {
     unsigned char val;
@@ -144,7 +141,6 @@ void GetMenuItemColor_8002ACE8(int flags, unsigned char* out)
     out[1] = val;
     out[2] = val;
 }
-// Matched
 void SetMenuItemFont1Clut_8002AD08(int flags)
 {
     if (flags & 2)
@@ -156,7 +152,6 @@ void SetMenuItemFont1Clut_8002AD08(int flags)
         SetFontClutOffset_8003F900(1, 0);
     }
 }
-// Matched
 void SetMenuItemFont2Clut_8002AD44(int flags)
 {
     if (flags & 2)
@@ -168,7 +163,6 @@ void SetMenuItemFont2Clut_8002AD44(int flags)
         SetFontClutOffset_8003F900(2, 0);
     }
 }
-// Matched
 void SetMenuItemDigitColor_8002AD80(int flags)
 {
     if (flags & 2)
@@ -180,7 +174,6 @@ void SetMenuItemDigitColor_8002AD80(int flags)
         SetLargeDigitColor_8002C5D0(0);
     }
 }
-// Matched
 void DrawMenuItemWithWindow_8002ADB4(MenuWindowItem* item, void* window, int ot, int time)
 {
     DrawMenuWindowContents_8002A710(item, ot);
@@ -188,7 +181,6 @@ void DrawMenuItemWithWindow_8002ADB4(MenuWindowItem* item, void* window, int ot,
     SetFontClutOffset_8003F900(1, 0);
     DrawWindow_80042460(&item->x_10, window, &pOT_8008D454[ot], time);
 }
-// Matched
 void DrawTextLinesWindow_8002AE38(const char** lines, Pos16* pos, int ot, RECT* rect, int count)
 {
     Pos16 cur;
@@ -212,7 +204,6 @@ void DrawTextLinesWindow_8002AE38(const char** lines, Pos16* pos, int ot, RECT* 
         DrawWindow_80042460(rect, &style, &pOT_8008D454[ot], 0);
     }
 }
-// Matched
 void DrawLargeTextBox_8002AF10(const char** text, Pos16* pos, int ot)
 {
     RECT rect;
@@ -222,7 +213,6 @@ void DrawLargeTextBox_8002AF10(const char** text, Pos16* pos, int ot)
     rect.h = 0x3C;
     DrawTextBox_8002AFA0(text, pos, ot, &rect, 4);
 }
-// Matched
 void DrawSmallTextBox_8002AF58(const char** text, Pos16* pos, int ot)
 {
     RECT rect;
@@ -232,7 +222,6 @@ void DrawSmallTextBox_8002AF58(const char** text, Pos16* pos, int ot)
     rect.h = 0x12;
     DrawTextBox_8002AFA0(text, pos, ot, &rect, 1);
 }
-// Matched
 void DrawTextBox_8002AFA0(const char** text, Pos16* pos, int ot, RECT* rect, int count)
 {
     Pos16 cur;
@@ -245,7 +234,6 @@ void DrawTextBox_8002AFA0(const char** text, Pos16* pos, int ot, RECT* rect, int
     cur.y = rect->y + 5;
     DrawTextLinesWindow_8002AE38(text, &cur, ot, rect, count);
 }
-// Matched
 void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
 {
     Pos16 cur;
@@ -284,7 +272,6 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
     DrawWindow_80042460(&rect, &style, &pOT_8008D454[ot], 0);
 }
 extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
-// Matched
 void DrawElementIconsRow_8002B1B0(short mask, int pos, int ot)
 {
     Block16 local = elementIconRowOffsets_800741C4;

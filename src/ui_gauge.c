@@ -26,7 +26,6 @@ const CVECTOR colorGrey_800741E4 = { 128, 128, 128 };
 const CVECTOR colorWhite_800741E8 = { 255, 255, 255 };
 
 extern int elementIcons_800827BC[];
-// Matched
 void DrawElementIcons_8002B2A4(short mask, short* base, int ot, short (*offsets)[2], int showUnlit)
 {
     short pos[2];
@@ -58,7 +57,6 @@ void DrawElementIcons_8002B2A4(short mask, short* base, int ot, short (*offsets)
 }
 extern const CVECTOR colorGrey_800741E4;
 extern const CVECTOR colorWhite_800741E8;
-// Matched
 void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot)
 {
     CVECTOR c0;
@@ -100,7 +98,6 @@ void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot)
     AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyPolyFT4s_8008D430[idx], 10);
     AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyTPages_8008D440[idx], 2);
 }
-// Matched
 void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, short* pos, int ot)
 {
     switch (arrow.dir)
@@ -133,7 +130,6 @@ void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, short* pos, int o
         break;
     }
 }
-// Matched
 void DrawGauge_8002BA54(Gauge* gauge, int time, short* origin, int ot)
 {
     short pos[2];
@@ -213,7 +209,6 @@ void DrawGauge_8002BA54(Gauge* gauge, int time, short* origin, int ot)
     DrawGaugeBar_8002BCAC(idx, width, pos, pulseTime, ot);
     DrawUiTiySprt_8002C06C(origin, frameIcon, ot);
 }
-// Matched
 unsigned int ScaleGaugeLength_8002BC60(unsigned int value, unsigned int max, unsigned int length)
 {
     if (max < value)
@@ -232,7 +227,6 @@ unsigned int ScaleGaugeLength_8002BC60(unsigned int value, unsigned int max, uns
     return 0;
 }
 extern const CVECTOR colorWhite_800741E8;
-// Matched
 void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int time, int ot)
 {
     POLY_FT4 poly;

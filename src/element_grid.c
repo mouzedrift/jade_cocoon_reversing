@@ -20,7 +20,6 @@
 const Block16 elementIconGridOffsets_800741D4 = { { 14, 0, 14, 14, 0, 14 } };
 
 extern void DrawElementIcons_8002B2A4(short mask, short* base, int ot, Block16* d, int showUnlit);
-// Matched
 void DrawElementIconsGrid_8002B228(short mask, short* pos, int ot, int unused)
 {
     Block16 local = elementIconGridOffsets_800741D4;

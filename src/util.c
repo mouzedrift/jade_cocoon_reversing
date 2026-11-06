@@ -32,14 +32,12 @@
 
 
 
-// Matched
 void DrawNumber_8003EF74(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, val);
     DrawText_8003E91C(2, (int*)buf, pos, ot);
 }
-// Matched
 void DrawNumberRightAligned_8003EFBC(short* pos, int val, int ot)
 {
     unsigned short buf[12];
@@ -88,7 +86,6 @@ void DrawNumberRightAligned_8003EFBC(short* pos, int val, int ot)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
 extern int charWidthThresholds_80086898[][12];
-// Matched
 void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot)
 {
     unsigned short buf[12];
@@ -142,14 +139,12 @@ void DrawNumberRightAlignedFont1_8003F264(short* pos, int val, int ot)
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
-// Matched
 void DrawNumber_8003F544(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, val);
     DrawText_8003E91C(1, (int*)buf, pos, ot);
 }
-// Matched
 void IntToSjisReversed_8003F58C(unsigned char* buf, int val)
 {
     int neg = 1;
@@ -174,7 +169,6 @@ void IntToSjisReversed_8003F58C(unsigned char* buf, int val)
     buf[0] = 0;
     buf[1] = 0;
 }
-// Matched
 void IntToText_8003F610(unsigned short* out, int val)
 {
     unsigned short reversed[12];
@@ -190,7 +184,6 @@ void IntToText_8003F610(unsigned short* out, int val)
     *out = 0;
     EncodeText_8003F684(2, start);
 }
-// Matched
 unsigned short* EncodeText_8003F684(int mode, unsigned short* text)
 {
     unsigned short* cur = text;
@@ -214,7 +207,6 @@ unsigned short* EncodeText_8003F684(int mode, unsigned short* text)
     }
     return text;
 }
-// Matched
 unsigned short* DecodeText_8003F748(int mode, unsigned short* text)
 {
     unsigned short* tbl = charTables_8008685C[mode].tbl;
@@ -232,7 +224,6 @@ unsigned short* DecodeText_8003F748(int mode, unsigned short* text)
     }
     return text;
 }
-// Matched
 void EncodeName_8003F7C8(void* text, unsigned char* out)
 {
     unsigned short buf[11];
@@ -256,7 +247,6 @@ void EncodeName_8003F7C8(void* text, unsigned char* out)
     }
     out[10] = 0;
 }
-// Matched
 int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut)
 {
     int i;
@@ -272,7 +262,6 @@ int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut
 
     return 0;
 }
-// Matched
 void UppercaseSjisName_8003F89C(unsigned short* name)
 {
     int i;
@@ -288,19 +277,16 @@ void UppercaseSjisName_8003F89C(unsigned short* name)
     }
 }
 
-// Matched
 void SetFontClutOffset_8003F900(int idx, int val)
 {
     Font* font = &fonts_80095FB0[idx];
     font->clutOffset_2A = val;
 }
-// Matched
 void SetFontClutRow_8003F928(int idx, int dy)
 {
     Font* font = &fonts_80095FB0[idx];
     font->clut_E = GetClut(font->clutX_20, font->clutY_22 + dy);
 }
-// Matched
 void SetFontGrey_8003F978(int idx, int val)
 {
     Font* font = &fonts_80095FB0[idx];
@@ -308,7 +294,6 @@ void SetFontGrey_8003F978(int idx, int val)
     font->g_5 = val;
     font->b_6 = val;
 }
-// Matched
 void SetFontColor_8003F9A8(int idx, unsigned char* rgb)
 {
     Font* font = &fonts_80095FB0[idx];
@@ -316,19 +301,16 @@ void SetFontColor_8003F9A8(int idx, unsigned char* rgb)
     font->g_5 = rgb[1];
     font->b_6 = rgb[2];
 }
-// Matched
 void SetFontAbr_8003F9E8(int idx, int abr)
 {
     Font* font = &fonts_80095FB0[idx];
     SetDrTPageAbr_80033048(font->tpage_14, abr);
 }
-// Matched
 void SetFontSemiTrans_8003FA2C(int idx, int abe)
 {
     Font* font = &fonts_80095FB0[idx];
     SetSemiTrans(font->tpage_14, abe);
 }
-// Matched
 int MeasureText_8003FA70(int idx, unsigned char* str)
 {
     int sum = 0;
@@ -356,7 +338,6 @@ int MeasureText_8003FA70(int idx, unsigned char* str)
     }
     return sum;
 }
-// Matched
 int StrLen_8003FAF0(unsigned char* str)
 {
     int len = 0;
@@ -366,7 +347,6 @@ int StrLen_8003FAF0(unsigned char* str)
     }
     return len;
 }
-// Matched
 int SjisStrLen_8003FB24(unsigned char* str)
 {
     int len = 0;
@@ -376,7 +356,6 @@ int SjisStrLen_8003FB24(unsigned char* str)
     }
     return len / 2;
 }
-// Matched
 int WStrLen_8003FB60(unsigned short* str)
 {
     int len = 0;
@@ -387,7 +366,6 @@ int WStrLen_8003FB60(unsigned short* str)
     }
     return len;
 }
-// Matched
 void StrCopy_8003FB8C(char* dst, char* src)
 {
     int i = 0;
@@ -398,7 +376,6 @@ void StrCopy_8003FB8C(char* dst, char* src)
     }
     dst[i] = src[i];
 }
-// Matched
 void DecodeNames_8003FBD4(int mode)
 {
     int count;
@@ -410,17 +387,14 @@ void DecodeNames_8003FBD4(int mode)
         DecodeText_8003F748(mode, GetMinionName_800106F8(3, i));
     }
 }
-// Matched
 void* malloc3_8003FC4C(unsigned int size)
 {
     return malloc3(size);
 }
-// Matched
 void free3_8003FC6C(void* block)
 {
     free3(block);
 }
-// Matched
 void* HeapAlloc_8003FC8C(int size, int heap)
 {
     Pool* pool = (Pool*)heap;
@@ -443,7 +417,6 @@ void* HeapAlloc_8003FC8C(int size, int heap)
     }
     return ListAlloc_8003FDC0((List*)pool, size);
 }
-// Matched
 void HeapFree_8003FD18(void* ptr, int heap)
 {
     Pool* pool = (Pool*)heap;
@@ -474,14 +447,12 @@ void HeapFree_8003FD18(void* ptr, int heap)
         break;
     }
 }
-// Matched
 void ListInit_8003FDB0(List* list)
 {
     list->count = 0;
     list->head = 0;
     list->tail = 0;
 }
-// Matched
 void* ListAlloc_8003FDC0(List* list, int size)
 {
     ListNode* node = malloc3_8003FC4C(size + 8);
@@ -500,7 +471,6 @@ void* ListAlloc_8003FDC0(List* list, int size)
     list->count++;
     return node + 1;
 }
-// Matched
 void ListFree_8003FE38(List* l, void* ptr)
 {
     ListNode* node = ptr;
@@ -527,7 +497,6 @@ void ListFree_8003FE38(List* l, void* ptr)
         free3_8003FC6C(node);
     }
 }
-// Matched
 void ListFreeAll_8003FEC8(List* l)
 {
     ListNode* node = l->tail;
@@ -539,7 +508,6 @@ void ListFreeAll_8003FEC8(List* l)
     }
     ListInit_8003FDB0(l);
 }
-// Matched
 void PoolInit_8003FF1C(Pool* pool, unsigned int size)
 {
     void* buf = malloc3_8003FC4C(size);
@@ -552,7 +520,6 @@ void PoolInit_8003FF1C(Pool* pool, unsigned int size)
     pool->head = 0;
     pool->tail = 0;
 }
-// Matched
 void PoolDestroy_8003FF7C(Pool* pool)
 {
     free3_8003FC6C(pool->buffer);
@@ -565,7 +532,6 @@ void PoolDestroy_8003FF7C(Pool* pool)
     pool->head = 0;
     pool->tail = 0;
 }
-// Matched
 void* PoolAlloc_8003FFD0(Pool* pool, unsigned int size)
 {
     PoolBlock* block = 0;
@@ -593,7 +559,6 @@ void* PoolAlloc_8003FFD0(Pool* pool, unsigned int size)
     pool->count++;
     return block + 1;
 }
-// Matched
 void PoolFree_800400B4(Pool* pool, void* ptr)
 {
     PoolBlock* block;
@@ -621,12 +586,10 @@ void PoolFree_800400B4(Pool* pool, void* ptr)
         pool->count--;
     }
 }
-// Matched
 void PoolSetInited_80040148(Pool* pool, int inited)
 {
     pool->inited = inited;
 }
-// Matched
 PoolBlock* PoolFindFreeSpace_80040150(Pool* pool, unsigned int size)
 {
     char* best = 0;
@@ -688,18 +651,15 @@ PoolBlock* PoolFindFreeSpace_80040150(Pool* pool, unsigned int size)
     }
     return (PoolBlock*)best;
 }
-// Matched
 int IsPoolBlock_80040274(Pool* pool, void* ptr)
 {
     return ((PoolBlock*)ptr)[-1].magic == 0x8FFFFFFF;
 }
-// Matched
 void sub_8004028C(void)
 {
     dword_80098688 = 0;
 }
 extern unsigned long* primAllocPtrs_800960A8[];
-// Matched
 void* AddPrimCopy_80040298(void* ot, void* prim, int words)
 {
     int cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
@@ -708,7 +668,6 @@ void* AddPrimCopy_80040298(void* ot, void* prim, int words)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += words * 4;
     return (void*)cur;
 }
-// Matched
 void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
 {
   int first; // $v0
@@ -726,7 +685,6 @@ void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
   }
   while ( fileSize );
 }
-// Matched
 void ReadBytesInto_80040388(int* pOut, int* pSource, int count)
 {
     int dataToCopy;
@@ -738,7 +696,6 @@ void ReadBytesInto_80040388(int* pOut, int* pSource, int count)
         --count;
     } while (count);
 }
-// Matched
 void CopyHalfwords_800403A8(unsigned short* pOut, unsigned short* pSource, int count)
 {
     do
@@ -747,7 +704,6 @@ void CopyHalfwords_800403A8(unsigned short* pOut, unsigned short* pSource, int c
         --count;
     } while (count);
 }
-// Matched
 void CopyBytes_800403C8(char *pOut, unsigned char *fileBuffer, int fileSize)
 {
   do
@@ -757,7 +713,6 @@ void CopyBytes_800403C8(char *pOut, unsigned char *fileBuffer, int fileSize)
   }
   while ( fileSize );
 }
-// Matched
 void MemCopy_800403E8(void *overlayAddr, void *fileBuffer, unsigned int fileSize)
 {
   unsigned int *overlayAddr_copy; // $s2
@@ -788,12 +743,10 @@ void MemCopy_800403E8(void *overlayAddr, void *fileBuffer, unsigned int fileSize
       CopyBytes_800403C8(overlayAddr_copy, pFileBuffer, fileSize_copy);
   }
 }
-// Matched
 void SetGameBootState_80040470(void)
 {
     currentGameState_8008D4B4 = eGameBoot_0;
 }
-// Matched
 void GameLoop_8004047C(void)
 {
     do

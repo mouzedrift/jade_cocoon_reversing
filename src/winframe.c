@@ -21,7 +21,6 @@
 
 const CVECTOR windowFrameGrey_80074BA0 = { 128, 128, 128 };
 
-// Matched
 int FrameEdgeCoord_80041E68(int mode, int pos, int size, int inset)
 {
     switch (mode)
@@ -39,7 +38,6 @@ int FrameEdgeCoord_80041E68(int mode, int pos, int size, int inset)
 }
 extern const CVECTOR windowFrameGrey_80074BA0;
 extern int windowFrameShades_80086F9C[];
-// Matched
 void DrawWindowFrame_80041ED0(RECT* rect, unsigned char* rgb, u_long* ot, unsigned char semi)
 {
     POLY_F4 quads[5];

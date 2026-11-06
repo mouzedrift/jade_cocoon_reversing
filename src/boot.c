@@ -35,7 +35,6 @@ const char aDueToFutureChanges_80074AA8[] = "\202c\202\225\202\205\201@\202\224\
 const char aSignificantlyDifferent_80074B10[] = "\202\223\202\211\202\207\202\216\202\211\202\206\202\211\202\203\202\201\202\216\202\224\202\214\202\231\201@\202\204\202\211\202\206\202\206\202\205\202\222\202\205\202\216\202\224\201@\202\206\202\222\202\217\202\215\201@\202\224\202\210\202\205\201@\202\222\202\205\202\224\202\201\202\211\202\214\201@\202\226\202\205\202\222\202\223\202\211\202\217\202\216\201D"; // significantly different from the retail version.
 
 extern int geomScreenDistance_8008B548;
-// Matched
 void InitGameDefaults_80040718(void)
 {
     int i;
@@ -62,7 +61,6 @@ void InitGameDefaults_80040718(void)
     titleMenuState_8008B558[1] = 0;
 }
 
-// Matched
 void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
@@ -74,7 +72,6 @@ void LoadPublicTiyAndFtg_800407D0(void)
     LoadSound_80030A84(0, &systemSound_80091D40);
     InitFonts_8003DA70();
 }
-// Matched
 void ReloadPublicTiy_80040898(void)
 {
     void* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
@@ -84,7 +81,6 @@ void ReloadPublicTiy_80040898(void)
 }
 
 
-// Matched
 void DrawCopyrightScreen_800408F4(void)
 {
     if ((unsigned int)frameCount_8008D3FC < 0x190)
@@ -117,7 +113,6 @@ void DrawCopyrightScreen_800408F4(void)
         bStopDrawingMovie_8008D45C = 1;
     }
 }
-// Matched
 void InitCopyrightScreen_80040A10(int* entry)
 {
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
@@ -127,7 +122,6 @@ void InitCopyrightScreen_80040A10(int* entry)
     free3_8003FC6C(pFile);
     entry[2] = (int)DrawCopyrightScreen_800408F4;
 }
-// Matched
 void ShowCopyright_80040A84(void)
 {
     EndFade_8001C290();
@@ -136,13 +130,11 @@ void ShowCopyright_80040A84(void)
     drawEnvRed_8008D448[0] = 0;
     DrawIntroMovie_8001AF64(copyright_80086948);
 }
-// Matched
 void PlayGenkiMovie_80040AC4(void)
 {
     PlayMovie_80040EB4(0);
     bStopDrawingMovie_8008D45C = 1;
 }
-// Matched
 void PlayGenkiMovie_80040AEC(void)
 {
     EndFade_8001C290();
@@ -151,13 +143,11 @@ void PlayGenkiMovie_80040AEC(void)
     drawEnvRed_8008D448[0] = 0;
     DrawIntroMovie_8001AF64(genkiMovie_80086968);
 }
-// Matched
 void PlayCraveMovie_80040B2C(void)
 {
     PlayMovie_80040EB4(0x19);
     bStopDrawingMovie_8008D45C = 1;
 }
-// Matched
 void PlayCraveEntertainmentMovie_80040B54(void)
 {
     EndFade_8001C290();
@@ -172,7 +162,6 @@ extern const char aInDevelopment_80074A88[];
 extern const char aDueToFutureChanges_80074AA8[];
 extern const char aSignificantlyDifferent_80074B10[];
 
-// Matched
 void DrawDemoDisclaimer_80040B94(void)
 {
     if ((unsigned int)frameCount_8008D3FC < 0xC8)

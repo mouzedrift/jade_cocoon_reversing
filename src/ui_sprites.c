@@ -31,7 +31,6 @@
 
 const int emptyString_800741EC = 0;
 
-// Matched
 void DrawMenuBackground_8002BE10(void)
 {
     unsigned short pos[2];
@@ -51,7 +50,6 @@ void DrawMenuBackground_8002BE10(void)
         }
     }
 }
-// Matched
 void DrawAnimatedWindow_8002BEC8(RECT* outRect, RECT* rect, short step, short ot, int highlight, int time)
 {
     UiWindowDesc desc;
@@ -71,7 +69,6 @@ void DrawAnimatedWindow_8002BEC8(RECT* outRect, RECT* rect, short step, short ot
     DrawUiWindow_8002A384(&desc);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
 }
-// Matched
 void LoadUiTiy_8002BF74(void)
 {
     FileRequestDesc req;
@@ -86,13 +83,11 @@ void LoadUiTiy_8002BF74(void)
     req.callback_1C = OnUiTiyLoaded_8002BFCC;
     QueueFileRequest_8003BC84(&req);
 }
-// Matched
 void OnUiTiyLoaded_8002BFCC(void* params, int* data)
 {
     LoadTiy_80028E74(&uiTiySprts_8008D620, 0, &uiTiyTPages_8008D3F4, data, 1);
     uiTiyLoaded_8008B4E8 = 1;
 }
-// Matched
 void FreeActiveOverlay_8002C014(void)
 {
     if (uiTiySprts_8008D620)
@@ -106,7 +101,6 @@ void FreeActiveOverlay_8002C014(void)
         uiTiyTPages_8008D3F4 = 0;
     }
 }
-// Matched
 void DrawUiTiySprt_8002C06C(unsigned short* pos, int idx, int ot)
 {
     uiTiySprts_8008D620[idx].x0 = pos[0];
@@ -114,7 +108,6 @@ void DrawUiTiySprt_8002C06C(unsigned short* pos, int idx, int ot)
     AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[idx], 5);
     AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[idx], 2);
 }
-// Matched
 void DrawLargeNumber_8002C100(unsigned short* origin, int value, int ot)
 {
     short digits[7];
@@ -146,7 +139,6 @@ void DrawLargeNumber_8002C100(unsigned short* origin, int value, int ot)
         }
     }
 }
-// Matched
 void DrawSmallNumber3_8002C290(unsigned short* origin, int value, int ot)
 {
     short digits[3];
@@ -178,7 +170,6 @@ void DrawSmallNumber3_8002C290(unsigned short* origin, int value, int ot)
         }
     }
 }
-// Matched
 void DrawSmallNumber9_8002C414(unsigned short* origin, int value, int ot)
 {
     short digits[9];
@@ -210,7 +201,6 @@ void DrawSmallNumber9_8002C414(unsigned short* origin, int value, int ot)
         }
     }
 }
-// Matched
 int CountDigits_8002C5A4(int value)
 {
     do
@@ -219,7 +209,6 @@ int CountDigits_8002C5A4(int value)
     } while (value);
     return 0;
 }
-// Matched
 void SetLargeDigitColor_8002C5D0(int color)
 {
     short i = 0x84;
@@ -231,12 +220,10 @@ void SetLargeDigitColor_8002C5D0(int color)
         i++;
     } while (i < 0x8e);
 }
-// Matched
 unsigned int GetTime30Hz_8002C64C(void)
 {
     return (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
 }
-// Matched
 int DrawAbilityDescription_8002C670(char* minion, Pos16* pos, const char* (*texts)[4], short slot, short ot)
 {
     char* skill = minion + slot * 4;
@@ -253,7 +240,6 @@ int DrawAbilityDescription_8002C670(char* minion, Pos16* pos, const char* (*text
     return 1;
 }
 extern void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot);
-// Matched
 void DrawScrollArrow_8002C6DC(short* pos, short dir, short ot)
 {
     ScrollArrow arrow;
@@ -263,7 +249,6 @@ void DrawScrollArrow_8002C6DC(short* pos, short dir, short ot)
 }
 extern int GetLastInventorySlot_800AD308(int a0);
 extern const int emptyString_800741EC;
-// Matched
 void DrawItemList_8002C728(ListMenuState* menu)
 {
     MenuWindowList list;
@@ -355,7 +340,6 @@ void DrawItemList_8002C728(ListMenuState* menu)
         DrawScrollArrow_8002C6DC(itemScrollDownPos_80082824, 1, menu->ot_6);
     }
 }
-// Matched
 void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
 {
     unsigned short pos[2];

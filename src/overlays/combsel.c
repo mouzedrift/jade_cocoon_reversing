@@ -436,7 +436,6 @@ void MainMenuInput_800A4E94(CombSelTask* t, int a)
     }
 }
 
-// Matched
 void NextOrFight_800A5080(CombSelTask* t, int a)
 {
     if (AllSlotsEmpty_800A5560(teams_800A3AA0[curPlayer_800A38D9], 3) == 1)

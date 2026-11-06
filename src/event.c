@@ -33,7 +33,6 @@ extern const char aDWorkPsusEvent[];
 extern unsigned char** windowColorSets_80087064[];
 extern unsigned char* windowPulseColors_80087050[];
 extern int windowPulseScale_80086FB0[][3];
-// Matched
 void GetWindowColors_8004226C(int colorSet, unsigned char* out, int time, int colorIdx)
 {
     unsigned char c0[4];
@@ -83,21 +82,18 @@ void GetWindowColors_8004226C(int colorSet, unsigned char* out, int time, int co
         PulseColor_80033394(out, c0, c1, time, 40, 10);
     }
 }
-// Matched
 void DrawWindow_80042460(RECT* rect, WindowStyle* style, u_long* ot, int time)
 {
     unsigned char rgb[8];
     GetWindowColors_8004226C(style->colorSet_2, rgb, time, style->color_0);
     DrawWindowFrame_80041ED0(rect, rgb, ot, style->semiTrans_3);
 }
-// Matched
 void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, u_long* ot, int time)
 {
     unsigned char rgb[8];
     GetWindowColors_8004226C(colorSet, rgb, time, saveData_8008B570.uiColor_20.s);
     DrawWindowFrame_80041ED0(rect, rgb, ot, 1);
 }
-// Matched
 void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
 {
     POLY_G4 poly;
@@ -123,7 +119,6 @@ void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
     }
 }
-// Matched
 void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot)
 {
     LINE_F4 line;
@@ -139,7 +134,6 @@ void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot)
     to.vy = line.y3;
     DrawLine_80042870(&from, &to, rgb, ot);
 }
-// Matched
 void DrawLine_80042870(DVECTOR* from, DVECTOR* to, unsigned char* rgb, void* ot)
 {
     LINE_F2 line;
@@ -154,7 +148,6 @@ void DrawLine_80042870(DVECTOR* from, DVECTOR* to, unsigned char* rgb, void* ot)
     addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
-// Matched
 int IsWindowFrameFit_800429A8(RECT* rect)
 {
     SPRT* sprts = publicTiySprts_8008D434;
@@ -165,7 +158,6 @@ int IsWindowFrameFit_800429A8(RECT* rect)
     return 0;
 }
 extern unsigned char* windowBgColors_80087028[];
-// Matched
 void DrawWindowBackground_800429F8(RECT* rect, int ot)
 {
     SPRT* sprts = publicTiySprts_8008D434;
@@ -189,7 +181,6 @@ void DrawWindowBackground_800429F8(RECT* rect, int ot)
     }
 }
 #define EVT_SPRT publicTiySprts_8008D434
-// Matched
 void DrawWindowBorder_80042B38(RECT* rect, int ot)
 {
     RECT parts[8];
@@ -269,7 +260,6 @@ void DrawWindowBorder_80042B38(RECT* rect, int ot)
 extern int xaStartPos_80096108;
 extern int xaEndPos_8009610C;
 
-// Matched
 void XaInitTask_80043054(EventEntry* entry, XaTask* task)
 {
     SsSetSerialAttr(0, 0, 1);
@@ -278,14 +268,12 @@ void XaInitTask_80043054(EventEntry* entry, XaTask* task)
     task->state_8 = 0;
     entry->cb_8 = (EventEntryFn)XaIdleTask_800430E8;
 }
-// Matched
 void XaStop_800430B0(void)
 {
     SsSetSerialVol(0, 0, 0);
     DsControlB(9, 0, 0);
 }
 extern int DsSystemStatus(void);
-// Matched
 void XaIdleTask_800430E8(EventEntry* entry, XaTask* buffer)
 {
     XaTask* task = buffer;
@@ -305,7 +293,6 @@ void XaIdleTask_800430E8(EventEntry* entry, XaTask* buffer)
         entry->cb_8 = (EventEntryFn)XaWaitFilterTask_800431C4;
     }
 }
-// Matched
 void XaWaitFilterTask_800431C4(EventEntry* entry, XaTask* task)
 {
     char buf[8];
@@ -314,7 +301,6 @@ void XaWaitFilterTask_800431C4(EventEntry* entry, XaTask* task)
         entry->cb_8 = (EventEntryFn)XaStartReadTask_80043204;
     }
 }
-// Matched
 void XaStartReadTask_80043204(EventEntry* entry, XaTask* task)
 {
     if (XaStartRead_800434C4(xaStartPos_80096108))
@@ -324,7 +310,6 @@ void XaStartReadTask_80043204(EventEntry* entry, XaTask* task)
         entry->cb_8 = (EventEntryFn)XaMonitorTask_800432EC;
     }
 }
-// Matched
 void XaFadeOutTask_80043264(EventEntry* entry, XaTask* task)
 {
     short vol = task->vol_A - 14;
@@ -342,7 +327,6 @@ void XaFadeOutTask_80043264(EventEntry* entry, XaTask* task)
         SsSetSerialVol(0, vol, vol);
     }
 }
-// Matched
 void XaMonitorTask_800432EC(EventEntry* entry, XaTask* task)
 {
     u_char result[8];
@@ -369,7 +353,6 @@ void XaMonitorTask_800432EC(EventEntry* entry, XaTask* task)
     }
 }
 extern int DsCommand(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
-// Matched
 void XaSetup_800433FC(XaTask* task)
 {
     Data001File file;
@@ -389,7 +372,6 @@ void XaSetup_800433FC(XaTask* task)
     xaEndPos_8009610C = xaStartPos_80096108 + xaRequest_80096110.length_6 * 32;
     xaTimer_8008D450 = xaRequest_80096110.length_6 * 1920 / 150;
 }
-// Matched
 int XaStartRead_800434C4(int pos)
 {
     unsigned char loc[4];
@@ -403,7 +385,6 @@ int XaStartRead_800434C4(int pos)
     } while (id == 0);
     return id;
 }
-// Matched
 int XaRequestStop_80043524(void)
 {
     XaTask* task;
@@ -415,7 +396,6 @@ int XaRequestStop_80043524(void)
     task->flags_0 |= 1;
     return 1;
 }
-// Matched
 void XaRequestPlay_80043564(short channel, short startSector, short length)
 {
     xaRequestPending_80096118 = 0;
@@ -423,17 +403,14 @@ void XaRequestPlay_80043564(short channel, short startSector, short length)
     xaRequest_80096110.startSector_4 = startSector;
     xaRequest_80096110.length_6 = length;
 }
-// Matched
 int XaIsIdle_80043584(void)
 {
     return ((XaTask*)xaTask_8008B560->entry.buffer)->state_8 == 0;
 }
-// Matched
 unsigned int XaNoRequestPending_800435A4(void)
 {
     return xaRequestPending_80096118 >> 31;
 }
-// Matched
 EventNode* CreateEventList_800435B4(EventDesc** list)
 {
     EventDesc** descs;
@@ -518,7 +495,6 @@ EventNode* CreateEventList_800435B4(EventDesc** list)
     last->next = NULL;
     return head;
 }
-// Matched
 void* EventEntryAllocBuffer_800437E8(int* entry, int size)
 {
     void* buffer = malloc3_dbg(size, aDWorkPsusEvent, 0x2C);
@@ -530,7 +506,6 @@ void* EventEntryAllocBuffer_800437E8(int* entry, int size)
     entry[4] = size;
     return buffer;
 }
-// Matched
 int EventEntryFreeBuffer_80043840(int* entry)
 {
     if (entry[5])
@@ -544,7 +519,6 @@ int EventEntryFreeBuffer_80043840(int* entry)
     }
     return 1;
 }
-// Matched
 void RunEventList_80043898(EventNode* node)
 {
     do
@@ -556,7 +530,6 @@ void RunEventList_80043898(EventNode* node)
         node = node->next;
     } while (node);
 }
-// Matched
 void RunEventListFreeCallbacks_800438F8(EventNode* node)
 {
     do
@@ -568,7 +541,6 @@ void RunEventListFreeCallbacks_800438F8(EventNode* node)
         node = node->next;
     } while (node);
 }
-// Matched
 void RunEventListUntilAbort_80043958(EventNode* node)
 {
     if (eventDispatchHalt_8008B540 == 0)
@@ -583,7 +555,6 @@ void RunEventListUntilAbort_80043958(EventNode* node)
         } while (node && eventDispatchHalt_8008B540 == 0);
     }
 }
-// Matched
 void ResetEventListFromDescs_800439E0(unsigned int** descs, unsigned int* nodes)
 {
     unsigned int* desc;
@@ -601,7 +572,6 @@ void ResetEventListFromDescs_800439E0(unsigned int** descs, unsigned int* nodes)
         nodes += 10;
     }
 }
-// Matched
 int FreeEventList_80043A5C(EventNode* head)
 {
     EventNode* node = head;

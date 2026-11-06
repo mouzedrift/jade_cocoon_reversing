@@ -403,7 +403,6 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
     }
 }
 
-// Matched
 MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side)
 {
     MsgWindowCfg cfg;
@@ -558,7 +557,6 @@ void NextLivingMinion_800A58E8(int side)
     } while (IsMinionSlotEmpty_800A1934(minion) || IsMinionFainted_800A1958(minion));
 }
 
-// Matched
 void ChooseNextActor_800A599C(CombBtlTask* t, int side)
 {
     int gauge[2];
@@ -964,7 +962,6 @@ void ResolveCommand_800A616C()
 // hitWindow_800A8494: the merged window; lo counts the frames up to hi
 // The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then
 // handles side KO / swap / counter. Steps fall through in one call while the step keeps changing.
-// Matched
 void RunExchange_800A68E0(CombBtlTask* t)
 {
     int prev = -1;
@@ -1217,7 +1214,6 @@ ShortPair MergeHitWindows_800A71E4(int count, ShortPair* windows)
     return merged;
 }
 
-// Matched
 void StartArenaCamera_800A7290()
 {
     EventEntry* e = AllocEventEntry_80043AF8(cameraTask_8008D4A0);
@@ -1337,7 +1333,6 @@ void OpenSideWindow_800A75F8(int side)
     }
 }
 
-// Matched
 void SideWindowTask_800A7694(EventEntry* e, void* buf)
 {
     MenuWindowItem w0 = sideLabel0_800A4AFC;

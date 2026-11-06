@@ -206,7 +206,6 @@ void LoadMenuStart_800B7650(void)
     LoadMenuInit_800B7674(4, 0);
 }
 
-// Matched
 void LoadMenuInit_800B7674(int mode, int b)
 {
     int i;
@@ -358,7 +357,6 @@ const int dword_800B6970 = 0;
 //  4 load / save / overwrite?, 5 return to the title?, 6 no card in the slot, 7 card full, 8 no save data,
 //  9 no empty blocks, 10 damaged data, 11 card not formatted, 13..15 format / save / load failed,
 //  18 checking the card
-// Matched
 void LoadMenuScreen_800B79F8(LoadMenuWork* work)
 {
     union // the text position and the window colour share one slot (case 4)
@@ -962,7 +960,6 @@ void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work)
     DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
 {
     LoadTextPos p0 = { 0xBF, 0x15 };
@@ -1003,7 +1000,6 @@ void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
     DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
 {
     LoadTextPos p0;
@@ -1402,7 +1398,6 @@ int ReadSaveSummaries_800B9724(LoadMenuWork* work)
 
 // the save task: writes the save file to the card, then back to the menu (task callback: void* params copied
 // into typed locals)
-// Matched
 void WriteSaveTask_800B98C4(void* t, void* buf)
 {
     LoadMenuTaskEntry* task = t;
@@ -1456,7 +1451,6 @@ void WriteSaveTask_800B98C4(void* t, void* buf)
 }
 
 // packs saveData_8008B570 into the save file to write, with its summary and title
-// Matched
 void PackSaveFile_800B9A8C(LoadMenuWork* work)
 {
     unsigned short buf[12];
@@ -1621,7 +1615,6 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
 // the load task: reads the save file from the card and unpacks it, then back to the menu (task callback: the
 // second parameter is copied into a typed local after the other locals; declared first it would be merged into
 // the incoming argument move and the call setup scheduled differently)
-// Matched
 void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf)
 {
     int cmd = 0;
@@ -1686,7 +1679,6 @@ void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf)
 }
 
 // unpacks the loaded save file into saveData_8008B570; 0 when the checksum or the version is wrong
-// Matched
 int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
 {
     int ret = 0;
@@ -2042,7 +2034,6 @@ int PollCardExist_800BAF0C(int slot)
     return ret;
 }
 
-// Matched
 void ScanCardSaves_800BAFB0(int slot)
 {
     CardDirEntry dir[15];
@@ -2081,7 +2072,6 @@ void ScanCardSaves_800BAFB0(int slot)
     cardSaveCount_800BE150 = found;
 }
 
-// Matched
 void ScanCardSavesComb_800BB0E4(int slot)
 {
     CardDirEntry dir[15];
@@ -2160,7 +2150,6 @@ int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir)
 // (the header comes in as a void* copied into a typed local: as a typed parameter it gets a REG_EQUIV note to its
 // stack slot, which doubles its live length for global alloc and gives i / the icon table pointer $s0 first; rect.y
 // adds poly->v0 last, the original reads it after the tp / 16 rounding branch)
-// Matched
 void BuildCardHeader_800BB2AC(void* buf, int idx, char* title)
 {
     CardHeader* header = buf;

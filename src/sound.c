@@ -26,7 +26,6 @@
 const char aAssertionFaile_0[] = "Assertion failed: file \"%s\", line %d\n";
 const char aSoundC[] = "SOUND.C";
 
-// Matched
 void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short animate, RECT* clipRect)
 {
     RECT buf;
@@ -67,7 +66,6 @@ void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short
     desc2.ot_A = ot;
     DrawUiWindow_8002A384(&desc2);
 }
-// Matched
 void InitSound_8002FE54(SoundStruct* sound)
 {
     sound->field_0_vab_id = -1;
@@ -79,14 +77,12 @@ void InitSound_8002FE54(SoundStruct* sound)
     sound->field_10_sep_data_ptr = 0;
     sound->field_18_vab_header_ptr = 0;
 }
-// Matched
 void InitSounds_8002FE7C(void)
 {
     InitSound_8002FE54(&bgmSound_80091CE0);
     InitSound_8002FE54(&sfxSound_80091D20);
     InitSound_8002FE54(&seqSlotSound_80091D00);
 }
-// Matched
 void ResetSoundTask_8002FEB8(void)
 {
     SoundTask* task = soundTask_8008D4A4->entry.buffer;
@@ -100,7 +96,6 @@ void ResetSoundTask_8002FEB8(void)
         task->fades_18[i].active = 0;
     }
 }
-// Matched
 void InitSoundTask_8002FF10(EventEntry* entry, SoundTask* task)
 {
     int i;
@@ -114,7 +109,6 @@ void InitSoundTask_8002FF10(EventEntry* entry, SoundTask* task)
     }
     entry->cb_8 = (EventEntryFn)UpdateSoundTask_8002FF64;
 }
-// Matched
 void UpdateSoundTask_8002FF64(int entry, SoundTask* task)
 {
     int i;
@@ -148,7 +142,6 @@ void UpdateSoundTask_8002FF64(int entry, SoundTask* task)
         break;
     }
 }
-// Matched
 void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer)
 {
     SoundTask* task = buffer;
@@ -163,7 +156,6 @@ void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer)
     FreeSound_80030D00(task->sfx_8);
 }
 
-// Matched
 int PlayMusic_800300E0(int idx, int unused)
 {
     SoundTask* task = soundTask_8008D4A4->entry.buffer;
@@ -247,7 +239,6 @@ int PlayMusic_800300E0(int idx, int unused)
     }
     return 1;
 }
-// Matched
 int LoadSeqSlotSound_800303E8(void)
 {
     SoundTask* task = soundTask_8008D4A4->entry.buffer;
@@ -271,7 +262,6 @@ int LoadSeqSlotSound_800303E8(void)
     task->request_10 = QueueFileRequest_8003BC84(&req);
     return 1;
 }
-// Matched
 void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
 {
     SoundStruct* sound = req[0];
@@ -318,27 +308,22 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
         sound->field_10_sep_data_ptr = 0;
     }
 }
-// Matched
 void FreeSeqSlotSound_80030664(void)
 {
     FreeSoundSeqs_80030EEC(&seqSlotSound_80091D00);
 }
-// Matched
 int IsSoundTaskReady_80030688(void)
 {
     return ((SoundTask*)soundTask_8008D4A4->entry.buffer)->state_2 == 2;
 }
-// Matched
 int IsSoundTaskReady_800306B0(void)
 {
     return ((SoundTask*)soundTask_8008D4A4->entry.buffer)->state_2 == 2;
 }
-// Matched
 void FreeBgmSeqs_800306D8(void)
 {
     FreeSoundSeqs_80030EEC(&bgmSound_80091CE0);
 }
-// Matched
 void StopSoundSeqById_800306FC(int idx)
 {
     SoundTask* task = soundTask_8008D4A4->entry.buffer;
@@ -356,7 +341,6 @@ void StopSoundSeqById_800306FC(int idx)
         StopSoundSeq_80031408(task->sfx_8, idx);
     }
 }
-// Matched
 void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileHeader)
 {
     SoundStruct* sound = req[0];
@@ -411,7 +395,6 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
         PlayMusicSeq_80031260(sound, sound->field_6_sound_idx, 1);
     }
 }
-// Matched
 void ApplyAudioOutputFormat_80030988(void)
 {
     if (!((saveData_8008B570.settings_1C.word >> 6) & 1))
@@ -424,7 +407,6 @@ void ApplyAudioOutputFormat_80030988(void)
     }
     SsSetMVol(0x7F, 0x7F);
 }
-// Matched
 void ApplyBgmVolume_800309D8(SoundStruct* sound)
 {
     int i;
@@ -434,7 +416,6 @@ void ApplyBgmVolume_800309D8(SoundStruct* sound)
         SsSepSetVol(sound->field_C_sep_access_num, i, vol, vol);
     }
 }
-// Matched
 void LoadSound_80030A84(short soundId, SoundStruct* sound)
 {
     char* pSndFileBuffer;

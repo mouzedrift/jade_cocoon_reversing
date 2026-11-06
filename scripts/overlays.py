@@ -116,7 +116,7 @@ def extract(name, iso_path, exe):
 
 def lib_objs(name):
     """the PSY-Q modules config/ovl_lib_objs.txt links into the overlay: [obj path], in link order"""
-    from lib_match import lib_modules
+    from objlib.lib import lib_modules
     for line in open(os.path.join(REPO, "config", "ovl_lib_objs.txt")):
         f = line.split("#", 1)[0].split()
         if not f or f[0] != name:
@@ -287,16 +287,7 @@ def main(argv):
     diff = sum(1 for i in range(0, len(data), 4) if data[i:i + 4] != built[i:i + 4])
     print("%s.BIN: %d of %d words identical" % (name, len(data) // 4 - diff, len(data) // 4))
     if size > len(data):
-        print("%s.BIN: %d bytes longer than the original" % (name, size - len(data)))
-    # the generated assembly refers to code and data by number (j to non-symbol targets, lui/addiu pairs,
-    # pointer tables in .word data), so a modified build is only usable if nothing moved
-    mapped = {m.group(2): int(m.group(1), 16) for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$",
-                                                                       open(os.path.join(b, tag + ".map")).read(), re.M)}
-    moved = sorted((a, n) for a, n in syms if n in mapped and mapped[n] != a)
-    if moved:
-        print("%s.BIN: warning: %d symbols moved (first %s 0x%08X -> 0x%08X): the generated assembly still uses "
-              "the old addresses, this build will not run correctly" % (name, len(moved), moved[0][1], moved[0][0],
-                                                                         mapped[moved[0][1]]))
+        print("%s.BIN: %d bytes longer than the original (it must still fit where the game loads it)" % (name, size - len(data)))
     open(os.path.join(b, name + ".BIN"), "wb").write(built)
     open(os.path.join(b, name + ".orig"), "wb").write(data)
     return 1 if diff else 0

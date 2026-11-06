@@ -43,7 +43,6 @@ const char aPlusPower_80074600[] = "\201{\201@\202o\202\217\202\227\202\205\202\
 const char aDashes3_80074610[] = "\201[\201[\201["; // ーーー
 const int dword_80074618 = 0;
 
-// Matched
 void FreeSound_80030D00(SoundStruct* sound)
 {
     if (sound && sound->field_6_sound_idx >= 0)
@@ -53,12 +52,10 @@ void FreeSound_80030D00(SoundStruct* sound)
         sound->field_6_sound_idx = -1;
     }
 }
-// Matched
 int GetSoundFileId_80030D4C(int idx)
 {
   return soundFiles_80082F0C[idx].field_0_file_id;
 }
-// Matched
 void StopSoundSeqs_80030D68(SoundStruct* sound)
 {
     int i;
@@ -80,7 +77,6 @@ void StopSoundSeqs_80030D68(SoundStruct* sound)
         }
     }
 }
-// Matched
 void FreeSoundVab_80030EA4(SoundStruct* sound)
 {
     SsVabClose(sound->field_0_vab_id);
@@ -90,7 +86,6 @@ void FreeSoundVab_80030EA4(SoundStruct* sound)
         sound->field_18_vab_header_ptr = 0;
     }
 }
-// Matched
 void FreeSoundSeqs_80030EEC(void* soundArg)
 {
     SoundStruct* sound = soundArg;
@@ -118,7 +113,6 @@ void FreeSoundSeqs_80030EEC(void* soundArg)
         sound->field_10_sep_data_ptr = 0;
     }
 }
-// Matched
 void PlaySoundSeq_8003105C(SoundStruct* sound, int idx, short loops)
 {
     int seq = soundFiles_80082F0C[idx].field_2_seq;
@@ -146,7 +140,6 @@ void PlaySoundSeq_8003105C(SoundStruct* sound, int idx, short loops)
     SsSepSetCrescendo(accessNum, seqNum, 1, 1);
     sound->field_4_seq_num = seqNum;
 }
-// Matched
 void PlaySeqSlot_80031160(unsigned int idx, short loops)
 {
     SoundStruct* sound = &seqSlotSound_80091D00;
@@ -172,7 +165,6 @@ void PlaySeqSlot_80031160(unsigned int idx, short loops)
     SsSepPlay(accessNum, seqNum, 1, loops);
     SsSepSetCrescendo(accessNum, seqNum, 1, 1);
 }
-// Matched
 void PlayMusicSeq_80031260(SoundStruct* sound, int idx, short loops)
 {
     int seq = soundFiles_80082F0C[idx].field_2_seq;
@@ -193,7 +185,6 @@ void PlayMusicSeq_80031260(SoundStruct* sound, int idx, short loops)
         sound->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
     }
 }
-// Matched
 void StopSeqSlot_80031334(int idx)
 {
     SoundStruct* sound = &seqSlotSound_80091D00;
@@ -211,12 +202,10 @@ void StopSeqSlot_80031334(int idx)
     SsSepStop(accessNum, seqNum);
     SsSepSetVol(accessNum, seqNum, 0, 0);
 }
-// Matched
 void FadeOutSeqSlot_800313C8(int idx)
 {
     SsSepSetDecrescendo(seqSlotSound_80091D00.field_C_sep_access_num, seqSlots_800833E4[idx].seq_4, 0x7F, 0x78);
 }
-// Matched
 void StopSoundSeq_80031408(SoundStruct* sound, int idx)
 {
     SoundInfo* files = soundFiles_80082F0C;
@@ -237,7 +226,6 @@ void StopSoundSeq_80031408(SoundStruct* sound, int idx)
     SsSepStop(accessNum, seqNum);
     SsSepSetVol(accessNum, seqNum, 0, 0);
 }
-// Matched
 void PlaySfx_80031494(int id)
 {
     if (id < 63)
@@ -255,7 +243,6 @@ void PlaySfx_80031494(int id)
                   (saveData_8008B570.settings_1C.word >> 14) & 0x7F);
     }
 }
-// Matched
 short SfxKeyOn_800314F4(int sfx)
 {
     SoundStruct* sound;
@@ -269,7 +256,6 @@ short SfxKeyOn_800314F4(int sfx)
     }
     return SsUtKeyOn(*(short*)sound, sfx, 0, 0x3c, 0, (saveData_8008B570.settings_1C.word >> 14) & 0x7F, (saveData_8008B570.settings_1C.word >> 14) & 0x7F);
 }
-// Matched
 void SfxKeyOff_80031574(short voice, short sfx)
 {
     SoundStruct* sound;
@@ -283,24 +269,20 @@ void SfxKeyOff_80031574(short voice, short sfx)
     }
     SsUtKeyOff(voice, *(short*)sound, sfx, 0, 0x3c);
 }
-// Matched
 void SetBattleMusic_800315D8(int music)
 {
     battleMusic_80091CFC = music;
 }
-// Matched
 int GetBattleMusic_800315E4(void)
 {
     return battleMusic_80091CFC;
 }
-// Matched
 void FreeBgmAndSfx_800315F4(void)
 {
     SoundTask* task = soundTask_8008D4A4->entry.buffer;
     FreeSound_80030D00(task->bgm_4);
     FreeSound_80030D00(task->sfx_8);
 }
-// Matched
 void FadeOutSfxSeq_80031638(void)
 {
     SoundTask* task;
@@ -322,18 +304,15 @@ void FadeOutSfxSeq_80031638(void)
         }
     }
 }
-// Matched
 int ReturnZero_800316DC(void)
 {
     return 0;
 }
-// Matched
 int ReturnZero_800316E4(void)
 {
     return 0;
 }
 extern UnitSkill* GetUnitSkills_80031B30(int a0);
-// Matched
 int GetSkillEffect_800316EC(unsigned int slot, int actorMask)
 {
     int effect;

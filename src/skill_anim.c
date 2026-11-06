@@ -20,7 +20,6 @@
 
 
 
-// Matched
 int SkillSlotToAnimIndex_80031870(int slot)
 {
     switch (slot)

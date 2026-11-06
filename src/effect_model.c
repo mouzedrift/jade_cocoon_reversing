@@ -27,7 +27,6 @@
 
 const int off_80072278[0] = {  };
 
-// Matched
 void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
@@ -56,7 +55,6 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         entry->cb_8 = (EventEntryFn)PulseModelTask_8001761C;
     }
 }
-// Matched
 void PulseModelTask_8001761C(int* flags, EffectObj* obj)
 {
     EffectModel* model = (EffectModel*)obj->res_88;
@@ -76,7 +74,6 @@ void PulseModelTask_8001761C(int* flags, EffectObj* obj)
         free3_8003FC6C(obj->work_94);
     }
 }
-// Matched
 void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
@@ -105,7 +102,6 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         entry->cb_8 = (EventEntryFn)MorphModelTask_800178C0;
     }
 }
-// Matched
 void MorphModelTask_800178C0(int* flags, EffectObj* obj)
 {
     EffectModel* model = (EffectModel*)obj->res_88;
@@ -139,7 +135,6 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
     DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, cameraState_8008D4F0.ent_44, 0x10, scale);
 }
 extern EventNode* effectObjects_8008B4A8;
-// Matched
 void SpawnMdecEffect_80017A6C(int parent, int frames)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
@@ -163,7 +158,6 @@ void SpawnMdecEffect_80017A6C(int parent, int frames)
         DecDCTReset(0);
     }
 }
-// Matched
 void MdecEffectTask_80017B10(unsigned int* flags, EffectObj* obj)
 {
     int* schedule = (int*)obj->field_8C;
@@ -182,7 +176,6 @@ void MdecEffectTask_80017B10(unsigned int* flags, EffectObj* obj)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-// Matched
 void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
@@ -206,7 +199,6 @@ void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
         entry->cb_8 = WaveModelTask_80017CE4;
     }
 }
-// Matched
 void WaveModelTask_80017CE4(EventEntry* entry, void* buf)
 {
     int* flags = (int*)entry;
@@ -231,7 +223,6 @@ void WaveModelTask_80017CE4(EventEntry* entry, void* buf)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-// Matched
 void MorphInModelTask_80017E30(EventEntry* entry, void* buf)
 {
     EffectObj* obj = buf;
@@ -262,7 +253,6 @@ void MorphInModelTask_80017E30(EventEntry* entry, void* buf)
     pos[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->targetPos_1C[2];
     DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, (obj->field_30 << 16) | 0xB0, scalePtr);
 }
-// Matched
 void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
 {
     EffectObj* obj = buf;
@@ -296,12 +286,10 @@ void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
         free3_8003FC6C(obj->work_94);
     }
 }
-// Matched
 int GetMdecEffectLength_800181E8(void)
 {
     return effectFile_80091BD0.imageSets_30->count_0;
 }
-// Matched
 HitTimes* RepeatHitTimes_80018200(HitTimes* src, unsigned short loopStart, unsigned short loopEnd, short loops, int effect)
 {
     HitTimes* dst = ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->hitTimes_0;
@@ -335,7 +323,6 @@ extern void GetSummonedMinionEffectTarget_800C0FC4(EffectTarget* out);
 extern void GetLevantEffectTarget_800A93A4(EffectTarget* out);
 extern void GetEnemyEffectTarget_800A29CC(int idx, EffectTarget* out);
 extern void GetSlotEffectTarget_800A111C(int slot, EffectTarget* out);
-// Matched
 void CollectEffectTargets_800182B8(ActorEffectReq* req, int mask)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;

@@ -23,7 +23,6 @@
 #include "spadstack.h"
 #include "unit_query.h"
 
-// Matched
 EventEntry* AllocEventEntry_80043AF8(EventNode* node)
 {
     int i;
@@ -39,7 +38,6 @@ EventEntry* AllocEventEntry_80043AF8(EventNode* node)
     }
     return 0;
 }
-// Matched
 void StopAllEventEntries_80043B40(EventNode* node)
 {
     int count = node->count;
@@ -53,7 +51,6 @@ void StopAllEventEntries_80043B40(EventNode* node)
         node = node->next;
     }
 }
-// Matched
 int DrawBillboard_80043B8C(POLY_FT4* poly, VECTOR* pos, short* size, int flags, short* off, short fl)
 {
     BillboardScratch* scratch = BILLBOARD_SCRATCH;
@@ -87,7 +84,6 @@ int DrawBillboard_80043B8C(POLY_FT4* poly, VECTOR* pos, short* size, int flags, 
     }
     return 0;
 }
-// Matched
 int DrawBillboardRgb_80043DE0(POLY_FT4* poly, VECTOR* pos, short* size, unsigned char* rgb)
 {
     BillboardScratch* scratch = BILLBOARD_SCRATCH;
@@ -132,7 +128,6 @@ extern short battleCamSpline1Tail_80084350[];
         (s)->prim_0.v3 = (src)->v0 + (uv)[1] + (size)[1];     \
     }
 #define ROT_SPRITE_EXTENT(v, piv, sc) (((v) * (sc) * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4)
-// Matched
 VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short* size, short* pivot, short* scale,
                      SVECTOR* ofs, unsigned char* rgb, short flags, int abr, unsigned long* ot)
 {
@@ -290,7 +285,6 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
     return (VECTOR*)&s->wofs_40;
 }
 extern MATRIX lightMatrix_80087114; // light matrix
-// Matched
 void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot)
 {
     MATRIX* m;
@@ -329,7 +323,6 @@ void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SV
     PopMatrix();
     gte_SetLightMatrix(&lightMatrix_80087114);
 }
-// Matched
 void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos, PointLight* light, int flags, VECTOR* scale)
 {
     MATRIX* m;
@@ -366,7 +359,6 @@ void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos
     gte_SetLightMatrix(&lightMatrix_80087114);
     PopMatrix();
 }
-// Matched
 void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* rot, unsigned char* rgb)
 {
     MATRIX* m;
@@ -431,7 +423,6 @@ void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SV
     }
     PopMatrix();
 }
-// Matched
 void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int flags)
 {
     FtgQuadCtx* ctx = FTG_QUAD_CTX;
@@ -507,7 +498,6 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_14;
     ResetFtgSpriteVtx_8004D924();
 }
-// Matched
 void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
 {
     FtgQuadG4Ctx* ctx = FTG_QUAD_G4_CTX;
@@ -583,7 +573,6 @@ static inline void GetBonePos(SVECTOR* out, AnimPose* pose, int bone)
         out->vz = pose->pos[bone * 3 + 2];
     }
 }
-// Matched
 void GetBoneOffsets_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
 {
     int boneNum = 0;
@@ -665,7 +654,6 @@ void GetBoneOffsets_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
         *out++ = *offset;
     }
 }
-// Matched
 void RotMatrixZXY_8004668C(SVECTOR* rot, MATRIX* m)
 {
     int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
@@ -688,7 +676,6 @@ void RotMatrixZXY_8004668C(SVECTOR* rot, MATRIX* m)
     m->m[2][2] = (cx * cy) >> 12;
     m->m[1][2] = ((sz * sy) >> 12) - ((b * cy) >> 12);
 }
-// Matched
 void RotMatrixYXZ_80046874(SVECTOR* rot, MATRIX* m)
 {
     int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
@@ -895,7 +882,6 @@ static inline void SkelRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
 }
 // draws a skeleton: bone matrices from the pose (alt: bone rotations about x added from another pose), then
 // each drawn bone's FTG object
-// Matched
 void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
 {
     SVECTOR rot;
@@ -1121,7 +1107,6 @@ static inline void BlendFrameRot(SVECTOR* out, AnimPose* pose, int frame, int bo
 }
 // DrawAnimSkel_80046A58 blending two poses: the bone rotations are interpolated by t through the axis / angle of the
 // relative rotation (GetRotationAxis_8004AD44 / BasisFromAxis_8004B0A8), the bone offsets and per-bone scales linearly
-// Matched
 void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, int frame2, int t, PointLight* light, AnimPose* alt)
 {
     VECTOR root;
@@ -1339,7 +1324,6 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
     PopMatrix();
 }
 
-// Matched
 void BlendSkelPoses_8004A4FC(AnimSkel* sk, SVECTOR* scale1, AnimPose* pose1, int t1, SVECTOR* scale2, AnimPose* pose2, int t2,
                   AnimPose* rotBase, AnimPose* posBase, AnimPose* out, SVECTOR* vout)
 {
@@ -1425,7 +1409,6 @@ void BlendSkelPoses_8004A4FC(AnimSkel* sk, SVECTOR* scale1, AnimPose* pose1, int
         out->pos[idx * 3 + 2] = offset->vz;
     }
 }
-// Matched
 void GetRotationAxis_8004AD44(MATRIX* in, VECTOR* out)
 {
     MATRIX m;

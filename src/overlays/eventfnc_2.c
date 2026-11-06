@@ -37,7 +37,6 @@ int (*eventFuncs_800BCDBC[157])() = {
 // its externs in eventfnc.h when the function is C, the switch emits it then
 
 // Returns from a warp: plays the warp animation, fades out, picks the return area var and reloads the map
-// Matched
 void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
 {
     EvActorCmd cmd;

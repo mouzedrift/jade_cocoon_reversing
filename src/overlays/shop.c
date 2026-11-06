@@ -536,7 +536,6 @@ void MergeExp_800BA6D0(Minion* out, Minion* base, Minion* partner)
     out->status_84.exp_4 += CombinedExpDelta_80012204(base->status_84.level_44, base->status_84.exp_4, partner->status_84.level_44, partner->status_84.exp_4);
 }
 
-// Matched
 void MergeSkills_800BA72C(Minion* out, Minion* partner)
 {
     UnitSkills skills;
@@ -933,7 +932,6 @@ int CanInheritMagic_800BAB30(Minion* minion)
     return 1;
 }
 
-// Matched
 void MergeSpeciesHistory_800BAB38(Minion* out, Minion* partner)
 {
     unsigned char tmp[0x30];
@@ -1080,7 +1078,6 @@ void SwapMinions_800BAEDC(Minion* first, Minion* second)
 
 // Exchange two minions between the party/storage lists, fixing up their list kinds (2/3/4) first; each case calls SwapMinions
 // itself (the separate calls are what lets jump2 cross-jump the *first = 3 stores)
-// Matched
 int ExchangeMinions_800BAF54(short* first, short* second, short firstList, short secondList)
 {
     if (*first == 3)
@@ -1157,7 +1154,6 @@ void ShopFadeIn_800BB0F8(EventEntry* task, void* buffer)
     task->cb_8 = ShopMenuTask_800BB444;
 }
 
-// Matched
 void InitShopMenu_800BB148(ShopMenu* menu)
 {
     short i;
@@ -1636,7 +1632,6 @@ void SetShopHelpText_800BBB54(ShopMenu* menu, int mode)
     }
 }
 
-// Matched
 void ShopMenuInput_800BBE24(ShopMenu* menu)
 {
     int snd;
@@ -1860,7 +1855,6 @@ void DismissShopPrompt_800BC2DC(ShopMenu* menu)
     }
 }
 
-// Matched
 void DrawShopMenu_800BC380(ShopMenu* menu)
 {
     Pos16 pos;
@@ -2220,7 +2214,6 @@ void DrawShopMainMenu_800BCEDC(ShopMenu* menu)
     DrawMenuWindows_8002A5A4(&win);
 }
 
-// Matched
 int CheckShopSelection_800BCF74(ShopMenu* menu)
 {
     if (menu->state_0 == 0)
@@ -2288,7 +2281,6 @@ int CheckShopSelection_800BCF74(ShopMenu* menu)
     return 0;
 }
 
-// Matched
 void HandleShopConfirmCancel_800BD0D4(ShopMenu* menu)
 {
     short s;
@@ -2660,7 +2652,6 @@ void SetupShopCursor_800BD854(ShopMenu* menu)
     }
 }
 
-// Matched
 void ShopMenuExecute_800BD9DC(ShopMenu* menu)
 {
     EventEntry* tk;
@@ -3418,7 +3409,6 @@ void DrawSkinList_800BED48(short* ref)
     }
 }
 
-// Matched
 void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
 {
     TopSpeciesBuf top;
@@ -3620,7 +3610,6 @@ void FreeFormModelTask_800BF548()
     FreeModelTask_8001098C(task);
 }
 
-// Matched
 void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
 {
     FormActorDesc desc;

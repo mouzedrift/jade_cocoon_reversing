@@ -42,19 +42,16 @@ typedef struct
 extern EffectFileEntry effectFileTable_800795F0[];
 extern int effectSfxStarted_8008D784;
 extern int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
-// Matched
 void SetHitVariant_80018430(short variant)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     state->hitVariant_40 = variant;
 }
-// Matched
 void SetHitParam_80018448(short param)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     state->hitParam_42 = param;
 }
-// Matched
 void SetEffectFlag8_80018460(int on)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
@@ -67,7 +64,6 @@ void SetEffectFlag8_80018460(int on)
         state->flags_28 &= ~8;
     }
 }
-// Matched
 void SetTargetHitFlag_800184A0(int slot, int bit)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
@@ -80,7 +76,6 @@ void SetTargetHitFlag_800184A0(int slot, int bit)
         state->hitFlags_44[slot] |= 1 << bit;
     }
 }
-// Matched
 int PlayActorEffect_800184DC(ActorEffectReq* req, int slot)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
@@ -88,7 +83,6 @@ int PlayActorEffect_800184DC(ActorEffectReq* req, int slot)
     state->flags_28 |= 1;
     return 1;
 }
-// Matched
 void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
 {
     EffectArgs args;
@@ -181,7 +175,6 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
         }
     }
 }
-// Matched
 int FindEffectTblRow_80018908(int id, short (*tbl)[6])
 {
     int i;
@@ -214,7 +207,6 @@ int FindEffectTblRow_80018908(int id, short (*tbl)[6])
     }
     return row;
 }
-// Matched
 int GetWeaponEffect_800189F8(void)
 {
     SaveData* sd = &saveData_8008B570;
@@ -222,7 +214,6 @@ int GetWeaponEffect_800189F8(void)
     SetHitVariantForCommand_800BFAF8(*((unsigned char*)sd + 0x7E4));
     return weaponEffectIds_80079708[weapon->kind_2];
 }
-// Matched
 ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c)
 {
     ShortPair result;
@@ -275,7 +266,6 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     return result;
 }
 extern int dword_800B129C[];
-// Matched
 int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)
 {
     int animIdx;

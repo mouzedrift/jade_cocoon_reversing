@@ -27,7 +27,6 @@
 const ColorRGBA orangeGlowColor_80072270 = { { 255, 128, 0, 0 } };
 const int dword_80072274 = 0;
 
-// Matched
 void CountdownTask_80016BF4(EventEntry* entry, EffectObj* obj)
 {
     if (--obj->field_4 < 0)
@@ -36,7 +35,6 @@ void CountdownTask_80016BF4(EventEntry* entry, EffectObj* obj)
         PlaySfx_80031494(0x24);
     }
 }
-// Matched
 void BoneModelFadeTask_80016C3C(int* flags, void* buf)
 {
     EffectObj* obj = buf;
@@ -71,7 +69,6 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
     }
 }
 extern void SpawnSpriteAnim_800C1A5C(void* pos, short* rot, int sprite, int speed);
-// Matched
 void RadialBurstTask_80016E20(int* flags, void* buf)
 {
     EffectObj* obj = buf;
@@ -108,7 +105,6 @@ void RadialBurstTask_80016E20(int* flags, void* buf)
     obj->field_4++;
 }
 extern void PlayTimedSfx_800C1190(int frames, int sfx);
-// Matched
 void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
 {
     short rot[3];
@@ -143,7 +139,6 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
     obj->field_4++;
 }
 extern EventNode* effectObjects_8008B4A8;
-// Matched
 void SpawnLightFlash_80017158(int* pos, unsigned char* rgb)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
@@ -162,7 +157,6 @@ void SpawnLightFlash_80017158(int* pos, unsigned char* rgb)
         entry->cb_8 = (EventEntryFn)LightFlashTask_80017208;
     }
 }
-// Matched
 void LightFlashTask_80017208(int* flags, EffectObj* obj)
 {
     if (obj->frame_0 < 0x20)
@@ -176,7 +170,6 @@ void LightFlashTask_80017208(int* flags, EffectObj* obj)
         flags[0] = (flags[0] & ~1) | 0x8000;
     }
 }
-// Matched
 void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
 {
     EventEntry* entry;
@@ -203,7 +196,6 @@ void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
         entry->cb_8 = (EventEntryFn)GlowModelTask_800173A8;
     }
 }
-// Matched
 void GlowModelTask_800173A8(int* flags, void* buf)
 {
     EffectObj* obj = buf;

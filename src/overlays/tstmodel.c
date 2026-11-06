@@ -171,7 +171,6 @@ void TstModelTask_800A0A8C(EventEntry* task, TstModelWork* c)
 }
 const TstModelBone dword_800A09B8 = { 0x8080, 128, 0x8080 };
 
-// Matched
 void TstModelResetCamera_800A0BC0(TstModelWork* work)
 {
     work->dist_174 = 0x4B0;
@@ -597,7 +596,6 @@ void SetCameraLookAt_800A1A24(TstModelWork* c)
     SetGteLightAndCamera_8004D0E8();
 }
 
-// Matched
 enum GameStates TstModelMain_800A1B24(void)
 {
     DrawIntroMovie_8001AF64(tstModelTaskList_800A1EDC);

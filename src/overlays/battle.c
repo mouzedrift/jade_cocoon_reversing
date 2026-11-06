@@ -5,7 +5,6 @@ int dword_800B66C0 SDATA = 31;
 
 // GAME's encounter task buffer while a battle runs (GAME's GameQ_1; WaitBattleOverlay_800A1474 starts the battle)
 
-// Matched
 void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
 {
     SoundStruct* seq;
@@ -334,7 +333,6 @@ int GetEncounterAdvantage_800BAAD8()
     return 0;
 }
 
-// Matched
 void InitEnemyRecords_800BABC4()
 {
     int i;
@@ -575,7 +573,6 @@ void WaitChainMessageClosed_800BB168(BatTaskEntry* task, BatTurnWork* work)
     }
 }
 
-// Matched
 void BattleFinish_800BB1B0(BatTaskEntry* task, BatTurnWork* work)
 {
     BatTurnWork* w = work;
@@ -643,7 +640,6 @@ void SelectActingUnit_800BB314(BatTaskEntry* task)
     shownUnit_800C9C99 = summonedUnit_800C9C82;
 }
 
-// Matched
 void BeginUnitTurn_800BB380(BatTaskEntry* task, BatTurnWork* work)
 {
     BatTurnWork* w = work;
@@ -872,7 +868,6 @@ void CmdAction_800BBA24(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = WaitActionTask_800BC144;
 }
 
-// Matched
 void CmdActionReactions_800BBA70(BatTaskEntry* task, BatTurnWork* work)
 {
     BatTurnWork* w = work;
@@ -931,7 +926,6 @@ void CmdSummon_800BBBA8(BatTaskEntry* task, BatTurnWork* work)
 }
 
 // CmdRecall_800BBDB4 gets no arguments (task/work are still in a0/a1)
-// Matched
 void CmdSwapMinion_800BBBF4(BatTaskEntry* task, BatTurnWork* work)
 {
     BatTurnWork* w = work;
@@ -958,7 +952,6 @@ void CmdSwapMinionLoad_800BBC84(BatTaskEntry* task)
 }
 
 // waits until the summoned minion's actor is created, then starts its summon action (CreateSummonedMinionActor_800C0BF0 takes no arguments; the s3 copy of work comes from 'workCopy')
-// Matched
 void CmdSummonWait_800BBCC8(BatTaskEntry* task, BatTurnWork* work)
 {
     BatTurnWork* workCopy = work;
@@ -1031,7 +1024,6 @@ void CmdEnemyCall_800BBEFC(BatTaskEntry* task, BatTurnWork* work)
 }
 
 // an enemy's call for help: the called enemy joins (SwapEncounterEnemy_800A2AE8 takes no arguments; a typed '(void)' prototype keeps &curCommand_800C9C88 from becoming its argument)
-// Matched
 void CmdEnemyCallJoin_800BBF64(BatTaskEntry* task, BatTurnWork* work)
 {
     curCommand_800C9C88.kind_0 = 0x15;
@@ -1053,7 +1045,6 @@ void CmdEnemySwap_800BBFFC(BatTaskEntry* task, BatTurnWork* work)
 }
 
 // an enemy swaps with its partner in a fixed encounter (SwapEncounterEnemy_800A2AE8 takes no arguments)
-// Matched
 void CmdEnemySwapJoin_800BC05C(BatTaskEntry* task, BatTurnWork* work)
 {
     curCommand_800C9C88.kind_0 = 0x16;
@@ -1306,7 +1297,6 @@ int IsUnitInBattle_800BC784(int unit)
 
 // 'side = 3' (a pseudo) and 'return 3' (v0) only become the same 'v0 = 3' after reload, too short for jump2 to merge;
 // reorg then drops the redundant 'unit == 7' branch after its 'li v0,7' went into the previous branch's delay slot
-// Matched
 int GetUnitSide_800BC7DC(int unit)
 {
     int side;

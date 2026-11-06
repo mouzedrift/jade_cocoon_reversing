@@ -1,6 +1,6 @@
-# PSY-Q objects of the main executable in link order (scripts/lib_match.py --write).
+# PSY-Q objects of the main executable in link order (found by comparing the original executable with the SDKs' .LIB modules).
 # 'LIB MODULE' links that module of libs/psyq4.4/LIB/LIB; 'src FILE' is code that is no 4.4 module
-# (src/lib/FILE, assembly); 'bsshead SIZE' / 'bsstail SIZE' are .bss padding the build makes itself.
+# (src/lib/FILE, assembly); 'bsshead' / 'bsstail' are .bss padding to 8 bytes the build makes itself.
 LIBAPI.LIB C57
 LIBAPI.LIB C81
 LIBAPI.LIB C113
@@ -318,6 +318,6 @@ LIBMCX.LIB MCXINIT
 LIBMCX.LIB MCXMAIN
 LIBMCX.LIB MCXCMD
 src mcxdsr.s   # LIBMCX MCXDSR
-bsshead 4   # the original's commons made psylink 8-align the .bss (game .bss from 0x8008B490); the build defines them itself
+bsshead   # the original's commons made psylink 8-align the .bss (game .bss from 0x8008B490); the build defines them itself
 src strchr.s   # strchr (no padding in the game's copy), strrchr; _stacksize (0x80075A9C) is used by the start-up code
-bsstail 4   # the .bss group ends on 8 bytes (0x800A05A0), where the start-up's bss clear stops
+bsstail   # the .bss group ends on 8 bytes, where the start-up's bss clear stops

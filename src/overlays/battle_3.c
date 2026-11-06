@@ -79,7 +79,6 @@ void ShowUnitHitResult_800BE834(int unit, int pos)
     }
 }
 
-// Matched
 int IsActionDone_800BEA94()
 {
     if (!(saveData_8008B570.flags_0 & 0x20))

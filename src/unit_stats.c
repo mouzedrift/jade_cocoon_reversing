@@ -1232,7 +1232,6 @@ EventDesc eventDescs_80078EB8[27] = {
 unsigned char defaultBones_80079140[208] = { 0, 0, 0, 0, 0, 0, 70, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 11, 0, 3, 0, 3, 2, 3, 0, 11, 0, 4, 0, 4, 3, 4, 0, 11, 0, 5, 0, 5, 4, 5, 0, 11, 0, 3, 0, 6, 2, 6, 0, 11, 0, 4, 0, 7, 6, 7, 0, 11, 0, 5, 0, 8, 7, 8, 0, 11, 0, 3, 0, 9, 2, 9, 0, 11, 0, 4, 0, 10, 9, 10, 0, 11, 0, 5, 0, 11, 10, 11, 0, 11, 0, 3, 0, 12, 2, 12, 0, 11, 0, 4, 0, 13, 12, 13, 0, 11, 0, 3, 0, 14, 2, 14, 0, 11, 0, 4, 0, 15, 14, 15, 0, 11, 0, 2, 0, 16, 0, 16, 0, 11, 0, 3, 0, 17, 16, 17, 0, 11, 0, 4, 0, 18, 17, 18, 0, 11, 0, 5, 0, 19, 18, 19, 0, 11, 0, 3, 0, 20, 16, 20, 0, 11, 0, 4, 0, 21, 20, 21, 0, 11, 0, 5, 0, 22, 21, 22, 0, 11, 0, 3, 0, 23, 16, 23, 0, 11, 0, 4, 0, 24, 23, 24, 0, 11, 0, 255, 255, 255, 255, 255, 255, 255, 255 };
 unsigned char mergeBones_80079210[272] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 2, 0, 2, 1, 2, 0, 0, 0, 3, 0, 3, 2, 3, 0, 0, 0, 4, 0, 4, 3, 4, 0, 0, 0, 5, 0, 5, 4, 5, 0, 0, 0, 3, 0, 6, 2, 6, 0, 0, 0, 4, 0, 7, 6, 7, 0, 0, 0, 5, 0, 8, 7, 8, 0, 0, 0, 3, 0, 9, 2, 9, 0, 0, 0, 4, 0, 10, 9, 10, 0, 0, 0, 5, 0, 11, 10, 11, 0, 0, 0, 3, 0, 12, 2, 12, 0, 0, 0, 4, 0, 13, 12, 13, 0, 0, 0, 3, 0, 14, 2, 14, 0, 0, 0, 4, 0, 15, 14, 15, 0, 0, 0, 2, 0, 16, 0, 16, 0, 0, 0, 3, 0, 17, 16, 17, 0, 0, 0, 4, 0, 18, 17, 18, 0, 0, 0, 5, 0, 19, 18, 19, 0, 0, 0, 3, 0, 20, 16, 20, 0, 0, 0, 4, 0, 21, 20, 21, 0, 0, 0, 5, 0, 22, 21, 22, 0, 0, 0, 3, 0, 23, 16, 23, 0, 0, 0, 4, 0, 24, 23, 24, 0, 0, 0, 255, 255, 255, 255, 255, 255, 255, 255, 1, 0, 0, 0, 2, 0, 0, 0, 4, 0, 0, 0, 8, 0, 0, 0, 16, 0, 0, 0, 32, 0, 0, 0, 64, 0, 0, 0, 128, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 4 };
 
-// Matched
 int ModelTaskLoad_80010B90(ModelTaskState* task)
 {
     int i;
@@ -1252,7 +1251,6 @@ int ModelTaskLoad_80010B90(ModelTaskState* task)
     task->next_3C = 2;
     return 1;
 }
-// Matched
 int ModelTaskWaitLoad_80010C30(ModelTaskState* task)
 {
     int i;
@@ -1269,7 +1267,6 @@ int ModelTaskWaitLoad_80010C30(ModelTaskState* task)
     task->state_38 = task->next_3C;
     return 1;
 }
-// Matched
 int ModelTaskApplyTextures_80010CDC(ModelTaskState* task)
 {
     if (task->texId_2C >= 0)
@@ -1306,7 +1303,6 @@ extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* scale1, char* pose1, int
 extern void DrawAnimSkel_80046A58(FuseSkel* sk, void* buf, char* pose);
 extern unsigned char defaultBones_80079140[];
 extern unsigned char mergeBones_80079210[];
-// Matched
 int ModelTaskDraw_80010DB0(ModelTaskState* task)
 {
     ModelList* list;
@@ -1481,7 +1477,6 @@ int ModelTaskDraw_80010DB0(ModelTaskState* task)
     task->state_38 = 3;
     return 1;
 }
-// Matched
 void BlendVertices_80011904(VtxBlend* blend, Vtx12* out)
 {
     int vtx;
@@ -1512,14 +1507,12 @@ void BlendVertices_80011904(VtxBlend* blend, Vtx12* out)
         out[vtx].z = sum;
     }
 }
-// Matched
 void InitSporeTask_80011ADC(EventEntry* entry, int* spore)
 {
     spore[0] = -1;
     spore[1] = -1;
     entry->cb_8 = (EventEntryFn)UpdateSporeTask_80011AF8;
 }
-// Matched
 void UpdateSporeTask_80011AF8(EventEntry* entry, int* spore)
 {
     int* buf = spore;
@@ -1533,7 +1526,6 @@ void UpdateSporeTask_80011AF8(EventEntry* entry, int* spore)
         buf[0] = -1;
     }
 }
-// Matched
 void UseSporeItem_80011B24(int item)
 {
     SporeTaskBuf* spore = sporeTask_8008D464->entry.buffer;
@@ -1549,19 +1541,16 @@ void UseSporeItem_80011B24(int item)
         break;
     }
 }
-// Matched
 int GetSporeMode_80011B6C(void)
 {
     return ((SporeTaskBuf*)sporeTask_8008D464->entry.buffer)->mode_0;
 }
-// Matched
 void HaltEventsAndFade_80011B8C(void)
 {
     eventDispatchHalt_8008B540 = 1;
     unknownFlags_8008D678 |= 0x8000000;
     BeginFade_8001C260();
 }
-// Matched
 void HaltEventsFadeStopMovie_80011BCC(void)
 {
     int flags;
@@ -1570,17 +1559,14 @@ void HaltEventsFadeStopMovie_80011BCC(void)
     bStopDrawingMovie_8008D45C = 1;
     unknownFlags_8008D678 = flags | 4;
 }
-// Matched
 void EmptyCallback_80011C04(void)
 {
 }
-// Matched
 void FillHpMp_80011C0C(UnitStatus* dst, UnitStatus* src)
 {
     dst->hp_8.cur_0 = dst->hp_8.max_2 = src->hp_8.max_2;
     dst->mp_C.cur_0 = dst->mp_C.max_2 = src->mp_C.max_2;
 }
-// Matched
 void ClearStatus_80011C30(UnitStatus* status)
 {
     status->status_0 &= 0x400;
@@ -1595,13 +1581,11 @@ void RecoverQuarterHpMp_80011C44(UnitStatus* status)
         status->mp_C.cur_0 = (status->mp_C.cur_0 + status->mp_C.max_2 / 4 > status->mp_C.max_2) ? status->mp_C.max_2 : status->mp_C.cur_0 + status->mp_C.max_2 / 4;
     }
 }
-// Matched
 void Heal_80011CD0(UnitStatus* status)
 {
     status->status_0 = 0;
     FillHpMp_80011C0C(status, status);
 }
-// Matched
 void ReviveOneHp_80011CF4(UnitStatus* status)
 {
     status->exp_4 = 0;
@@ -1613,7 +1597,6 @@ typedef struct
     unsigned short limit;
     unsigned short value;
 } GrowthThreshold;
-// Matched
 int GetGrowthKind_80011D28(int base)
 {
     int i;
@@ -1626,12 +1609,10 @@ int GetGrowthKind_80011D28(int base)
     }
     return 9;
 }
-// Matched
 void ApplyLevelUpsBonus_80011D78(UnitStatus* status)
 {
     ApplyLevelUps_80011D98(status, 1);
 }
-// Matched
 int ApplyLevelUps_80011D98(UnitStatus* status, int mode)
 {
     unsigned int acc[6];
@@ -1754,7 +1735,6 @@ int ApplyLevelUps_80011D98(UnitStatus* status, int mode)
     }
     return levels;
 }
-// Matched
 int BaseMaxHpForLevel_80012140(int level, void* unused)
 {
     int result;
@@ -1771,12 +1751,10 @@ int BaseMaxHpForLevel_80012140(int level, void* unused)
     }
     return result;
 }
-// Matched
 int BaseMaxMpForLevel_80012178(int level, void* unused)
 {
     return (level * 3) + 20;
 }
-// Matched
 void ApplyLevelUpsPlain_80012188(UnitStatus* status)
 {
     ApplyLevelUps_80011D98(status, 0);
@@ -1810,7 +1788,6 @@ int GetLevelRank_800121A8(int level)
     }
     return rank;
 }
-// Matched
 int CombinedExpDelta_80012204(int levelA, int expA, int levelB, int expB)
 {
     double total = 0.0;
@@ -1818,7 +1795,6 @@ int CombinedExpDelta_80012204(int levelA, int expA, int levelB, int expB)
     total += PackedExpToTotal_80012358(levelB, expB);
     return TotalExpToPacked_8001247C(total) - ((levelA << 26) + expA);
 }
-// Matched
 void AccumulateExpGain_800122A0(int unit, int exp, int* acc)
 {
     UnitStatus* status = GetUnitStatus_80014390(unit & 0xFF);
@@ -1835,7 +1811,6 @@ void AccumulateExpGain_800122A0(int unit, int exp, int* acc)
         *acc = CombinedExpDelta_80012204(status->level_44, status->exp_4, exp, 0);
     }
 }
-// Matched
 double PackedExpToTotal_80012358(int level, int exp)
 {
     double total = 67108864.0;
@@ -1852,7 +1827,6 @@ double PackedExpToTotal_80012358(int level, int exp)
     }
     return total;
 }
-// Matched
 int TotalExpToPacked_8001247C(double x)
 {
     double t;
@@ -1870,7 +1844,6 @@ int TotalExpToPacked_8001247C(double x)
     }
     return (double)(i << 26) + x / s;
 }
-// Matched
 unsigned int GetCapturedMinionsCount_800125B8(void)
 {
     unsigned int totalMinions;
@@ -1884,7 +1857,6 @@ unsigned int GetCapturedMinionsCount_800125B8(void)
     }
     return totalMinions;
 }
-// Matched
 void AdjustUnitStat_80012614(UnitStatus* status, int sel, int delta, int mask)
 {
     int value;

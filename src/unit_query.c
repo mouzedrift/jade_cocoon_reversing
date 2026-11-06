@@ -31,7 +31,6 @@
 
 extern UnitSkill* GetUnitSkills_80031B30(int a0);
 
-// Matched
 int GetSkillCommandTargetFlags_80031A94(int* cmd)
 {
     int flags = 2;
@@ -48,7 +47,6 @@ int GetSkillCommandTargetFlags_80031A94(int* cmd)
     }
     return flags;
 }
-// Matched
 int GetSkillTargetFlags_80031B0C(UnitSkill* base, int idx)
 {
     int flags = 4;
@@ -64,7 +62,6 @@ extern UnitSkill* GetEnemySkills_800A2BA0(int a0);
 
 
 
-// Matched
 UnitSkill* GetUnitSkills_80031B30(unit)
     unsigned char unit;
 {
@@ -92,12 +89,10 @@ UnitSkill* GetUnitSkills_80031B30(unit)
     }
     return r;
 }
-// Matched
 int MenuIndexToSkillSlot_80031BDC(int index)
 {
     return index;
 }
-// Matched
 int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, unsigned long* ot, short x, short y, int scaleX, int scaleY, short* offset, int anchorFlags)
 {
     int d;
@@ -274,7 +269,6 @@ int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, unsigned long* ot, short x, short 
 }
 #define ROT_X(x, y, a) ((x) * sinTable_80084540[((a) + 0x400) & 0xFFF] / 4096 - (y) * sinTable_80084540[(a) & 0xFFF] / 4096)
 #define ROT_Y(x, y, a) ((x) * sinTable_80084540[(a) & 0xFFF] / 4096 + (y) * sinTable_80084540[((a) + 0x400) & 0xFFF] / 4096)
-// Matched
 void DrawRotatedPublicSprite_80031FF4(int idx, unsigned long* ot, unsigned short* pos, int angle)
 {
     POLY_FT4 poly;
@@ -330,13 +324,11 @@ void DrawRotatedPublicSprite_80031FF4(int idx, unsigned long* ot, unsigned short
     poly.y3 = pos[1] + ry;
     AddPrimCopy_80040298(ot, &poly, 10);
 }
-// Matched
 void GetPublicTiySprt_80032470(int idx, SPRT* pOut20, DR_TPAGE* pOut8)
 {
     *pOut20 = publicTiySprts_8008D434[idx];
     *pOut8 = publicTiyTPages_8008D440[idx];
 }
-// Matched
 void AddRotatedPolyFT4_800324D8(POLY_FT4* poly, int cx, int cy, int w, int h, int angle, void* ot)
 {
     int a = -angle;
@@ -352,7 +344,6 @@ void AddRotatedPolyFT4_800324D8(POLY_FT4* poly, int cx, int cy, int w, int h, in
     poly->y3 = cy + (h + (-*sinA * w + *cosA * h) / 4096) / 2;
     AddPrimCopy_80040298(ot, poly, 10);
 }
-// Matched
 void AddRotatedPolyFT4Uv_800327A8(POLY_FT4* poly, int cx, int cy, int w, int h, int du, int dv, int angle, void* ot)
 {
     short* sinA = &sinTable_80084540[angle & 0xFFF];
@@ -374,7 +365,6 @@ void AddRotatedPolyFT4Uv_800327A8(POLY_FT4* poly, int cx, int cy, int w, int h, 
     poly->y3 = cy + (h / 2 + (-*sinA * (w / 2) + *cosA * (h / 2)) / 4096);
     AddPrimCopy_80040298(ot, poly, 10);
 }
-// Matched
 void SetRotatedPolyFT4_80032A88(POLY_FT4* poly, int cx, int cy, int w, int h, int angle)
 {
     int a = -angle;
@@ -389,7 +379,6 @@ void SetRotatedPolyFT4_80032A88(POLY_FT4* poly, int cx, int cy, int w, int h, in
     poly->x3 = cx + (w + (*cosA * w + *sinA * h) / 4096) / 2;
     poly->y3 = cy + (h + (-*sinA * w + *cosA * h) / 4096) / 2;
 }
-// Matched
 void AddPolyFT4FlipXY_80032D34(unsigned short* poly, void* ot)
 {
     int dx = (short)poly[8] - (short)poly[4];
@@ -404,7 +393,6 @@ void AddPolyFT4FlipXY_80032D34(unsigned short* poly, void* ot)
     copy[0x10] = poly[4];
     copy[0x11] = poly[5];
 }
-// Matched
 void AddPolyFT4FlipX_80032DFC(short* poly, void* ot)
 {
     int d = poly[8] - poly[4];
@@ -414,7 +402,6 @@ void AddPolyFT4FlipX_80032DFC(short* poly, void* ot)
     copy[12] = poly[4] + d;
     copy[16] = poly[4];
 }
-// Matched
 void AddPolyFT4FlipY_80032E78(unsigned short* poly, void* ot)
 {
     int d = ((short*)poly)[13] - ((short*)poly)[5];
@@ -424,7 +411,6 @@ void AddPolyFT4FlipY_80032E78(unsigned short* poly, void* ot)
     copy[13] = poly[5];
     copy[17] = poly[5];
 }
-// Matched
 void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* poly, void* ot)
 {
     int x0 = ((short*)poly)[4];
@@ -441,7 +427,6 @@ void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* poly, void* ot)
     copy[9] = y0;
     copy[17] = y1;
 }
-// Matched
 void AddPolyFT4Rot90Cw_80032F88(unsigned short* poly, void* ot)
 {
     int x0 = ((short*)poly)[4];
@@ -458,22 +443,18 @@ void AddPolyFT4Rot90Cw_80032F88(unsigned short* poly, void* ot)
     copy[13] = y0;
     copy[17] = y1;
 }
-// Matched
 void AddPolyFT4Copy_8003301C(void* poly, void* ot)
 {
     AddPrimCopy_80040298(ot, poly, 10);
 }
-// Matched
 void SetDrTPageAbr_80033048(unsigned short* tpage, int abr)
 {
     tpage[2] = (tpage[2] & 0xFF9F) | ((abr & 3) << 5);
 }
-// Matched
 void SetPolyFT4Abr_80033064(unsigned short* poly, int abr)
 {
     poly[0xB] = (poly[0xB] & 0xFF9F) | ((abr & 3) << 5);
 }
-// Matched
 void DrawPublicTiySprt_80033080(unsigned short* pos, int idx, int otIdx)
 {
     publicTiySprts_8008D434[idx].x0 = pos[0];
@@ -481,7 +462,6 @@ void DrawPublicTiySprt_80033080(unsigned short* pos, int idx, int otIdx)
     AddPrimCopy_80040298(pOT_8008D454 + otIdx, &publicTiySprts_8008D434[idx], 5);
     AddPrimCopy_80040298(pOT_8008D454 + otIdx, &publicTiyTPages_8008D440[idx], 2);
 }
-// Matched
 void DrawPublicTiySprtColored_80033114(unsigned short* pos, int idx, void* ot, unsigned char* col)
 {
     publicTiySprts_8008D434[idx].r0 = col[0];
@@ -492,7 +472,6 @@ void DrawPublicTiySprtColored_80033114(unsigned short* pos, int idx, void* ot, u
     AddPrimCopy_80040298(ot, &publicTiySprts_8008D434[idx], 5);
     AddPrimCopy_80040298(ot, &publicTiyTPages_8008D440[idx], 2);
 }
-// Matched
 void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, void* tpage, void* ot, unsigned char* col)
 {
     if (col)
@@ -512,7 +491,6 @@ void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, void* tpage, voi
     AddPrimCopy_80040298(ot, tpage, 2);
 }
 extern DRAWENV drawEnv_8008D698[2];
-// Matched
 void AddDrawAreaPrim_8003326C(RECT* bounds, void* ot)
 {
     DR_AREA area;
@@ -526,7 +504,6 @@ void AddDrawAreaPrim_8003326C(RECT* bounds, void* ot)
     SetDrawArea(&area, &rect);
     AddPrimCopy_80040298(ot, &area, 3);
 }
-// Matched
 void AddClipDrawAreaPrim_80033308(void* ot)
 {
     DR_AREA area;
@@ -540,7 +517,6 @@ void AddClipDrawAreaPrim_80033308(void* ot)
     SetDrawArea(&area, &rect);
     AddPrimCopy_80040298(ot, &area, 3);
 }
-// Matched
 void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int tick, int period, int half)
 {
     int phase;
@@ -595,67 +571,54 @@ void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c
     out[1] = g;
     out[2] = b;
 }
-// Matched
 unsigned char GetByteAt_800334BC(unsigned char* arr, int idx)
 {
     return arr[idx];
 }
-// Matched
 short GetMaxHp_800334CC(UnitStatus* status)
 {
     return status->hp_8.max_2;
 }
-// Matched
 short GetHp_800334D8(UnitStatus* status)
 {
     return status->hp_8.cur_0;
 }
-// Matched
 short GetMaxMp_800334E4(UnitStatus* status)
 {
     return status->mp_C.max_2;
 }
-// Matched
 short GetMp_800334F0(UnitStatus* status)
 {
     return status->mp_C.cur_0;
 }
-// Matched
 int GetExp_800334FC(int* status)
 {
     return status[1];
 }
-// Matched
 short GetElementMask_80033508(UnitStatus* status)
 {
     return status->elementMask_42;
 }
-// Matched
 short GetLevel_80033514(UnitStatus* status)
 {
     return status->level_44;
 }
-// Matched
 unsigned char* GetStats_80033520(UnitStatus* status)
 {
     return status->stats_2C.cur_0;
 }
-// Matched
 unsigned char GetStat_80033528(UnitStatus* status, int idx)
 {
     return GetByteAt_800334BC(status->stats_2C.cur_0, idx);
 }
-// Matched
 int HasStatusFlag_80033548(UnitStatus* status, int mask)
 {
     return (status->status_0 & mask) != 0;
 }
-// Matched
 unsigned char GetModifier_8003355C(UnitStatus* status, int idx)
 {
     return status->modifiers_20[idx];
 }
-// Matched
 int GetEquipmentId_8003356C(UnitStatus* status, unsigned int idx)
 {
     int id = 0xFF;
@@ -677,7 +640,6 @@ int GetEquipmentId_8003356C(UnitStatus* status, unsigned int idx)
     }
     return id;
 }
-// Matched
 void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* dst)
 {
     int level;
@@ -689,7 +651,6 @@ void CalcEffectiveStatus_800335D0(UnitStatus* src, UnitStatus* dst)
     }
     ApplyEquipmentModifiers_80033754(dst->modifiers_20, dst);
 }
-// Matched
 int CalcEquippedStats_80033624(unsigned char* out, UnitStatus* status)
 {
     unsigned char* stats = status->stats_2C.cur_0;
@@ -728,7 +689,6 @@ int CalcEquippedStats_80033624(unsigned char* out, UnitStatus* status)
     }
     return max;
 }
-// Matched
 void ApplyEquipmentModifiers_80033754(unsigned char* dst, UnitStatus* src)
 {
     unsigned char* tbl[2];
@@ -753,37 +713,30 @@ void ApplyEquipmentModifiers_80033754(unsigned char* dst, UnitStatus* src)
         }
     }
 }
-// Matched
 UnitStatus* GetMinionStatusOf_80033818(Minion* minion)
 {
     return &minion->status_84;
 }
-// Matched
 unsigned char* GetMinionStatBlockOf_80033820(Minion* minion)
 {
     return minion->field_CC.cur_0;
 }
-// Matched
 unsigned char* GetMinionNameOf_80033828(Minion* minion)
 {
     return minion->status_84.name_10;
 }
-// Matched
 unsigned char* GetAncestorName_80033830(Minion* m, int idx)
 {
     return m->ancestors_4[idx];
 }
-// Matched
 int GetAncestorElementMask_80033848(Minion* m, int idx)
 {
     return m->ancestorElements_7C[idx];
 }
-// Matched
 short GetMinionId_80033858(Minion* minion)
 {
     return minion->id;
 }
-// Matched
 void GetElementLevels_80033864(Minion* m, unsigned char* out)
 {
     int i;
@@ -797,7 +750,6 @@ void GetElementLevels_80033864(Minion* m, unsigned char* out)
         out[i] >>= 1;
     }
 }
-// Matched
 int GetDominantSpecies_800338B0(Minion* m)
 {
     unsigned char ids[8];
@@ -805,7 +757,6 @@ int GetDominantSpecies_800338B0(Minion* m)
     GetTopSpecies_800338DC(m->species_4C, ids, ratios);
     return ids[0];
 }
-// Matched
 int GetTopSpecies_800338DC(unsigned char* history, unsigned char* ids, int* ratios)
 {
     unsigned char hist[0xD3];
@@ -871,52 +822,42 @@ done:
     ratios[2] /= sum;
     return res;
 }
-// Matched
 void* GetStatsStatus_80033A60(void* stats)
 {
     return stats;
 }
-// Matched
 char* sub_80033A68(char* stats)
 {
     return stats + 0x48;
 }
-// Matched
 int HasSkill_80033A70(UnitStats* stats, int idx)
 {
     return IsSkillLearned_80031954(&stats->skills_6C, idx);
 }
-// Matched
 int HasMagic_80033A90(UnitStats* stats, unsigned int idx)
 {
     return TestMagicBit_8001AE2C(&stats->magicBits_80, idx);
 }
-// Matched
 int GetItemId_80033AB0(UnitStats* stats)
 {
     return stats->species_5C;
 }
-// Matched
 UnitStatus* GetLevantStatus_80033ABC(SaveData* save)
 {
     return &save->levantStatus_7C8;
 }
-// Matched
 char* sub_80033AC4(SaveData* save)
 {
     return save->field_7BC;
 }
-// Matched
 Minion* GetSaveMinion_80033ACC(SaveData* save, int idx)
 {
     return &save->minions[idx];
 }
-// Matched
 UnitStats* GetSaveItem_80033AE4(SaveData* save, int idx)
 {
     return &save->items[idx];
 }
-// Matched
 int CheckItemUsable_80033AFC(ListMenuState* menu)
 {
     int item = GetInventorySlotId_800AD288(menu->cursor_0 + menu->scroll_2, 0);
@@ -952,7 +893,6 @@ int CheckItemUsable_80033AFC(ListMenuState* menu)
     }
     return 0;
 }
-// Matched
 int CheckMagicCastable_80033C08(ListMenuState* menu)
 {
     Minion* minion = menu->minion_C;
@@ -973,7 +913,6 @@ int CheckMagicCastable_80033C08(ListMenuState* menu)
     }
     return 0;
 }
-// Matched
 int CheckSkillUsable_80033C98(ListMenuState* menu)
 {
     int cost;
@@ -992,7 +931,6 @@ int CheckSkillUsable_80033C98(ListMenuState* menu)
     }
     return 0;
 }
-// Matched
 int CheckMagicHasEffect_80033D20(ListMenuState* menu)
 {
     Minion* minion = menu->minion_C;
@@ -1018,12 +956,10 @@ int CheckMagicHasEffect_80033D20(ListMenuState* menu)
     }
     return 0;
 }
-// Matched
 int ReturnZero_80033DEC(void)
 {
     return 0;
 }
-// Matched
 int CheckItemOnTarget_80033DF4(TargetQuery* use)
 {
     UnitStatus* target;

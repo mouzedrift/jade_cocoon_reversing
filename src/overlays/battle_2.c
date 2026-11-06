@@ -1,7 +1,6 @@
 // BATTLE.BIN, source file 2 of 6 from 0x800BC90C (.rdata from 0x800B6700)
 #include "battle.h"
 
-// Matched
 // Draws the battle stage: its model, the sprite list, the 32 floor columns, the animated sprites and up to 3 extra models.
 // Some statements are split up only for the match: `frame = frames_8[j]; frame += k;` keeps the frame address unreduced
 // (computed fresh per iteration, as in the original), and the floor column x is built from separate terms so the

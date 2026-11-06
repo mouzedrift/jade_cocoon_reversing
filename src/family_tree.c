@@ -36,7 +36,6 @@ const char aNovice_800743A4[] = "\202m\202\217\202\226\202\211\202\203\202\205";
 const char aApprentice_800743B4[] = "\202`\202\220\202\220\202\222\202\205\202\216\202\224\202\211\202\203\202\205"; // Apprentice
 const CVECTOR familyTreeLineColor_800743CC = { 128, 128, 128 };
 
-// Matched
 int IsTargetListed_8002D738(int idx, int self, int mode)
 {
     if (mode == 0 || mode == 2)
@@ -53,7 +52,6 @@ int IsTargetListed_8002D738(int idx, int self, int mode)
     }
     return 0;
 }
-// Matched
 int GetAllMinionsTargetMask_8002D780(void)
 {
     int n = CountMinions_80010548(3);
@@ -66,7 +64,6 @@ int GetAllMinionsTargetMask_8002D780(void)
     return mask;
 }
 extern const CVECTOR familyTreeLineColor_800743CC;
-// Matched
 void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
 {
     RECT rect;

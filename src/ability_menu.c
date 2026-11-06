@@ -26,7 +26,6 @@
 #include "ability_menu.h"
 #include "family_tree.h"
 
-// Matched
 void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
 {
     MenuWindowList args;
@@ -114,7 +113,6 @@ void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
     DrawMenuWindows_8002A5A4(&args);
     SetFontClutOffset_8003F900(2, 0);
 }
-// Matched
 int GetAbilityIcon_8002D1A4(int type, short slot)
 {
     int typeIdx = 0;
@@ -142,7 +140,6 @@ int GetAbilityIcon_8002D1A4(int type, short slot)
     }
     return abilityIconsByType_8008280C[slot][type];
 }
-// Matched
 int DrawTargetSelectMenu_8002D250(TargetQuery* req, int mode, int cursor, int ot)
 {
     MenuWindowItem list0[4] = {

@@ -4006,18 +4006,15 @@ short sinTable_80084540[4096] = {
     -50, -44, -38, -31, -25, -19, -13, -6,
 };
 
-// Matched
 int IsEffectReady_80014954(void)
 {
     return ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->state_2C == 2;
 }
-// Matched
 void StartEffect_8001497C(void)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
     state->flags_28 |= 1;
 }
-// Matched
 void SpawnEffectObject_800149A4(EffectArgs* args)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;
@@ -4066,7 +4063,6 @@ void SpawnEffectObject_800149A4(EffectArgs* args)
         entry->cb_8 = EffectObjectTask_80015478;
     }
 }
-// Matched
 void RepeatUntilOutcomeTask_80014C28(int* flags, EffectObj* obj)
 {
     if (effectOutcomeFlag_8008D780[0] == 1)
@@ -4081,7 +4077,6 @@ void RepeatUntilOutcomeTask_80014C28(int* flags, EffectObj* obj)
 }
 extern void DrawRotSprite_80044010(POLY_FT4* src, int* pos, void* rot, short* uv, short* size, short* pivot, short* scale, short* ofs,
                          unsigned char* rgb, int flags, int abr, unsigned long* ot);
-// Matched
 void LensFlareTask_80014CCC(int* flags, void* buf)
 {
     EffectObj* obj = buf;
@@ -4195,7 +4190,6 @@ extern void PlayTimedSeq_800C10B8(int frames, int slot);
 extern void GlowTask_800C371C(EventEntry* entry, void* buf);
 extern void DropTrailTask_800C1450(EventEntry* entry, void* buf);
 #define EFF(i) ((int)&effectFile_80091BD0.sprites_20[i])
-// Matched
 void EffectObjectTask_80015478(EventEntry* entry, void* buf)
 {
     EffectObj* obj = (EffectObj*)buf;

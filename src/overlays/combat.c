@@ -83,7 +83,6 @@ int dword_800A4074 = 0;
 int sideSlot_800A4078[2] = { 0 }; // per side: the teams_800A3AA0 slot of the minion in the arena, -1 none
 int stageOvlRequest_800A4080 = 0;
 
-// Matched
 void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram)
 {
     CombatTopSpecies top;
@@ -184,7 +183,6 @@ void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, 
     }
 }
 
-// Matched
 int GetElementHueAngle_800A0898(unsigned char* elements)
 {
     int count = 0;
@@ -223,7 +221,6 @@ int GetElementHueAngle_800A0898(unsigned char* elements)
     return angle;
 }
 
-// Matched
 int ElementMixAngle_800A0968(unsigned char* elements)
 {
     short* sinTbl = sinTable_80084540;
@@ -239,7 +236,6 @@ int ElementMixAngle_800A0968(unsigned char* elements)
     return ratan2Degrees_8003B56C(p0 + p2 + p4 + p6, p1 + p3 + p5 + p7);
 }
 
-// Matched
 void InitCombatSlots_800A0A28(void)
 {
     int i;
@@ -251,7 +247,6 @@ void InitCombatSlots_800A0A28(void)
     InitActors_8001D378();
 }
 
-// Matched
 void FreeCombatSlots_800A0A6C(void)
 {
     int i;
@@ -265,7 +260,6 @@ void FreeCombatSlots_800A0A6C(void)
     }
 }
 
-// Matched
 void StartSlotModel_800A0ACC(int i, Minion* minion)
 {
     CombatSlot* slot = &combatSlots_800A3A08[i];
@@ -275,7 +269,6 @@ void StartSlotModel_800A0ACC(int i, Minion* minion)
     slot->actor_3C = 0;
 }
 
-// Matched
 // returns RunModelTask_80010A10's result
 int RunSlotModelTask_800A0B3C(int i)
 {
@@ -283,7 +276,6 @@ int RunSlotModelTask_800A0B3C(int i)
     return RunModelTask_80010A10(s->task_0);
 }
 
-// Matched
 void FreeSlotModel_800A0B70(int i)
 {
     CombatSlot* slot = &combatSlots_800A3A08[i];
@@ -292,7 +284,6 @@ void FreeSlotModel_800A0B70(int i)
     FreeModelTask_8001098C(task);
 }
 
-// Matched
 void CreateSlotActor_800A0BA8(int i, int* pos, short* rot)
 {
     CombatSlot* slot = &combatSlots_800A3A08[i];
@@ -329,7 +320,6 @@ void CreateSlotActor_800A0BA8(int i, int* pos, short* rot)
     SetActorGroundMove_8001D68C(slot->actor_3C, 0);
 }
 
-// Matched
 void DestroySlotActor_800A0D1C(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
@@ -340,7 +330,6 @@ void DestroySlotActor_800A0D1C(int i)
     }
 }
 
-// Matched
 void LoadModelTexToVram_800A0D64(int vramSlot, int modelId)
 {
     ModelDesc* desc = GetModelDesc_800251E4(modelId);
@@ -363,7 +352,6 @@ void LoadModelTexToVram_800A0D64(int vramSlot, int modelId)
     QueueFileRequest_8003BC84(&req);
 }
 
-// Matched
 void MoveSlotActorTo_800A0E1C(int i, int* pos)
 {
     CombatSlot* slot = &combatSlots_800A3A08[i];
@@ -393,21 +381,18 @@ void MoveSlotActorTo_800A0E1C(int i, int* pos)
     SetActorAction_8001E34C(slot->actor_3C, &action);
 }
 
-// Matched
 int IsSlotActorIdle_800A0EE8(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return IsActorIdle_8001E1C8(s->actor_3C);
 }
 
-// Matched
 int IsSlotActorReady_800A0F1C(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return IsActorActionReady_8001E1DC(s->actor_3C);
 }
 
-// Matched
 ShortPair StartSlotAction_800A0F50(int i, int* cmd, int x)
 {
     ShortPair hit;
@@ -422,7 +407,6 @@ ShortPair StartSlotAction_800A0F50(int i, int* cmd, int x)
     return hit;
 }
 
-// Matched
 void TriggerSlotEffect_800A0FF0(int i, int* p, int x)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
@@ -432,49 +416,42 @@ void TriggerSlotEffect_800A0FF0(int i, int* p, int x)
     }
 }
 
-// Matched
 int GetSlotHitFrame_800A1034(int i, unsigned int idx)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return GetActorHitFrame_80018E5C(s->actor_3C, idx);
 }
 
-// Matched
 void SetSlotStatusTint_800A1068(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     SetActorStatusTint_80018EBC(s->actor_3C, GetSlotStatus_800A10C0(i));
 }
 
-// Matched
 int GetSlotAncestors_800A10A4(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return (int)s->minion_4->ancestors_4;
 }
 
-// Matched
 UnitStatus* GetSlotStatus_800A10C0(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return &s->minion_4->status_84;
 }
 
-// Matched
 int* GetSlotPos_800A10DC(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return s->actor_3C->pos_38;
 }
 
-// Matched
 int* GetSlotBonePos_800A10F8(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return s->actor_3C->bonePos_1C4;
 }
 
-// Matched
 void GetSlotEffectTarget_800A111C(int i, EffectTarget* out)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
@@ -486,28 +463,24 @@ void GetSlotEffectTarget_800A111C(int i, EffectTarget* out)
     out->scale_30 = s->actor_3C->scale_2C;
 }
 
-// Matched
 int GetSlotSkills_800A11A0(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return (int)&s->minion_4->skills_DE;
 }
 
-// Matched
 unsigned int* GetSlotMagicBits_800A11BC(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return &s->minion_4->magicBits_F4;
 }
 
-// Matched
 Minion* GetSlotMinion_800A11D8(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
     return s->minion_4;
 }
 
-// Matched
 void StartCombatCamera_800A11F4(void)
 {
     EventEntry* e = AllocEventEntry_80043AF8(cameraTask_8008D4A0);
@@ -523,7 +496,6 @@ void StartCombatCamera_800A11F4(void)
     }
 }
 
-// Matched
 void StopCombatCamera_800A127C(void)
 {
     EventNode* p = cameraTask_8008D4A0;
@@ -531,7 +503,6 @@ void StopCombatCamera_800A127C(void)
     StopAllEventEntries_80043B40(cameraTask_8008D4A0);
 }
 
-// Matched
 void ResetCombatCamera_800A12B8(void)
 {
     CameraView* cam = &cameraState_8008D4F0;
@@ -560,7 +531,6 @@ void ResetCombatCamera_800A12B8(void)
 }
 
 // COMBAT overlay entry (the battle arena): runs combatTaskList_800A398C, back to the title menu after
-// Matched
 enum GameStates CombatMain_800A1324(void)
 {
     unknownFlags_8008D678 |= 0x2000000;
@@ -571,7 +541,6 @@ enum GameStates CombatMain_800A1324(void)
     return 6;
 }
 
-// Matched
 void CombatInit_800A13A0(CombatTask* t)
 {
     int i;
@@ -596,13 +565,11 @@ void CombatInit_800A13A0(CombatTask* t)
     t->next_8 = CombatWaitUiTiy_800A14AC;
 }
 
-// Matched
 void CombatFree_800A148C(void)
 {
     FreeActiveOverlay_8002C014();
 }
 
-// Matched
 void CombatWaitUiTiy_800A14AC(CombatTask* t)
 {
     if (uiTiyLoaded_8008B4E8)
@@ -614,7 +581,6 @@ void CombatWaitUiTiy_800A14AC(CombatTask* t)
     }
 }
 
-// Matched
 void CombatLoadStageOvl_800A14F0(CombatTask* t)
 {
     SetFadeMode_8001C19C(0, 0x20);
@@ -622,7 +588,6 @@ void CombatLoadStageOvl_800A14F0(CombatTask* t)
     t->next_8 = CombatWaitStageOvl_800A1554;
 }
 
-// Matched
 void CombatWaitStageOvl_800A1554(CombatTask* t, int x)
 {
     if (GetFileRequestStatus_8003BE30(stageOvlRequest_800A4080) == 0)
@@ -744,7 +709,6 @@ void CombatNextStage_800A16FC(CombatTask* t)
     t->next_8(t);
 }
 
-// Matched
 void DrawMinionNameLevel_800A1844(Minion* minion, unsigned short* pt, unsigned int flags)
 {
     UnitStatus* status;
@@ -772,7 +736,6 @@ void DrawMinionNameLevel_800A1844(Minion* minion, unsigned short* pt, unsigned i
     }
 }
 
-// Matched
 int IsMinionSlotEmpty_800A1934(Minion* minion)
 {
     if (minion == 0)
@@ -782,19 +745,16 @@ int IsMinionSlotEmpty_800A1934(Minion* minion)
     return minion->id == 4;
 }
 
-// Matched
 int IsMinionFainted_800A1958(Minion* minion)
 {
     return HasStatusFlag_80033548(&minion->status_84, 0x400);
 }
 
-// Matched
 void ClearMinionSlot_800A197C(Minion* minion)
 {
     minion->id = 4;
 }
 
-// Matched
 void CopySaveMinionsToRoster_800A1988(void)
 {
     int i;
@@ -806,7 +766,6 @@ void CopySaveMinionsToRoster_800A1988(void)
     }
 }
 
-// Matched
 int CountMinions_800A1A3C(Minion* minions, int len)
 {
     int i;
@@ -821,19 +780,16 @@ int CountMinions_800A1A3C(Minion* minions, int len)
     return count;
 }
 
-// Matched
 int CountTeamMinions_800A1AAC(int side)
 {
     return CountMinions_800A1A3C(teams_800A3AA0[side], 3);
 }
 
-// Matched
 int CountRosterMinions_800A1AEC(int side)
 {
     return CountMinions_800A1A3C(rosters_800A1BC8[side], 0xF);
 }
 
-// Matched
 void GetCombatPortraitPoly_800A1B2C(int i, void* poly)
 {
     TimInfo tim;

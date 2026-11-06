@@ -446,7 +446,6 @@ int partyMinionMask_800C9E78 = 0;
 int menuErrorText_800C9E7C = 0;
 unsigned char enemyUnits_800C9E80[4] = { 0 };
 
-// Matched
 void ChooseEnemyCommand_800C4118(BattleCmd* cmd, UnitStats* self, int slot, unsigned int script)
 {
     EnemyAi ai;
@@ -1761,7 +1760,6 @@ void BossAi0B_800C5EB8(EnemyAi* ai)
     aiCounter_800C8B30[0]++;
 }
 
-// Matched
 void BossAi0C_800C6038(EnemyAi* ai)
 {
     if (ai->slot_C == 0)
@@ -2599,7 +2597,6 @@ unsigned char GetSelectedCommand_800C78D0()
     return commandByCursor_800C9648[menuForMinion_800C9E49 + (short)GetMenuCursorIndex_8003DA54(commandMenu_800C92D8) * 2];
 }
 
-// Matched
 int GetSelectedTargets_800C791C()
 {
     int targets = 0;
@@ -3026,7 +3023,6 @@ void MenuInput_800C8768()
     }
 }
 
-// Matched
 void DrawMenuHelpText_800C8828(int text)
 {
     short rect[4];

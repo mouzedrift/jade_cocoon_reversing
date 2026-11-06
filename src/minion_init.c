@@ -231,7 +231,6 @@ const char aPatdreg_80073008[] = "\202o\202\201\202\224\202\204\202\222\202\205\
 const char aRaddreg_80073018[] = "\202q\202\201\202\204\202\204\202\222\202\205\202\207"; // Raddreg
 const char aMarrdreg_80073028[] = "\202l\202\201\202\222\202\222\202\204\202\222\202\205\202\207"; // Marrdreg
 
-// Matched
 int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
 {
     HitTimes* hitTimes = actor->hitTimes_108;
@@ -256,7 +255,6 @@ int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
     }
     return frame;
 }
-// Matched
 void SetActorStatusTint_80018EBC(Actor* actor, UnitStatus* status)
 {
     unsigned int flags = status->status_0;
@@ -298,7 +296,6 @@ void SetActorStatusTint_80018EBC(Actor* actor, UnitStatus* status)
 
 extern MinionBaseStats* sub_800B32A4(int a0);
 extern unsigned char* sub_800B32F0(int a0);
-// Matched
 int InitMinionData_8001900C(UnitStats* unit, int* params)
 {
     MinionBaseStats base;
@@ -462,7 +459,6 @@ int InitMinionData_8001900C(UnitStats* unit, int* params)
     }
     return GetRankForLevel_80019A80(*(char*)&unit->st_0.level_44);
 }
-// Matched
 void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base)
 {
     int i;
@@ -499,12 +495,10 @@ void InitStatsFromBase_8001980C(unsigned char* stats, MinionBaseStats* base)
         (stats + j)[12] = rand() % 100;
     }
 }
-// Matched
 void InitSpeciesSkills_800199A0(UnitStats* unit)
 {
     unit->skills_6C = *GetSpeciesSkills_80019C28(unit->species_5C);
 }
-// Matched
 void InitSpeciesMagic_80019A20(UnitStats* unit)
 {
     unsigned int idx = unit->species_5C;
@@ -518,7 +512,6 @@ void InitSpeciesMagic_80019A20(UnitStats* unit)
     }
 }
 extern unsigned char rankLevelThresholds_8007C2E4[];
-// Matched
 int GetRankForLevel_80019A80(int level)
 {
     int i;
@@ -536,18 +529,15 @@ int GetRankForLevel_80019A80(int level)
     }
     return i;
 }
-// Matched
 int GetUnitRank_80019AD0(UnitStats* unit)
 {
     GetRankForLevel_80019A80(unit->st_0.level_44);
     return 4;
 }
-// Matched
 void CopyName_80019AF4(unsigned int* dst, unsigned int* src)
 {
     MemCopy_800403E8(dst, src, 12);
 }
-// Matched
 void SetBoneGroupFlags_80019B14(short* bones, unsigned short* levels, unsigned short* flags)
 {
     struct_int3 masks;

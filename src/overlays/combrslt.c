@@ -103,7 +103,6 @@ void DrawPlayerResult_800A4240(int player)
 }
 
 // Draws the two numbers of a player's score box, each followed by a UI sprite (0xAE, 0x4D)
-// Matched
 void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWins)
 {
     short xy[2];
@@ -152,7 +151,6 @@ void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWin
 }
 
 
-// Matched
 void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box)
 {
     MenuWindowItem label = minionLabelItem_800A40A8;

@@ -35,17 +35,14 @@ extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
-// Matched
 int GetFtgObjectCount_80021738(int* file)
 {
     return file[1];
 }
-// Matched
 void AllocFtgObjects_80021744(FtgObject** out, int count, int heap)
 {
     *out = HeapAlloc_8003FC8C(count * 0x54, heap);
 }
-// Matched
 void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, int heap)
 {
     FtgObject* obj = *objs;
@@ -58,12 +55,10 @@ void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, int heap)
     HeapFree_8003FD18(*objs, heap);
     *objs = 0;
 }
-// Matched
 void FreeFtgObjectData_80021804(FtgObject* obj, int heap)
 {
     FreeFtgObject_800229B0(obj, heap);
 }
-// Matched
 void LoadFtgObjects_80021824(int* file, FtgObject* out, int count, int heap, int reloc)
 {
     unsigned int fileCount = GetFtgObjectCount_80021738(file);
@@ -75,7 +70,6 @@ void LoadFtgObjects_80021824(int* file, FtgObject* out, int count, int heap, int
         out++;
     }
 }
-// Matched
 void CopyFtgObject_800218A8(FtgObject* src, FtgObject* dst, int heap)
 {
     char* buf;
@@ -170,25 +164,21 @@ void CopyFtgObject_800218A8(FtgObject* src, FtgObject* dst, int heap)
     dst->tpage_4C = src->tpage_4C;
     dst->clut_4E = src->clut_4E;
 }
-// Matched
 int GetFtgMatCount_80021DE4(int* file)
 {
     return file[2];
 }
-// Matched
 void AllocFtgMatList_80021DF0(FtgMatList* list, int count, int heap)
 {
     list->count_0 = count;
     list->items_4 = HeapAlloc_8003FC8C(count * 16, heap);
 }
 // p is volatile to keep the store before the load
-// Matched
 void FreeFtgMatList_80021E24(volatile FtgMatList* list, int h)
 {
     list->count_0 = 0;
     HeapFree_8003FD18(list->items_4, h);
 }
-// Matched
 void LoadFtgMatList_80021E4C(int* file, FtgMatList* out, unsigned int count)
 {
     unsigned short* src = (unsigned short*)((char*)file + file[3]);
@@ -208,7 +198,6 @@ void LoadFtgMatList_80021E4C(int* file, FtgMatList* out, unsigned int count)
     }
 }
 // r2 is unused (the original frame has room for it)
-// Matched
 void MakeFtgSpritePoly_80021EDC(FtgPolyFT4* src, POLY_FT4* dst)
 {
     RECT rect;
@@ -290,7 +279,6 @@ void MakeFtgSpritePoly_80021EDC(FtgPolyFT4* src, POLY_FT4* dst)
     dst->tpage = src->tpage;
     dst->clut = src->clut;
 }
-// Matched
 void MakeFtgSprt_800221DC(FtgPolyFT4* src, SPRT* dst, DR_TPAGE* tpage)
 {
     RECT rect;
@@ -360,7 +348,6 @@ void MakeFtgSprt_800221DC(FtgPolyFT4* src, SPRT* dst, DR_TPAGE* tpage)
     dst->clut = src->clut;
     SetDrawTPage(tpage, 0, 1, src->tpage);
 }
-// Matched
 int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
 {
     int typeCounts[10];
@@ -416,7 +403,6 @@ int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
     FreeFtgSpriteGroups_800229E0(&A, &B, h);
     return (int)src;
 }
-// Matched
 int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
 {
     int spriteCount;
@@ -480,7 +466,6 @@ int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     out->texSprites_50 = (FtgSprite*)buf;
     return total;
 }
-// Matched
 int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, FtgSrcObjectHeader* hdr, int heap)
 {
     int count;
@@ -508,7 +493,6 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     }
     return count;
 }
-// Matched
 void FreeFtgObject_800229B0(FtgObject* obj, int heap)
 {
     FtgPolyF3* a = obj->f3_0.items;
@@ -517,7 +501,6 @@ void FreeFtgObject_800229B0(FtgObject* obj, int heap)
         HeapFree_8003FD18(a, heap);
     }
 }
-// Matched
 void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h)
 {
     int i;
@@ -544,7 +527,6 @@ void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
         HeapFree_8003FD18(groups9->groups, h);
     }
 }
-// Matched
 void RelocateTPageClut_80022AE8(unsigned short* tpage, unsigned short* clut, short* reloc)
 {
     int x = reloc[0] / 64;
@@ -566,7 +548,6 @@ void RelocateTPageClut_80022AE8(unsigned short* tpage, unsigned short* clut, sho
     *tpage += tp;
     *clut = y * 64 + (x >> 4);
 }
-// Matched
 void CountFtgSprites_80022B84(unsigned char* cursor, int* sprites, int* texSprites)
 {
     int spriteCount;
@@ -617,7 +598,6 @@ void CountFtgSprites_80022B84(unsigned char* cursor, int* sprites, int* texSprit
     *sprites = spriteCount;
     *texSprites = texSpriteCount;
 }
-// Matched
 void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h)
 {
     int j;
@@ -689,7 +669,6 @@ void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, Ft
         }
     }
 }
-// Matched
 int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* groups8, int k, int h)
 {
     FtgSrcSprites8* src = p_in;
@@ -717,7 +696,6 @@ int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteG
     }
     return read;
 }
-// Matched
 int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* groups9, int k, int h)
 {
     FtgSrcSprites9* src = p_in;
@@ -749,12 +727,10 @@ int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpri
     }
     return read;
 }
-// Matched
 void RelocFtgTexSprites_80023460(FtgSrcSprites9* sprites, int reloc)
 {
     RelocateTPageClut_80022AE8(&sprites->tpage_4, &sprites->clut_6, reloc);
 }
-// Matched
 int LoadFtgPolyF3_8002348C(FtgPrimHeader* hdr, FtgPolyF3* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -764,7 +740,6 @@ int LoadFtgPolyF3_8002348C(FtgPrimHeader* hdr, FtgPolyF3* src, FtgObject* obj, i
     CopyFtgPolyF3_80023514(&obj->f3_0, src, hdr->flags_3, idx);
     return 0x24;
 }
-// Matched
 void CopyFtgPolyF3_80023514(FtgPolyF3List* list, FtgPolyF3* src, int code, int idx)
 {
     list->items[idx].c.r = src->c.r;
@@ -784,7 +759,6 @@ void CopyFtgPolyF3_80023514(FtgPolyF3List* list, FtgPolyF3* src, int code, int i
     list->items[idx].n.y = src->n.y;
     list->items[idx].n.z = src->n.z;
 }
-// Matched
 int LoadFtgPolyG3_80023624(FtgPrimHeader* hdr, FtgSrcPolyG3* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -794,7 +768,6 @@ int LoadFtgPolyG3_80023624(FtgPrimHeader* hdr, FtgSrcPolyG3* src, FtgObject* obj
     CopyFtgPolyG3_800236AC(&obj->g3_8, src, hdr->flags_3, idx);
     return 0x3C;
 }
-// Matched
 void CopyFtgPolyG3_800236AC(FtgPolyG3List* list, FtgSrcPolyG3* src, int code, int idx)
 {
     list->items[idx].c[0].r = src->c[0].r;
@@ -829,7 +802,6 @@ void CopyFtgPolyG3_800236AC(FtgPolyG3List* list, FtgSrcPolyG3* src, int code, in
     list->items[idx].n[2].z = src->p[2].n.z;
     list->items[idx].c[0].code = code;
 }
-// Matched
 int LoadFtgPolyFT3_800238AC(FtgPrimHeader* hdr, FtgSrcPolyFT3* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -839,7 +811,6 @@ int LoadFtgPolyFT3_800238AC(FtgPrimHeader* hdr, FtgSrcPolyFT3* src, FtgObject* o
     CopyFtgPolyFT3_80023934(&obj->ft3_10, src, hdr->flags_3, idx);
     return 0x24;
 }
-// Matched
 void CopyFtgPolyFT3_80023934(FtgPolyFT3List* list, FtgSrcPolyFT3* src, int code, int idx)
 {
     list->items[idx].tpage = src->tex.tpage;
@@ -870,12 +841,10 @@ void CopyFtgPolyFT3_80023934(FtgPolyFT3List* list, FtgSrcPolyFT3* src, int code,
     list->items[idx].n.y = src->n.y;
     list->items[idx].n.z = src->n.z;
 }
-// Matched
 void RelocFtgPolyFT3_80023B24(FtgSrcPolyFT3* poly, int reloc)
 {
     RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
-// Matched
 int LoadFtgPolyGT3_80023B48(FtgPrimHeader* hdr, FtgSrcPolyGT3* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -885,7 +854,6 @@ int LoadFtgPolyGT3_80023B48(FtgPrimHeader* hdr, FtgSrcPolyGT3* src, FtgObject* o
     CopyFtgPolyGT3_80023BD0(&obj->gt3_18, src, hdr->flags_3, idx);
     return 0x40;
 }
-// Matched
 void CopyFtgPolyGT3_80023BD0(FtgPolyGT3List* list, FtgSrcPolyGT3* src, int code, int idx)
 {
     list->items[idx].tpage = src->tex.tpage;
@@ -928,12 +896,10 @@ void CopyFtgPolyGT3_80023BD0(FtgPolyGT3List* list, FtgSrcPolyGT3* src, int code,
     list->items[idx].n[2].y = src->p[2].n.y;
     list->items[idx].n[2].z = src->p[2].n.z;
 }
-// Matched
 void RelocFtgPolyGT3_80023E80(FtgSrcPolyGT3* poly, int reloc)
 {
     RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
-// Matched
 int LoadFtgPolyF4_80023EA4(FtgPrimHeader* hdr, FtgPolyF4* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -943,7 +909,6 @@ int LoadFtgPolyF4_80023EA4(FtgPrimHeader* hdr, FtgPolyF4* src, FtgObject* obj, i
     CopyFtgPolyF4_80023F34(&obj->f4_20, src, hdr->flags_3, idx);
     return 0x2C;
 }
-// Matched
 void CopyFtgPolyF4_80023F34(FtgPolyF4List* list, FtgPolyF4* src, int code, int idx)
 {
     list->items[idx].c.r = src->c.r;
@@ -966,7 +931,6 @@ void CopyFtgPolyF4_80023F34(FtgPolyF4List* list, FtgPolyF4* src, int code, int i
     list->items[idx].n.y = src->n.y;
     list->items[idx].n.z = src->n.z;
 }
-// Matched
 int LoadFtgPolyG4_8002407C(FtgPrimHeader* hdr, FtgSrcPolyG4* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -976,7 +940,6 @@ int LoadFtgPolyG4_8002407C(FtgPrimHeader* hdr, FtgSrcPolyG4* src, FtgObject* obj
     CopyFtgPolyG4_80024104(&obj->g4_28, src, hdr->flags_3, idx);
     return 0x50;
 }
-// Matched
 void CopyFtgPolyG4_80024104(FtgPolyG4List* list, FtgSrcPolyG4* src, int code, int idx)
 {
     list->items[idx].c[0].r = src->c[0].r;
@@ -1020,7 +983,6 @@ void CopyFtgPolyG4_80024104(FtgPolyG4List* list, FtgSrcPolyG4* src, int code, in
     list->items[idx].n[3].y = src->p[3].n.y;
     list->items[idx].n[3].z = src->p[3].n.z;
 }
-// Matched
 int LoadFtgPolyFT4_80024394(FtgPrimHeader* hdr, FtgSrcPolyFT4* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -1030,7 +992,6 @@ int LoadFtgPolyFT4_80024394(FtgPrimHeader* hdr, FtgSrcPolyFT4* src, FtgObject* o
     CopyFtgPolyFT4_8002441C(&obj->ft4_30, src, hdr->flags_3, idx);
     return 0x2C;
 }
-// Matched
 void CopyFtgPolyFT4_8002441C(FtgPolyFT4List* list, FtgSrcPolyFT4* src, int code, int idx)
 {
     list->items[idx].tpage = src->tex.tpage;
@@ -1067,12 +1028,10 @@ void CopyFtgPolyFT4_8002441C(FtgPolyFT4List* list, FtgSrcPolyFT4* src, int code,
     list->items[idx].n.y = src->n.y;
     list->items[idx].n.z = src->n.z;
 }
-// Matched
 void RelocFtgPolyFT4_8002467C(FtgSrcPolyFT4* poly, int reloc)
 {
     RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
-// Matched
 int LoadFtgPolyGT4_800246A0(FtgPrimHeader* hdr, FtgSrcPolyGT4* src, FtgObject* obj, int idx)
 {
     if (hdr->flags_3 & 2)
@@ -1082,7 +1041,6 @@ int LoadFtgPolyGT4_800246A0(FtgPrimHeader* hdr, FtgSrcPolyGT4* src, FtgObject* o
     CopyFtgPolyGT4_80024730(&obj->gt4_38, src, hdr->flags_3, idx);
     return 0x54;
 }
-// Matched
 void CopyFtgPolyGT4_80024730(FtgPolyGT4List* list, FtgSrcPolyGT4* src, int code, int idx)
 {
     list->items[idx].tpage = src->tex.tpage;
@@ -1137,12 +1095,10 @@ void CopyFtgPolyGT4_80024730(FtgPolyGT4List* list, FtgSrcPolyGT4* src, int code,
     list->items[idx].n[3].y = src->p[3].n.y;
     list->items[idx].n[3].z = src->p[3].n.z;
 }
-// Matched
 void RelocFtgPolyGT4_80024AB8(FtgSrcPolyGT4* poly, int reloc)
 {
     RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
-// Matched
 void InitModelList_80024ADC(ModelList** out, ModelVramSlot* vram, int heap)
 {
     ModelList* l;
@@ -1159,7 +1115,6 @@ void InitModelList_80024ADC(ModelList** out, ModelVramSlot* vram, int heap)
         ClearModel_800266CC(&l->items_8[i]);
     }
 }
-// Matched
 void FreeModelList_80024BB0(ModelList** list)
 {
     ModelList* l = *list;
@@ -1172,7 +1127,6 @@ void FreeModelList_80024BB0(ModelList** list)
     HeapFree_8003FD18(l, l->heap_4);
     *list = 0;
 }
-// Matched
 void FreeModel_80024C48(Model* model)
 {
     int h;
@@ -1217,7 +1171,6 @@ void FreeModel_80024C48(Model* model)
     }
     ClearModel_800266CC(model);
 }
-// Matched
 Model* AcquireModel_80024D70(ModelList* list, unsigned int id)
 {
     int i = FindModelIndex_80026630(list, id);
@@ -1229,7 +1182,6 @@ Model* AcquireModel_80024D70(ModelList* list, unsigned int id)
     }
     return 0;
 }
-// Matched
 int AreFileRequestsDone_80024DC4(Model* model)
 {
     int i;
@@ -1245,7 +1197,6 @@ int AreFileRequestsDone_80024DC4(Model* model)
     model->requestCount_4 = 0;
     return 1;
 }
-// Matched
 void* GetModelActorAnims_80024E38(Model* model)
 {
     char* result = 0;
@@ -1256,7 +1207,6 @@ void* GetModelActorAnims_80024E38(Model* model)
     }
     return result;
 }
-// Matched
 void* GetModelEffectTable_80024E64(Model* model)
 {
     char* result = 0;
@@ -1267,7 +1217,6 @@ void* GetModelEffectTable_80024E64(Model* model)
     }
     return result;
 }
-// Matched
 void* GetModelBaseScale_80024E90(Model* model, int record)
 {
     char* rec = GetModelHeaderRecord_80024FA8(model, record);
@@ -1277,7 +1226,6 @@ void* GetModelBaseScale_80024E90(Model* model, int record)
     }
     return rec;
 }
-// Matched
 void* GetModelBoneScale_80024EC8(Model* model, int record)
 {
     char* rec = GetModelHeaderRecord_80024FA8(model, record);
@@ -1287,7 +1235,6 @@ void* GetModelBoneScale_80024EC8(Model* model, int record)
     }
     return rec;
 }
-// Matched
 void* GetModelBoneGroupLevels_80024F00(Model* model, int record)
 {
     char* rec = GetModelHeaderRecord_80024FA8(model, record);
@@ -1297,7 +1244,6 @@ void* GetModelBoneGroupLevels_80024F00(Model* model, int record)
     }
     return rec;
 }
-// Matched
 void* GetModelBoneGroupFlags_80024F38(Model* model, int record)
 {
     char* rec = GetModelHeaderRecord_80024FA8(model, record);
@@ -1307,7 +1253,6 @@ void* GetModelBoneGroupFlags_80024F38(Model* model, int record)
     }
     return rec;
 }
-// Matched
 void* GetModelFtgWeights_80024F70(Model* model, int record)
 {
     char* rec = GetModelHeaderRecord_80024FA8(model, record);
@@ -1317,7 +1262,6 @@ void* GetModelFtgWeights_80024F70(Model* model, int record)
     }
     return rec;
 }
-// Matched
 char* GetModelHeaderRecord_80024FA8(Model* model, int record)
 {
     char* hdr = (char*)model->header_4C;
@@ -1339,7 +1283,6 @@ char* GetModelHeaderRecord_80024FA8(Model* model, int record)
     }
     return rec;
 }
-// Matched
 void SaveModelFtgs_80024FFC(Model* model, int* ids)
 {
     int count;
@@ -1359,7 +1302,6 @@ void SaveModelFtgs_80024FFC(Model* model, int* ids)
         count--;
     }
 }
-// Matched
 void GetSavedModelFtg_8002512C(unsigned int* out, Model* model, int id)
 {
     int i;
@@ -1373,21 +1315,17 @@ void GetSavedModelFtg_8002512C(unsigned int* out, Model* model, int id)
         }
     }
 }
-// Matched
 void GetModelFtg_800251A0(void* dst, Model* src, int unused, int idx)
 {
     MemCopy_800403E8(dst, &src->ftg_50[idx], sizeof(FtgObject));
 }
-// Matched
 void EmptyCallback_800251DC(void)
 {
 }
-// Matched
 ModelDesc* GetModelDesc_800251E4(int idx)
 {
     return modelDescs_800824CC[idx];
 }
-// Matched
 int LoadModel_80025200(ModelList* list, int id, int texSel, int animMode, int flag)
 {
     ModelLoadParams params;
@@ -1481,7 +1419,6 @@ int LoadModel_80025200(ModelList* list, int id, int texSel, int animMode, int fl
     }
     return 2;
 }
-// Matched
 int LoadModelAnim_80025440(Model* model, int idx, int flag)
 {
     ModelLoadParams b;
@@ -1529,7 +1466,6 @@ int LoadModelAnim_80025440(Model* model, int idx, int flag)
     }
     return AreFileRequestsDone_80024DC4(model) == 0;
 }
-// Matched
 void FreeModelAnim_8002556C(Model* model, int idx)
 {
     if (((char*)model->animLoaded_44)[idx])
@@ -1538,12 +1474,10 @@ void FreeModelAnim_8002556C(Model* model, int idx)
         model->animLoaded_44[idx] = 0;
     }
 }
-// Matched
 int IsModelAnimLoaded_800255D8(Model* model, int idx)
 {
     return ((char*)model->animLoaded_44)[idx] != 0;
 }
-// Matched
 int LoadModelListTextures_800255F0(ModelList* list, int id, int sel)
 {
     ModelLoadParams params;
@@ -1568,7 +1502,6 @@ int LoadModelListTextures_800255F0(ModelList* list, int id, int sel)
     AddFileRequest_80025D00(model, &req);
     return 1;
 }
-// Matched
 int LoadAllModelAnims_800256B8(ModelList* list, int id)
 {
     ModelLoadParams params;
@@ -1591,7 +1524,6 @@ int LoadAllModelAnims_800256B8(ModelList* list, int id)
     AddFileRequest_80025D00(model, &req);
     return 1;
 }
-// Matched
 int LoadModelAnimSet_80025780(Model* model, int idx, int flag)
 {
     ModelLoadParams params;
@@ -1628,7 +1560,6 @@ int LoadModelAnimSet_80025780(Model* model, int idx, int flag)
     AddFileRequest_80025D00(model, &req);
     return 1;
 }
-// Matched
 void FreeModelAnimSet_80025884(Model* model)
 {
     int* list = model->animSet_58;
@@ -1649,7 +1580,6 @@ void FreeModelAnimSet_80025884(Model* model)
         model->animSet_58 = 0;
     }
 }
-// Matched
 int IsAnimInModelAnimSet_80025924(Model* model, int id)
 {
     int* list = model->animSet_58;
@@ -1668,7 +1598,6 @@ int IsAnimInModelAnimSet_80025924(Model* model, int id)
     }
     return 0;
 }
-// Matched
 int LoadModelAltFtgs_80025974(Model* model, int idx, int flag)
 {
     ModelLoadParams params;
@@ -1710,7 +1639,6 @@ int LoadModelAltFtgs_80025974(Model* model, int idx, int flag)
     AddFileRequest_80025D00(model, &req);
     return 1;
 }
-// Matched
 void FreeModelAltFtgs_80025AB0(Model* model)
 {
     int h = model->list_0->heap_4;
@@ -1727,12 +1655,10 @@ void FreeModelAltFtgs_80025AB0(Model* model)
         model->swaps_6C = 0;
     }
 }
-// Matched
 void GetModelAltFtg_80025B20(void* dst, Model* src, int idx)
 {
     MemCopy_800403E8(dst, &src->ftg2_68[idx], sizeof(FtgObject));
 }
-// Matched
 void SetModelFtg_80025B5C(Model* model, int idx, int sel)
 {
     FtgObject ftg;
@@ -1750,7 +1676,6 @@ void SetModelFtg_80025B5C(Model* model, int idx, int sel)
     }
     model->ftg_50[idx] = ftg;
 }
-// Matched
 void ApplyModelFtgSwaps_80025C38(Model* model, int flag)
 {
     int i;
@@ -1768,7 +1693,6 @@ void ApplyModelFtgSwaps_80025C38(Model* model, int flag)
         }
     }
 }
-// Matched
 int AddFileRequest_80025D00(Model* model, FileRequestDesc* req)
 {
     if (model->requestCount_4 < 10)
@@ -1781,7 +1705,6 @@ int AddFileRequest_80025D00(Model* model, FileRequestDesc* req)
     }
     return 0;
 }
-// Matched
 void OnModelFileLoaded_80025D7C(int* arg, int data)
 {
     ModelLoadParams* params = (ModelLoadParams*)arg;
@@ -1824,7 +1747,6 @@ void OnModelFileLoaded_80025D7C(int* arg, int data)
     }
     ParseModelFile_80025F14(params);
 }
-// Matched
 void InitModelLoadParams_80025ED0(ModelLoadParams* params)
 {
     params->sel_8 = -1;
@@ -1842,7 +1764,6 @@ void InitModelLoadParams_80025ED0(ModelLoadParams* params)
     params->ftg2_34 = 0;
     params->extra_38 = 0;
 }
-// Matched
 void ParseModelFile_80025F14(ModelLoadParams* params)
 {
     if (params->flags_0 & 1)
@@ -1878,7 +1799,6 @@ void ParseModelFile_80025F14(ModelLoadParams* params)
         LoadModelFtgSwaps_8002659C(params);
     }
 }
-// Matched
 void LoadModelHeader_80026014(ModelLoadParams* params)
 {
     ModelHeaderSection* section = params->header_1C;
@@ -1891,7 +1811,6 @@ void LoadModelHeader_80026014(ModelLoadParams* params)
     model->header_4C = buf;
     MemCopy_800403E8(buf, params->header_1C->data_4, size);
 }
-// Matched
 void LoadModelTextures_8002607C(ModelLoadParams* params)
 {
     if (params->sel_8 != -1)
@@ -1901,7 +1820,6 @@ void LoadModelTextures_8002607C(ModelLoadParams* params)
         model->texSel_34 = params->sel_8;
     }
 }
-// Matched
 void LoadModelFtg_800260FC(ModelLoadParams* params)
 {
     Model* model = params->model_14;
@@ -1917,7 +1835,6 @@ void LoadModelFtg_800260FC(ModelLoadParams* params)
         LoadFtgMatList_80021E4C(params->ftg_24, &model->mats_5C, GetFtgMatCount_80021DE4(params->ftg_24));
     }
 }
-// Matched
 void LoadModelAnims_800261C8(ModelLoadParams* params)
 {
     Model* model = params->model_14;
@@ -1996,7 +1913,6 @@ void LoadModelAnims_800261C8(ModelLoadParams* params)
         }
     }
 }
-// Matched
 void LoadSingleModelAnim_800263CC(ModelLoadParams* params)
 {
     ModelList* l;
@@ -2004,7 +1920,6 @@ void LoadSingleModelAnim_800263CC(ModelLoadParams* params)
     l = model->list_0;
     LoadModelAnimData_80026A8C(&model->anims_54[params->animIdx_10], (int)params->anim_2C, l->heap_4);
 }
-// Matched
 void LoadModelAnimSetSection_80026410(ModelLoadParams* params)
 {
     ModelAnimSetSection* section = params->animSet_30;
@@ -2033,7 +1948,6 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* params)
         }
     }
 }
-// Matched
 void LoadModelAltFtgSection_8002651C(ModelLoadParams* params)
 {
     Model* model = params->model_14;
@@ -2044,7 +1958,6 @@ void LoadModelAltFtgSection_8002651C(ModelLoadParams* params)
     AllocFtgObjects_80021744(&model->ftg2_68, model->ftg2Count_42, heap);
     LoadFtgObjects_80021824(params->ftg2_34, model->ftg2_68, model->ftg2Count_42, heap, (int)vram->reloc_4);
 }
-// Matched
 void LoadModelFtgSwaps_8002659C(ModelLoadParams* params)
 {
     unsigned char* src = params->extra_38;
@@ -2057,7 +1970,6 @@ void LoadModelFtgSwaps_8002659C(ModelLoadParams* params)
     model->swaps_6C = buf;
     MemCopy_800403E8(buf, src, model->swapCount_43 << 2);
 }
-// Matched
 int CountModelVramSlots_80026600(ModelVramSlot* slot)
 {
     int count = 0;
@@ -2071,7 +1983,6 @@ int CountModelVramSlots_80026600(ModelVramSlot* slot)
     }
     return count;
 }
-// Matched
 int FindModelIndex_80026630(ModelList* list, unsigned int id)
 {
     int i;
@@ -2084,7 +1995,6 @@ int FindModelIndex_80026630(ModelList* list, unsigned int id)
     }
     return -1;
 }
-// Matched
 int FindFreeModelIndex_8002667C(ModelList* list)
 {
     int i;
@@ -2097,7 +2007,6 @@ int FindFreeModelIndex_8002667C(ModelList* list)
     }
     return -1;
 }
-// Matched
 void ClearModel_800266CC(Model* model)
 {
     model->id_38 = 0xFFFF;
@@ -2121,12 +2030,10 @@ void ClearModel_800266CC(Model* model)
     model->ftg2_68 = 0;
     model->swaps_6C = 0;
 }
-// Matched
 int GetModelAnimCount_80026724(int* section)
 {
     return section[0];
 }
-// Matched
 void AllocModelAnims_80026730(ModelAnim** out, int count, int heap)
 {
     ModelAnim* anims = HeapAlloc_8003FC8C(count * 28, heap);
@@ -2139,7 +2046,6 @@ void AllocModelAnims_80026730(ModelAnim** out, int count, int heap)
         anims[i].frames_18 = 0;
     }
 }
-// Matched
 void FreeModelAnims_8002679C(ModelAnim** anims, int count, int heap)
 {
     ModelAnim* arr;
@@ -2166,14 +2072,12 @@ void FreeModelAnims_8002679C(ModelAnim** anims, int count, int heap)
         *anims = 0;
     }
 }
-// Matched
 void LoadModelAnimSection_80026870(ModelAnim** out, int section, int heap)
 {
     int count = GetModelAnimCount_80026724((int*)section);
     AllocModelAnims_80026730(out, count, heap);
     LoadModelAnimsMasked_800268E8(out[0], section, count, heap, -1);
 }
-// Matched
 void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int count, int h, int mask)
 {
     int* offsets = (int*)section;
@@ -2187,7 +2091,6 @@ void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int count, int
         }
     }
 }
-// Matched
 void FreeModelAnimData_800269C4(ModelAnim* anims, int count, int sel, int h)
 {
     ModelAnim* anim = anims;
@@ -2208,7 +2111,6 @@ void FreeModelAnimData_800269C4(ModelAnim* anims, int count, int sel, int h)
         }
     }
 }
-// Matched
 void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, int heap)
 {
     int hasDivisor = 0;
@@ -2301,12 +2203,10 @@ void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, int heap)
         }
     }
 }
-// Matched
 int GetRecordTableCount_80026D6C(int* file)
 {
     return file[0];
 }
-// Matched
 void AllocRecordTables_80026D78(RecordTable** out, int count, int heap)
 {
     RecordTable* tables = HeapAlloc_8003FC8C(count * 12, heap);
@@ -2319,7 +2219,6 @@ void AllocRecordTables_80026D78(RecordTable** out, int count, int heap)
     }
     *out = tables;
 }
-// Matched
 void FreeRecordTables_80026DE8(RecordTable** tables, int count, int h)
 {
     RecordTable* table = *tables;
@@ -2334,7 +2233,6 @@ void FreeRecordTables_80026DE8(RecordTable** tables, int count, int h)
     HeapFree_8003FD18(*tables, h);
     *tables = 0;
 }
-// Matched
 void LoadRecordTables_80026E74(RecordTable* tables, int* file, int heap)
 {
     int i;
@@ -2351,7 +2249,6 @@ typedef struct
     unsigned short c;
     unsigned short d;
 } RecordEntry; // one 8-byte entry of a record table (LoadRecordTable_80026EF8)
-// Matched
 void LoadRecordTable_80026EF8(RecordTable* table, unsigned short* src, int heap)
 {
     unsigned short* d;
@@ -2379,7 +2276,6 @@ typedef struct
 } SavedLevantPos;
 extern SavedLevantPos savedLevantPos_80091C78;
 extern int gameStartMode_800B1DC8;
-// Matched
 void InitMapState_80026FAC(void)
 {
     ListInit_8003FDB0(&mapHeap_80091C68);
@@ -2439,7 +2335,6 @@ extern void StopAllEventScripts_800A58B4(void);
 extern void ClearFieldMinions_800A7784(void);
 extern void ResetEncounter_800A170C(void);
 extern void ClearEnemySlots_800A1794(void);
-// Matched
 void UnloadMap_80027118(void)
 {
     areaLoadIds_80091CB8[7] = -1;
@@ -2482,19 +2377,16 @@ void UnloadMap_80027118(void)
         ListFreeAll_8003FEC8(&heap_80091C48);
     }
 }
-// Matched
 void FreeMapArea_8002728C(void)
 {
     currentArea_80091C44 = -1;
     ListFreeAll_8003FEC8(&areaHeap_80091C20);
 }
-// Matched
 void SetCurrentArea_800272BC(int map, int area)
 {
     currentAreaMap_80091C88 = map;
     currentArea_80091C44 = area;
 }
-// Matched
 int IsMapLoading_800272D0(void)
 {
     int* a = mapLoaderTask_800B1DC4[9];
@@ -2505,13 +2397,11 @@ int IsMapLoading_800272D0(void)
     }
     return 0;
 }
-// Matched
 void RequestAreaReload_80027314(void)
 {
     areaReload_80082670 = 1;
     saveData_8008B570.mapId_2E4[3].field_2 = -1;
 }
-// Matched
 int RequestAreaPreload_80027330(short area)
 {
     if (areaPreloading_80082678 == 0)
@@ -2521,7 +2411,6 @@ int RequestAreaPreload_80027330(short area)
     }
     return 0;
 }
-// Matched
 int UsePreloadedArea_80027358(int id)
 {
     int* task;
@@ -2548,7 +2437,6 @@ int UsePreloadedArea_80027358(int id)
     saveData_8008B570.mapId_2E4[3].field_0 = id;
     return 0;
 }
-// Matched
 void CancelAreaPreload_8002741C(void)
 {
     int* task;
@@ -2560,7 +2448,6 @@ void CancelAreaPreload_8002741C(void)
         task[0] = 0;
     }
 }
-// Matched
 void SetLoadFadeFlag_80027478(int mask, int set)
 {
     int f;
@@ -2592,7 +2479,6 @@ void SetLoadFadeFlag_80027478(int mask, int set)
         SetFadeMode_8001C19C(code, 0x20);
     }
 }
-// Matched
 int UpdateLoadFade_80027540(void)
 {
     int* g = loadFade_80091C30;
@@ -2620,7 +2506,6 @@ int UpdateLoadFade_80027540(void)
     }
     return 1;
 }
-// Matched
 void AllocMapWallFlags_800275E8(unsigned char** out, int count, List* heap)
 {
     unsigned char* flags;
@@ -2637,7 +2522,6 @@ void AllocMapWallFlags_800275E8(unsigned char** out, int count, List* heap)
         }
     }
 }
-// Matched
 int* LoadMapSpawns_80027650(int* file, int unused, List* h)
 {
     int* src;
@@ -2665,7 +2549,6 @@ int* LoadMapSpawns_80027650(int* file, int unused, List* h)
     }
     return src;
 }
-// Matched
 void LoadMapFtg_80027708(int* file, int heap)
 {
     int count = GetFtgObjectCount_80021738(file);
@@ -2676,7 +2559,6 @@ void LoadMapFtg_80027708(int* file, int heap)
         LoadFtgObjects_80021824(file, mapState_8008B500.ftg_3C, mapState_8008B500.ftgCount_38, heap, 0);
     }
 }
-// Matched
 void LoadTileSets_80027778(int* data, List* heap)
 {
     TileSet* arr;
@@ -2706,7 +2588,6 @@ void LoadTileSets_80027778(int* data, List* heap)
     }
     tileAnim_8008D648.items_C = arr;
 }
-// Matched
 void LoadTileAnimLayers_800278BC(int* data, List* heap)
 {
     int* file = data;
@@ -2740,7 +2621,6 @@ void LoadTileAnimLayers_800278BC(int* data, List* heap)
         timer->timer_0 = 0;
     }
 }
-// Matched
 int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, List* heap, MapMeshFile* hdr)
 {
     MapMesh* arr;
@@ -2791,7 +2671,6 @@ int* LoadMapMeshes_80027A88(MapMesh** out, unsigned int* count, List* heap, MapM
     *out = arr;
     return (int*)((unsigned char*)hdr + hh->size_0);
 }
-// Matched
 void InitMapLoaderTask_80027CC0(EventEntry* entry, int* state)
 {
     state[0] = 0;
@@ -2820,7 +2699,6 @@ extern void SetBattleStageForMap_800A52AC(int a0);
 extern Model* GetLevantModel_800AC38C(void);
 extern int GetEventVar_800AD154(int a0);
 extern void StartEncounter_800B88A4(int a0);
-// Matched
 void MapLoaderTask_80027CF8(void* entry, int* state)
 {
     int* st = state;
@@ -2958,7 +2836,6 @@ void MapLoaderTask_80027CF8(void* entry, int* state)
         break;
     }
 }
-// Matched
 void ResetMapLoaderTask_8002830C(EventEntry* entry)
 {
     saveData_8008B570.mapId_2E4[0].field_2 = -1;
@@ -2971,7 +2848,6 @@ void ResetMapLoaderTask_8002830C(EventEntry* entry)
     FreeMapArea_8002728C();
     entry->cb_8 = (EventEntryFn)InitMapLoaderTask_80027CC0;
 }
-// Matched
 void InitAreaLoaderTask_80028388(EventEntry* entry, int* state)
 {
     state[0] = 0;
@@ -2981,7 +2857,6 @@ void InitAreaLoaderTask_80028388(EventEntry* entry, int* state)
 }
 extern int GetGameMode_800A6D50(int a0);
 extern int battleFlags_800B1228;
-// Matched
 void AreaLoaderTask_800283C0(void* entry, int* state)
 {
     int* st = state;
@@ -3114,7 +2989,6 @@ extern void MarkSharedEdges_800B73C0(MapMesh* a0, int a1);
 extern int FindTriAtXZ_800B76B8(MapMesh* a0, Vec3i* a1);
 extern short savedLevantRot_80091CA8[];
 extern EventNode* gameTask_8008B4A4; // the GAME overlay task
-// Matched
 void OnMapFileLoaded_80028808(void* params, int* data)
 {
     MapFileHeader hdr;

@@ -26,14 +26,14 @@ sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "scr
 
 def read_lib_objs():
     """config/lib_objs.txt: the PSY-Q modules in link order, ("obj", LIB, MODULE), ("src", FILE) for src/lib/FILE,
-    ("bsshead", SIZE) / ("bsstail", SIZE)"""
+    ("bsshead",) / ("bsstail",)"""
     out = []
     for line in open(os.path.join(CURRENT_DIR, "config", "lib_objs.txt")):
         f = line.split("#")[0].split()
         if not f:
             continue
         if f[0] in ("bsshead", "bsstail"):
-            out.append((f[0], int(f[1], 16)))
+            out.append((f[0],))
         elif f[0] == "src":
             out.append(("src", f[1]))
         else:
@@ -42,7 +42,7 @@ def read_lib_objs():
 
 
 def read_lib_commons():
-    """config/lib_commons.txt: {(LIB, MODULE): [(name, size, addr)]} by address.
+    """config/lib_commons.txt: {(LIB, MODULE): [(name, size, align, extra)]} in placement order.
     psylink aligns every .bss contribution to 8 bytes once there are common symbols, which the original link
     didn't (the game's .bss is packed); defining the commons ourselves (behind their module, where psylink
     would put them) keeps them out of the link."""
@@ -50,14 +50,25 @@ def read_lib_commons():
     for line in open(os.path.join(CURRENT_DIR, "config", "lib_commons.txt")):
         f = line.split("#")[0].split()
         if f:
-            out.setdefault((f[0], f[1]), []).append((f[2], int(f[3], 16), int(f[4], 16)))
-    return {k: sorted(v, key=lambda c: c[2]) for k, v in out.items()}
+            out.setdefault((f[0], f[1]), []).append((f[2], int(f[3], 16), int(f[4]), int(f[5])))
+    return out
+
+
+GAME_BSS_END = "__game_bss_end"  # marker behind the game's .bss, in front of the PSY-Q modules' .bss
+
+
+def bss_section_start():
+    """where the last link started .bss (bsshead pads the game's .bss from there to 8 bytes)"""
+    path = os.path.join(BUILD_DIR, f"{EXE_NAME}.map")
+    m = re.search(r"^ ([0-9A-F]{8}) [0-9A-F]{8} [0-9A-F]{8} [0-9A-F]{8} bss\s+\.bss$", open(path).read(), re.M) \
+        if os.path.exists(path) else None
+    return int(m.group(1), 16) if m else 4
 
 
 def game_bss_end():
-    """end of the game's .bss (the PSY-Q modules' .bss follows); the game's variables are all C"""
-    import layout
-    return layout.BSS_GAME_END
+    """where the last link ended the game's .bss (the PSY-Q modules' .bss follows; their padding and commons
+    depend on that address mod 8). Before the first link a guess, which aliases_resolved/build fix up."""
+    return read_map_symbols().get(GAME_BSS_END, 0)
 
 
 def read_aliases(image="EXE"):
@@ -85,6 +96,23 @@ def alias_base(base, syms):
         return syms[base]
     got = overlay_symbols().get(base, set())
     return next(iter(got)) if len(got) == 1 else None
+
+
+def warn_if_too_big():
+    """the executable (.bss included) must end before the overlays' load area (TITLE/GAME/... at 0x800A05A0)"""
+    sys.path.insert(0, os.path.join(CURRENT_DIR, "scripts"))
+    from overlays import LOAD_ADDRESSES
+    text = open(os.path.join(BUILD_DIR, f"{EXE_NAME}.map")).read()
+    end = max(int(m.group(1), 16) + 1 for m in re.finditer(r"^ [0-9A-F]{8} ([0-9A-F]{8}) [0-9A-F]{8} [0-9A-F]{8} ", text, re.M))
+    if end > min(LOAD_ADDRESSES.values()):
+        print("warning: the executable ends at 0x%08X, behind 0x%08X where the overlays are loaded"
+              % (end, min(LOAD_ADDRESSES.values())))
+
+
+def bss_layout_resolved():
+    """True if the last link's .bss starts and the game's .bss ends where the padding was computed for"""
+    used = open(os.path.join(BUILD_DIR, "game_bss_end.txt")).read().split()
+    return [int(x, 16) for x in used] == [game_bss_end(), bss_section_start()]
 
 
 def aliases_resolved():
@@ -184,7 +212,7 @@ def write_if_changed(path, text):
 
 def extract_lib_objs(psyq_lib, out_dir, wanted):
     """writes the wanted (LIB, MODULE) of the PSY-Q .LIB files to out_dir/LIB/MODULE.OBJ, returns their paths"""
-    from lib_match import lib_modules
+    from objlib.lib import lib_modules
     paths = {}
     for lib in sorted({l for l, _ in wanted}):
         mods = {m: data for m, data in lib_modules(os.path.join(psyq_lib, lib))}
@@ -269,6 +297,8 @@ def generate_ninja():
         bss_tail = None
         objs = []
         headers = [os.path.join(project_src, f) for f in sorted(os.listdir(project_src)) if f.endswith(".h")]
+        bss_start = game_bss_end()
+        write_if_changed(os.path.join(BUILD_DIR, "game_bss_end.txt"), "%08X %08X\n" % (bss_start, bss_section_start()))
         shift = shift_object(ninja, "shift")
         if shift:
             linker_deps.append(shift)
@@ -289,16 +319,22 @@ def generate_ninja():
         # the PSY-Q modules themselves, from the .LIB files; the code that is no 4.4 module is src/lib/*.s
         from objlib.sections import parse_obj_sections
         commons = read_lib_commons()
-        bss_pos = game_bss_end()
+        # the marker at the end of the game's .bss, behind every game object
+        marker = os.path.join(BUILD_DIR, "game_bss_end")
+        write_if_changed(marker + ".s", "\t.section\t.bss\r\n\t.globl\t%s\r\n%s:\r\n\t.text\r\n" % (GAME_BSS_END, GAME_BSS_END))
+        ninja.build(marker + ".obj", "assemble", marker + ".s")
+        linker_deps.append(marker + ".obj")
+        bss_pos = bss_start
         paths = extract_lib_objs(psyq_lib, os.path.join(BUILD_DIR, "libobj"),
                                  [(o[1], o[2]) for o in lib_objs if o[0] == "obj"])
         for o in lib_objs:
             if o[0] in ("bsshead", "bsstail"):
                 # bsshead: linked in front of the game so that it starts the bss group (the original's
-                # commons made psylink 8-align the .bss); bsstail: padding behind everything (the original's
-                # .bss group ends on 8 bytes, and the start-up clears the bss up to that end)
+                # commons made psylink 8-align the .bss); bsstail: padding behind everything up to 8 bytes (the
+                # original's .bss group ends on 8 bytes, and the start-up clears the bss up to that end)
                 out_path = os.path.join(BUILD_DIR, "lib_" + o[0])
-                write_if_changed(out_path + ".s", "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % o[1])
+                size = -bss_section_start() % 8 if o[0] == "bsshead" else -bss_pos % 8
+                write_if_changed(out_path + ".s", "\t.section\t.bss\r\n\t.space\t%d\r\n\t.text\r\n" % size)
                 ninja.build(f"{out_path}.obj", "assemble", out_path + ".s")
                 if o[0] == "bsshead":
                     linker_deps.insert(0, f"{out_path}.obj")
@@ -329,9 +365,8 @@ def generate_ninja():
                     name = "libcom_%s_%s" % (o[1].split(".")[0], o[2])
                     src = os.path.join(BUILD_DIR, name + ".s")
                     lines = ["\t.section\t.bss"]
-                    for n, size, a in own:
-                        if not 0 <= a - bss_pos < 8:
-                            print("lib_commons: %s at %08X, but the .bss is at %08X there" % (n, a, bss_pos))
+                    for n, size, align, extra in own:
+                        a = (bss_pos + align - 1) // align * align + extra
                         if a > bss_pos:
                             lines.append("\t.space\t%d" % (a - bss_pos))
                         lines += ["\t.globl\t%s" % n, "%s:" % n, "\t.space\t%d" % size]
@@ -541,13 +576,16 @@ def main():
         clean(log=False)
 
     build_retcode = build()
-    if build_retcode == 0 and not aliases_resolved():
+    if build_retcode == 0 and not (aliases_resolved() and bss_layout_resolved()):
         generate_ninja()
         build_retcode = build()
     if build_retcode != 0:
         sys.exit(build_retcode)
     if not aliases_resolved():
         sys.exit("aliases (config/aliases.txt) still not at BASE + OFFSET after relinking")
+    if not bss_layout_resolved():
+        sys.exit("the PSY-Q .bss padding still assumes another end of the game's .bss after relinking")
+    warn_if_too_big()
 
     if not args.no_verify:
         results = build_all(args.iso)

@@ -155,7 +155,6 @@ void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)
     }
 }
 
-// Matched
 void TstCompoMenu_800A0AB8(TstCompoWork* c)
 {
     short p0[4];
@@ -563,7 +562,6 @@ void TstCompoAnimSelect_800A19A4(TstCompoWork* c)
     }
 }
 
-// Matched
 void TstCompoFreeModel_800A1AD0(TstCompoWork* work)
 {
     FreeModelTask_8001098C(0);
@@ -583,7 +581,6 @@ void TstCompoInitBones_800A1AFC(TstCompoWork* work)
     SetBoneGroupFlags_80019B14(work->bones_C, levels, GetModelBoneGroupFlags_80024F38(work->model_4, compoModelParams_800A2768.modelId_1C));
 }
 
-// Matched
 void TstCompoResetCamera_800A1BE0(TstCompoWork* work)
 {
     work->dist_150 = 0x4B0;
@@ -678,7 +675,6 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
     SetGteLightAndCamera_8004D0E8();
 }
 
-// Matched
 enum GameStates TstCompoMain_800A200C(void)
 {
     DrawIntroMovie_8001AF64(tstCompoTaskList_800A2560);

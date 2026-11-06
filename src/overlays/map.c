@@ -185,7 +185,6 @@ const char aSelSceneGroup_800B6BAC[] = "\202r\202\205\202\214\201@\202\223\202\2
 const char aSelScene_800B6BCC[] = "\202r\202\205\202\214\201@\202\223\202\203\202\205\202\216\202\205"; // Sel scene
 const char aSelChapter_800B6BE0[28] = "\202r\202\205\202\214\201@\202\203\202\210\202\201\202\220\202\224\202\205\202\222\201@\000\000im";
 
-// Matched
 void MapSelectStart_800B6BFC(MapTask* task, int work)
 {
     void (*next)();
@@ -198,14 +197,12 @@ void MapSelectStart_800B6BFC(MapTask* task, int work)
     task->flags_0 = (task->flags_0 | 4) & 0xFFFF7FFF;
 }
 
-// Matched
 void StartAreaFadeOut_800B6C7C(MapTask* task)
 {
     SetFadeMode_8001C19C(0, 0x20);
     task->next_8 = LoadAreaPicture_800B6CB4;
 }
 
-// Matched
 void LoadAreaPicture_800B6CB4(MapTask* task)
 {
     int music;
@@ -229,7 +226,6 @@ void LoadAreaPicture_800B6CB4(MapTask* task)
     task->next_8 = WaitAreaPicture_800B6E5C;
 }
 
-// Matched
 void RequestMapFile_800B6D90(FileRequestDesc* req, int fileId)
 {
     mapFileLoaded_800B9430 = 0;
@@ -244,7 +240,6 @@ void RequestMapFile_800B6D90(FileRequestDesc* req, int fileId)
     QueueFileRequest_8003BC84(req);
 }
 
-// Matched
 void OnMapFileLoaded_800B6DE0(MapTask* task, int* data)
 {
     FreeMapTiys_800B6FAC(task);
@@ -259,7 +254,6 @@ void OnMapFileLoaded_800B6DE0(MapTask* task, int* data)
     mapFileLoaded_800B9430 = 1;
 }
 
-// Matched
 void WaitAreaPicture_800B6E5C(MapTask* task)
 {
     if (mapFileLoaded_800B9430)
@@ -268,7 +262,6 @@ void WaitAreaPicture_800B6E5C(MapTask* task)
     }
 }
 
-// Matched
 void LoadAreaSprites_800B6E80(MapTask* task)
 {
     mapFileStage_800B9434 = 1;
@@ -276,7 +269,6 @@ void LoadAreaSprites_800B6E80(MapTask* task)
     task->next_8 = WaitAreaFadeIn_800B6EE8;
 }
 
-// Matched
 void WaitAreaFadeIn_800B6EE8(MapTask* task, int work)
 {
     if (mapFileLoaded_800B9430 && IsFadeDone_8001C2FC())
@@ -288,7 +280,6 @@ void WaitAreaFadeIn_800B6EE8(MapTask* task, int work)
     }
 }
 
-// Matched
 void MapSelectEnd_800B6F60(MapTask* task, int work)
 {
     FreeMapTiys_800B6FAC(task);
@@ -296,7 +287,6 @@ void MapSelectEnd_800B6F60(MapTask* task, int work)
     unknownFlags_8008D678 &= 0xFBFFFFFF;
 }
 
-// Matched
 void FreeMapTiys_800B6FAC(MapTask* task)
 {
     if (areaBgSprts_800B9314)
@@ -323,7 +313,6 @@ void FreeMapTiys_800B6FAC(MapTask* task)
 
 // the destination list of a map area: the area picture, the blinking marker of the selected destination
 // and the scrolling list of names
-// Matched
 void DestinationSelect_800B7044(MapTask* task, int work)
 {
     MapDest sel;
@@ -544,14 +533,12 @@ void DestinationSelect_800B7044(MapTask* task, int work)
     }
 }
 
-// Matched
 void StartDestFadeOut_800B7948(MapTask* task)
 {
     SetFadeMode_8001C19C(0, 0x20);
     task->next_8 = LoadDestPicture_800B7980;
 }
 
-// Matched
 void LoadDestPicture_800B7980(MapTask* task)
 {
     MapDest sel;
@@ -565,7 +552,6 @@ void LoadDestPicture_800B7980(MapTask* task)
     task->next_8 = WaitDestPicture_800B7A38;
 }
 
-// Matched
 void WaitDestPicture_800B7A38(MapTask* task)
 {
     if (mapFileLoaded_800B9430 && IsFadeDone_8001C2FC())
@@ -656,7 +642,6 @@ void ConfirmDestination_800B7A90(MapTask* task, int work)
     }
 }
 
-// Matched
 int CountOpenDests_800B7E54(short area)
 {
     int i;
@@ -674,7 +659,6 @@ int CountOpenDests_800B7E54(short area)
     return count;
 }
 
-// Matched
 void InitDestCursor_800B7EE0(void)
 {
     MapDest sel;
@@ -727,7 +711,6 @@ void InitDestCursor_800B7EE0(void)
     }
 }
 
-// Matched
 void GetNthOpenDest_800B8128(short nth, short area, MapDest* out)
 {
     int count = 0;
@@ -767,7 +750,6 @@ int GetOpenDestRank_800B81D0(MapDest* want)
     return rank;
 }
 
-// Matched
 int IsDestOpen_800B8290(MapDest* sel)
 {
     int area = sel->area;
@@ -825,7 +807,6 @@ void GoToDest_800B8338(MapDest* sel)
     eventDispatchHalt_8008B540 = 1;
 }
 
-// Matched
 void GetCurrentDest_800B8448(MapDest* out)
 {
     unsigned short area = saveData_8008B570.mapId_2E4[0].field_0;
@@ -881,7 +862,6 @@ void GetCurrentDest_800B8448(MapDest* out)
     out->dest = 0;
 }
 
-// Matched
 void SceneSelectStart_800B85CC(MapTask* task)
 {
     MapSelState* st;
@@ -1026,7 +1006,6 @@ void SceneSelect_800B860C()
     }
 }
 
-// Matched
 void ChapterSelectStart_800B8B2C(MapTask* task)
 {
     void (*next)() = ChapterSelect_800B8B5C;

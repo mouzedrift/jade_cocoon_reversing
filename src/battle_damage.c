@@ -25,7 +25,6 @@
 
 
 
-// Matched
 int GetSealResultFlags_80013358(int idx)
 {
     return sealResultFlags_80079320[idx];
@@ -44,7 +43,6 @@ typedef struct
     unsigned char damageType_B; // 0 hp, 1 mp (halved), 2 hp + 2/5 as mp, 3 instant death chance
 } AttackDesc;
 extern double sqrt(double);
-// Matched
 void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out)
 {
     int crit0;
@@ -277,7 +275,6 @@ void CalcActionDamage_80013374(AttackDesc* action, UnitStatus* actorStatus, Unit
         out->status_8 &= ~2;
     }
 }
-// Matched
 void UseItemOnUnit_80013C28(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* result)
 {
     int bonus;

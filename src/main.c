@@ -245,7 +245,6 @@ int textNumberArgs_80096038[22] BSS = { 0 };
 List defaultAllocList_80096090 BSS = { 0 };
 int defaultAllocListPad_8009609C BSS = 0;
 
-// Matched
 int main(void)
 {
     int* pHeapIter;
@@ -283,7 +282,6 @@ int main(void)
     LoadExec(name, 0x801FFFF0, 0);
     exit();
 }
-// Matched
 void InitGame_80010110(void)
 {
     ResetCallback();

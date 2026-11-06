@@ -22,7 +22,6 @@
 extern int charWidthThresholds_80086898[][12];
 
 
-// Matched
 int GetCharWidth_8003E884(int idx, short c)
 {
     Font* font = &fonts_80095FB0[idx];
@@ -39,7 +38,6 @@ int GetCharWidth_8003E884(int idx, short c)
     }
     return width;
 }
-// Matched
 void DrawText_8003E91C(int idx, const char* str, short* pos, int ot)
 {
     Font* font = &fonts_80095FB0[idx];
@@ -92,7 +90,6 @@ void DrawText_8003E91C(int idx, const char* str, short* pos, int ot)
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
 }
-// Matched
 void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
 {
     Font* font = &fonts_80095FB0[2];

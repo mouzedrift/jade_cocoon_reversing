@@ -114,7 +114,6 @@ int dword_80079520[32] = {
     98, 79, 59, 50, 40, 30, 20, 10,
 };
 
-// Matched
 void AddStatus_80012794(UnitStatus* status, int bits)
 {
     if (status->status_0 & 0x3F8)
@@ -123,14 +122,12 @@ void AddStatus_80012794(UnitStatus* status, int bits)
     }
     status->status_0 |= bits;
 }
-// Matched
 void KillUnit_800127B8(UnitStatus* status)
 {
     status->exp_4 = 0;
     status->hp_8.cur_0 = 0;
     status->status_0 |= 0x400;
 }
-// Matched
 void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask)
 {
     UnitStatus* status = GetUnitStatus_80014390(unit & 0xFF);
@@ -140,7 +137,6 @@ void AdjustUnitStatById_800127D0(int unit, int sel, int delta, int mask)
         AdjustUnitStat_80012614(status, sel, delta, mask);
     }
 }
-// Matched
 void ApplyStatusPenalties_80012828(int* stats, UnitStatus* status)
 {
     if (status->status_0 & 1)
@@ -167,7 +163,6 @@ void ApplyStatusPenalties_80012828(int* stats, UnitStatus* status)
     }
 }
 
-// Matched
 ActionData* GetAbilityActionData_800129B0(ActionData* out, unsigned char* skill, int unit)
 {
     int id = 0xD3;
@@ -229,7 +224,6 @@ extern const char aCommonC[];
 extern const ActionData defaultActionData_80071F58; // an empty action
 extern int GetUnitSkills_80031B30(int unit);
 extern void CalcActionDamage_80013374(ActionData* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out);
-// Matched
 void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out)
 {
     int actorStats[12];
@@ -418,7 +412,6 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleC
         SetTargetHitFlag_800184A0(targetUnit, 2);
     }
 }
-// Matched
 int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out)
 {
     ActionData local = defaultActionData_80071F58;

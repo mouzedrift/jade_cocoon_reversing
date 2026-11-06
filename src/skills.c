@@ -19,12 +19,10 @@
 #include "party.h"
 
 
-// Matched
 ActionData* GetAbilityAction_800318C8(int idx)
 {
     return &abilityActions_80083594[idx];
 }
-// Matched
 int CheckMinionSkillStub_800318E4(unsigned int idx, int partySlot)
 {
     Minion* m = GetMinion_80010598(3, partySlot - 1);
@@ -37,29 +35,23 @@ int CheckMinionSkillStub_800318E4(unsigned int idx, int partySlot)
     }
     return 0;
 }
-// Matched
 void SeVibOn(void)
 {
 }
-// Matched
 void SetVib(void)
 {
 }
-// Matched
 void SsUtVibrateOn(void)
 {
 }
-// Matched
 void SsUtVibrateOff(void)
 {
 }
-// Matched
 int IsSkillLearned_80031954(void* skills, int slot)
 {
     unsigned char* skill = (unsigned char*)skills + slot * 4;
     return *skill & 1;
 }
-// Matched
 int CountLearnedSkills_80031968(void* skills)
 {
     int count;
@@ -75,17 +67,14 @@ int CountLearnedSkills_80031968(void* skills)
 }
 extern int abilityNames_800834E4[];
 extern int abilityBonusNames_80083580[];
-// Matched
 int GetAbilityName_800319CC(int idx)
 {
     return abilityNames_800834E4[idx];
 }
-// Matched
 int GetAbilityBonusName_800319E8(int idx)
 {
     return abilityBonusNames_80083580[idx];
 }
-// Matched
 int GetSkillMpCost_80031A04(UnitSkill* skills, int slot)
 {
     int cost;

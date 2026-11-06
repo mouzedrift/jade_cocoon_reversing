@@ -35,7 +35,6 @@ extern unsigned short padPressed_8009194C[];
 extern unsigned short padHoldFrames_80091950[][16];
 extern signed char padAnalog_800918D8[][4];
 extern unsigned char padAnalogMax_800918E0[][4];
-// Matched
 void RunActorScript_8001EA48(void* actor)
 {
     Actor* o = actor;
@@ -245,7 +244,6 @@ void RunActorScript_8001EA48(void* actor)
         cmd = (ActorScriptCmd*)((unsigned int*)cmd + cmd->len_1);
     }
 }
-// Matched
 void StopActorScript_8001EFC4(Actor* actor)
 {
     unsigned int flags = actor->flags_4;
@@ -270,7 +268,6 @@ void StopActorScript_8001EFC4(Actor* actor)
     }
     actor->flags_4 &= 0xFF17FFFF;
 }
-// Matched
 int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int frame)
 {
     Actor* o = (Actor*)actorAddr;
@@ -355,7 +352,6 @@ int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int f
     }
     return -1;
 }
-// Matched
 short GetActorHitTimes_8001F268(Actor* o, HitTimes* out, ActorScriptCmd* script, int anim)
 {
     short* e = o->anims_148[anim].hitFrames_8[0];
@@ -377,7 +373,6 @@ short GetActorHitTimes_8001F268(Actor* o, HitTimes* out, ActorScriptCmd* script,
 }
 extern void GetAnimRootMotion_8004D288(int* out, ModelAnim* s, int k);
 extern int CollideWithMap_800B716C(VECTOR* pos, VECTOR* prev, SVECTOR* rot, void* a3);
-// Matched
 void UpdateActorMotion_8001F354(void* actor)
 {
     Actor* o = actor;
@@ -480,7 +475,6 @@ void UpdateActorMotion_8001F354(void* actor)
         o->ground_80 = CollideWithMap_800B716C((VECTOR*)o->pos_38, (VECTOR*)o->prevPos_44, (SVECTOR*)o->rot_5C, &o->fB4);
     }
 }
-// Matched
 void UpdateActorAnimLoad_8001F918(void* actor)
 {
     Actor* act = actor;
@@ -502,7 +496,6 @@ void UpdateActorAnimLoad_8001F918(void* actor)
         break;
     }
 }
-// Matched
 void UpdateActor_8001F9AC(void* actor)
 {
     UpdateActorScale_8001F9F0(actor);
@@ -511,7 +504,6 @@ void UpdateActor_8001F9AC(void* actor)
     AdvanceActorFrame_8001FF48(actor);
     CopyActorBoneMatrices_800200F8(actor);
 }
-// Matched
 void UpdateActorScale_8001F9F0(Actor* o)
 {
     unsigned int f = o->flags_4;
@@ -540,7 +532,6 @@ void UpdateActorScale_8001F9F0(Actor* o)
     o->scale_2C[1] = o->baseScale_138[1] * o->scale_26 / 4096;
     o->scale_2C[2] = o->baseScale_138[2] * o->scale_26 / 4096;
 }
-// Matched
 void UpdateActorDrawMode_8001FB00(Actor* o)
 {
     unsigned int flags = o->flags_4;
@@ -603,7 +594,6 @@ void UpdateActorDrawMode_8001FB00(Actor* o)
         o->drawMode_8 |= (o->clut_158[1] - o->image_150.y) << 8;
     }
 }
-// Matched
 int IsActorOnScreen_8001FC90(Actor* actor)
 {
     SVECTOR rel;
@@ -622,7 +612,6 @@ int IsActorOnScreen_8001FC90(Actor* actor)
 extern void DrawAnimSkelBlend_80047E28();
 extern void DrawAnimSkel_80046A58();
 extern void DrawSpriteVtxQuadsGT4_800459E4();
-// Matched
 void DrawActor_8001FD08(void* actor)
 {
     Actor* o = (Actor*)actor;
@@ -682,7 +671,6 @@ void DrawActor_8001FD08(void* actor)
         RunAnimFrameCues_8001C440(o->model_15C, o->anim_9C, o->frame_90 % o->draw_164.anim_14->frameCount_0);
     }
 }
-// Matched
 void AdvanceActorFrame_8001FF48(Actor* o)
 {
     int g;
@@ -742,7 +730,6 @@ void AdvanceActorFrame_8001FF48(Actor* o)
         }
     }
 }
-// Matched
 void CopyActorBoneMatrices_800200F8(void* actor)
 {
     Actor* o = actor;
@@ -760,7 +747,6 @@ void CopyActorBoneMatrices_800200F8(void* actor)
         }
     }
 }
-// Matched
 void ClearModelAnimRefs_800201A4(void)
 {
     int i;
@@ -769,7 +755,6 @@ void ClearModelAnimRefs_800201A4(void)
         ClearModelAnimRef_800204AC(&modelAnimRefs_800919A0[i]);
     }
 }
-// Matched
 int AddModelAnimRef_800201EC(Model* model)
 {
     int i;
@@ -794,7 +779,6 @@ int AddModelAnimRef_800201EC(Model* model)
     }
     return -1;
 }
-// Matched
 void ReleaseModelAnimRef_80020278(int ref, int user)
 {
     int i;
@@ -811,7 +795,6 @@ void ReleaseModelAnimRef_80020278(int ref, int user)
         ClearModelAnimRef_800204AC(e);
     }
 }
-// Matched
 int RequestModelAnim_8002032C(int ref, int user, int anim)
 {
     ModelAnimRef* e = &modelAnimRefs_800919A0[ref];
@@ -824,7 +807,6 @@ int RequestModelAnim_8002032C(int ref, int user, int anim)
     e->users_8[anim] |= 1 << user;
     return loaded;
 }
-// Matched
 void ReleaseModelAnim_800203B0(int ref, int user, int anim)
 {
     ModelAnimRef* e = &modelAnimRefs_800919A0[ref];
@@ -833,7 +815,6 @@ void ReleaseModelAnim_800203B0(int ref, int user, int anim)
         FreeModelAnim_8002556C(e->model_0, anim);
     }
 }
-// Matched
 int IsModelAnimUsed_80020410(int ref, int user, int anim)
 {
     ModelAnimRef* e = &modelAnimRefs_800919A0[ref];
@@ -856,7 +837,6 @@ int IsModelAnimUsed_80020410(int ref, int user, int anim)
     }
     return 1;
 }
-// Matched
 void ClearModelAnimRef_800204AC(ModelAnimRef* ref)
 {
     int i;
@@ -867,7 +847,6 @@ void ClearModelAnimRef_800204AC(ModelAnimRef* ref)
     ref->model_0 = 0;
     ref->refs_4 = 0;
 }
-// Matched
 void ResetModelLoader_800204D0(void)
 {
     ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
@@ -886,7 +865,6 @@ void ResetModelLoader_800204D0(void)
         slot++;
     }
 }
-// Matched
 void FreeModelLoaderList_8002052C(void)
 {
     ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
@@ -895,7 +873,6 @@ void FreeModelLoaderList_8002052C(void)
         FreeModelList_80024BB0(&loader->models_8);
     }
 }
-// Matched
 void StartModelLoader_8002056C(void)
 {
     EventEntry* entry = &modelLoaderTask_8008B54C->entry;
@@ -904,18 +881,15 @@ void StartModelLoader_8002056C(void)
     ((ModelLoader*)entry->buffer)->state_0 = 0;
     entry->cb_8(entry, entry->buffer);
 }
-// Matched
 int IsModelLoaderDone_800205D0(void)
 {
     return ((ModelLoader*)modelLoaderTask_8008B54C->entry.buffer)->done_4;
 }
-// Matched
 void StopModelLoader_800205F0(void)
 {
     EventEntry* entry = &modelLoaderTask_8008B54C->entry;
     entry->flags = (entry->flags & ~1) | 0x8000;
 }
-// Matched
 int CountLoaderModels_80020614(void)
 {
     ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
@@ -932,7 +906,6 @@ int CountLoaderModels_80020614(void)
     }
     return count;
 }
-// Matched
 int GetLoaderModelId_80020654(int nth)
 {
     ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
@@ -953,7 +926,6 @@ int GetLoaderModelId_80020654(int nth)
     }
     return -1;
 }
-// Matched
 int RequestLoaderModel_800206A0(int id, int sel, int animMode, int animSet)
 {
     ModelLoader* loader = modelLoaderTask_8008B54C->entry.buffer;
@@ -984,12 +956,10 @@ int RequestLoaderModel_800206A0(int id, int sel, int animMode, int animSet)
     }
     return 0;
 }
-// Matched
 Model* AcquireLoaderModel_80020734(int arg)
 {
     return AcquireModel_80024D70(((ModelLoader*)modelLoaderTask_8008B54C->entry.buffer)->models_8, arg);
 }
-// Matched
 void FreeLoaderModel_80020768(Model* model)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
@@ -1009,7 +979,6 @@ void FreeLoaderModel_80020768(Model* model)
         slot++;
     }
 }
-// Matched
 void FreeLoaderModelAnimSets_80020814(void)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
@@ -1024,7 +993,6 @@ void FreeLoaderModelAnimSets_80020814(void)
         slot++;
     }
 }
-// Matched
 void LoadLoaderModelAnimSets_80020898(void)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
@@ -1039,7 +1007,6 @@ void LoadLoaderModelAnimSets_80020898(void)
         slot++;
     }
 }
-// Matched
 int AreLoaderModelsLoaded_80020924(void)
 {
     ModelLoader* base = modelLoaderTask_8008B54C->entry.buffer;
@@ -1058,7 +1025,6 @@ int AreLoaderModelsLoaded_80020924(void)
     }
     return 1;
 }
-// Matched
 void ModelLoaderTask_800209AC(EventEntry* entry, int* buf)
 {
     ModelLoader* loader = (ModelLoader*)buf;
@@ -1081,7 +1047,6 @@ void ModelLoaderTask_800209AC(EventEntry* entry, int* buf)
         break;
     }
 }
-// Matched
 void LoadRequestedModels_80020A38(ModelLoader* loader)
 {
     ModelLoadSlot* slot;
@@ -1113,7 +1078,6 @@ void LoadRequestedModels_80020A38(ModelLoader* loader)
         slot++;
     }
 }
-// Matched
 int AreRequestedModelsLoaded_80020B70(ModelLoader* loader)
 {
     ModelLoadSlot* slot = loader->slots_C;
@@ -1132,7 +1096,6 @@ int AreRequestedModelsLoaded_80020B70(ModelLoader* loader)
     loader->done_4 = 1;
     return 1;
 }
-// Matched
 int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
 {
     FileRequestDesc req;
@@ -1158,14 +1121,12 @@ int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
     req.callback_1C = 0;
     return QueueFileRequest_8003BC84(&req);
 }
-// Matched
 void InitOverlayLoaderTask_80020CB8(EventEntry* entry, OverlayLoader* loader)
 {
     loader->loaded_4 = -1;
     loader->wanted_0 = 0x1D;
     entry->cb_8 = (EventEntryFn)UpdateOverlayLoaderTask_80020CD8;
 }
-// Matched
 void UpdateOverlayLoaderTask_80020CD8(int entry, OverlayLoader* loader)
 {
     if (loader->wanted_0 != loader->loaded_4)
@@ -1174,7 +1135,6 @@ void UpdateOverlayLoaderTask_80020CD8(int entry, OverlayLoader* loader)
         loader->request_8 = LoadOverlay_80020BF8(2, loader->wanted_0);
     }
 }
-// Matched
 int LoadOverlayIfChanged_80020D1C(int mode, int overlay)
 {
     OverlayLoader* loader = overlayLoaderTask_8008D4C0->entry.buffer;
@@ -1186,12 +1146,10 @@ int LoadOverlayIfChanged_80020D1C(int mode, int overlay)
     loader->loaded_4 = overlay;
     return LoadOverlay_80020BF8(mode, loader->wanted_0);
 }
-// Matched
 void ResetOverlayLoaderTask_80020D68(void)
 {
     ((OverlayLoader*)overlayLoaderTask_8008D4C0->entry.buffer)->wanted_0 = 0x1D;
 }
-// Matched
 int IsOverlayLoaderIdle_80020D84(void)
 {
     OverlayLoader* loader = overlayLoaderTask_8008D4C0->entry.buffer;
@@ -1207,7 +1165,6 @@ int IsOverlayLoaderIdle_80020D84(void)
     }
     return idle;
 }
-// Matched
 void LoadEffectFile_80020DDC(int fileId, EffectFile* out, short* tpagePos, short* clutPos, int sel, int flag)
 {
     FileRequestDesc req;
@@ -1239,17 +1196,14 @@ void LoadEffectFile_80020DDC(int fileId, EffectFile* out, short* tpagePos, short
     req.callback_1C = OnEffectFileLoaded_80020F5C;
     out->request_0 = StartFileRequestTask_8003C6C8(&req);
 }
-// Matched
 int IsEffectFileLoaded_80020EBC(EffectFile* file)
 {
     return GetFileRequestStatus_8003BE30(file->request_0) == 0;
 }
-// Matched
 void FreeEffectFile_80020EE0(EffectFile* file)
 {
     ListFreeAll_8003FEC8(&file->list_4);
 }
-// Matched
 int FindEffectIndex_80020F00(EffectFile* file, int kind, int id)
 {
     int i;
@@ -1262,7 +1216,6 @@ int FindEffectIndex_80020F00(EffectFile* file, int kind, int id)
     }
     return -1;
 }
-// Matched
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
 {
     EffectLoadArg* arg = arg_in;
@@ -1342,7 +1295,6 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
         LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)tiySec, GetTiyFileCount_80028E68(tiySec), (int)arg->reloc_4, arg->sel_10);
     }
 }
-// Matched
 void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, List* heap)
 {
     POLY_FT4 buf;
@@ -1377,7 +1329,6 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, 
     MemCopy_800403E8(&buf, src, 0x28);
     InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
-// Matched
 void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, List* heap)
 {
     int* models = (int*)((char*)hdr + hdr[1]);
@@ -1408,7 +1359,6 @@ void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, Li
         MemCopy_800403E8(out->keys_18, images + 2, images[0] * 40 * images[1]);
     }
 }
-// Matched
 int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, List* heap)
 {
     int i;
@@ -1435,7 +1385,6 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, List* heap)
     }
     return max;
 }
-// Matched
 void AllocMdecBuffers_800216E8(EffectMdecBuffers* out, int maxSize, List* heap)
 {
     out->dct_0 = ListAlloc_8003FDC0(heap, (maxSize + 1) * 4);

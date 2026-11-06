@@ -28,7 +28,6 @@ extern int dword_80091C5C;
 extern int dword_80091C8C;
 extern void (*mapCallback_80091CB4)(int);
 extern int mapJustLoaded_80082668;
-// Matched
 void OnRoomDataLoaded_80028C60(int req, char* data)
 {
     int n;
@@ -65,7 +64,6 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     }
 }
 extern short screenOffset_8008D474[2];
-// Matched
 void InitRoomCamera_80028DC0(void)
 {
     CameraCtrl* cam;
@@ -80,19 +78,16 @@ void InitRoomCamera_80028DC0(void)
         SetGeomOffset(display_8008B4D8.w_C / 2 + screenOffset_8008D474[0], display_8008B4D8.h_E / 2 + screenOffset_8008D474[1]);
     }
 }
-// Matched
 int GetTiyFileCount_80028E68(int* file)
 {
     return file[0];
 }
-// Matched
 void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int heap)
 {
     int count = *file;
     AllocTiyPrims_800295D8(sprts, polys, tpages, count, heap);
     LoadTiyTims_80028EEC(sprts, polys, tpages, file, count);
 }
-// Matched
 void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int count)
 {
     TimInfo buf;
@@ -111,7 +106,6 @@ void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int
         }
     }
 }
-// Matched
 void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, int count, int reloc, int hue)
 {
     TimInfo buf;
@@ -138,7 +132,6 @@ void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, i
         }
     }
 }
-// Matched
 void ShiftVramImageHsv_800290FC(RECT* rect, short* dst, short* delta)
 {
     short rgb[4];
@@ -176,7 +169,6 @@ void ShiftVramImageHsv_800290FC(RECT* rect, short* dst, short* delta)
     DrawSync(0);
     free3_8003FC6C(buf);
 }
-// Matched
 void TintVramImage_800292D0(void* rect, void* dst, int tint)
 {
     short rgb[4];
@@ -216,7 +208,6 @@ void TintVramImage_800292D0(void* rect, void* dst, int tint)
     DrawSync(0);
     free3_8003FC6C(buf);
 }
-// Matched
 void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int count, int heap)
 {
     if (sprts)
@@ -232,14 +223,12 @@ void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, i
         *tpages = HeapAlloc_8003FC8C(count * sizeof(DR_TPAGE), heap);
     }
 }
-// Matched
 void LoadTim_80029674(void* tim)
 {
     TimInfo buf;
     ParseTim_80029708(&buf, tim);
     LoadTimToVram_800296A0(&buf);
 }
-// Matched
 void LoadTimToVram_800296A0(void* tim)
 {
     int* info = (int*)tim;
@@ -251,7 +240,6 @@ void LoadTimToVram_800296A0(void* tim)
     LoadImage((RECT*)&info[7], (u_long*)info[9]);
     DrawSync(0);
 }
-// Matched
 int ParseTim_80029708(void* outTim, void* inTim)
 {
     int* out = (int*)outTim;
@@ -277,7 +265,6 @@ int ParseTim_80029708(void* outTim, void* inTim)
     out[9] = (int)&pixelBlock[3];
     return 1;
 }
-// Matched
 void RelocateTimInfo_800297C0(TimInfo* tim, TimReloc* reloc)
 {
     if (tim->mode_valid)
@@ -297,14 +284,12 @@ void RelocateTimInfo_800297C0(TimInfo* tim, TimReloc* reloc)
     *(unsigned short*)&tim->prect.x += reloc->pixelDx_0;
     *(unsigned short*)&tim->prect.y += reloc->pixelDy_2;
 }
-// Matched
 void InitSprtFromTimData_80029868(int sprt, int tim, int tpage)
 {
     TimInfo buf;
     ParseTim_80029708(&buf, (void*)tim);
     InitSprtFromTim_800298AC(sprt, tpage, &buf);
 }
-// Matched
 void InitSprtFromTim_800298AC(SPRT* sprt, DR_TPAGE* tpage, TimInfo* tim)
 {
     SetSprt(sprt);
@@ -318,14 +303,12 @@ void InitSprtFromTim_800298AC(SPRT* sprt, DR_TPAGE* tpage, TimInfo* tim)
     sprt->h = tim->prect.h;
     sprt->clut = ((unsigned short)tim->crect.y << 6) | (((unsigned short)tim->crect.x >> 4) & 0x3F);
 }
-// Matched
 void InitPolyFT4FromTimData_800299DC(void* poly, void* tim)
 {
     TimInfo buf;
     ParseTim_80029708(&buf, tim);
     InitPolyFT4_80029A10(poly, &buf);
 }
-// Matched
 void InitPolyFT4_80029A10(void* polyArg, void* timArg)
 {
     POLY_FT4* poly = (POLY_FT4*)polyArg;
@@ -345,7 +328,6 @@ void InitPolyFT4_80029A10(void* polyArg, void* timArg)
     poly->v3 = tim->prect.y % 256 + (tim->prect.h - 1);
     poly->clut = ((unsigned short)tim->crect.y << 6) | (((unsigned short)tim->crect.x >> 4) & 0x3F);
 }
-// Matched
 void UnpackColor555_80029C68(unsigned short* dst, unsigned short* src)
 {
     dst[3] = *src & 0x8000;
@@ -353,7 +335,6 @@ void UnpackColor555_80029C68(unsigned short* dst, unsigned short* src)
     dst[1] = (*src >> 5) & 0x1f;
     dst[2] = (*src >> 10) & 0x1f;
 }
-// Matched
 void PackColor555_80029CB4(unsigned short* dst, unsigned short* src)
 {
     *dst = 0;
@@ -362,7 +343,6 @@ void PackColor555_80029CB4(unsigned short* dst, unsigned short* src)
     *dst |= src[1] << 5;
     *dst |= src[2] << 10;
 }
-// Matched
 void ShiftClutHue_80029D00(TimInfo* tim, unsigned int hue)
 {
     short rgb[4];
@@ -394,7 +374,6 @@ void ShiftClutHue_80029D00(TimInfo* tim, unsigned int hue)
         }
     }
 }
-// Matched
 int Rgb555ToHsv_80029EA8(short* in, short* out)
 {
     int idx;
@@ -457,7 +436,6 @@ int Rgb555ToHsv_80029EA8(short* in, short* out)
     out[3] = in[3];
     return 1;
 }
-// Matched
 int HsvToRgb555_8002A040(short* in, short* out)
 {
     int sector;

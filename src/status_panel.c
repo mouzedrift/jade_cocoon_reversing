@@ -32,7 +32,6 @@
 const StatGridColor statGridLineColor_800743D0 = { "```" };
 
 
-// Matched
 void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
 {
     unsigned short loc[2];
@@ -54,7 +53,6 @@ void DrawStatusPanelLabels_8002DA3C(unsigned short* pos, int ot)
     loc[1] = pos[1];
     DrawStatIcons_8002E0D8(loc, ot);
 }
-// Matched
 void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsigned short* pos, Minion* minion, UnitStatus* cmp)
 {
     short i;
@@ -198,7 +196,6 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsign
         }
     }
 }
-// Matched
 void DrawStatDelta_8002E004(unsigned short* origin, int delta, int ot)
 {
     unsigned short pos[2];
@@ -228,7 +225,6 @@ void DrawStatDelta_8002E004(unsigned short* origin, int delta, int ot)
 }
 extern unsigned char statIcons_80082EBC[];
 extern unsigned char statRowY_80082EE8[];
-// Matched
 void DrawStatIcons_8002E0D8(unsigned short* origin, short ot)
 {
     unsigned short pos[2];
@@ -240,7 +236,6 @@ void DrawStatIcons_8002E0D8(unsigned short* origin, short ot)
         DrawUiTiySprt_8002C06C(pos, statIcons_80082EBC[i], ot);
     }
 }
-// Matched
 void DrawStatCompare_8002E188(unsigned char* oldStats, unsigned char* newStats, unsigned short* pos, short ot)
 {
     unsigned short loc[2];
@@ -261,7 +256,6 @@ void DrawStatCompare_8002E188(unsigned char* oldStats, unsigned char* newStats, 
         SetLargeDigitColor_8002C5D0(0);
     }
 }
-// Matched
 void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned char* outStats)
 {
     UnitStatus* copy = 0; // works on a copy at address 0 (the scratch area)
@@ -282,7 +276,6 @@ void CalcStatsWithEquip_8002E288(UnitStatus* src, int itemId, int slot, unsigned
     CalcEquippedStats_80033624(outStats, copy);
 }
 extern int GetEmptyCocoons_800AD8E4(void);
-// Matched
 void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
 {
     short rect[4];
@@ -370,7 +363,6 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     expGauge.max_C = 0x4000000;
     DrawGauge_8002BA54(&expGauge, 0, loc2, args->ot_0);
 }
-// Matched
 void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short ot)
 {
     unsigned short p1[2];
@@ -429,7 +421,6 @@ void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short
     }
     DrawUiTiySprt_8002C06C(pos, 0xB, ot);
 }
-// Matched
 void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level, short quadrant)
 {
     int size = elementChartSizes_80082EF0[level];
@@ -470,7 +461,6 @@ void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level,
         break;
     }
 }
-// Matched
 void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, short ot)
 {
     short loc[2];

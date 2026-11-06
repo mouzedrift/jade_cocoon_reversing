@@ -24,7 +24,6 @@
 #include "ftg_draw.h"
 
 extern ShortPair screenOffset_8008D474;
-// Matched
 void StartPadVibration_80036528(int idx, int pattern)
 {
     EventNode* node;
@@ -52,19 +51,16 @@ void StartPadVibration_80036528(int idx, int pattern)
     padVibration_80095460[vib->port_0].motor_2[0] = vibrationPatterns_80083B30[vib->pattern_1][vib->step_2].motor0_2;
     padVibration_80095460[vib->port_0].motor_2[1] = vibrationPatterns_80083B30[vib->pattern_1][vib->step_2].motor1_3;
 }
-// Matched
 void StopPadVibration_80036658(int idx)
 {
     padVibration_80095460[(unsigned char)idx].motor_2[0] = 0;
     padVibration_80095460[(unsigned char)idx].motor_2[1] = 0;
 }
-// Matched
 void StopAllPadVibration_80036678(void)
 {
     StopPadVibration_80036658(0);
     StopPadVibration_80036658(1);
 }
-// Matched
 void UpdatePadVibration_800366A0(EventEntry* entry, PadVibTask* vib)
 {
     if (--vib->timer_4 <= 0)
@@ -84,14 +80,12 @@ void UpdatePadVibration_800366A0(EventEntry* entry, PadVibTask* vib)
         padVibration_80095460[vib->port_0].motor_2[1] = 0;
     }
 }
-// Matched
 void StopPadVibrationTask_800367F0(int entry, unsigned char* port)
 {
     padVibration_80095460[*port].motor_2[0] = 0;
     padVibration_80095460[*port].motor_2[1] = 0;
 }
 
-// Matched
 void UpdatePadVibration_80036820(int port)
 {
     int state = PadGetState(port << 4);
@@ -113,7 +107,6 @@ void UpdatePadVibration_80036820(int port)
 }
 extern int FindMeshAtPos_800B8184(int pos, int b);
 
-// Matched
 void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam)
 {
     if (cam->flags_4 & 0x100)
@@ -145,7 +138,6 @@ void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam)
 }
 extern void DrawBattleStage_800BC90C(CameraCtrl* cam);
 
-// Matched
 void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam)
 {
     switch (cam->mode_8)
@@ -172,7 +164,6 @@ void CameraBattleIntroTask_800369E0(EventEntry* entry, CameraCtrl* cam)
     }
 }
 
-// Matched
 void CameraBattleTask_80036AB4(EventEntry* entry, CameraCtrl* cam)
 {
     CameraCtrl* ctrl = cam;
@@ -209,7 +200,6 @@ run:
     }
 }
 #define SPLINE(c) ((int)((c)[0] * t3 + (c)[1] * t2 + (c)[2] * t + (c)[3]))
-// Matched
 void CameraSplineTask_80036BB0(EventEntry* entry, CameraCtrl* cam)
 {
     CameraCtrl* ctrl = cam;
@@ -272,7 +262,6 @@ void CameraSplineTask_80036BB0(EventEntry* entry, CameraCtrl* cam)
     DrawBattleStage_800BC90C(ctrl);
 }
 #undef SPLINE
-// Matched
 void CameraOrbitTask_800374E0(EventEntry* entry, CameraCtrl* cam)
 {
     CameraCtrl* ctrl = cam;
@@ -303,7 +292,6 @@ void CameraOrbitTask_800374E0(EventEntry* entry, CameraCtrl* cam)
     }
 }
 extern int cameraZoom_8008B4F8;
-// Matched
 void CameraOrbitReturnTask_800375F8(EventEntry* entry, CameraCtrl* cam)
 {
     CameraCtrl* ctrl = cam;
@@ -328,12 +316,10 @@ void CameraOrbitReturnTask_800375F8(EventEntry* entry, CameraCtrl* cam)
         entry->cb_8 = (EventEntryFn)InitCameraTask_800368F8;
     }
 }
-// Matched
 void FreeCameraTask_800376A0(EventEntry* entry, void* buffer)
 {
 }
 extern int geomScreenDistance_8008B548;
-// Matched
 void ResetCameraToLevant_800376A8(void)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
@@ -346,19 +332,16 @@ void ResetCameraToLevant_800376A8(void)
     cam->blendStep_26 = 0x1000;
     cam->target_0 = (int)&levantPos_8008BD18;
 }
-// Matched
 void SetCameraBattleMode_80037720(void)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->flags_4 |= 0x2000;
 }
-// Matched
 void StartBattleCamera_80037748(void)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->flags_4 |= 4;
 }
-// Matched
 void EndBattleCamera_80037770(void)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
@@ -366,7 +349,6 @@ void EndBattleCamera_80037770(void)
     cam->flags_4 &= ~0x2000;
     RestoreCameraState_80039698(cam);
 }
-// Matched
 void StartBattleCameraSpline_800377B4(int side, short action, int unused)
 {
     if (side == 0)
@@ -386,7 +368,6 @@ void StartBattleCameraSpline_800377B4(int side, short action, int unused)
 }
 // Table in the overlay area (outside the linked image), 8 bytes per entry
 extern struct_pair8 levantBattleActions_800B1084[];
-// Matched
 void MoveBattleCameraForAction_80037828(int side, short action, int force)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
@@ -406,17 +387,14 @@ void MoveBattleCameraForAction_80037828(int side, short action, int force)
         MoveBattleCamera_800390F4(cam, 1);
     }
 }
-// Matched
 void MoveBattleCameraDefault_800378CC(void)
 {
     MoveBattleCamera_800390F4(cameraTask_8008D4A0->entry.buffer, 1);
 }
-// Matched
 int GetCameraMode_800378F8(void)
 {
     return ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->mode_8;
 }
-// Matched
 void UpdateCameraFollow_80037918(CameraCtrl* cam)
 {
     if (cam->flags_4 & 0x10)
@@ -438,7 +416,6 @@ void UpdateCameraFollow_80037918(CameraCtrl* cam)
         }
     }
 }
-// Matched
 void SetCameraBlendTarget_800379DC(int* target, int steps)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
@@ -448,19 +425,16 @@ void SetCameraBlendTarget_800379DC(int* target, int steps)
     cam->flags_4 |= 0x10;
     cam->blendStep_26 = steps;
 }
-// Matched
 void ClearCameraBlendTarget_80037A20(int a0, int steps)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->blendStep_26 = steps;
     cam->flags_4 &= ~0x10;
 }
-// Matched
 short GetCameraBlend_80037A4C(void)
 {
     return ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->blend_24;
 }
-// Matched
 void SetCameraZoom_80037A6C(int zoom, int steps)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
@@ -477,7 +451,6 @@ void SetCameraZoom_80037A6C(int zoom, int steps)
         UpdateCameraFollow_80037918(cam);
     }
 }
-// Matched
 void SetCameraTarget_80037AC8(int target)
 {
     ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = target;
@@ -485,7 +458,6 @@ void SetCameraTarget_80037AC8(int target)
 extern int* GetBattleSelection_800A1E3C(void);
 extern LVec3* GetSummonedMinionBonePos_800C0FAC(void); // BATTLE: the summoned minion's bone positions
 extern unsigned char actingUnit_800C9C7C;
-// Matched
 void FocusBattleCamera_80037AE0(unsigned short mask)
 {
     int sel = 0;
@@ -522,26 +494,22 @@ void FocusBattleCamera_80037AE0(unsigned short mask)
         cameraTask_8008D4A0->entry.cb_8 = (EventEntryFn)CameraBattleTask_80036AB4;
     }
 }
-// Matched
 void StartCameraShake_80037BFC(int strength) // strength is unused
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->shake_10 = 0;
     cam->flags_4 |= 0xC0;
 }
-// Matched
 void StartCameraOrbit_80037C24(void)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->flags_4 |= 0x100;
 }
-// Matched
 void StopCameraOrbit_80037C4C(void)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
     cam->flags_4 &= ~0x100;
 }
-// Matched
 void PlaceBattleIntroCamera_80037C74(CameraCtrl* cam)
 {
     int sel;
@@ -574,7 +542,6 @@ void PlaceBattleIntroCamera_80037C74(CameraCtrl* cam)
     cameraState_8008D4F0.ent_44[0].color_C.vz = 0x800;
     cameraZoom_8008B4F8 = cam->introZoom_188;
 }
-// Matched
 void SetupBattleIntroCamera_80037F44(CameraCtrl* cam)
 {
     int i;
@@ -616,7 +583,6 @@ void SetupBattleIntroCamera_80037F44(CameraCtrl* cam)
     cam->t_C = 0x1000;
 }
 #define EASE(p) (0x1000 - sinTable_80084540[(((p)->t_C / 4) + 0x400) & 0xFFF])
-// Matched
 void UpdateCameraMove_80038230(CameraCtrl* cam)
 {
     short ang;
@@ -639,7 +605,6 @@ void UpdateCameraMove_80038230(CameraCtrl* cam)
     TrackCameraTarget_8003891C(cam, &levantPos_8008BD18.pos);
 }
 extern double pow(double, double);
-// Matched
 void UpdateCameraZoom_8003856C(CameraCtrl* cam)
 {
     unsigned int target;
@@ -698,7 +663,6 @@ typedef struct
     int z;
 } ScreenPosZ;
 extern ScreenPosZ cameraTargetScreenPos_8008D668;
-// Matched
 void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target)
 {
     SVECTOR sv;
@@ -731,7 +695,6 @@ void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target)
         UpdateScreenScroll_800398B4(cam, &cameraTargetScreenPos_8008D668);
     }
 }
-// Matched
 void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, int target, Vec3i* blendTarget, int blend)
 {
     Vec3i* targetPos = (Vec3i*)target;
@@ -774,7 +737,6 @@ void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, int target, Vec3i* blendTa
         UpdateScreenScroll_800398B4(cam, &cameraTargetScreenPos_8008D668);
     }
 }
-// Matched
 void SetupCameraOrbit_80038CA8(CameraCtrl* cam)
 {
     CameraCtrl* ctrl = cam;
@@ -789,7 +751,6 @@ void SetupCameraOrbit_80038CA8(CameraCtrl* cam)
     ComputeCameraMoveAngles_80038D64(ctrl, &saveData_8008B570.levant_7A8.pos.x);
 }
 
-// Matched
 void ComputeCameraMoveAngles_80038D64(CameraCtrl* cam, int* center)
 {
     int diff;
@@ -807,7 +768,6 @@ void ComputeCameraMoveAngles_80038D64(CameraCtrl* cam, int* center)
         cam->angDst_152 = *(unsigned short*)&cam->angDst_152 + 0x1000;
     }
 }
-// Matched
 void MoveCameraToFocusPreset_80038E2C(CameraCtrl* cam, int preset, int eyeRaise)
 {
     CameraCtrl* ctrl = cam;
@@ -829,7 +789,6 @@ void MoveCameraToFocusPreset_80038E2C(CameraCtrl* cam, int preset, int eyeRaise)
     ComputeCameraMoveAngles_80038D64(ctrl, (int*)&cam->pos_38);
 }
 extern int actorSide_800A85B8;
-// Matched
 void MoveBattleCamera_800390F4(CameraCtrl* cam, int mode)
 {
     int sel = 0;
@@ -894,7 +853,6 @@ void MoveBattleCamera_800390F4(CameraCtrl* cam, int mode)
     cam->geomScreenDst_180 = battleCamPresets_80083C0C[sel].geomScreen_8;
     ComputeCameraMoveAngles_80038D64(cam, (int*)&cam->pos_38);
 }
-// Matched
 int AdvanceSplineKey_800395D0(int* pIdx, int value, int* table)
 {
     if (value >= table[*pIdx + 1])
@@ -904,14 +862,12 @@ int AdvanceSplineKey_800395D0(int* pIdx, int value, int* table)
     return table[*pIdx + 1] != -1;
 }
 
-// Matched
 void SaveCameraState_80039620(CameraCtrl* cam)
 {
     cam->saved_48 = cameraState_8008D4F0;
     cam->savedZoom_184 = cameraZoom_8008B4F8;
     cam->savedShake_14C = screenOffset_8008D474;
 }
-// Matched
 void RestoreCameraState_80039698(CameraCtrl* cam)
 {
     cameraState_8008D4F0 = cam->saved_48;
@@ -919,7 +875,6 @@ void RestoreCameraState_80039698(CameraCtrl* cam)
     screenOffset_8008D474 = cam->savedShake_14C;
 }
 extern int GetLevantActionEndFrame_800AB4D8(int anim);
-// Matched
 void StartCameraSplineLong_8003970C(int action, int* spline)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
@@ -961,7 +916,6 @@ void StartCameraSplineLong_8003970C(int action, int* spline)
     cam->splinePos_1BC = (VECTOR*)&levantPos_8008BD18.pos;
     cam->splineRot_1C0 = &levantPos_8008BD18.rot;
 }
-// Matched
 void StartCameraSplineShort_8003983C(int action, int* spline)
 {
     CameraCtrl* cam = cameraTask_8008D4A0->entry.buffer;
@@ -986,7 +940,6 @@ typedef struct
 extern ShortRect viewport_8008D420;
 extern DRAWENV drawEnv_8008D698[2];
 #define CLAMP_HALF(v, lim) ((v) < -(lim) / 2 ? -(lim) / 2 : ((lim) / 2 < (v) ? (lim) / 2 : (v)))
-// Matched
 void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos)
 {
     ScreenPosZ* pos = screenPos;
@@ -1060,7 +1013,6 @@ void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos)
     }
 }
 extern SVECTOR cameraRot_8008D4C8;
-// Matched
 void UpdateCameraRotation_80039E14(void)
 {
     VECTOR dir;
@@ -1078,7 +1030,6 @@ void UpdateCameraRotation_80039E14(void)
     SetGteLightAndCamera_8004D0E8();
 }
 // cameraState_8008D4F0.ent_44[0].color_C.vx/vy/vz through the PointLight type changes the scheduling, so the short view stays
-// Matched
 void SetAreaElementLight_80039ED8(int mode)
 {
     switch ((short)(mode + 1))

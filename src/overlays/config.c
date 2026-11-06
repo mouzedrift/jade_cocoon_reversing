@@ -258,7 +258,6 @@ MenuWindowItem* vibrationItems_800C5920[3] = { vibration0_800C58B0, vibration1_8
 ButtonHelpEntry helpBar_800C592C[3] = { { 16, aSelect_800C2C5C }, { 167, aExit_800C2C50 }, { -1 } };
 int configMenuActive_800C5944 = 0;
 
-// Matched
 void StartConfigMenu_800C2EB4(void)
 {
     EventNode* holder = configTask_8008B4B8;
@@ -280,7 +279,6 @@ void StartConfigMenu_800C2EB4(void)
     task->cb_8 = (EventEntryFn)ConfigMenuTask_800C2F70;
 }
 
-// Matched
 void ConfigMenuTask_800C2F70(EventEntry* t, CfgCtxConfig* ctx)
 {
     short prevPos;
@@ -314,7 +312,6 @@ void ConfigMenuTask_800C2F70(EventEntry* t, CfgCtxConfig* ctx)
     }
 }
 
-// Matched
 void LoadConfigSettings_800C3060(CfgCtxConfig* c)
 {
     SaveData* save = &saveData_8008B570;
@@ -616,7 +613,6 @@ const MenuWindowList menuHdrActive_800C2CD0 = { 2, 0, 8, 0, 0, 14 };
 const MenuWindowList menuHdrIdle_800C2CE8 = { 0, 0, 8, 0, 0, 14 };
 const int dword_800C2D00 = 0;
 
-// Matched
 void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
 {
     short rect[4];
@@ -640,7 +636,6 @@ void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
     DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawAudioPage_800C39C4(CfgCtxConfig* c)
 {
     short rect[4];
@@ -850,7 +845,6 @@ done:
     DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
 {
     short rect[4];
@@ -908,7 +902,6 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     }
 }
 
-// Matched
 void DrawVibrationPage_800C4390(CfgCtxConfig* c)
 {
     short rect[4];
@@ -956,7 +949,6 @@ void DrawVibrationPage_800C4390(CfgCtxConfig* c)
     DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawConfigHelpText_800C450C(CfgCtxConfig* c)
 {
     int text;
@@ -991,7 +983,6 @@ void DrawConfigHelpText_800C450C(CfgCtxConfig* c)
     DrawTextLinesWindow_8002AE38(&text, pos, 0xE, rect, 1);
 }
 
-// Matched
 int IsConfigMenuActive_800C45D8(void)
 {
     return configMenuActive_800C5944;
@@ -1202,7 +1193,6 @@ void EditConfigSettingTask_800C45E8(EventEntry* t, CfgCtxConfig* c)
     }
 }
 
-// Matched
 void ConfigNoticeTask_800C4B34(EventEntry* t, CfgCtxConfig* c)
 {
     DrawMenuBackground_8002BE10();
@@ -1221,7 +1211,6 @@ void ConfigNoticeTask_800C4B34(EventEntry* t, CfgCtxConfig* c)
     }
 }
 
-// Matched
 void DrawOptionUnavailable_800C4BDC(int notice)
 {
     short rect[4];

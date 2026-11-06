@@ -24,7 +24,6 @@ extern unsigned long SpuSetTransferStartAddr(unsigned long addr);
 extern unsigned long SpuWrite0(unsigned long size);
 extern void McxStopCom(void);
 extern void MemCardEnd(void);
-// Matched
 void ShutdownSystems_80010228(void)
 {
     SsEnd();
@@ -37,7 +36,6 @@ void ShutdownSystems_80010228(void)
     PadStopCom();
     MemCardEnd();
 }
-// Matched
 void InitEvents_8001028C(void)
 {
     cdRomEventDescError_8008B490 = OpenEvent(HwCdRom, EvSpERROR, EvMdINTR, cdRomEventErrorHandler_8003BBAC);
@@ -52,7 +50,6 @@ void InitEvents_8001028C(void)
     vsyncCounter_8008B4B4 = 0;
     gnFrame_8008D610 = 0;
 }
-// Matched
 void CloseEvents_80010328(void)
 {
     DisableEvent(cdRomEventDescError_8008B490);
@@ -64,7 +61,6 @@ void CloseEvents_80010328(void)
     StopRCnt(RCntCNT2);
     StopRCnt(RCntCNT3);
 }
-// Matched
 long vsyncEventHandler_800103AC(void)
 {
     ++vsyncCounter_8008B4B4;
@@ -78,7 +74,6 @@ long vsyncEventHandler_800103AC(void)
 
     return vsyncCounter_8008B4B4;
 }
-// Matched
 void InitImage_80010428(void)
 {
     RECT rect;

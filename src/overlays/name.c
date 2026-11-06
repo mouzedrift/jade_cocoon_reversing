@@ -117,7 +117,6 @@ void StartNameEntry_800B6E4C(int nameDest, int flags)
     }
 }
 
-// Matched
 int IsNameEntryActive_800B6FC8(void)
 {
     return nameEntryActive_800B83F8;
@@ -380,14 +379,12 @@ void MoveNameCursor_800B78EC(NameEntry* entry)
     entry->moveResult_4 = 0;
 }
 
-// Matched
 void HandleCharGridInput_800B7A88(NameEntry* entry)
 {
     InputNameChar_800B7AB4(entry);
     ClampNameLength_800B7CA4(entry);
 }
 
-// Matched
 void InputNameChar_800B7AB4(NameEntry* entry)
 {
     unsigned short* list[2];
@@ -429,7 +426,6 @@ void DeleteNameChar_800B7C68(NameEntry* entry)
     }
 }
 
-// Matched
 void ClampNameLength_800B7CA4(NameEntry* entry)
 {
     if (entry->length_44 >= 0x15)
@@ -462,7 +458,6 @@ void SwitchCharPage_800B7CD8(NameEntry* entry)
 }
 
 // Start jumps to the commands, Select restores the saved name (flags 8)
-// Matched
 void HandleNameShortcutButtons_800B7D60(NameEntry* entry)
 {
     if (padPressed_8009194C[0] & 0x800)
@@ -532,7 +527,6 @@ void HandleNameCommandInput_800B7E30(NameEntry* entry)
     }
 }
 
-// Matched
 void RestoreSavedName_800B7F08(NameEntry* entry)
 {
     int i;
@@ -566,14 +560,12 @@ int SavedNameLength_800B7F70(NameEntry* entry)
     return n * 2;
 }
 
-// Matched
 void ResetNameToDefault_800B7FA0(NameEntry* entry)
 {
     MemCopy_800403E8(entry->name_10, defaultName_800B83B8, 0x14);
     entry->length_44 = 0;
 }
 
-// Matched
 int IsNameBlank_800B7FD8(unsigned char* name)
 {
     int n = 0;
@@ -592,7 +584,6 @@ int IsNameBlank_800B7FD8(unsigned char* name)
     return 1;
 }
 
-// Matched
 void NameEntryNop_800B8018(void* name)
 {
 }

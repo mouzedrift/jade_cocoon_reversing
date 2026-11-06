@@ -29,7 +29,6 @@
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
 
-// Matched
 void DrawPulsingWindow_8002F6F8(RECT* rect, int* st, int unused)
 {
     unsigned char col[4];
@@ -61,7 +60,6 @@ void DrawPulsingWindow_8002F6F8(RECT* rect, int* st, int unused)
 }
 
 extern unsigned char statIcons_80082EBC[];
-// Matched
 void DrawLevantStats_8002F7D0(unsigned short* pos, short ot)
 {
     unsigned short loc[2];
@@ -78,7 +76,6 @@ void DrawLevantStats_8002F7D0(unsigned short* pos, short ot)
         DrawLargeNumber_8002C100(loc, stats[i], ot);
     }
 }
-// Matched
 void DrawPartySlotWindow_8002F8E4(UnitStatus* unit, PartySlotWindow* win)
 {
     unsigned short loc[2];
@@ -104,7 +101,6 @@ void DrawPartySlotWindow_8002F8E4(UnitStatus* unit, PartySlotWindow* win)
     DrawUiWindow_8002A384(&desc);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[win->ot_6]);
 }
-// Matched
 short GetPartyWindowX_8002FA0C(short partySize, short slot)
 {
     short x = 0;
@@ -119,12 +115,10 @@ short GetPartyWindowX_8002FA0C(short partySize, short slot)
     }
     return x;
 }
-// Matched
 short GetLevantLevel_8002FA70(void)
 {
     return GetLevel_80033514(GetLevantStatus_80033ABC(&saveData_8008B570));
 }
-// Matched
 void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text, int ot)
 {
     unsigned short loc[2];
@@ -149,7 +143,6 @@ void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text,
     loc[1] = pos[1];
     DrawText_8003E91C(1, &buf, loc, ot);
 }
-// Matched
 void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text, int ot)
 {
     unsigned short loc[2];
@@ -169,7 +162,6 @@ void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text,
     loc[1] = pos[1];
     DrawText_8003E91C(2, &buf, loc, ot);
 }
-// Matched
 char* GetRankName_8002FCD8(int idx)
 {
     if (idx >= 9)

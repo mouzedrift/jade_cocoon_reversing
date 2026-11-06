@@ -1,7 +1,6 @@
 // BATTLE.BIN, source file 4 of 6 from 0x800BF648, compiled with -O1 (config/overlay_cc.txt)
 #include "battle.h"
 
-// Matched
 void InitTurnGauges_800BF648(short* gauges, unsigned int mode)
 {
     gauges[0] = 500;
@@ -27,7 +26,6 @@ void InitTurnGauges_800BF648(short* gauges, unsigned int mode)
     }
 }
 
-// Matched
 int AdvanceTurnGauges_800BF6BC(unsigned short* gauges, int summonedUnit)
 {
     int next;
@@ -69,7 +67,6 @@ int GetUnitTurnSpeed_800BF784(int unit)
     return stats[4] + 10;
 }
 
-// Matched
 void TickUnitStatus_800BF7C4(UnitStatus* unitStatus, short* hpChange, short* mpChange)
 {
     unsigned int status = unitStatus->status_0;
@@ -156,7 +153,6 @@ int IsBossSpecies_800BF9B4(int species)
 }
 
 
-// Matched
 void MarkSpeciesCaptured_800BF9F0(int species)
 {
     unsigned int id = species;
@@ -175,7 +171,6 @@ int AdvancePetrification_800BFA34(int status)
     return (status & ~0x3F8) | (stage << 1);
 }
 
-// Matched
 int GetStatusCommand_800BFA4C(unsigned int status, unsigned int prevStatus)
 {
     int cmd;

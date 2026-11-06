@@ -20,7 +20,6 @@
 #include "skel_draw.h"
 
 #define ABS_8004B0A8(x) ((x) < 0 ? -(x) : (x))
-// Matched
 void BasisFromAxis_8004B0A8(VECTOR* axis, MATRIX* m)
 {
     VECTOR tangent;
@@ -126,7 +125,6 @@ void BasisFromAxis_8004B0A8(VECTOR* axis, MATRIX* m)
     m->m[1][2] = n2.vy;
     m->m[2][2] = n2.vz;
 }
-// Matched
 void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_F3* prim = (POLY_F3*)FTG_PRIM_SCRATCH;
@@ -177,7 +175,6 @@ void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-// Matched
 void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_F4* prim = (POLY_F4*)FTG_PRIM_SCRATCH;
@@ -233,7 +230,6 @@ void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-// Matched
 void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_G3* prim = (POLY_G3*)FTG_PRIM_SCRATCH;
@@ -302,7 +298,6 @@ void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-// Matched
 void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_G4* prim = (POLY_G4*)FTG_PRIM_SCRATCH;
@@ -385,7 +380,6 @@ void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-// Matched
 void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_FT3* prim;
@@ -443,7 +437,6 @@ void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-// Matched
 void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
 {
     POLY_FT4* prim;
@@ -509,7 +502,6 @@ void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-// Matched
 void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctxArg, int slot)
 {
     FtgDrawCtx* ctx = ctxArg;
@@ -590,7 +582,6 @@ static inline void FtgDrawSprites(FtgObject* obj, FtgDrawCtx* ctxArg, int slot)
     }
     ftgSpriteVtxNext_80098180 = vtx;
 }
-// Matched
 void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
 {
     FtgDrawCtx* ctx = FTG_DRAW_CTX;
@@ -785,7 +776,6 @@ extern unsigned char backColor_8008D460[3]; // back colour
 extern MATRIX lightMatrix_80087114;            // light matrix
 extern MATRIX colorMatrix_80087134;            // light colour matrix
 extern SVECTOR cameraRot_8008D4C8;
-// Matched
 void SetGteLightAndCamera_8004D0E8(void)
 {
     MATRIX* m;
@@ -801,7 +791,6 @@ void SetGteLightAndCamera_8004D0E8(void)
     gte_SetTransMatrix(m);
 }
 
-// Matched
 void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* light, int flags, void* scale)
 {
     DrawFtgObjectAt_80044D0C(obj, ot, pos, rot, light, flags, scale, 0);
@@ -813,7 +802,6 @@ typedef struct
     unsigned short* offsets_14; // per bone (x, y, z) offset from its parent
 } SkelBoneOffsets;
 
-// Matched
 void GetBonePos_8004D224(unsigned short* out, SkelBoneOffsets* skel, int idx)
 {
     if (idx == 0)
@@ -835,7 +823,6 @@ typedef struct
     char pad_8[0x10];
     short* frames_18; // per frame: root motion, root rotation, then one rotation per bone (x, y, z)
 } AnimFrames;
-// Matched
 void GetAnimRootMotion_8004D288(int* out, AnimFrames* anim, int frame)
 {
     int i = frame * (anim->boneCount_4 + 2);
@@ -843,7 +830,6 @@ void GetAnimRootMotion_8004D288(int* out, AnimFrames* anim, int frame)
     out[1] = anim->frames_18[i * 3 + 1];
     out[2] = anim->frames_18[i * 3 + 2];
 }
-// Matched
 void GetAnimRootRot_8004D2EC(short* out, AnimFrames* anim, int frame)
 {
     int i = frame * (anim->boneCount_4 + 2) + 1;
@@ -851,7 +837,6 @@ void GetAnimRootRot_8004D2EC(short* out, AnimFrames* anim, int frame)
     out[1] = anim->frames_18[i * 3 + 1];
     out[2] = anim->frames_18[i * 3 + 2];
 }
-// Matched
 void GetAnimBoneRot_8004D354(short* out, AnimFrames* anim, int bone, int frame)
 {
     int i;
@@ -872,7 +857,6 @@ void GetAnimBoneRot_8004D354(short* out, AnimFrames* anim, int bone, int frame)
 /* 4096-entry sine table at 0x80084540 (inside the battleCamSpline1Tail_80084350 data chunk) */
 extern short battleCamSpline1Tail_80084350[];
 #define SIN_TABLE (battleCamSpline1Tail_80084350 + 0xF8)
-// Matched
 void RotMatrixXYZ_8004D3D8(SVECTOR* rot, MATRIX* m)
 {
     int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
@@ -895,7 +879,6 @@ void RotMatrixXYZ_8004D3D8(SVECTOR* rot, MATRIX* m)
     m->m[2][2] = (cy * cx) >> 12;
     m->m[2][1] = ((cz * sx) >> 12) - ((b * cx) >> 12);
 }
-// Matched
 void RotMatrixZYX_8004D5CC(SVECTOR* rot, MATRIX* m)
 {
     int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
@@ -918,14 +901,12 @@ void RotMatrixZYX_8004D5CC(SVECTOR* rot, MATRIX* m)
     m->m[2][2] = (cy * cx) >> 12;
     m->m[1][2] = -((cz * sx) >> 12) + ((b * cx) >> 12);
 }
-// Matched
 void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 {
     out->vx = a->vx + (b->vx - a->vx) * t / 4096;
     out->vy = a->vy + (b->vy - a->vy) * t / 4096;
     out->vz = a->vz + (b->vz - a->vz) * t / 4096;
 }
-// Matched
 void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
 {
     int diff;
@@ -948,12 +929,10 @@ void LerpAngles_8004D848(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t)
     }
     out->vz = (a->vz + diff * t / 4096) & 0xFFF;
 }
-// Matched
 void ResetFtgSpriteVtx_8004D924(void)
 {
     ftgSpriteVtxNext_80098180 = ftgSpriteVtxPool_80096628;
 }
-// Matched
 // RotMatrixZYX_8004D5CC's matrix with its rows 1 and 2 turned by roll (a rotation about X applied after it)
 void RotMatrixZYXRollX_8004D938(short roll, SVECTOR* rot, MATRIX* m)
 {
@@ -991,14 +970,12 @@ void RotMatrixZYXRollX_8004D938(short roll, SVECTOR* rot, MATRIX* m)
     m->m[2][1] = r21;
     m->m[2][2] = r22;
 }
-// Matched
 void PrintMatrix_8004DC54(MATRIX* m)
 {
     printf("%d,%d,%d\r", m->m[0][0], m->m[0][1], m->m[0][2]);
     printf("%d,%d,%d\r", m->m[1][0], m->m[1][1], m->m[1][2]);
     printf("%d,%d,%d\r", m->m[2][0], m->m[2][1], m->m[2][2]);
 }
-// Matched
 void ProjectFtgSprites_8004DCC0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx, int slot)
 {
     if (obj->spriteCount_40 == 0)

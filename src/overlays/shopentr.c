@@ -30,7 +30,6 @@ int IsShelfMenuActive_800B6F0C(void)
 
 // starts the cocoon shelf menu (memory card check, slot and shelf selection, registered minion list); when it
 // reaches state 15 it hands back to the shop (ShopCtrlRequestShop_800B6CA0)
-// Matched
 void StartShelfMenu_800B6F1C(void)
 {
     EventEntry* task;
@@ -58,7 +57,6 @@ void StartShelfMenu_800B6F1C(void)
     }
 }
 
-// Matched
 void ShelfMenuTask_800B7000(EventEntry* task, ShelfMenu* menu)
 {
     int rejected;
@@ -201,7 +199,6 @@ const char aElement_800B6EFC[] = "\221\256\220\253"; // 属性
 const char aSlash_800B6F04[] = "\201^"; // /
 const char aColon_800B6F08[] = "\201F"; // :
 
-// Matched
 void ShelfMenuCancel_800B72D4(ShelfMenu* menu)
 {
     int snd;
@@ -224,7 +221,6 @@ void ShelfMenuCancel_800B72D4(ShelfMenu* menu)
     }
 }
 
-// Matched
 int ShelfMenuProgress_800B73A8(ShelfMenu* menu)
 {
     short pos[2];
@@ -246,7 +242,6 @@ int ShelfMenuProgress_800B73A8(ShelfMenu* menu)
     return 1;
 }
 
-// Matched
 void DrawShelfMenu_800B7440(ShelfMenu* menu)
 {
     short i;
@@ -273,7 +268,6 @@ void DrawShelfMenu_800B7440(ShelfMenu* menu)
     }
 }
 
-// Matched
 void SetShelfMenuCursorRect_800B7520(ShelfMenu* menu)
 {
     ShelfRect* rect;
@@ -287,7 +281,6 @@ void SetShelfMenuCursorRect_800B7520(ShelfMenu* menu)
     }
 }
 
-// Matched
 void DrawCardCheckPage_800B7594(ShelfMenu* menu)
 {
     unsigned short pos[2];
@@ -296,7 +289,6 @@ void DrawCardCheckPage_800B7594(ShelfMenu* menu)
     DrawText_8003E91C(2, aCardChecking_800B6E74, pos, 14);
 }
 
-// Matched
 void DrawCardSelectPage_800B75DC(ShelfMenu* menu)
 {
     unsigned short titlePos[2];
@@ -313,7 +305,6 @@ void DrawCardSelectPage_800B75DC(ShelfMenu* menu)
     DrawText_8003E91C(2, aSlot2_800B6EB0, slot2Pos, 14);
 }
 
-// Matched
 void DrawShelfSelectPage_800B7684(ShelfMenu* menu)
 {
     ShelfRect row;
@@ -358,7 +349,6 @@ void DrawShelfSelectPage_800B7684(ShelfMenu* menu)
     DrawPageCount_800B7A90((ShelfRect*)pos, menu->cursor_8 + menu->scroll_A + 1, 0xf);
 }
 
-// Matched
 void DrawShelfContentsPage_800B7858(ShelfMenu* menu)
 {
     ShelfRect row;
@@ -431,7 +421,6 @@ void DrawShelfContentsPage_800B7858(ShelfMenu* menu)
     DrawPageCount_800B7A90((ShelfRect*)pos, menu->cursor_8 + menu->scroll_A + 1, 0x19);
 }
 
-// Matched
 void DrawPageCount_800B7A90(ShelfRect* pos, short num, short total)
 {
     ShelfRect bounds;
@@ -453,7 +442,6 @@ void DrawPageCount_800B7A90(ShelfRect* pos, short num, short total)
     bounds.h = 0xc;
 }
 
-// Matched
 void DrawNumberPair_800B7B64(ShelfRect* pos, short num, short total)
 {
     unsigned short numPos[2];
@@ -470,7 +458,6 @@ void DrawNumberPair_800B7B64(ShelfRect* pos, short num, short total)
     DrawNumber_8003EF74(totalPos, total, 14);
 }
 
-// Matched
 void DrawZeroTime_800B7C08(ShelfRect* pos)
 {
     unsigned short hoursPos[2];

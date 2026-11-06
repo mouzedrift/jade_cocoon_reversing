@@ -32,7 +32,6 @@ const unsigned short emptyText_80074994[2] = { 0 };
 const TextBuf22 emptyNameBuf_80074998 = { { 0xFFFF } };
 const int dword_800749B0 = 0;
 
-// Matched
 int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx)
 {
     if (padRepeat_800918CC[idx] & 2)
@@ -56,7 +55,6 @@ int AdjustByShoulderButtons_8003D198(int limit, int pos, int step, int idx)
     }
     return pos;
 }
-// Matched
 int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx)
 {
     if (padRepeat_800918CC[idx] & 0x2000)
@@ -80,7 +78,6 @@ int AdjustByLeftRight_8003D210(int limit, int pos, int step, int idx)
     }
     return pos;
 }
-// Matched
 int IsConfirmPressed_8003D288(int playSfx, int pad)
 {
     int pressed = 0;
@@ -110,17 +107,14 @@ done:
 end:
     return pressed;
 }
-// Matched
 int IsConfirmPressedP1_8003D380(int playSfx)
 {
     return IsConfirmPressed_8003D288(playSfx, 0);
 }
-// Matched
 int IsConfirmPressedP2_8003D3A0(int playSfx)
 {
     return IsConfirmPressed_8003D288(playSfx, 1);
 }
-// Matched
 int IsCancelPressed_8003D3C0(int playSfx, int pad)
 {
     int pressed = 0;
@@ -135,33 +129,27 @@ int IsCancelPressed_8003D3C0(int playSfx, int pad)
     }
     return pressed;
 }
-// Matched
 int IsCancelPressedP1_8003D41C(int playSfx)
 {
     return IsCancelPressed_8003D3C0(playSfx, 0);
 }
-// Matched
 int IsCancelPressedP2_8003D43C(int playSfx)
 {
     return IsCancelPressed_8003D3C0(playSfx, 1);
 }
-// Matched
 int IsCircleHeld_8003D45C(int idx)
 {
     unsigned int held = padHeld_800918D0[idx] & 0x20;
     return held != 0;
 }
-// Matched
 int IsCircleHeldP1_8003D480(void)
 {
     return IsCircleHeld_8003D45C(0);
 }
-// Matched
 int IsCircleHeldP2_8003D4A0(void)
 {
     return IsCircleHeld_8003D45C(1);
 }
-// Matched
 int MoveGridCursor_8003D4C0(short* grid, int idx)
 {
     int result = 1;
@@ -215,7 +203,6 @@ int MoveGridCursor_8003D4C0(short* grid, int idx)
     }
     return result;
 }
-// Matched
 int MoveGridCursorP1_8003D630(GridCursor* grid)
 {
     int idx = 0;
@@ -258,7 +245,6 @@ int MoveGridCursorP1_8003D630(GridCursor* grid)
     return 0;
 }
 
-// Matched
 int UpdateMenuCursor_8003D794(MenuCursor* menu, int pad)
 {
     unsigned short prevCursor = menu->cursor_8;
@@ -278,7 +264,6 @@ int UpdateMenuCursor_8003D794(MenuCursor* menu, int pad)
     }
     return result;
 }
-// Matched
 int MenuCursorInput_8003D830(MenuCursor* menu, int idx)
 {
     int moved = MoveGridCursor_8003D4C0((short*)menu, idx);
@@ -350,7 +335,6 @@ int MenuCursorInput_8003D830(MenuCursor* menu, int idx)
     }
     return 0;
 }
-// Matched
 int GetMenuCursorIndex_8003DA54(MenuCursor* menu)
 {
     return (short)(menu->cursor_8 + menu->scroll_A);
@@ -370,7 +354,6 @@ typedef struct
     unsigned short pad_16;
 } FontDef;
 extern FontDef fontDefs_80086574[];
-// Matched
 void InitFonts_8003DA70(void)
 {
     int i;
@@ -395,7 +378,6 @@ void InitFonts_8003DA70(void)
         font->clutOffset_2A = 0;
     }
 }
-// Matched
 int UpdateTextWindow_8003DB74(TextWindow* w, int draw)
 {
     if (w->timer_24 >= 3 - (saveData_8008B570.settings_1C.word & 7))
@@ -429,7 +411,6 @@ int UpdateTextWindow_8003DB74(TextWindow* w, int draw)
     return 0;
 }
 extern int charWidthThresholds_80086898[][12];
-// Matched
 void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
 {
     unsigned short num[12];
@@ -584,14 +565,12 @@ done:
         primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
     }
 }
-// Matched
 void DrawMsgWindowNextPrompt_8003E268(unsigned short* pos)
 {
     short x = pos[0] + 0xC3;
     short y = pos[1] + 0x23;
     DrawNextPrompt_8003CF88(x, y, 0);
 }
-// Matched
 TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
 {
     TextSize size;
@@ -620,7 +599,6 @@ typedef struct
     short h;
 } Size2;
 
-// Matched
 TextSize MeasureTextLines_8003E3B4(int* list)
 {
     TextSize size;
@@ -643,7 +621,6 @@ TextSize MeasureTextLines_8003E3B4(int* list)
     size.h *= 12;
     return size;
 }
-// Matched
 int IsTextMarkerLine_8003E484(int text)
 {
     int ch = *EncodeText_8003F684(2, (unsigned short*)text);
@@ -656,7 +633,6 @@ int IsTextMarkerLine_8003E484(int text)
     }
     return 0;
 }
-// Matched
 int MeasureTextWidth_8003E4C8(const char* str)
 {
     unsigned short num[12];
@@ -714,7 +690,6 @@ int MeasureTextWidth_8003E4C8(const char* str)
     }
     return width;
 }
-// Matched
 int MeasureTextWidthFont1_8003E6B0(int str)
 {
     unsigned short num[12];

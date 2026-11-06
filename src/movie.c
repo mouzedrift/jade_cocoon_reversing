@@ -46,7 +46,6 @@ extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
 
 extern enum GameStates (*overlayCallbacks_800869D0[])(void);
 
-// Matched
 void ShowDemoDisclaimer_80040C8C(void)
 {
     EndFade_8001C290();
@@ -55,7 +54,6 @@ void ShowDemoDisclaimer_80040C8C(void)
     drawEnvRed_8008D448[0] = 0;
     DrawIntroMovie_8001AF64(demoDisclaimer_800869A8);
 }
-// Matched
 void PlayAnimeMovie_80040CCC(void)
 {
     EndFade_8001C290();
@@ -64,13 +62,11 @@ void PlayAnimeMovie_80040CCC(void)
     drawEnvRed_8008D448[0] = 0;
     DrawIntroMovie_8001AF64(introAnime_800869C8);
 }
-// Matched
 void PlayAnimeMovie_80040D0C(void)
 {
     PlayMovie_80040EB4(1);
     bStopDrawingMovie_8008D45C = 1;
 }
-// Matched
 void StartIntroAnime_80040D34(EventEntry* entry)
 {
     if (!(unknownFlags_8008D678 & 0x20))
@@ -78,7 +74,6 @@ void StartIntroAnime_80040D34(EventEntry* entry)
         entry->cb_8 = (EventEntryFn)PlayAnimeMovie_80040D0C;
     }
 }
-// Matched
 int SelectIngameOrTitle_80040D5C(void)
 {
     if (saveData_8008B570.flags_0 & 0x80)
@@ -92,13 +87,11 @@ int SelectIngameOrTitle_80040D5C(void)
     titleMenuState_8008B558[1] = 1;
     return eIngame_12;
 }
-// Matched
 enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId)
 {
     LoadOverlay_80020BF8(2, overlayId);
     return overlayCallbacks_800869D0[overlayId]();
 }
-// Matched
 void ClearMovieRect_80040E28(MovieInfo* movie)
 {
     RECT rect;
@@ -108,7 +101,6 @@ void ClearMovieRect_80040E28(MovieInfo* movie)
     rect.h = movie->rect.h * 2;
     ClearImage(&rect, 0, 0, 0);
 }
-// Matched
 int PlayMovie_80040EB4(int idx)
 {
     MovieInfo* movie;
@@ -183,7 +175,6 @@ int PlayMovie_80040EB4(int idx)
     RestartDisplay_8001B230();
     return 1;
 }
-// Matched
 void InitMovieCtx_80041240(MovieCtx* ctx, MovieInfo* movie)
 {
     int x;
@@ -220,7 +211,6 @@ void InitMovieCtx_80041240(MovieCtx* ctx, MovieInfo* movie)
     ctx->slice.w = movie->is24bpp ? 0x18 : 0x10;
     ctx->slice.h = movie->height_16;
 }
-// Matched
 void InitMovieStream_80041358(int file, int ring, int* stream)
 {
     DecDCTReset(0);
@@ -228,7 +218,6 @@ void InitMovieStream_80041358(int file, int ring, int* stream)
     StSetRing(ringBufferStart_800960B0, 0x2A);
     StSetStream(stream[1], ((short*)stream)[4], -1, 0, 0);
 }
-// Matched
 int SkipMovieButtonPressed_800413BC(MovieParams* params)
 {
     if (bMovieFinished_800960FC == 1)
@@ -249,7 +238,6 @@ extern MovieCtx movieCtx_800960C0;
 extern int movieSliceFirst_80096100;
 extern int StCdIntrFlag;
 extern void StCdInterrupt(void);
-// Matched
 void MovieDctOutCallback_80041424(void)
 {
     MovieRect slice;
@@ -289,7 +277,6 @@ void MovieDctOutCallback_80041424(void)
 }
 extern short movieWidth_80086F98;
 extern short movieHeight_80086F9A;
-// Matched
 int MovieDecodeNextFrame_800415D8(MovieCtx* ctx, MovieInfo* movie)
 {
     u_long* addr;
@@ -315,7 +302,6 @@ int MovieDecodeNextFrame_800415D8(MovieCtx* ctx, MovieInfo* movie)
     StFreeRing(addr);
     return 1;
 }
-// Matched
 void MovieWaitFrameDone_80041724(MovieCtx* ctx, int unused)
 {
     volatile int timeout = 0x13880;
@@ -331,7 +317,6 @@ void MovieWaitFrameDone_80041724(MovieCtx* ctx, int unused)
     }
     ctx->frameDone_34 = 0;
 }
-// Matched
 void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* params)
 {
     unsigned char mode[8];
@@ -354,7 +339,6 @@ void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* params)
         VSync(3);
     } while (!DsRead2(loc, mode[0] | 0x160));
 }
-// Matched
 void AllocMdecVLCBuffer_80041848(void)
 {
     if (!mdecVLCBuffer_80086F94)
@@ -363,7 +347,6 @@ void AllocMdecVLCBuffer_80041848(void)
         DecDCTvlcBuild(mdecVLCBuffer_80086F94);
     }
 }
-// Matched
 void AllocMdecVLCBufferInFileBuffer_8004188C(void)
 {
     if (!mdecVLCBuffer_80086F94)
@@ -372,26 +355,22 @@ void AllocMdecVLCBufferInFileBuffer_8004188C(void)
         DecDCTvlcBuild(mdecVLCBuffer_80086F94);
     }
 }
-// Matched
 void FreeMdecBuffer_800418CC(void)
 {
     free3_8003FC6C(mdecVLCBuffer_80086F94);
     mdecVLCBuffer_80086F94 = 0;
 }
-// Matched
 void ReleaseMdecVLCFileBuffer_800418FC(void)
 {
     SetFileBufferInUse_8003BFB8(0);
     mdecVLCBuffer_80086F94 = 0;
 }
-// Matched
 void DecodeMdec_80041920(unsigned long* bs, unsigned long* buf, int mode)
 {
     DecDCTvlc2(bs, buf, mdecVLCBuffer_80086F94);
     DecDCTinSync(0);
     DecDCTin(buf, mode);
 }
-// Matched
 int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int mode)
 {
     if (cur < 0 || max < cur)

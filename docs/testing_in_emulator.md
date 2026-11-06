@@ -103,18 +103,8 @@ li $t1,0x3F`), because C cannot set `$t1`. The game's own `printf` (LIBC2, at 0x
 used: its putchar buffers 32 characters before writing. The BIOS printf supports `%d %u %x %c %s`
 and widths, but not floats.
 
-**Limit: only a change that moves nothing runs correctly.** The assembly generated for the parts
-that are not decompiled uses numbers for addresses in the image (`j` to non-symbol targets,
-`lui`/`addiu` address pairs, pointer tables in `.word` data). Adding a print grows `.rdata` (the
-format string) and `.text`, so everything behind it moves, and those references still point at the
-old places. That holds for overlays and even more for the executable, which every overlay calls
-into at fixed addresses. `scripts/overlays.py` warns when that happens:
-
-```
-TITLE.BIN: warning: 52 symbols moved (first sub_800A08C8 0x800A08C8 -> 0x800A08E4): ...
-```
-
-So for now, use the Lua watches to look at values. Rebuilt code on the disc is good for experiments
-that keep the size, such as changing a constant, swapping a branch, or replacing a function body
-with one of exactly the same size. `DEBUG_PRINTF` becomes usable once `gen_asm.py` emits symbolic
-references for addresses inside the image.
+**Changes may move code and data.** Every reference into an image is a symbol (see
+[build.md](build.md#symbols-between-images-shiftability)), so adding a print or growing a function moves
+everything behind it consistently. What does not move is where the game loads each image: the executable
+must end before 0x800A05A0 (build.py warns) and an overlay must fit below whatever the game loads behind it
+(`overlays.py` says when a BIN got longer than the original).

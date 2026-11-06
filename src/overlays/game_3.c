@@ -999,7 +999,6 @@ int dword_800B1DD4[9] = { 0 };
 char dword_800B1DF8 = 0;
 int dword_800B1DFC[304] = { 0 };
 
-// Matched
 void AllocMdecBuffer_800A5804(int mode)
 {
     if (mode == 0)
@@ -1013,7 +1012,6 @@ void AllocMdecBuffer_800A5804(int mode)
     mdecBufferMode_800AEB7C = mode;
 }
 
-// Matched
 int FreeMdecBuffer_800A5854(void)
 {
     int old = mdecBufferMode_800AEB7C;
@@ -1063,7 +1061,6 @@ void StopAllEventScripts_800A58B4(void)
     eventResult_800AEBF4 = 0;
 }
 
-// Matched
 EventEntry* StartEventScript_800A59D0(int script)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(eventScripts_8008D410);
@@ -1090,7 +1087,6 @@ EventEntry* StartEventScript_800A59D0(int script)
     return 0;
 }
 
-// Matched
 EventEntry* StartEventScriptForEntity_800A5AA0(int script, int ent)
 {
     EventEntry* entry = StartEventScript_800A59D0(script);
@@ -1099,13 +1095,11 @@ EventEntry* StartEventScriptForEntity_800A5AA0(int script, int ent)
     return entry;
 }
 
-// Matched
 int GetEventScriptId_800A5AD0(EventEntry* entry)
 {
     return ((GameEvCtx*)entry->buffer)->id_10;
 }
 
-// Matched
 int FindEventScript_800A5AE4(int id)
 {
     EventNode* node = eventScripts_8008D410;
@@ -1127,7 +1121,6 @@ int FindEventScript_800A5AE4(int id)
     return 0;
 }
 
-// Matched
 void ResetEventCtx_800A5B54(GameEvCtx* ctx)
 {
     int i;
@@ -1158,7 +1151,6 @@ void ResetEventCtx_800A5B54(GameEvCtx* ctx)
     }
 }
 
-// Matched
 void ClearScriptActorBusy_800A5BCC(int actor)
 {
     EventNode* node = eventScripts_8008D410;
@@ -1241,7 +1233,6 @@ int FireEventTrigger_800A5C40(int trigger)
     return fired;
 }
 
-// Matched
 GameEvEnt* FindEventEntity_800A5DDC(int key, int byId, GameEvEnt* skip)
 {
     EventNode* node = eventEntities_8008D400;
@@ -1276,7 +1267,6 @@ GameEvEnt* FindEventEntity_800A5DDC(int key, int byId, GameEvEnt* skip)
     return 0;
 }
 
-// Matched
 int IsSceneHeld_800A5E68(void)
 {
     return sceneScriptId_800AEBD8 >= 0;
@@ -1314,7 +1304,6 @@ int IsTriggerWaited_800A5E80(int trigger)
     return 0;
 }
 
-// Matched
 GameEnemy* GetEventEnemy_800A5F6C(void)
 {
     if (eventBattlePending_800AEBE0)
@@ -1324,13 +1313,11 @@ GameEnemy* GetEventEnemy_800A5F6C(void)
     return 0;
 }
 
-// Matched
 void SetEventHook_800A5F90(int hook)
 {
     eventHook_800B1D98 = hook;
 }
 
-// Matched
 int ExchangeEventResult_800A5F9C(int result)
 {
     int old = eventResult_800AEBF4;
@@ -1338,7 +1325,6 @@ int ExchangeEventResult_800A5F9C(int result)
     return old;
 }
 
-// Matched
 void WarpAfterLostBattle_800A5FAC(void)
 {
     if (eventBattleLoseWarp_800AEBE4)
@@ -1385,7 +1371,6 @@ void RunEventScript_800A6060(GameTask* task, GameEvCtx* ctx)
     }
 }
 
-// Matched
 void EndEventScript_800A6168(GameTask* task, GameEvCtx* ctx)
 {
     if (sceneScriptId_800AEBD8 == ctx->id_10)
@@ -1493,25 +1478,21 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
     }
 }
 
-// Matched
 int IsEventPointValid_800A6504(int point, int* pos)
 {
     return FindTriAtXZ_800B76B8((char *)&mapState_8008B500.meshes20_20[point], pos) >= 0;
 }
 
-// Matched
 void SetLevantWallEnabled_800A6534(int wall, int on)
 {
     mapState_8008B500.entFlags_18[wall] = on;
 }
 
-// Matched
 void SetActorWallEnabled_800A654C(int wall, int on)
 {
     mapState_8008B500.entFlags_34[wall] = on;
 }
 
-// Matched
 void SetWallsEnabled_800A6564(GameWallPair* walls, int on)
 {
     if (walls->levantWall_0 >= 0)
@@ -1524,13 +1505,11 @@ void SetWallsEnabled_800A6564(GameWallPair* walls, int on)
     }
 }
 
-// Matched
 int IsAngleWithin36_800A65BC(int angleA, int angleB)
 {
     return (unsigned int)(WrapAngle_8003BA18((short)(angleA - angleB)) + 0x198) < 0x331;
 }
 
-// Matched
 int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int range)
 {
     unsigned int dist = 0xfff;
@@ -1546,7 +1525,6 @@ int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int ra
     return 0;
 }
 
-// Matched
 int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot)
 {
     if (point[0] >= 0 && IsEventPointValid_800A6504(point[0], eye))
@@ -1579,7 +1557,6 @@ int GetEventString_800A6738(unsigned int id)
     return id;
 }
 
-// Matched
 int SkipActorAnims_800A67B4(unsigned int* args)
 {
     int i;
@@ -1600,13 +1577,11 @@ int SkipActorAnims_800A67B4(unsigned int* args)
     return 0;
 }
 
-// Matched
 void SetVoiceTable_800A6830(int tbl)
 {
     voiceTable_800AEBF0 = tbl;
 }
 
-// Matched
 int GetSetReturnEntrance_800A683C(int entrance)
 {
     int old = GetEventVar_800AD154(5) << 8;
@@ -1751,7 +1726,6 @@ void SwitchGameMode_800A6C00(GameTask* task, GameMainWork* work)
     work->mode_0 = work->nextMode_8;
 }
 
-// Matched
 void GameMainExit_800A6CCC(GameTask* task, GameMainWork* work)
 {
     RunEventListFreeCallbacks_800438F8(work->eventList_3C);
@@ -1760,7 +1734,6 @@ void GameMainExit_800A6CCC(GameTask* task, GameMainWork* work)
     task->flags_0 = (task->flags_0 & ~1) | 0x8000;
 }
 
-// Matched
 void RequestGameMode_800A6D30(int mode)
 {
     GameMainWork* work = gameMainTask_8008D46C->entry.buffer;
@@ -1904,7 +1877,6 @@ void WaitSubOverlayLoad_800A70F8(GameTask* task, GameSubOverlayWork* work)
     }
 }
 
-// Matched
 void StartShopRequest_800A7204(GameMenuRequest* req)
 {
     if (req->kind_4 == 0)
@@ -1927,7 +1899,6 @@ void StartShopRequest_800A7204(GameMenuRequest* req)
     }
 }
 
-// Matched
 void StartSaveMenuRequest_800A7280(GameMenuRequest* req)
 {
     SetLoadMenuSavePlace_800B78B8(req->arg_8);
@@ -1994,7 +1965,6 @@ void ResetFieldState_800A73A8(void)
     useMapStartPos_80091C94 = gameStartMode_800B1DC8[0];
 }
 
-// Matched
 void RunEventListUpdate_800A7450(EventNode* node)
 {
     int i;
@@ -2014,7 +1984,6 @@ void RunEventListUpdate_800A7450(EventNode* node)
     }
 }
 
-// Matched
 void RunEventListExit_800A74F0(EventNode* node)
 {
     int i;
@@ -2045,7 +2014,6 @@ enum GameStates GameShutdown_800A7574(void)
     return 0xd;
 }
 
-// Matched
 void StartMapOverlay_800A75F8(GameTask* task, int* work)
 {
     *work = LoadOverlayIfChanged_80020D1C(1, 0xa);
@@ -2053,7 +2021,6 @@ void StartMapOverlay_800A75F8(GameTask* task, int* work)
     unknownFlags_8008D678 |= 0x4000000;
 }
 
-// Matched
 void WaitMapOverlay_800A7654(GameTask* task, int* work)
 {
     if (GetFileRequestStatus_8003BE30(work[0]) == 0)
@@ -2062,14 +2029,12 @@ void WaitMapOverlay_800A7654(GameTask* task, int* work)
     }
 }
 
-// Matched
 void StartChapterOverlay_800A7690(GameTask* task, int* work)
 {
     *work = LoadOverlayIfChanged_80020D1C(1, 0x14);
     task->next_8 = WaitChapterOverlay_800A76D8;
 }
 
-// Matched
 void WaitChapterOverlay_800A76D8(GameTask* task, int* work)
 {
     if (GetFileRequestStatus_8003BE30(work[0]) == 0)
@@ -2078,13 +2043,11 @@ void WaitChapterOverlay_800A76D8(GameTask* task, int* work)
     }
 }
 
-// Matched
 void SetFieldMode_800A7714(int mode)
 {
     fieldMode_800B0EC0 = mode;
 }
 
-// Matched
 void FieldModeTask_800A7720(GameTask* task)
 {
     int mode = fieldMode_800B0EC0;
@@ -2100,13 +2063,11 @@ void FieldModeTask_800A7720(GameTask* task)
     }
 }
 
-// Matched
 void ClearFieldMinions_800A7784(void)
 {
     fieldMinions_800B0EC4.count = 0;
 }
 
-// Matched
 int GetFieldMinionCount_800A7790(void)
 {
     return fieldMinions_800B0EC4.count;
@@ -2123,13 +2084,11 @@ int AddFieldMinion_800A77A0(GameMember* member)
     return i;
 }
 
-// Matched
 GameMember* GetFieldMinion_800A77F4(int idx)
 {
     return fieldMinions_800B0EC4.members[idx];
 }
 
-// Matched
 int HoldFieldMinion_800A7810(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2140,7 +2099,6 @@ int HoldFieldMinion_800A7810(int idx)
     return 0;
 }
 
-// Matched
 void ReleaseFieldMinion_800A785C(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2150,7 +2108,6 @@ void ReleaseFieldMinion_800A785C(int idx)
     }
 }
 
-// Matched
 int GetFieldMinionModelId_800A78A8(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2160,7 +2117,6 @@ int GetFieldMinionModelId_800A78A8(int idx)
     return 0;
 }
 
-// Matched
 int sub_800A78F4(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2170,7 +2126,6 @@ int sub_800A78F4(int idx)
     return 0;
 }
 
-// Matched
 int* GetFieldMinionPos_800A7940(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2180,7 +2135,6 @@ int* GetFieldMinionPos_800A7940(int idx)
     return 0;
 }
 
-// Matched
 short* GetFieldMinionRot_800A7984(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2190,7 +2144,6 @@ short* GetFieldMinionRot_800A7984(int idx)
     return 0;
 }
 
-// Matched
 int IsFieldMinionVisible_800A79C8(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2200,7 +2153,6 @@ int IsFieldMinionVisible_800A79C8(int idx)
     return 0;
 }
 
-// Matched
 GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2210,7 +2162,6 @@ GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx)
     return 0;
 }
 
-// Matched
 int GetFieldMinionActor_800A7A60(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2220,7 +2171,6 @@ int GetFieldMinionActor_800A7A60(int idx)
     return 0;
 }
 
-// Matched
 int GetFieldMinionAnims_800A7A9C(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
@@ -2230,7 +2180,6 @@ int GetFieldMinionAnims_800A7A9C(int idx)
     return 0;
 }
 
-// Matched
 void SkipFieldMinionAnim_800A7AD8(int idx)
 {
     SkipActorAnimToEnd_8001D9B0(GetFieldMinionActor_800A7A60(idx));
@@ -2316,7 +2265,6 @@ int IsFieldMinionReady_800A7CFC(int idx)
     return 0;
 }
 
-// Matched
 void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
 {
     ActorActionDesc desc;
@@ -2478,7 +2426,6 @@ void InitLevantControl_800A8140()
 
 // Levant's movement command for this frame (SetLevantMoveCmd_800AB37C): 1 / 4 / 2 move, 0x10000000 / 0x20000000 turn
 // (or-ed onto a move), 0x50000000 / 0x60000000 turn on the spot
-// Matched
 void LevantControlTask_800A818C(EventEntry* entry, GameLevantCtl* ctl)
 {
     int cmd;
@@ -3363,7 +3310,6 @@ void UpdateLevantTurn_800A99DC(GameLevantActor* lev)
 }
 
 // Moves Levant by the animation's root motion: rotated by the facing and scaled by the floor slope, or along a scripted path (0x400000), or offset from basePos_60
-// Matched
 void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
 {
     G2V12 prev;
@@ -3554,7 +3500,6 @@ void ReturnLevantToIdle_800AA3F0(GameLevantActor* lev)
     lev->flags_0 |= 0x2000;
 }
 
-// Matched
 void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
 {
     ActorEffectReq req;
@@ -3580,7 +3525,6 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
 
 unsigned short GetLevantAnimEventFrameCur_800AB170(int anim);
 // Levant battle action state machine (per action_8 state)
-// Matched
 void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
 {
     unsigned short GetLevantAnimLastFrame_800AC8BC(int a, int b);
@@ -4783,7 +4727,6 @@ void LevantModelTaskInit_800ACAA4(int* task, int* work)
     task[2] = (int)LevantModelTask_800ACB64;
 }
 
-// Matched
 void LevantModelTask_800ACB64(int* task, void* buf)
 {
     int more = 1;
@@ -5395,7 +5338,6 @@ void FindMapEntrance_800ADCEC(short* out, int key)
     }
 }
 
-// Matched
 void SelectMapEntrance_800ADDAC(void)
 {
     GameMapLoc loc;

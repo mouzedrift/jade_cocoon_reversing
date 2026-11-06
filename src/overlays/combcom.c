@@ -488,7 +488,6 @@ void DrawPauseMenu_800CBCA0()
 }
 
 // Draws the menus of the current state, the circle-held descriptions and the HP/MP preview
-// Matched
 void DrawCmdMenu_800CBEA4()
 {
     short target[2];
@@ -621,7 +620,6 @@ void DrawCmdMenu_800CBEA4()
 }
 
 // HP/MP change preview of the chosen action on the target (previewHp_800A82D0 / previewMp_800A82D2)
-// Matched
 void PreviewCmdEffect_800CC40C()
 {
     TargetQuery check;

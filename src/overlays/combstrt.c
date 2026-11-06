@@ -34,7 +34,6 @@ const MenuWindowItem titleItem_800A4138 = { 8, 1, 36, &uiTiySprts_8008D620, &uiT
 const MenuWindowItem minionLabelItem_800A4154 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x32, 0x14, 2, 4 };
 
 // Versus fight setup: yes/no questions (allow minion changing, shuffle order, start fight) and the shuffle animation
-// Matched
 void VersusSetupTask_800A4170(CombatTask* t, int a)
 {
     WindowStyle box;
@@ -274,7 +273,6 @@ void DrawTeam_800A4958(int side)
     }
 }
 
-// Matched
 void DrawTeamMinion_800A49DC(int side, int slot)
 {
     WindowStyle c1;

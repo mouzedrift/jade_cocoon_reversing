@@ -11,7 +11,6 @@ int dword_800C6F40 SDATA = 216;
 
 
 
-// Matched
 void PierceEventTask_800C6F58(PierceTask* task, int* st)
 {
     PierceMsg m;
@@ -81,7 +80,6 @@ void PierceEventTask_800C6F58(PierceTask* task, int* st)
     }
 }
 
-// Matched
 void PierceEventStart_800C7124(PierceTask* task, int* st)
 {
     st[0] = 0;

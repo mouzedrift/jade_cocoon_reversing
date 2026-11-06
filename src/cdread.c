@@ -29,7 +29,6 @@ const LoadingIconFrames loadingIconFrames_8007490C = { {
 extern EventNode* fileRequestTasks_8008D488;
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* list);
 
-// Matched
 int StartFileRequestTask_8003C6C8(FileRequestDesc* req)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(fileRequestTasks_8008D488);
@@ -49,7 +48,6 @@ int StartFileRequestTask_8003C6C8(FileRequestDesc* req)
     }
     return 0;
 }
-// Matched
 void UpdateFileRequestTask_8003C76C(int* entry, int* task)
 {
     if (task[1])
@@ -61,7 +59,6 @@ void UpdateFileRequestTask_8003C76C(int* entry, int* task)
         entry[0] = (entry[0] & ~1) | 0x8000;
     }
 }
-// Matched
 void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx)
 {
     int dataStartOffsetPos;
@@ -85,12 +82,10 @@ void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx)
 
     DsIntToPos(data001Pos + targetFilePos - dataStartOffsetPos, &pOutFile->field_0_position);
 }
-// Matched
 int DATA_GetFileSize_8003C87C(int idx)
 {
     return Data001Files_80075AA0[idx].field_8_size;
 }
-// Matched
 int CdSeekStart_8003C8A0(DslLOC* loc)
 {
     if (cdReadState_80086550.idle_0 != 0)
@@ -103,7 +98,6 @@ int CdSeekStart_8003C8A0(DslLOC* loc)
     return 0;
 }
 
-// Matched
 int CdSeekIsComplete_8003C900(void)
 {
     if (DsSync(cdReadState_80086550.packet_10, 0) == 2)
@@ -115,7 +109,6 @@ int CdSeekIsComplete_8003C900(void)
 }
 extern int DsSystemStatus(void);
 
-// Matched
 int CdReadStart_8003C944(DslLOC* loc, void* buf, int sectors)
 {
     if (cdReadState_80086550.idle_0 != 0)
@@ -132,12 +125,10 @@ int CdReadStart_8003C944(DslLOC* loc, void* buf, int sectors)
     }
     return 0;
 }
-// Matched
 int CdReadIsIdle_8003C9EC(void)
 {
     return cdReadState_80086550.idle_0;
 }
-// Matched
 void CdReadSyncCallback_8003C9FC(unsigned char mode)
 {
     if (mode == 2)
@@ -145,7 +136,6 @@ void CdReadSyncCallback_8003C9FC(unsigned char mode)
         DsStartReadySystem(CdReadReadyCallback_8003CA30, -1);
     }
 }
-// Matched
 void CdReadReadyCallback_8003CA30(unsigned char mode)
 {
     if (mode == 1)
@@ -160,7 +150,6 @@ void CdReadReadyCallback_8003CA30(unsigned char mode)
         }
     }
 }
-// Matched
 void* DATA_GetFileBuffer_8003CAA0(int idx)
 {
     unsigned long* pFileBuffer;
@@ -172,14 +161,12 @@ void* DATA_GetFileBuffer_8003CAA0(int idx)
     LoadFileIntoBuffer_8003CB7C(&dataFile.field_0_position, pFileBuffer, dataFile.field_4_sectors);
     return pFileBuffer;
 }
-// Matched
 void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest)
 {
     void* pBuffer = DATA_GetFileBuffer_8003CAA0(idx);
     MemCopy_800403E8(pDest, pBuffer, DATA_GetFileSize_8003C87C(idx));
     free3_8003FC6C(pBuffer);
 }
-// Matched
 void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
 {
     Data001File file;
@@ -188,7 +175,6 @@ void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
     LoadFileIntoBuffer_8003CB7C(&file.field_0_position, (unsigned long*)0x801B9250, file.field_4_sectors);
     return (void*)0x801B9250;
 }
-// Matched
 void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors)
 {
     int state;
@@ -222,7 +208,6 @@ void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, in
 
     cdReadFlags_8008B55C |= 0x10;
 }
-// Matched
 int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFileBuffer)
 {
     do
@@ -251,7 +236,6 @@ int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFi
 
     return 1;
 }
-// Matched
 int LoadData001File_8003CD1C(void)
 {
     while (DsSearchFile(&Data001File_800954A8, data001Path_80086570) == 0)
@@ -260,7 +244,6 @@ int LoadData001File_8003CD1C(void)
 
     return 1;
 }
-// Matched
 void DrawLoadingIcon_8003CD5C(void)
 {
     unsigned short pos[2];
@@ -273,7 +256,6 @@ void DrawLoadingIcon_8003CD5C(void)
     pos[1] = 0xBA;
     DrawPublicTiySprt_80033080(pos, sprtIdx, 0);
 }
-// Matched
 void DrawBlinkSprite_8003CE18(short x, short y)
 {
     SPRT* sprt;

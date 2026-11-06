@@ -225,7 +225,6 @@ const char* cannotUnequipBox_800C5D50[4] = {
     aCannotUnequip_800C4788, emptyText_800C4784, emptyText_800C4784, emptyText_800C4784,
 };
 
-// Matched
 void StartEquipMenu_800C47A8(void)
 {
     EventEntry* task = &equipTask_8008D4C4->entry;
@@ -262,7 +261,6 @@ void StartEquipMenu_800C47A8(void)
 }
 
 
-// Matched
 void EquipMenuTask_800C48B4(EventEntry* t, EquipCtx* c)
 {
     DrawMenuBackground_8002BE10();
@@ -287,7 +285,6 @@ void EquipMenuTask_800C48B4(EventEntry* t, EquipCtx* c)
 }
 
 
-// Matched
 void SetEquipCursorArea_800C497C(EquipCtx* c)
 {
     short i;
@@ -323,7 +320,6 @@ void SetEquipCursorArea_800C497C(EquipCtx* c)
 }
 
 
-// Matched
 void DrawEquipMenu_800C4A94(EquipCtx* c)
 {
     short i;
@@ -429,7 +425,6 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
 }
 
 
-// Matched
 void HandleEquipCursorInput_800C4D50(EquipCtx* c)
 {
     int nextMode;
@@ -456,7 +451,6 @@ void HandleEquipCursorInput_800C4D50(EquipCtx* c)
 }
 
 
-// Matched
 void ChangeEquipMenuStep_800C4DF4(EquipCtx* c)
 {
     if (c->confirmed_28)
@@ -510,7 +504,6 @@ void ChangeEquipMenuStep_800C4DF4(EquipCtx* c)
 }
 
 
-// Matched
 void TryEquipItem_800C5064(EquipCtx* c)
 {
     EventEntry* task;
@@ -530,7 +523,6 @@ void TryEquipItem_800C5064(EquipCtx* c)
 }
 
 
-// Matched
 void CannotUnequipTask_800C50F0(EventEntry* t, EquipCtx* c)
 {
     const char** box = cannotUnequipBox_800C5D50;
@@ -552,7 +544,6 @@ void CannotUnequipTask_800C50F0(EventEntry* t, EquipCtx* c)
 }
 
 
-// Matched
 void UpdateEquipSelection_800C51B0(EquipCtx* c)
 {
     short v;
@@ -591,7 +582,6 @@ void UpdateEquipSelection_800C51B0(EquipCtx* c)
 
 
 
-// Matched
 void DrawEquipStats_800C5314(EquipCtx* c)
 {
     unsigned char baseStats[0x18];
@@ -664,7 +654,6 @@ void DrawEquipDescription_800C5440(short itemId, short category, int pos)
 }
 
 
-// Matched
 void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short category)
 {
     short i;

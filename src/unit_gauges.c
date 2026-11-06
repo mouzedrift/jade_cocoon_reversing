@@ -31,7 +31,6 @@ const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620
 const MenuWindowItem statusIcon2_8007440C = { 0x10, 1, 177, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 6, 5 };
 const StatusIconMasks statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
 
-// Matched
 void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unused, short ot)
 {
     unsigned short loc[2];
@@ -62,7 +61,6 @@ void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unuse
     loc[1] = pos[1] + 0x24;
     DrawMpGauge_8002F120(unit, loc, 0, ot);
 }
-// Matched
 void DrawCurMaxValue_8002EE28(UnitGauge* values, unsigned short* pos, short ot, int showNumbers)
 {
     unsigned short loc[2];
@@ -106,7 +104,6 @@ void DrawCurMaxValue_8002EE28(UnitGauge* values, unsigned short* pos, short ot, 
         DrawUiTiySprtRow_8002EF5C(loc, 3, ot);
     }
 }
-// Matched
 void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short ot)
 {
     unsigned short loc[2];
@@ -119,7 +116,6 @@ void DrawUiTiySprtRow_8002EF5C(unsigned short* pos, short count, short ot)
         loc[0] += 7;
     } while (count > 0);
 }
-// Matched
 void DrawValueGauge_8002EFC4(UnitGauge* values, int gaugeArg, int time, void* origin_, int ot, int showNumbers)
 {
     unsigned short pos[2];
@@ -136,7 +132,6 @@ void DrawValueGauge_8002EFC4(UnitGauge* values, int gaugeArg, int time, void* or
     pos[1] = origin[1] + 7;
     DrawCurMaxValue_8002EE28(values, pos, (short)ot, showNumbers);
 }
-// Matched
 void DrawHpGauge_8002F078(UnitStatus* unit, unsigned short* pos, int gaugeArg, short ot)
 {
     unsigned short loc[2];
@@ -147,7 +142,6 @@ void DrawHpGauge_8002F078(UnitStatus* unit, unsigned short* pos, int gaugeArg, s
     loc[1] = pos[1] + 3;
     DrawValueGauge_8002EFC4(&unit->hp_8, gaugeArg, 0, loc, ot, 1);
 }
-// Matched
 void DrawMpGauge_8002F120(UnitStatus* unit, unsigned short* pos, int gaugeArg, short ot)
 {
     unsigned short loc[2];
@@ -158,7 +152,6 @@ void DrawMpGauge_8002F120(UnitStatus* unit, unsigned short* pos, int gaugeArg, s
     loc[1] = pos[1] + 3;
     DrawValueGauge_8002EFC4(&unit->mp_C, gaugeArg, 0, loc, ot, 1);
 }
-// Matched
 void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight, int time, RECT* rect, int ot, int flags)
 
 {
@@ -171,7 +164,6 @@ void DrawUnitStatusWindow_8002F1C8(UnitStatus* unit, int gaugeArg, int highlight
     DrawUiWindow_8002A384(&desc);
 }
 
-// Matched
 void DrawUnitStatus_8002F23C(UnitStatus* unit, int gaugeArg, int time, unsigned short* pos, int ot, int flags)
 {
     unsigned short loc[2];
@@ -212,7 +204,6 @@ void DrawUnitStatus_8002F23C(UnitStatus* unit, int gaugeArg, int time, unsigned 
         DrawUiTiySprtRow_8002EF5C(loc, 2, ot);
     }
 }
-// Matched
 short ElementLevelsToMask_8002F424(unsigned char* levels)
 {
     short mask = 0;
@@ -229,7 +220,6 @@ short ElementLevelsToMask_8002F424(unsigned char* levels)
     }
     return mask;
 }
-// Matched
 void DrawMenuWindowItems_8002F480(int* status, unsigned short* pos, int ot, int reverse)
 {
     MenuWindowItem icon0 = statusIcon0_800743D4;

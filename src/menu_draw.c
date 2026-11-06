@@ -37,7 +37,6 @@ const char aNo_80074198[] = "\202m\202\217"; // No
 const int dword_800741A0 = 0;
 
 
-// Matched
 void InitReverbTask_8002A1BC(int* task)
 {
     reverbAttr_80091CC8.mask = 0;
@@ -45,7 +44,6 @@ void InitReverbTask_8002A1BC(int* task)
     SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
     task[2] = (int)UpdateReverb_8002A218;
 }
-// Matched
 void UpdateReverb_8002A218(void)
 {
     if (reverbAttr_80091CC8.mask != 0)
@@ -59,31 +57,26 @@ void UpdateReverb_8002A218(void)
         reverbAttr_80091CC8.mask = 0;
     }
 }
-// Matched
 void SetReverbMode_8002A280(SpuReverbAttr* attr, short mode)
 {
     attr->mask |= 1;
     attr->mode = (short)(mode | 0x100);
 }
-// Matched
 void SetReverbDepth_8002A2A0(SpuReverbAttr* attr, short left, short right)
 {
     SetReverbDepthLeft_8002A2E8(attr, left);
     SetReverbDepthRight_8002A2FC(attr, right);
 }
-// Matched
 void SetReverbDepthLeft_8002A2E8(SpuReverbAttr* attr, short depth)
 {
     attr->mask |= 2;
     attr->depth.left = depth;
 }
-// Matched
 void SetReverbDepthRight_8002A2FC(SpuReverbAttr* attr, short depth)
 {
     attr->mask |= 4;
     attr->depth.right = depth;
 }
-// Matched
 void DrawTextList_8002A310(TextListEntry* entries, int ot)
 {
     unsigned short loc[2];
@@ -98,7 +91,6 @@ void DrawTextList_8002A310(TextListEntry* entries, int ot)
         }
     }
 }
-// Matched
 void DrawUiWindow_8002A384(UiWindowDesc* desc)
 {
     WindowStyle style;
@@ -115,7 +107,6 @@ typedef struct
     int field_4;
     int element_8;
 } MagicDataInt;
-// Matched
 short GetMagicElementIcon_8002A3E0(int magic)
 {
     if (magic < 30)
@@ -125,7 +116,6 @@ short GetMagicElementIcon_8002A3E0(int magic)
     return 36;
 }
 extern void GetPortraitSprt_800A61CC(int a, void* b, void* c);
-// Matched
 void DrawPortrait_8002A42C(unsigned short* pos, short id, RECT* drawArea, short ot)
 {
     unsigned short buf1[10];
@@ -140,7 +130,6 @@ void DrawPortrait_8002A42C(unsigned short* pos, short id, RECT* drawArea, short 
         AddDrawAreaPrim_8003326C(drawArea, &pOT_8008D454[ot]);
     }
 }
-// Matched
 void DrawPortraitWindow_8002A4E4(short ot)
 {
     unsigned short buf1[10];
@@ -154,7 +143,6 @@ void DrawPortraitWindow_8002A4E4(short ot)
     DrawWindowBackground_800429F8((int)portraitWindowRect_800827E4, ot);
 }
 
-// Matched
 void DrawMenuWindows_8002A5A4(MenuWindowList* list)
 {
     RECT rect;
@@ -180,7 +168,6 @@ typedef struct
     unsigned short y;
 } Pt;
 extern void AlignMenuItem_8002AC88(int flags, unsigned short* a, short b, unsigned short* out);
-// Matched
 void DrawMenuWindowContents_8002A710(void* item, int ot)
 {
     MenuWindowItem* desc = item;

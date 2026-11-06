@@ -2,10 +2,9 @@
 """Apply config/renames.txt to the sources (the file format is documented at its top).
 
 Every rename is a whole-word replacement in the files that hold symbol names: src/ (all .c/.h, overlays
-included), include/, symbol_addrs.txt, config/*.txt and overlays/*.sym (docs/ is left alone: it uses
-address names as examples). The overlays pick up main-executable names from symbol_addrs.txt
-(scripts/overlays.py writes them as equates), so a rename has to reach both the symbol list and every C
-source that uses the name.
+included), include/, config/*.txt and overlays/*.sym (docs/ is left alone: it uses
+address names as examples): a name is shared by the C of every image that uses it and by the symbol
+lists (overlays/*.sym, config/aliases.txt, config/fixed_symbols.txt).
 
 Files belong to a unit: an overlay's files are src/overlays/<name>.c, <name>_<n>.c, <name>.h and
 overlays/<name>.sym; everything else is EXE. A pair applies to the files of the units its section names
@@ -87,7 +86,7 @@ def load_renames(path):
 
 def target_files():
     pats = ["src/**/*.c", "src/**/*.h", "include/**/*.c", "include/**/*.h", "include/**/*.inc",
-            "symbol_addrs.txt", "config/*.txt", "overlays/*.sym"]
+            "config/*.txt", "overlays/*.sym"]
     files = set()
     for p in pats:
         files.update(glob.glob(os.path.join(REPO, p), recursive=True))

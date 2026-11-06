@@ -104,7 +104,6 @@ void CardSelectScreen_800A41FC(CombatTask* task)
     DrawMenuBackground_8002BE10();
 }
 
-// Matched
 void DrawTitleWindow_800A4364()
 {
     RECT rect;
@@ -125,7 +124,6 @@ void DrawTitleWindow_800A4364()
     DrawWindow_80042460(&rect, &box, pOT_8008D454 + 10, 0);
 }
 
-// Matched
 void DrawTitleWindow2_800A4420()
 {
     RECT rect;
@@ -147,7 +145,6 @@ void DrawTitleWindow2_800A4420()
 }
 
 // (the three sprite blocks look like an expanded macro: { int x = X; SPRT* sprt = &uiTiySprts_8008D620[idx]; ... })
-// Matched
 void DrawDataHeaderWindows_800A44DC()
 {
     short rect[4];

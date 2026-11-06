@@ -38,7 +38,6 @@ __asm__(
     "\tjr\t$31\n"
     "\tnop\n"
     "\t.set\treorder\n");
-// Matched
 int CountMinions_80010548(int id)
 {
     int count;
@@ -58,7 +57,6 @@ int CountMinions_80010548(int id)
     }
     return count;
 }
-// Matched
 Minion* GetMinion_80010598(int id, int nth)
 {
     Minion* result;
@@ -81,7 +79,6 @@ Minion* GetMinion_80010598(int id, int nth)
     }
     return result;
 }
-// Matched
 void ClearMinionsAndItems_80010600(void)
 {
     int i;
@@ -97,7 +94,6 @@ void ClearMinionsAndItems_80010600(void)
         saveData_8008B570.items[i].species_5C = marker;
     }
 }
-// Matched
 int AddItem_80010650(UnitStats* pItem)
 {
     int i;
@@ -112,7 +108,6 @@ int AddItem_80010650(UnitStats* pItem)
     }
     return 0;
 }
-// Matched
 int CountItems_800106B8(void)
 {
     int count;
@@ -128,7 +123,6 @@ int CountItems_800106B8(void)
     }
     return count;
 }
-// Matched
 unsigned char* GetMinionName_800106F8(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
@@ -138,7 +132,6 @@ unsigned char* GetMinionName_800106F8(int id, int nth)
     }
     return 0;
 }
-// Matched
 unsigned char* GetMinionAncestorName_80010724(int id, int nth, int idx)
 {
     Minion* m = GetMinion_80010598(id, nth);
@@ -148,7 +141,6 @@ unsigned char* GetMinionAncestorName_80010724(int id, int nth, int idx)
     }
     return 0;
 }
-// Matched
 unsigned char GetMinionAncestorElement_80010768(int id, int nth, int idx)
 {
     Minion* m = GetMinion_80010598(id, nth);
@@ -158,7 +150,6 @@ unsigned char GetMinionAncestorElement_80010768(int id, int nth, int idx)
     }
     return 0;
 }
-// Matched
 UnitStatus* GetMinionStatus_800107A0(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
@@ -168,7 +159,6 @@ UnitStatus* GetMinionStatus_800107A0(int id, int nth)
     }
     return 0;
 }
-// Matched
 unsigned char* GetMinionStatBlock_800107CC(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
@@ -178,7 +168,6 @@ unsigned char* GetMinionStatBlock_800107CC(int id, int nth)
     }
     return 0;
 }
-// Matched
 UnitSkills* GetMinionSkills_800107F8(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
@@ -188,7 +177,6 @@ UnitSkills* GetMinionSkills_800107F8(int id, int nth)
     }
     return 0;
 }
-// Matched
 unsigned int* GetMinionMagicBits_80010824(int id, int nth)
 {
     Minion* m = GetMinion_80010598(id, nth);
@@ -200,7 +188,6 @@ unsigned int* GetMinionMagicBits_80010824(int id, int nth)
     return 0;
 }
 extern EventNode* modelTasks_8008D618;
-// Matched
 int StartModelTask_80010850(void* params)
 {
     EventEntry* e = AllocEventEntry_80043AF8(modelTasks_8008D618);
@@ -225,7 +212,6 @@ int StartModelTask_80010850(void* params)
     }
     return -1;
 }
-// Matched
 EventEntry* FindModelTask_8001091C(key)
 int key;
 {
@@ -247,7 +233,6 @@ int key;
     }
     return 0;
 }
-// Matched
 int FreeModelTask_8001098C(int key)
 {
     EventEntry* e = FindModelTask_8001091C();
@@ -263,13 +248,11 @@ int FreeModelTask_8001098C(int key)
     }
     return 0;
 }
-// Matched
 int RunModelTask_80010A10(int key)
 {
     EventEntry* entry = FindModelTask_8001091C();
     return StepModelTask_80010AD8(((ModelTaskBuf*)entry->buffer)->state_4);
 }
-// Matched
 Model* GetModelTaskModel_80010A44(int key)
 {
     ModelTaskBuf* buf = FindModelTask_8001091C()->buffer;
@@ -280,17 +263,14 @@ Model* GetModelTaskModel_80010A44(int key)
     }
     return 0;
 }
-// Matched
 void ModelTaskUpdateCb_80010A90(int entry, int* buf)
 {
     RunModelTask_80010A10(*buf);
 }
-// Matched
 void ModelTaskFreeCb_80010AB4(int entry, int* buf)
 {
     FreeModelTask_8001098C(*buf);
 }
-// Matched
 int StepModelTask_80010AD8(ModelTaskState* state)
 {
     int cont = 1;

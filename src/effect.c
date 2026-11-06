@@ -58,7 +58,6 @@ short effectFileTable_800795F0[140] = {
     0x3EE, 0, 0x3F2,
 };
 
-// Matched
 int RollOilBonus_80013DB0(void)
 {
     int bonus = rand() % 6;
@@ -72,7 +71,6 @@ int RollOilBonus_80013DB0(void)
     }
     return bonus;
 }
-// Matched
 int GetStatGrowth_80013E00(unsigned int idx, int add)
 {
     int result = 0;
@@ -82,22 +80,18 @@ int GetStatGrowth_80013E00(unsigned int idx, int add)
     }
     return result;
 }
-// Matched
 int Rand100_80013E30(void)
 {
     return rand() % 100;
 }
-// Matched
 void CalcUnitEquippedStats_80013E80(unsigned char* out, int unit)
 {
     CalcEquippedStats_80033624(out, GetUnitStatus_80014390(unit & 0xFF));
 }
-// Matched
 void CalcMinionEquippedStats_80013EB4(unsigned char* out, int a1, int a2)
 {
     CalcEquippedStats_80033624(out, GetMinionStatus_800107A0(a2, a1));
 }
-// Matched
 void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, int mode)
 {
     int def;
@@ -132,22 +126,18 @@ void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, 
 
     }
 }
-// Matched
 int CalcHitBonus_80014114(int value)
 {
     return (value * value) / 10;
 }
-// Matched
 int CalcEvadeBonus_8001413C(int value)
 {
     return (value * value) / 5;
 }
-// Matched
 int CriticalRateTransform_80014164(int value)
 {
     return (value * value * value) / 400;
 }
-// Matched
 void BaseStatRatios_8001419C(unsigned char* stats, short* out)
 {
     int a = (stats[7] + stats[9]) >> 1;
@@ -156,7 +146,6 @@ void BaseStatRatios_8001419C(unsigned char* stats, short* out)
     out[0] = speedRatio;
     out[1] = magicRatio;
 }
-// Matched
 int BaseSpeedRatio_80014200(unsigned char* stats)
 {
     int a = (stats[7] + stats[9]) >> 1;
@@ -174,7 +163,6 @@ int BaseSpeedRatio_80014200(unsigned char* stats)
     }
     return ratio;
 }
-// Matched
 int BaseDefenseRatio_8001425C(unsigned char* stats)
 {
     int a = (stats[7] + stats[9]) >> 1;
@@ -192,7 +180,6 @@ int BaseDefenseRatio_8001425C(unsigned char* stats)
     }
     return ratio;
 }
-// Matched
 int BaseMagicRatio_800142B8(unsigned char* stats)
 {
     int ratio = stats[8] * 200 / (stats[8] + stats[6]);
@@ -209,7 +196,6 @@ int BaseMagicRatio_800142B8(unsigned char* stats)
     }
     return ratio;
 }
-// Matched
 int BaseAttackRatio_80014308(unsigned char* stats)
 {
     int ratio = stats[6] * 200 / (stats[6] + stats[8]);
@@ -226,7 +212,6 @@ int BaseAttackRatio_80014308(unsigned char* stats)
     }
     return ratio;
 }
-// Matched
 int LowestSetBit_80014358(unsigned int mask)
 {
     unsigned int i;
@@ -239,7 +224,6 @@ int LowestSetBit_80014358(unsigned int mask)
     }
     return 0;
 }
-// Matched
 UnitStatus* GetUnitStatus_80014390(unit)
     unsigned char unit;
 {
@@ -271,7 +255,6 @@ UnitStatus* GetUnitStatus_80014390(unit)
     }
     return status;
 }
-// Matched
 Minion* GetUnitMinion_80014444(int unit)
 {
     unsigned int idx = unit & 0xFF;
@@ -288,7 +271,6 @@ Minion* GetUnitMinion_80014444(int unit)
     }
     return minion;
 }
-// Matched
 UnitStats* GetUnitStats_8001449C(unit)
     unsigned char unit;
 {
@@ -306,7 +288,6 @@ UnitStats* GetUnitStats_8001449C(unit)
     return stats;
 }
 
-// Matched
 void FirFilterInit_8001450C(int* history, FirFilter* filter, int* coefs, int taps)
 {
     unsigned int i;
@@ -316,7 +297,6 @@ void FirFilterInit_8001450C(int* history, FirFilter* filter, int* coefs, int tap
         history[i] = 0;
     }
 }
-// Matched
 void FirFilterSetup_80014574(FirFilter* filter, int* coefs, int taps)
 {
     filter->coefs_0 = coefs;
@@ -324,7 +304,6 @@ void FirFilterSetup_80014574(FirFilter* filter, int* coefs, int taps)
     filter->input_8 = 0;
     filter->output_C.sum = 0;
 }
-// Matched
 void FirFilterStep_80014588(int* history, FirFilter* filter, unsigned int t)
 {
     unsigned int i;
@@ -336,7 +315,6 @@ void FirFilterStep_80014588(int* history, FirFilter* filter, unsigned int t)
     }
     filter->output_C.sum >>= 12;
 }
-// Matched
 void InitEffectTask_80014618(EventEntry* entry, EffectTaskState* state)
 {
     state->flags_28 = 2;
@@ -346,7 +324,6 @@ void InitEffectTask_80014618(EventEntry* entry, EffectTaskState* state)
 }
 extern short effectVramOrigin_800795D0[];
 extern short effectFileTable_800795F0[];
-// Matched
 void UpdateEffectTask_80014638(EventEntry* entry, void* buf)
 {
     EffectTaskState* state = (EffectTaskState*)buf;
@@ -401,7 +378,6 @@ void UpdateEffectTask_80014638(EventEntry* entry, void* buf)
         break;
     }
 }
-// Matched
 int CountActiveEffectObjects_800147FC(void)
 {
     int i;
@@ -437,18 +413,15 @@ int CountActiveEffectObjects_800147FC(void)
     }
     return active;
 }
-// Matched
 void FreeEffectTask_800148A0(void)
 {
     FreeEffectFile_80020EE0(&effectFile_80091BD0);
     unknownFlags_8008D678 &= ~0x800;
 }
-// Matched
 int IsEffectTaskIdle_800148D4(void)
 {
     return ((EffectTaskState*)effectTask_8008D3F8->entry.buffer)->state_2C == 0;
 }
-// Matched
 void RequestEffect_800148F4(int id)
 {
     EffectTaskState* state = effectTask_8008D3F8->entry.buffer;

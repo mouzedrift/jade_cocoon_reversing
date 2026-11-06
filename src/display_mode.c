@@ -18,7 +18,6 @@
 #include "engine.h"
 
 
-// Matched
 void SetDisplayMode_80040658(int mode)
 {
     RestartDisplay_8001B230();

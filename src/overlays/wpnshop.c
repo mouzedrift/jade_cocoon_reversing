@@ -293,7 +293,6 @@ const char aOrnamentalItem_800BAD30[] = "\202n\202\222\202\216\202\201\202\215\2
 const int dword_800BAD50 = 0;
 
 // GAME starts it for a store: kind 0 equipment, 1 items; keeper selects the texts and the stock
-// Matched
 void StartStore_800BAE2C(int kind, short keeper)
 {
     StoreMenu* store;
@@ -354,7 +353,6 @@ void StartStore_800BAE2C(int kind, short keeper)
     }
 }
 
-// Matched
 int GetStoreStockMask_800BB088(StoreMenu* store)
 {
     int r = 1;
@@ -377,7 +375,6 @@ int GetStoreStockMask_800BB088(StoreMenu* store)
     return r;
 }
 
-// Matched
 void StoreWaitUiTiy_800BB130(EventEntry* task, StoreMenu* store)
 {
     if (uiTiyLoaded_8008B4E8 != 0)
@@ -390,7 +387,6 @@ void StoreWaitUiTiy_800BB130(EventEntry* task, StoreMenu* store)
     }
 }
 
-// Matched
 void StoreFadeIn_800BB194(EventEntry* task, StoreMenu* store)
 {
     DrawMenuBackground_8002BE10();
@@ -421,7 +417,6 @@ void StoreTask_800BB1F4(EventEntry* task, StoreMenu* store)
     }
 }
 
-// Matched
 void StoreWaitMapReload_800BB298(EventEntry* task, void* buffer)
 {
     if (IsMapLoading_800272D0() == 0)
@@ -633,7 +628,6 @@ void StoreInput_800BB664(StoreMenu* store)
 const MenuWindowList menuWindow_800BADF0 = { 2, 0, 8, 0, 0, 14 };
 const int dword_800BAE08 = 0;
 
-// Matched
 void DrawStoreWindowFrame_800BB868(StoreMenu* store, RECT* rect, int a2, int a3, short idx)
 {
     WindowStyle style;
@@ -647,7 +641,6 @@ void DrawStoreWindowFrame_800BB868(StoreMenu* store, RECT* rect, int a2, int a3,
     }
 }
 
-// Matched
 void DrawStoreDialog_800BB8CC(StoreMenu* store)
 {
     DrawPortraitWindow_8002A4E4(0xE);
@@ -663,7 +656,6 @@ void DrawStoreDialog_800BB8CC(StoreMenu* store)
     }
 }
 
-// Matched
 void DrawStore_800BB950(StoreMenu* store)
 {
     StorePos pos;
@@ -840,7 +832,6 @@ void DrawStore_800BB950(StoreMenu* store)
     }
 }
 
-// Matched
 void UpdateStoreCursor_800BBDD0(StoreMenu* store)
 {
     short s;
@@ -854,7 +845,6 @@ void UpdateStoreCursor_800BBDD0(StoreMenu* store)
     }
 }
 
-// Matched
 void SetStoreErrorText_800BBE54(StoreMenu* store)
 {
     switch (store->panel_34)
@@ -882,7 +872,6 @@ void SetStoreErrorText_800BBE54(StoreMenu* store)
     }
 }
 
-// Matched
 void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
 {
     RECT rect;
@@ -906,7 +895,6 @@ void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
     DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawHeldCountWindow_800BBFD4(int count)
 {
     RECT rect;
@@ -929,7 +917,6 @@ void DrawHeldCountWindow_800BBFD4(int count)
     DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
 {
     RECT rect;
@@ -960,7 +947,6 @@ void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
 }
 
 
-// Matched
 void DrawStoreMainMenu_800BC194(StoreMenu* store)
 {
     MenuWindowList cfg;
@@ -971,7 +957,6 @@ void DrawStoreMainMenu_800BC194(StoreMenu* store)
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
-// Matched
 void DrawStoreMainCursor_800BC210(StoreMenu* store)
 {
     RECT r;
@@ -982,7 +967,6 @@ void DrawStoreMainCursor_800BC210(StoreMenu* store)
     DrawStoreWindowFrame_800BB868(store, &r, store->panel_34, store->panel_34, 0x17);
 }
 
-// Matched
 void DrawEquipKindMenu_800BC268(StoreMenu* store)
 {
     MenuWindowList cfg;
@@ -993,7 +977,6 @@ void DrawEquipKindMenu_800BC268(StoreMenu* store)
     DrawMenuWindows_8002A5A4(&cfg);
 }
 
-// Matched
 void DrawItemHeldCount_800BC2E4(StoreMenu* store)
 {
     int r = 0;
@@ -1008,7 +991,6 @@ void DrawItemHeldCount_800BC2E4(StoreMenu* store)
     DrawHeldCountWindow_800BBFD4(r);
 }
 
-// Matched
 void DrawStoreList_800BC374(StoreMenu* store, short panel)
 {
     MenuWindowList cfg;
@@ -1221,7 +1203,6 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     DrawWindow_80042460(&u30.r, &b48.col_8, pOT_8008D454 + 14, 0);
 }
 
-// Matched
 void DrawEquippedMark_800BCABC(StoreMenu* store, short panel)
 {
     RECT rect;
@@ -1270,13 +1251,11 @@ void DrawEquippedMark_800BCABC(StoreMenu* store, short panel)
     }
 }
 
-// Matched
 void DrawItemQuantity_800BCC18(StoreMenu* store)
 {
     DrawQuantityWindow_800BC0AC(store, store->sell_12 == 1 ? 0x12 : 0x11);
 }
 
-// Matched
 void DrawEquipHeldCount_800BCC4C(StoreMenu* store)
 {
     int r = 0;
@@ -1291,7 +1270,6 @@ void DrawEquipHeldCount_800BCC4C(StoreMenu* store)
     DrawHeldCountWindow_800BBFD4(r);
 }
 
-// Matched
 void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
 {
     unsigned char curStats[0x18];
@@ -1354,7 +1332,6 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
     }
 }
 
-// Matched
 void SetStoreDialogText_800BCED4(StoreMenu* store)
 {
     switch (store->keeperId_4C)
@@ -1377,7 +1354,6 @@ void SetStoreDialogText_800BCED4(StoreMenu* store)
     }
 }
 
-// Matched
 void DrawStoreButtonHelp_800BCF80(unsigned short* state)
 {
     if ((unsigned int)(*state - 2) < 4)
@@ -1436,13 +1412,11 @@ void DrawTotalPrice_800BCFCC(StoreMenu* store)
     }
 }
 
-// Matched
 void DrawEquipQuantity_800BD174(StoreMenu* store)
 {
     DrawQuantityWindow_800BC0AC(store, store->sell_12 == 1 ? 0xE : 0xD);
 }
 
-// Matched
 void StoreMainInput_800BD1A8(StoreMenu* store)
 {
     if (store->confirm_40)
@@ -1476,7 +1450,6 @@ void StoreMainInput_800BD1A8(StoreMenu* store)
     }
 }
 
-// Matched
 void ItemBuyListInput_800BD278(StoreMenu* store)
 {
     int s = store->cursorIndex_30 + store->cursorScroll_32;
@@ -1519,7 +1492,6 @@ void ItemBuyListInput_800BD278(StoreMenu* store)
     }
 }
 
-// Matched
 void ItemSellListInput_800BD378(StoreMenu* store)
 {
     int s = store->cursorIndex_30 + store->cursorScroll_32;
@@ -1555,7 +1527,6 @@ void ItemSellListInput_800BD378(StoreMenu* store)
     }
 }
 
-// Matched
 void StoreConfirmInput_800BD444(StoreMenu* store)
 {
     if (store->confirm_40 && store->cursorIndex_30 == 0)
@@ -1615,7 +1586,6 @@ void StoreConfirmInput_800BD444(StoreMenu* store)
     }
 }
 
-// Matched
 void ReadyEquipInput_800BD61C(StoreMenu* store)
 {
     if (store->confirm_40)
@@ -1640,7 +1610,6 @@ void ReadyEquipInput_800BD61C(StoreMenu* store)
     }
 }
 
-// Matched
 void StoreWaitPrompt_800BD6A4(StoreMenu* store)
 {
     DrawNextPrompt_8003CF88(0x11E, 0x3C, 0xE);
@@ -1651,7 +1620,6 @@ void StoreWaitPrompt_800BD6A4(StoreMenu* store)
     }
 }
 
-// Matched
 int IsEquipped_800BD71C(int id, int kind)
 {
     int r = GetEquippedId_800AD990(kind);
@@ -1662,7 +1630,6 @@ int IsEquipped_800BD71C(int id, int kind)
     return 0;
 }
 
-// Matched
 void StoreQuantityInput_800BD760(StoreMenu* store)
 {
     int prev = store->quantity_18;
@@ -1727,7 +1694,6 @@ void StoreQuantityInput_800BD760(StoreMenu* store)
     }
 }
 
-// Matched
 void EquipKindInput_800BD928(StoreMenu* store)
 {
     if (store->confirm_40)
@@ -1743,7 +1709,6 @@ void EquipKindInput_800BD928(StoreMenu* store)
     }
 }
 
-// Matched
 void EquipBuyListInput_800BD9A8(StoreMenu* store)
 {
     int s = store->cursorScroll_32 + store->cursorIndex_30;
@@ -1784,7 +1749,6 @@ void EquipBuyListInput_800BD9A8(StoreMenu* store)
     }
 }
 
-// Matched
 void EquipSellListInput_800BDAB4(StoreMenu* store)
 {
     int s = store->cursorIndex_30 + store->cursorScroll_32;
@@ -1816,7 +1780,6 @@ void EquipSellListInput_800BDAB4(StoreMenu* store)
 }
 
 // 0: bought, 1: not enough money, 2: no room
-// Matched
 int BuyItem_800BDB80(int id, int count)
 {
     if (AddInventory_800AD184(id, count, 0))
@@ -1826,7 +1789,6 @@ int BuyItem_800BDB80(int id, int count)
     return 2;
 }
 
-// Matched
 void SellItem_800BDBDC(int id, int count)
 {
     int price;
@@ -1835,7 +1797,6 @@ void SellItem_800BDBDC(int id, int count)
     AddMoney_800AD058((price * 3 / 4) * count);
 }
 
-// Matched
 int BuyEquipment_800BDC40(int id, int kind, int count)
 {
     if (AddInventory_800AD184(id, count, kind + 1) == 1)
@@ -1845,7 +1806,6 @@ int BuyEquipment_800BDC40(int id, int kind, int count)
     return 2;
 }
 
-// Matched
 void SellEquipment_800BDCB4(int id, int kind, int count)
 {
     int price;
@@ -1889,7 +1849,6 @@ int GetStockEquipment_800BDD2C(int nth, unsigned int kind, int mask)
     return id - 1;
 }
 
-// Matched
 int GetStockItem_800BDDB0(int nth, int mask)
 {
     int id = 0;
@@ -1910,7 +1869,6 @@ int GetStockItem_800BDDB0(int nth, int mask)
     return id - 1;
 }
 
-// Matched
 short CountStock_800BDDF8(unsigned short* stock, int count, int mask)
 {
     int found = 0;
@@ -1976,7 +1934,6 @@ int GetMaxBuyItemCount_800BDF68(short id)
     return n;
 }
 
-// Matched
 short GetStoreListPos_800BE00C(StoreMenu* store, short panel)
 {
     if (panel == store->panel_34)
@@ -1986,7 +1943,6 @@ short GetStoreListPos_800BE00C(StoreMenu* store, short panel)
     return (short)(store->savedIndex_36 + store->savedScroll_38);
 }
 
-// Matched
 short GetStoreListCursor_800BE058(StoreMenu* store, short panel)
 {
     if (panel == store->panel_34)
