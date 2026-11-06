@@ -50,31 +50,31 @@ void TileAnimTask_800A0A04(GameTask* task, short* work)
 }
 
 #if 0
-// Not matched (459 words, was 490; size 553 vs 558): cleaner rewrite. No type-pun: the SPRT takes the POLY_FT4's u0/v0/clut word through
-// TileUVClut (union in new TileFT4/TileSprt prim structs, needs DrawTileAnimLayers_800A0A5C.src.diff on overlays/game.h). Found: setShadeTex
-// for the codes (cse no longer shares 0x2C/0x64 regs), getTPage(1,1,(tile/8+20)/4*64,0) gives the orig srl, inline tile/8 (no page var)
-// adds a cse path entry so the 2nd tpage recomputes page+20 like orig, setDrawTPage before sprt.x0/y0 makes them reload like orig.
-// An unused 8-byte local (buf) gives the original 0x30 frame and puts the cells spill at 8(sp) like the original.
-// Remaining: register allocation (orig also spills texU+31 to 0xC(sp) and reloads it with lbu for u1/u3, and its pOT hi
-// pseudo gets no register so the lui is rematerialized before each addPrim, ours hoists it into $s3; the block-copy
-// spill regs are $s7/$t3/$s5/$s6, ours $s4-$s7) and sched order of the ft4 u1/u3 stores (ours stores them right after
-// computing texU+31); 449 of 558 words differ, mostly register names; register-stripped diff 79 ops.
-// Analysis (cc1psx -dS -dl -dg dumps): t3/s5/s6/s7 in the original are pure reload (spill) regs, so before reload the
-// original had 4 evicted values: work (0x30(sp)), cells (8(sp)), texU+31 (0xC(sp)) and the hoisted pOT hi (rematerialized
-// as it is a REG_EQUIV constant). That is why the frame is 0x30, so `buf` is only a stand-in for the texU+31 slot. texU+31
-// loses its register because the original's prim block needs 9 simultaneously live locals there: texV+31 (v0) and the 7
-// y-field loads (v1,a0..a3,t0,t1, the later moves come from reload_cse). For that, sched1 must leave the v3/u3 stores and the
-// SPRT x0/y0/uv0 loads AFTER the y stores (the original reuses v1/a0 for the SPRT loads). Our sched1 instead hoists the
-// latency-1 stores (v3, w, h, u3) above the latency-2 load group. Also, the original's SPRT x0/y0 stores and uv0 copy are in
-// the same basic block as the FT4 stores, before setDrawTPage's (tile/8+20)/4 branch, so in the source they come before
-// setDrawTPage. Moving them there makes sched1 group all 10 loads, so too many locals are live and $fp gets used.
-// Tried, none helped: texU2 = texU + 31 temporaries (before or after texV), texU += 31, setXY4/setUV4-style orders, an
-// SPRT taken from the ft4 fields, TILE_ANIM_SCRATCH-> for the SPRT loads, y1/x3/y3 taken from the ft4 fields, a void* work
-// parameter, and ~450 random statement-order permutations (best stripped diff 52, still no texU+31 spill).
-// Lead: sched1 flushes its pending memory lists after more than 32 memory refs in a block, and everything after the flush
-// stays below it. With ~10 extra memory refs ahead of the FT4 stores (a test with dummy stores only), the SPRT loads and
-// u3 drop below the y stores like the original. So the original block probably held more memory refs, e.g. redundant
-// field loads that reload_cse later turned into moves or deleted.
+// Not matched (231 of 558 words differ, was 449; size 555 vs 558; offset-aware register-stripped diff 18 ops, was 73).
+// Kept from earlier rounds: TileUVClut union (no type pun), setShadeTex for the codes, getTPage(1,1,(tile/8+20)/4*64,0)
+// for the srl, inline tile/8 (cse reuses page, recomputes page+20 like orig), buf = 8 unused bytes at 0(sp) (the
+// original frame has 16 bytes of locals: 0..7 unknown, cells spill 8(sp), texU+31 spill 0xC(sp)).
+// New (cc1psx -dS/-dl/-dg dumps): sched1 makes the first insn after a NOTE_INSN_LOOP_BEG/END a full barrier
+// (sched.c sched_analyze_insn: loop_notes -> flush + depend on every reg). The original prim block shows exactly two such
+// barriers: one at the ft4 x0 store (texU+31 is computed above it) and one at the SPRT x0 load (everything after it:
+// SPRT loads, v3, w, h, setlen, u3, SPRT stores stays below the y stores). Two do/while (0) starting there reproduce the
+// whole prim block order up to the u0/u2/v0 stores. They must be nested and both end after setDrawTPage: cse1 stops at a
+// LOOP_END (cse.c "Don't cse out the end of a loop"), so an E before setDrawTPage recomputes tile/8 there. With that, the
+// pOT hi pseudo is rematerialized before each addPrim like orig and only register names differ outside the prim block.
+// Remaining: the original's texU+31 pseudo is GLOBAL (allocated $t3 by global-alloc, then evicted when reload picks $t3 as
+// its 4th spill reg; reload1.c spill_hard_reg never evicts a block-local pseudo from a block that needs no reloads, and
+// block 44 needs none, so a local texU2 always keeps its register). Defining texU2 before texV (other block) makes it
+// global: then the spill regs become $s7/$s6/$t3/$s5 like orig, texU2 goes to 0xC(sp) with sw + lbu reloads, and the
+// whole function outside the prim block matches except cell/page in $t7/$t6 (orig $t6/$t7), e.g. with the (unnatural)
+// statement order "x0 u2 x1 v0 y1 sx v2 u1 u3 v1 y2 x3 x2 {{ y0 v3 y3 sy h w u0 suv tpage }}" (57 words differ). But
+// then its addiu+sw sit in the texV block (before the tile%32 bgez) instead of after texV like orig, and with the clean
+// order below (texU2 before texV) global-alloc gives it $t4 instead of $t3 ($s4 becomes the 4th spill reg). How the
+// original gets a global texU+31 whose only def (after texV) and uses are all in the prim block is still unknown (all
+// refs in the final code are in that block; an extra ref deleted after flow, a reused variable, etc.?). The SPRT x0/y0
+// loads are real lhu in orig but reload_cse turns ours into moves from the x2/y1 regs (orig: some invalidation between).
+// Tried: the >32 pending-mem flush (dummy stores only, no texU+31 spill), page variable (cse2 then reuses page+20),
+// single do/while around the ft4 part, bright reused for texU+31 (changes block 0), texU2 = texU; ... texU2 += 31,
+// u3 after setDrawTPage (texU2 global with def after texV, but the u3 store lands in the next block), random searches.
 // Draws the map's animated tile layers (tileAnim_8008D648.lists_14): steps each layer's frame timer, then builds a
 // zoomed POLY_FT4 (or, unzoomed, a SPRT + DR_TPAGE) for every 32x32 cell of the frame's tile set.
 // Runs on the scratchpad stack (TileAnimTask_800A0A04); *work & 1 freezes the timers.
@@ -91,6 +91,7 @@ void DrawTileAnimLayers_800A0A5C(short* work)
     int texU;
     int texV;
     int bright;
+    int texU2;
     char buf[8];
 
     setPolyFT4(&s->ft4_4);
@@ -176,29 +177,37 @@ void DrawTileAnimLayers_800A0A5C(short* work)
                     break;
                 }
                 texU = ((tile / 8 * 16 + 0x140) % 64) * 2;
+                texU2 = texU + 31;
                 texV = (tile % 32) * 32;
-                s->ft4_4.x0 = s->x0_48;
-                s->ft4_4.uv0.f.u0 = texU;
-                s->ft4_4.uv0.f.v0 = texV;
-                s->ft4_4.u2 = texU;
-                s->ft4_4.v1 = texV;
-                s->ft4_4.v2 = texV + 31;
-                s->ft4_4.u1 = texU + 31;
-                s->ft4_4.y0 = s->y0_4A;
-                s->ft4_4.x1 = s->x1_4C;
-                s->ft4_4.y1 = s->y0_4A;
-                s->ft4_4.x2 = s->x0_48;
-                s->ft4_4.y2 = s->y1_4E;
-                s->ft4_4.x3 = s->x1_4C;
-                s->ft4_4.y3 = s->y1_4E;
-                s->ft4_4.v3 = texV + 31;
-                s->sprt_2C.w = 32;
-                s->sprt_2C.h = 32;
-                s->ft4_4.u3 = texU + 31;
-                setDrawTPage(&s->tpage_40, 0, 1, getTPage(1, 1, (tile / 8 + 20) / 4 * 64, 0));
-                s->sprt_2C.x0 = s->x0_48;
-                s->sprt_2C.y0 = s->y0_4A;
-                s->sprt_2C.uv0 = s->ft4_4.uv0;
+                // the two do/while (0) only give sched1 its two barriers (see above)
+                do
+                {
+                    s->ft4_4.x0 = s->x0_48;
+                    s->ft4_4.uv0.f.u0 = texU;
+                    s->ft4_4.uv0.f.v0 = texV;
+                    s->ft4_4.u2 = texU;
+                    s->ft4_4.v1 = texV;
+                    s->ft4_4.v2 = texV + 31;
+                    s->ft4_4.u1 = texU2;
+                    s->ft4_4.y0 = s->y0_4A;
+                    s->ft4_4.x1 = s->x1_4C;
+                    s->ft4_4.y1 = s->y0_4A;
+                    s->ft4_4.x2 = s->x0_48;
+                    s->ft4_4.y2 = s->y1_4E;
+                    s->ft4_4.x3 = s->x1_4C;
+                    s->ft4_4.y3 = s->y1_4E;
+                    do
+                    {
+                        s->sprt_2C.x0 = s->x0_48;
+                        s->sprt_2C.y0 = s->y0_4A;
+                        s->sprt_2C.uv0 = s->ft4_4.uv0;
+                        s->ft4_4.v3 = texV + 31;
+                        s->sprt_2C.w = 32;
+                        s->sprt_2C.h = 32;
+                        s->ft4_4.u3 = texU2;
+                        setDrawTPage(&s->tpage_40, 0, 1, getTPage(1, 1, (tile / 8 + 20) / 4 * 64, 0));
+                    } while (0);
+                } while (0);
                 if (cameraZoom_8008B4F8 != 0x1000)
                 {
                     *(TileFT4*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = s->ft4_4;
