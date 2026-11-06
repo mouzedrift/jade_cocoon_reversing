@@ -149,9 +149,9 @@ typedef struct Actor
     short loopCount_F4;         // 0xF4
     short scaleTarget_F6;       // 0xF6
     int pad_F8;                    // 0xF8
-    short fFC;                  // 0xFC
+    short anim_FC;              // ActorActionDesc.anim_28
     short queuedAnim_FE;        // 0xFE
-    int f100;                   // 0x100
+    int stopScriptAtEnd_100;    // StopActorScript_8001EFC4 when the action ends
     int pad_104;                   // 0x104
     HitTimes hitTimes_108[10]; // 0x108: (start, end) frames, GetActorHitFrame_80018E5C
     int effect_130;             // 0x130
@@ -213,7 +213,7 @@ typedef struct
     short nextAnim_26;
     short anim_28;          // >= 0: played next (playAnimScript_8007D9A4)
     short queuedAnim_2A;
-    int field_2C;
+    int stopScriptAtEnd_2C; // Actor.stopScriptAtEnd_100
     ActorPath* path_30;
     int pad_34[11]; // StartCommandAction_80018A4C's local is 0x60 bytes
 } ActorActionDesc;

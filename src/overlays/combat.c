@@ -370,7 +370,7 @@ void MoveSlotActorTo_800A0E1C(int i, int* pos)
     action.nextAnim_26 = -1;
     action.anim_28 = -1;
     action.queuedAnim_2A = -1;
-    action.field_2C = 0;
+    action.stopScriptAtEnd_2C = 0;
     action.path_30 = 0;
     slot->actor_3C->target_70.vx = pos[0];
     slot->actor_3C->target_70.vy = pos[1];

@@ -2534,7 +2534,7 @@ void TriggerActorEffect_8001E28C(Actor* actor)
         actor->effect_130 = -1;
     }
     actor->flags_4 |= 0x20000;
-    if (actor->f100 != 0)
+    if (actor->stopScriptAtEnd_100 != 0)
     {
         StopActorScript_8001EFC4(actor);
     }
@@ -2550,10 +2550,10 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
     actor->effectKinds_EC = desc->effectKinds_18;
     actor->loopCount_F4 = desc->loopCount_20;
     actor->scaleTarget_F6 = desc->scaleTarget_22;
-    actor->fFC = desc->anim_28;
+    actor->anim_FC = desc->anim_28;
     actor->queuedAnim_FE = desc->queuedAnim_2A;
     actor->turnStep_E0 = desc->turnStep_C;
-    actor->f100 = desc->field_2C;
+    actor->stopScriptAtEnd_100 = desc->stopScriptAtEnd_2C;
     hitStart = 0;
     if (desc->script_4)
     {

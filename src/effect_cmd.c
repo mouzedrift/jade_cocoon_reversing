@@ -249,7 +249,7 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     desc.loopCount_20 = 0;
     desc.scaleTarget_22 = 0;
     desc.field_1C = 1;
-    desc.field_2C = 0;
+    desc.stopScriptAtEnd_2C = 0;
     desc.path_30 = 0;
     desc.field_1C = (c == 0);
     desc.effectMask_14 = cmd[2];

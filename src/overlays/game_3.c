@@ -2291,7 +2291,7 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
         desc.nextAnim_26 = -1;
         desc.anim_28 = -1;
         desc.queuedAnim_2A = -1;
-        desc.field_2C = 0;
+        desc.stopScriptAtEnd_2C = 0;
         desc.path_30 = 0;
         desc.field_1C = cmd->wait_8;
         start = 0;
@@ -2350,7 +2350,7 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
             desc.anim_28 = cmd->arg_C;
             desc.queuedAnim_2A = (cmd->kind_4 == 10) ? cmd->arg2_10 : -1;
             desc.turnStep_C = (cmd->opts_14 & 1) ? -1 : -2;
-            desc.field_2C = (cmd->opts_14 >> 3) & 1;
+            desc.stopScriptAtEnd_2C = (cmd->opts_14 >> 3) & 1;
             desc.flags_0 = (cmd->opts_14 >> 2) & 1;
             flags3 = desc.flags_0;
             if (cmd->opts_14 & 0x10)
@@ -2365,7 +2365,7 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
             else
                 desc.queuedAnim_2A = actor->animIdx_C2;
             desc.turnStep_C = (cmd->opts_14 & 1) ? -1 : -2;
-            desc.field_2C = (cmd->opts_14 >> 3) & 1;
+            desc.stopScriptAtEnd_2C = (cmd->opts_14 >> 3) & 1;
             desc.flags_0 = (cmd->opts_14 >> 2) & 1;
             flags = desc.flags_0;
             if (cmd->opts_14 & 0x10)
