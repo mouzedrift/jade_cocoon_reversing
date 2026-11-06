@@ -250,9 +250,7 @@ extern int dword_800B19E0;
 
 
 
-extern char* dword_8008B518;
 
-extern char* dword_8008B534;
 
 extern EventNode* gameMainTask_8008D46C;
 
@@ -652,7 +650,6 @@ extern int CheckEnemyContact_800A19E4();
 
 extern EventNode* enemyAiTasks_8008D49C;
 
-extern unsigned char levantCaptureLevel_8008BD7C;
 
 extern void EnemyAiNone_800A2EE4(EventEntry* e, void* ai);
 
@@ -925,7 +922,6 @@ extern short word_8008BDA6;
 
 extern void SetLevantHasArmor_800AC380(int has);
 
-extern int levantEmptyCocoons_8008B818;
 
 extern ModelList* dword_8007DC60; // the GAME overlay's model list
 

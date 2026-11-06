@@ -403,7 +403,7 @@ void DecodeNames_8003FBD4(int mode)
 {
     int count;
     int i;
-    DecodeText_8003F748(mode, playerName_8008BD48);
+    DecodeText_8003F748(mode, saveData_8008B570.levantStatus_7C8.name_10);
     count = CountMinions_80010548(3);
     for (i = 0; i < count; i++)
     {

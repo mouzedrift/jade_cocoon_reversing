@@ -414,7 +414,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
 // Matched
 void ApplyAudioOutputFormat_80030988(void)
 {
-    if (!((settingsFlags_8008B58C.word >> 6) & 1))
+    if (!((saveData_8008B570.settings_1C.word >> 6) & 1))
     {
         SsSetStereo();
     }

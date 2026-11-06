@@ -1,7 +1,7 @@
 #ifndef UNIT_H
 #define UNIT_H
 
-/* 0x48-byte status block of Levant (levantStatus_8008BD38 == saveData+0x7C8) and of each minion
+/* 0x48-byte status block of Levant (saveData_8008B570.levantStatus_7C8 == saveData+0x7C8) and of each minion
    (Minion.status_84, GetMinionStatus_800107A0); also the head of UnitStats.
    Heal_80011CD0 refills hp/mp (Meos4's randomizer calls 0x80011CD0 "healFn"). */
 /* current / maximum of a gauge (UnitStatus.hp_8, mp_C); the save packer copies it as one */
@@ -95,7 +95,6 @@ typedef struct ActionData
     char pad_9[3];
 } ActionData;
 
-extern UnitStatus levantStatus_8008BD38; // == saveData_8008B570.levantStatus_7C8
 
 #endif
 

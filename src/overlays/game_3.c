@@ -1500,13 +1500,13 @@ int IsEventPointValid_800A6504(int point, int* pos)
 // Matched
 void SetLevantWallEnabled_800A6534(int wall, int on)
 {
-    dword_8008B518[wall] = on;
+    mapState_8008B500.entFlags_18[wall] = on;
 }
 
 // Matched
 void SetActorWallEnabled_800A654C(int wall, int on)
 {
-    dword_8008B534[wall] = on;
+    mapState_8008B500.entFlags_34[wall] = on;
 }
 
 // Matched
@@ -2850,7 +2850,7 @@ GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
     }
     ctl->state_C6 = levantBattleActions_800B1084[cmd[0]].state_0;
     ctl->anim_CC = levantBattleActions_800B1084[cmd[0]].anim_4;
-    if (ctl->anim_CC == 8 && (int)((settingsFlags_8008B58C.word >> 21) & 1) == 1)
+    if (ctl->anim_CC == 8 && (int)((saveData_8008B570.settings_1C.word >> 21) & 1) == 1)
     {
         ctl->anim_CC = 7;
     }
@@ -2901,7 +2901,7 @@ void TriggerLevantAction_800A8C0C()
 
 UnitStatus* GetLevantStatus_800A8C34()
 {
-    return &levantStatus_8008BD38;
+    return &saveData_8008B570.levantStatus_7C8;
 }
 
 char* GetLevantPos_800A8C40()
@@ -3337,12 +3337,12 @@ void DrawLevantModel_800A9708(GameLevantActor* lev)
     }
     if (!(lev->flags_0 & 0x10))
     {
-        DrawAnimSkel_80046A58(&sk, &pointLights_8008D534[light], 0);
+        DrawAnimSkel_80046A58(&sk, &cameraState_8008D4F0.ent_44[light], 0);
     }
     else
     {
         anim = &lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->prevAnim_1E)];
-        DrawAnimSkelBlend_80047E28(&sk, levantBoneScale_800B0FB0, (char*)anim, lev->blendFrame_14 % anim->frameCount_0, 0x1000 - lev->blend_26, &pointLights_8008D534[light], 0);
+        DrawAnimSkelBlend_80047E28(&sk, levantBoneScale_800B0FB0, (char*)anim, lev->blendFrame_14 % anim->frameCount_0, 0x1000 - lev->blend_26, &cameraState_8008D4F0.ent_44[light], 0);
     }
     DrawSpriteVtxQuadsGT4_800459E4(&levantBones_800B0EF8, &lev->model_40->mats_5C, pOT_8008D690, sk.flags);
 }
@@ -5224,12 +5224,12 @@ int GetFreeCocoonSlots_800AD888()
 
 int CountCocoonsAndMinions_800AD8BC()
 {
-    return levantEmptyCocoons_8008B818 + CountMinions_80010548(0);
+    return saveData_8008B570.inv_24.emptyCocoons_284 + CountMinions_80010548(0);
 }
 
 int GetEmptyCocoons_800AD8E4()
 {
-    return levantEmptyCocoons_8008B818;
+    return saveData_8008B570.inv_24.emptyCocoons_284;
 }
 
 int AddEmptyCocoons_800AD8F4(int count)
@@ -5241,7 +5241,7 @@ int AddEmptyCocoons_800AD8F4(int count)
         total = 12;
         ret = 0;
     }
-    levantEmptyCocoons_8008B818 = total;
+    saveData_8008B570.inv_24.emptyCocoons_284 = total;
     return ret;
 }
 
@@ -5254,7 +5254,7 @@ int RemoveEmptyCocoons_800AD944(int count)
         total = 0;
         ret = total;
     }
-    levantEmptyCocoons_8008B818 = total;
+    saveData_8008B570.inv_24.emptyCocoons_284 = total;
     return ret;
 }
 

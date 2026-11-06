@@ -398,7 +398,7 @@ void InitFonts_8003DA70(void)
 // Matched
 int UpdateTextWindow_8003DB74(TextWindow* w, int draw)
 {
-    if (w->timer_24 >= 3 - (settingsFlags_8008B58C.word & 7))
+    if (w->timer_24 >= 3 - (saveData_8008B570.settings_1C.word & 7))
     {
         w->timer_24 = 0;
         w->limit_1C++;
@@ -529,7 +529,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                     break;
                 case 0x86:
                 case 0x87:
-                    if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                    if (CopyPlayerName_8003F860(saveData_8008B570.levantStatus_7C8.name_10, name.s))
                     {
                         DecodeText_8003F748(1, name.s);
                     }
@@ -692,7 +692,7 @@ int MeasureTextWidth_8003E4C8(const char* str)
             {
             case 0x86:
             case 0x87:
-                if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                if (CopyPlayerName_8003F860(saveData_8008B570.levantStatus_7C8.name_10, name.s))
                 {
                     DecodeText_8003F748(1, name.s);
                 }
@@ -750,7 +750,7 @@ int MeasureTextWidthFont1_8003E6B0(int str)
             {
             case 0x86:
             case 0x87:
-                if (CopyPlayerName_8003F860(playerName_8008BD48, name.s))
+                if (CopyPlayerName_8003F860(saveData_8008B570.levantStatus_7C8.name_10, name.s))
                 {
                     DecodeText_8003F748(1, name.s);
                 }

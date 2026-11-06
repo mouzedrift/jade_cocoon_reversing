@@ -67,7 +67,7 @@ void DrawLevantStats_8002F7D0(unsigned short* pos, short ot)
     unsigned short loc[2];
     unsigned char stats[0x18];
     short i;
-    CalcEquippedStats_80033624(stats, &levantStatus_8008BD38);
+    CalcEquippedStats_80033624(stats, &saveData_8008B570.levantStatus_7C8);
     for (i = 0; i < 5; i++)
     {
         loc[0] = pos[0] + 6;

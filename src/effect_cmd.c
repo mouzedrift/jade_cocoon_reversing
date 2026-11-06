@@ -40,7 +40,6 @@ typedef struct
     short hitOffset_2;
 } EffectFileEntry;
 extern EffectFileEntry effectFileTable_800795F0[];
-extern EffectRow* effectRows_80091BE0;
 extern int effectSfxStarted_8008D784;
 extern int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
 // Matched
@@ -103,7 +102,7 @@ void SpawnActorEffects_8001852C(ActorEffectReq* req, int hitFlags)
     int idx;
     short (*tbl)[6];
 
-    rows = effectRows_80091BE0;
+    rows = effectFile_80091BD0.data_10;
     effectSfxStarted_8008D784 = 0;
     for (n = 0; n < 10; n++)
     {

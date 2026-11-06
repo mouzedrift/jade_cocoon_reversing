@@ -58,7 +58,7 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
         p = data + 4;
         LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&mapHeap_80091C68);
     }
-    SetCurrentArea_800272BC(mapState_8008B500.id_0, pendingArea_8008B860);
+    SetCurrentArea_800272BC(mapState_8008B500.id_0, saveData_8008B570.mapId_2E4[3].field_0);
     if (mapJustLoaded_80082668 && mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
     {
         mapCallback_80091CB4(1);

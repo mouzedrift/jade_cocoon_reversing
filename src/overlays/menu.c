@@ -855,7 +855,7 @@ EventEntry* CreateBattleResultTask_800BBB9C(EventNode* node)
             if (battleEnemyResults_800B1238[i].idx_6)
                 status = GetMinionStatus_800107A0(3, battleEnemyResults_800B1238[i].idx_6 - 1);
             else
-                status = &levantStatus_8008BD38;
+                status = &saveData_8008B570.levantStatus_7C8;
             if (battleEnemyResults_800B1238[i].idx_6 || battleEnemyResults_800B1238[i].a == 5 || battleEnemyResults_800B1238[i].a == 0x1A)
                 ok = 1;
             if (ok && !(status->status_0 & 0x400))
@@ -864,7 +864,7 @@ EventEntry* CreateBattleResultTask_800BBB9C(EventNode* node)
         result->s58 = 0;
         result->count_44 = CountMinions_80010548(3) + 1;
         result->flags_0 = 0;
-        status = &levantStatus_8008BD38;
+        status = &saveData_8008B570.levantStatus_7C8;
         MemCopy_800403E8(&result->st_8C[0], status, 0x48);
         MemCopy_800403E8(&result->oldStatus_1AC[0], status, 0x48);
         result->expShown_2CC[0] = status->exp_4;
@@ -1014,7 +1014,7 @@ void DrawResultParty_800BC2A8(BattleResult* result)
     if (!(result->flags_0 & 2))
         st = &result->st_8C[0];
     else
-        st = &levantStatus_8008BD38;
+        st = &saveData_8008B570.levantStatus_7C8;
     pos[0] = 0xA;
     pos[1] = 0x2C;
     if (result->leveledUp_7C[0] && !(result->flags_0 & 2))
@@ -2325,7 +2325,7 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
     summary.open_2 = openStep;
     summary.highlight_4 = 1;
     summary.time_8 = time;
-    DrawLevantSummary_8002E334(&levantStatus_8008BD38, &summary);
+    DrawLevantSummary_8002E334(&saveData_8008B570.levantStatus_7C8, &summary);
     InterpolateWindowRect_8004196C(&tmp, levantSummaryRect_800C2994, (short)openStep, 8, 0);
     AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
     InterpolateWindowRect_8004196C(&tmp, levantHeaderRect_800C298C, (short)openStep, 8, 0);
@@ -2409,7 +2409,7 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
     int openStep = GetWindowOpenStep_800C0990(menu, 1);
     UnitStatus* lv;
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
-    lv = &levantStatus_8008BD38;
+    lv = &saveData_8008B570.levantStatus_7C8;
     pos[0] = 0xA;
     pos[1] = 0x2C;
     summary.ot_0 = b;
@@ -2481,7 +2481,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
         tmp.f0 = 4;
         unit = name_80014390(*(unsigned char*)&menu->cursors_2A[5]);
         if (unit)
-            UseItemOnUnit_80013C28(&levantStatus_8008BD38, unit, &tmp, &tmp.d_10);
+            UseItemOnUnit_80013C28(&saveData_8008B570.levantStatus_7C8, unit, &tmp, &tmp.d_10);
         ApplyItemUseDelta_800C00F8(&tmp, &tmp.d_10);
         RemoveInventory_800AD1E0(item, 1, 0);
         break;
@@ -3081,7 +3081,7 @@ void DrawKeyItemInfo_800C05E0(MenuCtx* menu)
         }
     }
     if (!found && menu->showMessage_24 == 0 && menu->state_2 != 0x10)
-        DrawUnitStatusWindow_8002F1C8(&levantStatus_8008BD38, 0, 0, 0, statusWindowRect_800C18F4, 0xE, 2);
+        DrawUnitStatusWindow_8002F1C8(&saveData_8008B570.levantStatus_7C8, 0, 0, 0, statusWindowRect_800C18F4, 0xE, 2);
 }
 
 void DrawMagicInfo_800C06E8(MenuCtx* menu)
@@ -3254,7 +3254,7 @@ void PreviewItemRecovery_800C0CA4(MenuCtx* menu, int* out)
     if (CheckItemOnTarget_80033DF4(&target) == 0 && IsRecoveryItem_800C0DD4(item))
     {
         int v;
-        UseItemOnUnit_80013C28(&levantStatus_8008BD38, unit, &tmp, &tmp.d_10);
+        UseItemOnUnit_80013C28(&saveData_8008B570.levantStatus_7C8, unit, &tmp, &tmp.d_10);
         out[0] = -tmp.d_10.hp_1C;
         out[1] = -tmp.d_10.mp_20;
         v = unit->hp_8.max_2 - unit->hp_8.cur_0;

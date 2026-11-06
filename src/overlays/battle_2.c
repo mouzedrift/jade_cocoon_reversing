@@ -13,7 +13,7 @@ void DrawBattleStage_800BC90C(CameraCtrl* ctrl)
 
     unknownFlags_8008D678 &= ~0x10000;
     idx = FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, battleStages_800C8EAC[battleStageId_80083BD0].model_6);
-    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &ctrl->pos_38, &stageRot_800C9124, pointLights_8008D534, 1, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(battleEffectFile_80095468.models_28[idx].ftg_4, pOT_8008B4C8, &ctrl->pos_38, &stageRot_800C9124, cameraState_8008D4F0.ent_44, 1, scale);
     {
         unsigned short* list = battleStages_800C8EAC[battleStageId_80083BD0].list_0;
         for (; *list != 0xFFFF; list++)
@@ -639,7 +639,7 @@ void UpdateAction_800BE3C0()
             kind = curCommand_800C9C88.kind_0;
             if (kind == 5)
             {
-                if (((BatSettingsBits*)&settingsFlags_8008B58C.word)->b21 == 1)
+                if (((BatSettingsBits*)&saveData_8008B570.settings_1C.word)->b21 == 1)
                 {
                     StartPadVibration_80036528(0, 3);
                 }

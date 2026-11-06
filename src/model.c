@@ -664,11 +664,11 @@ void DrawActor_8001FD08(void* actor)
         {
             DrawAnimSkelBlend_80047E28(&o->draw_164, o->draw_164.boneScale_10, &o->model_15C->anims_54[o->prevAnim_A0],
                          o->prevFrame_94 % o->model_15C->anims_54[o->prevAnim_A0].frameCount_0,
-                         0x1000 - o->blend_AC, &pointLights_8008D534[light], altPose);
+                         0x1000 - o->blend_AC, &cameraState_8008D4F0.ent_44[light], altPose);
         }
         else
         {
-            DrawAnimSkel_80046A58(&o->draw_164, &pointLights_8008D534[light], altPose);
+            DrawAnimSkel_80046A58(&o->draw_164, &cameraState_8008D4F0.ent_44[light], altPose);
         }
         if (unknownFlags_8008D678 & 0x10000)
         {

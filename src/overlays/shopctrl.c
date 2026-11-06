@@ -97,7 +97,7 @@ void ShopCtrlIdle_800B6964(EventEntry* task, void* buffer)
         if (shopCtrlMode_800B6CEC != 3)
         {
             SuspendFieldMinions_800A7B00(-1);
-            if (shopCtrlMode_800B6CEC == 2 && settingsFlags_8008B58C.bits.d_5 == 1)
+            if (shopCtrlMode_800B6CEC == 2 && saveData_8008B570.settings_1C.bits.d_5 == 1)
             {
                 SetFadeMode_8001C19C(0, 0x20);
                 task->cb_8 = ShopCtrlStartMode_800B6AE0;
@@ -105,7 +105,7 @@ void ShopCtrlIdle_800B6964(EventEntry* task, void* buffer)
             else
             {
                 task->cb_8 = ShopCtrlLoadOverlay_800B6840;
-                if (shopCtrlMode_800B6CEC == 1 && settingsFlags_8008B58C.bits.d_5 == 1)
+                if (shopCtrlMode_800B6CEC == 1 && saveData_8008B570.settings_1C.bits.d_5 == 1)
                 {
                     SetFadeMode_8001C19C(0, 0x20);
                 }
@@ -148,7 +148,7 @@ void ShopCtrlStartMode_800B6AE0(EventEntry* task, void* buffer)
         else
         {
             e = AllocEventEntry_80043AF8(shopMenuTask_8008D670);
-            if (settingsFlags_8008B58C.bits.d_5 == 1)
+            if (saveData_8008B570.settings_1C.bits.d_5 == 1)
             {
                 RestoreMapCamera_800B6720();
             }
@@ -164,7 +164,7 @@ void ShopCtrlStartMode_800B6AE0(EventEntry* task, void* buffer)
         break;
     case 2:
         e = AllocEventEntry_80043AF8(shopMenuTask_8008D670);
-        if (settingsFlags_8008B58C.bits.d_5 == 1)
+        if (saveData_8008B570.settings_1C.bits.d_5 == 1)
         {
             RestoreMapCamera_800B6720();
         }

@@ -797,7 +797,7 @@ void HandleMsgWindowInput_800353A0(MsgWindow* win)
                 win->res_18.advances_1E++;
             }
         }
-        else if ((settingsFlags_8008B58C.word & 0xC00000) == 0xC00000 && win->voiced_2A4 == 1 &&
+        else if ((saveData_8008B570.settings_1C.word & 0xC00000) == 0xC00000 && win->voiced_2A4 == 1 &&
                  XaNoRequestPending_800435A4() == 1 && XaIsIdle_80043584() == 1)
         {
             if (win->flags_4 & 0x800)

@@ -931,7 +931,7 @@ void StartCameraSplineLong_8003970C(int action, int* spline)
     cam->spline_218 = (CamSpline*)spline;
     cam->flags_4 |= 8;
     endFrame = (short)GetLevantActionEndFrame_800AB4D8(0xE);
-    if (((settingsFlags_8008B58C.word & 0x200000) >> 21) == 1)
+    if (((saveData_8008B570.settings_1C.word & 0x200000) >> 21) == 1)
     {
         keys = cam->keys_1C8;
         cam->keys_1C8[0] = 0;
@@ -985,7 +985,6 @@ typedef struct
     short x, y, w, h;
 } ShortRect;
 extern ShortRect viewport_8008D420;
-extern short* tileSets_8008D654;
 extern DRAWENV drawEnv_8008D698[2];
 #define CLAMP_HALF(v, lim) ((v) < -(lim) / 2 ? -(lim) / 2 : ((lim) / 2 < (v) ? (lim) / 2 : (v)))
 // Matched
@@ -1003,7 +1002,7 @@ void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos)
     {
         screenOffset_8008D474.a = screenOffset_8008D474.a - (pos->xy.vx - (viewport_8008D420.x + viewport_8008D420.w / 2));
         screenOffset_8008D474.b = screenOffset_8008D474.b - (pos->xy.vy - (viewport_8008D420.y + viewport_8008D420.h / 2));
-        tiles = tileSets_8008D654;
+        tiles = tileAnim_8008D648.items_C;
         scale = cameraZoom_8008B4F8 << 5;
         rangeX = tiles[4] * scale / 4096 - viewport_8008D420.w;
         rangeY = tiles[5] * scale / 4096 - viewport_8008D420.h;
@@ -1079,36 +1078,36 @@ void UpdateCameraRotation_80039E14(void)
     cameraRot_8008D4C8.vz = cameraState_8008D4F0.roll_2C;
     SetGteLightAndCamera_8004D0E8();
 }
-// pointLights_8008D534[0].color_C.vx/vy/vz through the PointLight type changes the scheduling, so the short view stays
+// cameraState_8008D4F0.ent_44[0].color_C.vx/vy/vz through the PointLight type changes the scheduling, so the short view stays
 // Matched
 void SetAreaElementLight_80039ED8(int mode)
 {
     switch ((short)(mode + 1))
     {
     case 0:
-        ((short*)pointLights_8008D534)[6] = 0x800;
-        ((short*)pointLights_8008D534)[7] = 0x800;
-        ((short*)pointLights_8008D534)[8] = 0x800;
+        ((short*)cameraState_8008D4F0.ent_44)[6] = 0x800;
+        ((short*)cameraState_8008D4F0.ent_44)[7] = 0x800;
+        ((short*)cameraState_8008D4F0.ent_44)[8] = 0x800;
         break;
     case 1:
-        ((short*)pointLights_8008D534)[6] = 0x1000;
-        ((short*)pointLights_8008D534)[7] = 0;
-        ((short*)pointLights_8008D534)[8] = 0x6B0;
+        ((short*)cameraState_8008D4F0.ent_44)[6] = 0x1000;
+        ((short*)cameraState_8008D4F0.ent_44)[7] = 0;
+        ((short*)cameraState_8008D4F0.ent_44)[8] = 0x6B0;
         break;
     case 4:
-        ((short*)pointLights_8008D534)[6] = 0x150;
-        ((short*)pointLights_8008D534)[7] = 0;
-        ((short*)pointLights_8008D534)[8] = 0x1000;
+        ((short*)cameraState_8008D4F0.ent_44)[6] = 0x150;
+        ((short*)cameraState_8008D4F0.ent_44)[7] = 0;
+        ((short*)cameraState_8008D4F0.ent_44)[8] = 0x1000;
         break;
     case 3:
-        ((short*)pointLights_8008D534)[6] = 0;
-        ((short*)pointLights_8008D534)[7] = 0x1000;
-        ((short*)pointLights_8008D534)[8] = 0x940;
+        ((short*)cameraState_8008D4F0.ent_44)[6] = 0;
+        ((short*)cameraState_8008D4F0.ent_44)[7] = 0x1000;
+        ((short*)cameraState_8008D4F0.ent_44)[8] = 0x940;
         break;
     case 2:
-        ((short*)pointLights_8008D534)[6] = 0xEB0;
-        ((short*)pointLights_8008D534)[7] = 0x1000;
-        ((short*)pointLights_8008D534)[8] = 0;
+        ((short*)cameraState_8008D4F0.ent_44)[6] = 0xEB0;
+        ((short*)cameraState_8008D4F0.ent_44)[7] = 0x1000;
+        ((short*)cameraState_8008D4F0.ent_44)[8] = 0;
         break;
     }
 }

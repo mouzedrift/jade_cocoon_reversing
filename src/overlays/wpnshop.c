@@ -1306,7 +1306,7 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
     } u;
     RECT r60;
     int itemId;
-    CalcEquippedStats_80033624(curStats, &levantStatus_8008BD38);
+    CalcEquippedStats_80033624(curStats, &saveData_8008B570.levantStatus_7C8);
     itemId = GetStockEquipment_800BDD2C(GetStoreListPos_800BE00C(store, 0xA), store->equipKind_10, store->stockMask_1E);
     if (itemId != 0xFF)
     {
@@ -1314,7 +1314,7 @@ void DrawEquipStatCompare_800BCCE8(StoreMenu* store)
         {
             if (store->nextState_2 != 0x11)
             {
-                CalcStatsWithEquip_8002E288(&levantStatus_8008BD38, itemId, store->equipKind_10, newStats);
+                CalcStatsWithEquip_8002E288(&saveData_8008B570.levantStatus_7C8, itemId, store->equipKind_10, newStats);
 
                 r40.x = 0x119;
                 r40.y = 0x73;

@@ -2509,7 +2509,7 @@ int IsMapLoading_800272D0(void)
 void RequestAreaReload_80027314(void)
 {
     areaReload_80082670 = 1;
-    word_8008B862 = -1;
+    saveData_8008B570.mapId_2E4[3].field_2 = -1;
 }
 // Matched
 int RequestAreaPreload_80027330(short area)
@@ -2529,7 +2529,7 @@ int UsePreloadedArea_80027358(int id)
     {
         if (areaPreload_80091C40[0] != id)
         {
-            pendingArea_8008B860 = id;
+            saveData_8008B570.mapId_2E4[3].field_0 = id;
             return 0;
         }
         task = areaLoaderTask_800B1DB8[9];
@@ -2545,7 +2545,7 @@ int UsePreloadedArea_80027358(int id)
         areaPreloading_80082678 = 0;
         return 1;
     }
-    pendingArea_8008B860 = id;
+    saveData_8008B570.mapId_2E4[3].field_0 = id;
     return 0;
 }
 // Matched

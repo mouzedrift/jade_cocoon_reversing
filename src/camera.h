@@ -20,12 +20,11 @@ typedef struct
     unsigned char pad_33;
     SVECTOR lightDir_34;   // scene light direction
     SVECTOR lightColor_3C; // scene light colour (vx/vy/vz used)
-    PointLight ent_44[8]; // point lights; .range_14 == 0 ends the list (also the alias pointLights_8008D534)
+    PointLight ent_44[8]; // point lights; .range_14 == 0 ends the list (also the alias cameraState_8008D4F0.ent_44)
 } CameraView;
 extern CameraView cameraState_8008D4F0;
 
 /* cameraState_8008D4F0.ent_44: accessed through its own symbol (going through cameraState changes the codegen) */
-extern PointLight pointLights_8008D534[8];
 extern VECTOR cameraEye_8008D600; // camera eye (cameraState_8008D4F0.eye_14)
 
 typedef struct

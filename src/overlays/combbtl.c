@@ -412,7 +412,7 @@ MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side)
     cfg.posMode_0 = 2;
     cfg.pos_4 = 0;
     cfg.text_8 = (int*)lines;
-    cfg.field_10 = (settingsFlags_8008B58C.word & 7) != 3;
+    cfg.field_10 = (saveData_8008B570.settings_1C.word & 7) != 3;
     cfg.cancelable_14 = 0;
     cfg.mask_18 = 0;
     cfg.lines_1C = 0;
@@ -422,7 +422,7 @@ MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side)
     cfg.field_2C = 1;
     cfg.field_30 = 0;
     cfg.field_34 = 0;
-    cfg.field_38 = (settingsFlags_8008B58C.word >> 3) & 1;
+    cfg.field_38 = (saveData_8008B570.settings_1C.word >> 3) & 1;
     cfg.field_3C = 1;
     cfg.field_40 = 0;
     cfg.title_C = tbl[which];
@@ -1625,7 +1625,7 @@ void AnnouncerTask_800A816C(EventEntry* e)
     }
     if (!(combatFlags_800A3A88 & 8))
     {
-        v = (settingsFlags_8008B58C.word >> 3) & 1;
+        v = (saveData_8008B570.settings_1C.word >> 3) & 1;
         if (v == 1 && (combatFlags_800A3A88 & 4))
         {
             if (!(combatFlags_800A3A88 & 0x10))

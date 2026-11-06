@@ -2343,7 +2343,7 @@ SVECTOR* GetActorRot_800BBBD0(int actor)
     SVECTOR* ret;
     if (actor == 0)
     {
-        ret = &levantRot_8008BD24;
+        ret = &saveData_8008B570.levant_7A8.rot;
     }
     else
     {
@@ -2451,8 +2451,8 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     c0 = 0;
     c4 = 0;
     cc = 1;
-    skip = (settingsFlags_8008B58C.word & 7) != 3;
-    c8 = settingsFlags_8008B58C.word & 0x18;
+    skip = (saveData_8008B570.settings_1C.word & 7) != 3;
+    c8 = saveData_8008B570.settings_1C.word & 0x18;
     pc = ctx->pc_8;
     c8 = c8 == 0x18;
     if (pc->op_0 == 0x3E)

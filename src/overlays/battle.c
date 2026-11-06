@@ -103,7 +103,7 @@ void BattleEndDefeat_800BA444(BatTaskEntry* task)
         StopLevantAnimLoop_800A9364();
         if (IsLevantActionFinished_800A8DAC() == done)
         {
-            ReviveOneHp_80011CF4(&levantStatus_8008BD38);
+            ReviveOneHp_80011CF4(&saveData_8008B570.levantStatus_7C8);
             task->next_8 = BattleEndWaitFade_800BA4F4;
             if (TestBattleFlag_800BC820(0x20000) == 0)
             {
@@ -273,7 +273,7 @@ void RecoverPartyAfterBattle_800BA97C()
 {
     int count;
     int i;
-    ClearStatus_80011C30(&levantStatus_8008BD38);
+    ClearStatus_80011C30(&saveData_8008B570.levantStatus_7C8);
     count = CountMinions_80010548(3);
     for (i = 0; i < count; i++)
     {

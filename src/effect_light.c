@@ -63,7 +63,7 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
         pos[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->targetPos_1C[0];
         pos[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->targetPos_1C[1];
         pos[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->targetPos_1C[2];
-        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, (obj->field_4 << 24) | 0xB0, scalePtr);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, (obj->field_4 << 24) | 0xB0, scalePtr);
     }
     else
     {
@@ -217,7 +217,7 @@ void GlowModelTask_800173A8(int* flags, void* buf)
         obj->field_30 += obj->field_34;
         scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
         obj->rot_80.vy += obj->rot_80.pad;
-        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, pointLights_8008D534, 0x30, scale);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, cameraState_8008D4F0.ent_44, 0x30, scale);
         SetPointLight_800C4090((int)obj->pos_44, (int)&color, 0x5DC, ((obj->field_4 - obj->frame_0) << 12) / obj->field_4);
         obj->frame_0++;
     }

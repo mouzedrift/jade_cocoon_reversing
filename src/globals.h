@@ -47,7 +47,7 @@ typedef struct EventNode
 #include "unit.h" // UnitStatus, UnitStats, Minion
 
 
-// the settings word (SaveData.settings_1C == settingsFlags_8008B58C.word); most code tests it with masks
+// the settings word (SaveData.settings_1C == saveData_8008B570.settings_1C.word); most code tests it with masks
 typedef union Settings
 {
     unsigned int word;
@@ -76,7 +76,7 @@ typedef struct
     int z;
 } Vec3i;
 
-// Levant's position + rotation (SaveData.levant_7A8 == levantPos_8008BD18; rot == levantRot_8008BD24)
+// Levant's position + rotation (SaveData.levant_7A8 == levantPos_8008BD18; rot == saveData_8008B570.levant_7A8.rot)
 typedef struct LevantPos
 {
     Vec3i pos;
@@ -95,7 +95,7 @@ typedef struct
 {
     int yan_0; // money
     InvSlot inventory_4[5][0x40];
-    int emptyCocoons_284; // levantEmptyCocoons_8008B818
+    int emptyCocoons_284; // saveData_8008B570.inv_24.emptyCocoons_284
     unsigned int flags_288[2]; // valuablesFlags_8008B81C; bits set by GAME's SetValuableFlag_800AD68C
     unsigned char bits_290[0x13]; // bit flags (GAME's TestEventFlag_800AD0D4 / SetEventFlag_800AD0F8)
     unsigned char vars_2A3[0x14]; // GAME's GetEventVar_800AD154 / SetEventVar_800AD16C
@@ -114,8 +114,8 @@ typedef struct
 {
     int flags_0; // option bits; bit 6: no pad vibration (config.c, StartPadVibration_80036528)
     int playTime_4; // vsyncs, counted by the vsync handler while not paused
-    unsigned short buttonConfig_8[10]; // == buttonConfig_8008B578
-    Settings settings_1C; // == settingsFlags_8008B58C.word
+    unsigned short buttonConfig_8[10]; // == saveData_8008B570.buttonConfig_8
+    Settings settings_1C; // == saveData_8008B570.settings_1C.word
     union
     {
         int i;            // uiColor_8008B590
@@ -141,8 +141,8 @@ typedef struct
     LevantPos levant_7A8; // == levantPos_8008BD18
     char field_7BC[0xC]; // returned by sub_80033AC4
     // Levant's 0x48-byte status block (same layout as a minion's status_84)
-    UnitStatus levantStatus_7C8; // levantStatus_8008BD38: name_10 == playerName_8008BD48, field_1C[0..2] the
-                                 // equipped weapon / armor / accessory, level_44 the rank (levantCaptureLevel_8008BD7C)
+    UnitStatus levantStatus_7C8; // saveData_8008B570.levantStatus_7C8: name_10 == saveData_8008B570.levantStatus_7C8.name_10, field_1C[0..2] the
+                                 // equipped weapon / armor / accessory, level_44 the rank (saveData_8008B570.levantStatus_7C8.level_44)
     int field_810; // == dword_8008BD80
     unsigned int allMinionsBitfields_814[7]; // allMinionsBitfields_8008BD84
     int field_830; // model index (GAME's LevantModelTask_800ACB64)
@@ -327,7 +327,6 @@ extern ActionData magicActions_8007C5A0[];
 extern int loadFade_80091C30[];
 extern unsigned short itemPrices_8007CED8[];
 extern unsigned char keyItemIcons_8007CFC8[0x26];
-extern short seqSlotSepAccessNum_80091D0C;
 // a sequence slot (seqSlots_800833E4, PlaySeqSlot_80031160)
 typedef struct
 {
@@ -389,7 +388,6 @@ extern int** mapLoaderTask_800B1DC4;
 extern int** areaLoaderTask_800B1DB8;
 extern short equipmentIcons_8007D938[];
 extern int areaReload_80082670;
-extern short word_8008B862;
 extern int areaPreloading_80082678;
 extern short areaPreload_80091C40[];
 extern FileRequest* fileRequestTail_8008654C;
@@ -430,7 +428,6 @@ extern int ODEIsEvenAddressDrawn_800918C0;
 extern DisplayConfig display_8008B4D8;
 extern long cdRomEventDescError_8008B490;
 extern long vsyncEventDesc_8008B494;
-extern int dword_8008B574;
 extern volatile int vsyncCounter_8008B4B4;
 extern volatile int gnFrame_8008D610;
 extern volatile int xaTimer_8008D450;
@@ -438,9 +435,7 @@ extern volatile int unpausedFrames_8008D404;
 extern SaveData saveData_8008B570;
 extern SaveInventory playerYan_8008B594; // == saveData_8008B570.inv_24
 extern LevantPos levantPos_8008BD18; // == saveData_8008B570.levant_7A8
-extern SVECTOR levantRot_8008BD24;   // == saveData_8008B570.levant_7A8.rot
 extern unsigned int allMinionsBitfields_8008BD84[7];
-extern unsigned char playerName_8008BD48[MAX_PLAYER_NAME_LENGTH];
 extern unsigned long bDoubleBuffer_8008D428;
 extern unsigned long OT_8008D798[2][8];
 extern unsigned long OT_8008D7D8[2][1024];
@@ -460,7 +455,6 @@ extern unsigned long* pOT_8008D5F4;
 extern unsigned long* pOT_8008B4C8;
 extern unsigned long* pOT_8008D3EC;
 
-extern Settings settingsFlags_8008B58C;
 extern int numFilesInsideTiy_8008B4BC;
 
 
@@ -505,7 +499,6 @@ typedef struct
     int field_130;
 } struct_obj_F;
 
-extern unsigned short buttonConfig_8008B578[];
 extern EventNode* modelTasks_8008D618;
 extern EventNode* effectObjects_8008B4A8;
 extern EventNode* miscTasks_8008D60C;
@@ -531,7 +524,6 @@ extern int freeActorModels_80091CA0;
 extern int loadFade_80091C30[];
 
 
-extern short pendingArea_8008B860;
 extern MATRIX boneMatrices_80098188[];
 
 #endif

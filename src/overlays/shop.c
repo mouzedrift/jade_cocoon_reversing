@@ -1216,7 +1216,7 @@ void InitShopMenu_800BB148(ShopMenu* menu)
     menu->windowsOpen_20 = 0;
     SetShopHelpText_800BBB54(menu, 0);
     SetupShopCursor_800BD854(menu);
-    fn_80011CD0(&levantStatus_8008BD38);
+    fn_80011CD0(&saveData_8008B570.levantStatus_7C8);
     for (i = 0; i < 12; i++)
     {
         r = GetSaveItem_80033AE4(&saveData_8008B570, i);

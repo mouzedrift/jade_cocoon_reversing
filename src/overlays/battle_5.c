@@ -1165,7 +1165,7 @@ void ShardTask_800C273C(EventEntry* task, BatShard* shard)
     pos[0] = shard->base_1C[0] + shard->pos_10[0] / 1024;
     pos[1] = shard->base_1C[1] + shard->pos_10[1] / 1024;
     pos[2] = shard->base_1C[2] + shard->pos_10[2] / 1024;
-    DrawFtgObjectAtSlot0_8004D1EC(shard->obj_3C, pOT_8008D690, pos, shard->rot_34, pointLights_8008D534, 0x30, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(shard->obj_3C, pOT_8008D690, pos, shard->rot_34, cameraState_8008D4F0.ent_44, 0x30, scale);
     shard->frame_0++;
 }
 
@@ -1250,7 +1250,7 @@ void ImplodeShardTask_800C2CD8(EventEntry* task, BatShard* shard)
     pos[0] = shard->base_1C[0] + shard->pos_10[0] / 1024;
     pos[1] = shard->base_1C[1] + shard->pos_10[1] / 1024;
     pos[2] = shard->base_1C[2] + shard->pos_10[2] / 1024;
-    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, shard->rot_34, pointLights_8008D534, 0x30, scale);
+    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, shard->rot_34, cameraState_8008D4F0.ent_44, 0x30, scale);
     shard->frame_0++;
 }
 
@@ -1323,10 +1323,10 @@ void SpriteTrailTask_800C2FC8(EventEntry* task, BatSpriteTrail* trail)
             trail->trail_50[1].z = trail->trail_50[0].z;
         }
         trail->frame_0 += trail->speed_8;
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4, pOT_8008D690, &trail->trail_50[0], trail->rot_80, pointLights_8008D534, 0x30, 0, 0);
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 1, pOT_8008D690, &trail->trail_50[1], trail->rot_80, pointLights_8008D534, 0x30, 0, 1);
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 2, pOT_8008D690, &trail->trail_50[2], trail->rot_80, pointLights_8008D534, 0x30, 0, 2);
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 3, pOT_8008D690, &trail->trail_50[3], trail->rot_80, pointLights_8008D534, 0x30, 0, 3);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4, pOT_8008D690, &trail->trail_50[0], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 0);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 1, pOT_8008D690, &trail->trail_50[1], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 1);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 2, pOT_8008D690, &trail->trail_50[2], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 2);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 3, pOT_8008D690, &trail->trail_50[3], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 3);
         DrawSpriteVtxQuadsGT4_800459E4(defaultBoneSlots_800C91A4, &trail->clip_8C->mats_8, pOT_8008D690, 0x30);
     }
     else
@@ -1398,7 +1398,7 @@ void ModelAnimTask_800C33E4(EventEntry* task, void* buf)
                 pos[0] = anim->pos_44[0] + key->x_4 * sinTable_80084540[(anim->rot_82 + 0x400) & 0xFFF] / 4096 + key->z_C * sinTable_80084540[anim->rot_82 & 0xFFF] / 4096;
                 pos[1] = anim->pos_44[1] + key->y_8;
                 pos[2] = anim->pos_44[2] - key->x_4 * sinTable_80084540[anim->rot_82 & 0xFFF] / 4096 + key->z_C * sinTable_80084540[(anim->rot_82 + 0x400) & 0xFFF] / 4096;
-                DrawFtgObjectAt_80044D0C(&clip->ftg_4[key->model_0], pOT_8008D690, pos, rot, pointLights_8008D534, (0x1000 - key->alpha_2) << 16 | 0x80 | key->mode_24, key->f18, i);
+                DrawFtgObjectAt_80044D0C(&clip->ftg_4[key->model_0], pOT_8008D690, pos, rot, cameraState_8008D4F0.ent_44, (0x1000 - key->alpha_2) << 16 | 0x80 | key->mode_24, key->f18, i);
                 if (clip->ftg_4[key->model_0].texSpriteCount_48)
                 {
                     any = 1;
@@ -1447,7 +1447,7 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
         pos[1] = glow->path_20[glow->idx_98 * 3 + 1] + glow->base_1C[1];
         pos[2] = glow->path_20[glow->idx_98 * 3 + 2] + glow->base_1C[2];
         LerpFtgObject_8003A6C4(alpha, model->ftg_4, model->ftg_4 + 1, glow->work_94);
-        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - alpha) << 16) | 0xB0, scale);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, ((0x1000 - alpha) << 16) | 0xB0, scale);
         SetPointLight_800C4090((int)glow->pos_44, (int)col, 0x5DC, glow->alpha_30);
         glow->frame_0++;
     }
@@ -1464,7 +1464,7 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
         pos[1] = glow->path_20[glow->idx_98 * 3 + 1] + glow->base_1C[1];
         pos[2] = glow->path_20[glow->idx_98 * 3 + 2] + glow->base_1C[2];
         LerpFtgObject_8003A6C4(alpha, model->ftg_4, model->ftg_4 + 1, glow->work_94);
-        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, pointLights_8008D534, ((0x1000 - alpha) << 16) | 0xB0, scale);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, ((0x1000 - alpha) << 16) | 0xB0, scale);
         if (glow->alpha_30 == 0x1000)
         {
             SpawnOrb_800C3B50(pos, 0x25);
@@ -1552,7 +1552,7 @@ void OrbFadeTask_800C3D34(EventEntry* task, BatOrb* orb)
         FreeFtgObjectData_80021804(orb->model_94, 1);
         free3_8003FC6C(orb->model_94);
     }
-    DrawFtgObjectAtSlot0_8004D1EC(clip->ftg_4, pOT_8008D690, orb->pos_44, orb->rot_80, pointLights_8008D534, ((0x1000 - orb->alpha_30) << 16) | 0xB0, 0);
+    DrawFtgObjectAtSlot0_8004D1EC(clip->ftg_4, pOT_8008D690, orb->pos_44, orb->rot_80, cameraState_8008D4F0.ent_44, ((0x1000 - orb->alpha_30) << 16) | 0xB0, 0);
 }
 
 void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb* orb)

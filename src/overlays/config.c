@@ -344,7 +344,7 @@ void LoadConfigSettings_800C3060(CfgCtxConfig* c)
         c->vibration_12 = 1;
     }
     c->animSkip_A = c->animSkip_9;
-    c->autoMessage_13 = (settingsFlags_8008B58C.word >> 0x17) & 1;
+    c->autoMessage_13 = (saveData_8008B570.settings_1C.word >> 0x17) & 1;
     if (c->subtitles_14 == 0)
     {
         c->autoMessage_13 = 1;

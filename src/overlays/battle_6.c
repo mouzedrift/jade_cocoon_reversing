@@ -450,7 +450,7 @@ void ChooseEnemyCommand_800C4118(BattleCmd* cmd, UnitStats* self, int slot, unsi
     else
     {
         ai.targetMask_18 = 1;
-        ai.target_14 = &levantStatus_8008BD38;
+        ai.target_14 = &saveData_8008B570.levantStatus_7C8;
     }
     ai.cmd_8->mask_8 = 1 << (slot + 4);
     switch (script)

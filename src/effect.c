@@ -267,7 +267,7 @@ UnitStatus* GetUnitStatus_80014390(unit)
     }
     else
     {
-        status = &levantStatus_8008BD38; // == saveData_8008B570.levantStatus_7C8
+        status = &saveData_8008B570.levantStatus_7C8; // == saveData_8008B570.levantStatus_7C8
     }
     return status;
 }

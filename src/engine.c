@@ -1378,7 +1378,7 @@ void ResetPadAnalogMax_8001C69C(void)
 // Matched
 void ResetButtonConfig_8001C6C8(void)
 {
-    unsigned short* config = buttonConfig_8008B578;
+    unsigned short* config = saveData_8008B570.buttonConfig_8;
     int i = 0;
     unsigned short* defaults = defaultButtonConfig_8007CAF4;
     for (; i < 10; i++)
@@ -1404,7 +1404,7 @@ int TestAllBits_8001C73C(unsigned int value, unsigned int mask)
 // Matched
 int FindButtonConfig_8001C75C(unsigned int button)
 {
-    unsigned short* config = buttonConfig_8008B578;
+    unsigned short* config = saveData_8008B570.buttonConfig_8;
     int i = 0;
     unsigned int value = (unsigned short)button;
     for (; i < 10; i++)
@@ -1420,7 +1420,7 @@ int FindButtonConfig_8001C75C(unsigned int button)
 // Matched
 void SwapButtonConfig_8001C79C(int i, int j)
 {
-    unsigned short* base = buttonConfig_8008B578;
+    unsigned short* base = saveData_8008B570.buttonConfig_8;
     unsigned short* entryI = &base[i];
     unsigned short bi = GetButtonConfigEntry_8001C818(entryI);
     unsigned short* entryJ = &base[j];
@@ -1455,7 +1455,7 @@ int GetButtonConfigBitIndex_8001C824(int idx)
 // Matched
 unsigned int GetButtonConfig_8001C874(int idx)
 {
-    unsigned short* config = buttonConfig_8008B578;
+    unsigned short* config = saveData_8008B570.buttonConfig_8;
     int i;
     for (i = 0; i < idx; i++)
     {

@@ -474,9 +474,7 @@ extern int LevantCommand_800A8EC4(int* p);
 
 extern void FieldModeTask_800A7720();
 
-extern short word_8008B858;
 
-extern short pendingArea_8008B860;
 
 extern int dword_80091C8C;
 

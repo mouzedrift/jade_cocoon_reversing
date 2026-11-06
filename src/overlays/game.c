@@ -1107,7 +1107,7 @@ GameAi* CreateEnemyAiEvent_800A2D90(Actor* actor, UnitStats* minion, int active)
             species = minion->species_5C;
             if ((unsigned)species < 0x39)
             {
-                weak = !(levantCaptureLevel_8008BD7C - minion->st_0.level_44 < 5);
+                weak = !(saveData_8008B570.levantStatus_7C8.level_44 - minion->st_0.level_44 < 5);
 
                 e->cb_8 = enemyAiBySpecies_800ADEB8[species][weak];
             }

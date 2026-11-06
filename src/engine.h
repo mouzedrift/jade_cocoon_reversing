@@ -42,7 +42,7 @@ typedef struct
 
 
 // a point light passed to SetModelLighting_80019D84
-// (also the camera's light list cameraState_8008D4F0.ent_44 / pointLights_8008D534)
+// (also the camera's light list cameraState_8008D4F0.ent_44 / cameraState_8008D4F0.ent_44)
 typedef struct
 {
     Vec3i pos_0;
