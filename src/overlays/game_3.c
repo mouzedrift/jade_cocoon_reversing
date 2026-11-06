@@ -719,13 +719,13 @@ EventDesc eventScriptsDef_800B075C = { 10, 0x8000, 0x124, (void *)&eventScripts_
 EventDesc encounterWatchTaskDef_800B0774 = { 1, 5, 16, (void *)&encounterWatchTask_8008B4D0, (EventEntryFn)EncounterWatchTask_800A1314, (EventEntryFn)FreeBattleResources_800A1444 };
 EventDesc battleTaskDef_800B078C = { 1, 0x8000, 16, (void *)&battleTask_8008D624 };
 EventDesc battleMenuTaskDef_800B07A4 = { 1, 0x8000, 12, (void *)&battleMenuTask_8008D468 };
-EventDesc dword_800B07BC = { 1, 0x8000, 0, (void *)&dword_8008D444 };
+EventDesc taskSlotDef_800B07BC = { 1, 0x8000, 0, &taskSlot_8008D444 };
 EventDesc enemyWindowsTaskDef_800B07D4 = { 1, 0x8000, 48, (void *)&enemyWindowsLayoutTask_8008B568 };
 EventDesc enemyWindowTaskDef_800B07EC = { 3, 0x8000, 24, (void *)&enemyWindowTasks_8008B564 };
 EventDesc actorWindowTaskDef_800B0804 = { 1, 0x8000, 20, (void *)&actorWindowTask_8008D4B0 };
 EventDesc helpWindowTaskDef_800B081C = { 1, 0x8000, 20, (void *)&helpWindowTask_8008D63C };
 EventDesc levantControlTaskDef_800B0834 = { 1, 1, 0x9D0, (void *)&levantControlTask_8008B4CC, (EventEntryFn)LevantControlTask_800A818C };
-EventDesc dword_800B084C = { 1, 0x8000, 0x2E0, (void *)&dword_8008D48C[1] };
+EventDesc taskSlotsDef_800B084C = { 1, 0x8000, 0x2E0, &taskSlots_8008D48C[1] };
 EventDesc levantActorTaskDef_800B0864 = { 1, 5, 0x7C0, (void *)&gameTask_8008B4A4, (EventEntryFn)LevantActorTask_800A9564, (EventEntryFn)LevantActorTaskExit_800A955C };
 EventDesc encounterTaskDef_800B087C = { 1, 0x8000, 24, (void *)&encounterTask_8008D674 };
 EventDesc enemyAiTasksDef_800B0894 = { 3, 0x8000, 48, (void *)&enemyAiTasks_8008D49C };
@@ -738,7 +738,7 @@ EventDesc shopCtrlTaskDef_800B0924 = { 1, 0x8000, 0, (void *)&shopCtrlTask_8008D
 EventDesc shopMenuTaskDef_800B093C = { 1, 0x8000, 156, (void *)&shopMenuTask_8008D670, (EventEntryFn)ShopMenuTask_800BB444 };
 EventDesc shelfMenuTaskDef_800B0954 = { 1, 0x8000, 24, (void *)&shelfMenuTask_8008D4A8, (EventEntryFn)ShelfMenuTask_800B7000 };
 EventDesc storeTaskDef_800B096C = { 1, 0x8000, 84, (void *)&storeTask_8008D3E0, (EventEntryFn)StoreTask_800BB1F4 };
-EventDesc dword_800B0984 = { 1, 0x8000, 0, (void *)(&screenOffset_8008D474 + 1) };
+EventDesc taskSlotDef_800B0984 = { 1, 0x8000, 0, &taskSlot_8008D478 };
 EventDesc chapterOverlayTaskDef_800B099C = { 1, 1, 8, (void *)chapterOverlayTask_800B1DB0, (EventEntryFn)StartChapterOverlay_800A7690 };
 EventDesc sporeTaskDef_800B09B4 = { 1, 1, 8, (void *)&sporeTask_8008D464, (EventEntryFn)InitSporeTask_80011ADC };
 EventDesc fieldModeTaskDef_800B09CC = { 1, 0x8000, 80, (void *)&fieldModeTask_800B1DAC, (EventEntryFn)FieldModeTask_800A7720 };
@@ -757,7 +757,7 @@ GameTaskListDef gameModeFieldTasks_800B0A2C[26] = {
     { (void *)&mapLoaderTask_800B1DC4, 0x100 },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &modelTasks_8008D618 },
-    { (void *)&dword_8008D470 },
+    { &idleTask_8008D470 },
     { &eventScripts_8008D410 },
     { dword_800B1DA8 },
     { subOverlayTask_800B1DB4 },
@@ -780,7 +780,7 @@ GameTaskListDef gameModeBattleTasks_800B0AFC[35] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &soundTask_8008D4A4 },
     { &overlayLoaderTask_8008D4C0 },
-    { (void *)&dword_8008D470 },
+    { &idleTask_8008D470 },
     { &fadeTask_8008D628 },
     { (void *)&encounterWatchTask_8008B4D0 },
     { subOverlayTask_800B1DB4 },
@@ -790,16 +790,16 @@ GameTaskListDef gameModeBattleTasks_800B0AFC[35] = {
     { (void *)&battleTask_8008D624 },
     { (void *)&actionTask_8008B4C0 },
     { (void *)&battleMenuTask_8008D468 },
-    { (void *)&dword_8008D444 },
+    { &taskSlot_8008D444 },
     { (void *)&cmdMenuTask_8008D614 },
     { (void *)&messageWindowTask_8008D640 },
-    { (void *)((char *)&dword_8008B4AC + 4) },
+    { &taskSlots_8008B4AC[1] },
     { &screenFlashTasks_8008D61C },
     { (void *)&enemyWindowsLayoutTask_8008B568 },
     { (void *)&enemyWindowTasks_8008B564 },
     { (void *)&actorWindowTask_8008D4B0 },
     { (void *)&helpWindowTask_8008D63C },
-    { (void *)&dword_8008B4AC },
+    { &taskSlots_8008B4AC[0] },
     { (void *)&hitNumberTasks_8008D778 },
     { (void *)&vibrationTasks_8008D4B8 },
     { (void *)&levantControlTask_8008B4CC },
@@ -807,15 +807,15 @@ GameTaskListDef gameModeBattleTasks_800B0AFC[35] = {
     { &enemyAiTasks_8008D49C },
     { &actorTasks_8008D43C },
     { &effectTask_8008D3F8 },
-    { (void *)&dword_8008D5F8 },
+    { &taskSlots_8008D5F8[0] },
     { &effectObjects_8008B4A8 },
     { &miscTasks_8008D60C },
-    { (void *)((char *)&dword_8008D48C + 4) },
+    { &taskSlots_8008D48C[1] },
 };
 GameTaskListDef gameModeBattleEndTasks_800B0C14[4] = {
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
-    { (void *)((char *)&dword_8008D48C + 4) },
+    { &taskSlots_8008D48C[1] },
     { (void *)&messageWindowTask_8008D640 },
 };
 GameTaskListDef gameModeEquipTasks_800B0C34[3] = {
@@ -831,7 +831,7 @@ GameTaskListDef gameModeMenuTasks_800B0C4C[7] = {
     { (void *)&messageWindowTask_8008D640 },
 };
 GameTaskListDef gameModeShopTasks_800B0C84[12] = {
-    { (void *)&dword_8008D470 },
+    { &idleTask_8008D470 },
     { (void *)&areaLoaderTask_800B1DB8, 0x100 },
     { &overlayLoaderTask_8008D4C0 },
     { (void *)&shopCtrlTask_8008D438 },
@@ -844,7 +844,7 @@ GameTaskListDef gameModeShopTasks_800B0C84[12] = {
     { &fadeTask_8008D628 },
 };
 GameTaskListDef gameModeSaveTasks_800B0CE4[4] = {
-    { (void *)&dword_8008D62C },
+    { &taskSlot_8008D62C },
     { &overlayLoaderTask_8008D4C0 },
     { &loadMenuTask_8008D480 },
 };
@@ -852,13 +852,13 @@ GameTaskListDef gameModeReturnTasks_800B0D04[2] = { { prevModeTask_800B1DC0 } };
 GameTaskListDef gameModeMapTasks_800B0D14[6] = {
     { &soundTask_8008D4A4 },
     { levantModelTask_800B1DA0 },
-    { (void *)&dword_8008D470 },
+    { &idleTask_8008D470 },
     { &overlayLoaderTask_8008D4C0 },
     { mapOverlayTask_800B1DA4 },
 };
-GameTaskListDef dword_800B0D44[3] = {
+GameTaskListDef gameModeUnused9Tasks_800B0D44[3] = {
     { &overlayLoaderTask_8008D4C0 },
-    { (void *)((char *)&screenOffset_8008D474 + 4) },
+    { &taskSlot_8008D478 },
 };
 GameTaskListDef gameModeLoadingTasks_800B0D5C[3] = {
     { &overlayLoaderTask_8008D4C0 },
@@ -867,22 +867,22 @@ GameTaskListDef gameModeLoadingTasks_800B0D5C[3] = {
 GameTaskListDef *gameModeTaskLists_800B0D74[12] = {
     gameModeChapterTasks_800B0A0C, gameModeFieldTasks_800B0A2C, gameModeBattleTasks_800B0AFC, gameModeEquipTasks_800B0C34,
     gameModeMenuTasks_800B0C4C, gameModeShopTasks_800B0C84, gameModeSaveTasks_800B0CE4, gameModeReturnTasks_800B0D04,
-    gameModeMapTasks_800B0D14, dword_800B0D44, gameModeBattleEndTasks_800B0C14, gameModeLoadingTasks_800B0D5C,
+    gameModeMapTasks_800B0D14, gameModeUnused9Tasks_800B0D44, gameModeBattleEndTasks_800B0C14, gameModeLoadingTasks_800B0D5C,
 };
 EventDesc* gameEventListDefs_800B0DA4[58] = {
     &mapLoaderTaskDef_800B06CC, &eventDescs_80078EB8[3], &eventDescs_80078EB8[4], &areaLoaderTaskDef_800B06E4,
     &levantModelTaskDef_800B06FC, &modelLoaderTaskDef_800B0714, &actorTasksDef_800B072C, &eventDescs_80078EB8[20],
     &eventDescs_80078EB8[6], &tileAnimTaskDef_800B0744, &eventDescs_80078EB8[7], &encounterWatchTaskDef_800B0774,
-    &battleTaskDef_800B078C, &eventDescs_80078EB8[26], &battleMenuTaskDef_800B07A4, &dword_800B07BC,
+    &battleTaskDef_800B078C, &eventDescs_80078EB8[26], &battleMenuTaskDef_800B07A4, &taskSlotDef_800B07BC,
     &eventDescs_80078EB8[25], &eventDescs_80078EB8[17], &eventDescs_80078EB8[18], &enemyWindowsTaskDef_800B07D4,
-    &enemyWindowTaskDef_800B07EC, &actorWindowTaskDef_800B0804, &helpWindowTaskDef_800B081C, &dword_800B084C,
+    &enemyWindowTaskDef_800B07EC, &actorWindowTaskDef_800B0804, &helpWindowTaskDef_800B081C, &taskSlotsDef_800B084C,
     &eventDescs_80078EB8[15], &eventDescs_80078EB8[16], &eventDescs_80078EB8[10], &levantControlTaskDef_800B0834,
     &levantActorTaskDef_800B0864, &eventDescs_80078EB8[21], &eventDescs_80078EB8[22], &eventDescs_80078EB8[23],
     &eventDescs_80078EB8[24], &eventDescs_80078EB8[19], &dword_800B08AC, &eventEntitiesDef_800B08C4,
     &eventDescs_80078EB8[14], &eventDescs_80078EB8[8], &fieldMenuTaskDef_800B090C, &eventDescs_80078EB8[11],
     &eventDescs_80078EB8[12], &eventDescs_80078EB8[13], &prevModeTaskDef_800B08DC, &mapOverlayTaskDef_800B08F4,
     &eventScriptsDef_800B075C, &eventDescs_80078EB8[9], &shopCtrlTaskDef_800B0924, &shopMenuTaskDef_800B093C,
-    &shelfMenuTaskDef_800B0954, &storeTaskDef_800B096C, &dword_800B0984, &chapterOverlayTaskDef_800B099C,
+    &shelfMenuTaskDef_800B0954, &storeTaskDef_800B096C, &taskSlotDef_800B0984, &chapterOverlayTaskDef_800B099C,
     &sporeTaskDef_800B09B4, &encounterTaskDef_800B087C, &enemyAiTasksDef_800B0894, &fieldModeTaskDef_800B09CC,
     &subOverlayTaskDef_800B09E4,
 };

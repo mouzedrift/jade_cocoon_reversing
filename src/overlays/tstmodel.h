@@ -245,7 +245,7 @@ extern int MoveGridCursor_800A1B48();
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
 extern LVec3 cameraEye_8008D600;
 /* exe-side, to move to main.h / globals.h */
-extern short screenOffset_8008D474[];
+extern ShortPair screenOffset_8008D474;
 /* exe-side: data_decls.h declares it (that header needs LIBSND.H) */
 extern short sinTable_80084540[];
 /* exe-side: event.h declares them (as MATRIX) */

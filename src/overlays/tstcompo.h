@@ -248,7 +248,7 @@ extern void SetCameraLookAt_800A1E68();
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
 extern LVec3 cameraEye_8008D600;
 /* exe-side, to move to main.h / globals.h */
-extern short screenOffset_8008D474[];
+extern ShortPair screenOffset_8008D474;
 extern MATRIX defaultLightMatrix_8007C2EC; // effect_data.h
 extern MATRIX defaultColorMatrix_8007C30C; // effect_data.h
 /* exe-side: effect_data.h declares it as int dword_8007DC74[6] */

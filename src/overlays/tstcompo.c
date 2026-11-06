@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "model.h"
 #include "unit_stats.h" // eventDescs_80078EB8
+#include "camera.h" // ShortPair
 #include "tstcompo.h"
 
 
@@ -667,8 +668,8 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
     backColor_8008D460[0] = 0x40;
     backColor_8008D460[1] = 0x40;
     backColor_8008D460[2] = 0x40;
-    screenOffset_8008D474[0] = 0;
-    screenOffset_8008D474[1] = 0;
+    screenOffset_8008D474.a = 0;
+    screenOffset_8008D474.b = 0;
     geomScreenDistance_8008B548 = 0xA0;
     lightMatrix_80087114 = defaultLightMatrix_8007C2EC;
     colorMatrix_80087134 = defaultColorMatrix_8007C30C;

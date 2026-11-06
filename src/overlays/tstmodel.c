@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "model.h"
 #include "unit_stats.h" // eventDescs_80078EB8
+#include "camera.h" // ShortPair
 #include "tstmodel.h"
 
 
@@ -590,8 +591,8 @@ void SetCameraLookAt_800A1A24(TstModelWork* c)
     backColor_8008D460[0] = 0x40;
     backColor_8008D460[1] = 0x40;
     backColor_8008D460[2] = 0x40;
-    screenOffset_8008D474[0] = 0;
-    screenOffset_8008D474[1] = 0;
+    screenOffset_8008D474.a = 0;
+    screenOffset_8008D474.b = 0;
     geomScreenDistance_8008B548 = 0xA0;
     SetGteLightAndCamera_8004D0E8();
 }
