@@ -75,7 +75,7 @@ typedef struct GameEnemy
 {
     int kind_0; // 0: actors already exist, 1: hide them when reused
     int maxCount_4;
-    int f8;
+    int canFlee_8; // GameEncounter.canFlee_780 (CanFleeFromEnemy_800A28FC)
     int fC;
     int f10;
     int groupIndex_14; // GameEncounter.groupIndex_48 (ClearEncounterGroupFlags_800A4940; -1: none)
@@ -327,7 +327,7 @@ typedef struct GameEncounter
     int fixed_774;
     int reused_778;
     int f77c;
-    int f780;
+    int canFlee_780; // CanFleeFromEnemy_800A28FC
     int f784;
     int f788;
     int f78c;

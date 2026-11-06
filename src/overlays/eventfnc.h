@@ -579,7 +579,7 @@ typedef struct EvEnemyGroup
 {
     int kind_0; // 0: actors already exist, 1: hide them when reused (GAME's GameEnemy)
     int maxCount_4;
-    int f8;
+    int canFlee_8; // GAME: GameEncounter.canFlee_780
     int fC;
     int f10;
     int idx_14;

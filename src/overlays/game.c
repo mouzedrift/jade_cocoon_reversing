@@ -336,7 +336,7 @@ void ResetEncounter_800A170C(void)
     gCtx_800B1260.fixed_774 = 0;
     gCtx_800B1260.reused_778 = 0;
     gCtx_800B1260.f77c = 0;
-    gCtx_800B1260.f780 = 1;
+    gCtx_800B1260.canFlee_780 = 1;
     gCtx_800B1260.f784 = 1;
     gCtx_800B1260.swapped_3C = 0;
 }
@@ -575,7 +575,7 @@ void SetupEncounter_800A1BD0(void)
     enc->fixed_774 = q->data_8.kind_0 == 0;
     enc->reused_778 = q->data_8.kind_0 == 1;
     enc->f77c = 0;
-    enc->f780 = q->data_8.f8;
+    enc->canFlee_780 = q->data_8.canFlee_8;
     enc->f784 = q->data_8.fC;
     enc->f788 = q->data_8.f10;
     dword_800B1CA8[0] = 0;
@@ -868,7 +868,7 @@ int EnemyReturnZero_800A28DC(int idx)
 int CanFleeFromEnemy_800A28FC(int idx)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
-    return gCtx_800B1260.f780;
+    return gCtx_800B1260.canFlee_780;
 }
 
 void RemoveEnemy_800A2924(int idx)

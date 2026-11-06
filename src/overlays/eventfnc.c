@@ -592,7 +592,7 @@ void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* plac
         SetBoneGroupFlags_80019B14(actor->bones_134, levels, GetModelBoneGroupFlags_80024F38(model, k));
         group.kind_0 = 2;
         group.maxCount_4 = 3;
-        group.f8 = 1;
+        group.canFlee_8 = 1;
         group.fC = 1;
         group.f10 = 1;
         group.idx_14 = index;
