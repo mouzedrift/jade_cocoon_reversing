@@ -622,15 +622,8 @@ int GetGaugeRate_800A5B70(int side)
     return rate;
 }
 
-// Near miss (15 words): the sides read into locals first gives the original's late loads and registers; left: the original
-// issues the actorSide %hi (lui v1) and the constant 1 before the result stores (sched1 keeps them next to their users here)
-#if 0
 void ResetCommands_800A5BB4()
 {
-    int a;
-    int t;
-    t = targetSide_800A8620;
-    a = actorSide_800A85B8;
     chosenCmd_800A8600.kind_0 = 0x14;
     chosenCmd_800A8600.arg_4 = 0;
     actorCmd_800A85A8.kind_0 = 0x14;
@@ -638,8 +631,6 @@ void ResetCommands_800A5BB4()
     targetCmd_800A8610.kind_0 = 0x14;
     targetCmd_800A8610.arg_4 = 0;
     result_800A85C8.kind_0 = 0;
-    result_800A85C8.areaElement_24 = -1;
-    result_800A85C8.fixedElement_26 = -1;
     result_800A85C8.arg_2 = 0;
     result_800A85C8.flags_4 = 0;
     result_800A85C8.status_8 = 0;
@@ -649,15 +640,15 @@ void ResetCommands_800A5BB4()
     result_800A85C8.actorMpDamage_18 = 0;
     result_800A85C8.hpDamage_1C = 0;
     result_800A85C8.mpDamage_20 = 0;
-    chosenCmd_800A8600.mask_8 = 1 << (a + 8);
-    chosenCmd_800A8600.targets_C = 1 << (t + 8);
-    actorCmd_800A85A8.mask_8 = 1 << (a + 8);
-    actorCmd_800A85A8.targets_C = 1 << (t + 8);
-    targetCmd_800A8610.mask_8 = 1 << (t + 8);
-    targetCmd_800A8610.targets_C = 1 << (a + 8);
+    result_800A85C8.areaElement_24 = -1;
+    result_800A85C8.fixedElement_26 = -1;
+    chosenCmd_800A8600.mask_8 = 1 << (actorSide_800A85B8 + 8);
+    chosenCmd_800A8600.targets_C = 1 << (targetSide_800A8620 + 8);
+    actorCmd_800A85A8.mask_8 = 1 << (actorSide_800A85B8 + 8);
+    actorCmd_800A85A8.targets_C = 1 << (targetSide_800A8620 + 8);
+    targetCmd_800A8610.mask_8 = 1 << (targetSide_800A8620 + 8);
+    targetCmd_800A8610.targets_C = 1 << (actorSide_800A85B8 + 8);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, ResetCommands_800A5BB4);
 
 void StartTurn_800A5C64(CombBtlTask* t)
 {
