@@ -1,9 +1,14 @@
 #ifndef _TU_80040718_H_
 #define _TU_80040718_H_
 
-extern int genkiMovieData_80086950[6];
-extern int craveEntertainmentData_80086970[6];
-extern int demoDisclaimerData_80086990[6];
+#include "event.h" // EventDesc
+
+extern EventDesc genkiMovieData_80086950;
+extern EventDesc craveEntertainmentData_80086970;
+extern EventDesc demoDisclaimerData_80086990;
+extern EventDesc* copyright_80086948[2];
+extern EventDesc* genkiMovie_80086968[2];
+extern EventDesc* craveEntertainmentMovie_80086988[2];
 
 void DrawCopyrightScreen_800408F4(void);
 void InitGameDefaults_80040718(void);

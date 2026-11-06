@@ -1361,7 +1361,7 @@ extern unsigned short pageHideFlags_800C968C[6][2];
 extern int commandKinds_800C96A4[9];
 extern int itemDescriptions_800C96C8[43][4];
 extern int magicDescriptions_800C9978[30][4];
-extern char skillDescriptions_800C9B58[256];
+extern const char* skillDescriptions_800C9B58[16][4];
 extern int battleLoadState_800C9C58;
 extern int dword_800C9C5C[3];
 extern short turnGauges_800C9C68[8];

@@ -700,7 +700,7 @@ MATRIX lightDirs_800A1E84 = {
         { -0x7FC, -0xAA6, -0x8DE },
     },
 };
-TstModelMat lightColors_800A1EA4 = { { 0x8001000, 0x10000800, 0x8000800, 0x8001000, 0x800 } };
+MATRIX lightColors_800A1EA4 = { { { 0x1000, 0x800, 0x800 }, { 0x1000, 0x800, 0x800 }, { 0x1000, 0x800, 0x800 } } };
 int tstModelTaskDesc_800A1EC4[6] = { 1, 1, 0x1F8, 0, (int)TstModelInit_800A09C0 };
 char tstModelTaskList_800A1EDC[12] = { 184, 142, 7, 128, 196, 30, 10, 128 };
 char modelLight_800A1EE8[24] = { 0 };

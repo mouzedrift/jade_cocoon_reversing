@@ -1,6 +1,8 @@
 #ifndef _TU_8003EF74_H_
 #define _TU_8003EF74_H_
 
+#include "event.h" // EventDesc
+
 typedef struct ListNode { struct ListNode* prev; struct ListNode* next; } ListNode;
 typedef struct List { int count; ListNode* head; ListNode* tail; } List;
 
@@ -29,7 +31,7 @@ typedef struct Pool
 extern int dword_8008686C[3];
 extern int dword_80086878[8];
 extern int dword_80086928[2];
-extern int copyrightData_80086930[6];
+extern EventDesc copyrightData_80086930;
 
 extern int dword_80086928[2];
 

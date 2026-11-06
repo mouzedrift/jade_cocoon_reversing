@@ -884,4 +884,4 @@ int charWidthThresholds_80086898[3][12] = {
     },
 };
 int dword_80086928[2] = { 0 };
-int copyrightData_80086930[6] = { 1, 1, 0, 0, (int)&InitCopyrightScreen_80040A10 };
+EventDesc copyrightData_80086930 = { 1, 1, 0, 0, (EventEntryFn)InitCopyrightScreen_80040A10 };

@@ -639,7 +639,7 @@ extern char statusStatsRect_800C1BE0[8];
 extern MenuQ itemDescs_800C1BE8[43];
 extern MenuQ keyItemDescs_800C1E98[38];
 extern MenuQ magicDescs_800C20F8[30];
-extern char abilityDescs_800C22D8[624];
+extern const char* abilityDescs_800C22D8[39][4];
 extern MenuWindowItem levantCmdItem0_800C2548[2];
 extern MenuWindowItem levantCmdItem1_800C2580[2];
 extern MenuWindowItem levantCmdItem2_800C25B8[2];

@@ -336,11 +336,6 @@ typedef struct
 } SeqSlot;
 extern SeqSlot seqSlots_800833E4[];
 extern unsigned char drawEnvRed_8008D448[3];
-extern char copyright_80086948[];
-extern char genkiMovie_80086968[];
-extern char craveEntertainmentMovie_80086988[];
-extern char demoDisclaimer_800869A8[];
-extern char introAnime_800869C8[];
 typedef struct
 {
     int m[3];

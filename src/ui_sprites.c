@@ -237,7 +237,7 @@ unsigned int GetTime30Hz_8002C64C(void)
     return (unsigned int)(frameCount_8008D3FC * display_8008B4D8.vsyncsPerFrame_4) >> 1;
 }
 // Matched
-int DrawAbilityDescription_8002C670(char* minion, int pos, int texts, short slot, short ot)
+int DrawAbilityDescription_8002C670(char* minion, Pos16* pos, const char* (*texts)[4], short slot, short ot)
 {
     char* skill = minion + slot * 4;
     int b;
@@ -249,7 +249,7 @@ int DrawAbilityDescription_8002C670(char* minion, int pos, int texts, short slot
     {
         return 0;
     }
-    DrawLargeTextBox_8002AF10(texts + (unsigned char)skill[0xdf] * 16, pos, ot);
+    DrawLargeTextBox_8002AF10(texts[(unsigned char)skill[0xdf]], pos, ot);
     return 1;
 }
 extern void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot);

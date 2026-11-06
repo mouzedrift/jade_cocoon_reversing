@@ -204,9 +204,9 @@ void DrawDemoDisclaimer_80040B94(void)
     }
 }
 
-char copyright_80086948[8] = { 48, 105, 8, 128 };
-int genkiMovieData_80086950[6] = { 1, 1, 0, 0, (int)&PlayGenkiMovie_80040AC4 };
-char genkiMovie_80086968[8] = { 80, 105, 8, 128 };
-int craveEntertainmentData_80086970[6] = { 1, 1, 0, 0, (int)&PlayCraveMovie_80040B2C };
-char craveEntertainmentMovie_80086988[8] = { 112, 105, 8, 128 };
-int demoDisclaimerData_80086990[6] = { 1, 1, 0, 0, (int)&DrawDemoDisclaimer_80040B94 };
+EventDesc* copyright_80086948[2] = { &copyrightData_80086930 };
+EventDesc genkiMovieData_80086950 = { 1, 1, 0, 0, (EventEntryFn)PlayGenkiMovie_80040AC4 };
+EventDesc* genkiMovie_80086968[2] = { &genkiMovieData_80086950 };
+EventDesc craveEntertainmentData_80086970 = { 1, 1, 0, 0, (EventEntryFn)PlayCraveMovie_80040B2C };
+EventDesc* craveEntertainmentMovie_80086988[2] = { &craveEntertainmentData_80086970 };
+EventDesc demoDisclaimerData_80086990 = { 1, 1, 0, 0, (EventEntryFn)DrawDemoDisclaimer_80040B94 };

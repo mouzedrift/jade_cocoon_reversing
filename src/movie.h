@@ -1,6 +1,8 @@
 #ifndef _TU_80040C8C_H_
 #define _TU_80040C8C_H_
 
+#include "event.h" // EventDesc
+
 #include "globals.h"
 
 typedef struct
@@ -51,7 +53,9 @@ typedef struct
     int doubleSpeed;
 } MovieParams;
 
-extern int introAnimeData_800869B0[6];
+extern EventDesc introAnimeData_800869B0;
+extern EventDesc* demoDisclaimer_800869A8[2];
+extern EventDesc* introAnime_800869C8[2];
 
 enum GameStates TitleMain_800A0EF0(void);
 enum GameStates CombatMain_800A1324(void);

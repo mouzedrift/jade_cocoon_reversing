@@ -24,10 +24,6 @@ typedef struct TstModelBone
 
 typedef struct TstModelTbl { int modelId_0; TstModelBone* bones_4; int name_8; } TstModelTbl;
 
-typedef struct TstModelMat
-{
-    int w[8];
-} TstModelMat;
 
 extern int dword_800A05A0;
 extern const char aMDLOUMG_800A05A4[];
@@ -122,7 +118,7 @@ extern const char aMDLLEBANT_800A098C[];
 extern const int dword_800A0998;
 extern const TstModelBone dword_800A09B8;
 extern MATRIX lightDirs_800A1E84;
-extern TstModelMat lightColors_800A1EA4;
+extern MATRIX lightColors_800A1EA4;
 extern int tstModelTaskDesc_800A1EC4[6];
 extern char tstModelTaskList_800A1EDC[12];
 extern char modelLight_800A1EE8[24];
@@ -254,7 +250,6 @@ extern short screenOffset_8008D474[];
 extern short sinTable_80084540[];
 /* exe-side: event.h declares them (as MATRIX) */
 extern MATRIX lightMatrix_80087114;
-extern TstModelMat colorMatrix_80087134;
 /* exe-side, to move to ftg_draw.h */
 extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
 /* exe-side, to move to engine.h */

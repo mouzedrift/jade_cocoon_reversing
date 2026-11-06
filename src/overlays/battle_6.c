@@ -363,7 +363,24 @@ int magicDescriptions_800C9978[30][4] = {
     { (int)aEnhanceEarth_800B8EA4, (int)aIncreasesEarthA_800B8E4C, (int)aEffectivenessOf_800B8DEC },
     { (int)aEnhanceWind_800B8DD0, (int)aIncreasesWindAt_800B8D7C, (int)aEffectivenessOf_800B8D1C },
 };
-char skillDescriptions_800C9B58[256] = { 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 116, 161, 11, 128, 116, 161, 11, 128, 116, 161, 11, 128, 0, 0, 0, 0, 72, 161, 11, 128, 240, 160, 11, 128, 232, 148, 11, 128, 0, 0, 0, 0, 196, 160, 11, 128, 108, 160, 11, 128, 16, 150, 11, 128, 0, 0, 0, 0, 68, 160, 11, 128, 236, 159, 11, 128, 48, 151, 11, 128, 0, 0, 0, 0, 196, 159, 11, 128, 108, 159, 11, 128, 200, 147, 11, 128, 0, 0, 0, 0, 64, 159, 11, 128, 236, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 192, 158, 11, 128, 88, 158, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 28, 158, 11, 128, 176, 157, 11, 128, 0, 0, 0, 0, 0, 0, 0, 0, 116, 157, 11, 128, 12, 157, 11, 128, 188, 156, 11, 128, 0, 0, 0, 0, 132, 156, 11, 128, 56, 156, 11, 128, 232, 155, 11, 128, 0, 0, 0, 0, 172, 155, 11, 128, 100, 155, 11, 128, 28, 155, 11, 128, 0, 0, 0, 0, 224, 154, 11, 128, 164, 154, 11, 128, 88, 154, 11, 128, 0, 0, 0, 0, 28, 154, 11, 128, 208, 153, 11, 128, 120, 153, 11, 128, 0, 0, 0, 0, 64, 153, 11, 128, 224, 152, 11, 128, 124, 152, 11, 128, 0, 0, 0, 0, 64, 152, 11, 128, 232, 151, 11, 128, 124, 152, 11, 128 };
+const char* skillDescriptions_800C9B58[16][4] = {
+    { dword_800BA174, dword_800BA174, dword_800BA174, 0 },
+    { dword_800BA174, dword_800BA174, dword_800BA174, 0 },
+    { aSpecialEarthAtt_800BA148, aVeryEffectiveAg_800BA0F0, aHigherEarthElem_800B94E8, 0 },
+    { aSpecialWaterAtt_800BA0C4, aVeryEffectiveAg_800BA06C, aHigherWaterElem_800B9610, 0 },
+    { aSpecialFireAtta_800BA044, aVeryEffectiveAg_800B9FEC, aHigherFireEleme_800B9730, 0 },
+    { aSpecialWindAtta_800B9FC4, aVeryEffectiveAg_800B9F6C, aHigherWindEleme_800B93C8, 0 },
+    { aSpecialPoisonAt_800B9F40, aPhysicallyDamag_800B9EEC, 0, 0 },
+    { aSpecialSleepAtt_800B9EC0, aPhysicallyDamag_800B9E58, 0, 0 },
+    { aSpecialFleshToS_800B9E1C, aPhysicallyDamag_800B9DB0, 0, 0 },
+    { aSpecialAttackDe_800B9D74, aCausesAnEnemyTo_800B9D0C, aMoreDifficultFo_800B9CBC, 0 },
+    { aSpecialAttackAb_800B9C84, aTakesSomeOfTheD_800B9C38, aAnEnemyToRestor_800B9BE8, 0 },
+    { aSpecialAttackAb_800B9BAC, aStealsSomeManaF_800B9B64, aUsesItToRestore_800B9B1C, 0 },
+    { aSpecialAttackAl_800B9AE0, aAttacksAllEnemi_800B9AA4, aBringsEnemiesTo_800B9A58, 0 },
+    { aSpecialAttackCr_800B9A1C, aReducesAnEnemie_800B99D0, aItMoreDifficult_800B9978, 0 },
+    { aSpecialAttackBr_800B9940, aMakesItEasierTo_800B98E0, aSlightlyMoreDif_800B987C, 0 },
+    { aSpecialAttackBr_800B9840, aMakesItEasierTo_800B97E8, aSlightlyMoreDif_800B987C, 0 },
+};
 int battleLoadState_800C9C58 = 0;
 int dword_800C9C5C[3] = { 0 };
 short turnGauges_800C9C68[8] = { 0 };
