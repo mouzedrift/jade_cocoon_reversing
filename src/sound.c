@@ -68,14 +68,14 @@ void DrawLevantHeaderWindows_8002FD0C(int ot, short step, short highlight, short
 }
 void InitSound_8002FE54(SoundStruct* sound)
 {
-    sound->field_0_vab_id = -1;
-    sound->field_4_seq_num = -1;
-    sound->field_6_sound_idx = -1;
-    sound->field_C_sep_access_num = -1;
-    sound->field_14_sep_access_num = -1;
-    sound->field_8_sep_data_ptr = 0;
-    sound->field_10_sep_data_ptr = 0;
-    sound->field_18_vab_header_ptr = 0;
+    sound->vabId_0 = -1;
+    sound->seqNum_4 = -1;
+    sound->soundIdx_6 = -1;
+    sound->sepAccessNum_C = -1;
+    sound->sepAccessNum_14 = -1;
+    sound->sepDataPtr_8 = 0;
+    sound->sepDataPtr_10 = 0;
+    sound->vabHeaderPtr_18 = 0;
 }
 void InitSounds_8002FE7C(void)
 {
@@ -146,10 +146,10 @@ void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer)
 {
     SoundTask* task = buffer;
     SoundStruct* bgm = &bgmSound_80091CE0;
-    if (bgm->field_4_seq_num >= 0)
+    if (bgm->seqNum_4 >= 0)
     {
-        SsSepStop(bgm->field_C_sep_access_num, bgm->field_4_seq_num);
-        bgm->field_4_seq_num = -1;
+        SsSepStop(bgm->sepAccessNum_C, bgm->seqNum_4);
+        bgm->seqNum_4 = -1;
     }
     FreeSound_80030D00(task->bgm_4);
     StopSoundSeqs_80030D68(&systemSound_80091D40);
@@ -167,29 +167,29 @@ int PlayMusic_800300E0(int idx, int unused)
         PlaySoundSeq_8003105C(&systemSound_80091D40, idx, 1);
         return 1;
     }
-    if (task->bgm_4->field_6_sound_idx == idx)
+    if (task->bgm_4->soundIdx_6 == idx)
     {
-        if (task->bgm_4->field_4_seq_num == soundFiles_80082F0C[idx].field_2_seq)
+        if (task->bgm_4->seqNum_4 == soundFiles_80082F0C[idx].field_2_seq)
         {
             return 1;
         }
-        SsSepStop(task->bgm_4->field_C_sep_access_num, task->bgm_4->field_4_seq_num);
-        SsSepSetVol(task->bgm_4->field_C_sep_access_num, task->bgm_4->field_4_seq_num, 0, 0);
-        task->bgm_4->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
+        SsSepStop(task->bgm_4->sepAccessNum_C, task->bgm_4->seqNum_4);
+        SsSepSetVol(task->bgm_4->sepAccessNum_C, task->bgm_4->seqNum_4, 0, 0);
+        task->bgm_4->seqNum_4 = soundFiles_80082F0C[idx].field_2_seq;
         PlayMusicSeq_80031260(task->bgm_4, idx, 1);
         return 1;
     }
-    if (GetSoundFileId_80030D4C(task->bgm_4->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    if (GetSoundFileId_80030D4C(task->bgm_4->soundIdx_6) == GetSoundFileId_80030D4C(idx))
     {
-        SsSepStop(task->bgm_4->field_C_sep_access_num, task->bgm_4->field_4_seq_num);
-        SsSepSetVol(task->bgm_4->field_C_sep_access_num, task->bgm_4->field_4_seq_num, 0, 0);
-        task->bgm_4->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
+        SsSepStop(task->bgm_4->sepAccessNum_C, task->bgm_4->seqNum_4);
+        SsSepSetVol(task->bgm_4->sepAccessNum_C, task->bgm_4->seqNum_4, 0, 0);
+        task->bgm_4->seqNum_4 = soundFiles_80082F0C[idx].field_2_seq;
         PlayMusicSeq_80031260(task->bgm_4, idx, 1);
         return 1;
     }
-    if (task->sfx_8 && GetSoundFileId_80030D4C(task->sfx_8->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    if (task->sfx_8 && GetSoundFileId_80030D4C(task->sfx_8->soundIdx_6) == GetSoundFileId_80030D4C(idx))
     {
-        task->sfx_8->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
+        task->sfx_8->seqNum_4 = soundFiles_80082F0C[idx].field_2_seq;
         PlayMusicSeq_80031260(task->sfx_8, idx, 1);
         return 1;
     }
@@ -198,23 +198,23 @@ int PlayMusic_800300E0(int idx, int unused)
         return 0;
     }
     bgm = &bgmSound_80091CE0;
-    if (bgm->field_4_seq_num >= 0)
+    if (bgm->seqNum_4 >= 0)
     {
-        SsSepStop(bgm->field_C_sep_access_num, bgm->field_4_seq_num);
-        bgm->field_4_seq_num = -1;
+        SsSepStop(bgm->sepAccessNum_C, bgm->seqNum_4);
+        bgm->seqNum_4 = -1;
     }
-    if (task->bgm_4->field_6_sound_idx >= 0)
+    if (task->bgm_4->soundIdx_6 >= 0)
     {
         FreeSound_80030D00(task->bgm_4);
     }
-    if (task->sfx_8->field_6_sound_idx >= 0)
+    if (task->sfx_8->soundIdx_6 >= 0)
     {
         FreeSound_80030D00(task->sfx_8);
     }
-    task->bgm_4->field_6_sound_idx = idx;
+    task->bgm_4->soundIdx_6 = idx;
     task->state_2 = 0;
     req.flags_0 = 0x2C;
-    req.fileId_4 = GetSoundFileId_80030D4C(task->bgm_4->field_6_sound_idx);
+    req.fileId_4 = GetSoundFileId_80030D4C(task->bgm_4->soundIdx_6);
     req.params_14 = &task->bgm_4;
     req.offset_8 = 0;
     req.size_C = 0;
@@ -222,13 +222,13 @@ int PlayMusic_800300E0(int idx, int unused)
     req.paramsSize_18 = 4;
     req.callback_1C = LoadSoundFromBuffer_800307B4;
     task->request_10 = QueueFileRequest_8003BC84(&req);
-    sub = soundFiles_80082F0C[idx].field_6_sub_sound;
+    sub = soundFiles_80082F0C[idx].subSound_6;
     if (sub >= 0)
     {
-        task->sfx_8->field_6_sound_idx = sub;
+        task->sfx_8->soundIdx_6 = sub;
         task->state_2 = 0;
         req.flags_0 = 0x2C;
-        req.fileId_4 = GetSoundFileId_80030D4C(task->sfx_8->field_6_sound_idx);
+        req.fileId_4 = GetSoundFileId_80030D4C(task->sfx_8->soundIdx_6);
         req.offset_8 = 0;
         req.size_C = 0;
         req.dest_10 = 0;
@@ -248,8 +248,8 @@ int LoadSeqSlotSound_800303E8(void)
         return 0;
     }
     seqSlotSound_80091D00 = systemSound_80091D40;
-    seqSlotSound_80091D00.field_8_sep_data_ptr = 0;
-    seqSlotSound_80091D00.field_6_sound_idx = 10;
+    seqSlotSound_80091D00.sepDataPtr_8 = 0;
+    seqSlotSound_80091D00.soundIdx_6 = 10;
     task->state_2 = 0;
     req.flags_0 = 0x2C;
     req.fileId_4 = 0x301;
@@ -267,45 +267,45 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
     SoundStruct* sound = req[0];
     GenkiSoundHeader* pSndFileHeader = (GenkiSoundHeader*)pSndFileBuffer;
 
-    if (pSndFileHeader->field_14_sep_size)
+    if (pSndFileHeader->sepSize_14)
     {
-        sound->field_8_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
-        ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
-                               (int*)((char*)pSndFileHeader + pSndFileHeader->field_10_sep_data_start),
-                               pSndFileHeader->field_14_sep_size / sizeof(int));
+        sound->sepDataPtr_8 = malloc3_8003FC4C(pSndFileHeader->sepSize_14);
+        ReadBytesInto_80040388((int*)sound->sepDataPtr_8,
+                               (int*)((char*)pSndFileHeader + pSndFileHeader->sepDataStart_10),
+                               pSndFileHeader->sepSize_14 / sizeof(int));
 
-        sound->field_C_sep_access_num =
-            SsSepOpen(sound->field_8_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count);
-        if (sound->field_C_sep_access_num == -1)
+        sound->sepAccessNum_C =
+            SsSepOpen(sound->sepDataPtr_8, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_4);
+        if (sound->sepAccessNum_C == -1)
         {
             printf(aAssertionFaile_0, aSoundC, 411);
             exit(1);
         }
-        SsSepSetVol(sound->field_C_sep_access_num, 1, 0, 0);
+        SsSepSetVol(sound->sepAccessNum_C, 1, 0, 0);
     }
     else
     {
-        sound->field_8_sep_data_ptr = 0;
+        sound->sepDataPtr_8 = 0;
     }
 
-    if (pSndFileHeader->field_1C_sep_size)
+    if (pSndFileHeader->sepSize_1C)
     {
-        sound->field_10_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_1C_sep_size);
-        ReadBytesInto_80040388((int*)sound->field_10_sep_data_ptr,
-                               (int*)(pSndFileBuffer + pSndFileHeader->field_18_sep_data2_ptr),
-                               pSndFileHeader->field_1C_sep_size / sizeof(int));
-        sound->field_14_sep_access_num =
-            SsSepOpen(sound->field_10_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_5_seq_count);
-        if (sound->field_14_sep_access_num == -1)
+        sound->sepDataPtr_10 = malloc3_8003FC4C(pSndFileHeader->sepSize_1C);
+        ReadBytesInto_80040388((int*)sound->sepDataPtr_10,
+                               (int*)(pSndFileBuffer + pSndFileHeader->sepData2Ptr_18),
+                               pSndFileHeader->sepSize_1C / sizeof(int));
+        sound->sepAccessNum_14 =
+            SsSepOpen(sound->sepDataPtr_10, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_5);
+        if (sound->sepAccessNum_14 == -1)
         {
             printf(aAssertionFaile_0, aSoundC, 426);
             exit(1);
         }
-        SsSepSetVol(sound->field_14_sep_access_num, 1, 0, 0);
+        SsSepSetVol(sound->sepAccessNum_14, 1, 0, 0);
     }
     else
     {
-        sound->field_10_sep_data_ptr = 0;
+        sound->sepDataPtr_10 = 0;
     }
 }
 void FreeSeqSlotSound_80030664(void)
@@ -332,11 +332,11 @@ void StopSoundSeqById_800306FC(int idx)
         StopSoundSeq_80031408(&systemSound_80091D40, idx);
         return;
     }
-    if (GetSoundFileId_80030D4C(task->bgm_4->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    if (GetSoundFileId_80030D4C(task->bgm_4->soundIdx_6) == GetSoundFileId_80030D4C(idx))
     {
         StopSoundSeq_80031408(task->bgm_4, idx);
     }
-    if (GetSoundFileId_80030D4C(task->sfx_8->field_6_sound_idx) == GetSoundFileId_80030D4C(idx))
+    if (GetSoundFileId_80030D4C(task->sfx_8->soundIdx_6) == GetSoundFileId_80030D4C(idx))
     {
         StopSoundSeq_80031408(task->sfx_8, idx);
     }
@@ -345,54 +345,54 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
 {
     SoundStruct* sound = req[0];
 
-    sound->field_18_vab_header_ptr = malloc3_8003FC4C(pSndFileHeader->field_4_vab_header_size);
+    sound->vabHeaderPtr_18 = malloc3_8003FC4C(pSndFileHeader->vabHeaderSize_4);
 
-    ReadBytesInto_80040388((int*)sound->field_18_vab_header_ptr,
-                           (int*)((char*)pSndFileHeader + pSndFileHeader->field_0_header_start),
-                           pSndFileHeader->field_4_vab_header_size / sizeof(int));
+    ReadBytesInto_80040388((int*)sound->vabHeaderPtr_18,
+                           (int*)((char*)pSndFileHeader + pSndFileHeader->headerStart_0),
+                           pSndFileHeader->vabHeaderSize_4 / sizeof(int));
 
-    sound->field_0_vab_id = SsVabOpenHead(sound->field_18_vab_header_ptr, -1);
-    if (sound->field_0_vab_id == -1)
+    sound->vabId_0 = SsVabOpenHead(sound->vabHeaderPtr_18, -1);
+    if (sound->vabId_0 == -1)
     {
         printf(aAssertionFaile_0, aSoundC, 540);
         exit(1);
     }
 
-    if (SsVabTransBody((unsigned char*)((char*)pSndFileHeader + pSndFileHeader->field_8_vab_body_start), sound->field_0_vab_id) == -1)
+    if (SsVabTransBody((unsigned char*)((char*)pSndFileHeader + pSndFileHeader->vabBodyStart_8), sound->vabId_0) == -1)
     {
         printf(aAssertionFaile_0, aSoundC, 546);
         exit(1);
     }
     SsVabTransCompleted(1);
 
-    if (pSndFileHeader->field_14_sep_size)
+    if (pSndFileHeader->sepSize_14)
     {
-        sound->field_8_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
-        ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
-                               (int*)((char*)pSndFileHeader + pSndFileHeader->field_10_sep_data_start),
-                               pSndFileHeader->field_14_sep_size / sizeof(int));
+        sound->sepDataPtr_8 = malloc3_8003FC4C(pSndFileHeader->sepSize_14);
+        ReadBytesInto_80040388((int*)sound->sepDataPtr_8,
+                               (int*)((char*)pSndFileHeader + pSndFileHeader->sepDataStart_10),
+                               pSndFileHeader->sepSize_14 / sizeof(int));
 
-        sound->field_C_sep_access_num =
-            SsSepOpen(sound->field_8_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count);
-        if (sound->field_C_sep_access_num == -1)
+        sound->sepAccessNum_C =
+            SsSepOpen(sound->sepDataPtr_8, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_4);
+        if (sound->sepAccessNum_C == -1)
         {
             printf(aAssertionFaile_0, aSoundC, 559);
             exit(1);
         }
-        SsSepSetVol(sound->field_C_sep_access_num, 1, 0, 0);
+        SsSepSetVol(sound->sepAccessNum_C, 1, 0, 0);
     }
     else
     {
-        sound->field_8_sep_data_ptr = 0;
+        sound->sepDataPtr_8 = 0;
     }
-    sound->field_10_sep_data_ptr = 0;
+    sound->sepDataPtr_10 = 0;
 
     SsUtSetReverbDepth(50, 50);
-    sound->field_4_seq_num = -1;
+    sound->seqNum_4 = -1;
 
-    if (sound->field_8_sep_data_ptr && soundFiles_80082F0C[sound->field_6_sound_idx].field_2_seq >= 0)
+    if (sound->sepDataPtr_8 && soundFiles_80082F0C[sound->soundIdx_6].field_2_seq >= 0)
     {
-        PlayMusicSeq_80031260(sound, sound->field_6_sound_idx, 1);
+        PlayMusicSeq_80031260(sound, sound->soundIdx_6, 1);
     }
 }
 void ApplyAudioOutputFormat_80030988(void)
@@ -410,10 +410,10 @@ void ApplyAudioOutputFormat_80030988(void)
 void ApplyBgmVolume_800309D8(SoundStruct* sound)
 {
     int i;
-    for (i = 0; i < soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count; i++)
+    for (i = 0; i < soundFiles_80082F0C[sound->soundIdx_6].seqCount_4; i++)
     {
         int vol = (saveData_8008B570.settings_1C.word >> 7) & 0x7F;
-        SsSepSetVol(sound->field_C_sep_access_num, i, vol, vol);
+        SsSepSetVol(sound->sepAccessNum_C, i, vol, vol);
     }
 }
 void LoadSound_80030A84(short soundId, SoundStruct* sound)
@@ -421,74 +421,74 @@ void LoadSound_80030A84(short soundId, SoundStruct* sound)
     char* pSndFileBuffer;
     GenkiSoundHeader* pSndFileHeader;
 
-    sound->field_6_sound_idx = soundId;
+    sound->soundIdx_6 = soundId;
 
-    pSndFileBuffer = DATA_GetFileBuffer_8003CAA0(GetSoundFileId_80030D4C(sound->field_6_sound_idx));
+    pSndFileBuffer = DATA_GetFileBuffer_8003CAA0(GetSoundFileId_80030D4C(sound->soundIdx_6));
     pSndFileHeader = (GenkiSoundHeader*)pSndFileBuffer;
 
-    sound->field_18_vab_header_ptr = malloc3_8003FC4C(pSndFileHeader->field_4_vab_header_size);
+    sound->vabHeaderPtr_18 = malloc3_8003FC4C(pSndFileHeader->vabHeaderSize_4);
 
-    ReadBytesInto_80040388((int*)sound->field_18_vab_header_ptr,
-                           (int*)(pSndFileBuffer + pSndFileHeader->field_0_header_start),
-                           pSndFileHeader->field_4_vab_header_size / sizeof(int));
+    ReadBytesInto_80040388((int*)sound->vabHeaderPtr_18,
+                           (int*)(pSndFileBuffer + pSndFileHeader->headerStart_0),
+                           pSndFileHeader->vabHeaderSize_4 / sizeof(int));
 
-    sound->field_0_vab_id = SsVabOpenHead(sound->field_18_vab_header_ptr, -1);
-    if (sound->field_0_vab_id == -1)
+    sound->vabId_0 = SsVabOpenHead(sound->vabHeaderPtr_18, -1);
+    if (sound->vabId_0 == -1)
     {
         printf(aAssertionFaile_0, aSoundC, 631);
         exit(1);
     }
 
-    if (SsVabTransBody((unsigned char*)(pSndFileBuffer + pSndFileHeader->field_8_vab_body_start), sound->field_0_vab_id) == -1)
+    if (SsVabTransBody((unsigned char*)(pSndFileBuffer + pSndFileHeader->vabBodyStart_8), sound->vabId_0) == -1)
     {
         printf(aAssertionFaile_0, aSoundC, 639);
         exit(1);
     }
     SsVabTransCompleted(1);
 
-    if (pSndFileHeader->field_14_sep_size)
+    if (pSndFileHeader->sepSize_14)
     {
-        sound->field_8_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_14_sep_size);
-        ReadBytesInto_80040388((int*)sound->field_8_sep_data_ptr,
-                               (int*)(pSndFileBuffer + pSndFileHeader->field_10_sep_data_start),
-                               pSndFileHeader->field_14_sep_size / sizeof(int));
+        sound->sepDataPtr_8 = malloc3_8003FC4C(pSndFileHeader->sepSize_14);
+        ReadBytesInto_80040388((int*)sound->sepDataPtr_8,
+                               (int*)(pSndFileBuffer + pSndFileHeader->sepDataStart_10),
+                               pSndFileHeader->sepSize_14 / sizeof(int));
 
-        sound->field_C_sep_access_num =
-            SsSepOpen(sound->field_8_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count);
-        if (sound->field_C_sep_access_num == -1)
+        sound->sepAccessNum_C =
+            SsSepOpen(sound->sepDataPtr_8, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_4);
+        if (sound->sepAccessNum_C == -1)
         {
             printf(aAssertionFaile_0, aSoundC, 652);
             exit(1);
         }
-        SsSepSetVol(sound->field_C_sep_access_num, 1, 0, 0);
+        SsSepSetVol(sound->sepAccessNum_C, 1, 0, 0);
     }
     else
     {
-        sound->field_8_sep_data_ptr = 0;
+        sound->sepDataPtr_8 = 0;
     }
 
-    if (pSndFileHeader->field_1C_sep_size)
+    if (pSndFileHeader->sepSize_1C)
     {
-        sound->field_10_sep_data_ptr = malloc3_8003FC4C(pSndFileHeader->field_1C_sep_size);
-        ReadBytesInto_80040388((int*)sound->field_10_sep_data_ptr,
-                               (int*)(pSndFileBuffer + pSndFileHeader->field_18_sep_data2_ptr),
-                               pSndFileHeader->field_1C_sep_size / sizeof(int));
-        sound->field_14_sep_access_num =
-            SsSepOpen(sound->field_10_sep_data_ptr, sound->field_0_vab_id, soundFiles_80082F0C[sound->field_6_sound_idx].field_5_seq_count);
-        if (sound->field_14_sep_access_num == -1)
+        sound->sepDataPtr_10 = malloc3_8003FC4C(pSndFileHeader->sepSize_1C);
+        ReadBytesInto_80040388((int*)sound->sepDataPtr_10,
+                               (int*)(pSndFileBuffer + pSndFileHeader->sepData2Ptr_18),
+                               pSndFileHeader->sepSize_1C / sizeof(int));
+        sound->sepAccessNum_14 =
+            SsSepOpen(sound->sepDataPtr_10, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_5);
+        if (sound->sepAccessNum_14 == -1)
         {
             printf(aAssertionFaile_0, aSoundC, 667);
             exit(1);
         }
-        SsSepSetVol(sound->field_14_sep_access_num, 1, 0, 0);
+        SsSepSetVol(sound->sepAccessNum_14, 1, 0, 0);
     }
     else
     {
-        sound->field_10_sep_data_ptr = 0;
+        sound->sepDataPtr_10 = 0;
     }
 
     SsUtSetReverbDepth(50, 50);
-    sound->field_4_seq_num = -1;
+    sound->seqNum_4 = -1;
 
     free3_8003FC6C(pSndFileBuffer);
 }

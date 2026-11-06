@@ -780,25 +780,25 @@ void GoToDest_800B8338(MapDest* sel)
     unsigned char map = destMaps_800B9348[sel->area][sel->dest];
     if (map == 0xFE || map == 0xFF)
     {
-        saveData_8008B570.mapId_2E4[0].field_0 = 4;
-        saveData_8008B570.mapId_2E4[1].field_0 = 0;
-        saveData_8008B570.mapId_2E4[2].field_0 = 0;
-        saveData_8008B570.mapId_2E4[2].field_2 = -1;
+        saveData_8008B570.mapId_2E4[0].cur_0 = 4;
+        saveData_8008B570.mapId_2E4[1].cur_0 = 0;
+        saveData_8008B570.mapId_2E4[2].cur_0 = 0;
+        saveData_8008B570.mapId_2E4[2].prev_2 = -1;
     }
     else if (map >= 0xF0)
     {
         SetEventVar_800AD16C(4, map - 0xEF);
-        saveData_8008B570.mapId_2E4[0].field_0 = 4;
-        saveData_8008B570.mapId_2E4[1].field_0 = 0;
-        saveData_8008B570.mapId_2E4[2].field_0 = 0;
-        saveData_8008B570.mapId_2E4[2].field_2 = -1;
+        saveData_8008B570.mapId_2E4[0].cur_0 = 4;
+        saveData_8008B570.mapId_2E4[1].cur_0 = 0;
+        saveData_8008B570.mapId_2E4[2].cur_0 = 0;
+        saveData_8008B570.mapId_2E4[2].prev_2 = -1;
     }
     else
     {
-        saveData_8008B570.mapId_2E4[0].field_0 = areaMapGroups_800B9360[sel->area];
-        saveData_8008B570.mapId_2E4[1].field_0 = destMaps_800B9348[sel->area][sel->dest];
-        saveData_8008B570.mapId_2E4[2].field_0 = 0;
-        saveData_8008B570.mapId_2E4[2].field_2 = -1;
+        saveData_8008B570.mapId_2E4[0].cur_0 = areaMapGroups_800B9360[sel->area];
+        saveData_8008B570.mapId_2E4[1].cur_0 = destMaps_800B9348[sel->area][sel->dest];
+        saveData_8008B570.mapId_2E4[2].cur_0 = 0;
+        saveData_8008B570.mapId_2E4[2].prev_2 = -1;
     }
     ResetLevantActorToIdle_800A8DEC();
     SetFadeMode_8001C19C(0, 0x20);
@@ -809,13 +809,13 @@ void GoToDest_800B8338(MapDest* sel)
 
 void GetCurrentDest_800B8448(MapDest* out)
 {
-    unsigned short area = saveData_8008B570.mapId_2E4[0].field_0;
+    unsigned short area = saveData_8008B570.mapId_2E4[0].cur_0;
     MapQuery query;
     unsigned char* tbl;
     unsigned char cnt;
     if ((unsigned short)(area - 4) < 2)
     {
-        if (saveData_8008B570.mapId_2E4[1].field_0 == 0)
+        if (saveData_8008B570.mapId_2E4[1].cur_0 == 0)
         {
             int variant = saveData_8008B570.mapVariant_2E0;
             out->dest = 12;
@@ -854,7 +854,7 @@ void GetCurrentDest_800B8448(MapDest* out)
     cnt = destMapCounts_800B9368[out->area];
     for (out->dest = 0; out->dest < cnt; out->dest++)
     {
-        if (saveData_8008B570.mapId_2E4[1].field_0 == tbl[out->dest])
+        if (saveData_8008B570.mapId_2E4[1].cur_0 == tbl[out->dest])
         {
             return;
         }
@@ -980,13 +980,13 @@ void SceneSelect_800B860C()
         if (IsConfirmPressedP1_8003D380(1) == 1)
         {
             saveData_8008B570.mapVariant_2E0 = debugGroupVariants_800B93F8[st->area_4];
-            saveData_8008B570.mapId_2E4[0].field_0 = st->area_4;
-            saveData_8008B570.mapId_2E4[1].field_0 = st->map_8;
-            saveData_8008B570.mapId_2E4[2].field_0 = st->entry_C;
+            saveData_8008B570.mapId_2E4[0].cur_0 = st->area_4;
+            saveData_8008B570.mapId_2E4[1].cur_0 = st->map_8;
+            saveData_8008B570.mapId_2E4[2].cur_0 = st->entry_C;
             saveData_8008B570.field_2E2 = -1;
-            saveData_8008B570.mapId_2E4[0].field_2 = -1;
-            saveData_8008B570.mapId_2E4[1].field_2 = -1;
-            saveData_8008B570.mapId_2E4[2].field_2 = -1;
+            saveData_8008B570.mapId_2E4[0].prev_2 = -1;
+            saveData_8008B570.mapId_2E4[1].prev_2 = -1;
+            saveData_8008B570.mapId_2E4[2].prev_2 = -1;
             useMapStartPos_80091C94 = 1;
             mapStartMode_80091C54 = 0;
             ResetLevantActorToIdle_800A8DEC();

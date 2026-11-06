@@ -44,10 +44,10 @@ void ChapterIntroTask_800B66F4(ChapterTask* task, int* st)
         PlayMovie_80040EB4(chapterTable_800B6FE0[saveData_8008B570.chapter_2DC].movie_10);
         if (chapterTable_800B6FE0[saveData_8008B570.chapter_2DC].fadeBgm_C)
         {
-            if (bgmSound_80091CE0.field_4_seq_num >= 0)
+            if (bgmSound_80091CE0.seqNum_4 >= 0)
             {
-                SsSepSetDecrescendo(bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78);
-                bgmSound_80091CE0.field_4_seq_num = -1;
+                SsSepSetDecrescendo(bgmSound_80091CE0.sepAccessNum_C, bgmSound_80091CE0.seqNum_4, 0x7F, 0x78);
+                bgmSound_80091CE0.seqNum_4 = -1;
             }
             st[1] = 0x3C;
         }
@@ -143,10 +143,10 @@ void EnterChapterMap_800B6B18()
     sd->chapterNext_2DE = sd->chapter_2DC + 1;
     sd->mapVariant_2E0 = chapter->mapVariant_0;
     useMapStartPos_80091C94 = 1;
-    sd->mapId_2E4[0].field_0 = key.area;
-    sd->mapId_2E4[1].field_0 = key.map;
-    sd->mapId_2E4[2].field_0 = key.sub;
-    sd->mapId_2E4[3].field_0 = 0;
+    sd->mapId_2E4[0].cur_0 = key.area;
+    sd->mapId_2E4[1].cur_0 = key.map;
+    sd->mapId_2E4[2].cur_0 = key.sub;
+    sd->mapId_2E4[3].cur_0 = 0;
     RequestGameMode_800A6D30(1);
     eventDispatchHalt_8008B540 = 1;
 }

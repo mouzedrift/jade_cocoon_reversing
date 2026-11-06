@@ -50,8 +50,8 @@ struct TimInfo;
 
 typedef struct
 {
-    DslLOC field_0_position;
-    int field_4_sectors;
+    DslLOC position_0;
+    int sectors_4;
     int field_8_size;
 } Data001File;
 

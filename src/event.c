@@ -367,7 +367,7 @@ void XaSetup_800433FC(XaTask* task)
         cmd = DsCommand(0xD, param, 0, -1);
         task->cmd_4 = cmd;
     } while (cmd == 0);
-    xaStartPos_80096108 = DsPosToInt(&file.field_0_position);
+    xaStartPos_80096108 = DsPosToInt(&file.position_0);
     xaStartPos_80096108 += xaRequest_80096110.startSector_4 * 32;
     xaEndPos_8009610C = xaStartPos_80096108 + xaRequest_80096110.length_6 * 32;
     xaTimer_8008D450 = xaRequest_80096110.length_6 * 1920 / 150;

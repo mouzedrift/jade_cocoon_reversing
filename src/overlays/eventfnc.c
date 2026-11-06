@@ -508,9 +508,9 @@ void EncounterSpawnTask_800B844C(EvTaskEntry* task)
     {
         EvMapEntry*** tbl = mapTable_800B0608;
         save = &saveData_8008B570;
-        spawn.f1A_1A = tbl[save->mapId_2E4[0].field_0][save->mapId_2E4[1].field_0][save->mapId_2E4[2].field_2].f6_6;
-        spawn.f18_18 = tbl[save->mapId_2E4[0].field_0][save->mapId_2E4[1].field_0][save->mapId_2E4[2].field_0].f6_6;
-        count = RollEncounterGroups_800A49CC(tbl[save->mapId_2E4[0].field_0][save->mapId_2E4[1].field_0][save->mapId_2E4[2].field_2].f4_4, spawn.f18_18, &mapSpawns_80091C60, &spawn);
+        spawn.f1A_1A = tbl[save->mapId_2E4[0].cur_0][save->mapId_2E4[1].cur_0][save->mapId_2E4[2].prev_2].f6_6;
+        spawn.f18_18 = tbl[save->mapId_2E4[0].cur_0][save->mapId_2E4[1].cur_0][save->mapId_2E4[2].cur_0].f6_6;
+        count = RollEncounterGroups_800A49CC(tbl[save->mapId_2E4[0].cur_0][save->mapId_2E4[1].cur_0][save->mapId_2E4[2].prev_2].f4_4, spawn.f18_18, &mapSpawns_80091C60, &spawn);
         for (i = 0; i < count; i++)
         {
             SpawnEncounterEnemy_800B8568(spawn.members_0[i], spawn.places_C[i], -1, i);
@@ -1657,10 +1657,10 @@ int EvCmdChangeMap_800BA930(EvScriptCtx* ctx)
 {
     SaveData* s = &saveData_8008B570;
     int* dest;
-    s->mapId_2E4[0].field_0 = ((unsigned short*)&ctx->pc_8->a_4)[0];
-    s->mapId_2E4[1].field_0 = ((unsigned short*)&ctx->pc_8->b_8)[1];
-    s->mapId_2E4[2].field_0 = ((unsigned short*)&ctx->pc_8->b_8)[0];
-    s->mapId_2E4[2].field_2 = -1;
+    s->mapId_2E4[0].cur_0 = ((unsigned short*)&ctx->pc_8->a_4)[0];
+    s->mapId_2E4[1].cur_0 = ((unsigned short*)&ctx->pc_8->b_8)[1];
+    s->mapId_2E4[2].cur_0 = ((unsigned short*)&ctx->pc_8->b_8)[0];
+    s->mapId_2E4[2].prev_2 = -1;
     dest = (int*)ctx->pc_8->c_C;
     if (dest)
     {
@@ -1687,9 +1687,9 @@ int EvCmdChangeMapToPoint_800BA9E4(EvScriptCtx* ctx)
     mapStartMode_80091C54 = 0;
     useMapStartPos_80091C94 = 1;
     s = &saveData_8008B570;
-    s->mapId_2E4[0].field_0 = v[0];
-    s->mapId_2E4[1].field_0 = v[1];
-    s->mapId_2E4[2].field_0 = v[2];
+    s->mapId_2E4[0].cur_0 = v[0];
+    s->mapId_2E4[1].cur_0 = v[1];
+    s->mapId_2E4[2].cur_0 = v[2];
     eventDispatchHalt_8008B540 = 1;
     ctx->pc_8++;
     return 0;
@@ -1857,8 +1857,8 @@ int EvCmdSetMapMesh_800BAF68(EvScriptCtx* ctx)
 {
     SaveData* s = &saveData_8008B570;
     unsigned short mesh = *(unsigned short*)&ctx->pc_8->b_8;
-    s->mapId_2E4[3].field_0 = mesh;
-    if ((short)mesh == s->mapId_2E4[3].field_2)
+    s->mapId_2E4[3].cur_0 = mesh;
+    if ((short)mesh == s->mapId_2E4[3].prev_2)
     {
         ctx->pc_8++;
         return 1;
@@ -2082,19 +2082,19 @@ int EvCmdFadeSound_800BB4A4(EvScriptCtx* ctx)
         if (op == 0xFF00)
         {
             seq = &bgmSound_80091CE0;
-            if (seq->field_4_seq_num >= 0)
+            if (seq->seqNum_4 >= 0)
             {
-                SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
-                seq->field_4_seq_num = -1;
+                SsSepSetDecrescendo(seq->sepAccessNum_C, seq->seqNum_4, 0x7F, 0x78);
+                seq->seqNum_4 = -1;
             }
         }
         else if (op == 0xFF01)
         {
             seq = &bgmSound_80091CE0;
-            if (seq->field_4_seq_num >= 0)
+            if (seq->seqNum_4 >= 0)
             {
-                SsSepStop(seq->field_C_sep_access_num, seq->field_4_seq_num);
-                seq->field_4_seq_num = -1;
+                SsSepStop(seq->sepAccessNum_C, seq->seqNum_4);
+                seq->seqNum_4 = -1;
             }
         }
         else if (op == 0xFF02)

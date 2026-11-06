@@ -3,28 +3,28 @@
 
 typedef struct SoundStruct
 {
-    int field_0_vab_id;
-    short field_4_seq_num;
-    short field_6_sound_idx;
-    unsigned long* field_8_sep_data_ptr;
-    int field_C_sep_access_num;
-    unsigned long* field_10_sep_data_ptr;
-    int field_14_sep_access_num;
-    unsigned char* field_18_vab_header_ptr;
+    int vabId_0;
+    short seqNum_4;
+    short soundIdx_6;
+    unsigned long* sepDataPtr_8;
+    int sepAccessNum_C;
+    unsigned long* sepDataPtr_10;
+    int sepAccessNum_14;
+    unsigned char* vabHeaderPtr_18;
 } SoundStruct;
 
 #include "soundtask.h"
 
 typedef struct
 {
-    int field_0_header_start;
-    unsigned int field_4_vab_header_size;
-    int field_8_vab_body_start;
+    int headerStart_0;
+    unsigned int vabHeaderSize_4;
+    int vabBodyStart_8;
     int field_C;
-    int field_10_sep_data_start;
-    unsigned int field_14_sep_size;
-    int field_18_sep_data2_ptr;
-    unsigned int field_1C_sep_size;
+    int sepDataStart_10;
+    unsigned int sepSize_14;
+    int sepData2Ptr_18;
+    unsigned int sepSize_1C;
     int pad_20;
     int field_24;
     int pad_28;
@@ -38,9 +38,9 @@ typedef struct
 {
   short field_0_file_id;
   short field_2_seq; // sequence played from the file (-1 = none)
-  unsigned char field_4_seq_count;
-  unsigned char field_5_seq_count;
-  short field_6_sub_sound;
+  unsigned char seqCount_4;
+  unsigned char seqCount_5;
+  short subSound_6;
 } SoundInfo;
 
 extern int GetSoundFileId_80030D4C(int idx);

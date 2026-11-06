@@ -368,7 +368,7 @@ int GetStoreStockMask_800BB088(StoreMenu* store)
     {
         r = 8;
     }
-    if (saveData_8008B570.chapter_2DC == 0 && saveData_8008B570.mapId_2E4[0].field_0 == 0 && saveData_8008B570.mapId_2E4[1].field_0 == 4 && store->keeperId_4C == 3)
+    if (saveData_8008B570.chapter_2DC == 0 && saveData_8008B570.mapId_2E4[0].cur_0 == 0 && saveData_8008B570.mapId_2E4[1].cur_0 == 4 && store->keeperId_4C == 3)
     {
         r = 0x10;
     }

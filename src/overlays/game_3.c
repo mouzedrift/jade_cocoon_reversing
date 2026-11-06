@@ -1331,17 +1331,17 @@ void WarpAfterLostBattle_800A5FAC(void)
     {
         SaveData* sd = &saveData_8008B570;
         GameMapLoc loc;
-        SetEventVar_800AD16C(4, sd->mapId_2E4[1].field_0 + 4);
+        SetEventVar_800AD16C(4, sd->mapId_2E4[1].cur_0 + 4);
         FindMapEntrance_800ADCEC(&loc, GetSetReturnEntrance_800A683C(-1));
         SetEventFlag_800AD0F8(0);
         useMapStartPos_80091C94 = 1;
         mapStartMode_80091C54 = 0;
-        sd->mapId_2E4[3].field_0 = 0;
+        sd->mapId_2E4[3].cur_0 = 0;
         forceMapReload_80091C9C = 1;
         dword_80091C8C = 0;
-        sd->mapId_2E4[0].field_0 = loc.area;
-        sd->mapId_2E4[1].field_0 = loc.map;
-        sd->mapId_2E4[2].field_0 = loc.entrance;
+        sd->mapId_2E4[0].cur_0 = loc.area;
+        sd->mapId_2E4[1].cur_0 = loc.map;
+        sd->mapId_2E4[2].cur_0 = loc.entrance;
         unknownFlags_8008D678 &= ~0x20000;
     }
 }
@@ -1772,15 +1772,15 @@ void CheckSubOverlayRequests_800A6DAC(GameTask* task, GameSubOverlayWork* work)
     work->start_1C = 0;
     if (forceMapReload_80091C9C == 1)
         return;
-    if (saveData_8008B570.mapId_2E4[0].field_2 != saveData_8008B570.mapId_2E4[0].field_0)
+    if (saveData_8008B570.mapId_2E4[0].prev_2 != saveData_8008B570.mapId_2E4[0].cur_0)
         return;
-    if (saveData_8008B570.mapId_2E4[1].field_2 != saveData_8008B570.mapId_2E4[1].field_0)
+    if (saveData_8008B570.mapId_2E4[1].prev_2 != saveData_8008B570.mapId_2E4[1].cur_0)
         return;
-    if (saveData_8008B570.mapId_2E4[2].field_2 != saveData_8008B570.mapId_2E4[2].field_0)
+    if (saveData_8008B570.mapId_2E4[2].prev_2 != saveData_8008B570.mapId_2E4[2].cur_0)
         return;
     if (areaPreload_80091C40[1] != areaPreload_80091C40[0])
         return;
-    if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
+    if (saveData_8008B570.mapId_2E4[3].prev_2 != saveData_8008B570.mapId_2E4[3].cur_0)
         return;
     if (areaLoadIds_80091CB8[6] != areaLoadIds_80091CB8[7])
         return;
@@ -1915,13 +1915,13 @@ GameStartMode* GetGameStartMode_800A72C8(GameStartMode* out)
         mode.useStartPos_0 = 0;
         mode.mode_4 = 1;
         FindMapEntrance_800ADCEC(&loc, 0x159);
-        saveData_8008B570.mapId_2E4[0].field_2 = -1;
-        saveData_8008B570.mapId_2E4[1].field_2 = -1;
-        saveData_8008B570.mapId_2E4[2].field_2 = -1;
+        saveData_8008B570.mapId_2E4[0].prev_2 = -1;
+        saveData_8008B570.mapId_2E4[1].prev_2 = -1;
+        saveData_8008B570.mapId_2E4[2].prev_2 = -1;
         useMapStartPos_80091C94 = 1;
-        saveData_8008B570.mapId_2E4[0].field_0 = loc.area;
-        saveData_8008B570.mapId_2E4[1].field_0 = loc.map;
-        saveData_8008B570.mapId_2E4[2].field_0 = loc.entrance;
+        saveData_8008B570.mapId_2E4[0].cur_0 = loc.area;
+        saveData_8008B570.mapId_2E4[1].cur_0 = loc.map;
+        saveData_8008B570.mapId_2E4[2].cur_0 = loc.entrance;
     }
     else if ((unsigned short)titleMenuState_8008B558[1] == 1)
     {
@@ -5342,12 +5342,12 @@ void SelectMapEntrance_800ADDAC(void)
     int i;
     int key;
     GameMapEntrance* ents;
-    loc.area = saveData_8008B570.mapId_2E4[0].field_0;
-    loc.map = saveData_8008B570.mapId_2E4[1].field_0;
-    loc.entrance = saveData_8008B570.mapId_2E4[2].field_0;
+    loc.area = saveData_8008B570.mapId_2E4[0].cur_0;
+    loc.map = saveData_8008B570.mapId_2E4[1].cur_0;
+    loc.entrance = saveData_8008B570.mapId_2E4[2].cur_0;
     savedEntrance = GetMapVar_800ADC1C(&loc);
-    ents = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
-    key = saveData_8008B570.mapId_2E4[2].field_0;
+    ents = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0];
+    key = saveData_8008B570.mapId_2E4[2].cur_0;
     i = 0;
     if (ents->id_0 >= 0)
     {
@@ -5357,12 +5357,12 @@ void SelectMapEntrance_800ADDAC(void)
             {
                 if (savedEntrance == -1)
                 {
-                    saveData_8008B570.mapId_2E4[2].field_0 = i;
+                    saveData_8008B570.mapId_2E4[2].cur_0 = i;
                     return;
                 }
                 if (savedEntrance == ents[i].entrance_6)
                 {
-                    saveData_8008B570.mapId_2E4[2].field_0 = i;
+                    saveData_8008B570.mapId_2E4[2].cur_0 = i;
                     return;
                 }
             }

@@ -127,7 +127,7 @@ int PlayMovie_80040EB4(int idx)
     bMovieFinished_800960FC = 0;
     do
     {
-        loc = file.field_0_position;
+        loc = file.position_0;
         MovieStartCdStream_800417BC(&loc, (MovieParams*)movie);
     } while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, movie));
     while (!SkipMovieButtonPressed_800413BC((MovieParams*)movie))
@@ -139,7 +139,7 @@ int PlayMovie_80040EB4(int idx)
             backFrame = StGetBackloc(&loc);
             if (movie->frameCount_A < backFrame || backFrame <= 0)
             {
-                loc = file.field_0_position;
+                loc = file.position_0;
             }
             MovieStartCdStream_800417BC(&loc, (MovieParams*)movie);
         }

@@ -82,21 +82,21 @@ void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
         {
             FreeLevantAnimById_800AC6A8(st[1]);
             ReleaseLevantControl_800A8E38();
-            if (saveData_8008B570.mapId_2E4[0].field_0 == 4 && saveData_8008B570.mapId_2E4[1].field_0 == 0 && mapTable_800B0608[4][0][saveData_8008B570.mapId_2E4[2].field_0].f4_4 == 0)
+            if (saveData_8008B570.mapId_2E4[0].cur_0 == 4 && saveData_8008B570.mapId_2E4[1].cur_0 == 0 && mapTable_800B0608[4][0][saveData_8008B570.mapId_2E4[2].cur_0].f4_4 == 0)
             {
                 int tbl2[9] = {0, 0, 0, 0, 0, 5, 7, 6, 8};
-                SetEventVar_800AD16C(4, tbl2[saveData_8008B570.mapId_2E4[3].field_0]);
+                SetEventVar_800AD16C(4, tbl2[saveData_8008B570.mapId_2E4[3].cur_0]);
             }
             else
             {
-                SetEventVar_800AD16C(4, saveData_8008B570.mapId_2E4[1].field_0 + 4);
+                SetEventVar_800AD16C(4, saveData_8008B570.mapId_2E4[1].cur_0 + 4);
             }
             FindMapEntrance_800ADCEC(v, GetSetReturnEntrance_800A683C(-1));
             save = &saveData_8008B570;
-            save->mapId_2E4[3].field_0 = 0;
-            save->mapId_2E4[0].field_0 = v[0];
-            save->mapId_2E4[1].field_0 = v[1];
-            save->mapId_2E4[2].field_0 = v[2];
+            save->mapId_2E4[3].cur_0 = 0;
+            save->mapId_2E4[0].cur_0 = v[0];
+            save->mapId_2E4[1].cur_0 = v[1];
+            save->mapId_2E4[2].cur_0 = v[2];
             forceMapReload_80091C9C = 1;
             useMapStartPos_80091C94 = 1;
             mapStartMode_80091C54 = 0;

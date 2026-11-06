@@ -297,10 +297,10 @@ void CheckBattleOver_800A4EC8(CombBtlTask* t, int a)
 
 void PlayVictoryJingle_800A5000(CombBtlTask* t)
 {
-    if (bgmSound_80091CE0.field_4_seq_num >= 0)
+    if (bgmSound_80091CE0.seqNum_4 >= 0)
     {
-        SsSepSetDecrescendo(bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78);
-        bgmSound_80091CE0.field_4_seq_num = -1;
+        SsSepSetDecrescendo(bgmSound_80091CE0.sepAccessNum_C, bgmSound_80091CE0.seqNum_4, 0x7F, 0x78);
+        bgmSound_80091CE0.seqNum_4 = -1;
     }
     StopSeqSlot_80031334(0);
     PlaySeqSlot_80031160(1, 1);
@@ -431,10 +431,10 @@ MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side)
 void CombBtlEnd_800A54CC(CombBtlTask* t)
 {
     FadeOutSeqSlot_800313C8(0);
-    if (bgmSound_80091CE0.field_4_seq_num >= 0)
+    if (bgmSound_80091CE0.seqNum_4 >= 0)
     {
-        SsSepSetDecrescendo(bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78);
-        bgmSound_80091CE0.field_4_seq_num = -1;
+        SsSepSetDecrescendo(bgmSound_80091CE0.sepAccessNum_C, bgmSound_80091CE0.seqNum_4, 0x7F, 0x78);
+        bgmSound_80091CE0.seqNum_4 = -1;
     }
     StartSceneFadeOut_8001AA50(0x1E);
     CloseSideWindows_800A7BE4();

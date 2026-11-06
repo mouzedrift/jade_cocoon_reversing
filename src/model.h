@@ -690,7 +690,7 @@ typedef struct MapTriRec
 
 typedef struct MapState
 {
-    int id_0; // saveData_8008B570.mapId_2E4[2].field_0
+    int id_0; // saveData_8008B570.mapId_2E4[2].cur_0
     unsigned int nMeshes_4;
     int f8_8;
     MapMesh* meshes_C; // the floor, one mesh per area (saveData mapId_2E4[3])

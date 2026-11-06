@@ -204,10 +204,10 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
         c->timer_68 = 0x3C;
         t->next_8 = NewGameFadeOut_800A0BCC;
         ss = &bgmSound_80091CE0;
-        if (ss->field_4_seq_num >= 0)
+        if (ss->seqNum_4 >= 0)
         {
-            SsSepSetDecrescendo(*(short*)&ss->field_C_sep_access_num, ss->field_4_seq_num, 0x7F, 0x78);
-            ss->field_4_seq_num = -1;
+            SsSepSetDecrescendo(*(short*)&ss->sepAccessNum_C, ss->seqNum_4, 0x7F, 0x78);
+            ss->seqNum_4 = -1;
         }
     }
 }
@@ -342,10 +342,10 @@ void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
     if (++titleIdleTimer_800A2814 >= 0x1771) \
     { \
         (c)->frames_0 = 0; \
-        if (bgmSound_80091CE0.field_4_seq_num >= 0) \
+        if (bgmSound_80091CE0.seqNum_4 >= 0) \
         { \
-            SsSepSetDecrescendo(*(short*)&bgmSound_80091CE0.field_C_sep_access_num, bgmSound_80091CE0.field_4_seq_num, 0x7F, 0x78); \
-            bgmSound_80091CE0.field_4_seq_num = -1; \
+            SsSepSetDecrescendo(*(short*)&bgmSound_80091CE0.sepAccessNum_C, bgmSound_80091CE0.seqNum_4, 0x7F, 0x78); \
+            bgmSound_80091CE0.seqNum_4 = -1; \
         } \
         SetFadeMode_8001C19C(0, 0x20); \
         SetFadeMode_8001C19C(1, 0x20); \
@@ -559,10 +559,10 @@ void TitleExit_800A1AFC(TitleTask* t, int result)
 {
     SoundStruct* bgm = &bgmSound_80091CE0;
     titleResult_800A2818 = result;
-    if (bgm->field_4_seq_num >= 0)
+    if (bgm->seqNum_4 >= 0)
     {
-        SsSepSetDecrescendo((short)bgm->field_C_sep_access_num, bgm->field_4_seq_num, 0x7F, 0x78);
-        bgm->field_4_seq_num = -1;
+        SsSepSetDecrescendo((short)bgm->sepAccessNum_C, bgm->seqNum_4, 0x7F, 0x78);
+        bgm->seqNum_4 = -1;
     }
     bStopDrawingMovie_8008D45C = 1;
     t->flags_0 &= ~1;
@@ -864,10 +864,10 @@ void ResetMapIds_800A242C(void)
 {
     SDECL;
     s->field_2E2 = -1;
-    s->mapId_2E4[0].field_2 = -1;
-    s->mapId_2E4[1].field_2 = -1;
-    s->mapId_2E4[2].field_2 = -1;
-    s->mapId_2E4[3].field_2 = -1;
+    s->mapId_2E4[0].prev_2 = -1;
+    s->mapId_2E4[1].prev_2 = -1;
+    s->mapId_2E4[2].prev_2 = -1;
+    s->mapId_2E4[3].prev_2 = -1;
 }
 
 void ClearMinionSlots_800A2450(void)
@@ -915,18 +915,18 @@ void SetNewGameStartMap_800A2650(void)
     s->chapterNext_2DE = -1;
     s->mapVariant_2E0 = 1;
     s->field_2E2 = -1;
-    s->mapId_2E4[0].field_2 = -1;
-    s->mapId_2E4[1].field_2 = -1;
-    s->mapId_2E4[2].field_2 = -1;
-    s->mapId_2E4[3].field_2 = -1;
-    s->mapId_2E4[1].field_0 = 4;
+    s->mapId_2E4[0].prev_2 = -1;
+    s->mapId_2E4[1].prev_2 = -1;
+    s->mapId_2E4[2].prev_2 = -1;
+    s->mapId_2E4[3].prev_2 = -1;
+    s->mapId_2E4[1].cur_0 = 4;
     useMapStartPos_80091C94 = 1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;
     s->field_810 = 0;
-    s->mapId_2E4[0].field_0 = 0;
-    s->mapId_2E4[2].field_0 = 0;
-    s->mapId_2E4[3].field_0 = 0;
+    s->mapId_2E4[0].cur_0 = 0;
+    s->mapId_2E4[2].cur_0 = 0;
+    s->mapId_2E4[3].cur_0 = 0;
     s->levant_7A8.pos = levantStartPos_800B069C;
     s->levant_7A8.rot = levantStartRot_800B06A8;
     ClearMapVars_800A2110();

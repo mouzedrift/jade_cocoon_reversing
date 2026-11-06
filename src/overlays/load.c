@@ -1888,10 +1888,10 @@ void LoadMenuExit_800BAAE0(LoadMenuTaskEntry* task, LoadMenuWork* work)
         {
             SaveData* save = &saveData_8008B570;
             save->field_2E2 = -1;
-            save->mapId_2E4[0].field_2 = -1;
-            save->mapId_2E4[1].field_2 = -1;
-            save->mapId_2E4[2].field_2 = -1;
-            save->mapId_2E4[3].field_2 = -1;
+            save->mapId_2E4[0].prev_2 = -1;
+            save->mapId_2E4[1].prev_2 = -1;
+            save->mapId_2E4[2].prev_2 = -1;
+            save->mapId_2E4[3].prev_2 = -1;
             mapStartMode_80091C54 = 0;
             if (!(work->flags_54 & 4))
             {

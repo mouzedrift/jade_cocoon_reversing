@@ -77,23 +77,23 @@ int IsCurrentMapListed_80034140(void)
 {
     unsigned char*** table = mapListTable_80083800;
     SaveData* save = &saveData_8008B570;
-    unsigned char** tbl = table[save->mapId_2E4[0].field_0];
+    unsigned char** tbl = table[save->mapId_2E4[0].cur_0];
     unsigned char* list;
     short target;
     short i;
     if (tbl)
     {
-        list = tbl[save->mapId_2E4[1].field_0];
+        list = tbl[save->mapId_2E4[1].cur_0];
         if (list)
         {
             i = 0;
             if (list == mapLists4_800837D8)
             {
-                target = save->mapId_2E4[3].field_0;
+                target = save->mapId_2E4[3].cur_0;
             }
             else
             {
-                target = save->mapId_2E4[2].field_0;
+                target = save->mapId_2E4[2].cur_0;
             }
             while (list[i] != 0xFF)
             {

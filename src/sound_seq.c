@@ -45,11 +45,11 @@ const int unused_80074618 = 0;
 
 void FreeSound_80030D00(SoundStruct* sound)
 {
-    if (sound && sound->field_6_sound_idx >= 0)
+    if (sound && sound->soundIdx_6 >= 0)
     {
         FreeSoundSeqs_80030EEC(sound);
         FreeSoundVab_80030EA4(sound);
-        sound->field_6_sound_idx = -1;
+        sound->soundIdx_6 = -1;
     }
 }
 int GetSoundFileId_80030D4C(int idx)
@@ -59,58 +59,58 @@ int GetSoundFileId_80030D4C(int idx)
 void StopSoundSeqs_80030D68(SoundStruct* sound)
 {
     int i;
-    sound->field_4_seq_num = -1;
-    if (sound->field_8_sep_data_ptr)
+    sound->seqNum_4 = -1;
+    if (sound->sepDataPtr_8)
     {
-        for (i = 0; i < soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count; i++)
+        for (i = 0; i < soundFiles_80082F0C[sound->soundIdx_6].seqCount_4; i++)
         {
-            SsSepStop(sound->field_C_sep_access_num, i);
-            SsSepSetVol(sound->field_C_sep_access_num, i, 0, 0);
+            SsSepStop(sound->sepAccessNum_C, i);
+            SsSepSetVol(sound->sepAccessNum_C, i, 0, 0);
         }
     }
-    if (sound->field_10_sep_data_ptr)
+    if (sound->sepDataPtr_10)
     {
-        for (i = 0; i < soundFiles_80082F0C[sound->field_6_sound_idx].field_5_seq_count; i++)
+        for (i = 0; i < soundFiles_80082F0C[sound->soundIdx_6].seqCount_5; i++)
         {
-            SsSepStop(sound->field_14_sep_access_num, i);
-            SsSepSetVol(sound->field_14_sep_access_num, i, 0, 0);
+            SsSepStop(sound->sepAccessNum_14, i);
+            SsSepSetVol(sound->sepAccessNum_14, i, 0, 0);
         }
     }
 }
 void FreeSoundVab_80030EA4(SoundStruct* sound)
 {
-    SsVabClose(sound->field_0_vab_id);
-    if (sound->field_18_vab_header_ptr)
+    SsVabClose(sound->vabId_0);
+    if (sound->vabHeaderPtr_18)
     {
-        free3_8003FC6C(sound->field_18_vab_header_ptr);
-        sound->field_18_vab_header_ptr = 0;
+        free3_8003FC6C(sound->vabHeaderPtr_18);
+        sound->vabHeaderPtr_18 = 0;
     }
 }
 void FreeSoundSeqs_80030EEC(void* soundArg)
 {
     SoundStruct* sound = soundArg;
     int i;
-    if (sound->field_8_sep_data_ptr)
+    if (sound->sepDataPtr_8)
     {
-        for (i = 0; i < soundFiles_80082F0C[sound->field_6_sound_idx].field_4_seq_count; i++)
+        for (i = 0; i < soundFiles_80082F0C[sound->soundIdx_6].seqCount_4; i++)
         {
-            SsSepStop(sound->field_C_sep_access_num, (short)i);
-            SsSepSetVol(sound->field_C_sep_access_num, (short)i, 0, 0);
+            SsSepStop(sound->sepAccessNum_C, (short)i);
+            SsSepSetVol(sound->sepAccessNum_C, (short)i, 0, 0);
         }
-        SsSepClose(sound->field_C_sep_access_num);
-        free3_8003FC6C(sound->field_8_sep_data_ptr);
-        sound->field_8_sep_data_ptr = 0;
+        SsSepClose(sound->sepAccessNum_C);
+        free3_8003FC6C(sound->sepDataPtr_8);
+        sound->sepDataPtr_8 = 0;
     }
-    if (sound->field_10_sep_data_ptr)
+    if (sound->sepDataPtr_10)
     {
-        for (i = 0; i < soundFiles_80082F0C[sound->field_6_sound_idx].field_5_seq_count; i++)
+        for (i = 0; i < soundFiles_80082F0C[sound->soundIdx_6].seqCount_5; i++)
         {
-            SsSepStop(sound->field_14_sep_access_num, (short)i);
-            SsSepSetVol(sound->field_14_sep_access_num, (short)i, 0, 0);
+            SsSepStop(sound->sepAccessNum_14, (short)i);
+            SsSepSetVol(sound->sepAccessNum_14, (short)i, 0, 0);
         }
-        SsSepClose(sound->field_14_sep_access_num);
-        free3_8003FC6C(sound->field_10_sep_data_ptr);
-        sound->field_10_sep_data_ptr = 0;
+        SsSepClose(sound->sepAccessNum_14);
+        free3_8003FC6C(sound->sepDataPtr_10);
+        sound->sepDataPtr_10 = 0;
     }
 }
 void PlaySoundSeq_8003105C(SoundStruct* sound, int idx, short loops)
@@ -120,13 +120,13 @@ void PlaySoundSeq_8003105C(SoundStruct* sound, int idx, short loops)
     int seqNum;
     if (seq >= 0x10)
     {
-        accessNum = sound->field_14_sep_access_num;
+        accessNum = sound->sepAccessNum_14;
         seqNum = seq - 0x10;
     }
     else
     {
         seqNum = seq;
-        accessNum = sound->field_C_sep_access_num;
+        accessNum = sound->sepAccessNum_C;
     }
     if (idx == 0)
     {
@@ -138,7 +138,7 @@ void PlaySoundSeq_8003105C(SoundStruct* sound, int idx, short loops)
     }
     SsSepPlay(accessNum, seqNum, 1, loops);
     SsSepSetCrescendo(accessNum, seqNum, 1, 1);
-    sound->field_4_seq_num = seqNum;
+    sound->seqNum_4 = seqNum;
 }
 void PlaySeqSlot_80031160(unsigned int idx, short loops)
 {
@@ -147,11 +147,11 @@ void PlaySeqSlot_80031160(unsigned int idx, short loops)
     int seqNum;
     if (seqSlots_800833E4[idx].sep_0 == 1)
     {
-        accessNum = sound->field_14_sep_access_num;
+        accessNum = sound->sepAccessNum_14;
     }
     else
     {
-        accessNum = sound->field_C_sep_access_num;
+        accessNum = sound->sepAccessNum_C;
     }
     seqNum = seqSlots_800833E4[idx].seq_4;
     if (idx < 2)
@@ -172,17 +172,17 @@ void PlayMusicSeq_80031260(SoundStruct* sound, int idx, short loops)
     {
         if (sound == &bgmSound_80091CE0)
         {
-            SsSepSetVol(sound->field_C_sep_access_num, seq, (saveData_8008B570.settings_1C.word >> 7) & 0x7F,
+            SsSepSetVol(sound->sepAccessNum_C, seq, (saveData_8008B570.settings_1C.word >> 7) & 0x7F,
                         (saveData_8008B570.settings_1C.word >> 7) & 0x7F);
         }
         else
         {
-            SsSepSetVol(sound->field_C_sep_access_num, seq, (saveData_8008B570.settings_1C.word >> 14) & 0x7F,
+            SsSepSetVol(sound->sepAccessNum_C, seq, (saveData_8008B570.settings_1C.word >> 14) & 0x7F,
                         (saveData_8008B570.settings_1C.word >> 14) & 0x7F);
         }
-        SsSepPlay(sound->field_C_sep_access_num, soundFiles_80082F0C[idx].field_2_seq, 1, loops);
-        SsSepSetCrescendo(sound->field_C_sep_access_num, soundFiles_80082F0C[idx].field_2_seq, 1, 1);
-        sound->field_4_seq_num = soundFiles_80082F0C[idx].field_2_seq;
+        SsSepPlay(sound->sepAccessNum_C, soundFiles_80082F0C[idx].field_2_seq, 1, loops);
+        SsSepSetCrescendo(sound->sepAccessNum_C, soundFiles_80082F0C[idx].field_2_seq, 1, 1);
+        sound->seqNum_4 = soundFiles_80082F0C[idx].field_2_seq;
     }
 }
 void StopSeqSlot_80031334(int idx)
@@ -192,11 +192,11 @@ void StopSeqSlot_80031334(int idx)
     short seqNum;
     if (seqSlots_800833E4[idx].sep_0 == 1)
     {
-        accessNum = sound->field_14_sep_access_num;
+        accessNum = sound->sepAccessNum_14;
     }
     else
     {
-        accessNum = sound->field_C_sep_access_num;
+        accessNum = sound->sepAccessNum_C;
     }
     seqNum = seqSlots_800833E4[idx].seq_4;
     SsSepStop(accessNum, seqNum);
@@ -204,7 +204,7 @@ void StopSeqSlot_80031334(int idx)
 }
 void FadeOutSeqSlot_800313C8(int idx)
 {
-    SsSepSetDecrescendo(seqSlotSound_80091D00.field_C_sep_access_num, seqSlots_800833E4[idx].seq_4, 0x7F, 0x78);
+    SsSepSetDecrescendo(seqSlotSound_80091D00.sepAccessNum_C, seqSlots_800833E4[idx].seq_4, 0x7F, 0x78);
 }
 void StopSoundSeq_80031408(SoundStruct* sound, int idx)
 {
@@ -215,12 +215,12 @@ void StopSoundSeq_80031408(SoundStruct* sound, int idx)
     int seqNum;
     if (seq >= 0x10)
     {
-        accessNum = sound->field_14_sep_access_num;
+        accessNum = sound->sepAccessNum_14;
         seqNum = seq - 0x10;
     }
     else
     {
-        accessNum = sound->field_C_sep_access_num;
+        accessNum = sound->sepAccessNum_C;
         seqNum = seq;
     }
     SsSepStop(accessNum, seqNum);
@@ -230,14 +230,14 @@ void PlaySfx_80031494(int id)
 {
     if (id < 63)
     {
-        SsVoKeyOn((sfxSound_80091D20.field_0_vab_id << 8) + id,
+        SsVoKeyOn((sfxSound_80091D20.vabId_0 << 8) + id,
                   0x3C00u,
                   (saveData_8008B570.settings_1C.word >> 14) & 0x7F,
                   (saveData_8008B570.settings_1C.word >> 14) & 0x7F);
     }
     else
     {
-        SsVoKeyOn((systemSound_80091D40.field_0_vab_id << 8) + id,
+        SsVoKeyOn((systemSound_80091D40.vabId_0 << 8) + id,
                   0x3C00u,
                   (saveData_8008B570.settings_1C.word >> 14) & 0x7F,
                   (saveData_8008B570.settings_1C.word >> 14) & 0x7F);
@@ -288,16 +288,16 @@ void FadeOutSfxSeq_80031638(void)
     SoundTask* task;
     int i;
     task = soundTask_8008D4A4->entry.buffer;
-    if (sfxSound_80091D20.field_4_seq_num >= 0)
+    if (sfxSound_80091D20.seqNum_4 >= 0)
     {
         for (i = 0; i < 5; i++)
         {
             if (task->fades_18[i].active == 0)
             {
                 task->fades_18[i].active = 1;
-                SsSepSetDecrescendo(sfxSound_80091D20.field_C_sep_access_num, sfxSound_80091D20.field_4_seq_num, 0x7F, 0x40);
-                task->fades_18[i].access_num = sfxSound_80091D20.field_C_sep_access_num;
-                task->fades_18[i].seq = sfxSound_80091D20.field_4_seq_num;
+                SsSepSetDecrescendo(sfxSound_80091D20.sepAccessNum_C, sfxSound_80091D20.seqNum_4, 0x7F, 0x40);
+                task->fades_18[i].access_num = sfxSound_80091D20.sepAccessNum_C;
+                task->fades_18[i].seq = sfxSound_80091D20.seqNum_4;
                 task->fades_18[i].timer = 0x20;
                 return;
             }

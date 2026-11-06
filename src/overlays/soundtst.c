@@ -1653,10 +1653,10 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
     if (padPressed_8009194C[0] & 0x40)
     {
         bgm = &bgmSound_80091CE0;
-        if (bgm->field_4_seq_num >= 0)
+        if (bgm->seqNum_4 >= 0)
         {
-            SsSepStop(bgm->field_C_sep_access_num, bgm->field_4_seq_num);
-            bgm->field_4_seq_num = -1;
+            SsSepStop(bgm->sepAccessNum_C, bgm->seqNum_4);
+            bgm->seqNum_4 = -1;
         }
         FreeSound_80030D00(bgm);
         BeginFade_8001C260();
@@ -1670,10 +1670,10 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
             if (id != 10)
             {
                 bgm = &bgmSound_80091CE0;
-                if (bgm->field_4_seq_num >= 0)
+                if (bgm->seqNum_4 >= 0)
                 {
-                    SsSepStop(bgm->field_C_sep_access_num, bgm->field_4_seq_num);
-                    bgm->field_4_seq_num = -1;
+                    SsSepStop(bgm->sepAccessNum_C, bgm->seqNum_4);
+                    bgm->seqNum_4 = -1;
                 }
                 FreeSound_80030D00(bgm);
                 LoadSound_80030A84(id, bgm);
@@ -1687,10 +1687,10 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
         {
             if (st->f.voice_C >= 0)
             {
-                SsUtKeyOff(st->f.voice_C, bgmSound_80091CE0.field_0_vab_id, st->f.prog_E, 0x3f, 0);
+                SsUtKeyOff(st->f.voice_C, bgmSound_80091CE0.vabId_0, st->f.prog_E, 0x3f, 0);
             }
             st->f.prog_E = st->f.se_6;
-            st->f.voice_C = SsUtKeyOn(bgmSound_80091CE0.field_0_vab_id, st->f.prog_E, 0, 0x3f, 0,
+            st->f.voice_C = SsUtKeyOn(bgmSound_80091CE0.vabId_0, st->f.prog_E, 0, 0x3f, 0,
                                    saveData_8008B570.settings_1C.bits.sfxVol_14, saveData_8008B570.settings_1C.bits.sfxVol_14);
         }
         else
@@ -1701,14 +1701,14 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
     else if (padPressed_8009194C[0] & 0x10)
     {
         bgm = &bgmSound_80091CE0;
-        if (bgm->field_4_seq_num >= 0)
+        if (bgm->seqNum_4 >= 0)
         {
-            SsSepSetDecrescendo(bgm->field_C_sep_access_num, bgm->field_4_seq_num, 0x7f, 0x78);
-            bgm->field_4_seq_num = -1;
+            SsSepSetDecrescendo(bgm->sepAccessNum_C, bgm->seqNum_4, 0x7f, 0x78);
+            bgm->seqNum_4 = -1;
         }
         if (st->f.voice_C >= 0)
         {
-            SsUtKeyOff(st->f.voice_C, bgmSound_80091CE0.field_0_vab_id, st->f.prog_E, 0x3f, 0);
+            SsUtKeyOff(st->f.voice_C, bgmSound_80091CE0.vabId_0, st->f.prog_E, 0x3f, 0);
         }
         st->f.voice_C = -1;
     }

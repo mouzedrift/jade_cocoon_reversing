@@ -724,12 +724,12 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             DATA_GetFile_8003C7CC(&task->file, task->cur->fileId_10);
             if (task->cur->flags_C & 0x40)
             {
-                DsIntToPos(DsPosToInt(&task->file.field_0_position) + ((unsigned int)task->cur->offset_14 >> 11), &task->file.field_0_position);
+                DsIntToPos(DsPosToInt(&task->file.position_0) + ((unsigned int)task->cur->offset_14 >> 11), &task->file.position_0);
                 task->sectors = (unsigned int)task->cur->size_18 >> 11;
             }
             else
             {
-                task->sectors = task->file.field_4_sectors;
+                task->sectors = task->file.sectors_4;
             }
             if (task->cur->flags_C & 2)
             {
@@ -765,7 +765,7 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             }
             break;
         case 2:
-            if (CdSeekStart_8003C8A0(&task->file.field_0_position))
+            if (CdSeekStart_8003C8A0(&task->file.position_0))
             {
                 task->state = 3;
             }
@@ -789,7 +789,7 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             }
             break;
         case 5:
-            if (CdReadStart_8003C944(&task->file.field_0_position, task->buf, task->sectors))
+            if (CdReadStart_8003C944(&task->file.position_0, task->buf, task->sectors))
             {
                 task->state = 6;
             }
@@ -817,7 +817,7 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             }
             break;
         case 7:
-            if (CdReadStart_8003C944(&task->file.field_0_position, task->buf, task->sectors))
+            if (CdReadStart_8003C944(&task->file.position_0, task->buf, task->sectors))
             {
                 while (!CdReadIsIdle_8003C9EC())
                 {

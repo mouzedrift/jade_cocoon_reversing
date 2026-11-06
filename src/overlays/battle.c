@@ -26,10 +26,10 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
     case 0:
         StopSoundSeqs_80030D68(&systemSound_80091D40);
         seq = &bgmSound_80091CE0;
-        if (seq->field_4_seq_num >= 0)
+        if (seq->seqNum_4 >= 0)
         {
-            SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
-            seq->field_4_seq_num = -1;
+            SsSepSetDecrescendo(seq->sepAccessNum_C, seq->seqNum_4, 0x7F, 0x78);
+            seq->seqNum_4 = -1;
         }
         StopSeqSlot_80031334(0);
         PlaySeqSlot_80031160(1, 1);
@@ -58,10 +58,10 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
         else
         {
             seq = &bgmSound_80091CE0;
-            if (seq->field_4_seq_num >= 0)
+            if (seq->seqNum_4 >= 0)
             {
-                SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
-                seq->field_4_seq_num = -1;
+                SsSepSetDecrescendo(seq->sepAccessNum_C, seq->seqNum_4, 0x7F, 0x78);
+                seq->seqNum_4 = -1;
             }
         }
         task->next_8 = BattleEndWaitLevant_800BA52C;
@@ -82,10 +82,10 @@ void BattleEnd_800BA254(BatTaskEntry* task, BatEndWork* work)
         else
         {
             seq = &bgmSound_80091CE0;
-            if (seq->field_4_seq_num >= 0)
+            if (seq->seqNum_4 >= 0)
             {
-                SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
-                seq->field_4_seq_num = -1;
+                SsSepSetDecrescendo(seq->sepAccessNum_C, seq->seqNum_4, 0x7F, 0x78);
+                seq->seqNum_4 = -1;
             }
         }
         task->next_8 = BattleEndWaitLevant_800BA52C;
@@ -111,10 +111,10 @@ void BattleEndDefeat_800BA444(BatTaskEntry* task)
             else
             {
                 SoundStruct* seq = &bgmSound_80091CE0;
-                if (seq->field_4_seq_num >= 0)
+                if (seq->seqNum_4 >= 0)
                 {
-                    SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
-                    seq->field_4_seq_num = -1;
+                    SsSepSetDecrescendo(seq->sepAccessNum_C, seq->seqNum_4, 0x7F, 0x78);
+                    seq->seqNum_4 = -1;
                 }
             }
         }
@@ -153,10 +153,10 @@ void BattleEndVictory_800BA564(BatTaskEntry* task, BatEndWork* work)
                 else
                 {
                     SoundStruct* seq = &bgmSound_80091CE0;
-                    if (seq->field_4_seq_num >= 0)
+                    if (seq->seqNum_4 >= 0)
                     {
-                        SsSepSetDecrescendo(seq->field_C_sep_access_num, seq->field_4_seq_num, 0x7F, 0x78);
-                        seq->field_4_seq_num = -1;
+                        SsSepSetDecrescendo(seq->sepAccessNum_C, seq->seqNum_4, 0x7F, 0x78);
+                        seq->seqNum_4 = -1;
                     }
                 }
                 task->next_8 = BattleEndFadeOut_800BA624;

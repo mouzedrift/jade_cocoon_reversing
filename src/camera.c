@@ -121,10 +121,10 @@ void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam)
     }
     else if (!(cam->flags_4 & 0x2000))
     {
-        int mesh = FindMeshAtPos_800B8184(cam->target_0, saveData_8008B570.mapId_2E4[3].field_0);
+        int mesh = FindMeshAtPos_800B8184(cam->target_0, saveData_8008B570.mapId_2E4[3].cur_0);
         if (mesh >= 0)
         {
-            saveData_8008B570.mapId_2E4[3].field_0 = mesh;
+            saveData_8008B570.mapId_2E4[3].cur_0 = mesh;
         }
     }
     else

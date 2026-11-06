@@ -70,17 +70,17 @@ void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx)
     dataStartOffsetFile = &Data001Files_80075AA0[2];
     pReadFile = &Data001Files_80075AA0[idx];
 
-    pOutFile->field_0_position.minute = pReadFile->field_0_position.minute;
-    pOutFile->field_0_position.second = pReadFile->field_0_position.second;
-    pOutFile->field_0_position.sector = pReadFile->field_0_position.sector;
-    pOutFile->field_0_position.track = pReadFile->field_0_position.track;
-    pOutFile->field_4_sectors = pReadFile->field_4_sectors;
+    pOutFile->position_0.minute = pReadFile->position_0.minute;
+    pOutFile->position_0.second = pReadFile->position_0.second;
+    pOutFile->position_0.sector = pReadFile->position_0.sector;
+    pOutFile->position_0.track = pReadFile->position_0.track;
+    pOutFile->sectors_4 = pReadFile->sectors_4;
 
     data001Pos = DsPosToInt(&Data001File_800954A8.pos);
-    targetFilePos = DsPosToInt(&pOutFile->field_0_position);
-    dataStartOffsetPos = DsPosToInt(&dataStartOffsetFile->field_0_position);
+    targetFilePos = DsPosToInt(&pOutFile->position_0);
+    dataStartOffsetPos = DsPosToInt(&dataStartOffsetFile->position_0);
 
-    DsIntToPos(data001Pos + targetFilePos - dataStartOffsetPos, &pOutFile->field_0_position);
+    DsIntToPos(data001Pos + targetFilePos - dataStartOffsetPos, &pOutFile->position_0);
 }
 int DATA_GetFileSize_8003C87C(int idx)
 {
@@ -157,8 +157,8 @@ void* DATA_GetFileBuffer_8003CAA0(int idx)
     int pad[2];
 
     DATA_GetFile_8003C7CC(&dataFile, idx);
-    pFileBuffer = malloc3_8003FC4C(dataFile.field_4_sectors * 2048);
-    LoadFileIntoBuffer_8003CB7C(&dataFile.field_0_position, pFileBuffer, dataFile.field_4_sectors);
+    pFileBuffer = malloc3_8003FC4C(dataFile.sectors_4 * 2048);
+    LoadFileIntoBuffer_8003CB7C(&dataFile.position_0, pFileBuffer, dataFile.sectors_4);
     return pFileBuffer;
 }
 void DATA_ReadFileInto_8003CAEC(int idx, unsigned int* pDest)
@@ -172,7 +172,7 @@ void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
     Data001File file;
     int pad[2]; // the original frame has 8 more bytes of locals
     DATA_GetFile_8003C7CC(&file, idx);
-    LoadFileIntoBuffer_8003CB7C(&file.field_0_position, (unsigned long*)0x801B9250, file.field_4_sectors);
+    LoadFileIntoBuffer_8003CB7C(&file.position_0, (unsigned long*)0x801B9250, file.sectors_4);
     return (void*)0x801B9250;
 }
 void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors)

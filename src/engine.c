@@ -1285,10 +1285,10 @@ void RunAnimFrameCues_8001C440(Model* model, int idx, int frame)
                 }
                 if (soundCues_8007C750[cue->arg_4].kind == 3)
                 {
-                    if (systemSound_80091D40.field_4_seq_num >= 0)
+                    if (systemSound_80091D40.seqNum_4 >= 0)
                     {
-                        SsSepSetDecrescendo(systemSound_80091D40.field_C_sep_access_num, systemSound_80091D40.field_4_seq_num, 0x7F, 0x78);
-                        systemSound_80091D40.field_4_seq_num = -1;
+                        SsSepSetDecrescendo(systemSound_80091D40.sepAccessNum_C, systemSound_80091D40.seqNum_4, 0x7F, 0x78);
+                        systemSound_80091D40.seqNum_4 = -1;
                     }
                 }
             }

@@ -1010,7 +1010,7 @@ void BattleResultTask_800BBF48(MenuTask* task, BattleResult* result)
         task->next_8 = ResultEndTask_800BC24C;
         SetFadeMode_8001C19C(0, 0x20);
         FreeActiveOverlay_8002C014();
-        if (saveData_8008B570.mapId_2E4[3].field_2 == saveData_8008B570.mapId_2E4[3].field_0)
+        if (saveData_8008B570.mapId_2E4[3].prev_2 == saveData_8008B570.mapId_2E4[3].cur_0)
             RequestAreaReload_80027314();
     }
     else if (padPressed_8009194C[0] & 0x20)

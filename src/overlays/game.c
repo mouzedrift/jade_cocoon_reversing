@@ -273,7 +273,7 @@ void ReturnFromBattle_800A1578(GameTask* task, int** work)
         FreeActiveOverlay_8002C014();
         SetFadeMode_8001C19C(0, 0x20);
         sd = &saveData_8008B570;
-        if (sd->mapId_2E4[3].field_2 == sd->mapId_2E4[3].field_0)
+        if (sd->mapId_2E4[3].prev_2 == sd->mapId_2E4[3].cur_0)
         {
             RequestAreaReload_80027314();
         }
@@ -444,7 +444,7 @@ int CheckEnemyContact_800A19E4(void)
     {
         return 0;
     }
-    if (saveData_8008B570.mapId_2E4[3].field_0 != saveData_8008B570.mapId_2E4[3].field_2)
+    if (saveData_8008B570.mapId_2E4[3].cur_0 != saveData_8008B570.mapId_2E4[3].prev_2)
     {
         return 0;
     }
@@ -881,7 +881,7 @@ void RemoveEnemy_800A2924(int idx)
         if (group >= 0)
         {
             SaveData* sd = &saveData_8008B570;
-            ClearEncounterGroupFlags_800A4940(group, mapTable_800B0608[sd->mapId_2E4[0].field_0][sd->mapId_2E4[1].field_0][sd->mapId_2E4[2].field_0].encIndex_4);
+            ClearEncounterGroupFlags_800A4940(group, mapTable_800B0608[sd->mapId_2E4[0].cur_0][sd->mapId_2E4[1].cur_0][sd->mapId_2E4[2].cur_0].encIndex_4);
         }
     }
 }
@@ -2012,36 +2012,36 @@ unsigned short* GetMapEncounterFlags_800A53CC(void)
 {
     SaveData* sd = &saveData_8008B570;
     unsigned short* flags = 0;
-    if (sd->mapId_2E4[0].field_0 == 4)
+    if (sd->mapId_2E4[0].cur_0 == 4)
     {
-        if (sd->mapId_2E4[1].field_0 == 1)
+        if (sd->mapId_2E4[1].cur_0 == 1)
         {
             flags = sd->tbl_838;
         }
-        else if (sd->mapId_2E4[1].field_0 == 2)
+        else if (sd->mapId_2E4[1].cur_0 == 2)
         {
             flags = sd->tbl_850;
         }
-        else if (sd->mapId_2E4[1].field_0 == 3)
+        else if (sd->mapId_2E4[1].cur_0 == 3)
         {
             flags = sd->tbl_874;
         }
-        else if (sd->mapId_2E4[1].field_0 == 4)
+        else if (sd->mapId_2E4[1].cur_0 == 4)
         {
             flags = sd->tbl_8CC;
         }
     }
-    else if (sd->mapId_2E4[0].field_0 == 5)
+    else if (sd->mapId_2E4[0].cur_0 == 5)
     {
-        if (sd->mapId_2E4[1].field_0 == 1)
+        if (sd->mapId_2E4[1].cur_0 == 1)
         {
             flags = sd->tbl_8F8;
         }
-        else if (sd->mapId_2E4[1].field_0 == 2)
+        else if (sd->mapId_2E4[1].cur_0 == 2)
         {
             flags = sd->tbl_90C;
         }
-        else if (sd->mapId_2E4[1].field_0 == 3)
+        else if (sd->mapId_2E4[1].cur_0 == 3)
         {
             flags = sd->tbl_92C;
         }

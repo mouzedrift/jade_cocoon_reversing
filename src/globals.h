@@ -134,9 +134,9 @@ typedef struct
     short field_2E2;
     struct
     {
-        short field_0;
-        short field_2;
-    } mapId_2E4[4]; // 0x8008B854: [0..2].field_0 identify the map (Meos4: mapId); [3].field_0 = mesh
+        short cur_0;  // [0] area, [1] map, [2] entrance (Meos4: mapId); [3] mesh
+        short prev_2; // the same before the last map change (-1: none)
+    } mapId_2E4[4]; // 0x8008B854
     int nMapVars_2F4;
     SaveMapVar mapVars_2F8[150];
     LevantPos levant_7A8; // == levantPos_8008BD18
@@ -331,7 +331,7 @@ extern unsigned char keyItemIcons_8007CFC8[0x26];
 // a sequence slot (seqSlots_800833E4, PlaySeqSlot_80031160)
 typedef struct
 {
-    int sep_0; // 1: the slot sound's second SEP (field_14_sep_access_num), else the first
+    int sep_0; // 1: the slot sound's second SEP (sepAccessNum_14), else the first
     int seq_4; // sequence number in the SEP
 } SeqSlot;
 extern SeqSlot seqSlots_800833E4[];

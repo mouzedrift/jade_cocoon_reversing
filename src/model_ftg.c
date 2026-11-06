@@ -2399,7 +2399,7 @@ int IsMapLoading_800272D0(void)
 void RequestAreaReload_80027314(void)
 {
     areaReload_80082670 = 1;
-    saveData_8008B570.mapId_2E4[3].field_2 = -1;
+    saveData_8008B570.mapId_2E4[3].prev_2 = -1;
 }
 int RequestAreaPreload_80027330(short area)
 {
@@ -2417,7 +2417,7 @@ int UsePreloadedArea_80027358(int id)
     {
         if (areaPreload_80091C40[0] != id)
         {
-            saveData_8008B570.mapId_2E4[3].field_0 = id;
+            saveData_8008B570.mapId_2E4[3].cur_0 = id;
             return 0;
         }
         task = areaLoaderTask_800B1DB8[9];
@@ -2428,12 +2428,12 @@ int UsePreloadedArea_80027358(int id)
         FreeMapArea_8002728C();
         ConsumeFileRequest_8003BFD0(task[1], 0);
         InitRoomCamera_80028DC0();
-        saveData_8008B570.mapId_2E4[3].field_0 = id;
-        saveData_8008B570.mapId_2E4[3].field_2 = id;
+        saveData_8008B570.mapId_2E4[3].cur_0 = id;
+        saveData_8008B570.mapId_2E4[3].prev_2 = id;
         areaPreloading_80082678 = 0;
         return 1;
     }
-    saveData_8008B570.mapId_2E4[3].field_0 = id;
+    saveData_8008B570.mapId_2E4[3].cur_0 = id;
     return 0;
 }
 void CancelAreaPreload_8002741C(void)
@@ -2688,7 +2688,7 @@ typedef struct
     char pad_C[4];
 } MapAreaEntry;
 extern MapAreaEntry** mapTable_800B0608[];
-#define MAP_ENTRY_CF8(i) mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][i]
+#define MAP_ENTRY_CF8(i) mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0][i]
 extern int fieldMode_800B0EC0;
 extern void SelectMapEntrance_800ADDAC(void);
 extern int GetSetReturnEntrance_800A683C(int a0);
@@ -2719,9 +2719,9 @@ void MapLoaderTask_80027CF8(void* entry, int* state)
         else if (UpdateLoadFade_80027540() != 0)
         {
             if (forceMapReload_80091C9C != 1 &&
-                saveData_8008B570.mapId_2E4[0].field_2 == saveData_8008B570.mapId_2E4[0].field_0 &&
-                saveData_8008B570.mapId_2E4[1].field_2 == saveData_8008B570.mapId_2E4[1].field_0 &&
-                saveData_8008B570.mapId_2E4[2].field_2 == saveData_8008B570.mapId_2E4[2].field_0)
+                saveData_8008B570.mapId_2E4[0].prev_2 == saveData_8008B570.mapId_2E4[0].cur_0 &&
+                saveData_8008B570.mapId_2E4[1].prev_2 == saveData_8008B570.mapId_2E4[1].cur_0 &&
+                saveData_8008B570.mapId_2E4[2].prev_2 == saveData_8008B570.mapId_2E4[2].cur_0)
             {
             }
             else
@@ -2730,25 +2730,25 @@ void MapLoaderTask_80027CF8(void* entry, int* state)
                 {
                     SelectMapEntrance_800ADDAC();
                 }
-                if (GetSetReturnEntrance_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).encounterSet_6)
+                if (GetSetReturnEntrance_800A683C(-1) != MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].cur_0).encounterSet_6)
                 {
                     ClearEventFlag_800AD124(0);
                 }
-                e = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0];
+                e = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0];
                 for (mapAreaCount_80091CB0 = 0; e[mapAreaCount_80091CB0].f0 != -1; mapAreaCount_80091CB0++)
                 {
                 }
-                encounterSets[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_2).encounterSet_6;
-                encounterSets[0] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).encounterSet_6;
+                encounterSets[1] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].prev_2).encounterSet_6;
+                encounterSets[0] = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].cur_0).encounterSet_6;
                 encounter = SelectEncounterSpecies_800A5030(encounterSets[0], encounterSets[1], dword_80091C90);
                 SetBattleStageForMap_800A52AC(encounterSets[0]);
                 mapStartMode_80091C54 = 1;
                 areaReload_80082670 = 0;
                 forceMapReload_80091C9C = 0;
-                saveData_8008B570.mapId_2E4[0].field_2 = saveData_8008B570.mapId_2E4[0].field_0;
-                saveData_8008B570.mapId_2E4[1].field_2 = saveData_8008B570.mapId_2E4[1].field_0;
-                saveData_8008B570.mapId_2E4[2].field_2 = saveData_8008B570.mapId_2E4[2].field_0;
-                if ((unsigned short)(saveData_8008B570.mapId_2E4[0].field_0 - 1) < 2)
+                saveData_8008B570.mapId_2E4[0].prev_2 = saveData_8008B570.mapId_2E4[0].cur_0;
+                saveData_8008B570.mapId_2E4[1].prev_2 = saveData_8008B570.mapId_2E4[1].cur_0;
+                saveData_8008B570.mapId_2E4[2].prev_2 = saveData_8008B570.mapId_2E4[2].cur_0;
+                if ((unsigned short)(saveData_8008B570.mapId_2E4[0].cur_0 - 1) < 2)
                 {
                     unknownFlags_8008D678 |= 0x1000000;
                 }
@@ -2758,14 +2758,14 @@ void MapLoaderTask_80027CF8(void* entry, int* state)
                 }
                 ApplyModelFtgSwaps_80025C38(GetLevantModel_800AC38C(), (((unsigned int)unknownFlags_8008D678 >> 24) ^ 1) & 1);
                 freeActorModels_80091CA0 = 0;
-                if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA != 0 || encounter != 0)
+                if (dword_80091C90 != 0 || MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].cur_0).fA != 0 || encounter != 0)
                 {
                     freeActorModels_80091CA0 = 1;
                 }
-                dword_80091C90 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).fA;
+                dword_80091C90 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].cur_0).fA;
                 UnloadMap_80027118();
                 FreeMapArea_8002728C();
-                music = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).music_8;
+                music = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].cur_0).music_8;
                 if (music >= 0)
                 {
                     if (GetEventVar_800AD154(12) == 1 && music == 0xD)
@@ -2807,7 +2807,7 @@ void MapLoaderTask_80027CF8(void* entry, int* state)
         }
     case 1:
         req.flags_0 = 0x2C;
-        req.fileId_4 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].field_0).f0;
+        req.fileId_4 = MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].cur_0).f0;
         req.offset_8 = 0;
         req.size_C = 0;
         req.dest_10 = 0;
@@ -2837,10 +2837,10 @@ void MapLoaderTask_80027CF8(void* entry, int* state)
 }
 void ResetMapLoaderTask_8002830C(EventEntry* entry)
 {
-    saveData_8008B570.mapId_2E4[0].field_2 = -1;
-    saveData_8008B570.mapId_2E4[1].field_2 = -1;
-    saveData_8008B570.mapId_2E4[2].field_2 = -1;
-    saveData_8008B570.mapId_2E4[3].field_2 = -1;
+    saveData_8008B570.mapId_2E4[0].prev_2 = -1;
+    saveData_8008B570.mapId_2E4[1].prev_2 = -1;
+    saveData_8008B570.mapId_2E4[2].prev_2 = -1;
+    saveData_8008B570.mapId_2E4[3].prev_2 = -1;
     unknownFlags_8008D678 &= ~0x20000;
     freeActorModels_80091CA0 = 1;
     UnloadMap_80027118();
@@ -2880,7 +2880,7 @@ void AreaLoaderTask_800283C0(void* entry, int* state)
         if (areaPreload_80091C40[1] != areaPreload_80091C40[0])
         {
             req.flags_0 = 0xC69;
-            req.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0][saveData_8008B570.mapId_2E4[2].cur_0].f2;
             req.offset_8 = mapAreas_80082674[areaPreload_80091C40[0] * 3];
             req.size_C = mapAreas_80082674[areaPreload_80091C40[0] * 3 + (areaReload_80082670 ? 2 : 1)];
             req.dest_10 = 0;
@@ -2892,7 +2892,7 @@ void AreaLoaderTask_800283C0(void* entry, int* state)
             areaPreload_80091C40[1] = areaPreload_80091C40[0];
             break;
         }
-        if (saveData_8008B570.mapId_2E4[3].field_2 != saveData_8008B570.mapId_2E4[3].field_0)
+        if (saveData_8008B570.mapId_2E4[3].prev_2 != saveData_8008B570.mapId_2E4[3].cur_0)
         {
             load = 1;
             wait = 2;
@@ -2902,7 +2902,7 @@ void AreaLoaderTask_800283C0(void* entry, int* state)
             }
             if (areaPreloading_80082678)
             {
-                if (areaPreload_80091C40[0] == saveData_8008B570.mapId_2E4[3].field_0)
+                if (areaPreload_80091C40[0] == saveData_8008B570.mapId_2E4[3].cur_0)
                 {
                     load = 0;
                 }
@@ -2912,18 +2912,18 @@ void AreaLoaderTask_800283C0(void* entry, int* state)
             if (load)
             {
                 req2.flags_0 = 0x46C;
-                req2.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
-                req2.offset_8 = mapAreas_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3];
-                req2.size_C = mapAreas_80082674[saveData_8008B570.mapId_2E4[3].field_0 * 3 + (areaReload_80082670 ? 2 : 1)];
+                req2.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0][saveData_8008B570.mapId_2E4[2].cur_0].f2;
+                req2.offset_8 = mapAreas_80082674[saveData_8008B570.mapId_2E4[3].cur_0 * 3];
+                req2.size_C = mapAreas_80082674[saveData_8008B570.mapId_2E4[3].cur_0 * 3 + (areaReload_80082670 ? 2 : 1)];
                 req2.dest_10 = 0;
                 req2.params_14 = 0;
                 req2.paramsSize_18 = 0;
                 req2.callback_1C = OnRoomDataLoaded_80028C60;
                 st[1] = QueueFileRequest_8003BC84(&req2);
             }
-            areaLoadIds_80091CB8[7] = saveData_8008B570.mapId_2E4[3].field_0;
-            areaLoadIds_80091CB8[6] = saveData_8008B570.mapId_2E4[3].field_0;
-            saveData_8008B570.mapId_2E4[3].field_2 = saveData_8008B570.mapId_2E4[3].field_0;
+            areaLoadIds_80091CB8[7] = saveData_8008B570.mapId_2E4[3].cur_0;
+            areaLoadIds_80091CB8[6] = saveData_8008B570.mapId_2E4[3].cur_0;
+            saveData_8008B570.mapId_2E4[3].prev_2 = saveData_8008B570.mapId_2E4[3].cur_0;
             if (wait)
             {
                 if (areaReload_80082670 == 0)
@@ -2938,7 +2938,7 @@ void AreaLoaderTask_800283C0(void* entry, int* state)
         if (areaLoadIds_80091CB8[6] != areaLoadIds_80091CB8[7])
         {
             req3.flags_0 = 0x450;
-            req3.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0][saveData_8008B570.mapId_2E4[2].field_0].f2;
+            req3.fileId_4 = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0][saveData_8008B570.mapId_2E4[2].cur_0].f2;
             req3.offset_8 = mapAreas_80082674[areaLoadIds_80091CB8[6] * 3];
             req3.size_C = 0;
             req3.dest_10 = 0;
@@ -3004,7 +3004,7 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     if (size != 0 && dword_80091C8C == 0)
     {
         MemCopy_800403E8(mapCodeAddr_80073210, cur, size);
-        mapCallback_80091CB4 = ((MapAreaEntryb*)mapTable_800B0608[saveData_8008B570.mapId_2E4[0].field_0][saveData_8008B570.mapId_2E4[1].field_0])[saveData_8008B570.mapId_2E4[2].field_0].fC;
+        mapCallback_80091CB4 = ((MapAreaEntryb*)mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0])[saveData_8008B570.mapId_2E4[2].cur_0].fC;
     }
     cur = (int*)((char*)cur + size);
     mapJustLoaded_80082668 = 1;
@@ -3018,7 +3018,7 @@ void OnMapFileLoaded_80028808(void* params, int* data)
         LoadEventData_800A5628(a, cur, c);
         cur = (int*)((char*)cur + c2);
     }
-    mapState_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].field_0;
+    mapState_8008B500.id_0 = saveData_8008B570.mapId_2E4[2].cur_0;
     mapState_8008B500.nMeshes_4 = *cur++;
     mapState_8008B500.f8_8 = *cur++;
     MemCopy_800403E8(&hdr, cur, sizeof(hdr));
@@ -3069,8 +3069,8 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     // stays an int* view: savedLevantPos_80091C78.mapIdx addresses the field as sym+12 and changes the code
     if (((int*)&savedLevantPos_80091C78)[3] >= 0)
     {
-        saveData_8008B570.mapId_2E4[3].field_0 = *(short*)&((int*)&savedLevantPos_80091C78)[3];
-        saveData_8008B570.mapId_2E4[3].field_2 = -1;
+        saveData_8008B570.mapId_2E4[3].cur_0 = *(short*)&((int*)&savedLevantPos_80091C78)[3];
+        saveData_8008B570.mapId_2E4[3].prev_2 = -1;
         ((int*)&savedLevantPos_80091C78)[3] = -1;
     }
     else
@@ -3079,11 +3079,11 @@ void OnMapFileLoaded_80028808(void* params, int* data)
         {
             if (FindTriAtXZ_800B76B8(&mapState_8008B500.meshes_C[i], &saveData_8008B570.levant_7A8.pos) >= 0)
             {
-                saveData_8008B570.mapId_2E4[3].field_0 = i;
-                saveData_8008B570.mapId_2E4[3].field_2 = -1;
+                saveData_8008B570.mapId_2E4[3].cur_0 = i;
+                saveData_8008B570.mapId_2E4[3].prev_2 = -1;
                 break;
             }
         }
     }
-    ((GameTaskState*)gameTask_8008B4A4->entry.buffer)->mapPoint_84 = saveData_8008B570.mapId_2E4[3].field_0;
+    ((GameTaskState*)gameTask_8008B4A4->entry.buffer)->mapPoint_84 = saveData_8008B570.mapId_2E4[3].cur_0;
 }
