@@ -568,7 +568,7 @@ void WaitChainMessageClosed_800BB168(BatTaskEntry* task, BatTurnWork* work)
 {
     if (IsMsgWindowAlive_80034AB8(work->handle_C) == 0)
     {
-        encounterChainMsgId_800ADE88 = -1;
+        encounterChainNext_800ADE88 = -1;
         task->next_8 = BattleNextTurn_800BAE74;
     }
 }

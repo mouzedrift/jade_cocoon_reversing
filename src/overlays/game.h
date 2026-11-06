@@ -679,7 +679,6 @@ extern int encounterVariantToggle_8008B554;
 
 
 
-extern unsigned int loadFadeFlags_80091C38;
 
 extern int (*eventFuncs_800BCDBC[])(GameEvCtx*);
 
@@ -956,7 +955,6 @@ extern void EndLevantPath_800ABAD4();
 extern void ExitLevantActorBattle_800AB444();
 
 
-extern int levantTurnFilterCoeffs_800795C0[]; // FIR coefficients of Levant's turn filter
 
 // a window's screen rectangle (PlaceWindowAwayFromQuadrant_800A88E0)
 typedef struct GameWinRect

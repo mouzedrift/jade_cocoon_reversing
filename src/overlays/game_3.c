@@ -1045,7 +1045,7 @@ void StopAllEventScripts_800A58B4(void)
     eventTempFlags_800AEBD4 = 0;
     StopAllEventEntries_80043B40(eventScripts_8008D410);
     SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
-    if (!(loadFadeFlags_80091C38 & 0x40))
+    if (!(loadFade_80091C30[2] & 0x40))
     {
         view = &viewport_8008D420;
         view->x = 0;
@@ -2415,7 +2415,7 @@ void EmptyCallback_800A8138()
 void InitLevantControl_800A8140()
 {
     GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
-    FirFilterInit_8001450C(ctl->turnBuf_5C, &ctl->turn_4C, levantTurnFilterCoeffs_800795C0, 4);
+    FirFilterInit_8001450C(ctl->turnBuf_5C, &ctl->turn_4C, &turnFilterCoeffs_800795A0[8], 4);
     ctl->flags_0 = 0;
     ctl->f9C = 0;
     ctl->state_C6 = 0;
@@ -3136,7 +3136,7 @@ void ResetLevantActor_800A9414(void* buf, int action, int anim)
 {
     GameLevantActor* lev = (GameLevantActor*)buf;
     ApplyModelFtgSwaps_80025C38(lev->model_40, (((unsigned)unknownFlags_8008D678 >> 24) ^ 1) & 1);
-    FirFilterInit_8001450C(lev->turnBuf_780, &lev->turn_770, levantTurnFilterCoeffs_800795C0, 4);
+    FirFilterInit_8001450C(lev->turnBuf_780, &lev->turn_770, &turnFilterCoeffs_800795A0[8], 4);
     SetLevantAnim_800AB010(lev, action, anim, 0);
     lev->mode_C = 0;
     if (IsLevantAnimLoadedOrFree_800AAFD8(lev->prevAnim_1E) != 1)
