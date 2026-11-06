@@ -322,12 +322,21 @@ void SetEquipCursorArea_800C497C(EquipCtx* c)
 
 
 #if 0
-// Not matched: register allocation of the hoisted constants differs ($19/$20 swapped)
+// Not matched (16 of 175 words differ, control flow/scheduling otherwise identical):
+// - the three loop-invariant registers: original preheader is `li s4,1; lui s3,%hi(pOT); li s5,0x38`,
+//   here `li s5,0x38; lui s4,%hi(pOT); li s3,1` (constant 1 and the pOT high part swapped between s3/s4,
+//   ofs set before the hoisted ones). The 1 pseudo (insn from the switch's case-1 compare) is hoisted
+//   after the pOT high part and so lives 2 insns less -> wins global-alloc priority (both 9 refs).
+//   In the original the 0x38 is itself a hoisted loop constant (set after the others) yet all three
+//   AddClip calls use it unfolded; `ofs = 0x38` at the top of the loop body (short ofs) gives the right
+//   preheader position for 0x38 but cse folds the first AddClip to addiu.
+// - case 1: k2 (4/2) lands in a3 instead of v0 and the lhu category_18 / li a2,8 are scheduled differently.
 void DrawEquipMenu_800C4A94(EquipCtx* c)
 {
     short i;
-    int ofs = 0x38;
+    int ofs;
     int k;
+    short k2;
     EquipRect rect;
     union
     {
@@ -339,7 +348,9 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
     {
         DrawButtonHelpBar_8002B004(helpBarSelectQuitDesc_800826B0, 0, 0xe);
     }
-    for (i = 0; i < 4; i++)
+    i = 0;
+    ofs = 0x38;
+    while (i < 4)
     {
         if ((c->activeWindows_1E >> i) & 1)
         {
@@ -347,26 +358,29 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
             switch (i)
             {
             case 0:
-                if (c->flags_44 & 4)
+                if (!(c->flags_44 & 4))
+                {
+                    if (!(c->flags_44 & 8))
+                    {
+                        rect.x = 0x53;
+                        rect.y = 0x89;
+                        k = 2;
+                        if (c->mode_1C != 1)
+                        {
+                            k = 1;
+                        }
+                        u.q.cursor = c->stepCursor_0[c->category_18 + 1];
+                        u.q.scroll = c->stepScroll_C[c->category_18 + 1];
+                        u.q.mode = k;
+                        u.q.ot = 0xe;
+                        u.q.e = 0;
+                        u.q.f = 0;
+                        DrawEquipItemList_800C5510(&u.q, &rect, c->category_18);
+                    }
+                }
+                else
                 {
                     DrawEquipDescription_800C5440(GetEquippedId_800AD990(c->category_18), c->category_18, 0);
-                }
-                else if (!(c->flags_44 & 8))
-                {
-                    rect.x = 0x53;
-                    rect.y = 0x89;
-                    u.q.cursor = c->stepCursor_0[c->category_18 + 1];
-                    u.q.scroll = c->stepScroll_C[c->category_18 + 1];
-                    k = 2;
-                    if (c->mode_1C != 1)
-                    {
-                        k = 1;
-                    }
-                    u.q.mode = k;
-                    u.q.ot = 0xe;
-                    u.q.e = 0;
-                    u.q.f = 0;
-                    DrawEquipItemList_800C5510(&u.q, &rect, c->category_18);
                 }
                 AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
                 break;
@@ -375,14 +389,10 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                 {
                     rect.x = 0xa;
                     rect.y = 0x3d;
+                    k2 = (c->mode_1C == 0) ? 2 : 4;
                     equipList.cursor = c->category_18;
+                    equipList.mode = k2;
                     equipList.scroll = 0;
-                    k = 4;
-                    if (c->mode_1C == 0)
-                    {
-                        k = 2;
-                    }
-                    equipList.mode = k;
                     equipList.ot = 0xe;
                     equipList.e = 0;
                     equipList.f = 0;
@@ -395,7 +405,9 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                 }
                 else
                 {
-                    DrawEquipDescription_800C5440(GetInventorySlotId_800AD288(c->stepCursor_0[c->category_18 + 1] + c->stepScroll_C[c->category_18 + 1], c->category_18 + 1), c->category_18, (int)descBoxPos_800C599C);
+                    short j = c->category_18 + 1;
+                    short slot = c->stepCursor_0[j] + c->stepScroll_C[j];
+                    DrawEquipDescription_800C5440(GetInventorySlotId_800AD288(slot, c->category_18 + 1), c->category_18, (int)descBoxPos_800C599C);
                 }
                 AddClipDrawAreaPrim_80033308((char*)pOT_8008D454 + ofs);
                 break;
@@ -405,6 +417,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                 c->openedWindows_20 |= 1 << i;
             }
         }
+        i++;
     }
 }
 #endif

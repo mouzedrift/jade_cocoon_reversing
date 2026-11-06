@@ -221,12 +221,20 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
 }
 
 #if 0
-// Not matched: register allocation / scheduling differs
+// Not matched (18 of 118 words differ). The loop shape (`j < i + 2` -> `addiu v1; move s4,v1`) and
+// the i-before-int-y declaration order (avoids reload_cse turning i = 0 into a copy of y) are right.
+// Still different:
+// - thread_jumps (before cse1) threads the `else if (mode == 1)` bne past the second `mode != 1` test
+//   (original: bne -> the beq, nop delay slot; here bne -> after the beq). Anything placed between the
+//   chain and the second test that blocks it (e.g. `j = i;`) lets jump's store-flag turn the chain into
+//   xori/sltiu/sll instead.
+// - i = 0 should end up in the beqz delay slot (original sched order: ... sw s1, sw s0, beqz/move s1,0).
+// - c and y swap s2/s3 (and the loop's pOT high part follows): y (5 refs) outranks the pOT high pseudo.
 void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, NameEntryWork* c)
 {
-    int y = 0;
     short i = 0;
-    int end;
+    int y = 0;
+    short j;
     char zero[4];
     TitleColor color;
 
@@ -240,20 +248,18 @@ void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, Name
     }
     if (mode != 1)
     {
-        end = i + 2;
-        for (; i < end; i++)
+        for (j = i; j < i + 2; j++)
         {
-            sprts[i].x0 = ((i % 2) * 5) << 5;
-            sprts[i].y0 = y;
-            AddPrimCopy_80040298(pOT_8008D3EC, &sprts[i], 5);
-            AddPrimCopy_80040298(pOT_8008D3EC, &tpages[i], 2);
+            sprts[j].x0 = ((j % 2) * 5) << 5;
+            sprts[j].y0 = y;
+            AddPrimCopy_80040298(pOT_8008D3EC, &sprts[j], 5);
+            AddPrimCopy_80040298(pOT_8008D3EC, &tpages[j], 2);
         }
     }
     else
     {
         memset(zero, 0, 4);
         y = 0x17;
-        i = (short)i;
         color = nameCursorPulseColor_800A05A4;
         sprts[i].x0 = 0x6F;
         sprts[i].y0 = y;
