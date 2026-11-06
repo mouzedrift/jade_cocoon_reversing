@@ -220,31 +220,28 @@ void NewGameAfterNameMovie_800A0C28(TitleTask* t, NameEntryWork* c)
     }
 }
 
-#if 0
-// Not matched (18 of 118 words differ). The loop shape (`j < i + 2` -> `addiu v1; move s4,v1`) and
-// the i-before-int-y declaration order (avoids reload_cse turning i = 0 into a copy of y) are right.
-// Still different:
-// - thread_jumps (before cse1) threads the `else if (mode == 1)` bne past the second `mode != 1` test
-//   (original: bne -> the beq, nop delay slot; here bne -> after the beq). Anything placed between the
-//   chain and the second test that blocks it (e.g. `j = i;`) lets jump's store-flag turn the chain into
-//   xori/sltiu/sll instead.
-// - i = 0 should end up in the beqz delay slot (original sched order: ... sw s1, sw s0, beqz/move s1,0).
-// - c and y swap s2/s3 (and the loop's pOT high part follows): y (5 refs) outranks the pOT high pseudo.
+// Matched
+// The redundant `case 0` next to `default` (both i = 0) is needed: the post-reload jump pass
+// cross-jumps the two arms and hoists i = 0 in front of the first test after sched2, so it ends up
+// in the beqz delay slot; an if/else-if chain gets jump-threaded or turned into a store-flag.
 void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, NameEntryWork* c)
 {
-    short i = 0;
+    short i;
     int y = 0;
     short j;
     char zero[4];
     TitleColor color;
 
-    if (mode == 0)
+    switch (mode)
     {
+    case 0:
         i = 0;
-    }
-    else if (mode == 1)
-    {
+        break;
+    case 1:
         i = 2;
+        break;
+    default:
+        i = 0;
     }
     if (mode != 1)
     {
@@ -269,8 +266,6 @@ void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, Name
         AddPrimCopy_80040298(pOT_8008D3EC, &tpages[i], 2);
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(title, DrawNameEntrySprites_800A0D18);
 
 // TITLE overlay entry: runs the title tasks, returns the next GameStates value (titleResult_800A2818)
 // Matched
