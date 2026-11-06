@@ -59,6 +59,22 @@ void TileAnimTask_800A0A04(GameTask* task, short* work)
 // pseudo gets no register so the lui is rematerialized before each addPrim, ours hoists it into $s3; the block-copy
 // spill regs are $s7/$t3/$s5/$s6, ours $s4-$s7) and sched order of the ft4 u1/u3 stores (ours stores them right after
 // computing texU+31); 449 of 558 words differ, mostly register names; register-stripped diff 79 ops.
+// Analysis (cc1psx -dS -dl -dg dumps): t3/s5/s6/s7 in the original are pure reload (spill) regs, so before reload the
+// original had 4 evicted values: work (0x30(sp)), cells (8(sp)), texU+31 (0xC(sp)) and the hoisted pOT hi (rematerialized
+// as it is a REG_EQUIV constant). That is why the frame is 0x30, so `buf` is only a stand-in for the texU+31 slot. texU+31
+// loses its register because the original's prim block needs 9 simultaneously live locals there: texV+31 (v0) and the 7
+// y-field loads (v1,a0..a3,t0,t1, the later moves come from reload_cse). For that, sched1 must leave the v3/u3 stores and the
+// SPRT x0/y0/uv0 loads AFTER the y stores (the original reuses v1/a0 for the SPRT loads). Our sched1 instead hoists the
+// latency-1 stores (v3, w, h, u3) above the latency-2 load group. Also, the original's SPRT x0/y0 stores and uv0 copy are in
+// the same basic block as the FT4 stores, before setDrawTPage's (tile/8+20)/4 branch, so in the source they come before
+// setDrawTPage. Moving them there makes sched1 group all 10 loads, so too many locals are live and $fp gets used.
+// Tried, none helped: texU2 = texU + 31 temporaries (before or after texV), texU += 31, setXY4/setUV4-style orders, an
+// SPRT taken from the ft4 fields, TILE_ANIM_SCRATCH-> for the SPRT loads, y1/x3/y3 taken from the ft4 fields, a void* work
+// parameter, and ~450 random statement-order permutations (best stripped diff 52, still no texU+31 spill).
+// Lead: sched1 flushes its pending memory lists after more than 32 memory refs in a block, and everything after the flush
+// stays below it. With ~10 extra memory refs ahead of the FT4 stores (a test with dummy stores only), the SPRT loads and
+// u3 drop below the y stores like the original. So the original block probably held more memory refs, e.g. redundant
+// field loads that reload_cse later turned into moves or deleted.
 // Draws the map's animated tile layers (tileAnim_8008D648.lists_14): steps each layer's frame timer, then builds a
 // zoomed POLY_FT4 (or, unzoomed, a SPRT + DR_TPAGE) for every 32x32 cell of the frame's tile set.
 // Runs on the scratchpad stack (TileAnimTask_800A0A04); *work & 1 freezes the timers.
