@@ -1,4 +1,8 @@
-# names the C code uses for places inside data objects that are defined in C: build.py makes them link-time
-# equates of their address (the asm data used to define them as labels). name  # what it is
-playerYan_8008B594               # == saveData_8008B570.inv_24
-levantPos_8008BD18               # == saveData_8008B570.levant_7A8
+# Names the code has for a place inside a C object: the original code reaches these through either symbol, and
+# the compiler only produces the same code when it sees a separate symbol. They are link-time equates of
+# BASE + OFFSET, with BASE's address taken from the link map (build.py / scripts/overlays.py link again when
+# it moved). IMAGE is EXE or the overlay whose link defines BASE.
+# IMAGE  NAME                   BASE                 OFFSET
+EXE      playerYan_8008B594     saveData_8008B570    0x24     # saveData_8008B570.inv_24
+EXE      levantPos_8008BD18     saveData_8008B570    0x7A8    # saveData_8008B570.levant_7A8
+GAME     enemySlots_800B19F0    gCtx_800B1260        0x790    # gCtx_800B1260.enemySlots_790

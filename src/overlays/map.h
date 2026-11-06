@@ -198,7 +198,6 @@ extern int IsDestOpen_800B8290(MapDest*);
 extern void WaitAreaPicture_800B6E5C(MapTask* task);
 extern int GetOpenDestRank_800B81D0(MapDest*);
 extern void GetCurrentDest_800B8448(MapDest* out);
-extern short word_800B932C;
 extern void LoadAreaPicture_800B6CB4(MapTask* task);
 extern void StartAreaFadeOut_800B6C7C(MapTask* task);
 extern void OnMapFileLoaded_800B6DE0(MapTask*, int*);

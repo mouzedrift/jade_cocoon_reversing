@@ -386,7 +386,6 @@ void StartBattleCameraSpline_800377B4(int side, short action, int unused)
 }
 // Table in the overlay area (outside the linked image), 8 bytes per entry
 extern struct_pair8 levantBattleActions_800B1084[];
-__asm__(".globl levantBattleActions_800B1084\n.equ levantBattleActions_800B1084,0x800b1084");
 // Matched
 void MoveBattleCameraForAction_80037828(int side, short action, int force)
 {

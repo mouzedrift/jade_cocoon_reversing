@@ -408,7 +408,7 @@ void SetFocusedMinion_800CBAD4(int state)
     }
     else
     {
-        actorSlot_800A85BD = targetSlotLo_800CD83C;
+        actorSlot_800A85BD = targetSlot_800CD83C;
     }
 }
 

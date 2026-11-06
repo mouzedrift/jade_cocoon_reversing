@@ -94,6 +94,8 @@ typedef struct GameEnemySlot
     GameEnemy data_8;
 } GameEnemySlot;
 
+extern GameEnemySlot enemySlots_800B19F0[3]; // == gCtx_800B1260.enemySlots_790 (config/aliases.txt)
+
 extern short defaultBones_80079140[]; // default bone table
 extern GameEnemy* GetEventEnemy_800A5F6C(void);
 extern GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* ai);
@@ -172,7 +174,6 @@ extern int sub_800B76B8(char* p, int* pos);
 
 
 
-extern GameEnemySlot enemySlots_800B19F0[];
 
 extern void ResumeEnemyAi_800A2D48(GameAi* ai);
 
@@ -185,7 +186,6 @@ extern void ResetEncounter_800A170C(void);
 
 extern int GetFieldMinionActor_800A7A60(int idx);
 
-extern char battleSelection_800B19CC[];
 
 
 
@@ -243,7 +243,6 @@ extern GameMember* GetFieldMinion_800A77F4(int idx);
 extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx);
 
 
-extern int dword_800B19E0;
 
 
 
@@ -253,7 +252,6 @@ extern int dword_800B19E0;
 
 extern EventNode* gameMainTask_8008D46C;
 
-extern int* encounterSlot_800B1264;
 
 // a map location (saveData_8008B570.mapId_2E4[0..2]; FindMapEntrance_800ADCEC)
 typedef struct GameMapLoc
@@ -332,7 +330,8 @@ typedef struct GameEncounter
     int f780;
     int f784;
     int f788;
-    char pad_78c[0xa48 - 0x78c];
+    int f78c;
+    GameEnemySlot enemySlots_790[3]; // the code uses them as enemySlots_800B19F0 (config/aliases.txt)
 } GameEncounter;
 
 // the record of one enemy of the last battle (battleEnemyResults_800B1238; BATTLE fills it, MENU's results use it)
@@ -455,7 +454,6 @@ typedef struct GameV6_1
 } GameV6_1;
 
 
-extern char aFile_800A05CC[];
 
 extern void EnterLevantBattleMode_800A895C();
 

@@ -13,6 +13,7 @@ positions relative to DATA.001. Load addresses are the ones used by the game
 (see scripts/ida/load_overlay_into_idb.py). Symbols live in overlays/<name>.sym, C code in
 src/overlays/<name>.c.
 """
+import glob
 import os
 import re
 import struct
@@ -198,42 +199,74 @@ def main(argv):
         objs.append(obj)
     link = os.path.join(b, tag + "_link.txt")
     # the executable's symbols where its link put them (build.py first), so that the overlays follow the
-    # executable when it moves; symbols outside of its image (other overlays, buffers) by their address
-    exe_map = {m.group(2): int(m.group(1), 16) for m in re.finditer(
+    # executable when it moves (its own equates for this overlay's range aside)
+    equ = {m.group(2): int(m.group(1), 16) for m in re.finditer(
         r"^ ([0-9A-F]{8})  (\w+)$", open(os.path.join(BUILD, "jade_cocoon.map")).read(), re.M)}
-    main_syms = sorted([(a, n) for n, a in exe_map.items()] +
-                       [(a, n) for a, n in load_symbols("symbol_addrs.txt")
-                        if n not in exe_map and not (0x80010000 <= a < EXE_END)])
-    with open(link, "w") as f:
-        f.write("\torg\t$%08x\n" % base)
-        for g, kw in (("head", ""), ("rdata", ""), ("text", ""), ("data", ""), ("bss", "\tbss")):
-            f.write("%s\tgroup%s\n" % (g, kw))
-        for sec, g in ((".sdata", "head"), (".rdata", "rdata"), (".text", "text"), (".data", "data"),
-                       (".sbss", "bss"), (".bss", "bss")):
-            f.write("\tsection\t%s,%s\n" % (sec, g))
-        for obj in objs:
-            f.write('\tinclude "%s"\n' % os.path.basename(obj))
-        for path in libs:
-            f.write('\tinclude "%s"\n' % os.path.relpath(path, b))
-        for a, n in main_syms:
-            if not (base <= a < base + len(data)):
+    equ = {n: a for n, a in equ.items() if not base <= a < base + len(data)}
+    # names of the source outside of the executable and of this overlay: other overlays' symbols (overlays/*.sym),
+    # else buffers by their _XXXXXXXX suffix
+    own = {n for _, n in syms}
+    others = {}
+    for path in glob.glob(os.path.join(REPO, "overlays", "*.sym")):
+        if os.path.basename(path) != name.lower() + ".sym":
+            for a, n in load_symbols(os.path.relpath(path, REPO)):
+                others.setdefault(n, set()).add(a)
+    for n in sorted(set(re.findall(r"\b[A-Za-z_]\w*\b", src_text)) - own - set(equ)):
+        if n in others:
+            if len(others[n]) > 1:
+                sys.exit("%s: %s is at several addresses in overlays/*.sym" % (name, n))
+            equ[n] = next(iter(others[n]))
+        else:
+            m = re.match(r"\w+_([0-9A-F]{8})$", n)
+            if m and not base <= int(m.group(1), 16) < base + len(data):
+                equ[n] = int(m.group(1), 16)
+    sys.path.insert(0, REPO)
+    import build as bp  # config/aliases.txt
+    aliases = bp.read_aliases(name)
+
+    def map_symbols():
+        path = os.path.join(b, tag + ".map")
+        if not os.path.exists(path):
+            return {}
+        return {m.group(2): int(m.group(1), 16) for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", open(path).read(), re.M)}
+
+    def link_once():
+        syms_map = map_symbols()
+        for n, base_sym, off in aliases:
+            equ[n] = syms_map.get(base_sym, 0) + off
+        with open(link, "w") as f:
+            f.write("\torg\t$%08x\n" % base)
+            for g, kw in (("head", ""), ("rdata", ""), ("text", ""), ("data", ""), ("bss", "\tbss")):
+                f.write("%s\tgroup%s\n" % (g, kw))
+            for sec, g in ((".sdata", "head"), (".rdata", "rdata"), (".text", "text"), (".data", "data"),
+                           (".sbss", "bss"), (".bss", "bss")):
+                f.write("\tsection\t%s,%s\n" % (sec, g))
+            for obj in objs:
+                f.write('\tinclude "%s"\n' % os.path.basename(obj))
+            for path in libs:
+                f.write('\tinclude "%s"\n' % os.path.relpath(path, b))
+            for n, a in sorted(equ.items(), key=lambda x: (x[1], x[0])):
                 f.write("%s\tequ\t$%08x\n" % (n, a))
-        # buffers behind the overlay that are only named in the C source (name_XXXXXXXX)
-        # (main-exe symbols inside the overlay range are not written above, so they count as unknown here)
-        known = {n for a, n in main_syms if not (base <= a < base + len(data))} | {n for _, n in syms}
-        for n, addr in sorted(set(re.findall(r"\b(\w+_([0-9A-F]{8}))\b", src_text))):
-            if n not in known:
-                f.write("%s\tequ\t$%s\n" % (n, addr))
-    cpe = os.path.join(b, tag + ".cpe")
-    # the SN tools crash on long paths: run them from the build folder with relative names
-    cwd = os.getcwd()
-    os.chdir(b)
-    try:
-        run([os.path.relpath(os.path.join(BIN, "psylink.exe")), "/l", os.path.relpath(os.path.join(PSYQ, "LIB")),
-                "/c", "/n", "4000", "/q", "/m", "@%s,%s,%s,%s" % (tag + "_link.txt", tag + ".cpe", tag + ".sym", tag + ".map")])
-        run([os.path.relpath(os.path.join(BIN, "cpe2exe.exe")), "-CA", tag + ".cpe"])
-    finally:
-        os.chdir(cwd)
+        cpe = os.path.join(b, tag + ".cpe")
+        # the SN tools crash on long paths: run them from the build folder with relative names
+        cwd = os.getcwd()
+        os.chdir(b)
+        try:
+            run([os.path.relpath(os.path.join(BIN, "psylink.exe")), "/l", os.path.relpath(os.path.join(PSYQ, "LIB")),
+                    "/c", "/n", "4000", "/q", "/m", "@%s,%s,%s,%s" % (tag + "_link.txt", tag + ".cpe", tag + ".sym", tag + ".map")])
+            run([os.path.relpath(os.path.join(BIN, "cpe2exe.exe")), "-CA", tag + ".cpe"])
+        finally:
+            os.chdir(cwd)
+
+    # names inside C objects (config/aliases.txt): BASE + OFFSET from where this link put BASE, so link again
+    # when it moved (nothing else depends on the values)
+    for _ in range(2):
+        link_once()
+        got = map_symbols()
+        if all(got.get(n) == got.get(base_sym, -1) + off for n, base_sym, off in aliases):
+            break
+    else:
+        sys.exit("%s: aliases (config/aliases.txt) not at BASE + OFFSET after relinking" % name)
     built = open(os.path.join(b, tag + ".exe"), "rb").read()[0x800:]
     # end of everything linked (.bss included) from the map; more than the original only for modified
     # (e.g. debug) builds, which are then written in full (scripts/patch_disc.py can place them)

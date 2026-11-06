@@ -1379,7 +1379,7 @@ extern int unitStatusInflicted_800C9CA0[7];
 extern char unitHitKinds_800C9CBC[12];
 extern BattleCmd unitReactions_800C9CC8[7];
 extern short unitHpDamage_800C9D38[8];
-extern short unitMpDamage_800C9D48[8];
+extern short unitMpDamage_800C9D48[7];
 extern int unitResultFlags_800C9D58[7];
 extern const char* helpWindowText_800C9D74;
 extern short hitSfx_800C9D78;

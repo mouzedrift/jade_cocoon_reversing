@@ -485,7 +485,7 @@ int CheckEnemyContact_800A19E4(void)
                 radius = ai->actor_8->baseScale_138[2] * 400 / 4096;
                 if (dist < radius * radius)
                 {
-                    encounterSlot_800B1264 = (int*)slot;
+                    gCtx_800B1260.leader_4 = slot;
                     return 1;
                 }
             }
@@ -546,7 +546,7 @@ void SetupEncounter_800A1BD0(void)
         slot->ai_4 = CreateEnemyAiEvent_800A2D90(enemy->actors_A4[0], &slot->data_8.minion_1C, 0);
         SetActorVisible_8001D730(actor, 0);
         SetActorGroundMove_8001D68C(actor, 0);
-        encounterSlot_800B1264 = (int*)slot;
+        gCtx_800B1260.leader_4 = slot;
     }
     found = 0;
     for (i = 0; i < 3; i++)
@@ -617,7 +617,7 @@ void EndEncounter_800A1E1C(void)
 // Matched
 char* GetBattleSelection_800A1E3C(void)
 {
-    return battleSelection_800B19CC;
+    return (char*)&gCtx_800B1260.activeCount_76C;
 }
 
 // Matched
@@ -916,7 +916,7 @@ int EnemyReturnZero_800A28DC(int idx)
 int CanFleeFromEnemy_800A28FC(int idx)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
-    return dword_800B19E0;
+    return gCtx_800B1260.f780;
 }
 
 // Matched
@@ -1058,7 +1058,7 @@ int AssertEnemyIndex_800A2CA8(int idx, int noExit)
     {
         if (!noExit)
         {
-            printf(aAssertionFaile_800A05A4, aFile_800A05CC, 0x512);
+            printf(aAssertionFaile_800A05A4, aEnmbatleC_800A05CC, 0x512);
             exit(1);
         }
     }

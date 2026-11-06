@@ -124,7 +124,6 @@ extern unsigned char side_800CD839;
 extern unsigned char menuState_800CD83A;
 extern unsigned char msgTimer_800CD83B;
 extern int targetSlot_800CD83C;
-extern unsigned char targetSlotLo_800CD83C; // low byte of targetSlot_800CD83C (SetFocusedMinion_800CBAD4 reads it with lbu)
 extern BattleCmd* cmd_800CD840;
 extern unsigned char targetFlags_800CD844;
 extern unsigned char byte_800CD845;

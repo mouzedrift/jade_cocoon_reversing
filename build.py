@@ -60,21 +60,53 @@ def game_bss_end():
     return layout.BSS_GAME_END
 
 
-def read_aliases():
-    """config/aliases.txt: names of places inside data objects that are C, [(name, address)] (the address is the
-    one in symbol_addrs.txt, or the name's _XXXXXXXX suffix)"""
-    addrs = {}
-    for line in open(os.path.join(CURRENT_DIR, "symbol_addrs.txt")):
-        m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
-        if m:
-            addrs[m.group(1)] = int(m.group(2), 16)
+def read_aliases(image="EXE"):
+    """config/aliases.txt: names of places inside C objects of the executable (or of an overlay),
+    [(name, base symbol, offset)]"""
     out = []
-    path = os.path.join(CURRENT_DIR, "config", "aliases.txt")
-    for line in open(path) if os.path.exists(path) else ():
+    for line in open(os.path.join(CURRENT_DIR, "config", "aliases.txt")):
         f = line.split("#")[0].split()
-        if f:
-            out.append((f[0], addrs[f[0]] if f[0] in addrs else int(f[0][-8:], 16)))
+        if f and f[0] == image:
+            out.append((f[1], f[2], int(f[3], 16)))
     return out
+
+
+def read_map_symbols():
+    """{name: address} of the last link (build_psyq/jade_cocoon.map), {} before the first one"""
+    path = os.path.join(BUILD_DIR, f"{EXE_NAME}.map")
+    if not os.path.exists(path):
+        return {}
+    return {m.group(2): int(m.group(1), 16) for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", open(path).read(), re.M)}
+
+
+def aliases_resolved():
+    """True if the aliases of the last link sit at BASE + OFFSET (the equates are from the link before when
+    something moved; nothing else depends on their values, so linking once more fixes them)"""
+    syms = read_map_symbols()
+    return all(n in syms and b in syms and syms[n] == syms[b] + off for n, b, off in read_aliases())
+
+
+def external_symbols(src_dir):
+    """[(name, address)] of the names in the executable's C sources (src/*.c, *.h, not src/overlays) that are
+    outside of its image: from overlays/*.sym, or by the name's _XXXXXXXX suffix (buffers behind the image)"""
+    ovl = {}
+    for path in glob.glob(os.path.join(CURRENT_DIR, "overlays", "*.sym")):
+        for line in open(path):
+            m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
+            if m:
+                ovl[m.group(1)] = int(m.group(2), 16)
+    names = set()
+    for path in glob.glob(os.path.join(src_dir, "*.[ch]")):
+        names |= set(re.findall(r"\b[A-Za-z_]\w*\b", open(path).read()))
+    out = {}
+    for n in names:
+        if n in ovl:
+            out[n] = ovl[n]
+        else:
+            m = re.match(r"\w+_([0-9A-F]{8})$", n)
+            if m and int(m.group(1), 16) >= IMAGE_END:
+                out[n] = int(m.group(1), 16)
+    return sorted(out.items(), key=lambda x: (x[1], x[0]))
 
 
 def write_if_changed(path, text):
@@ -104,6 +136,7 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = os.path.join(CURRENT_DIR, "build_psyq")
 
 EXE_NAME = "jade_cocoon"
+IMAGE_END = 0x800A05A0  # end of the executable's image (.bss included), where GAME/TITLE/... are loaded
 
 def read_cc43():
     """TUs built with another compiler than psyq 4.4: "tu [4.3|4.6|4.6n]" (4.6n: with -mno-check-zero-division)"""
@@ -119,13 +152,6 @@ def read_cc43():
 
 
 cc43 = read_cc43()
-
-
-def in_lib(a):
-    """address in the PSY-Q part of the executable (code, .rdata, .data/.sdata, .sbss, .bss)"""
-    import layout as L
-    return (L.GAME_TEXT_END <= a < L.RDATA_START or L.RDATA_GAME_END <= a < L.DATA_START or
-            L.DATA_GAME_END <= a < L.BSS_START or L.BSS_GAME_END <= a < L.BSS_END)
 
 
 def generate_ninja():
@@ -191,7 +217,6 @@ def generate_ninja():
             linker_deps.append(f"{out_path}.obj")
 
         lib_objs = read_lib_objs()
-        lib_syms = set()
         # the PSY-Q modules themselves, from the .LIB files; the code that is no 4.4 module is src/lib/*.s
         from objlib.sections import parse_obj_sections
         commons = read_lib_commons()
@@ -217,9 +242,6 @@ def generate_ninja():
                 write_if_changed(out_path + ".s", open(src).read().replace("\r\n", "\n").replace("\n", "\r\n"))
                 ninja.build(f"{out_path}.obj", "assemble", out_path + ".s", implicit=[src])
                 linker_deps.append(f"{out_path}.obj")
-                for l in open(src):
-                    if l.startswith("\t.globl\t"):
-                        lib_syms.add(l.split()[1])
             else:
                 secs = parse_obj_sections(paths[(o[1], o[2])])
                 if ".bss" in secs and secs[".bss"].size and bss_pos % 8:
@@ -231,7 +253,6 @@ def generate_ninja():
                     linker_deps.append(os.path.join(BUILD_DIR, name + ".obj"))
                     bss_pos += 8 - bss_pos % 8
                 linker_deps.append(paths[(o[1], o[2])])
-                lib_syms.update(secs["__xdefs__"])
                 bss_pos += secs[".bss"].size if ".bss" in secs else 0
                 own = commons.get((o[1], o[2]))
                 if own:
@@ -267,18 +288,15 @@ def generate_ninja():
                 f.write("\tsection\t%s,%s\n" % (sec, g))
             for o in linker_deps:
                 f.write('\tinclude "%s"\n' % o)
-            # symbols outside of the image (overlays, buffers behind the executable), and with the PSY-Q
-            # modules linked from the .LIB files the names of library code/data they don't define themselves
-            for line in open(os.path.join(CURRENT_DIR, "symbol_addrs.txt")):
-                m = re.match(r"(\w+)=0x([0-9a-fA-F]+);", line)
-                if not m:
-                    continue
-                a = int(m.group(2), 16)
-                if a >= 0x800A05A0 or (lib_objs is not None and m.group(1) not in lib_syms and in_lib(a)):
-                    f.write("%s\tequ\t$%s\n" % (m.group(1), m.group(2)))
-            # names the code has for a place inside a C object (playerYan_8008B594 == saveData_8008B570.inv_24)
-            for name, a in read_aliases():
+            # what the executable uses outside of its image: overlay code/data (at the overlays' fixed load
+            # addresses) and buffers behind the image
+            for name, a in external_symbols(project_src):
                 f.write("%s\tequ\t$%08X\n" % (name, a))
+            # names the code has for a place inside a C object (playerYan_8008B594 == saveData_8008B570.inv_24),
+            # from where the last link put the object (see aliases_resolved)
+            syms = read_map_symbols()
+            for name, base, off in read_aliases():
+                f.write("%s\tequ\t$%08X\n" % (name, syms.get(base, 0) + off))
             f.write("\tregs\tpc=__SN_ENTRY_POINT\n")
 
         ninja.build(cpe_path, "link", implicit=linker_deps + [link_path])
@@ -423,8 +441,13 @@ def main():
         clean(log=False)
 
     build_retcode = build()
+    if build_retcode == 0 and not aliases_resolved():
+        generate_ninja()
+        build_retcode = build()
     if build_retcode != 0:
         sys.exit(build_retcode)
+    if not aliases_resolved():
+        sys.exit("aliases (config/aliases.txt) still not at BASE + OFFSET after relinking")
 
     if not args.no_verify and not verify_hashes(args.iso):
         sys.exit(1)

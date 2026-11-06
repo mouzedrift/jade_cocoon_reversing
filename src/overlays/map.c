@@ -572,7 +572,7 @@ void WaitDestPicture_800B7A38(MapTask* task)
     {
         task->next_8 = ConfirmDestination_800B7A90;
         SetFadeMode_8001C19C(3, 0x20);
-        word_800B932C = 0;
+        confirmCursor_800B9324.cursor_8 = 0;
     }
 }
 
