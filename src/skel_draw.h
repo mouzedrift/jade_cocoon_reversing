@@ -171,4 +171,7 @@ extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* 
 
 extern int dword_80096620[2];
 
+// billboard sprite with an RGB tint (DrawBillboardRgb_80043DE0)
+int DrawBillboardRgb_80043DE0(POLY_FT4* poly, VECTOR* pos, short* size, unsigned char* rgb);
+
 #endif
