@@ -213,7 +213,6 @@ void DrawGauge_8002BA54(Gauge* gauge, int time, short* origin, int ot)
     DrawGaugeBar_8002BCAC(idx, width, pos, pulseTime, ot);
     DrawUiTiySprt_8002C06C(origin, frameIcon, ot);
 }
-// Not matched: original has no zero-divisor check (plain divu), cc1psx/aspsx emit one
 // Matched
 unsigned int ScaleGaugeLength_8002BC60(unsigned int value, unsigned int max, unsigned int length)
 {

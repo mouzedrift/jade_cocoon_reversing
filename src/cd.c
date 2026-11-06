@@ -351,8 +351,6 @@ int LengthSquared3D_8003B8DC(int* v)
 {
     return v[0] * v[0] + v[1] * v[1] + v[2] * v[2];
 }
-// Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
-// Not matched: C is right but ASPSX expands divu with a divide-by-zero check (3 extra insts); original has a bare divu
 // Matched
 unsigned int ISqrt_8003B918(unsigned int value)
 {

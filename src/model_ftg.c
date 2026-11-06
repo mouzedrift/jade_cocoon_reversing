@@ -2494,23 +2494,6 @@ void SetCurrentArea_800272BC(int map, int area)
     currentAreaMap_80091C88 = map;
     currentArea_80091C44 = area;
 }
-#if 0
-// Not matched (close)
-int IsMapLoading_800272D0(void)
-{
-    int* a = mapLoaderTask_800B1DC4[0x24 / 4];
-    int* b = areaLoaderTask_800B1DB8[0x24 / 4];
-    if (*a != 0)
-    {
-        return 1;
-    }
-    if (*b == 0)
-    {
-        return 0;
-    }
-    return 1;
-}
-#endif
 // Matched
 int IsMapLoading_800272D0(void)
 {
