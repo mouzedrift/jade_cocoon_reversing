@@ -1599,12 +1599,13 @@ void ReadyEquipInput_800BD61C(StoreMenu* store)
         }
         if (store->cursorIndex_30 == 1)
         {
-            goto snd;
+            PlaySfx_80031494(0x7D);
+            store->nextState_2 = 0x12;
+            return;
         }
     }
     if (store->cancel_44)
     {
-    snd:
         PlaySfx_80031494(0x7D);
         store->nextState_2 = 0x12;
     }

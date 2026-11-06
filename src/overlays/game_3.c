@@ -1460,15 +1460,16 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
         break;
     case 2:
         icon = GetItemIcon_8001D2AC(id);
-        goto draw;
+        GetPublicTiySprt_80032470(icon, sprt, sprtArg);
+        break;
     case 3:
         icon = GetKeyItemIcon_8001D344(id);
-        goto draw;
+        GetPublicTiySprt_80032470(icon, sprt, sprtArg);
+        break;
     case 4:
     case 5:
     case 6:
         icon = GetEquipmentIcon_8001D2D4(id, kind - 4);
-    draw:
         GetPublicTiySprt_80032470(icon, sprt, sprtArg);
         break;
     case 7:
@@ -1636,16 +1637,14 @@ void GameMainStart_800A6968(GameTask* task, GameMainWork* work)
             i++;
         } while (lists[i].list_0 != 0);
     }
-    if (eventDispatchHalt_8008B540)
+    if (!eventDispatchHalt_8008B540)
     {
-        goto end;
+        ApplyAudioOutputFormat_80030988();
+        ResetFieldState_800A73A8();
+        SwitchGameMode_800A6C00(task, work);
+        InitGameModeTasks_800A6A48(task, work);
+        task->next_8 = GameMainUpdate_800A6B00;
     }
-    ApplyAudioOutputFormat_80030988();
-    ResetFieldState_800A73A8();
-    SwitchGameMode_800A6C00(task, work);
-    InitGameModeTasks_800A6A48(task, work);
-    task->next_8 = GameMainUpdate_800A6B00;
-end:
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
 }
@@ -1693,14 +1692,12 @@ void GameMainUpdate_800A6B00(GameTask* task, GameMainWork* work)
     if (unknownFlags_8008D678 & 0x8000000)
     {
         task->next_8 = GameMainExit_800A6CCC;
-        goto end;
     }
-    if (gameModeChanged_800B0698 != 0)
+    else if (gameModeChanged_800B0698 != 0)
     {
         SwitchGameMode_800A6C00(task, work);
         InitGameModeTasks_800A6A48(task, work);
     }
-end:
     eventDispatchHalt_8008B540 = 0;
     gameModeChanged_800B0698 = 0;
 }
