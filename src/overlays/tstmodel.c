@@ -170,7 +170,7 @@ void TstModelTask_800A0A8C(EventEntry* task, TstModelWork* c)
         bStopDrawingMovie_8008D45C = 1;
     }
 }
-const TstModelBone dword_800A09B8 = { 0x8080, 128, 0x8080 };
+const TstModelBone defaultBone_800A09B8 = { 0x8080, 128, 0x8080 };
 
 void TstModelResetCamera_800A0BC0(TstModelWork* work)
 {
@@ -213,7 +213,7 @@ void TstModelSelectModel_800A0C00(TstModelWork* c)
     {
         if (c->sel_4 == i)
         {
-            tmp = dword_800A09B8;
+            tmp = defaultBone_800A09B8;
         }
     }
     if (padRepeat_800918CC[0] & 0x2000)
@@ -452,7 +452,7 @@ void TstModelBoneEdit_800A1614(TstModelWork* c)
     c->boneScroll_10 = (short)cur.scroll_E;
     for (i = 0; i < 6; i++)
     {
-        tmp = dword_800A09B8;
+        tmp = defaultBone_800A09B8;
     }
     pad = padPressed_8009194C[0];
     if (pad & 0x20)

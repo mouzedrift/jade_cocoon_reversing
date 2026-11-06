@@ -364,8 +364,8 @@ int magicDescriptions_800C9978[30][4] = {
     { (int)aEnhanceWind_800B8DD0, (int)aIncreasesWindAt_800B8D7C, (int)aEffectivenessOf_800B8D1C },
 };
 const char* skillDescriptions_800C9B58[16][4] = {
-    { dword_800BA174, dword_800BA174, dword_800BA174, 0 },
-    { dword_800BA174, dword_800BA174, dword_800BA174, 0 },
+    { emptyText_800BA174, emptyText_800BA174, emptyText_800BA174, 0 },
+    { emptyText_800BA174, emptyText_800BA174, emptyText_800BA174, 0 },
     { aSpecialEarthAtt_800BA148, aVeryEffectiveAg_800BA0F0, aHigherEarthElem_800B94E8, 0 },
     { aSpecialWaterAtt_800BA0C4, aVeryEffectiveAg_800BA06C, aHigherWaterElem_800B9610, 0 },
     { aSpecialFireAtta_800BA044, aVeryEffectiveAg_800B9FEC, aHigherFireEleme_800B9730, 0 },
@@ -1549,7 +1549,7 @@ const char aVeryEffectiveAg_800BA06C[] = "\202u\202\205\202\222\202\231\201@\202
 const char aSpecialWaterAtt_800BA0C4[] = "\202r\202\220\202\205\202\203\202\211\202\201\202\214\201@\202v\202\201\202\224\202\205\202\222\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Special Water Attack
 const char aVeryEffectiveAg_800BA0F0[] = "\202u\202\205\202\222\202\231\201@\202\205\202\206\202\206\202\205\202\203\202\224\202\211\202\226\202\205\201@\202\201\202\207\202\201\202\211\202\216\202\223\202\224\201@\202\227\202\201\202\224\202\205\202\222\201|\202\202\202\201\202\223\202\205\202\204\201@\202\205\202\216\202\205\202\215\202\211\202\205\202\223\201D"; // Very effective against water-based enemies.
 const char aSpecialEarthAtt_800BA148[] = "\202r\202\220\202\205\202\203\202\211\202\201\202\214\201@\202d\202\201\202\222\202\224\202\210\201@\202`\202\224\202\224\202\201\202\203\202\213"; // Special Earth Attack
-const int dword_800BA174[2] = { 0 };
+const int emptyText_800BA174[2] = { 0 };
 
 void BossAi04_800C59A0(EnemyAi* ai)
 {

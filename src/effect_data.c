@@ -1636,10 +1636,10 @@ MinionModelDesc speciesModelDescs_8007BD30[365] = {
 unsigned char rankLevelThresholds_8007C2E4[8] = { 1, 7, 13, 22, 27 };
 MATRIX defaultLightMatrix_8007C2EC = { { { 0x7FC, -0xAA6, 0x8DE } } };
 MATRIX defaultColorMatrix_8007C30C = { { { 0x1000 }, { 0x1000 }, { 0x1000 } } };
-int dword_8007C32C = 0x4D4D4D;
-void* unused_8007C330[6] = {
+int defaultAmbientColor_8007C32C = 0x4D4D4D;
+void* defaultLightTable_8007C330[6] = {
     &defaultLightMatrix_8007C2EC, &defaultLightMatrix_8007C2EC, &defaultColorMatrix_8007C30C, &defaultColorMatrix_8007C30C,
-    &dword_8007C32C, &dword_8007C32C,
+    &defaultAmbientColor_8007C32C, &defaultAmbientColor_8007C32C,
 };
 const char* magicNames_8007C348[0x1E * 2] = {
     aAgni_800731EC, emptyName_800731E8, aAgnis_800731DC, emptyName_800731E8, aAgnia_800731D0, emptyName_800731E8, aVahli_800731C4, emptyName_800731E8,
@@ -2184,7 +2184,7 @@ int modelVramSlots_8007DC10[24] = {
     0xFFFF0000, 0, 0, 0, 0, 0, 0, (int)&modelVramSlots_8007DB30,
 };
 ModelVramSlot *modelLoaderVram_8007DC70 = (void *)modelVramSlots_8007DB50;
-int dword_8007DC74[6] = { (int)&modelVramSlots_8007DB84[7], (int)&modelVramSlots_8007DBC4[7], (int)&modelVramSlots_8007DC10[4], 0x1000300, 0x10100, 0x1890300 };
+int modelVramSlotLists_8007DC74[6] = { (int)&modelVramSlots_8007DB84[7], (int)&modelVramSlots_8007DBC4[7], (int)&modelVramSlots_8007DC10[4], 0x1000300, 0x10100, 0x1890300 };
 unsigned short actorImageRect_8007DC8C[2] = { 0x300, 0x181 };
 short unused_8007DC90 = 0x100;
 short unused_8007DC92 = 1;

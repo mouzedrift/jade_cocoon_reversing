@@ -3591,7 +3591,7 @@ void FreeFormModel_800BF484()
 void LoadFormModel_800BF4B8(Minion* minion)
 {
     ShopFormModel* form = &formModel_800C09E0;
-    BuildFormModelDesc_800BF02C(minion, form->desc_8, dword_8007DC74[0]);
+    BuildFormModelDesc_800BF02C(minion, form->desc_8, modelVramSlotLists_8007DC74[0]);
     form->minion_4 = minion;
     form->task_0 = StartModelTask_80010850(form->desc_8);
     form->actor_3C = 0;

@@ -58,8 +58,8 @@ extern signed char elementModifiers_8007BA74[16];
 extern unsigned char speciesModifiers_8007BA84[];
 extern MATRIX defaultLightMatrix_8007C2EC; // default scene light direction (row 0)
 extern MATRIX defaultColorMatrix_8007C30C; // default scene light colour (column 0)
-extern int dword_8007C32C;
-extern void* unused_8007C330[6];
+extern int defaultAmbientColor_8007C32C;
+extern void* defaultLightTable_8007C330[6];
 extern short screenModes_8007C728[][2];
 extern SoundCue soundCues_8007C750[];
 extern short levelSeqsCue2_8007CAC0[];
@@ -76,7 +76,7 @@ extern int modelVramSlots_8007DB50[13];
 extern int modelVramSlots_8007DB84[16];
 extern int modelVramSlots_8007DBC4[19];
 extern int modelVramSlots_8007DC10[24];
-extern int dword_8007DC74[6];
+extern int modelVramSlotLists_8007DC74[6];
 extern unsigned short actorImageRect_8007DC8C[];
 extern short unused_8007DC90;
 extern short unused_8007DC92;

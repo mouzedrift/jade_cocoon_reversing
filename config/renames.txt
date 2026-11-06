@@ -219,3 +219,20 @@ name_80091C38 loadFadeFlags_80091C38
 dword_800ADE88 encounterChainMsgId_800ADE88
 [MAP CHAPTER]
 dword_800B0624 areaMapCounts_800B0624
+
+# --- cleanup pass: data named from its use ---
+[ALL]
+dword_8007C32C defaultAmbientColor_8007C32C
+unused_8007C330 defaultLightTable_8007C330
+dword_8007DC74 modelVramSlotLists_8007DC74
+[WPNSHOP]
+dword_800BE114 quantityLine0_800BE114
+dword_800BE124 quantityLine1_800BE124
+[TSTMODEL]
+dword_800A09B8 defaultBone_800A09B8
+[BATTLE]
+dword_800BA174 emptyText_800BA174
+[EXE GAME]
+dword_800B1DA8 mapEventTasks_800B1DA8
+[GAME]
+dword_800B08AC mapEventTasksDef_800B08AC

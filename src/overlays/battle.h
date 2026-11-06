@@ -1229,7 +1229,7 @@ extern const char aVeryEffectiveAg_800BA06C[];
 extern const char aSpecialWaterAtt_800BA0C4[];
 extern const char aVeryEffectiveAg_800BA0F0[];
 extern const char aSpecialEarthAtt_800BA148[];
-extern const int dword_800BA174[2];
+extern const int emptyText_800BA174[2];
 extern int unused_800C8B2C;
 extern unsigned char aiCounter_800C8B30[4];
 extern int aiAllyCalled_800C8B34;

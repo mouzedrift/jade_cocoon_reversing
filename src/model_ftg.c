@@ -2327,7 +2327,7 @@ void InitMapState_80026FAC(void)
     InitActors_8001D378();
 }
 extern int mapCallback_80091CB4;
-extern EventNode* dword_800B1DA8;
+extern EventNode* mapEventTasks_800B1DA8;
 extern void FreeLevantAnimSet_800AC73C(void);
 extern void FreeAllEventData_800A54A0(void);
 extern void StopAllEventScripts_800A58B4(void);
@@ -2355,7 +2355,7 @@ void UnloadMap_80027118(void)
     mapHasCode_8008266C = 0;
     if (dword_80091C8C == 0)
     {
-        StopAllEventEntries_80043B40(dword_800B1DA8);
+        StopAllEventEntries_80043B40(mapEventTasks_800B1DA8);
         StopAllEventEntries_80043B40(eventEntities_8008D400);
     }
     FreeLevantAnimSet_800AC73C();

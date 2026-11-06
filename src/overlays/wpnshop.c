@@ -1971,8 +1971,8 @@ int AdjustBuyQuantity_800BE084(int count, int max)
 }
 
 int unused_800BE110 = 0xA000D;
-TextListEntry dword_800BE114[2] = { { 0x10, 0xC9, 0 } };
-TextListEntry dword_800BE124[2] = { { 0x10, 0xC9, 0 } };
+TextListEntry quantityLine0_800BE114[2] = { { 0x10, 0xC9, 0 } };
+TextListEntry quantityLine1_800BE124[2] = { { 0x10, 0xC9, 0 } };
 TextListEntry dialogLines_800BE134[4] = { { 0x57, 0x18, 0 }, { 0x57, 0x28, 0 }, { 0x57, 0x38, 0 } };
 void *txtEquipMainA_800BE154[3] = { (void *)aYesWhatDoYouWan_800B66C8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
 void *txtEquipBuyKindA_800BE160[3] = { (void *)aWhatDoYouWantTo_800B66F8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
@@ -2077,8 +2077,8 @@ StorePanel storePanels_800BE580[29] = {
     { 0, 0, { 10, 176, 75, 20 }, 14 },
     { 0, 0, { 10, 176, 75, 20 }, 14 },
     { panelCursor19_800BE560, 0, { 0, 0, 0, 0 }, 14 },
-    { 0, dword_800BE114, { 12, 197, 296, 20 }, 14 },
-    { 0, dword_800BE124, { 12, 197, 296, 20 }, 14 },
+    { 0, quantityLine0_800BE114, { 12, 197, 296, 20 }, 14 },
+    { 0, quantityLine1_800BE124, { 12, 197, 296, 20 }, 14 },
     { 0, 0, { 194, 112, 116, 96 }, 14 },
     { 0, dialogLines_800BE134, { 10, 18, 300, 58 }, 14 },
     { 0, 0, { 12, 218, 296, 12 }, 14 },

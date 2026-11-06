@@ -11,7 +11,7 @@ GAME     Ratan2DifferenceInt_8003B9E0  ratan2Difference_8003B9E0  0  # GAME decl
 EXE      encounterSwapped_800B129C                 gCtx_800B1260                0x3C     # gCtx_800B1260 + 0x3C
 TITLE    titleStartMode_8008B55A                  titleMenuState_8008B558      0x2      # titleMenuState_8008B558 + 0x2
 TITLE    levantStartRot_800B06A8                 levantStartPos_800B069C      0xC      # levantStartPos_800B069C + 0xC
-COMBAT   combatSlotModelParams_8007DC78                 dword_8007DC74               0x4      # dword_8007DC74 + 0x4
+COMBAT   combatSlotModelParams_8007DC78                 modelVramSlotLists_8007DC74               0x4      # modelVramSlotLists_8007DC74 + 0x4
 COMBAT   combatPortraitImagePos_8007DCAC                 actorClutPos_8007DC94        0x18     # actorClutPos_8007DC94 + 0x18
 COMBAT   combatPortraitClutPos_8007DCBC                 actorClutPos_8007DC94        0x28     # actorClutPos_8007DC94 + 0x28
 COMBAT   saveMinions_8008BEF8           saveData_8008B570            0x988    # saveData_8008B570 + 0x988
@@ -19,10 +19,10 @@ GAME     levantTurnFilterCoeffs_800795C0                 turnFilterCoeffs_800795
 GAME     statusTint_8007A164                 statusTintPoisonLevel7_8007A14C 0x18     # statusTintPoisonLevel7_8007A14C + 0x18
 GAME     gameModelList_8007DC60                 modelVramSlots_8007DC10      0x50     # modelVramSlots_8007DC10 + 0x50
 GAME     gameModelVramSlots_8007DC6C                 modelVramSlots_8007DC10      0x5C     # modelVramSlots_8007DC10 + 0x5C
-GAME     tintImageRect_8007DC80                 dword_8007DC74               0xC      # dword_8007DC74 + 0xC
-GAME     tintImageRectY_8007DC82                  dword_8007DC74               0xE      # dword_8007DC74 + 0xE
-GAME     tintClutRect_8007DC88                 dword_8007DC74               0x14     # dword_8007DC74 + 0x14
-GAME     tintClutRectY_8007DC8A                  dword_8007DC74               0x16     # dword_8007DC74 + 0x16
+GAME     tintImageRect_8007DC80                 modelVramSlotLists_8007DC74               0xC      # modelVramSlotLists_8007DC74 + 0xC
+GAME     tintImageRectY_8007DC82                  modelVramSlotLists_8007DC74               0xE      # modelVramSlotLists_8007DC74 + 0xE
+GAME     tintClutRect_8007DC88                 modelVramSlotLists_8007DC74               0x14     # modelVramSlotLists_8007DC74 + 0x14
+GAME     tintClutRectY_8007DC8A                  modelVramSlotLists_8007DC74               0x16     # modelVramSlotLists_8007DC74 + 0x16
 GAME     fieldModelImagePos_8007DCA4                  actorClutPos_8007DC94        0x10     # actorClutPos_8007DC94 + 0x10
 GAME     fieldModelClutPos_8007DCA8                  actorClutPos_8007DC94        0x14     # actorClutPos_8007DC94 + 0x14
 GAME     combatPortraitImagePos_8007DCAC                  actorClutPos_8007DC94        0x18     # actorClutPos_8007DC94 + 0x18

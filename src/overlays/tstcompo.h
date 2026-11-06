@@ -251,8 +251,8 @@ extern LVec3 cameraEye_8008D600;
 extern ShortPair screenOffset_8008D474;
 extern MATRIX defaultLightMatrix_8007C2EC; // effect_data.h
 extern MATRIX defaultColorMatrix_8007C30C; // effect_data.h
-/* exe-side: effect_data.h declares it as int dword_8007DC74[6] */
-extern int dword_8007DC74;
+/* exe-side: effect_data.h declares it as int modelVramSlotLists_8007DC74[6] */
+extern int modelVramSlotLists_8007DC74;
 /* exe-side: data_decls.h declares it (that header needs LIBSND.H) */
 extern short sinTable_80084540[];
 /* exe-side, to move to pad_text.h */

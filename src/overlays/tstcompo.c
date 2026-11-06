@@ -114,7 +114,7 @@ void SetDefaultCompoParams_800A0918()
     params->angle_24 = 0;
     params->enemyPart_28 = 0x4C;
     params->main_2C = 0;
-    params->vram_30 = dword_8007DC74;
+    params->vram_30 = modelVramSlotLists_8007DC74;
 }
 
 void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c)

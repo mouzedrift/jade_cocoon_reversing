@@ -729,7 +729,7 @@ EventDesc taskSlotsDef_800B084C = { 1, 0x8000, 0x2E0, &taskSlots_8008D48C[1] };
 EventDesc levantActorTaskDef_800B0864 = { 1, 5, 0x7C0, (void *)&gameTask_8008B4A4, (EventEntryFn)LevantActorTask_800A9564, (EventEntryFn)LevantActorTaskExit_800A955C };
 EventDesc encounterTaskDef_800B087C = { 1, 0x8000, 24, (void *)&encounterTask_8008D674 };
 EventDesc enemyAiTasksDef_800B0894 = { 3, 0x8000, 48, (void *)&enemyAiTasks_8008D49C };
-EventDesc dword_800B08AC = { 1, 0x8000, 12, (void *)dword_800B1DA8 };
+EventDesc mapEventTasksDef_800B08AC = { 1, 0x8000, 12, (void *)mapEventTasks_800B1DA8 };
 EventDesc eventEntitiesDef_800B08C4 = { 25, 0x8000, 148, (void *)&eventEntities_8008D400 };
 EventDesc prevModeTaskDef_800B08DC = { 1, 1, 4, (void *)prevModeTask_800B1DC0, (EventEntryFn)ReturnToPrevGameMode_800A8108 };
 EventDesc mapOverlayTaskDef_800B08F4 = { 1, 1, 0x100, (void *)mapOverlayTask_800B1DA4, (EventEntryFn)StartMapOverlay_800A75F8, (EventEntryFn)MapSelectEnd_800B6F60 };
@@ -759,7 +759,7 @@ GameTaskListDef gameModeFieldTasks_800B0A2C[26] = {
     { &modelTasks_8008D618 },
     { &idleTask_8008D470 },
     { &eventScripts_8008D410 },
-    { dword_800B1DA8 },
+    { mapEventTasks_800B1DA8 },
     { subOverlayTask_800B1DB4 },
     { &fieldModeTask_800B1DAC },
     { &fadeTask_8008D628 },
@@ -878,7 +878,7 @@ EventDesc* gameEventListDefs_800B0DA4[58] = {
     &enemyWindowTaskDef_800B07EC, &actorWindowTaskDef_800B0804, &helpWindowTaskDef_800B081C, &taskSlotsDef_800B084C,
     &eventDescs_80078EB8[15], &eventDescs_80078EB8[16], &eventDescs_80078EB8[10], &levantControlTaskDef_800B0834,
     &levantActorTaskDef_800B0864, &eventDescs_80078EB8[21], &eventDescs_80078EB8[22], &eventDescs_80078EB8[23],
-    &eventDescs_80078EB8[24], &eventDescs_80078EB8[19], &dword_800B08AC, &eventEntitiesDef_800B08C4,
+    &eventDescs_80078EB8[24], &eventDescs_80078EB8[19], &mapEventTasksDef_800B08AC, &eventEntitiesDef_800B08C4,
     &eventDescs_80078EB8[14], &eventDescs_80078EB8[8], &fieldMenuTaskDef_800B090C, &eventDescs_80078EB8[11],
     &eventDescs_80078EB8[12], &eventDescs_80078EB8[13], &prevModeTaskDef_800B08DC, &mapOverlayTaskDef_800B08F4,
     &eventScriptsDef_800B075C, &eventDescs_80078EB8[9], &shopCtrlTaskDef_800B0924, &shopMenuTaskDef_800B093C,
@@ -985,7 +985,7 @@ int eventHook_800B1D98 = 0;
 int unused_800B1D9C = 0;
 EventNode *levantModelTask_800B1DA0[1] = { 0 };
 EventNode *mapOverlayTask_800B1DA4[1] = { 0 };
-EventNode *dword_800B1DA8[1] = { 0 };
+EventNode *mapEventTasks_800B1DA8[1] = { 0 };
 EventNode *fieldModeTask_800B1DAC = 0;
 EventNode *chapterOverlayTask_800B1DB0[1] = { 0 };
 EventNode *subOverlayTask_800B1DB4[1] = { 0 };
