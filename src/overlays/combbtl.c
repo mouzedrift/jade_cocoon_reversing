@@ -429,10 +429,6 @@ MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side)
     return OpenMessageWindow_8003422C(&cfg);
 }
 
-// the jump table of ResolveCommand_800A616C (asm; its targets are labels of the generated asm, gen_asm.jump_label): delete it and
-// its externs in combbtl.h when the function is C, the switch emits it then
-void* const dword_800A4A9C[6] = { jtgt_800A6624, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A64C0, jtgt_800A65BC, jtgt_800A65F0 };
-
 void CombBtlEnd_800A54CC(CombBtlTask* t)
 {
     FadeOutSeqSlot_800313C8(0);
@@ -626,15 +622,8 @@ int GetGaugeRate_800A5B70(int side)
     return rate;
 }
 
-// Near miss (15 words): the sides read into locals first gives the original's late loads and registers; left: the original
-// issues the actorSide %hi (lui v1) and the constant 1 before the result stores (sched1 keeps them next to their users here)
-#if 0
 void ResetCommands_800A5BB4()
 {
-    int a;
-    int t;
-    t = targetSide_800A8620;
-    a = actorSide_800A85B8;
     chosenCmd_800A8600.kind_0 = 0x14;
     chosenCmd_800A8600.arg_4 = 0;
     actorCmd_800A85A8.kind_0 = 0x14;
@@ -642,8 +631,6 @@ void ResetCommands_800A5BB4()
     targetCmd_800A8610.kind_0 = 0x14;
     targetCmd_800A8610.arg_4 = 0;
     result_800A85C8.kind_0 = 0;
-    result_800A85C8.areaElement_24 = -1;
-    result_800A85C8.fixedElement_26 = -1;
     result_800A85C8.arg_2 = 0;
     result_800A85C8.flags_4 = 0;
     result_800A85C8.status_8 = 0;
@@ -653,15 +640,15 @@ void ResetCommands_800A5BB4()
     result_800A85C8.actorMpDamage_18 = 0;
     result_800A85C8.hpDamage_1C = 0;
     result_800A85C8.mpDamage_20 = 0;
-    chosenCmd_800A8600.mask_8 = 1 << (a + 8);
-    chosenCmd_800A8600.targets_C = 1 << (t + 8);
-    actorCmd_800A85A8.mask_8 = 1 << (a + 8);
-    actorCmd_800A85A8.targets_C = 1 << (t + 8);
-    targetCmd_800A8610.mask_8 = 1 << (t + 8);
-    targetCmd_800A8610.targets_C = 1 << (a + 8);
+    result_800A85C8.areaElement_24 = -1;
+    result_800A85C8.fixedElement_26 = -1;
+    chosenCmd_800A8600.mask_8 = 1 << (actorSide_800A85B8 + 8);
+    chosenCmd_800A8600.targets_C = 1 << (targetSide_800A8620 + 8);
+    actorCmd_800A85A8.mask_8 = 1 << (actorSide_800A85B8 + 8);
+    actorCmd_800A85A8.targets_C = 1 << (targetSide_800A8620 + 8);
+    targetCmd_800A8610.mask_8 = 1 << (targetSide_800A8620 + 8);
+    targetCmd_800A8610.targets_C = 1 << (actorSide_800A85B8 + 8);
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, ResetCommands_800A5BB4);
 
 void StartTurn_800A5C64(CombBtlTask* t)
 {
@@ -808,9 +795,6 @@ void ClearHitResults_800A60F0()
     }
 }
 
-#if 0
-// Not matched: loop strength reduction differs - the original keeps mpDamage_800A8474[i] as (i*2 spilled) + base
-// and only hpDamage_800A8470[i] as a pointer; here both become pointers and i spills. Logic is complete.
 void ResolveCommand_800A616C()
 {
     UnitStatus* actor = GetUnitStatus_80014390((unsigned char)(actorSide_800A85B8 + 8));
@@ -846,12 +830,12 @@ void ResolveCommand_800A616C()
         result_800A85C8.areaElement_24 = stageElement_800A8498;
         result_800A85C8.fixedElement_26 = fixedStageElement_800A849C;
         ResolveBattleAction_80012BB0(actor, u, &actorCmd_800A85A8, &result_800A85C8);
-        hpDamage_800A8470[i] = result_800A85C8.hpDamage_1C;
-        mpDamage_800A8474[i] = result_800A85C8.mpDamage_20;
         newStageElement_800A84A0 = result_800A85C8.areaElement_24;
         actorHpLoss_800A84BC = result_800A85C8.actorHpCost_C;
-        hpDamage_800A8470[actorSide_800A85B8] += result_800A85C8.actorHpDamage_14;
         actorMpLoss_800A84C4 = result_800A85C8.actorMpCost_10;
+        hpDamage_800A8470[i] = result_800A85C8.hpDamage_1C;
+        mpDamage_800A8474[i] = result_800A85C8.mpDamage_20;
+        hpDamage_800A8470[actorSide_800A85B8] += result_800A85C8.actorHpDamage_14;
         mpDamage_800A8474[actorSide_800A85B8] += result_800A85C8.actorMpDamage_18;
         if (u->hp_8.cur_0 <= hpDamage_800A8470[i])
         {
@@ -897,7 +881,7 @@ void ResolveCommand_800A616C()
                 targetSfx_800A84A4 = 0x72;
             }
             tenth = u->hp_8.max_2 / 10;
-            if (tenth < u->hp_8.cur_0 && u->hp_8.cur_0 - hpDamage_800A8470[i] <= tenth)
+            if (u->hp_8.cur_0 > tenth && u->hp_8.cur_0 - hpDamage_800A8470[i] <= tenth)
             {
                 SetAnnouncerXa_800A8078(0x1D, 0x4DE, 0x1B);
                 announcerLines_800A85C0 = tenthHpLines_800A83A0;
@@ -976,8 +960,6 @@ void ResolveCommand_800A616C()
         sideHitKind_800A85FC[actorSide_800A85B8] = 0;
     }
 }
-#endif
-INCLUDE_OVERLAY_ASM(combbtl, ResolveCommand_800A616C);
 
 // hitWindow_800A8494: the merged window; lo counts the frames up to hi
 // The exchange of the two sides' commands: runs both animations, lands the hits at the hit frame, then

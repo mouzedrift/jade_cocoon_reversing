@@ -686,8 +686,6 @@ void PreviewCmdEffect_800CC40C()
 }
 
 // Target window: mode 1 a single unit (magic on a side), else the side's other minions (for Change); returns the slot
-#if 0
-// Not matched: register allocation only (44 words): the original gives the list pointer s1 and mode/k s3, f/i s2
 int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
 {
     CombComItem rows[3];
@@ -701,28 +699,24 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
     short rowX;
     Minion* minion;
     CombComItem* p0;
-    CombComItem* it;
-    CombComItem** pk;
-    CombComItem** pi;
     rows[0] = targetItem0_800CB690;
     rows[1] = targetItem1_800CB6C8;
     rows[2] = targetItem2_800CB700;
-    pk = list;
-    memset(pk, 0, 0x10);
+    memset(list, 0, 0x10);
     memset(items, 0, 0xC);
-    p0 = &rows[0];
     menu = menuWinTmpl_800CB5D0;
-    items[1] = &rows[1];
-    items[0] = p0;
-    items[2] = &rows[2];
-    menu.ot_14 = ot;
     rowX = side_800CD839 * 62 + 100;
+    p0 = &rows[0];
+    items[0] = p0;
+    items[1] = &rows[1];
+    items[2] = &rows[2];
     rows[0].x_10 = rowX;
     rows[1].x_10 = rowX;
     rows[2].x_10 = rowX;
+    menu.ot_14 = ot;
     menu.time_4 = GetTime30Hz_8002C64C();
     menu.sel_C = sel;
-    menu.items_10 = pk;
+    menu.items_10 = list;
     check.id_0 = target[0];
     res = 0;
     if (mode == 1)
@@ -745,42 +739,36 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
     }
     else
     {
-        pi = pk;
         for (k = i = 0; i < 3; i++)
         {
             minion = &teams_800A3AA0[target[1]][i];
             if (i != sideSlot_800A4078[side_800CD839] && IsMinionSlotEmpty_800A1934(minion) == 0)
             {
-                it = items[k];
-                *pk = it;
-                it->text_4 = minion->status_84.name_10;
+                list[k] = items[k];
+                list[k]->text_4 = minion->status_84.name_10;
                 if (IsMinionFainted_800A1958(minion))
                 {
-                    (*pk)->flags |= 2;
+                    list[k]->flags |= 2;
                 }
                 else
                 {
-                    (*pk)->flags &= ~2;
+                    list[k]->flags &= ~2;
                 }
                 if (sel == k)
                 {
                     res = i;
                 }
-                pk++;
                 k++;
             }
             else
             {
-                *pi = 0;
+                list[i] = 0;
             }
-            pi++;
         }
     }
     DrawMenuWindows_8002A5A4(&menu);
     return res;
 }
-#endif
-INCLUDE_OVERLAY_ASM(combcom, DrawTargetList_800CC674);
 
 // Stores the chosen target; Defend marks the unit defending, Change has no target unit
 void FinishCmd_800CC9FC()
