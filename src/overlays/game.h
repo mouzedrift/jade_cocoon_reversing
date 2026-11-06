@@ -1630,10 +1630,6 @@ extern int dword_800B1DD4[9];
 extern char dword_800B1DF8;
 extern int dword_800B1DFC[304];
 
-/* the jump table of FieldMinionCommand_800A7D40 (asm) and its targets, labels in the generated asm */
-extern char jtgt_800A7E18[], jtgt_800A7E48[], jtgt_800A7E78[], jtgt_800A7EC8[], jtgt_800A7EE4[], jtgt_800A7EF4[], jtgt_800A7F08[], jtgt_800A7F1C[], jtgt_800A7F30[], jtgt_800A7FBC[], jtgt_800A8078[];
-extern void* const dword_800A06B8[14];
-
 /* the jump table of UpdateLevantBattleAction_800AA51C (asm) and its targets, labels in the generated asm */
 extern GameActionFrames StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c);
 
