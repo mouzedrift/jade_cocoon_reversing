@@ -2532,10 +2532,10 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         cfg.str_8 = str;
         cfg.f10 = skip;
         cfg.mask_18 = mask;
-        cfg.f14 = cc;
+        cfg.cancelable_14 = cc;
         cfg.list_1C = list;
         cfg.pair_20 = pair;
-        cfg.f28 = bc;
+        cfg.style_28 = bc;
         cfg.f30 = c0;
         cfg.f34 = c4;
         cfg.f38 = c8;

@@ -672,11 +672,11 @@ typedef struct EvMsgWindowCfg
     int str_8;
     int fC;
     int f10;
-    int f14;
+    int cancelable_14; // MsgWindowCfg (msgwin.h)
     int mask_18;
     int* list_1C;
     EvSpeaker pair_20;
-    int f28;
+    int style_28;
     int f2C;
     int f30;
     int f34;
