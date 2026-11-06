@@ -102,7 +102,6 @@ void DrawPlayerResult_800A4240(int player)
         DrawResultMinion_800A4554(player, j + slotCursor_800A47E8.scroll_A, &box);
 }
 
-// Near miss: scheduling of the repeated x/y stores
 // Draws the two numbers of a player's score box, each followed by a UI sprite (0xAE, 0x4D)
 // Matched
 void DrawScorePair_800A444C(unsigned short* pos, int ot, int oppWins, int ownWins)

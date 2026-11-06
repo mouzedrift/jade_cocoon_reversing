@@ -551,7 +551,7 @@ void StartDestFadeOut_800B7948(MapTask* task)
     task->next_8 = LoadDestPicture_800B7980;
 }
 
-// Not matched: register allocation of the table base (v0/v1 swapped)
+// Matched
 void LoadDestPicture_800B7980(MapTask* task)
 {
     MapDest sel;

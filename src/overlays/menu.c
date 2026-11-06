@@ -1255,9 +1255,6 @@ void HandleLevelUpInput_800BC9E8(BattleResult* result)
     }
 }
 
-// Not matched: frame/stack layout matches, but saved-register assignment differs (the 0x80
-// constant, &r, 1 and the pOT/b*4 values are rotated by one s-register) and the brightness uses
-// -0x80 - x instead of 0x80 - x
 // Draws the Levant rank-up panel (portrait, name, old/new rank name with fade)
 // Matched
 void DrawLevantRankUp_800BCB98(BattleResult* result, int b)
@@ -2466,8 +2463,6 @@ void UseSpore_800BF3AC(int item)
     RemoveInventory_800AD1E0(item, 1, 0);
 }
 
-// Not matched: original tests s == 0 via sltiu + bnez (one word more); also tried
-// (unsigned)s < 1 and short s (both fold to beqz)
 // Runs the confirmed menu action: use an item, a valuable (event trigger / leave the forest) or leave the forest
 // Matched
 void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
@@ -2508,9 +2503,6 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
     }
 }
 
-// Not matched: cases 1, 2 and 4 match; in cases 6, 7 and 14 the original returns through the delay
-// slot of branches straight to the epilogue (v0 used as temp) and the 14 tail is not a store-flag;
-// tried a single ret variable (goes to a saved reg), && in the 14 tail, case order 6/7/4 fall-through
 // Matched
 int CheckMenuAction_800BF540(MenuCtx* menu)
 {
@@ -2758,8 +2750,6 @@ int TopMenuCursorDown_800BFB10(MenuCtx* menu)
     return 0;
 }
 
-// Not matched: first block: original ORs the flags with a register holding 1 (or v1,v1,v0)
-// and copies fl first; tried n = 1 / r = 1 temporaries, | n, return n (all give ori)
 // Matched
 int TopMenuCursorUp_800BFBE0(MenuCtx* menu)
 {
@@ -3219,8 +3209,6 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq)
         DrawScrollArrow_8002C6DC(keyItemsDownArrowPos_800C2770, 1, eq->ot_6);
 }
 
-// Not matched: compiler turns the tail into a boolean (sltu); also tried r = 1 / r = 0 tail,
-// == 0 inverted tests, nested if (r), return r && IsKeyItemUseAllowed_800C1000()
 // Matched
 int IsKeyItemUsable_800C0C3C(int item)
 {
