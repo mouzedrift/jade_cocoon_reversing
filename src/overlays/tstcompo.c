@@ -656,9 +656,9 @@ void SetCameraLookAt_800A1E68(TstCompoWork* c)
 {
     int dir[3];
     int yaw;
-    cameraEye_8008D600[0] = c->eye_154[0];
-    cameraEye_8008D600[1] = c->eye_154[1];
-    cameraEye_8008D600[2] = c->eye_154[2];
+    cameraEye_8008D600.vx = c->eye_154[0];
+    cameraEye_8008D600.vy = c->eye_154[1];
+    cameraEye_8008D600.vz = c->eye_154[2];
     dir[0] = c->at_160[0] - c->eye_154[0];
     dir[1] = c->at_160[1] - c->eye_154[1];
     dir[2] = c->at_160[2] - c->eye_154[2];

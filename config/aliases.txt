@@ -2,4 +2,3 @@
 # equates of their address (the asm data used to define them as labels). name  # what it is
 playerYan_8008B594               # == saveData_8008B570.inv_24
 levantPos_8008BD18               # == saveData_8008B570.levant_7A8
-miscTasks_8008D60C                   # == cameraEye_8008D600.pad

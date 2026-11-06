@@ -25,7 +25,7 @@ typedef struct
 extern CameraView cameraState_8008D4F0;
 
 /* cameraState_8008D4F0.ent_44: accessed through its own symbol (going through cameraState changes the codegen) */
-extern VECTOR cameraEye_8008D600; // camera eye (cameraState_8008D4F0.eye_14)
+extern LVec3 cameraEye_8008D600; // camera eye (cameraState_8008D4F0.eye_14)
 
 typedef struct
 {

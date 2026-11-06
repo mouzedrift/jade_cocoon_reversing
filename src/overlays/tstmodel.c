@@ -577,9 +577,9 @@ void SetCameraLookAt_800A1A24(TstModelWork* c)
 {
     int dir[3];
     int yaw;
-    cameraEye_8008D600[0] = c->eyeX_178;
-    cameraEye_8008D600[1] = c->eyeY_17C;
-    cameraEye_8008D600[2] = c->eyeZ_180;
+    cameraEye_8008D600.vx = c->eyeX_178;
+    cameraEye_8008D600.vy = c->eyeY_17C;
+    cameraEye_8008D600.vz = c->eyeZ_180;
     dir[0] = c->atX_184 - c->eyeX_178;
     dir[1] = c->atY_188 - c->eyeY_17C;
     dir[2] = c->atZ_18C - c->eyeZ_180;

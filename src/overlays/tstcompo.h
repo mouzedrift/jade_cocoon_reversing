@@ -246,7 +246,7 @@ extern void TstCompoInitBones_800A1AFC();
 extern void SetCameraLookAt_800A1E68();
 /* exe-side: declared in main.h (which conflicts with this overlay's types) */
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
-extern int cameraEye_8008D600[];
+extern LVec3 cameraEye_8008D600;
 /* exe-side, to move to main.h / globals.h */
 extern short screenOffset_8008D474[];
 extern MATRIX defaultLightMatrix_8007C2EC; // effect_data.h

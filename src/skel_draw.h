@@ -32,14 +32,6 @@ typedef struct
     WireTri* items;
 } WireTriList;
 
-// a VECTOR without the pad word (the scratch layouts pack them)
-typedef struct
-{
-    long vx;
-    long vy;
-    long vz;
-} LVec3;
-
 // rotated / scaled sprite (DrawRotSprite_80044010), in the scratchpad at 0x1F800214
 typedef struct
 {

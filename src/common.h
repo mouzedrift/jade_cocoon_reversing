@@ -14,6 +14,14 @@ enum foo
     foo_count
 }
 */
+// a VECTOR without the pad word
+typedef struct
+{
+    long vx;
+    long vy;
+    long vz;
+} LVec3;
+
 #define COUNTOF_S(x) (int)(sizeof(x) / sizeof(*(x)))
 
 #define MAX_PLAYER_NAME_LENGTH 10

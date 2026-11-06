@@ -247,7 +247,7 @@ extern void SetCameraLookAt_800A1A24();
 extern int MoveGridCursor_800A1B48();
 /* exe-side: declared in main.h (which conflicts with this overlay's types; main.h has scalars for the pad words) */
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
-extern int cameraEye_8008D600[];
+extern LVec3 cameraEye_8008D600;
 /* exe-side, to move to main.h / globals.h */
 extern short screenOffset_8008D474[];
 /* exe-side: data_decls.h declares it (that header needs LIBSND.H) */
