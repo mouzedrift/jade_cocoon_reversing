@@ -34,7 +34,7 @@
 // the bit masks SetBoneGroupFlags_80019B14 (minion_init.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so SetBoneGroupFlags_80019B14 is probably the first function of this TU
 const struct_int3 boneGroupMasks_8007303C = { { 0x1F8, 0xF000, 0x7E0000 } };
-const int dword_80073048 = 0;
+const char emptyName_80073048[4] = "";
 const char aDevaMalti_8007304C[] = "\202c\202\205\202\226\202\201\201@\202l\202\201\202\214\202\224\202\211"; // Deva Malti
 const char aDevaUlvi_80073064[] = "\202c\202\205\202\226\202\201\201@\202t\202\214\202\226\202\211"; // Deva Ulvi
 const char aDevaVali_80073078[] = "\202c\202\205\202\226\202\201\201@\202u\202\201\202\214\202\211"; // Deva Vali
@@ -59,7 +59,7 @@ const char aVahlis_800731B4[] = "\202u\202\201\202\210\202\214\202\211\202\223";
 const char aVahli_800731C4[] = "\202u\202\201\202\210\202\214\202\211"; // Vahli
 const char aAgnia_800731D0[] = "\202`\202\207\202\216\202\211\202\201"; // Agnia
 const char aAgnis_800731DC[] = "\202`\202\207\202\216\202\211\202\223"; // Agnis
-const int dword_800731E8 = 0;
+const char emptyName_800731E8[4] = "";
 const char aAgni_800731EC[] = "\202`\202\207\202\216\202\211"; // Agni
 const int overlayAdrr1_800731F8 = 0x800C9E88;
 const int overlayAddr2_800731FC = 0x800A4088;
@@ -507,7 +507,7 @@ void SetSceneFadeFrontOT_8001ABEC(int on)
         fade->flags &= ~0x20;
     }
 }
-int GetMagicName_8001AC2C(int idx)
+const char* GetMagicName_8001AC2C(int idx)
 {
     if (idx >= 0x1E)
     {
@@ -1467,7 +1467,7 @@ void ProcessPad_8001C8E8(int port)
     }
 }
 // .rdata that follows the jump table of ProcessPad_8001C8E8 (the compiler's table is emitted between)
-const int dword_80073234 = 0;
+const char emptyName_80073234[4] = "";
 const char aKlarrgas_80073238[] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
 const char aYolga_8007324C[] = "\202x\202\217\202\214\202\207\202\201"; // Yolga
 const char aTimaios_80073258[] = "\202s\202\211\202\215\202\201\202\211\202\217\202\223"; // Timaios
@@ -1707,7 +1707,7 @@ int ReturnZero_8001CD34(void)
 {
     return 0;
 }
-int GetPersonName_8001CD3C(int idx)
+const char* GetPersonName_8001CD3C(int idx)
 {
     return personNames_8007CB20[idx];
 }
@@ -1751,7 +1751,7 @@ ActionData* GetItemData_8001CDF4(unsigned int idx)
     }
     return 0;
 }
-int GetItemName_8001CE20(unsigned int idx)
+const char* GetItemName_8001CE20(unsigned int idx)
 {
     if (idx >= 0x2B)
     {
@@ -1801,7 +1801,7 @@ int* GetWeaponStatBonus_8001CEF4(unsigned int idx)
     }
     return (int*)weaponData_8007D04C[idx].statBonus_4;
 }
-int GetWeaponName_8001CF20(unsigned int idx)
+const char* GetWeaponName_8001CF20(unsigned int idx)
 {
     if (idx >= 0x17)
     {
@@ -1833,7 +1833,7 @@ int* GetArmorStatBonus_8001CFB0(unsigned int idx)
     }
     return (int*)armorData_8007D420[idx].statBonus_4;
 }
-int GetArmorName_8001CFDC(unsigned int idx)
+const char* GetArmorName_8001CFDC(unsigned int idx)
 {
     if (idx >= 0xF)
     {
@@ -1869,7 +1869,7 @@ int* GetAccessoryStatBonus_8001D078(unsigned int idx)
     }
     return (int*)accessoryData_8007D6B0[idx].statBonus_4;
 }
-int GetAccessoryName_8001D0A4(unsigned int idx)
+const char* GetAccessoryName_8001D0A4(unsigned int idx)
 {
     if (idx >= 0x11)
     {
@@ -1893,7 +1893,7 @@ EquipmentData* GetAccessoryData_8001D0FC(unsigned int idx)
     }
     return &accessoryData_8007D6B0[idx];
 }
-int GetEquipmentName_8001D128(int idx, unsigned int kind)
+const char* GetEquipmentName_8001D128(int idx, unsigned int kind)
 {
     int name = 0;
     switch (kind)

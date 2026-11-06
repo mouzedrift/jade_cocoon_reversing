@@ -1641,15 +1641,15 @@ void* unused_8007C330[6] = {
     &defaultLightMatrix_8007C2EC, &defaultLightMatrix_8007C2EC, &defaultColorMatrix_8007C30C, &defaultColorMatrix_8007C30C,
     &dword_8007C32C, &dword_8007C32C,
 };
-int magicNames_8007C348[0x1E * 2] = {
-    (int)&aAgni_800731EC, (int)&dword_800731E8, (int)&aAgnis_800731DC, (int)&dword_800731E8, (int)&aAgnia_800731D0, (int)&dword_800731E8, (int)&aVahli_800731C4, (int)&dword_800731E8,
-    (int)&aVahlis_800731B4, (int)&dword_800731E8, (int)&aVahlia_800731A4, (int)&dword_800731E8, (int)&aUlvi_80073198, (int)&dword_800731E8, (int)&aUlvis_8007318C, (int)&dword_800731E8,
-    (int)&aUlvia_80073180, (int)&dword_800731E8, (int)&aMalti_80073174, (int)&dword_800731E8, (int)&aMaltis_80073164, (int)&dword_800731E8, (int)&aMaltia_80073154, (int)&dword_800731E8,
-    (int)&aSelahmVenon_80073138, (int)&dword_800731E8, (int)&aMedina_80073128, (int)&dword_800731E8, (int)&aMedinia_80073118, (int)&dword_800731E8, (int)&aSelahm_80073108, (int)&dword_800731E8,
-    (int)&aSelSelahm_800730F0, (int)&dword_800731E8, (int)&aAdVenon_800730DC, (int)&dword_800731E8, (int)&aAdSlahm_800730C8, (int)&dword_800731E8, (int)&aAdRoqua_800730B4, (int)&dword_800731E8,
-    (int)&aAdMumuls_800730A0, (int)&dword_800731E8, (int)&aDevaAgni_8007308C, (int)&dword_800731E8, (int)&aDevaVali_80073078, (int)&dword_800731E8, (int)&aDevaUlvi_80073064, (int)&dword_800731E8,
-    (int)&aDevaMalti_8007304C, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8,
-    (int)&dword_80073048, (int)&dword_800731E8, (int)&dword_80073048, (int)&dword_800731E8,
+const char* magicNames_8007C348[0x1E * 2] = {
+    aAgni_800731EC, emptyName_800731E8, aAgnis_800731DC, emptyName_800731E8, aAgnia_800731D0, emptyName_800731E8, aVahli_800731C4, emptyName_800731E8,
+    aVahlis_800731B4, emptyName_800731E8, aVahlia_800731A4, emptyName_800731E8, aUlvi_80073198, emptyName_800731E8, aUlvis_8007318C, emptyName_800731E8,
+    aUlvia_80073180, emptyName_800731E8, aMalti_80073174, emptyName_800731E8, aMaltis_80073164, emptyName_800731E8, aMaltia_80073154, emptyName_800731E8,
+    aSelahmVenon_80073138, emptyName_800731E8, aMedina_80073128, emptyName_800731E8, aMedinia_80073118, emptyName_800731E8, aSelahm_80073108, emptyName_800731E8,
+    aSelSelahm_800730F0, emptyName_800731E8, aAdVenon_800730DC, emptyName_800731E8, aAdSlahm_800730C8, emptyName_800731E8, aAdRoqua_800730B4, emptyName_800731E8,
+    aAdMumuls_800730A0, emptyName_800731E8, aDevaAgni_8007308C, emptyName_800731E8, aDevaVali_80073078, emptyName_800731E8, aDevaUlvi_80073064, emptyName_800731E8,
+    aDevaMalti_8007304C, emptyName_800731E8, emptyName_80073048, emptyName_800731E8, emptyName_80073048, emptyName_800731E8, emptyName_80073048, emptyName_800731E8,
+    emptyName_80073048, emptyName_800731E8, emptyName_80073048, emptyName_800731E8,
 };
 MagicData magicData_8007C438[30] = {
     { 130, 10, 7, 26, 5 },
@@ -1851,9 +1851,9 @@ unsigned short defaultButtonConfig_8007CAF4[0xa] = {
     17,
 };
 char *(*nameGetters_8007CB08[6])(int id) = { (char *(*)(int))GetItemName_8001CE20, (char *(*)(int))GetWeaponName_8001CF20, (char *(*)(int))GetArmorName_8001CFDC, (char *(*)(int))GetAccessoryName_8001D0A4, (char *(*)(int))GetPersonName_8001CD3C, (char *(*)(int))GetKeyItemName_8001D318 };
-int personNames_8007CB20[11] = {
-    (int)&aPalooja_800732A8, (int)&aTicker_80073298, (int)&aJeechwo_80073288, (int)&aKolna_8007327C, (int)&aSicanjal_80073268, (int)&aTimaios_80073258, (int)&aYolga_8007324C, (int)&aKlarrgas_80073238,
-    (int)&dword_80073234, (int)&dword_80073234, (int)&dword_80073234,
+const char* personNames_8007CB20[11] = {
+    aPalooja_800732A8, aTicker_80073298, aJeechwo_80073288, aKolna_8007327C, aSicanjal_80073268, aTimaios_80073258, aYolga_8007324C, aKlarrgas_80073238,
+    emptyName_80073234, emptyName_80073234, emptyName_80073234,
 };
 unsigned char personMergeInfo_8007CB4C[11][4] = {
     { 201, 255, 255, 255 },
@@ -1868,13 +1868,13 @@ unsigned char personMergeInfo_8007CB4C[11][4] = {
     { 210, 255, 255, 255 },
     { 255, 255, 255, 255 },
 };
-int itemNames_8007CB78[0x2b] = {
-    (int)&aMugwort_8007377C, (int)&aMetaMugwort_80073760, (int)&aBitterMugwort_80073740, (int)&aGreatWalnut_80073724, (int)&aChestnutOil_80073708, (int)&aShishiudoOil_800736EC, (int)&aKukumiraOil_800736D0, (int)&aBletillaOil_800736B4,
-    (int)&aIchishiOil_8007369C, (int)&aShabLiquor_80073684, (int)&aFineLiquor_8007366C, (int)&aExcellentLiquor_80073648, (int)&aSpecialLiquor_80073628, (int)&aTendaiUyaku_8007360C, (int)&aValerianPowder_800735EC, (int)&aIkariPowder_800735D0,
-    (int)&aRingOfVenom_800735B4, (int)&aRingOfSleep_80073598, (int)&aRingOfStoning_80073578, (int)&aRingOfDeath_8007355C, (int)&aMirrorOfDeva_8007353C, (int)&aUrvySBlessing_8007351C, (int)&aVarySBlessing_800734FC, (int)&aAgniSBlessing_800734DC,
-    (int)&aMaltySBlessing_800734B8, (int)&aUrvySSeal1_8007349C, (int)&aUrvySSeal2_80073480, (int)&aVarySSeal1_80073464, (int)&aVarySSeal2_80073448, (int)&aAgniSSeal1_8007342C, (int)&aAgniSSeal2_80073410, (int)&aMaltySSeal1_800733F0,
-    (int)&aMaltySSeal2_800733D0, (int)&aCloudSilk_800733B8, (int)&aThunderSilk_8007339C, (int)&aLilySilk_80073388, (int)&aPearlSilk_80073370, (int)&aFirstSnowSilk_80073350, (int)&aAngelwingSilk_80073330, (int)&aMoonlightSilk_80073310,
-    (int)&aSkeletonKey_800732F4, (int)&aSleepSpores_800732D8, (int)&aAttractSpores_800732B8,
+const char* itemNames_8007CB78[0x2b] = {
+    aMugwort_8007377C, aMetaMugwort_80073760, aBitterMugwort_80073740, aGreatWalnut_80073724, aChestnutOil_80073708, aShishiudoOil_800736EC, aKukumiraOil_800736D0, aBletillaOil_800736B4,
+    aIchishiOil_8007369C, aShabLiquor_80073684, aFineLiquor_8007366C, aExcellentLiquor_80073648, aSpecialLiquor_80073628, aTendaiUyaku_8007360C, aValerianPowder_800735EC, aIkariPowder_800735D0,
+    aRingOfVenom_800735B4, aRingOfSleep_80073598, aRingOfStoning_80073578, aRingOfDeath_8007355C, aMirrorOfDeva_8007353C, aUrvySBlessing_8007351C, aVarySBlessing_800734FC, aAgniSBlessing_800734DC,
+    aMaltySBlessing_800734B8, aUrvySSeal1_8007349C, aUrvySSeal2_80073480, aVarySSeal1_80073464, aVarySSeal2_80073448, aAgniSSeal1_8007342C, aAgniSSeal2_80073410, aMaltySSeal1_800733F0,
+    aMaltySSeal2_800733D0, aCloudSilk_800733B8, aThunderSilk_8007339C, aLilySilk_80073388, aPearlSilk_80073370, aFirstSnowSilk_80073350, aAngelwingSilk_80073330, aMoonlightSilk_80073310,
+    aSkeletonKey_800732F4, aSleepSpores_800732D8, aAttractSpores_800732B8,
 };
 unsigned char itemEffects_8007CC24[0x2b] = { 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34, 56, 55, 54, 68, 67, 69, 33, 43, 50, 48, 42, 49, 28, 28, 25, 25, 26, 26, 27, 27, 34, 34, 34, 34, 34, 34, 34, 34, 34, 34 };
 unsigned short itemFlags_8007CC50[44] = {
@@ -1952,10 +1952,10 @@ char *keyItemNames_8007CF30[0x26] = {
     aSecret2_800737A0, aSecret3_8007378C,
 };
 unsigned char keyItemIcons_8007CFC8[0x26] = { 49, 31, 67, 63, 64, 50, 62, 40, 38, 27, 30, 61, 44, 33, 32, 34, 28, 46, 29, 39, 39, 58, 59, 57, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28, 28 };
-int weaponNames_8007CFF0[0x17] = {
-    (int)&aKnife_80073D54, (int)&aDagger_80073D44, (int)&aAquazor_80073D34, (int)&aBronzeSword_80073D18, (int)&aSwordOfSpeed_80073CF8, (int)&aIronSword_80073CE0, (int)&aIronAxe_80073CCC, (int)&aLifeStealer_80073CB0,
-    (int)&aWhiteHorn_80073C98, (int)&aLittleBird_80073C80, (int)&aWhistler_80073C6C, (int)&aNightglow_80073C58, (int)&aBluePhantom_80073C3C, (int)&aThunderbolt_80073C24, (int)&aTsunami_80073C14, (int)&aSpringBlossom_80073BF4,
-    (int)&aDragoncrest_80073BDC, (int)&aCloudcover_80073BC4, (int)&aPalemoon_80073BB0, (int)&aReaper_80073BA0, (int)&aDrainer_80073B90, (int)&aAutumnMoon_80073B78, (int)&aIcicle_80073B68,
+const char* weaponNames_8007CFF0[0x17] = {
+    aKnife_80073D54, aDagger_80073D44, aAquazor_80073D34, aBronzeSword_80073D18, aSwordOfSpeed_80073CF8, aIronSword_80073CE0, aIronAxe_80073CCC, aLifeStealer_80073CB0,
+    aWhiteHorn_80073C98, aLittleBird_80073C80, aWhistler_80073C6C, aNightglow_80073C58, aBluePhantom_80073C3C, aThunderbolt_80073C24, aTsunami_80073C14, aSpringBlossom_80073BF4,
+    aDragoncrest_80073BDC, aCloudcover_80073BC4, aPalemoon_80073BB0, aReaper_80073BA0, aDrainer_80073B90, aAutumnMoon_80073B78, aIcicle_80073B68,
 };
 EquipmentData weaponData_8007D04C[0x17] = {
     { 0, 0, { 2, 0, 0, 0, 3 }, { 0 }, 5 },
@@ -2012,9 +2012,9 @@ int weaponPrices_8007D388[0x17] = {
     190, 200, 0x136, 0x15E, 0x3E8, 0x3E8, 0x3E8, 0x1F40,
     0x157C, 0x157C, 0x157C, 0x157C, 0x1388, 0x1388, 0x1869F,
 };
-int armorNames_8007D3E4[0xf] = {
-    (int)&aHunterSVest_80073ED8, (int)&aLeatherVest_80073EBC, (int)&aChainMailVest_80073E9C, (int)&aWireVest_80073E88, (int)&aPlateMailVest_80073E68, (int)&aReflectingVest_80073E48, (int)&aSilverVest_80073E30, (int)&aDivineVest_80073E18,
-    (int)&aRiketzGarb_80073DFC, (int)&aNagiGarb_80073DE8, (int)&aBloodyGarb_80073DD0, (int)&aNavyBlueGarb_80073DB0, (int)&aForestGarb_80073D98, (int)&aDivineGarb1_80073D7C, (int)&aDivineGarb2_80073D60,
+const char* armorNames_8007D3E4[0xf] = {
+    aHunterSVest_80073ED8, aLeatherVest_80073EBC, aChainMailVest_80073E9C, aWireVest_80073E88, aPlateMailVest_80073E68, aReflectingVest_80073E48, aSilverVest_80073E30, aDivineVest_80073E18,
+    aRiketzGarb_80073DFC, aNagiGarb_80073DE8, aBloodyGarb_80073DD0, aNavyBlueGarb_80073DB0, aForestGarb_80073D98, aDivineGarb1_80073D7C, aDivineGarb2_80073D60,
 };
 EquipmentData armorData_8007D420[0xf] = {
     { 1, 0, { 0, 1 } },
@@ -2055,10 +2055,10 @@ unsigned short armorPrices_8007D64C[0xf] = {
     50, 100, 0x12C, 0x1F4, 0x258, 0x7D0, 0x4B0, 0x7D0,
     0x7D0, 0x2710, 100, 0x3A98, 0x4E20, 0x7530, 0x7530,
 };
-int accessoryNames_8007D66C[0x11] = {
-    (int)&aLeatherHeadband_8007408C, (int)&aIronHeadband_80074070, (int)&aSilverHeadband_80074050, (int)&aBlueBead_8007403C, (int)&aGreenBead_80074024, (int)&aYellowBead_8007400C, (int)&aRedBead_80073FF8, (int)&aSparrowRuff_80073FDC,
-    (int)&aIronBracelet_80073FC0, (int)&aSilverCrown_80073FA4, (int)&aHollyRuff_80073F8C, (int)&aHawkRuff_80073F78, (int)&aPoisonChoker_80073F5C, (int)&aSleepChoker_80073F40, (int)&aStoneChoker_80073F24, (int)&aSuperChoker_80073F08,
-    (int)&aNagiBelt_80073EF4,
+const char* accessoryNames_8007D66C[0x11] = {
+    aLeatherHeadband_8007408C, aIronHeadband_80074070, aSilverHeadband_80074050, aBlueBead_8007403C, aGreenBead_80074024, aYellowBead_8007400C, aRedBead_80073FF8, aSparrowRuff_80073FDC,
+    aIronBracelet_80073FC0, aSilverCrown_80073FA4, aHollyRuff_80073F8C, aHawkRuff_80073F78, aPoisonChoker_80073F5C, aSleepChoker_80073F40, aStoneChoker_80073F24, aSuperChoker_80073F08,
+    aNagiBelt_80073EF4,
 };
 EquipmentData accessoryData_8007D6B0[0x11] = {
     { 2, 0, { 0, 2 }, { 0 }, 1 },
@@ -3276,11 +3276,11 @@ SeqSlot seqSlots_800833E4[32] = {
     { 1, 14 },
     { 1, 15 },
 };
-int abilityNames_800834E4[39] = {
-    (int)&aDashes4_800745C4, (int)&aDashes4_800745C4, (int)&aEarthAttack_800745A8, (int)&aWaterAttack_8007458C, (int)&aFireAttack_80074574, (int)&aWindAttack_8007455C, (int)&aPoison_8007454C, (int)&aSleep_80074540,
-    (int)&aFleshToStone_80074520, (int)&aDestroyMana_80074504, (int)&aAbsorbHP_800744F0, (int)&aAbsorbMana_800744D8, (int)&aAllEnemies_800744C0, (int)&aCritical_800744AC, (int)&aBreakLegs_80074494, (int)&aRendWings_8007447C,
+const char* abilityNames_800834E4[39] = {
+    aDashes4_800745C4, aDashes4_800745C4, aEarthAttack_800745A8, aWaterAttack_8007458C, aFireAttack_80074574, aWindAttack_8007455C, aPoison_8007454C, aSleep_80074540,
+    aFleshToStone_80074520, aDestroyMana_80074504, aAbsorbHP_800744F0, aAbsorbMana_800744D8, aAllEnemies_800744C0, aCritical_800744AC, aBreakLegs_80074494, aRendWings_8007447C,
 };
-int abilityBonusNames_80083580[5] = { (int)&aDashes3_80074610, (int)&aDashes3_80074610, (int)&aPlusPower_80074600, (int)&aPlusAccuracy_800745E8, (int)&aPlusCritical_800745D0 };
+const char* abilityBonusNames_80083580[5] = { aDashes3_80074610, aDashes3_80074610, aPlusPower_80074600, aPlusAccuracy_800745E8, aPlusCritical_800745D0 };
 ActionData abilityActions_80083594[39] = {
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },
     { 0, 0, 100, 255, 100, 0, 0, 10, { 0, 3 } },

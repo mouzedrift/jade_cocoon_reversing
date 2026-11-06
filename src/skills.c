@@ -67,11 +67,11 @@ int CountLearnedSkills_80031968(void* skills)
 }
 extern int abilityNames_800834E4[];
 extern int abilityBonusNames_80083580[];
-int GetAbilityName_800319CC(int idx)
+const char* GetAbilityName_800319CC(int idx)
 {
     return abilityNames_800834E4[idx];
 }
-int GetAbilityBonusName_800319E8(int idx)
+const char* GetAbilityBonusName_800319E8(int idx)
 {
     return abilityBonusNames_80083580[idx];
 }
