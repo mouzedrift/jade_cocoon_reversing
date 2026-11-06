@@ -3317,7 +3317,8 @@ void UpdateShownMinion_800BECC8(ShopMenu* menu)
             menu->shown_54 = menu->partner_50;
             return;
         case 0:
-            goto def;
+            menu->shown_54 = menu->base_4C;
+            return;
         case 2:
             menu->shown_54 = &mergePreview_800C08E8;
             return;
@@ -3329,7 +3330,6 @@ void UpdateShownMinion_800BECC8(ShopMenu* menu)
         menu->shown_54 = menu->partner_50;
         return;
     }
-def:
     menu->shown_54 = menu->base_4C;
 }
 

@@ -767,19 +767,18 @@ void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
         if (c->subtitles_14 == 0)
         {
             items[2]->flags_0 |= 2;
+            items[3]->flags_0 |= 2;
         }
         else
         {
             items[2]->flags_0 &= ~2;
             items[3]->flags_0 &= ~2;
-            if (c->speech_11 != 0)
+            if (c->speech_11 == 0)
             {
-                goto done;
+                items[3]->flags_0 |= 2;
             }
         }
-        items[3]->flags_0 |= 2;
     }
-done:
     DrawMenuWindows_8002A5A4(&top);
     if (c->editing_38)
     {

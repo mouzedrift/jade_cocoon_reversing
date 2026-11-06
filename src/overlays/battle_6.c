@@ -1960,21 +1960,12 @@ void BossAi0F_800C66F4(EnemyAi* ai)
     }
     else if (ai->slot_C == 1)
     {
-        if ((rand() & 1) || ((unsigned short)ai->target_14->elementMask_42 & 2))
+        if ((rand() & 1) || ((unsigned short)ai->target_14->elementMask_42 & 2) ||
+            GetHp_800334D8(&ai->self_10->st_0) < (short)(GetMaxHp_800334CC(&ai->self_10->st_0) / 3))
         {
-            goto act;
-        }
-        else
-        {
-            short hp = GetHp_800334D8(&ai->self_10->st_0);
-            short maxHp = GetMaxHp_800334CC(&ai->self_10->st_0);
-            if (hp < (short)(maxHp / 3))
+            if (AiUseSkill_800C6A8C(ai))
             {
-            act:
-                if (AiUseSkill_800C6A8C(ai))
-                {
-                    return;
-                }
+                return;
             }
         }
     }
