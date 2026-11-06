@@ -176,10 +176,6 @@ typedef struct CombBtlHitNum
     int side_18;
 } CombBtlHitNum;
 
-/* the jump table of ResolveCommand_800A616C (asm) and its targets, labels in the generated asm */
-extern char jtgt_800A64C0[], jtgt_800A65BC[], jtgt_800A65F0[], jtgt_800A6624[];
-extern void* const dword_800A4A9C[6];
-
 extern int dword_8008D610;
 void CombBtlStart_800A4B8C(CombBtlTask* t, int a);
 void CombBtlWaitFile_800A4C40(CombBtlTask* t, int a);
