@@ -160,66 +160,66 @@ short cursorAreas_800C59C0[16] = {
     1, 3, 64, 64, 1, 3, 3, 2,
     1, 1, 1, 0, 1, 1, 1,
 };
-char weaponDescs_800C59E0[23][16] = {
-    { 56, 54, 12, 128, 232, 53, 12, 128, 204, 53, 12, 128 },
-    { 56, 54, 12, 128, 132, 53, 12, 128, 104, 53, 12, 128 },
-    { 92, 53, 12, 128, 20, 53, 12, 128, 216, 52, 12, 128 },
-    { 192, 52, 12, 128, 144, 52, 12, 128, 120, 52, 12, 128 },
-    { 96, 52, 12, 128, 20, 52, 12, 128, 212, 51, 12, 128 },
-    { 176, 51, 12, 128, 124, 51, 12, 128, 84, 51, 12, 128 },
-    { 76, 51, 12, 128, 4, 51, 12, 128, 184, 50, 12, 128 },
-    { 164, 50, 12, 128, 88, 50, 12, 128, 16, 50, 12, 128 },
-    { 0, 50, 12, 128, 180, 49, 12, 128, 108, 49, 12, 128 },
-    { 96, 52, 12, 128, 40, 49, 12, 128, 228, 48, 12, 128 },
-    { 92, 53, 12, 128, 160, 48, 12, 128, 112, 48, 12, 128 },
-    { 88, 48, 12, 128, 36, 48, 12, 128, 236, 47, 12, 128 },
-    { 176, 51, 12, 128, 160, 47, 12, 128, 96, 47, 12, 128 },
-    { 92, 53, 12, 128, 44, 47, 12, 128, 236, 46, 12, 128 },
-    { 192, 52, 12, 128, 192, 46, 12, 128, 136, 46, 12, 128 },
-    { 108, 46, 12, 128, 24, 46, 12, 128, 208, 45, 12, 128 },
-    { 172, 45, 12, 128, 128, 45, 12, 128, 80, 45, 12, 128 },
-    { 172, 45, 12, 128, 12, 45, 12, 128, 196, 44, 12, 128 },
-    { 76, 51, 12, 128, 112, 44, 12, 128, 28, 44, 12, 128 },
-    { 76, 51, 12, 128, 224, 43, 12, 128, 160, 43, 12, 128 },
-    { 108, 46, 12, 128, 104, 43, 12, 128, 44, 43, 12, 128 },
-    { 108, 46, 12, 128, 216, 42, 12, 128, 128, 42, 12, 128 },
-    { 108, 46, 12, 128, 44, 42, 12, 128, 212, 41, 12, 128 },
+const char* weaponDescs_800C59E0[23][4] = {
+    { aSmallKnife_800C3638, aOftenUsedForPla_800C35E8, aAtTheRiver_800C35CC, 0 },
+    { aSmallKnife_800C3638, aUsedForCuttingA_800C3584, aCarvingMeat_800C3568, 0 },
+    { aSpear_800C355C, aProvidesDivineP_800C3514, aWaterSoItsTipNe_800C34D8, 0 },
+    { aLongSword_800C34C0, aFairlyHeavySwor_800C3490, aOfBronze_800C3478, 0 },
+    { aShortSword_800C3460, aLightAndEasyToW_800C3414, aAttackAndDefens_800C33D4, 0 },
+    { aTwoHandedSword_800C33B0, aExtremelyLargeA_800C337C, aBladeMadeOfIron_800C3354, 0 },
+    { aAxe_800C334C, aAxeMadeOfIronFo_800C3304, aAsMightBeExpect_800C32B8, 0 },
+    { aLongsword_800C32A4, aFamousSwordThat_800C3258, aLightGivesPower_800C3210, 0 },
+    { aJavelin_800C3200, aLightAndEasyToW_800C31B4, aWithAPolishedAn_800C316C, 0 },
+    { aShortSword_800C3460, aProvidesDivineP_800C3128, aWindLighteningI_800C30E4, 0 },
+    { aSpear_800C355C, aSoundsLikeTheWi_800C30A0, aAlsoGoodForSlas_800C3070, 0 },
+    { aLongSword_800C3058, aBladeImbuedWith_800C3024, aRefinedYetDeadl_800C2FEC, 0 },
+    { aTwoHandedSword_800C33B0, aManyBlueSinewsR_800C2FA0, aProvidesAwesome_800C2F60, 0 },
+    { aSpear_800C355C, aTippedWithAShar_800C2F2C, aCanRenderTheEne_800C2EEC, 0 },
+    { aLongSword_800C34C0, aUndulatingBlade_800C2EC0, aOutstandingCutt_800C2E88, 0 },
+    { aSamuraiSword_800C2E6C, aLargeCurvedBlad_800C2E18, aWithSpectacular_800C2DD0, 0 },
+    { aTwoHandedSword_800C2DAC, aExtremelyLongBl_800C2D80, aEngravedWithADr_800C2D50, 0 },
+    { aTwoHandedSword_800C2DAC, aLargeBreathtaki_800C2D0C, aWithADesignOfGa_800C2CC4, 0 },
+    { aAxe_800C334C, aLeavesAPaleTrai_800C2C70, aProvidesTheDivi_800C2C1C, 0 },
+    { aAxe_800C334C, aOneFellSwoopOfT_800C2BE0, aAxeSoundlyCrush_800C2BA0, 0 },
+    { aSamuraiSword_800C2E6C, aBlindinglySharp_800C2B68, aDrainsOnlyTheEn_800C2B2C, 0 },
+    { aSamuraiSword_800C2E6C, aBladeThatGlowsL_800C2AD8, aClearNightDeliv_800C2A80, 0 },
+    { aSamuraiSword_800C2E6C, aColdBladeWithAP_800C2A2C, aCriticallyWound_800C29D4, 0 },
 };
-char armorDescs_800C5B50[15][16] = {
-    { 232, 62, 12, 128, 200, 62, 12, 128, 156, 62, 12, 128 },
-    { 232, 62, 12, 128, 108, 62, 12, 128, 52, 62, 12, 128 },
-    { 232, 62, 12, 128, 236, 61, 12, 128, 156, 61, 12, 128 },
-    { 232, 62, 12, 128, 100, 61, 12, 128, 48, 61, 12, 128 },
-    { 232, 62, 12, 128, 4, 61, 12, 128, 180, 60, 12, 128 },
-    { 232, 62, 12, 128, 96, 60, 12, 128, 8, 60, 12, 128 },
-    { 232, 62, 12, 128, 188, 59, 12, 128, 104, 59, 12, 128 },
-    { 232, 62, 12, 128, 40, 59, 12, 128, 232, 58, 12, 128 },
-    { 212, 58, 12, 128, 140, 58, 12, 128, 56, 58, 12, 128 },
-    { 212, 58, 12, 128, 252, 57, 12, 128, 192, 57, 12, 128 },
-    { 212, 58, 12, 128, 112, 57, 12, 128, 20, 57, 12, 128 },
-    { 212, 58, 12, 128, 184, 56, 12, 128, 100, 56, 12, 128 },
-    { 212, 58, 12, 128, 4, 56, 12, 128, 184, 55, 12, 128 },
-    { 212, 58, 12, 128, 96, 55, 12, 128, 4, 55, 12, 128 },
-    { 212, 58, 12, 128, 160, 54, 12, 128, 80, 54, 12, 128 },
+const char* armorDescs_800C5B50[15][4] = {
+    { aArmor_800C3EE8, aWarmYetAiry_800C3EC8, aSuitedToTheFore_800C3E9C, 0 },
+    { aArmor_800C3EE8, aMadeOfTannedLea_800C3E6C, aStrongYetQuietC_800C3E34, 0 },
+    { aArmor_800C3EE8, aMadeOfIronRings_800C3DEC, aLightYetGoodAtW_800C3D9C, 0 },
+    { aArmor_800C3EE8, aWovenWithThinIr_800C3D64, aLightAndUnrestr_800C3D30, 0 },
+    { aArmor_800C3EE8, aMadeOfIronPlate_800C3D04, aHeavyButGoodAtW_800C3CB4, 0 },
+    { aArmor_800C3EE8, aMadeOfMirrorLik_800C3C60, aProvidesResista_800C3C08, 0 },
+    { aArmor_800C3EE8, aSofterThanSomeO_800C3BBC, aProtectsWearerW_800C3B68, 0 },
+    { aArmor_800C3EE8, aMadeOfTheHardes_800C3B28, aYajakoSGreatest_800C3AE8, 0 },
+    { aClothing_800C3AD4, aLeftBehindByYou_800C3A8C, aWithstandsSnows_800C3A38, 0 },
+    { aClothing_800C3AD4, aWovenFromWhiteC_800C39FC, aLightWarmAndVer_800C39C0, 0 },
+    { aClothing_800C3AD4, aClothesOfOneWho_800C3970, aBringsMisfortun_800C3914, 0 },
+    { aClothing_800C3AD4, aWovenFromTheHig_800C38B8, aCalmsTheHeartAn_800C3864, 0 },
+    { aClothing_800C3AD4, aWovenOfTheHighe_800C3804, aTheBreathOfTheF_800C37B8, 0 },
+    { aClothing_800C3AD4, aWovenFromDivine_800C3760, aSenseEnemyMoves_800C3704, 0 },
+    { aClothing_800C3AD4, aDyedWithTheBark_800C36A0, aOfTheForestFlow_800C3650, 0 },
 };
-char accessoryDescs_800C5C40[17][16] = {
-    { 100, 71, 12, 128, 44, 71, 12, 128, 216, 70, 12, 128 },
-    { 100, 71, 12, 128, 164, 70, 12, 128, 128, 70, 12, 128 },
-    { 100, 71, 12, 128, 72, 70, 12, 128, 252, 69, 12, 128 },
-    { 100, 71, 12, 128, 164, 69, 12, 128, 84, 69, 12, 128 },
-    { 100, 71, 12, 128, 252, 68, 12, 128, 172, 68, 12, 128 },
-    { 100, 71, 12, 128, 84, 68, 12, 128, 4, 68, 12, 128 },
-    { 100, 71, 12, 128, 172, 67, 12, 128, 92, 67, 12, 128 },
-    { 100, 71, 12, 128, 40, 67, 12, 128, 240, 66, 12, 128 },
-    { 100, 71, 12, 128, 172, 66, 12, 128, 116, 66, 12, 128 },
-    { 100, 71, 12, 128, 48, 66, 12, 128, 12, 66, 12, 128 },
-    { 100, 71, 12, 128, 224, 65, 12, 128, 136, 65, 12, 128 },
-    { 100, 71, 12, 128, 88, 65, 12, 128, 20, 65, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 172, 64, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 108, 64, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 16, 64, 12, 128 },
-    { 100, 71, 12, 128, 236, 64, 12, 128, 184, 63, 12, 128 },
-    { 100, 71, 12, 128, 92, 63, 12, 128, 244, 62, 12, 128 },
+const char* accessoryDescs_800C5C40[17][4] = {
+    { aOrnamentalItem_800C4764, aBandWithLeather_800C472C, aProtectsHeadFro_800C46D8, 0 },
+    { aOrnamentalItem_800C4764, aBandWithIronWov_800C46A4, aToughButHeavy_800C4680, 0 },
+    { aOrnamentalItem_800C4764, aBandWithSilverW_800C4648, aSilverProvidesR_800C45FC, 0 },
+    { aOrnamentalItem_800C4764, aProvidesTheDivi_800C45A4, aResistanceAgain_800C4554, 0 },
+    { aOrnamentalItem_800C4764, aProvidesTheDivi_800C44FC, aResistanceAgain_800C44AC, 0 },
+    { aOrnamentalItem_800C4764, aProvidesTheDivi_800C4454, aResistanceAgain_800C4404, 0 },
+    { aOrnamentalItem_800C4764, aProvidesTheDivi_800C43AC, aResistanceAgain_800C435C, 0 },
+    { aOrnamentalItem_800C4764, aMadeOfSparrowFe_800C4328, aBoostsTheHeartA_800C42F0, 0 },
+    { aOrnamentalItem_800C4764, aPlainAndUnadorn_800C42AC, aItAMasculineApp_800C4274, 0 },
+    { aOrnamentalItem_800C4764, aBeautifullyScul_800C4230, aHelpsFocusMana_800C420C, 0 },
+    { aOrnamentalItem_800C4764, aMadeOfHollyLeav_800C41E0, aThornyButProvid_800C4188, 0 },
+    { aOrnamentalItem_800C4764, aMadeOfHawkFeath_800C4158, aEnhancesAimOfCu_800C4114, 0 },
+    { aOrnamentalItem_800C4764, aReleasesCleanAi_800C40EC, aIncreasesResist_800C40AC, 0 },
+    { aOrnamentalItem_800C4764, aReleasesCleanAi_800C40EC, aIncreasesResist_800C406C, 0 },
+    { aOrnamentalItem_800C4764, aReleasesCleanAi_800C40EC, aIncreasesResist_800C4010, 0 },
+    { aOrnamentalItem_800C4764, aReleasesCleanAi_800C40EC, aIncreasesBodySR_800C3FB8, 0 },
+    { aOrnamentalItem_800C4764, aMadeOfWhiteCoco_800C3F5C, aForSafeTravelPr_800C3EF4, 0 },
 };
 char cannotUnequipBox_800C5D50[16] = { 136, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128, 132, 71, 12, 128 };
 
@@ -630,25 +630,25 @@ void DrawEquipStats_800C5314(EquipCtx* c)
 
 void DrawEquipDescription_800C5440(short itemId, short category, int pos)
 {
-    int desc = 0;
+    const char** desc = 0;
     switch (category)
     {
     case 0:
         if (itemId < 0x17)
         {
-            desc = (int)weaponDescs_800C59E0 + itemId * 16;
+            desc = weaponDescs_800C59E0[itemId];
         }
         break;
     case 1:
         if (itemId < 0xf)
         {
-            desc = (int)armorDescs_800C5B50 + itemId * 16;
+            desc = armorDescs_800C5B50[itemId];
         }
         break;
     case 2:
         if (itemId < 0x11)
         {
-            desc = (int)accessoryDescs_800C5C40 + itemId * 16;
+            desc = accessoryDescs_800C5C40[itemId];
         }
         break;
     default:

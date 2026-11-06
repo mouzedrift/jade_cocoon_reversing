@@ -1,0 +1,45 @@
+# The only fixed addresses of the build: things the code reaches by number because they are not part of any
+# image it links (everything else is a symbol, so the images can move, see scripts/shift_check.py).
+# NAME                 ADDRESS      # what is there
+heapStart_800CD858     0x800CD858   # start of the heap (main.c: InitHeap3 up to 0x801B9250), above the largest overlay
+
+# code of the map script, which the map loader copies to mapCodeAddr_80073210 (0x800B22C0) behind GAME
+sub_800B2B40           0x800B2B40
+sub_800B3198           0x800B3198
+sub_800B322C           0x800B322C
+sub_800B3260           0x800B3260
+sub_800B3274           0x800B3274
+sub_800B32A4           0x800B32A4
+sub_800B32D4           0x800B32D4
+sub_800B32F0           0x800B32F0
+sub_800B330C           0x800B330C
+sub_800B41A8           0x800B41A8
+sub_800B41D0           0x800B41D0
+sub_800B4200           0x800B4200
+sub_800B42A8           0x800B42A8
+sub_800B4318           0x800B4318
+sub_800B4390           0x800B4390
+
+# PIERCE.BIN was linked against an older build: its calls and data land inside this build's code and data,
+# so they stay that build's addresses (it is unused)
+fn_80027724            0x80027724
+fn_800277E8            0x800277E8
+fn_80028E04            0x80028E04
+dword_80092F00         0x80092F00
+cam_80092F30           0x80092F30
+dword_8009DC7C         0x8009DC7C
+dword_8009DCAC         0x8009DCAC
+fn_800AD070            0x800AD070
+fn_800B60FC            0x800B60FC
+fn_800B76AC            0x800B76AC
+fn_800B7C04            0x800B7C04
+fn_800B7C30            0x800B7C30
+fn_800B7C74            0x800B7C74
+fn_800B7C9C            0x800B7C9C
+fn_800B7DD8            0x800B7DD8
+fn_800BC484            0x800BC484
+fn_800BC570            0x800BC570
+fn_800BC604            0x800BC604
+fn_800BD348            0x800BD348
+fn_800BD734            0x800BD734
+dword_800C124C         0x800C124C

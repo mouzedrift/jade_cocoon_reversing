@@ -1030,17 +1030,17 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
         {
             p0.x_0 = 0x7D;
             p0.y_2 = i * 33 + 0x39;
-            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
             DrawUiTiySprt_8002C06C(&p0, 0x9C, 1);
-            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
         }
         else if (!GetCardSaveName_800BAE4C(save))
         {
             p1.x_0 = 0x8B;
             p1.y_2 = i * 33 + 0x39;
-            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
             DrawUiTiySprt_8002C06C(&p1, 0x74, 1);
-            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
         }
         else
         {
@@ -1059,14 +1059,14 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                         } while (yan);
                         p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0 + digits * 7;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
-                        AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                        AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
                         DrawSmallNumber9_8002C414(&p2, work->summaries_0[save].vals_28[j], 1);
                     }
                     else
                     {
                         p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
-                        AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                        AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
                         DrawSmallNumber3_8002C290(&p2, work->summaries_0[save].vals_28[j], 1);
                     }
                     if ((j == 3 || j == 4) && work->summaries_0[save].vals_28[j] < 10)
@@ -1075,30 +1075,30 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                         DrawSmallNumber3_8002C290(&p2, 0, 1);
                     }
-                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
                 }
                 else if (j == 6)
                 {
-                    AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                    AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
                     p3.x_0 = saveSlotFieldPos_800BD93C[6].x_0;
                     p3.y_2 = saveSlotFieldPos_800BD93C[6].y_2 + i * 33;
                     DrawSmallText_8002FAA0(0, &p3.x_0, work->summaries_0[save].name_0, 1);
-                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
                 }
                 else if (j == 7)
                 {
                     p3.x_0 = saveSlotFieldPos_800BD93C[j].x_0;
                     p3.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
-                    AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                    AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
                     DrawText_8003E91C(1, work->summaries_0[save].text_C, &p3, 1);
-                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
                     if (work->summaries_0[save].corridor_26 >= 0)
                     {
                         p3.x_0 = saveSlotFieldPos_800BD93C[j].x_0 + 0x38;
                         p3.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
-                        AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+                        AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
                         DrawNumberRightAlignedFont1_8003F264(&p3, work->summaries_0[save].corridor_26, 1);
-                        AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+                        AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
                     }
                 }
                 else if (j == 8)
@@ -1106,34 +1106,34 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                     icon = &saveIconSprites_800BD9E8[work->summaries_0[save].icon_24];
                     p3.x_0 = icon->x_0;
                     p3.y_2 = icon->y_2 + i * 33;
-                    AddClipDrawAreaPrim_80033308(dword_8008D454 + icon->ot_6 * 4);
+                    AddClipDrawAreaPrim_80033308(pOT_8008D454 + icon->ot_6);
                     DrawUiTiySprt_8002C06C(&p3, icon->sprite_4, icon->ot_6);
-                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + icon->ot_6 * 4);
+                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + icon->ot_6);
                 }
                 for (spr = saveSlotSprites_800BD960; spr->sprite_4 > 0; spr++)
                 {
                     p3.x_0 = spr->x_0;
                     p3.y_2 = spr->y_2 + i * 33;
-                    AddClipDrawAreaPrim_80033308(dword_8008D454 + spr->ot_6 * 4);
+                    AddClipDrawAreaPrim_80033308(pOT_8008D454 + spr->ot_6);
                     DrawUiTiySprt_8002C06C(&p3, spr->sprite_4, spr->ot_6);
-                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + spr->ot_6 * 4);
+                    AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + spr->ot_6);
                 }
             }
             p2.x_0 = saveSlotFieldPos_800BD93C[1].x_0;
             p2.y_2 = saveSlotFieldPos_800BD93C[1].y_2 + i * 33;
-            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
             DrawUiTiySprt_8002C06C(&p2, 0xDA, 1);
-            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
             p4.x_0 = saveSlotFieldPos_800BD93C[3].x_0 + 2;
             p4.y_2 = (saveSlotFieldPos_800BD93C[3].y_2 - 4) + i * 33;
-            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
             DrawText_8003E91C(2, aMiddleDot_800B6BA8, &p4, 1);
-            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
             p5.x_0 = saveSlotFieldPos_800BD93C[3].x_0 + 2;
             p5.y_2 = saveSlotFieldPos_800BD93C[3].y_2 + i * 33;
-            AddClipDrawAreaPrim_80033308(dword_8008D454 + 4);
+            AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
             DrawText_8003E91C(2, aMiddleDot_800B6BA8, &p5, 1);
-            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, dword_8008D454 + 4);
+            AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
         }
     }
 }

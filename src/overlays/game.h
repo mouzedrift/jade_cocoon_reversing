@@ -1024,7 +1024,6 @@ extern int GetWeaponEffect_800189F8();
 
 extern void sub_8004ED78(int);
 
-extern int sub_8003B9E0(int*, int*);
 
 extern G2V12 statusTintLevel1_8007A0A4;
 

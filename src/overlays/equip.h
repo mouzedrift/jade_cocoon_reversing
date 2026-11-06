@@ -225,9 +225,9 @@ extern char statsWindowRect_800C59A8[8];
 extern short equipMenuStepModes_800C59B0[4];
 extern short modeCursorAreaMasks_800C59B8[4];
 extern short cursorAreas_800C59C0[16];
-extern char weaponDescs_800C59E0[23][16];
-extern char armorDescs_800C5B50[15][16];
-extern char accessoryDescs_800C5C40[17][16];
+extern const char* weaponDescs_800C59E0[23][4];
+extern const char* armorDescs_800C5B50[15][4];
+extern const char* accessoryDescs_800C5C40[17][4];
 extern char cannotUnequipBox_800C5D50[16];
 
 /* MENU overlay (resident under EQUIP): DrawEquipmentWindow_800C0E04(MenuEquipQ* eq, short* pos, short openStep) */

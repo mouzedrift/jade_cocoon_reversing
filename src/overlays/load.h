@@ -481,7 +481,6 @@ extern void RequestGameMode_800A6D30(int a);
 // main.h has these too, but declares loadMenuTask_8008D480 as int[2]: not included until that is fixed
 extern int dword_8008BD80;
 extern char* strcpy(char* dst, char* src); // PSY-Q strcpy (not in symbol_addrs.txt)
-extern char* dword_8008D454;
 extern void DrawScrollArrows_8002B8DC(ScrollArrowArg arrow, short* cursor, short* pos, int ot);
 extern void* memcpy(void* dst, const void* src, unsigned int n);
 

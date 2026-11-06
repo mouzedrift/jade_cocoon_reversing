@@ -169,7 +169,6 @@ int TestValuableFlag_800AD73C(int a);
 void SetEquipment_800AD9EC(int itemId, int category);
 
 /* exe-side, to move to <exe header> (named in the comment) */
-extern char* dword_8008D454;
 void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); // ui_gauge
 
 /* WPNSHOP data */
@@ -546,10 +545,10 @@ extern MenuWindowItem equipKindItem2_800BEB7C[2];
 extern MenuWindowItem* equipKindItems_800BEBB4[4];
 extern StorePos moneyWindowPosL_800BEBC4;
 extern StorePos moneyWindowPosR_800BEBC8;
-extern char itemDescLines_800BEBCC[688];
-extern char weaponDescLines_800BEE7C[368];
-extern char armorDescLines_800BEFEC[240];
-extern char accessoryDescLines_800BF0DC[272];
+extern const char* itemDescLines_800BEBCC[43][4];
+extern const char* weaponDescLines_800BEE7C[23][4];
+extern const char* armorDescLines_800BEFEC[15][4];
+extern const char* accessoryDescLines_800BF0DC[17][4];
 extern unsigned short itemStock_800BF1EC[44];
 extern unsigned short weaponStock_800BF244[24];
 extern unsigned short armorStock_800BF274[16];

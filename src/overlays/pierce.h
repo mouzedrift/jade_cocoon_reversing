@@ -42,7 +42,7 @@ extern void fn_800AD070();
 
 extern void fn_800B7C04();
 extern void fn_800B7DD8();
-extern void IsUnitOnField_800BC570(int a, int b);
+extern void fn_800BC570(int a, int b);
 extern int fn_800BC484();
 extern int fn_800B7C74();
 extern int fn_800B7C9C();
@@ -50,7 +50,7 @@ extern void fn_800B76AC(PierceMsg* m);
 extern void fn_80027724(int a);
 extern int fn_800277E8();
 extern void fn_800BC604(int a);
-extern void aNeedTwoJp2_800B7C30();
+extern void fn_800B7C30();
 extern void fn_800BD348(int a, int b);
 extern void fn_800BD734(short* v, int b);
 extern void fn_80028E04();

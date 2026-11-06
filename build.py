@@ -79,11 +79,20 @@ def read_map_symbols():
     return {m.group(2): int(m.group(1), 16) for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", open(path).read(), re.M)}
 
 
+def alias_base(base, syms):
+    """address of an alias's BASE: the executable's (syms: its last link), else an overlay's"""
+    if base in syms:
+        return syms[base]
+    got = overlay_symbols().get(base, set())
+    return next(iter(got)) if len(got) == 1 else None
+
+
 def aliases_resolved():
     """True if the aliases of the last link sit at BASE + OFFSET (the equates are from the link before when
     something moved; nothing else depends on their values, so linking once more fixes them)"""
     syms = read_map_symbols()
-    return all(n in syms and b in syms and syms[n] == syms[b] + off for n, b, off in read_aliases())
+    return all(n in syms and alias_base(b, syms) is not None and syms[n] == alias_base(b, syms) + off
+               for n, b, off in read_aliases())
 
 
 def overlay_maps():
@@ -114,24 +123,32 @@ def overlay_symbols(exclude=None):
     return out
 
 
+def read_fixed_symbols():
+    """config/fixed_symbols.txt: {name: address} of what the code reaches by number (outside of every image)"""
+    out = {}
+    for line in open(os.path.join(CURRENT_DIR, "config", "fixed_symbols.txt")):
+        f = line.split("#")[0].split()
+        if f:
+            out[f[0]] = int(f[1], 16)
+    return out
+
+
 def external_symbols(src_dir):
     """[(name, address)] of the names in the executable's C sources (src/*.c, *.h, not src/overlays) that are
-    outside of its image: overlay symbols (overlay_symbols), or by the name's _XXXXXXXX suffix (buffers
-    behind the image)"""
+    outside of its image: overlay symbols (overlay_symbols) and the fixed addresses (config/fixed_symbols.txt)"""
     ovl = overlay_symbols()
     names = set()
     for path in glob.glob(os.path.join(src_dir, "*.[ch]")):
         names |= set(re.findall(r"\b[A-Za-z_]\w*\b", open(path).read()))
     out = {}
-    for n in names:
-        if n in ovl:
+    fixed = read_fixed_symbols()
+    for n in names - {a for a, _, _ in read_aliases()}:
+        if n in fixed:
+            out[n] = fixed[n]
+        elif n in ovl:
             if len(ovl[n]) > 1:
                 sys.exit("%s is at several addresses in the overlays" % n)
             out[n] = next(iter(ovl[n]))
-        else:
-            m = re.match(r"\w+_([0-9A-F]{8})$", n)
-            if m and int(m.group(1), 16) >= IMAGE_END:
-                out[n] = int(m.group(1), 16)
     return sorted(out.items(), key=lambda x: (x[1], x[0]))
 
 
@@ -186,7 +203,6 @@ CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
 BUILD_DIR = os.path.join(CURRENT_DIR, "build_psyq")
 
 EXE_NAME = "jade_cocoon"
-IMAGE_END = 0x800A05A0  # end of the executable's image (.bss included), where GAME/TITLE/... are loaded
 
 def read_cc43():
     """TUs built with another compiler than psyq 4.4: "tu [4.3|4.6|4.6n]" (4.6n: with -mno-check-zero-division)"""
@@ -349,7 +365,7 @@ def generate_ninja():
             # from where the last link put the object (see aliases_resolved)
             syms = read_map_symbols()
             for name, base, off in read_aliases():
-                f.write("%s\tequ\t$%08X\n" % (name, syms.get(base, 0) + off))
+                f.write("%s\tequ\t$%08X\n" % (name, (alias_base(base, syms) or 0) + off))
             f.write("\tregs\tpc=__SN_ENTRY_POINT\n")
 
         ninja.build(cpe_path, "link", implicit=linker_deps + [link_path])

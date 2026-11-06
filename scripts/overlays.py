@@ -211,18 +211,17 @@ def main(argv):
         r"^ ([0-9A-F]{8})  (\w+)$", open(os.path.join(BUILD, "jade_cocoon.map")).read(), re.M)}
     equ = {n: a for n, a in equ.items() if 0x80010000 <= a < EXE_END}
     # names of the source outside of the executable and of this overlay: other overlays' symbols (where their
-    # last link put them, see build.overlay_symbols), else buffers by their _XXXXXXXX suffix
+    # last link put them, see build.overlay_symbols) and the fixed addresses (config/fixed_symbols.txt)
     own = {n for _, n in syms}
     others = bp.overlay_symbols(exclude=name)
+    fixed = bp.read_fixed_symbols()
     for n in sorted(set(re.findall(r"\b[A-Za-z_]\w*\b", src_text)) - own - set(equ)):
-        if n in others:
+        if n in fixed:
+            equ[n] = fixed[n]
+        elif n in others:
             if len(others[n]) > 1:
                 sys.exit("%s: %s is at several addresses in overlays/*.sym" % (name, n))
             equ[n] = next(iter(others[n]))
-        else:
-            m = re.match(r"\w+_([0-9A-F]{8})$", n)
-            if m and not base <= int(m.group(1), 16) < base + len(data):
-                equ[n] = int(m.group(1), 16)
     aliases = bp.read_aliases(name)
 
     def map_symbols():
@@ -231,10 +230,19 @@ def main(argv):
             return {}
         return {m.group(2): int(m.group(1), 16) for m in re.finditer(r"^ ([0-9A-F]{8})  (\w+)$", open(path).read(), re.M)}
 
+    def base_of(base_sym, syms_map):
+        # this overlay's own symbol, the executable's, or another overlay's
+        if base_sym in syms_map and base_sym not in equ:
+            return syms_map[base_sym]
+        if base_sym in equ:
+            return equ[base_sym]
+        got = others.get(base_sym, set())
+        return next(iter(got)) if len(got) == 1 else 0
+
     def link_once():
         syms_map = map_symbols()
         for n, base_sym, off in aliases:
-            equ[n] = syms_map.get(base_sym, 0) + off
+            equ[n] = base_of(base_sym, syms_map) + off
         with open(link, "w") as f:
             f.write("\torg\t$%08x\n" % base)
             for g, kw in (("head", ""), ("rdata", ""), ("text", ""), ("data", ""), ("bss", "\tbss")):
@@ -264,7 +272,7 @@ def main(argv):
     for _ in range(2):
         link_once()
         got = map_symbols()
-        if all(got.get(n) == got.get(base_sym, -1) + off for n, base_sym, off in aliases):
+        if all(got.get(n) == base_of(base_sym, got) + off for n, base_sym, off in aliases):
             break
     else:
         sys.exit("%s: aliases (config/aliases.txt) not at BASE + OFFSET after relinking" % name)

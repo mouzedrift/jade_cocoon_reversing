@@ -3131,7 +3131,7 @@ int FindFacingFieldMinion_800A9164(int* out)
             IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, pos, &dist);
             if (dist <= 0x9C3F)
             {
-                angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
+                angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - Ratan2DifferenceInt_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
                 *out = angle;
                 if ((unsigned)(angle + 0x3FF) < 0x7FF)
                     return 1;
@@ -3156,7 +3156,7 @@ int IsFieldMinionBehind_800A926C()
             IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, pos, &dist);
             if (dist <= 0x9C3F)
             {
-                angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - sub_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
+                angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - Ratan2DifferenceInt_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
                 if (!((unsigned)(angle + 0x400) < 0x801))
                     return 1;
             }

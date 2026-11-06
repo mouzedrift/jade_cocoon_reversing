@@ -667,7 +667,7 @@ void DrawStoreDialog_800BB8CC(StoreMenu* store)
 void DrawStore_800BB950(StoreMenu* store)
 {
     StorePos pos;
-    char* p;
+    const char** p;
     int r;
     int s;
     short i;
@@ -743,7 +743,7 @@ void DrawStore_800BB950(StoreMenu* store)
     }
     if ((unsigned short)(store->state_0 - 2) < 4)
     {
-        p = (char*)1;
+        p = (const char**)1;
     }
     if (p)
     {
@@ -763,14 +763,14 @@ void DrawStore_800BB950(StoreMenu* store)
                 }
                 if (r != 0xFF)
                 {
-                    p = itemDescLines_800BEBCC + r * 16;
+                    p = itemDescLines_800BEBCC[r];
                 }
                 break;
             case 5:
                 r = GetInventorySlotId_800AD288((short)s, 0);
                 if (r != 0xFF)
                 {
-                    p = itemDescLines_800BEBCC + r * 16;
+                    p = itemDescLines_800BEBCC[r];
                 }
                 break;
             case 10:
@@ -783,13 +783,13 @@ void DrawStore_800BB950(StoreMenu* store)
                     switch (store->equipKind_10)
                     {
                     case 0:
-                        p = weaponDescLines_800BEE7C + r * 16;
+                        p = weaponDescLines_800BEE7C[r];
                         break;
                     case 1:
-                        p = armorDescLines_800BEFEC + r * 16;
+                        p = armorDescLines_800BEFEC[r];
                         break;
                     case 2:
-                        p = accessoryDescLines_800BF0DC + r * 16;
+                        p = accessoryDescLines_800BF0DC[r];
                         break;
                     }
                 }
@@ -801,13 +801,13 @@ void DrawStore_800BB950(StoreMenu* store)
                     switch (store->equipKind_10)
                     {
                     case 0:
-                        p = weaponDescLines_800BEE7C + r * 16;
+                        p = weaponDescLines_800BEE7C[r];
                         break;
                     case 1:
-                        p = armorDescLines_800BEFEC + r * 16;
+                        p = armorDescLines_800BEFEC[r];
                         break;
                     case 2:
-                        p = accessoryDescLines_800BF0DC + r * 16;
+                        p = accessoryDescLines_800BF0DC[r];
                         break;
                     }
                 }
@@ -2204,10 +2204,112 @@ MenuWindowItem equipKindItem2_800BEB7C[2] = {
 MenuWindowItem* equipKindItems_800BEBB4[4] = { equipKindItem0_800BEB0C, equipKindItem1_800BEB44, equipKindItem2_800BEB7C, NULL };
 StorePos moneyWindowPosL_800BEBC4 = { 10, 77 };
 StorePos moneyWindowPosR_800BEBC8 = { 189, 77 };
-char itemDescLines_800BEBCC[688] = { 128, 143, 11, 128, 56, 143, 11, 128, 236, 142, 11, 128, 144, 142, 11, 128, 128, 143, 11, 128, 80, 142, 11, 128, 248, 141, 11, 128, 180, 141, 11, 128, 128, 143, 11, 128, 80, 141, 11, 128, 228, 140, 11, 128, 0, 0, 0, 0, 188, 140, 11, 128, 92, 140, 11, 128, 248, 139, 11, 128, 0, 0, 0, 0, 188, 139, 11, 128, 116, 139, 11, 128, 64, 139, 11, 128, 0, 0, 0, 0, 16, 139, 11, 128, 212, 138, 11, 128, 156, 138, 11, 128, 0, 0, 0, 0, 92, 138, 11, 128, 16, 138, 11, 128, 224, 137, 11, 128, 0, 0, 0, 0, 164, 137, 11, 128, 92, 137, 11, 128, 36, 137, 11, 128, 0, 0, 0, 0, 232, 136, 11, 128, 160, 136, 11, 128, 100, 136, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 224, 135, 11, 128, 156, 135, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 68, 135, 11, 128, 224, 134, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 128, 134, 11, 128, 36, 134, 11, 128, 0, 0, 0, 0, 44, 136, 11, 128, 200, 133, 11, 128, 132, 133, 11, 128, 0, 0, 0, 0, 96, 133, 11, 128, 248, 132, 11, 128, 180, 132, 11, 128, 136, 132, 11, 128, 104, 132, 11, 128, 28, 132, 11, 128, 200, 131, 11, 128, 0, 0, 0, 0, 168, 131, 11, 128, 68, 131, 11, 128, 232, 130, 11, 128, 0, 0, 0, 0, 204, 130, 11, 128, 136, 130, 11, 128, 64, 130, 11, 128, 0, 0, 0, 0, 36, 130, 11, 128, 220, 129, 11, 128, 112, 129, 11, 128, 0, 0, 0, 0, 80, 129, 11, 128, 248, 128, 11, 128, 156, 128, 11, 128, 0, 0, 0, 0, 132, 128, 11, 128, 60, 128, 11, 128, 224, 127, 11, 128, 0, 0, 0, 0, 184, 127, 11, 128, 88, 127, 11, 128, 240, 126, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 96, 126, 11, 128, 248, 125, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 152, 125, 11, 128, 48, 125, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 208, 124, 11, 128, 108, 124, 11, 128, 0, 0, 0, 0, 192, 126, 11, 128, 12, 124, 11, 128, 168, 123, 11, 128, 0, 0, 0, 0, 104, 123, 11, 128, 0, 123, 11, 128, 156, 122, 11, 128, 0, 0, 0, 0, 96, 122, 11, 128, 0, 123, 11, 128, 0, 122, 11, 128, 0, 0, 0, 0, 192, 121, 11, 128, 88, 121, 11, 128, 244, 120, 11, 128, 0, 0, 0, 0, 184, 120, 11, 128, 88, 121, 11, 128, 92, 120, 11, 128, 0, 0, 0, 0, 32, 120, 11, 128, 188, 119, 11, 128, 92, 119, 11, 128, 0, 0, 0, 0, 32, 119, 11, 128, 188, 119, 11, 128, 196, 118, 11, 128, 0, 0, 0, 0, 136, 118, 11, 128, 32, 118, 11, 128, 192, 117, 11, 128, 0, 0, 0, 0, 124, 117, 11, 128, 32, 118, 11, 128, 24, 117, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 112, 116, 11, 128, 48, 116, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 212, 115, 11, 128, 152, 115, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 96, 115, 11, 128, 36, 115, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 220, 114, 11, 128, 160, 114, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 80, 114, 11, 128, 20, 114, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 196, 113, 11, 128, 136, 113, 11, 128, 0, 0, 0, 0, 204, 116, 11, 128, 52, 113, 11, 128, 240, 112, 11, 128, 0, 0, 0, 0, 192, 112, 11, 128, 92, 112, 11, 128, 4, 112, 11, 128, 0, 0, 0, 0, 236, 111, 11, 128, 132, 111, 11, 128, 44, 111, 11, 128, 0, 0, 0, 0, 236, 111, 11, 128, 224, 110, 11, 128, 172, 110, 11, 128 };
-char weaponDescLines_800BEE7C[368] = { 4, 156, 11, 128, 180, 155, 11, 128, 152, 155, 11, 128, 0, 0, 0, 0, 4, 156, 11, 128, 80, 155, 11, 128, 52, 155, 11, 128, 0, 0, 0, 0, 40, 155, 11, 128, 224, 154, 11, 128, 164, 154, 11, 128, 0, 0, 0, 0, 140, 154, 11, 128, 92, 154, 11, 128, 68, 154, 11, 128, 0, 0, 0, 0, 44, 154, 11, 128, 224, 153, 11, 128, 160, 153, 11, 128, 0, 0, 0, 0, 124, 153, 11, 128, 72, 153, 11, 128, 32, 153, 11, 128, 0, 0, 0, 0, 24, 153, 11, 128, 208, 152, 11, 128, 132, 152, 11, 128, 0, 0, 0, 0, 112, 152, 11, 128, 36, 152, 11, 128, 220, 151, 11, 128, 0, 0, 0, 0, 204, 151, 11, 128, 128, 151, 11, 128, 56, 151, 11, 128, 0, 0, 0, 0, 44, 154, 11, 128, 244, 150, 11, 128, 176, 150, 11, 128, 0, 0, 0, 0, 40, 155, 11, 128, 108, 150, 11, 128, 60, 150, 11, 128, 0, 0, 0, 0, 36, 150, 11, 128, 240, 149, 11, 128, 184, 149, 11, 128, 0, 0, 0, 0, 124, 153, 11, 128, 108, 149, 11, 128, 44, 149, 11, 128, 0, 0, 0, 0, 40, 155, 11, 128, 248, 148, 11, 128, 184, 148, 11, 128, 0, 0, 0, 0, 140, 154, 11, 128, 140, 148, 11, 128, 84, 148, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 228, 147, 11, 128, 156, 147, 11, 128, 0, 0, 0, 0, 120, 147, 11, 128, 76, 147, 11, 128, 28, 147, 11, 128, 0, 0, 0, 0, 120, 147, 11, 128, 216, 146, 11, 128, 144, 146, 11, 128, 0, 0, 0, 0, 24, 153, 11, 128, 60, 146, 11, 128, 232, 145, 11, 128, 0, 0, 0, 0, 24, 153, 11, 128, 172, 145, 11, 128, 108, 145, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 52, 145, 11, 128, 248, 144, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 164, 144, 11, 128, 76, 144, 11, 128, 0, 0, 0, 0, 56, 148, 11, 128, 248, 143, 11, 128, 160, 143, 11, 128 };
-char armorDescLines_800BEFEC[240] = { 180, 164, 11, 128, 148, 164, 11, 128, 104, 164, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 56, 164, 11, 128, 0, 164, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 184, 163, 11, 128, 104, 163, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 48, 163, 11, 128, 252, 162, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 208, 162, 11, 128, 128, 162, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 44, 162, 11, 128, 212, 161, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 136, 161, 11, 128, 52, 161, 11, 128, 0, 0, 0, 0, 180, 164, 11, 128, 244, 160, 11, 128, 180, 160, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 88, 160, 11, 128, 4, 160, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 200, 159, 11, 128, 140, 159, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 60, 159, 11, 128, 224, 158, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 132, 158, 11, 128, 48, 158, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 208, 157, 11, 128, 132, 157, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 44, 157, 11, 128, 208, 156, 11, 128, 0, 0, 0, 0, 160, 160, 11, 128, 108, 156, 11, 128, 28, 156, 11, 128 };
-char accessoryDescLines_800BF0DC[272] = { 48, 173, 11, 128, 248, 172, 11, 128, 164, 172, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 112, 172, 11, 128, 76, 172, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 20, 172, 11, 128, 200, 171, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 112, 171, 11, 128, 32, 171, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 200, 170, 11, 128, 120, 170, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 32, 170, 11, 128, 208, 169, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 120, 169, 11, 128, 40, 169, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 244, 168, 11, 128, 188, 168, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 120, 168, 11, 128, 64, 168, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 252, 167, 11, 128, 216, 167, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 172, 167, 11, 128, 84, 167, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 36, 167, 11, 128, 224, 166, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 184, 166, 11, 128, 120, 166, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 184, 166, 11, 128, 56, 166, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 184, 166, 11, 128, 220, 165, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 184, 166, 11, 128, 132, 165, 11, 128, 0, 0, 0, 0, 48, 173, 11, 128, 40, 165, 11, 128, 192, 164, 11, 128 };
+const char* itemDescLines_800BEBCC[43][4] = {
+    { aRestoreHealth_800B8F80, aGrowsInOpenArea_800B8F38, aIncreasesHealth_800B8EEC, aGrindLeavesInto_800B8E90 },
+    { aRestoreHealth_800B8F80, aATypeOfMugwortB_800B8E50, aSweeterSmelling_800B8DF8, aCuresBleedingAn_800B8DB4 },
+    { aRestoreHealth_800B8F80, aATypeOfMugwortW_800B8D50, aBitterTasteThat_800B8CE4, 0 },
+    { aIncreaseMaxHeal_800B8CBC, aANutPackingEner_800B8C5C, aStrengthensTheB_800B8BF8, 0 },
+    { aIncreaseMinionA_800B8BBC, aOilFromATreeWit_800B8B74, aSharpensMinionS_800B8B40, 0 },
+    { aIncreasesMinion_800B8B10, aOilFromAVeryPot_800B8AD4, aStrengthensMini_800B8A9C, 0 },
+    { aIncreaseMinionD_800B8A5C, aOilFromAPlantWi_800B8A10, aHardensMinionSS_800B89E0, 0 },
+    { aIncreaseMinionM_800B89A4, aOilFromTreeWith_800B895C, aStrengthensMini_800B8924, 0 },
+    { aIncreaseMinionM_800B88E8, aOilFromAPlantWi_800B88A0, aStrengthensMini_800B8864, 0 },
+    { aRestoreMinionHP_800B882C, aLiquorMadeFromP_800B87E0, aRestoresSomeMin_800B879C, 0 },
+    { aRestoreMinionHP_800B882C, aFineLiquorMadeF_800B8744, aRestoresMinionH_800B86E0, 0 },
+    { aRestoreMinionHP_800B882C, aExcellentLiquor_800B8680, aRestoresAGreatD_800B8624, 0 },
+    { aRestoreMinionHP_800B882C, aSpecialLiquorMa_800B85C8, aRestoresAllMini_800B8584, 0 },
+    { aTotalRestoratio_800B8560, aDriedRootOfAGre_800B84F8, aAlsoCalledTheIm_800B84B4, aAdjustsTheVisce_800B8488 },
+    { aPoisonAntidote_800B8468, aPowderedFormOfD_800B841C, aSoothesTheSpiri_800B83C8, 0 },
+    { aStoneToFlesh_800B83A8, aPowderMadeFromS_800B8344, aInnerStrengthTo_800B82E8, 0 },
+    { aSprayPoison_800B82CC, aReleasesPoisonM_800B8288, aInstantlyCauses_800B8240, 0 },
+    { aInduceSleep_800B8224, aReleasesASleepM_800B81DC, aCausesADeepSlum_800B8170, 0 },
+    { aFleshToStone_800B8150, aReleasesAFleshT_800B80F8, aCausesBodyHarde_800B809C, 0 },
+    { aCauseDeath_800B8084, aReleasesADeathM_800B803C, aInstantlyCauses_800B7FE0, 0 },
+    { aProtectionFromA_800B7FB8, aReflectsAllUncl_800B7F58, aAllAbnormalStat_800B7EF0, 0 },
+    { aChangeAreaPrope_800B7EC0, aACharmBlessedBy_800B7E60, aChangesAreaProp_800B7DF8, 0 },
+    { aChangeAreaPrope_800B7EC0, aACharmBlessedBy_800B7D98, aChangesAreaProp_800B7D30, 0 },
+    { aChangeAreaPrope_800B7EC0, aACharmBlessedBy_800B7CD0, aChangesAreaProp_800B7C6C, 0 },
+    { aChangeAreaPrope_800B7EC0, aACharmBlessedBy_800B7C0C, aChangesAreaProp_800B7BA8, 0 },
+    { aAttackSingleEne_800B7B68, aSealWithTheMark_800B7B00, aInflictsAnEarth_800B7A9C, 0 },
+    { aAttackAllEnemie_800B7A60, aSealWithTheMark_800B7B00, aInflictsAnEarth_800B7A00, 0 },
+    { aAttackSingleEne_800B79C0, aSealWithTheMark_800B7958, aInflictsAWaterB_800B78F4, 0 },
+    { aAttackAllEnemie_800B78B8, aSealWithTheMark_800B7958, aInflictsAWaterB_800B785C, 0 },
+    { aAttackSingleEne_800B7820, aSealWithTheMark_800B77BC, aInflictsAFireBa_800B775C, 0 },
+    { aAttackAllEnemie_800B7720, aSealWithTheMark_800B77BC, aInflictsAFireBa_800B76C4, 0 },
+    { aAttackSingleEne_800B7688, aSealWithTheMark_800B7620, aInflictsAWindBa_800B75C0, 0 },
+    { aAttackMultipleE_800B757C, aSealWithTheMark_800B7620, aInflictsAWindBa_800B7518, 0 },
+    { aSilkThreadSpunF_800B74CC, aGivesOffAShineT_800B7470, aSeventhHighestG_800B7430, 0 },
+    { aSilkThreadSpunF_800B74CC, aEmitsVagueInsta_800B73D4, aSixthHighestGra_800B7398, 0 },
+    { aSilkThreadSpunF_800B74CC, aGivesOffADazzli_800B7360, aFifthHighestGra_800B7324, 0 },
+    { aSilkThreadSpunF_800B74CC, aGivesOffAModera_800B72DC, aFourthHighestGr_800B72A0, 0 },
+    { aSilkThreadSpunF_800B74CC, aGivesOffAPhosph_800B7250, aThirdHighestGra_800B7214, 0 },
+    { aSilkThreadSpunF_800B74CC, aGivesOffAnUnear_800B71C4, aSecondHighestGr_800B7188, 0 },
+    { aSilkThreadSpunF_800B74CC, aSoftThreadThatG_800B7134, aHighestGradeBes_800B70F0, 0 },
+    { aKeyToTreasureCh_800B70C0, aMultipurposeKey_800B705C, aBendsAndBecomes_800B7004, 0 },
+    { aTreeSpores_800B6FEC, aSweetSmellingSl_800B6F84, aCausesSurroundi_800B6F2C, 0 },
+    { aTreeSpores_800B6FEC, aTreeSporesWithA_800B6EE0, aAttractsNearbyM_800B6EAC, 0 },
+};
+const char* weaponDescLines_800BEE7C[23][4] = {
+    { aSmallKnife_800B9C04, aOftenUsedForPla_800B9BB4, aAtTheRiver_800B9B98, 0 },
+    { aSmallKnife_800B9C04, aUsedForCuttingA_800B9B50, aCarvingMeat_800B9B34, 0 },
+    { aSpear_800B9B28, aProvidesDivineP_800B9AE0, aWaterSoItsTipNe_800B9AA4, 0 },
+    { aLongSword_800B9A8C, aFairlyHeavySwor_800B9A5C, aOfBronze_800B9A44, 0 },
+    { aShortSword_800B9A2C, aLightAndEasyToW_800B99E0, aAttackAndDefens_800B99A0, 0 },
+    { aTwoHandedSword_800B997C, aExtremelyLargeA_800B9948, aBladeMadeOfIron_800B9920, 0 },
+    { aAxe_800B9918, aAxeMadeOfIronFo_800B98D0, aAsMightBeExpect_800B9884, 0 },
+    { aLongsword_800B9870, aFamousSwordThat_800B9824, aLightGivesPower_800B97DC, 0 },
+    { aJavelin_800B97CC, aLightAndEasyToW_800B9780, aWithAPolishedAn_800B9738, 0 },
+    { aShortSword_800B9A2C, aProvidesDivineP_800B96F4, aWindLighteningI_800B96B0, 0 },
+    { aSpear_800B9B28, aSoundsLikeTheWi_800B966C, aAlsoGoodForSlas_800B963C, 0 },
+    { aLongSword_800B9624, aBladeImbuedWith_800B95F0, aRefinedYetDeadl_800B95B8, 0 },
+    { aTwoHandedSword_800B997C, aManyBlueSinewsR_800B956C, aProvidesAwesome_800B952C, 0 },
+    { aSpear_800B9B28, aTippedWithAShar_800B94F8, aCanRenderTheEne_800B94B8, 0 },
+    { aLongSword_800B9A8C, aUndulatingBlade_800B948C, aOutstandingCutt_800B9454, 0 },
+    { aSamuraiSword_800B9438, aLargeCurvedBlad_800B93E4, aWithSpectacular_800B939C, 0 },
+    { aTwoHandedSword_800B9378, aExtremelyLongBl_800B934C, aEngravedWithADr_800B931C, 0 },
+    { aTwoHandedSword_800B9378, aLargeBreathtaki_800B92D8, aWithADesignOfGa_800B9290, 0 },
+    { aAxe_800B9918, aLeavesAPaleTrai_800B923C, aProvidesTheDivi_800B91E8, 0 },
+    { aAxe_800B9918, aOneFellSwoopOfT_800B91AC, aAxeSoundlyCrush_800B916C, 0 },
+    { aSamuraiSword_800B9438, aBlindinglySharp_800B9134, aDrainsOnlyTheEn_800B90F8, 0 },
+    { aSamuraiSword_800B9438, aBladeThatGlowsL_800B90A4, aClearNightDeliv_800B904C, 0 },
+    { aSamuraiSword_800B9438, aColdBladeWithAP_800B8FF8, aCriticallyWound_800B8FA0, 0 },
+};
+const char* armorDescLines_800BEFEC[15][4] = {
+    { aArmor_800BA4B4, aWarmYetAiry_800BA494, aSuitedToTheFore_800BA468, 0 },
+    { aArmor_800BA4B4, aMadeOfTannedLea_800BA438, aStrongYetQuietC_800BA400, 0 },
+    { aArmor_800BA4B4, aMadeOfIronRings_800BA3B8, aLightYetGoodAtW_800BA368, 0 },
+    { aArmor_800BA4B4, aWovenWithThinIr_800BA330, aLightAndUnrestr_800BA2FC, 0 },
+    { aArmor_800BA4B4, aMadeOfIronPlate_800BA2D0, aHeavyButGoodAtW_800BA280, 0 },
+    { aArmor_800BA4B4, aMadeOfMirrorLik_800BA22C, aProvidesResista_800BA1D4, 0 },
+    { aArmor_800BA4B4, aSofterThanSomeO_800BA188, aProtectsWearerW_800BA134, 0 },
+    { aArmor_800BA4B4, aMadeOfTheHardes_800BA0F4, aYajakoSGreatest_800BA0B4, 0 },
+    { aClothing_800BA0A0, aLeftBehindByYou_800BA058, aWithstandsSnows_800BA004, 0 },
+    { aClothing_800BA0A0, aWovenFromWhiteC_800B9FC8, aLightWarmAndVer_800B9F8C, 0 },
+    { aClothing_800BA0A0, aClothesOfOneWho_800B9F3C, aBringsMisfortun_800B9EE0, 0 },
+    { aClothing_800BA0A0, aWovenFromTheHig_800B9E84, aCalmsTheHeartAn_800B9E30, 0 },
+    { aClothing_800BA0A0, aWovenOfTheHighe_800B9DD0, aTheBreathOfTheF_800B9D84, 0 },
+    { aClothing_800BA0A0, aWovenFromDivine_800B9D2C, aSenseEnemyMoves_800B9CD0, 0 },
+    { aClothing_800BA0A0, aDyedWithTheBark_800B9C6C, aOfTheForestFlow_800B9C1C, 0 },
+};
+const char* accessoryDescLines_800BF0DC[17][4] = {
+    { aOrnamentalItem_800BAD30, aBandWithLeather_800BACF8, aProtectsHeadFro_800BACA4, 0 },
+    { aOrnamentalItem_800BAD30, aBandWithIronWov_800BAC70, aToughButHeavy_800BAC4C, 0 },
+    { aOrnamentalItem_800BAD30, aBandWithSilverW_800BAC14, aSilverProvidesR_800BABC8, 0 },
+    { aOrnamentalItem_800BAD30, aProvidesTheDivi_800BAB70, aResistanceAgain_800BAB20, 0 },
+    { aOrnamentalItem_800BAD30, aProvidesTheDivi_800BAAC8, aResistanceAgain_800BAA78, 0 },
+    { aOrnamentalItem_800BAD30, aProvidesTheDivi_800BAA20, aResistanceAgain_800BA9D0, 0 },
+    { aOrnamentalItem_800BAD30, aProvidesTheDivi_800BA978, aResistanceAgain_800BA928, 0 },
+    { aOrnamentalItem_800BAD30, aMadeOfSparrowFe_800BA8F4, aBoostsTheHeartA_800BA8BC, 0 },
+    { aOrnamentalItem_800BAD30, aPlainAndUnadorn_800BA878, aItAMasculineApp_800BA840, 0 },
+    { aOrnamentalItem_800BAD30, aBeautifullyScul_800BA7FC, aHelpsFocusMana_800BA7D8, 0 },
+    { aOrnamentalItem_800BAD30, aMadeOfHollyLeav_800BA7AC, aThornyButProvid_800BA754, 0 },
+    { aOrnamentalItem_800BAD30, aMadeOfHawkFeath_800BA724, aEnhancesAimOfCu_800BA6E0, 0 },
+    { aOrnamentalItem_800BAD30, aReleasesCleanAi_800BA6B8, aIncreasesResist_800BA678, 0 },
+    { aOrnamentalItem_800BAD30, aReleasesCleanAi_800BA6B8, aIncreasesResist_800BA638, 0 },
+    { aOrnamentalItem_800BAD30, aReleasesCleanAi_800BA6B8, aIncreasesResist_800BA5DC, 0 },
+    { aOrnamentalItem_800BAD30, aReleasesCleanAi_800BA6B8, aIncreasesBodySR_800BA584, 0 },
+    { aOrnamentalItem_800BAD30, aMadeOfWhiteCoco_800BA528, aForSafeTravelPr_800BA4C0, 0 },
+};
 unsigned short itemStock_800BF1EC[44] = {
     0x801F, 0x801E, 0x8018, 0x8000, 0x8000, 0x8000, 0x8000, 0x8000,
     0x8000, 0x801F, 0x801C, 0x8018, 0x8000, 0x801E, 0x801F, 0x801C,

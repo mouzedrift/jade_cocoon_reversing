@@ -23,7 +23,7 @@ void PierceEventTask_800C6F58(PierceTask* task, int* st)
         fn_800AD070();
         fn_800B7C04();
         fn_800B7DD8();
-        IsUnitOnField_800BC570(st[1], 0);
+        fn_800BC570(st[1], 0);
         st[0] = 1;
         break;
     case 1:
@@ -63,7 +63,7 @@ void PierceEventTask_800C6F58(PierceTask* task, int* st)
         if (fn_800277E8())
         {
             fn_800BC604(st[1]);
-            aNeedTwoJp2_800B7C30();
+            fn_800B7C30();
             fn_800BD348(0, cam_80092F30.y_320 + 4);
             fn_800BD734(pos, 0x63);
             cam_80092F30.f_328 = 0;

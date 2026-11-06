@@ -483,7 +483,7 @@ void SetCameraTarget_80037AC8(int target)
     ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = target;
 }
 extern int* GetBattleSelection_800A1E3C(void);
-extern BattleObj_800C0FAC* GetSummonedMinionBonePos_800C0FAC(void);
+extern LVec3* GetSummonedMinionBonePos_800C0FAC(void); // BATTLE: the summoned minion's bone positions
 extern unsigned char actingUnit_800C9C7C;
 // Matched
 void FocusBattleCamera_80037AE0(unsigned short mask)
@@ -515,7 +515,7 @@ void FocusBattleCamera_80037AE0(unsigned short mask)
         }
         else
         {
-            eyeRaise = GetSummonedMinionBonePos_800C0FAC()->field_7C + 0xF5;
+            eyeRaise = GetSummonedMinionBonePos_800C0FAC()[10].vy + 0xF5;
         }
         MoveCameraToFocusPreset_80038E2C(cam, battleCamFocusIndex_80083CE8[selection[0] - 1][sel], eyeRaise);
         *(unsigned short*)&cam->mode_8 = 4;
