@@ -36,7 +36,7 @@ int GetFtgObjectCount_80021738(int* file)
 }
 void AllocFtgObjects_80021744(FtgObject** out, int count, void* heap)
 {
-    *out = HeapAlloc_8003FC8C(count * 0x54, heap);
+    *out = HeapAlloc_8003FC8C(count * sizeof(**out), heap);
 }
 void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, void* heap)
 {
@@ -166,7 +166,7 @@ int GetFtgMatCount_80021DE4(int* file)
 void AllocFtgMatList_80021DF0(FtgMatList* list, int count, void* heap)
 {
     list->count_0 = count;
-    list->items_4 = HeapAlloc_8003FC8C(count * 16, heap);
+    list->items_4 = HeapAlloc_8003FC8C(count * sizeof(*list->items_4), heap);
 }
 // p is volatile to keep the store before the load
 void FreeFtgMatList_80021E24(volatile FtgMatList* list, void* h)
@@ -408,23 +408,23 @@ int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, void* 
     int* c = hdr->counts_0;
     buf = 0;
     CountFtgSprites_80022B84((unsigned char*)hdr, &spriteCount, &texSpriteCount);
-    size = c[0] * 0x24 + c[1] * 0x3C;
+    size = c[0] * sizeof(FtgPolyF3) + c[1] * sizeof(FtgPolyG3);
     total = c[0] + c[1];
-    size += c[2] * 0x30;
+    size += c[2] * sizeof(FtgPolyFT3);
     total += c[2];
-    size += c[3] * 0x48;
+    size += c[3] * sizeof(FtgPolyGT3);
     total += c[3];
-    size += c[4] * 0x2C;
+    size += c[4] * sizeof(FtgPolyF4);
     total += c[4];
-    size += c[5] * 0x50;
+    size += c[5] * sizeof(FtgPolyG4);
     total += c[5];
-    size += c[6] * 0x38;
+    size += c[6] * sizeof(FtgPolyFT4);
     total += c[6];
-    size += c[7] * 0x5C;
+    size += c[7] * sizeof(FtgPolyGT4);
     total += c[7];
-    size += spriteCount * 0x14;
+    size += spriteCount * sizeof(FtgSprite);
     total += c[8];
-    size += texSpriteCount * 0x14;
+    size += texSpriteCount * sizeof(FtgSprite);
     total += c[9];
     if (size != 0)
     {
@@ -432,31 +432,31 @@ int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, void* 
     }
     out->f3_0.count = c[0];
     out->f3_0.items = (FtgPolyF3*)buf;
-    buf += c[0] * 0x24;
+    buf += c[0] * sizeof(FtgPolyF3);
     out->g3_8.count = c[1];
     out->g3_8.items = (FtgPolyG3*)buf;
-    buf += c[1] * 0x3C;
+    buf += c[1] * sizeof(FtgPolyG3);
     out->ft3_10.count = c[2];
     out->ft3_10.items = (FtgPolyFT3*)buf;
-    buf += c[2] * 0x30;
+    buf += c[2] * sizeof(FtgPolyFT3);
     out->gt3_18.count = c[3];
     out->gt3_18.items = (FtgPolyGT3*)buf;
-    buf += c[3] * 0x48;
+    buf += c[3] * sizeof(FtgPolyGT3);
     out->f4_20.count = c[4];
     out->f4_20.items = (FtgPolyF4*)buf;
-    buf += c[4] * 0x2C;
+    buf += c[4] * sizeof(FtgPolyF4);
     out->g4_28.count = c[5];
     out->g4_28.items = (FtgPolyG4*)buf;
-    buf += c[5] * 0x50;
+    buf += c[5] * sizeof(FtgPolyG4);
     out->ft4_30.count = c[6];
     out->ft4_30.items = (FtgPolyFT4*)buf;
-    buf += c[6] * 0x38;
+    buf += c[6] * sizeof(FtgPolyFT4);
     out->gt4_38.count = c[7];
     out->gt4_38.items = (FtgPolyGT4*)buf;
-    buf += c[7] * 0x5C;
+    buf += c[7] * sizeof(FtgPolyGT4);
     out->spriteCount_40 = spriteCount;
     out->sprites_44 = (FtgSprite*)buf;
-    buf += spriteCount * 0x14;
+    buf += spriteCount * sizeof(FtgSprite);
     out->texSpriteCount_48 = texSpriteCount;
     out->texSprites_50 = (FtgSprite*)buf;
     return total;
@@ -469,7 +469,7 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     count = hdr->counts_0[8];
     if (count)
     {
-        groups8->groups = HeapAlloc_8003FC8C(count << 3, heap);
+        groups8->groups = HeapAlloc_8003FC8C(count * sizeof(*groups8->groups), heap);
     }
     else
     {
@@ -480,7 +480,7 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     count += m;
     if (m)
     {
-        groups9->groups = HeapAlloc_8003FC8C(m * 12, heap);
+        groups9->groups = HeapAlloc_8003FC8C(m * sizeof(*groups9->groups), heap);
     }
     else
     {
@@ -671,7 +671,7 @@ int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteG
     int i;
     FtgSrcSprite8* items;
     groups8->groups[k].count = src->count_0;
-    groups8->groups[k].items = HeapAlloc_8003FC8C(src->count_0 * 20, h);
+    groups8->groups[k].items = HeapAlloc_8003FC8C((src->count_0) * sizeof(*groups8->groups[k].items), h);
     items = (FtgSrcSprite8*)((unsigned char*)src + read); // r: bytes read so far
     for (i = 0; i < src->count_0; i++)
     {
@@ -698,7 +698,7 @@ int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpri
     int i;
     FtgSrcSprite9* items;
     groups9->groups[k].count = src->count_0;
-    groups9->groups[k].items = HeapAlloc_8003FC8C(src->count_0 * 20, h);
+    groups9->groups[k].items = HeapAlloc_8003FC8C((src->count_0) * sizeof(*groups9->groups[k].items), h);
     read = 8;
     groups9->groups[k].tpage = src->tpage_4;
     groups9->groups[k].clut = src->clut_6;
@@ -1098,10 +1098,10 @@ void InitModelList_80024ADC(ModelList** out, ModelVramSlot* vram, void* heap)
 {
     ModelList* l;
     int i;
-    l = *out = HeapAlloc_8003FC8C(0x10, heap);
+    l = *out = HeapAlloc_8003FC8C(sizeof(**out), heap);
     l->count_0 = CountModelVramSlots_80026600(vram);
     l->heap_4 = heap;
-    l->items_8 = HeapAlloc_8003FC8C(l->count_0 * 0x70, heap);
+    l->items_8 = HeapAlloc_8003FC8C((l->count_0) * sizeof(*l->items_8), heap);
     l->vram_C = vram;
     for (i = 0; i < l->count_0; i++)
     {
@@ -2530,7 +2530,7 @@ int* LoadMapSpawns_80027650(int* file, int unused, List* h)
     g->count_0 = count;
     if (count != 0)
     {
-        d = ListAlloc_8003FDC0(h, count * 16);
+        d = ListAlloc_8003FDC0(h, count * sizeof(*d));
         g->items_4 = d;
         for (i = 0; i < g->count_0; i++)
         {
@@ -2566,7 +2566,7 @@ void LoadTileSets_80027778(int* data, List* heap)
     tileAnim_8008D648.field_8 = data[1];
     count = data[2];
     tileAnim_8008D648.count_0 = count;
-    arr = ListAlloc_8003FDC0(heap, count * 16);
+    arr = ListAlloc_8003FDC0(heap, count * sizeof(*arr));
     for (i = 0; i < tileAnim_8008D648.count_0; i++)
     {
         src = (int*)((char*)data + data[i + 3]);

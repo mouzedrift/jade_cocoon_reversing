@@ -220,38 +220,38 @@ void LoadTim_80029674(void* tim)
 }
 void LoadTimToVram_800296A0(void* tim)
 {
-    int* info = (int*)tim;
-    if (info[0] == 1 && info[2] != 0)
+    TimInfo* info = (TimInfo*)tim;
+    if (info->mode_valid == 1 && info->clut_len != 0)
     {
-        LoadImage((RECT*)&info[3], (u_long*)info[5]);
+        LoadImage(&info->crect, info->caddr);
         DrawSync(0);
     }
-    LoadImage((RECT*)&info[7], (u_long*)info[9]);
+    LoadImage(&info->prect, info->paddr);
     DrawSync(0);
 }
 int ParseTim_80029708(void* outTim, void* inTim)
 {
-    int* out = (int*)outTim;
+    TimInfo* out = (TimInfo*)outTim;
     int* in = (int*)inTim;
     int* pixelBlock;
-    out[1] = in[1] & 7;
+    out->mode = in[1] & 7;
     pixelBlock = in + 2;
     if (in[1] & 8)
     {
-        out[0] = 1;
-        out[2] = in[2] - 12;
-        *(RECT*)&out[3] = *(RECT*)&in[3];
-        out[5] = (int)&in[5];
+        out->mode_valid = 1;
+        out->clut_len = in[2] - 12;
+        out->crect = *(RECT*)&in[3];
+        out->caddr = (u_long*)&in[5];
         pixelBlock = (int*)((char*)pixelBlock + in[2]);
     }
     else
     {
-        out[0] = 0;
-        out[2] = 0;
+        out->mode_valid = 0;
+        out->clut_len = 0;
     }
-    out[6] = pixelBlock[0] - 12;
-    *(RECT*)&out[7] = *(RECT*)&pixelBlock[1];
-    out[9] = (int)&pixelBlock[3];
+    out->pix_len = pixelBlock[0] - 12;
+    out->prect = *(RECT*)&pixelBlock[1];
+    out->paddr = (u_long*)&pixelBlock[3];
     return 1;
 }
 void RelocateTimInfo_800297C0(TimInfo* tim, TimReloc* reloc)

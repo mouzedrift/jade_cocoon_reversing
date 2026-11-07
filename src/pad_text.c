@@ -342,7 +342,7 @@ typedef struct
     unsigned short pageGlyphs_14; // glyphs per clut row
     unsigned short pad_16;
 } FontDef;
-extern FontDef fontDefs_80086574[];
+extern FontDef fontDefs_80086574[3];
 void InitFonts_8003DA70(void)
 {
     int i;
@@ -352,7 +352,7 @@ void InitFonts_8003DA70(void)
     {
         def = &fontDefs_80086574[i];
         font = &fonts_80095FB0[i];
-        MemCopy_800403E8(font, &publicTiySprts_8008D434[def->sprite_0], 0x14);
+        MemCopy_800403E8(font, &publicTiySprts_8008D434[def->sprite_0], sizeof(SPRT));
         font->w_10 = def->w_6;
         font->h_12 = def->h_8;
         font->tpage_14 = (unsigned short*)&publicTiyTPages_8008D440[def->sprite_0];
@@ -736,13 +736,13 @@ int MeasureTextWidthFont1_8003E6B0(const char* str)
     return width;
 }
 
-FontDef fontDefs_80086574[2] = {
+FontDef fontDefs_80086574[3] = {
     { 0, 16, 0, 6, 6, 0x380, 0x133 },
     { 19, 16, 0, 8, 8, 0x300, 0x106, 0, 0, 112 },
+    { 18, 18, 0, 14, 14, 0x300, 0x102, 0, 0, 126 },
 };
-int fontDef2_800865A4[5] = { 0x120012, 0xE0000, 0x300000E, 0x102 };
-int font2CharCodes_800865B8[169] = {
-    126, 0x45814981, 0x50824481, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081,
+int font2CharCodes_800865BC[168] = {
+    0x45814981, 0x50824481, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081,
     0x40814081, 0x66814381, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081,
     0x40814081, 0x69816882, 0x40816A81, 0x40814081, 0x40814081, 0x40814081, 0x40814081, 0x40814081,
     0x40814081, 0x61826082, 0x63826282, 0x65826482, 0x67826682, 0x6A826982, 0x6D826B82, 0x6F826E82,

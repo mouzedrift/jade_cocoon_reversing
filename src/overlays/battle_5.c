@@ -1506,7 +1506,7 @@ void SpawnOrb_800C3B50(int* pos, int id)
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
         model = &effectFile_80091BD0.models_28[idx];
         orb->clip_88 = model;
-        orb->model_94 = malloc3_8003FC4C(0x54);
+        orb->model_94 = malloc3_8003FC4C(sizeof(*orb->model_94));
         CopyFtgObject_800218A8(model->ftg_4, orb->model_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, orb->model_94);
         hero = gameTask_8008B4A4->entry.buffer;

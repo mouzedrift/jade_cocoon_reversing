@@ -151,4 +151,4 @@ void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
 }
 
 CharTable charTables_8008685C[1] = { { 0 } };
-void *unused_80086868[1] = { (void *)((char *)&font2CharCodes_800865B8 + 4) };
+void *unused_80086868[1] = { (void *)font2CharCodes_800865BC };

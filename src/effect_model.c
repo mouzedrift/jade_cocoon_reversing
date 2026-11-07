@@ -38,7 +38,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         entry->flags = (entry->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
         obj->res_88 = (int)model;
-        obj->work_94 = malloc3_8003FC4C(0x54);
+        obj->work_94 = malloc3_8003FC4C(sizeof(*obj->work_94));
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         entry->cb_8 = (EventEntryFn)PulseModelTask_8001761C;
@@ -85,7 +85,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         entry->flags = (entry->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
         obj->res_88 = (int)model;
-        obj->work_94 = malloc3_8003FC4C(0x54);
+        obj->work_94 = malloc3_8003FC4C(sizeof(*obj->work_94));
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         entry->cb_8 = (EventEntryFn)MorphModelTask_800178C0;

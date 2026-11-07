@@ -35,6 +35,10 @@
 #define WAIT_INTERRUPT()
 #endif
 
+#ifndef O_TAG
+#define O_TAG u_long tag /* the head of a GPU primitive (PSY-Z's is bigger on 64-bit) */
+#endif
+
 #ifdef __psyz /* PSY-Z's malloc.h is the C library's on PC (src/pc/sdk_extra.c has these) */
 void InitHeap3(unsigned long* head, unsigned long size);
 void* malloc3(size_t size);

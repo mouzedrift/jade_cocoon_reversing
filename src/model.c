@@ -1241,7 +1241,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     if (count)
     {
         out->pointCount_14 = count;
-        out->points_18 = ListAlloc_8003FDC0(&out->list_4, count * 12);
+        out->points_18 = ListAlloc_8003FDC0(&out->list_4, count * sizeof(*out->points_18));
         src = pointSec + 1;
         for (i = 0; i < out->pointCount_14; i++)
         {
@@ -1255,7 +1255,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     if (count)
     {
         out->spriteCount_1C = count;
-        out->sprites_20 = ListAlloc_8003FDC0(&out->list_4, count * 0x34);
+        out->sprites_20 = ListAlloc_8003FDC0(&out->list_4, count * sizeof(*out->sprites_20));
         for (i = 0; i < out->spriteCount_1C; i++)
         {
             EffectSprite* d = &out->sprites_20[i];
@@ -1266,7 +1266,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     if (count)
     {
         out->modelCount_24 = count;
-        out->models_28 = ListAlloc_8003FDC0(&out->list_4, count * 0x1C);
+        out->models_28 = ListAlloc_8003FDC0(&out->list_4, count * sizeof(*out->models_28));
         for (i = 0; i < out->modelCount_24; i++)
         {
             EffectModel* d = &out->models_28[i];
@@ -1310,7 +1310,7 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, short* reloc, int se
     {
         count = *src++;
         cur = (EffectSpriteFrameBytes*)src;
-        dst = ListAlloc_8003FDC0(heap, count * 28);
+        dst = ListAlloc_8003FDC0(heap, count * sizeof(*dst));
         out->frameCounts_4[i] = count;
         out->frames_8[i] = (EffectSpriteFrame*)dst;
         for (j = 0; j < out->frameCounts_4[i]; j++)

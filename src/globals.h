@@ -201,10 +201,10 @@ typedef struct
     short length_6;      // in units of 32 sectors
 } XaRequest;
 
-// font (InitFonts copies a SPRT from the public TIY into the first 0x14 bytes)
+// font (InitFonts copies a SPRT from the public TIY into its head, which is laid out as one)
 typedef struct
 {
-    char pad_0[4];
+    O_TAG;
     unsigned char r_4;
     unsigned char g_5;
     unsigned char b_6;

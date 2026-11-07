@@ -192,7 +192,7 @@ int StartModelTask_80010850(void* params)
         e->flags = (e->flags | 1) & 0xFFFF7FFF;
         e->flags = (e->flags | 4) & 0xFFFF7FFF;
         buf->key_0 = e->index_4;
-        m = malloc3_8003FC4C(0x40);
+        m = malloc3_8003FC4C(sizeof(*m));
         buf->state_4 = m;
         MemCopy_800403E8(&m->count_4, params, 0x34);
         m->models_0 = 0;
