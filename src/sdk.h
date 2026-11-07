@@ -28,6 +28,7 @@
 #include <string.h>
 
 #if defined(__psyz) && !defined(DslModeSpeed)
+#include <libcd.h>
 #define DslModeSpeed CdlModeSpeed
 #endif
 

@@ -5,6 +5,11 @@
    Only for calls that take their arguments in registers. */
 #define SPAD_STACK_ADDR 0x1F8003FC
 
+#ifdef __psyz
+/* the host stack is big enough */
+#define SetSpadStack(addr)
+#define ResetSpadStack()
+#else
 #define SetSpadStack(addr)                                                     \
     {                                                                          \
         __asm__ volatile("move $8,%0" ::"r"(addr) : "$8", "memory");           \
@@ -18,5 +23,6 @@
         __asm__ volatile("addiu $29,$29,4" ::: "$29", "memory");               \
         __asm__ volatile("lw $29,0($29)" ::: "$29", "memory");                 \
     }
+#endif
 
 #endif

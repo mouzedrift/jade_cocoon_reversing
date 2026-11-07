@@ -3828,7 +3828,7 @@ short xaTracks_800A70F0[1607][4] = {
     { 0, 26, 0x523, 14 },
     { 0, 18, 0x525, 22 },
 };
-int soundTestTaskDesc_800AA328[6] = { 1, 1, 28, 0, (int)SoundTestInit_800A51D8 };
+EventDesc soundTestTaskDesc_800AA328 = { 1, 1, 28, NULL, (EventEntryFn)SoundTestInit_800A51D8 };
 EventDesc* soundTestTaskList_800AA340[4] = {
     &eventDescs_80078EB8[0], &eventDescs_80078EB8[5], &soundTestTaskDesc_800AA328, 0,
 };

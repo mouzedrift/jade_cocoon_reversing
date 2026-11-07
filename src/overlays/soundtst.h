@@ -1631,7 +1631,7 @@ extern const char strSeNumber_800A5180[];
 extern const char strSeFile_800A518C[];
 extern const char *xaNames_800A57D4[1607];
 extern short xaTracks_800A70F0[1607][4];
-extern int soundTestTaskDesc_800AA328[6];
+extern EventDesc soundTestTaskDesc_800AA328;
 extern EventDesc* soundTestTaskList_800AA340[4];
 extern char *soundTestLabels_800AA350[8];
 

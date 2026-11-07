@@ -199,27 +199,27 @@ MenuCursor enemyTargetMenu_800C9314[1] = { { 0, 1 } };
 MenuCursor targetMenu_800C9320[1] = { { 1 } };
 MenuCursor allTargetsMenu_800C932C[1] = { { 1, 1, 1 } };
 MenuCursor *pageMenus_800C9338[6] = { commandMenu_800C92D8, itemMenu_800C9308, skillMenu_800C92E4, magicMenu_800C92F0, targetMenu_800C9320, commandMenu_800C92D8 };
-int helpAttack_800C9350[1] = { (int)aAttackWithReadi_800B68AC };
-int helpDefend_800C9354[1] = { (int)aDefendToReduceD_800B68E4 };
-int helpSummon_800C9358[1] = { (int)aSummonDivineMin_800B6914 };
-int helpCapture_800C935C[1] = { (int)aCaptureMinionIn_800B6940 };
-int helpItem_800C9360[1] = { (int)aUseItem_800B6984 };
-int helpFlee_800C9364[1] = { (int)aFleeFromCombat_800B6998 };
-int helpMinionAttack_800C9368[1] = { (int)aUseNormalAttack_800B69BC };
-int helpSpecialAttack_800C936C[1] = { (int)aUseSpecialAttac_800B69E0 };
-int helpMagic_800C9370[1] = { (int)aUseMagicSpell_800B6A08 };
-int helpChangeFighter_800C9374[1] = { (int)aChangeCurrentFi_800B6A28 };
-int msgNoDivineMinions_800C9378[1] = { (int)aNoDivineMinions_800B6A58 };
-int msgCannotSummon_800C937C = (int)aCannotSummonInt_800B6A88;
-int msgNotEnoughMana_800C9380 = (int)aNotEnoughMana_800B6ABC;
-int msgCannotCapture_800C9384[1] = { (int)aCannotCapture_800B6ADC };
-int msgNoEmptyCocoons_800C9388[1] = { (int)aNoEmptyCocoons_800B6AFC };
-int msgCannotEscape_800C938C[1] = { (int)aCannotEscape_800B6B20 };
-int msgNoNeedToUseItem_800C9390 = (int)aNoNeedToUseItem_800B6B3C;
-int msgCannotSelect_800C9394[1] = { (int)aCannotSelect_800B6B64 };
-int msgItemForDivineMinions_800C9398 = (int)aThisItemIsForDi_800B6B80;
-int msgDivineMinionsCannot_800C939C = (int)aDivineMinionsCa_800B6BC0;
-int msgCannotUseHere_800C93A0 = (int)aCannotUseHere_800B6C08;
+const char* helpAttack_800C9350[1] = { aAttackWithReadi_800B68AC };
+const char* helpDefend_800C9354[1] = { aDefendToReduceD_800B68E4 };
+const char* helpSummon_800C9358[1] = { aSummonDivineMin_800B6914 };
+const char* helpCapture_800C935C[1] = { aCaptureMinionIn_800B6940 };
+const char* helpItem_800C9360[1] = { aUseItem_800B6984 };
+const char* helpFlee_800C9364[1] = { aFleeFromCombat_800B6998 };
+const char* helpMinionAttack_800C9368[1] = { aUseNormalAttack_800B69BC };
+const char* helpSpecialAttack_800C936C[1] = { aUseSpecialAttac_800B69E0 };
+const char* helpMagic_800C9370[1] = { aUseMagicSpell_800B6A08 };
+const char* helpChangeFighter_800C9374[1] = { aChangeCurrentFi_800B6A28 };
+const char* msgNoDivineMinions_800C9378[1] = { aNoDivineMinions_800B6A58 };
+const char* msgCannotSummon_800C937C = aCannotSummonInt_800B6A88;
+const char* msgNotEnoughMana_800C9380 = aNotEnoughMana_800B6ABC;
+const char* msgCannotCapture_800C9384[1] = { aCannotCapture_800B6ADC };
+const char* msgNoEmptyCocoons_800C9388[1] = { aNoEmptyCocoons_800B6AFC };
+const char* msgCannotEscape_800C938C[1] = { aCannotEscape_800B6B20 };
+const char* msgNoNeedToUseItem_800C9390 = aNoNeedToUseItem_800B6B3C;
+const char* msgCannotSelect_800C9394[1] = { aCannotSelect_800B6B64 };
+const char* msgItemForDivineMinions_800C9398 = aThisItemIsForDi_800B6B80;
+const char* msgDivineMinionsCannot_800C939C = aDivineMinionsCa_800B6BC0;
+const char* msgCannotUseHere_800C93A0 = aCannotUseHere_800B6C08;
 BatMenuItem levantMenuItems_800C93A4[6] = {
     { helpAttack_800C9350 },
     { helpDefend_800C9354 },
@@ -291,77 +291,77 @@ int commandKinds_800C96A4[9] = {
     0, 18, 2, 5, 4, 7, 6, 1,
     8,
 };
-int itemDescriptions_800C96C8[43][4] = {
-    { (int)aRestoreHealth_800B8CFC, (int)aGrowsInOpenArea_800B8CB4, (int)aIncreasesHealth_800B8C68, (int)aGrindLeavesInto_800B8C0C },
-    { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortB_800B8BCC, (int)aSweeterSmelling_800B8B74, (int)aCuresBleedingAn_800B8B30 },
-    { (int)aRestoreHealth_800B8CFC, (int)aATypeOfMugwortW_800B8ACC, (int)aBitterTasteThat_800B8A60 },
-    { (int)aIncreaseMaxHeal_800B8A38, (int)aANutPackingEner_800B89D8, (int)aStrengthensTheB_800B8974 },
-    { (int)aIncreaseMinionA_800B8938, (int)aOilFromATreeWit_800B88F0, (int)aSharpensMinionS_800B88BC },
-    { (int)aIncreasesMinion_800B888C, (int)aOilFromAVeryPot_800B8850, (int)aStrengthensMini_800B8818 },
-    { (int)aIncreaseMinionD_800B87D8, (int)aOilFromAPlantWi_800B878C, (int)aHardensMinionSS_800B875C },
-    { (int)aIncreaseMinionM_800B8720, (int)aOilFromTreeWith_800B86D8, (int)aStrengthensMini_800B86A0 },
-    { (int)aIncreaseMinionM_800B8664, (int)aOilFromAPlantWi_800B861C, (int)aStrengthensMini_800B85E0 },
-    { (int)aRestoreMinionHP_800B85A8, (int)aLiquorMadeFromP_800B855C, (int)aRestoresSomeMin_800B8518 },
-    { (int)aRestoreMinionHP_800B85A8, (int)aFineLiquorMadeF_800B84C0, (int)aRestoresMinionH_800B845C },
-    { (int)aRestoreMinionHP_800B85A8, (int)aExcellentLiquor_800B83FC, (int)aRestoresAGreatD_800B83A0 },
-    { (int)aRestoreMinionHP_800B85A8, (int)aSpecialLiquorMa_800B8344, (int)aRestoresAllMini_800B8300 },
-    { (int)aTotalRestoratio_800B82DC, (int)aDriedRootOfAGre_800B8274, (int)aAlsoCalledTheIm_800B8230, (int)aAdjustsTheVisce_800B8204 },
-    { (int)aPoisonAntidote_800B81E4, (int)aPowderedFormOfD_800B8198, (int)aSoothesTheSpiri_800B8144 },
-    { (int)aStoneToFlesh_800B8124, (int)aPowderMadeFromS_800B80C0, (int)aInnerStrengthTo_800B8064 },
-    { (int)aSprayPoison_800B8048, (int)aReleasesPoisonM_800B8004, (int)aInstantlyCauses_800B7FBC },
-    { (int)aInduceSleep_800B7FA0, (int)aReleasesASleepM_800B7F58, (int)aCausesADeepSlum_800B7EEC },
-    { (int)aFleshToStone_800B7ECC, (int)aReleasesAFleshT_800B7E74, (int)aCausesBodyHarde_800B7E18 },
-    { (int)aCauseDeath_800B7E00, (int)aReleasesADeathM_800B7DB8, (int)aInstantlyCauses_800B7D5C },
-    { (int)aProtectionFromA_800B7D34, (int)aReflectsAllUncl_800B7CD4, (int)aAllAbnormalStat_800B7C6C },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7BDC, (int)aChangesAreaProp_800B7B74 },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7B14, (int)aChangesAreaProp_800B7AAC },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7A4C, (int)aChangesAreaProp_800B79E8 },
-    { (int)aChangeAreaPrope_800B7C3C, (int)aACharmBlessedBy_800B7988, (int)aChangesAreaProp_800B7924 },
-    { (int)aAttackSingleEne_800B78E4, (int)aSealWithTheMark_800B787C, (int)aInflictsAnEarth_800B7818 },
-    { (int)aAttackAllEnemie_800B77DC, (int)aSealWithTheMark_800B787C, (int)aInflictsAnEarth_800B777C },
-    { (int)aAttackSingleEne_800B773C, (int)aSealWithTheMark_800B76D4, (int)aInflictsAWaterB_800B7670 },
-    { (int)aAttackAllEnemie_800B7634, (int)aSealWithTheMark_800B76D4, (int)aInflictsAWaterB_800B75D8 },
-    { (int)aAttackSingleEne_800B759C, (int)aSealWithTheMark_800B7538, (int)aInflictsAFireBa_800B74D8 },
-    { (int)aAttackAllEnemie_800B749C, (int)aSealWithTheMark_800B7538, (int)aInflictsAFireBa_800B7440 },
-    { (int)aAttackSingleEne_800B7404, (int)aSealWithTheMark_800B739C, (int)aInflictsAWindBa_800B733C },
-    { (int)aAttackMultipleE_800B72F8, (int)aSealWithTheMark_800B739C, (int)aInflictsAWindBa_800B7294 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAShineT_800B71EC, (int)aSeventhHighestG_800B71AC },
-    { (int)aSilkThreadSpunF_800B7248, (int)aEmitsVagueInsta_800B7150, (int)aSixthHighestGra_800B7114 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffADazzli_800B70DC, (int)aFifthHighestGra_800B70A0 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAModera_800B7058, (int)aFourthHighestGr_800B701C },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAPhosph_800B6FCC, (int)aThirdHighestGra_800B6F90 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aGivesOffAnUnear_800B6F40, (int)aSecondHighestGr_800B6F04 },
-    { (int)aSilkThreadSpunF_800B7248, (int)aSoftThreadThatG_800B6EB0, (int)aHighestGradeBes_800B6E6C },
-    { (int)aKeyToTreasureCh_800B6E3C, (int)aMultipurposeKey_800B6DD8, (int)aBendsAndBecomes_800B6D80 },
-    { (int)aTreeSpores_800B6D68, (int)aSweetSmellingSl_800B6D00, (int)aCausesSurroundi_800B6CA8 },
-    { (int)aTreeSpores_800B6D68, (int)aTreeSporesWithA_800B6C5C, (int)aAttractsNearbyM_800B6C28 },
+const char* itemDescriptions_800C96C8[43][4] = {
+    { aRestoreHealth_800B8CFC, aGrowsInOpenArea_800B8CB4, aIncreasesHealth_800B8C68, aGrindLeavesInto_800B8C0C },
+    { aRestoreHealth_800B8CFC, aATypeOfMugwortB_800B8BCC, aSweeterSmelling_800B8B74, aCuresBleedingAn_800B8B30 },
+    { aRestoreHealth_800B8CFC, aATypeOfMugwortW_800B8ACC, aBitterTasteThat_800B8A60 },
+    { aIncreaseMaxHeal_800B8A38, aANutPackingEner_800B89D8, aStrengthensTheB_800B8974 },
+    { aIncreaseMinionA_800B8938, aOilFromATreeWit_800B88F0, aSharpensMinionS_800B88BC },
+    { aIncreasesMinion_800B888C, aOilFromAVeryPot_800B8850, aStrengthensMini_800B8818 },
+    { aIncreaseMinionD_800B87D8, aOilFromAPlantWi_800B878C, aHardensMinionSS_800B875C },
+    { aIncreaseMinionM_800B8720, aOilFromTreeWith_800B86D8, aStrengthensMini_800B86A0 },
+    { aIncreaseMinionM_800B8664, aOilFromAPlantWi_800B861C, aStrengthensMini_800B85E0 },
+    { aRestoreMinionHP_800B85A8, aLiquorMadeFromP_800B855C, aRestoresSomeMin_800B8518 },
+    { aRestoreMinionHP_800B85A8, aFineLiquorMadeF_800B84C0, aRestoresMinionH_800B845C },
+    { aRestoreMinionHP_800B85A8, aExcellentLiquor_800B83FC, aRestoresAGreatD_800B83A0 },
+    { aRestoreMinionHP_800B85A8, aSpecialLiquorMa_800B8344, aRestoresAllMini_800B8300 },
+    { aTotalRestoratio_800B82DC, aDriedRootOfAGre_800B8274, aAlsoCalledTheIm_800B8230, aAdjustsTheVisce_800B8204 },
+    { aPoisonAntidote_800B81E4, aPowderedFormOfD_800B8198, aSoothesTheSpiri_800B8144 },
+    { aStoneToFlesh_800B8124, aPowderMadeFromS_800B80C0, aInnerStrengthTo_800B8064 },
+    { aSprayPoison_800B8048, aReleasesPoisonM_800B8004, aInstantlyCauses_800B7FBC },
+    { aInduceSleep_800B7FA0, aReleasesASleepM_800B7F58, aCausesADeepSlum_800B7EEC },
+    { aFleshToStone_800B7ECC, aReleasesAFleshT_800B7E74, aCausesBodyHarde_800B7E18 },
+    { aCauseDeath_800B7E00, aReleasesADeathM_800B7DB8, aInstantlyCauses_800B7D5C },
+    { aProtectionFromA_800B7D34, aReflectsAllUncl_800B7CD4, aAllAbnormalStat_800B7C6C },
+    { aChangeAreaPrope_800B7C3C, aACharmBlessedBy_800B7BDC, aChangesAreaProp_800B7B74 },
+    { aChangeAreaPrope_800B7C3C, aACharmBlessedBy_800B7B14, aChangesAreaProp_800B7AAC },
+    { aChangeAreaPrope_800B7C3C, aACharmBlessedBy_800B7A4C, aChangesAreaProp_800B79E8 },
+    { aChangeAreaPrope_800B7C3C, aACharmBlessedBy_800B7988, aChangesAreaProp_800B7924 },
+    { aAttackSingleEne_800B78E4, aSealWithTheMark_800B787C, aInflictsAnEarth_800B7818 },
+    { aAttackAllEnemie_800B77DC, aSealWithTheMark_800B787C, aInflictsAnEarth_800B777C },
+    { aAttackSingleEne_800B773C, aSealWithTheMark_800B76D4, aInflictsAWaterB_800B7670 },
+    { aAttackAllEnemie_800B7634, aSealWithTheMark_800B76D4, aInflictsAWaterB_800B75D8 },
+    { aAttackSingleEne_800B759C, aSealWithTheMark_800B7538, aInflictsAFireBa_800B74D8 },
+    { aAttackAllEnemie_800B749C, aSealWithTheMark_800B7538, aInflictsAFireBa_800B7440 },
+    { aAttackSingleEne_800B7404, aSealWithTheMark_800B739C, aInflictsAWindBa_800B733C },
+    { aAttackMultipleE_800B72F8, aSealWithTheMark_800B739C, aInflictsAWindBa_800B7294 },
+    { aSilkThreadSpunF_800B7248, aGivesOffAShineT_800B71EC, aSeventhHighestG_800B71AC },
+    { aSilkThreadSpunF_800B7248, aEmitsVagueInsta_800B7150, aSixthHighestGra_800B7114 },
+    { aSilkThreadSpunF_800B7248, aGivesOffADazzli_800B70DC, aFifthHighestGra_800B70A0 },
+    { aSilkThreadSpunF_800B7248, aGivesOffAModera_800B7058, aFourthHighestGr_800B701C },
+    { aSilkThreadSpunF_800B7248, aGivesOffAPhosph_800B6FCC, aThirdHighestGra_800B6F90 },
+    { aSilkThreadSpunF_800B7248, aGivesOffAnUnear_800B6F40, aSecondHighestGr_800B6F04 },
+    { aSilkThreadSpunF_800B7248, aSoftThreadThatG_800B6EB0, aHighestGradeBes_800B6E6C },
+    { aKeyToTreasureCh_800B6E3C, aMultipurposeKey_800B6DD8, aBendsAndBecomes_800B6D80 },
+    { aTreeSpores_800B6D68, aSweetSmellingSl_800B6D00, aCausesSurroundi_800B6CA8 },
+    { aTreeSpores_800B6D68, aTreeSporesWithA_800B6C5C, aAttractsNearbyM_800B6C28 },
 };
-int magicDescriptions_800C9978[30][4] = {
-    { (int)aFireAttackOneEn_800B97B8, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
-    { (int)aFireAttackAllEn_800B96FC, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
-    { (int)aAdvancedFireAtt_800B96D0, (int)aExtraDamageVsAi_800B978C, (int)aHigherFireEleme_800B9730 },
-    { (int)aWaterAttackOneE_800B969C, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
-    { (int)aWaterAttackAllE_800B95D8, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
-    { (int)aAdvancedWaterAt_800B95AC, (int)aExtraDamageVsFi_800B9670, (int)aHigherWaterElem_800B9610 },
-    { (int)aEarthAttackOneE_800B9578, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
-    { (int)aEarthAttackAllE_800B94B0, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
-    { (int)aAdvancedEarthAt_800B9484, (int)aExtraDamageVsWa_800B9548, (int)aHigherEarthElem_800B94E8 },
-    { (int)aWindAttackOneEn_800B9454, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
-    { (int)aWindAttackAllEn_800B9394, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
-    { (int)aAdvancedWindAtt_800B9368, (int)aExtraDamageVsEa_800B9424, (int)aHigherWindEleme_800B93C8 },
-    { (int)aCurePoison_800B9350, (int)aCuresPoison_800B9334 },
-    { (int)aRestoreHP_800B931C, (int)aRestoresSomeHP_800B92F8 },
-    { (int)aRestoreAllHP_800B92D8, (int)aRestoresAllHP_800B92B4 },
-    { (int)aReturnToNormal_800B9290, (int)aCuresPoisonAndT_800B9238 },
-    { (int)aProtection_800B9220, (int)aProtectsAgainst_800B91B8, (int)aEndsOnceItProte_800B9164 },
-    { (int)aPoison_800B9154, (int)aPoisonsAnEnemy_800B9130 },
-    { (int)aSleep_800B9124, (int)aPutsAnEnemyToSl_800B90F4 },
-    { (int)aFleshToStone_800B7ECC, (int)aTurnsAnEnemyInt_800B90BC },
-    { (int)aDeath_800B90B0, (int)aCausesAnEnemyTo_800B905C },
-    { (int)aEnhanceFire_800B9040, (int)aIncreasesFireAt_800B8FEC, (int)aEffectivenessOf_800B8F90 },
-    { (int)aEnhanceWater_800B8F74, (int)aIncreasesWaterA_800B8F1C, (int)aEffectivenessOf_800B8EC0 },
-    { (int)aEnhanceEarth_800B8EA4, (int)aIncreasesEarthA_800B8E4C, (int)aEffectivenessOf_800B8DEC },
-    { (int)aEnhanceWind_800B8DD0, (int)aIncreasesWindAt_800B8D7C, (int)aEffectivenessOf_800B8D1C },
+const char* magicDescriptions_800C9978[30][4] = {
+    { aFireAttackOneEn_800B97B8, aExtraDamageVsAi_800B978C, aHigherFireEleme_800B9730 },
+    { aFireAttackAllEn_800B96FC, aExtraDamageVsAi_800B978C, aHigherFireEleme_800B9730 },
+    { aAdvancedFireAtt_800B96D0, aExtraDamageVsAi_800B978C, aHigherFireEleme_800B9730 },
+    { aWaterAttackOneE_800B969C, aExtraDamageVsFi_800B9670, aHigherWaterElem_800B9610 },
+    { aWaterAttackAllE_800B95D8, aExtraDamageVsFi_800B9670, aHigherWaterElem_800B9610 },
+    { aAdvancedWaterAt_800B95AC, aExtraDamageVsFi_800B9670, aHigherWaterElem_800B9610 },
+    { aEarthAttackOneE_800B9578, aExtraDamageVsWa_800B9548, aHigherEarthElem_800B94E8 },
+    { aEarthAttackAllE_800B94B0, aExtraDamageVsWa_800B9548, aHigherEarthElem_800B94E8 },
+    { aAdvancedEarthAt_800B9484, aExtraDamageVsWa_800B9548, aHigherEarthElem_800B94E8 },
+    { aWindAttackOneEn_800B9454, aExtraDamageVsEa_800B9424, aHigherWindEleme_800B93C8 },
+    { aWindAttackAllEn_800B9394, aExtraDamageVsEa_800B9424, aHigherWindEleme_800B93C8 },
+    { aAdvancedWindAtt_800B9368, aExtraDamageVsEa_800B9424, aHigherWindEleme_800B93C8 },
+    { aCurePoison_800B9350, aCuresPoison_800B9334 },
+    { aRestoreHP_800B931C, aRestoresSomeHP_800B92F8 },
+    { aRestoreAllHP_800B92D8, aRestoresAllHP_800B92B4 },
+    { aReturnToNormal_800B9290, aCuresPoisonAndT_800B9238 },
+    { aProtection_800B9220, aProtectsAgainst_800B91B8, aEndsOnceItProte_800B9164 },
+    { aPoison_800B9154, aPoisonsAnEnemy_800B9130 },
+    { aSleep_800B9124, aPutsAnEnemyToSl_800B90F4 },
+    { aFleshToStone_800B7ECC, aTurnsAnEnemyInt_800B90BC },
+    { aDeath_800B90B0, aCausesAnEnemyTo_800B905C },
+    { aEnhanceFire_800B9040, aIncreasesFireAt_800B8FEC, aEffectivenessOf_800B8F90 },
+    { aEnhanceWater_800B8F74, aIncreasesWaterA_800B8F1C, aEffectivenessOf_800B8EC0 },
+    { aEnhanceEarth_800B8EA4, aIncreasesEarthA_800B8E4C, aEffectivenessOf_800B8DEC },
+    { aEnhanceWind_800B8DD0, aIncreasesWindAt_800B8D7C, aEffectivenessOf_800B8D1C },
 };
 const char* skillDescriptions_800C9B58[16][4] = {
     { emptyText_800BA174, emptyText_800BA174, emptyText_800BA174, 0 },
@@ -443,7 +443,7 @@ unsigned char targetFlags_800C9E68 = 0;
 BatMenuItem *menuItems_800C9E6C = 0;
 BatEnemyTargets enemyTargets_800C9E70 = { 0 };
 int partyMinionMask_800C9E78 = 0;
-int menuErrorText_800C9E7C = 0;
+const char* menuErrorText_800C9E7C = NULL;
 unsigned char enemyUnits_800C9E80[4] = { 0 };
 
 void ChooseEnemyCommand_800C4118(BattleCmd* cmd, UnitStats* self, int slot, unsigned int script)
@@ -2427,7 +2427,7 @@ int IsMenuSelectionValid_800C7530()
     ListMenuState ref;
     TargetQuery query;
     short idx;
-    int* error;
+    const char** error;
     idx = GetMenuCursorIndex_8003DA54(pageCursor_800C9E44);
     ref.cursor_0 = pageCursor_800C9E44->cursor_8;
     ref.scroll_2 = pageCursor_800C9E44->scroll_A;
@@ -3014,12 +3014,12 @@ void MenuInput_800C8768()
     }
 }
 
-void DrawMenuHelpText_800C8828(int text)
+void DrawMenuHelpText_800C8828(const char* text)
 {
     short rect[4];
     short origin[4];
     short pos[2];
-    int lines[1];
+    const char* lines[1];
     rect[0] = 0x19;
     rect[1] = 0x8A;
     rect[2] = MeasureTextWidth_8003E4C8(text) + 4;
@@ -3032,14 +3032,14 @@ void DrawMenuHelpText_800C8828(int text)
     DrawTextLinesWindow_8002AE38(lines, pos, 0xF, rect, 1);
 }
 
-void DrawMenuMessage_800C88AC(int text)
+void DrawMenuMessage_800C88AC(const char* text)
 {
-    int lines[4];
+    const char* lines[4];
     lines[0] = text;
-    lines[1] = 0;
-    lines[2] = 0;
-    lines[3] = 0;
-    DrawLargeTextBox_8002AF10(lines, 0, 0xF);
+    lines[1] = NULL;
+    lines[2] = NULL;
+    lines[3] = NULL;
+    DrawLargeTextBox_8002AF10(lines, NULL, 0xF);
 }
 
 void MenuShowError_800C88E4()

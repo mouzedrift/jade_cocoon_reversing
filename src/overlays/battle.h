@@ -108,7 +108,7 @@ extern void AiSetCommand_800C6AFC(EnemyAi* ai, int kind, int arg);
 
 
 
-extern int menuErrorText_800C9E7C;
+extern const char* menuErrorText_800C9E7C;
 
 extern int GetLatestHitFrame_800BE364();
 
@@ -905,8 +905,8 @@ extern int GetLastInventorySlot_800AD308(int a);
 
 typedef struct BatMenuItem
 {
-    int* text;
-    int* data_4;
+    const char** text;   // the help line
+    const char** data_4; // the line why it cannot be selected (NULL: it can)
 } BatMenuItem;
 
 
@@ -975,7 +975,7 @@ extern int GetUnitSkills_80031B30(int a);
 
 
 
-extern void DrawMenuHelpText_800C8828(int text);
+extern void DrawMenuHelpText_800C8828(const char* text);
 
 
 
@@ -1313,27 +1313,27 @@ extern MenuCursor enemyTargetMenu_800C9314[1];
 extern MenuCursor targetMenu_800C9320[1];
 extern MenuCursor allTargetsMenu_800C932C[1];
 extern MenuCursor *pageMenus_800C9338[6];
-extern int helpAttack_800C9350[1];
-extern int helpDefend_800C9354[1];
-extern int helpSummon_800C9358[1];
-extern int helpCapture_800C935C[1];
-extern int helpItem_800C9360[1];
-extern int helpFlee_800C9364[1];
-extern int helpMinionAttack_800C9368[1];
-extern int helpSpecialAttack_800C936C[1];
-extern int helpMagic_800C9370[1];
-extern int helpChangeFighter_800C9374[1];
-extern int msgNoDivineMinions_800C9378[1];
-extern int msgCannotSummon_800C937C;
-extern int msgNotEnoughMana_800C9380;
-extern int msgCannotCapture_800C9384[1];
-extern int msgNoEmptyCocoons_800C9388[1];
-extern int msgCannotEscape_800C938C[1];
-extern int msgNoNeedToUseItem_800C9390;
-extern int msgCannotSelect_800C9394[1];
-extern int msgItemForDivineMinions_800C9398;
-extern int msgDivineMinionsCannot_800C939C;
-extern int msgCannotUseHere_800C93A0;
+extern const char* helpAttack_800C9350[1];
+extern const char* helpDefend_800C9354[1];
+extern const char* helpSummon_800C9358[1];
+extern const char* helpCapture_800C935C[1];
+extern const char* helpItem_800C9360[1];
+extern const char* helpFlee_800C9364[1];
+extern const char* helpMinionAttack_800C9368[1];
+extern const char* helpSpecialAttack_800C936C[1];
+extern const char* helpMagic_800C9370[1];
+extern const char* helpChangeFighter_800C9374[1];
+extern const char* msgNoDivineMinions_800C9378[1];
+extern const char* msgCannotSummon_800C937C;
+extern const char* msgNotEnoughMana_800C9380;
+extern const char* msgCannotCapture_800C9384[1];
+extern const char* msgNoEmptyCocoons_800C9388[1];
+extern const char* msgCannotEscape_800C938C[1];
+extern const char* msgNoNeedToUseItem_800C9390;
+extern const char* msgCannotSelect_800C9394[1];
+extern const char* msgItemForDivineMinions_800C9398;
+extern const char* msgDivineMinionsCannot_800C939C;
+extern const char* msgCannotUseHere_800C93A0;
 extern BatMenuItem levantMenuItems_800C93A4[6];
 extern BatMenuItem minionMenuItems_800C93D4[5];
 extern MenuWindowItem winAttack_800C93FC[2];
@@ -1356,8 +1356,8 @@ extern void (*menuStateFns_800C966C[2])(EventEntry *task, int buffer);
 extern ButtonHelpEntry* pageButtonHelp_800C9674[6];
 extern unsigned short pageHideFlags_800C968C[6][2];
 extern int commandKinds_800C96A4[9];
-extern int itemDescriptions_800C96C8[43][4];
-extern int magicDescriptions_800C9978[30][4];
+extern const char* itemDescriptions_800C96C8[43][4];
+extern const char* magicDescriptions_800C9978[30][4];
 extern const char* skillDescriptions_800C9B58[16][4];
 extern int battleLoadState_800C9C58;
 extern int unused_800C9C5C[3];
