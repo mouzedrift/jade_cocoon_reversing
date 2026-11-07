@@ -87,12 +87,12 @@ extern const char aAgnia_800731D0[];
 extern const char aAgnis_800731DC[];
 extern const char emptyName_800731E8[4];
 extern const char aAgni_800731EC[];
-extern const int overlayAdrr1_800731F8;
-extern const int overlayAddr2_800731FC;
-extern const int overlayAddr3_80073200;
-extern const int overlayAddr4_80073204;
-extern const int overlayAddr5_80073208;
-extern const int overlayAddr6_8007320C;
+extern unsigned int* const overlayAddr1_800731F8; /* where the overlays load (PSX_RAM) */
+extern unsigned int* const overlayAddr2_800731FC; /* where the overlays load (PSX_RAM) */
+extern unsigned int* const overlayAddr3_80073200; /* where the overlays load (PSX_RAM) */
+extern unsigned int* const overlayAddr4_80073204; /* where the overlays load (PSX_RAM) */
+extern unsigned int* const overlayAddr5_80073208; /* where the overlays load (PSX_RAM) */
+extern unsigned int* const overlayAddr6_8007320C; /* where the overlays load (PSX_RAM) */
 extern unsigned int *const mapCodeAddr_80073210;
 extern const char emptyName_80073234[4];
 extern const char aKlarrgas_80073238[];

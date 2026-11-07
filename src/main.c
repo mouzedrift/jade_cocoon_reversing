@@ -1,6 +1,9 @@
 #include "common.h"
 #include "funcs.h"
 #include "sdk.h"
+#ifdef __psyz
+#include "pc/pc.h"
+#endif
 #include "memmap.h"
 #include "globals.h"
 #include "sound.h"
@@ -242,6 +245,9 @@ int main(void)
     unsigned int heapSize;
     unsigned int i;
 
+#ifdef __psyz
+    Pc_Init();
+#endif
     InitGame_80010110();
     EnterCriticalSection();
     SetMem(2);

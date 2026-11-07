@@ -8,7 +8,7 @@
 typedef struct
 {
     int fileIdx;
-    unsigned int** ppDest;
+    unsigned int* const* ppDest;
 } OverlayEntry;
 extern OverlayEntry overlays_8007D9E8[];
 

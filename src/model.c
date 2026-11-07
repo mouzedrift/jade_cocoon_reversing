@@ -1,6 +1,9 @@
 #include "common.h"
 #include "funcs.h"
 #include "sdk.h"
+#ifdef __psyz
+#include "pc/pc.h"
+#endif
 #include "globals.h"
 #include "camera.h"
 #include "model.h"
@@ -1087,6 +1090,9 @@ int AreRequestedModelsLoaded_80020B70(ModelLoader* loader)
 int LoadOverlay_80020BF8(unsigned int mode, enum OverlayIds overlayIdx)
 {
     FileRequestDesc req;
+#ifdef __psyz
+    Pc_OverlayLoaded(overlays_8007D9E8[overlayIdx].fileIdx);
+#endif
     switch (mode)
     {
     case 0:

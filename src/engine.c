@@ -51,12 +51,12 @@ const char aAgnia_800731D0[] = "\202`\202\207\202\216\202\211\202\201"; // Agnia
 const char aAgnis_800731DC[] = "\202`\202\207\202\216\202\211\202\223"; // Agnis
 const char emptyName_800731E8[4] = "";
 const char aAgni_800731EC[] = "\202`\202\207\202\216\202\211"; // Agni
-const int overlayAdrr1_800731F8 = 0x800C9E88;
-const int overlayAddr2_800731FC = 0x800A4088;
-const int overlayAddr3_80073200 = 0x800A05A0;
-const int overlayAddr4_80073204 = 0x800B66C0;
-const int overlayAddr5_80073208 = 0x800C29D0;
-const int overlayAddr6_8007320C = 0x800B6D00;
+unsigned int* const overlayAddr1_800731F8 = PSX_RAM(0x800C9E88);
+unsigned int* const overlayAddr2_800731FC = PSX_RAM(0x800A4088);
+unsigned int* const overlayAddr3_80073200 = PSX_RAM(0x800A05A0);
+unsigned int* const overlayAddr4_80073204 = PSX_RAM(0x800B66C0);
+unsigned int* const overlayAddr5_80073208 = PSX_RAM(0x800C29D0);
+unsigned int* const overlayAddr6_8007320C = PSX_RAM(0x800B6D00);
 unsigned int *const mapCodeAddr_80073210 = PSX_RAM(0x800B22C0);
 /* char* data001Path_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
 
@@ -802,6 +802,7 @@ void Draw_8001B5EC(void)
     SetGeomScreen(geomScreenDistance_8008B548);
     do
     {
+        WAIT_INTERRUPT();
     } while (vsyncCounter_8008B4B4 < display_8008B4D8.vsyncsPerFrame_4);
     if (unknownFlags_8008D678 & 0x20)
     {
@@ -820,6 +821,7 @@ int WaitVSync_8001B6E8()
     int snapshot = vsyncCounter_8008B4B4;
     do
     {
+        WAIT_INTERRUPT();
     } while (vsyncCounter_8008B4B4 <= snapshot);
     return gnFrame_8008D610;
 }

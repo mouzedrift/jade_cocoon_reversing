@@ -27,6 +27,14 @@
 #include <memory.h>
 #include <string.h>
 
+/* the body of a loop that waits for an interrupt (the vsync callback, a CD callback) to change something: on PC,
+   where nothing interrupts the game, a vertical blank (VSync(0) runs the callbacks); nothing on the PlayStation */
+#ifdef __psyz
+#define WAIT_INTERRUPT() VSync(0)
+#else
+#define WAIT_INTERRUPT()
+#endif
+
 #if defined(__psyz) && !defined(DslModeSpeed)
 #include <libcd.h>
 #define DslModeSpeed CdlModeSpeed
