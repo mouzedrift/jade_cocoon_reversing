@@ -271,7 +271,6 @@ extern SVECTOR* GetActorRot_800BBBD0(int actor); // rotation of Levant (0) or a 
 extern short screenOffset_8008D474[2];
 
 
-extern void SetGeomOffset(long ofx, long ofy);
 
 extern short sinTable_80084540[];
 
@@ -735,9 +734,5 @@ extern short defaultBones_80079140[]; // default bone table
 /* exe-side, to move to model_ftg.h */
 /* exe-side, to move to msg_window.h */
 /* PSY-Q library */
-extern int printf(const char* fmt, ...);
 extern int rand(void);
-extern void exit(int status);
-extern void SsSepSetDecrescendo(short, short, short, long);
-extern void SsSepStop(short, short);
 

@@ -557,7 +557,7 @@ void EnemyAiC9_800C4328(EnemyAi* ai)
 
 void EnemyAiCA_800C43D8(EnemyAi* ai)
 {
-    if (rand(ai) & 1)
+    if (rand() & 1)
     {
         AiSetCommand_800C6AFC(ai, 1, 8);
     }
@@ -569,7 +569,7 @@ void EnemyAiCA_800C43D8(EnemyAi* ai)
 
 void EnemyAiCB_800C4424(EnemyAi* ai)
 {
-    if (rand(ai) & 1)
+    if (rand() & 1)
     {
         AiSetCommand_800C6AFC(ai, 6, 2);
     }
@@ -599,7 +599,7 @@ void EnemyAiCD_800C4494(EnemyAi* ai)
 
 void EnemyAiCE_800C44FC(EnemyAi* ai)
 {
-    if (rand(ai) & 1)
+    if (rand() & 1)
     {
         AiSetCommand_800C6AFC(ai, 6, 1);
     }
@@ -1012,7 +1012,7 @@ int EnemyAi17_800C50B0(EnemyAi* ai)
 int EnemyAi1B_800C51D8(EnemyAi* ai)
 {
     int chosen;
-    if (rand(ai) & 1)
+    if (rand() & 1)
     {
         chosen = AiUseSkill_800C6A8C(ai);
     }

@@ -81,6 +81,5 @@ extern void RequestGameMode_800A6D30(int);
 extern void StartChapterOverlay_800A7690();
 
 /* exe-side, to move to an exe header */
-extern void SsSepSetDecrescendo(short, short, short, long);
 
 #endif

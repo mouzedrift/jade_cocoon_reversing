@@ -3,7 +3,7 @@
 
 /* PSY-Q GTE macros: INLINE_C.H with the GTE commands as their real cop2 words (what DMPSX would
    patch the .word placeholders to; values as in the DMPSX-less inline_n.h). */
-#include "INLINE_C.H"
+#include <inline_c.h>
 
 #undef gte_rtps
 #define gte_rtps() __asm__ volatile (                           \
@@ -604,6 +604,6 @@
         :                                                       \
         : "g"( r0 ) )
 
-#include "GTEMAC.H"
+#include <gtemac.h>
 
 #endif

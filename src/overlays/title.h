@@ -155,17 +155,12 @@ extern int GetLoadMenuLoaded_800B7914(void);
 extern void ScanCardSaves_800BAFB0(int slot);
 extern int GetCardFreeBlocks_800BAE2C(void);
 extern int GetCardSaveCount_800BAE3C(void);
-extern void MemCardStart(void); // LOAD's MemCardStart (PSY-Q LIBMCRD)
-extern void MemCardStop(void); // LOAD's MemCardStop
-extern void MemCardAccept(int chan); // LOAD's MemCardAccept
-extern void MemCardSync(int mode, int* cmd, int* result); // LOAD's MemCardSync
 extern void StartNameEntry_800B6E4C(void* a0, int a1);
 extern int IsNameEntryActive_800B6FC8(void);
 extern void StartConfigMenu_800C2EB4(void);
 extern int IsConfigMenuActive_800C45D8(void);
 
 /* exe-side, to move to an exe header */
-extern void SsSepSetDecrescendo(short, short, short, long);
 extern void srand(unsigned int seed); // PSY-Q LIBC
 extern unsigned short titleStartMode_8008B55A;
 

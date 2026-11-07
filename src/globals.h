@@ -1,10 +1,7 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
-#include "SYS/TYPES.H"
-#include "LIBDS.H"
-#include "LIBGTE.H"
-#include "LIBGPU.H"
+#include "sdk.h"
 #include "enums.h"
 #include "common.h"
 

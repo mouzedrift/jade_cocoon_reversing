@@ -1,7 +1,7 @@
 #ifndef _TU_8003C6C8_H_
 #define _TU_8003C6C8_H_
 
-#include "LIBDS.H"
+#include <libds.h>
 
 // state of the sector reader (CdSeekStart_8003C8A0 / CdReadStart_8003C944 / CdReadReadyCallback_8003CA30)
 typedef struct CdReadState

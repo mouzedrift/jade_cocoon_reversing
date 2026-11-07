@@ -1,24 +1,13 @@
 #include "common.h"
 #include "funcs.h"
-#include "MALLOC.H"
-#include "LIBGTE.H"
-#include "LIBGPU.H"
-#include "LIBAPI.H"
+#include "sdk.h"
 #include "globals.h"
-#include "STDLIB.H"
-#include "STDIO.H"
-#include "LIBPAD.H"
 /* the game calls SsSetSerialVol without the header's short prototype (no sign extension) */
 #define SsSetSerialVol SsSetSerialVol_proto
-#include "LIBSND.H"
 #undef SsSetSerialVol
-#include "LIBMCX.H"
-#include "LIBPRESS.H"
-#include "LIBETC.H"
-#include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
-#include "LIBCD.H"
+#include <libcd.h>
 #include "movie.h"
 #include "util.h"
 #include "model.h"
@@ -36,8 +25,6 @@ extern unsigned short padPressed_8009194C[];
 
 extern MovieInfo strMovies_80086A4C[];
 extern MovieCtx movieCtx_800960C0;
-extern void SsSetSerialVol();
-extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
 
 #define MOVIE_W(i, v) ((i)->is24bpp ? (v) * 3 / 2 : (v))
 
@@ -237,7 +224,6 @@ int SkipMovieButtonPressed_800413BC(MovieParams* params)
 extern MovieCtx movieCtx_800960C0;
 extern int movieSliceFirst_80096100;
 extern int StCdIntrFlag;
-extern void StCdInterrupt(void);
 void MovieDctOutCallback_80041424(void)
 {
     MovieRect slice;

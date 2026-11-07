@@ -1,3 +1,6 @@
 [submodule "libs/psyq4.4"]
 	path = libs/psyq4.4
 	url = https://github.com/mouzedrift/psyq4.4.git
+[submodule "external/psyz"]
+	path = external/psyz
+	url = https://github.com/Xeeynamo/psyz

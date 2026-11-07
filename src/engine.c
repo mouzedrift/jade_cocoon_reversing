@@ -1,22 +1,11 @@
 #include "common.h"
 #include "funcs.h"
-#include "MALLOC.H"
-#include "LIBGTE.H"
-#include "LIBGPU.H"
-#include "LIBAPI.H"
+#include "sdk.h"
 #include "globals.h"
 #include "engine.h"
 #include "camera.h"
 #include "gte.h"
 #include "model.h"
-#include "STDLIB.H"
-#include "STDIO.H"
-#include "LIBPAD.H"
-#include "LIBSND.H"
-#include "LIBMCX.H"
-#include "LIBPRESS.H"
-#include "LIBETC.H"
-#include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
 #include "effect_data.h"
@@ -854,8 +843,6 @@ void StartDisplay_8001B714(void)
 }
 extern DRAWENV drawEnv_8008D698[2];
 extern DISPENV dispEnv_8008D750[2];
-extern DRAWENV* SetDefDrawEnv(DRAWENV* env, int x, int y, int w, int h);
-extern DISPENV* SetDefDispEnv(DISPENV* env, int x, int y, int w, int h);
 void InitEnvironments_8001B7B4(void)
 {
     int interlace;

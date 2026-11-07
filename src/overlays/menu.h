@@ -11,7 +11,7 @@
 #include "minion_menu.h"
 #include "main.h"
 #include "sound.h"
-#include "STDLIB.H"
+#include <stdlib.h>
 #include "font.h"
 #include "menu_window.h"
 #include "model_ftg.h"

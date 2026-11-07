@@ -259,7 +259,6 @@ extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 /* exe-side, to move to pad_text.h */
 /* exe-side, to move to sound_seq.h */
 /* PSY-Q library */
-extern MATRIX* MulMatrix0(MATRIX* m0, MATRIX* m1, MATRIX* m2);
 extern void* memset(void* p, int c, unsigned int n);
 
 #endif

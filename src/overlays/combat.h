@@ -10,10 +10,10 @@
 #include "minion_init.h"
 #include "unit_stats.h"
 #include "camera.h"
-#include "LIBSND.H"
+#include <libsnd.h>
 #include "sound.h"
 #include "data_decls.h"
-#include "MEMORY.H"
+#include <memory.h>
 #include "util.h"
 #include "unit_query.h"
 #include "model.h"

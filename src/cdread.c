@@ -1,18 +1,7 @@
 #include "common.h"
 #include "funcs.h"
-#include "MALLOC.H"
-#include "LIBGTE.H"
-#include "LIBGPU.H"
-#include "LIBAPI.H"
+#include "sdk.h"
 #include "globals.h"
-#include "STDLIB.H"
-#include "STDIO.H"
-#include "LIBPAD.H"
-#include "LIBSND.H"
-#include "LIBMCX.H"
-#include "LIBPRESS.H"
-#include "LIBETC.H"
-#include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
@@ -107,7 +96,6 @@ int CdSeekIsComplete_8003C900(void)
     }
     return 0;
 }
-extern int DsSystemStatus(void);
 
 int CdReadStart_8003C944(DslLOC* loc, void* buf, int sectors)
 {

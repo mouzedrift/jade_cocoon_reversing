@@ -5,7 +5,7 @@
 #include "funcs.h"
 
 #include "globals.h"
-#include "LIBETC.H"
+#include <libetc.h>
 
 #include "actor.h"
 
@@ -764,7 +764,6 @@ extern void StartSaveMenuRequest_800A7280();
 extern void CheckSubOverlayRequests_800A6DAC();
 
 
-extern void SsUtAllKeyOff(int a);
 
 
 
@@ -1717,7 +1716,6 @@ void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
 /* exe-side, to move to effect_data.h */
 /* exe-side, to move to engine.h */
 /* libc (PSY-Q) */
-extern int printf(const char* fmt, ...);
 extern int rand(void);
 
 // event callbacks of the sub-overlays GAME starts (MAP, MENU, SHOPCTRL, SHOP, SHOPENTR, WPNSHOP)

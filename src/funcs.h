@@ -40,11 +40,7 @@ struct ModelDesc;
 struct EffectFile;
 struct TimInfo;
 
-#include "SYS/TYPES.H"
-#include "LIBDS.H"
-#include "LIBGTE.H"
-#include "LIBGPU.H"
-#include "LIBSPU.H"
+#include "sdk.h"
 #include "enums.h"
 #include "globals.h"
 
@@ -70,7 +66,6 @@ struct Pool;
 extern UnitStatus* GetUnitStatus_80014390(int arg0);
 extern EventEntry* FindModelTask_8001091C();
 struct Pool;
-extern int DsControlB(unsigned char com, unsigned char* param, unsigned char* result);
 extern void AddStatus_80012794(UnitStatus* status, int bits);
 extern void SeVibOn(void);
 extern void SetVib(void);

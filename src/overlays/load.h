@@ -412,14 +412,8 @@ typedef struct
     char c[6];
 } Bytes6_LOAD;
 
-extern int MemCardSync(int mode, int* cmd, int* result);
-extern void MemCardAccept();
-extern void MemCardExist();
-extern long MemCardReadFile(long chan, char* file, void* adrs, long ofs, long bytes);
 extern void LoadMenuInit_800B7674(int mode, int b);
 extern void LoadMenuWaitUiTiy_800B7894(LoadMenuTaskEntry* task);
-extern long MemCardCreateFile(long chan, char* file, long blocks);
-extern long MemCardWriteFile(long chan, char* file, void* adrs, long ofs, long bytes);
 extern int UnpackSaveFile_800BA3EC(LoadMenuWork* work);
 extern void DrawMessageBox_800BACBC(char** lines);
 extern void LoadMenuTask_800B794C(LoadMenuTaskEntry* task, LoadMenuWork* work);
@@ -431,8 +425,6 @@ extern void FormatCardWait1_800BA968(LoadMenuTaskEntry* task);
 extern void LoadMenuExit_800BAAE0(LoadMenuTaskEntry* task, LoadMenuWork* work);
 extern void FormatCardWait2_800BA9AC(LoadMenuTaskEntry* task);
 extern void FormatCardTask_800BA9F0(LoadMenuTaskEntry* task, LoadMenuWork* work);
-extern long MemCardGetDirentry(long chan, char* name, CardDirEntry* dir, long* files, long ofs, long max);
-extern int MemCardFormat(long chan);
 extern void ScanCardSaves_800BAFB0(int slot);
 extern void _card_stop(void);
 extern void UserFuncInit(void);

@@ -1,18 +1,7 @@
 #include "common.h"
 #include "funcs.h"
-#include "MALLOC.H"
-#include "LIBGTE.H"
-#include "LIBGPU.H"
-#include "LIBAPI.H"
+#include "sdk.h"
 #include "globals.h"
-#include "STDLIB.H"
-#include "STDIO.H"
-#include "LIBPAD.H"
-#include "LIBSND.H"
-#include "LIBMCX.H"
-#include "LIBPRESS.H"
-#include "LIBETC.H"
-#include "LIBMCRD.H"
 #include "sound.h"
 #include "data_decls.h"
 #include "tiy.h"
@@ -273,7 +262,6 @@ void XaStop_800430B0(void)
     SsSetSerialVol(0, 0, 0);
     DsControlB(9, 0, 0);
 }
-extern int DsSystemStatus(void);
 void XaIdleTask_800430E8(EventEntry* entry, XaTask* buffer)
 {
     XaTask* task = buffer;
@@ -352,7 +340,6 @@ void XaMonitorTask_800432EC(EventEntry* entry, XaTask* task)
         entry->cb_8 = (EventEntryFn)XaFadeOutTask_80043264;
     }
 }
-extern int DsCommand(u_char com, u_char* param, DslCB cbsync, int count); /* DsCommand */
 void XaSetup_800433FC(XaTask* task)
 {
     Data001File file;

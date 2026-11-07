@@ -8,7 +8,7 @@
 #include "globals.h"
 #include "camera.h"
 #include "event.h"
-#include "STDLIB.H"
+#include <stdlib.h>
 #include "unit_gauges.h"
 #include "combat.h"
 #include "main.h"

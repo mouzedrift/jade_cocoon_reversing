@@ -206,7 +206,6 @@ extern int AreAllEncounterEnemiesGone_800A1B2C();
 
 
 
-extern void SsSepSetDecrescendo(short, short, short, long); // PSY-Q libsnd
 
 extern void BattleEndReturnToField_800BA848();
 
@@ -880,7 +879,6 @@ extern int AiUseSkill_800C6A8C();
 extern int AiAttack_800C6A68();
 
 
-extern int rand();
 
 extern void SetElementAffinity_800C66B4(unsigned char* buf, unsigned int element);
 
@@ -1552,4 +1550,3 @@ extern int CanFleeFromEnemy_800A28FC(int idx);
 /* exe-side, to move to cd.h */
 /* exe-side, to move to sound_seq.h */
 /* PSY-Q libsnd */
-extern void SsUtAllKeyOff(short mode);
