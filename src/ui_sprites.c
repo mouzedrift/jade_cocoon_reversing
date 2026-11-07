@@ -74,7 +74,7 @@ void LoadUiTiy_8002BF74(void)
 }
 void OnUiTiyLoaded_8002BFCC(void* params, int* data)
 {
-    LoadTiy_80028E74(&uiTiySprts_8008D620, 0, &uiTiyTPages_8008D3F4, data, 1);
+    LoadTiy_80028E74(&uiTiySprts_8008D620, 0, &uiTiyTPages_8008D3F4, data, HEAP_MALLOC3);
     uiTiyLoaded_8008B4E8 = 1;
 }
 void FreeActiveOverlay_8002C014(void)

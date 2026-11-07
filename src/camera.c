@@ -11,6 +11,9 @@
 #include "cd.h"
 #include "engine.h"
 #include "ftg_draw.h"
+/* defined further on / elsewhere without a prototype the callers see */
+int AdvanceSplineKey_800395D0(int* pIdx, int value, int* table);
+
 
 extern ShortPair screenOffset_8008D474;
 void StartPadVibration_80036528(int idx, int pattern)

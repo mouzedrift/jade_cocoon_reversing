@@ -24,7 +24,7 @@ typedef struct
 {
     unsigned short x;
     unsigned short y;
-    int text_4;
+    const char* text_4; // NULL ends the list
 } TextListEntry;
 
 void InitReverbTask_8002A1BC();

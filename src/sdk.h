@@ -39,6 +39,9 @@
 void InitHeap3(unsigned long* head, unsigned long size);
 void* malloc3(size_t size);
 void free3(void* block);
+long Lzc(long data);
+int IsIdMatrix(MATRIX* m);
+void StCdInterrupt(void);
 #endif
 
 #if defined(__psyz) && !defined(DslModeSpeed)

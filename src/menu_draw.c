@@ -123,13 +123,13 @@ void DrawPortraitWindow_8002A4E4(short ot)
 {
     unsigned short buf1[10];
     char buf2[8];
-    DrawWindowBorder_80042B38((int)portraitWindowRect_800827E4, ot);
+    DrawWindowBorder_80042B38(portraitWindowRect_800827E4, ot);
     GetPortraitSprt_800A61CC(1, buf1, buf2);
     buf1[4] = portraitWindowPos_800827EC[0];
     buf1[5] = portraitWindowPos_800827EC[1];
     AddPrimCopy_80040298(pOT_8008D454 + ot, buf1, 5);
     AddPrimCopy_80040298(pOT_8008D454 + ot, buf2, 2);
-    DrawWindowBackground_800429F8((int)portraitWindowRect_800827E4, ot);
+    DrawWindowBackground_800429F8(portraitWindowRect_800827E4, ot);
 }
 
 void DrawMenuWindows_8002A5A4(MenuWindowList* list)

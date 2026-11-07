@@ -4466,7 +4466,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             e2->flags = (e2->flags | 1) & 0xFFFF7FFF;
             res = &effectFile_80091BD0.models_28[idx];
             child->res_88 = (int)res;
-            CopyFtgObject_800218A8(res->ftg_4, child->work_94 = malloc3_8003FC4C(0x54), 1);
+            CopyFtgObject_800218A8(res->ftg_4, child->work_94 = malloc3_8003FC4C(0x54), HEAP_MALLOC3);
             DiffFtgObjects_80039FE4(res->ftg_4, res->ftg_4 + 1, child->work_94);
             PlaySeqSlot_80031160(9, 1);
             e2->cb_8 = GlowTask_800C371C;
@@ -4575,7 +4575,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x15);
             res = &effectFile_80091BD0.models_28[idx];
             obj->res_88 = (int)res;
-            CopyFtgObject_800218A8(res->ftg_4, obj->work_94 = malloc3_8003FC4C(0x54), 1);
+            CopyFtgObject_800218A8(res->ftg_4, obj->work_94 = malloc3_8003FC4C(0x54), HEAP_MALLOC3);
             DiffFtgObjects_80039FE4(res->ftg_4, res->ftg_4 + 1, obj->work_94);
             obj->field_30 = 0x1000;
             entry->cb_8 = MorphInModelTask_80017E30;

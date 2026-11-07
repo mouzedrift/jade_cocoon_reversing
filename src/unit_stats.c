@@ -19,6 +19,9 @@
 #include "unit_query.h"
 #include "engine.h"
 #include "model_ftg.h"
+/* defined further on / elsewhere without a prototype the callers see */
+int FindEffectTblRow_80018908(int id, short (*tbl)[6]);
+
 
 const char msgAsleep_80071B78[] = "\202\313\202\336\202\301\202\304\202\242\202\351"; // ねむっている
 const char msgParalyzed_80071B88[] = "\203}\203q\202\265\202\304\202\242\202\351"; // マヒしている
@@ -1224,7 +1227,7 @@ unsigned char mergeBones_80079210[272] = { 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1
 int ModelTaskLoad_80010B90(ModelTaskState* task)
 {
     int i;
-    InitModelList_80024ADC(&task->models_0, task->vram_34, 1);
+    InitModelList_80024ADC(&task->models_0, task->vram_34, HEAP_MALLOC3);
     for (i = 0; i < 3; i++)
     {
         if (i == task->main_30)
@@ -1321,7 +1324,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* task)
     {
         src[i] = AcquireModel_80024D70(list, task->ids_8[i]);
     }
-    InitModelList_80024ADC(&task->models_0, task->vram_34 + 2, 1);
+    InitModelList_80024ADC(&task->models_0, task->vram_34 + 2, HEAP_MALLOC3);
     fused = task->models_0->items_8;
     fused->id_38 = src[0]->id_38;
     fused->ftgCount_3C = src[0]->ftgCount_3C;
@@ -1387,13 +1390,13 @@ int ModelTaskDraw_80010DB0(ModelTaskState* task)
         ((int*)scale)[2] = vec[2];
     }
     fused->animCount_3E = src[task->main_30]->animCount_3E;
-    AllocModelAnims_80026730(&fused->anims_54, fused->animCount_3E, 1);
+    AllocModelAnims_80026730(&fused->anims_54, fused->animCount_3E, HEAP_MALLOC3);
     fused->anims_54->frameCount_0 = 1;
     fused->anims_54->divisor_8 = 0x20;
     fused->anims_54->cueCount_C = 0;
     fused->anims_54->boneCount_4 = fused->ftgCount_3C;
-    fused->anims_54->basePose_14 = HeapAlloc_8003FC8C(fused->ftgCount_3C * 6, 1);
-    fused->anims_54->frames_18 = HeapAlloc_8003FC8C((fused->ftgCount_3C + 2) * 6, 1);
+    fused->anims_54->basePose_14 = HeapAlloc_8003FC8C(fused->ftgCount_3C * 6, HEAP_MALLOC3);
+    fused->anims_54->frames_18 = HeapAlloc_8003FC8C((fused->ftgCount_3C + 2) * 6, HEAP_MALLOC3);
     fused->anims_54->cues_10 = 0;
     sk.ftg_0 = (int)ftg0;
     sk.pos_4 = &levantPos_8008BD18.pos;

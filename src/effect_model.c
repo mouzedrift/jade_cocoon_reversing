@@ -39,7 +39,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         model = &effectFile_80091BD0.models_28[idx];
         obj->res_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
-        CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
+        CopyFtgObject_800218A8(model->ftg_4, obj->work_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         entry->cb_8 = (EventEntryFn)PulseModelTask_8001761C;
     }
@@ -59,7 +59,7 @@ void PulseModelTask_8001761C(int* flags, EffectObj* obj)
     if (obj->frame_0++ > 60)
     {
         *flags = (*flags & ~1) | 0x8000;
-        FreeFtgObjectData_80021804(obj->work_94, 1);
+        FreeFtgObjectData_80021804(obj->work_94, HEAP_MALLOC3);
         free3_8003FC6C(obj->work_94);
     }
 }
@@ -86,7 +86,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         model = &effectFile_80091BD0.models_28[idx];
         obj->res_88 = (int)model;
         obj->work_94 = malloc3_8003FC4C(0x54);
-        CopyFtgObject_800218A8(model->ftg_4, obj->work_94, 1);
+        CopyFtgObject_800218A8(model->ftg_4, obj->work_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
         entry->cb_8 = (EventEntryFn)MorphModelTask_800178C0;
     }
@@ -117,7 +117,7 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
         {
             obj->frame_0 = 0;
             *flags = (*flags & ~1) | 0x8000;
-            FreeFtgObjectData_80021804(obj->work_94, 1);
+            FreeFtgObjectData_80021804(obj->work_94, HEAP_MALLOC3);
             free3_8003FC6C(obj->work_94);
         }
     }
@@ -271,7 +271,7 @@ void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
     else
     {
         entry->flags = (entry->flags & ~1) | 0x8000;
-        FreeFtgObjectData_80021804(obj->work_94, 1);
+        FreeFtgObjectData_80021804(obj->work_94, HEAP_MALLOC3);
         free3_8003FC6C(obj->work_94);
     }
 }

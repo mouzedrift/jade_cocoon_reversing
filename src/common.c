@@ -211,7 +211,7 @@ ActionData* GetAbilityActionData_800129B0(ActionData* out, unsigned char* skill,
 extern const char aAssertionFaile_2[];
 extern const char aCommonC[];
 extern const ActionData defaultActionData_80071F58; // an empty action
-extern int GetUnitSkills_80031B30(int unit);
+extern UnitSkill* GetUnitSkills_80031B30(int unit);
 extern void CalcActionDamage_80013374(ActionData* action, UnitStatus* actorStatus, UnitStatus* targetStatus, int* actorStats, int* targetStats, BattleCmd* cmd, ActionResult* out);
 void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd, ActionResult* out)
 {
@@ -223,7 +223,7 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleC
     ActionData* action;
     int actorUnit;
     int targetUnit;
-    int skills;
+    UnitSkill* skills;
     int id;
     Minion* minion;
     UnitStats* stats;
@@ -260,7 +260,7 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleC
         break;
     case 6:
         skills = GetUnitSkills_80031B30(actorUnit & 0xFF);
-        action = GetAbilityActionData_800129B0(&local, (unsigned char*)(skills + cmd->arg_4 * 4), targetUnit);
+        action = GetAbilityActionData_800129B0(&local, (unsigned char*)&skills[cmd->arg_4], targetUnit);
         out->actorMpCost_10 = GetSkillMpCost_80031A04(skills, cmd->arg_4);
         break;
     case 1:
@@ -416,7 +416,7 @@ int IsDrainAction_80013228(UnitStatus* actor, UnitStatus* target, BattleCmd* cmd
         }
         break;
     case 6:
-        action = GetAbilityActionData_800129B0(&local, (unsigned char*)(GetUnitSkills_80031B30(actorUnit & 0xFF) + cmd->arg_4 * 4), targetUnit);
+        action = GetAbilityActionData_800129B0(&local, (unsigned char*)&GetUnitSkills_80031B30(actorUnit & 0xFF)[cmd->arg_4], targetUnit);
         break;
     case 1:
         action = GetMagicAction_8001AD64(cmd->arg_4);

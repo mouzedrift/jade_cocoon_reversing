@@ -14,6 +14,13 @@
 #include "cd.h"
 #include "sound_seq.h"
 #include "tim.h"
+/* defined further on / elsewhere without a prototype the callers see */
+int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, FtgSrcObjectHeader* hdr, void* heap);
+void CancelAreaPreload_8002741C(void);
+void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, void* h);
+int IsOverlayLoaderIdle_80020D84(void);
+int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, void* h, int reloc);
+
 
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern unsigned short padPrevHeld_800918C8[];
@@ -1804,7 +1811,7 @@ void LoadModelTextures_8002607C(ModelLoadParams* params)
     if (params->sel_8 != -1)
     {
         Model* model = params->model_14;
-        LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)params->tim_20, GetTiyFileCount_80028E68(params->tim_20), (int)params->vram_18->reloc_4, params->sel_8);
+        LoadTiyTimsRelocated_80028FDC(NULL, NULL, NULL, params->tim_20, GetTiyFileCount_80028E68(params->tim_20), (TimReloc*)params->vram_18->reloc_4, params->sel_8);
         model->texSel_34 = params->sel_8;
     }
 }
@@ -3024,10 +3031,10 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
     cnt = cur[0];
-    LoadMapFtg_80027708(cur, (int)&mapHeap_80091C68);
+    LoadMapFtg_80027708(cur, &mapHeap_80091C68);
     cur = (int*)((char*)cur + cnt);
     cnt = *cur++;
-    LoadTiy_80028E74(0, 0, 0, (int*)cur, (int)&mapHeap_80091C68);
+    LoadTiy_80028E74(0, 0, 0, (int*)cur, &mapHeap_80091C68);
     cur = LoadMapSpawns_80027650((int*)((char*)cur + cnt), 0, &mapHeap_80091C68);
     mapAreas_80082674 = ListAlloc_8003FDC0(&mapHeap_80091C68, mapState_8008B500.nMeshes_4 * 12);
     MemCopy_800403E8(mapAreas_80082674, cur, mapState_8008B500.nMeshes_4 * 12);

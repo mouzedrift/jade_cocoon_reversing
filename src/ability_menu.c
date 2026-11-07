@@ -14,6 +14,9 @@
 #include "party.h"
 #include "ability_menu.h"
 #include "family_tree.h"
+/* defined further on / elsewhere without a prototype the callers see */
+int GetAllMinionsTargetMask_8002D780(void);
+
 
 void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
 {

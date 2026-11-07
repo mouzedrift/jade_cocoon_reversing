@@ -16,6 +16,9 @@
 #include "engine.h"
 #include "model_ftg.h"
 #include "cdread.h"
+/* defined further on / elsewhere without a prototype the callers see */
+void ResetButtonConfig_8001C6C8(void);
+
 
 const char aWarning_80074A24[] = "\202v\202\201\202\222\202\216\202\211\202\216\202\207"; // Warning
 const char aThisDemoVersion_80074A34[] = "\202s\202\210\202\211\202\223\201@\202\204\202\205\202\215\202\217\201@\202\226\202\205\202\222\202\223\202\211\202\217\202\216\201@\202\217\202\206\201@\202i\202\201\202\204\202\205\201@\202b\202\217\202\203\202\217\202\217\202\216\201@\202\211\202\223\201@\202\223\202\224\202\211\202\214\202\214"; // This demo version of Jade Cocoon is still
@@ -54,10 +57,10 @@ void LoadPublicTiyAndFtg_800407D0(void)
 {
     int* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68(pFile);
-    LoadTiy_80028E74(&publicTiySprts_8008D434, &publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, pFile, 1);
+    LoadTiy_80028E74(&publicTiySprts_8008D434, &publicTiyPolyFT4s_8008D430, &publicTiyTPages_8008D440, pFile, HEAP_MALLOC3);
     pFile = Data001Reader_LoadIntoGlobal_8003CB40(10);
-    AllocFtgObjects_80021744(&publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1);
-    LoadFtgObjects_80021824(pFile, publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), 1, 0);
+    AllocFtgObjects_80021744(&publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), HEAP_MALLOC3);
+    LoadFtgObjects_80021824(pFile, publicFtg_8008D4D0, GetFtgObjectCount_80021738(pFile), HEAP_MALLOC3, 0);
     LoadSound_80030A84(0, &systemSound_80091D40);
     InitFonts_8003DA70();
 }
@@ -65,7 +68,7 @@ void ReloadPublicTiy_80040898(void)
 {
     void* pFile = Data001Reader_LoadIntoGlobal_8003CB40(9);
     numFilesInsideTiy_8008B4BC = GetTiyFileCount_80028E68((int*)pFile);
-    LoadTiy_80028E74(0, 0, 0, pFile, 1);
+    LoadTiy_80028E74(0, 0, 0, pFile, HEAP_MALLOC3);
     InitFonts_8003DA70();
 }
 
@@ -107,7 +110,7 @@ void InitCopyrightScreen_80040A10(int* entry)
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
     copyrightSprts_8008D47C = 0;
     copyrightTPages_8008B4EC = 0;
-    LoadTiy_80028E74(&copyrightSprts_8008D47C, 0, &copyrightTPages_8008B4EC, pFile, 1);
+    LoadTiy_80028E74(&copyrightSprts_8008D47C, 0, &copyrightTPages_8008B4EC, pFile, HEAP_MALLOC3);
     free3_8003FC6C(pFile);
     entry[2] = (int)DrawCopyrightScreen_800408F4;
 }

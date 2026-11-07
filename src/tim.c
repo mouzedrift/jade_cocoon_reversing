@@ -25,7 +25,7 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     p = data;
     data += 0x108;
     n = *(int*)(p + 0x104);
-    LoadTiy_80028E74(0, 0, 0, (int*)data, (int)&areaHeap_80091C20);
+    LoadTiy_80028E74(0, 0, 0, (int*)data, &areaHeap_80091C20);
     data += n;
     n = *(int*)data;
     data += 4;
@@ -44,7 +44,7 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     if (areaReload_80082670 == 1)
     {
         p = data + 4;
-        LoadTiy_80028E74(0, 0, 0, (int*)p, (int)&mapHeap_80091C68);
+        LoadTiy_80028E74(0, 0, 0, (int*)p, &mapHeap_80091C68);
     }
     SetCurrentArea_800272BC(mapState_8008B500.id_0, saveData_8008B570.mapId_2E4[3].cur_0);
     if (mapJustLoaded_80082668 && mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
@@ -95,29 +95,29 @@ void LoadTiyTims_80028EEC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int
         }
     }
 }
-void LoadTiyTimsRelocated_80028FDC(int sprts, int polys, int tpages, int file, int count, int reloc, int hue)
+void LoadTiyTimsRelocated_80028FDC(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int count, TimReloc* reloc, int hue)
 {
     TimInfo buf;
     unsigned int i;
     for (i = 0; i < count; i++)
     {
-        ParseTim_80029708(&buf, (char*)file + ((int*)file)[i + 1]);
+        ParseTim_80029708(&buf, (char*)file + file[i + 1]);
         if (hue)
         {
             ShiftClutHue_80029D00(&buf, hue);
         }
         if (reloc)
         {
-            RelocateTimInfo_800297C0(&buf, (TimReloc*)reloc);
+            RelocateTimInfo_800297C0(&buf, reloc);
         }
         LoadTimToVram_800296A0(&buf);
         if (sprts && tpages)
         {
-            InitSprtFromTim_800298AC(*(int*)sprts + i * 20, *(int*)tpages + i * 8, &buf);
+            InitSprtFromTim_800298AC(&(*sprts)[i], &(*tpages)[i], &buf);
         }
         if (polys)
         {
-            InitPolyFT4_80029A10((void*)(*(int*)polys + i * 40), &buf);
+            InitPolyFT4_80029A10(&(*polys)[i], &buf);
         }
     }
 }

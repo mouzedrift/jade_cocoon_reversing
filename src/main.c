@@ -15,6 +15,9 @@
 #include "main.h"
 #include "util.h"
 #include "cdread.h"
+/* defined further on / elsewhere without a prototype the callers see */
+void InitGame_80010110(void);
+
 
 const char name[] = "cdrom:\\SLUS_008.54;1";
 const char aAssertionFaile[] = "Assertion failed: file \"%s\", line %d\n";

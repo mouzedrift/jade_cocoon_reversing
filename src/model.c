@@ -17,6 +17,12 @@
 #include "cd.h"
 #include "tim.h"
 #include "cdread.h"
+/* defined further on / elsewhere without a prototype the callers see */
+int ApproachActorTarget_8001DC60(Actor* actor, VECTOR* target, int turnStep, int range);
+void ReleaseActorAnim_8001D92C(Actor* actor, int idx);
+void RequestActorAnim_8001D8B4(Actor* actor, int idx);
+void StartActorScale_8001DA4C(Actor* actor, int div, int from, int to);
+
 
 extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern unsigned short padPrevHeld_800918C8[];
@@ -1044,7 +1050,7 @@ void LoadRequestedModels_80020A38(ModelLoader* loader)
     int i;
     if (loader->models_8 == 0)
     {
-        InitModelList_80024ADC(&loader->models_8, modelLoaderVram_8007DC70, 1);
+        InitModelList_80024ADC(&loader->models_8, modelLoaderVram_8007DC70, HEAP_MALLOC3);
     }
     slot = loader->slots_C;
     for (i = 0; i < 4; i++)
@@ -1286,7 +1292,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     }
     if (GetTiyFileCount_80028E68(tiySec))
     {
-        LoadTiyTimsRelocated_80028FDC(0, 0, 0, (int)tiySec, GetTiyFileCount_80028E68(tiySec), (int)arg->reloc_4, arg->sel_10);
+        LoadTiyTimsRelocated_80028FDC(NULL, NULL, NULL, tiySec, GetTiyFileCount_80028E68(tiySec), (TimReloc*)arg->reloc_4, arg->sel_10);
     }
 }
 void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, List* heap)
@@ -1330,12 +1336,12 @@ void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, Li
     if (GetFtgObjectCount_80021738(models))
     {
         out->ftgCount_0 = GetFtgObjectCount_80021738(models);
-        AllocFtgObjects_80021744(&out->ftg_4, out->ftgCount_0, (int)heap);
-        LoadFtgObjects_80021824(models, out->ftg_4, out->ftgCount_0, (int)heap, reloc);
+        AllocFtgObjects_80021744(&out->ftg_4, out->ftgCount_0, heap);
+        LoadFtgObjects_80021824(models, out->ftg_4, out->ftgCount_0, heap, reloc);
     }
     if (GetFtgMatCount_80021DE4(models))
     {
-        AllocFtgMatList_80021DF0(&out->mats_8, GetFtgMatCount_80021DE4(models), (int)heap);
+        AllocFtgMatList_80021DF0(&out->mats_8, GetFtgMatCount_80021DE4(models), heap);
         LoadFtgMatList_80021E4C(models, &out->mats_8, GetFtgMatCount_80021DE4(models));
     }
     else

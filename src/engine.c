@@ -20,6 +20,17 @@
 #include "effect_model.h"
 #include "effect_cmd.h"
 #include "model_ftg.h"
+/* defined further on / elsewhere without a prototype the callers see */
+#ifdef __psyz /* with these two the PlayStation code would change (a short result, short arguments) */
+short GetActorHitTimes_8001F268(Actor* o, HitTimes* out, ActorScriptCmd* script, int anim);
+void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate);
+#endif
+void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc);
+void InitSprt_8001B9A0(int buffer);
+void ReleaseModelAnimRef_80020278(int ref, int user);
+void ResetFtgSpriteVtx_8004D924(void);
+void UpdatePadAnalog_8001CC04(int port);
+
 
 // the bit masks SetBoneGroupFlags_80019B14 (minion_init.c) copies: the first .rdata of this file, which has to start at 4 mod 8
 // for its switch tables (.align 3), so SetBoneGroupFlags_80019B14 is probably the first function of this TU
@@ -1885,7 +1896,7 @@ EquipmentData* GetAccessoryData_8001D0FC(unsigned int idx)
 }
 const char* GetEquipmentName_8001D128(int idx, unsigned int kind)
 {
-    int name = 0;
+    const char* name = NULL;
     switch (kind)
     {
     case 0:
@@ -2239,7 +2250,7 @@ void StartActorScale_8001DA4C(Actor* actor, int div, int from, int to)
         actor->flags_4 |= 3;
     }
 }
-void SetActorTint_8001DAAC(Actor* actor, int tint)
+void SetActorTint_8001DAAC(Actor* actor, short* tint)
 {
     if (tint != 0)
     {
@@ -2551,7 +2562,7 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
     }
     if (desc->hitAnim_E >= 0)
     {
-        hitStart = GetActorHitTimes_8001F268(actor, actor->hitTimes_108, (int)actor->script_D0, desc->hitAnim_E);
+        hitStart = GetActorHitTimes_8001F268(actor, actor->hitTimes_108, actor->script_D0, desc->hitAnim_E);
     }
     effect = desc->effect_10;
     if (effect >= 0)

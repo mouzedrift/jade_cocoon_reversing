@@ -720,8 +720,8 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
         break;
     case 2:
         DrawMsgWindowChoices_800355EC(w, &w->x_4C);
-        DrawMsgWindowBackground_80035898(w, (int)&w->x_4C, 2);
-        DrawMsgWindowBorder_800358CC(w, (int)&w->x_4C, 0);
+        DrawMsgWindowBackground_80035898(w, &w->x_4C, 2);
+        DrawMsgWindowBorder_800358CC(w, &w->x_4C, 0);
         break;
     case 3:
         w->field_48--;
@@ -930,8 +930,8 @@ void DrawMsgWindowTitle_800359F8(MsgWindow* win)
             rect[1] = win->titleY_70;
             rect[2] = MeasureTextWidth_8003E4C8(win->title_74) + 0x11;
             rect[3] = 0x12;
-            DrawMsgWindowBackground_80035898(win, (int)rect, 2);
-            DrawMsgWindowBorder_800358CC(win, (int)rect, 0);
+            DrawMsgWindowBackground_80035898(win, rect, 2);
+            DrawMsgWindowBorder_800358CC(win, rect, 0);
         }
     }
 }
@@ -1196,8 +1196,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             line++;
         }
     }
-    DrawWindowBackground_800429F8((int)&r, 0);
-    DrawWindowBorder_80042B38((int)&r, 0);
+    DrawWindowBackground_800429F8(&r, 0);
+    DrawWindowBorder_80042B38(&r, 0);
     o->field_C = 3;
     if (IsConfirmPressedP1_8003D380(0))
     {

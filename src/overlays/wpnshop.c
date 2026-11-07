@@ -11,7 +11,7 @@
 
 
 int wpnshopHeader_800B66C0 SDATA = 26;
-const int aEmpty_800B66C4 = 0;
+const char aEmpty_800B66C4[4] = "";
 const char aYesWhatDoYouWan_800B66C8[] = "\202x\202\205\202\223\201H\201@\202v\202\210\202\201\202\224\201@\202\204\202\217\201@\202\231\202\217\202\225\201@\202\227\202\201\202\216\202\224\201H"; // Yes? What do you want?
 const char aWhatDoYouWantTo_800B66F8[] = "\202v\202\210\202\201\202\224\201@\202\204\202\217\201@\202\231\202\217\202\225\201@\202\227\202\201\202\216\202\224\201@\202\224\202\217\201@\202\202\202\225\202\231\201H"; // What do you want to buy?
 const char aWhichWillYouGet_800B672C[] = "\202v\202\210\202\211\202\203\202\210\201@\202\227\202\211\202\214\202\214\201@\202\231\202\217\202\225\201@\202\207\202\205\202\224\201@\202\222\202\211\202\204\201@\202\217\202\206\201H"; // Which will you get rid of?
@@ -1975,75 +1975,75 @@ int unused_800BE110 = 0xA000D;
 TextListEntry quantityLine0_800BE114[2] = { { 0x10, 0xC9, 0 } };
 TextListEntry quantityLine1_800BE124[2] = { { 0x10, 0xC9, 0 } };
 TextListEntry dialogLines_800BE134[4] = { { 0x57, 0x18, 0 }, { 0x57, 0x28, 0 }, { 0x57, 0x38, 0 } };
-void *txtEquipMainA_800BE154[3] = { (void *)aYesWhatDoYouWan_800B66C8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtEquipBuyKindA_800BE160[3] = { (void *)aWhatDoYouWantTo_800B66F8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtEquipSellKindA_800BE16C[3] = { (void *)aWhichWillYouGet_800B672C, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtEquipBuyListA_800BE178[3] = { (void *)aPickWhateverYou_800B6764, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtEquipSellListA_800BE184[3] = { (void *)aYouMightRegretI_800B67B4, (void *)aChooseWisely_800B6794, (void *)&aEmpty_800B66C4 };
-void *txtEquipBuyCountA_800BE190[3] = { (void *)aHowManyWillYouB_800B67F8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtEquipSellCountA_800BE19C[3] = { (void *)aHowManyWillYouG_800B6828, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
+const char* txtEquipMainA_800BE154[3] = { aYesWhatDoYouWan_800B66C8, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtEquipBuyKindA_800BE160[3] = { aWhatDoYouWantTo_800B66F8, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtEquipSellKindA_800BE16C[3] = { aWhichWillYouGet_800B672C, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtEquipBuyListA_800BE178[3] = { aPickWhateverYou_800B6764, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtEquipSellListA_800BE184[3] = { aYouMightRegretI_800B67B4, aChooseWisely_800B6794, aEmpty_800B66C4 };
+const char* txtEquipBuyCountA_800BE190[3] = { aHowManyWillYouB_800B67F8, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtEquipSellCountA_800BE19C[3] = { aHowManyWillYouG_800B6828, aEmpty_800B66C4, aEmpty_800B66C4 };
 const char *txtEquipBuyConfirmA_800BE1A8[3] = { aWillYouBuyThis_800B6878, aYes_800B686C, aNo_800B6864 };
 const char *txtEquipSellConfirmA_800BE1B4[3] = { aShallWeConclude_800B68A0, aYes_800B686C, aNo_800B6864 };
-void *txtItemMainA_800BE1C0[3] = { (void *)aHowMayIHelpYou_800B68DC, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemBuyListA_800BE1CC[3] = { (void *)aOkayThenPickWha_800B6904, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemSellListA_800BE1D8[3] = { (void *)aWhatWillYouTrad_800B694C, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemBuyCountA_800BE1E4[3] = { (void *)aHowManyDoYouWan_800B698C, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemSellCountA_800BE1F0[3] = { (void *)aHowManyWillYouT_800B69B8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
+const char* txtItemMainA_800BE1C0[3] = { aHowMayIHelpYou_800B68DC, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemBuyListA_800BE1CC[3] = { aOkayThenPickWha_800B6904, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemSellListA_800BE1D8[3] = { aWhatWillYouTrad_800B694C, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemBuyCountA_800BE1E4[3] = { aHowManyDoYouWan_800B698C, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemSellCountA_800BE1F0[3] = { aHowManyWillYouT_800B69B8, aEmpty_800B66C4, aEmpty_800B66C4 };
 const char *txtItemBuyConfirmA_800BE1FC[3] = { aThisIsOkayThen_800B69EC, aYes_800B686C, aNo_800B6864 };
 const char *txtItemSellConfirmA_800BE208[3] = { aOkay_800B6A14, aYes_800B686C, aNo_800B6864 };
-void *txtEquipNoMoneyA_800BE214[3] = { (void *)aHeyILlGoBrokeWi_800B6A38, (void *)aLikeThat_800B6A20, (void *)&aEmpty_800B66C4 };
-void *txtItemNoMoneyA_800BE220[3] = { (void *)aSorryThatSNotEn_800B6A78, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemCantBuyMoreA_800BE22C[3] = { (void *)aYouCanTBuyThatM_800B6AAC, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtEquipCantBuyMoreA_800BE238[3] = { (void *)aYouCanTBuyThatM_800B6AAC, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
+const char* txtEquipNoMoneyA_800BE214[3] = { aHeyILlGoBrokeWi_800B6A38, aLikeThat_800B6A20, aEmpty_800B66C4 };
+const char* txtItemNoMoneyA_800BE220[3] = { aSorryThatSNotEn_800B6A78, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemCantBuyMoreA_800BE22C[3] = { aYouCanTBuyThatM_800B6AAC, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtEquipCantBuyMoreA_800BE238[3] = { aYouCanTBuyThatM_800B6AAC, aEmpty_800B66C4, aEmpty_800B66C4 };
 const char *txtReadyAskA_800BE244[3] = { aWillYouReadyItN_800B6AE0, aYes_800B686C, aNo_800B6864 };
-void *txtReadiedA_800BE250[3] = { (void *)aYouLlRegretItIf_800B6B30, (void *)aItImproperly_800B6B10, (void *)&aEmpty_800B66C4 };
-void *txtReadyLaterA_800BE25C[3] = { (void *)aDonTForgetToRea_800B6B68, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtMainC_800BE268[3] = { (void *)aWhatDoYouWishTo_800B6BA8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtEquipBuyKindC_800BE274[3] = { (void *)aWhatDoYouWishTo_800B6BD8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtSellC_800BE280[3] = { (void *)aWhatWillYouTrad_800B6C0C, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtBuyListC_800BE28C[3] = { (void *)aWhichOneDoYouWa_800B6C38, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtBuyCountC_800BE298[3] = { (void *)aHowManyDoYouNee_800B6C68, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtSellCountC_800BE2A4[3] = { (void *)aHowManyWillYouT_800B69B8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
+const char* txtReadiedA_800BE250[3] = { aYouLlRegretItIf_800B6B30, aItImproperly_800B6B10, aEmpty_800B66C4 };
+const char* txtReadyLaterA_800BE25C[3] = { aDonTForgetToRea_800B6B68, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtMainC_800BE268[3] = { aWhatDoYouWishTo_800B6BA8, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtEquipBuyKindC_800BE274[3] = { aWhatDoYouWishTo_800B6BD8, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtSellC_800BE280[3] = { aWhatWillYouTrad_800B6C0C, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtBuyListC_800BE28C[3] = { aWhichOneDoYouWa_800B6C38, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtBuyCountC_800BE298[3] = { aHowManyDoYouNee_800B6C68, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtSellCountC_800BE2A4[3] = { aHowManyWillYouT_800B69B8, aEmpty_800B66C4, aEmpty_800B66C4 };
 const char *txtEquipBuyConfirmC_800BE2B0[3] = { aIsThisOkay_800B6C94, aYes_800B686C, aNo_800B6864 };
 const char *txtEquipSellConfirmC_800BE2BC[3] = { aIsTheTradeOkayW_800B6CB0, aYes_800B686C, aNo_800B6864 };
 const char *txtItemConfirmC_800BE2C8[3] = { aIsThisOkay_800B6C94, aYes_800B686C, aNo_800B6864 };
-void *txtNoMoneyC_800BE2D4[3] = { (void *)aItLooksLikeYouD_800B6D04, (void *)aEnoughMoney_800B6CE8, (void *)&aEmpty_800B66C4 };
-void *txtCantBuyMoreC_800BE2E0[3] = { (void *)aYouCanTBuyThatM_800B6AAC, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
+const char* txtNoMoneyC_800BE2D4[3] = { aItLooksLikeYouD_800B6D04, aEnoughMoney_800B6CE8, aEmpty_800B66C4 };
+const char* txtCantBuyMoreC_800BE2E0[3] = { aYouCanTBuyThatM_800B6AAC, aEmpty_800B66C4, aEmpty_800B66C4 };
 const char *txtReadyAskC_800BE2EC[3] = { aWillYouReadyItN_800B6AE0, aYes_800B686C, aNo_800B6864 };
-void *txtReadiedC_800BE2F8[3] = { (void *)aYouHaveReadiedI_800B6D40, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtReadyLaterC_800BE304[3] = { (void *)aDonTForgetToRea_800B6B68, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemMainB_800BE310[3] = { (void *)aDoYouWantToBuyS_800B6D90, (void *)aOrMakeATrade_800B6D6C, (void *)&aEmpty_800B66C4 };
-void *txtItemBuyListB_800BE31C[3] = { (void *)aWhichDoYouWant_800B6DCC, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemSellListB_800BE328[3] = { (void *)aWhatDoYouWannaS_800B6DF4, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemBuyCountB_800BE334[3] = { (void *)aAndHowManyDoYou_800B6E24, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtItemSellCountB_800BE340[3] = { (void *)aHowManyWillYouT_800B69B8, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
+const char* txtReadiedC_800BE2F8[3] = { aYouHaveReadiedI_800B6D40, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtReadyLaterC_800BE304[3] = { aDonTForgetToRea_800B6B68, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemMainB_800BE310[3] = { aDoYouWantToBuyS_800B6D90, aOrMakeATrade_800B6D6C, aEmpty_800B66C4 };
+const char* txtItemBuyListB_800BE31C[3] = { aWhichDoYouWant_800B6DCC, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemSellListB_800BE328[3] = { aWhatDoYouWannaS_800B6DF4, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemBuyCountB_800BE334[3] = { aAndHowManyDoYou_800B6E24, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtItemSellCountB_800BE340[3] = { aHowManyWillYouT_800B69B8, aEmpty_800B66C4, aEmpty_800B66C4 };
 const char *txtItemBuyConfirmB_800BE34C[3] = { aIsThisOkay_800B6C94, aYes_800B686C, aNo_800B6864 };
 const char *txtItemSellConfirmB_800BE358[3] = { aSoIsThisOkay_800B6E58, aYes_800B686C, aNo_800B6864 };
-void *txtItemNoMoneyB_800BE364[3] = { (void *)aOhThatSNotEnoug_800B6E7C, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-void *txtCantBuyMoreB_800BE370[3] = { (void *)aYouCanTBuyThatM_800B6AAC, (void *)&aEmpty_800B66C4, (void *)&aEmpty_800B66C4 };
-int *storeTextsA_800BE37C[23] = {
-    (void *)txtEquipMainA_800BE154, (void *)txtEquipBuyKindA_800BE160, (void *)txtEquipSellKindA_800BE16C, (void *)txtEquipBuyListA_800BE178,
-    (void *)txtEquipSellListA_800BE184, (void *)txtEquipBuyCountA_800BE190, (void *)txtEquipSellCountA_800BE19C, (void *)txtEquipBuyConfirmA_800BE1A8,
-    (void *)txtEquipSellConfirmA_800BE1B4, (void *)txtItemMainA_800BE1C0, (void *)txtItemBuyListA_800BE1CC, (void *)txtItemSellListA_800BE1D8,
-    (void *)txtItemBuyCountA_800BE1E4, (void *)txtItemSellCountA_800BE1F0, (void *)txtItemBuyConfirmA_800BE1FC, (void *)txtItemSellConfirmA_800BE208,
-    (void *)txtEquipNoMoneyA_800BE214, (void *)txtItemNoMoneyA_800BE220, (void *)txtItemCantBuyMoreA_800BE22C, (void *)txtEquipCantBuyMoreA_800BE238,
-    (void *)txtReadyAskA_800BE244, (void *)txtReadiedA_800BE250, (void *)txtReadyLaterA_800BE25C,
+const char* txtItemNoMoneyB_800BE364[3] = { aOhThatSNotEnoug_800B6E7C, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char* txtCantBuyMoreB_800BE370[3] = { aYouCanTBuyThatM_800B6AAC, aEmpty_800B66C4, aEmpty_800B66C4 };
+const char** storeTextsA_800BE37C[23] = {
+    txtEquipMainA_800BE154, txtEquipBuyKindA_800BE160, txtEquipSellKindA_800BE16C, txtEquipBuyListA_800BE178,
+    txtEquipSellListA_800BE184, txtEquipBuyCountA_800BE190, txtEquipSellCountA_800BE19C, txtEquipBuyConfirmA_800BE1A8,
+    txtEquipSellConfirmA_800BE1B4, txtItemMainA_800BE1C0, txtItemBuyListA_800BE1CC, txtItemSellListA_800BE1D8,
+    txtItemBuyCountA_800BE1E4, txtItemSellCountA_800BE1F0, txtItemBuyConfirmA_800BE1FC, txtItemSellConfirmA_800BE208,
+    txtEquipNoMoneyA_800BE214, txtItemNoMoneyA_800BE220, txtItemCantBuyMoreA_800BE22C, txtEquipCantBuyMoreA_800BE238,
+    txtReadyAskA_800BE244, txtReadiedA_800BE250, txtReadyLaterA_800BE25C,
 };
-int *storeTextsB_800BE3D8[23] = {
-    (void *)txtEquipMainA_800BE154, (void *)txtEquipBuyKindA_800BE160, (void *)txtEquipSellKindA_800BE16C, (void *)txtEquipBuyListA_800BE178,
-    (void *)txtEquipSellListA_800BE184, (void *)txtEquipBuyCountA_800BE190, (void *)txtEquipSellCountA_800BE19C, (void *)txtEquipBuyConfirmA_800BE1A8,
-    (void *)txtEquipSellConfirmA_800BE1B4, (void *)txtItemMainB_800BE310, (void *)txtItemBuyListB_800BE31C, (void *)txtItemSellListB_800BE328,
-    (void *)txtItemBuyCountB_800BE334, (void *)txtItemSellCountB_800BE340, (void *)txtItemBuyConfirmB_800BE34C, (void *)txtItemSellConfirmB_800BE358,
-    (void *)txtEquipNoMoneyA_800BE214, (void *)txtItemNoMoneyB_800BE364, (void *)txtCantBuyMoreB_800BE370, (void *)txtCantBuyMoreB_800BE370,
-    (void *)txtReadyAskA_800BE244, (void *)txtReadiedA_800BE250, (void *)txtReadyLaterA_800BE25C,
+const char** storeTextsB_800BE3D8[23] = {
+    txtEquipMainA_800BE154, txtEquipBuyKindA_800BE160, txtEquipSellKindA_800BE16C, txtEquipBuyListA_800BE178,
+    txtEquipSellListA_800BE184, txtEquipBuyCountA_800BE190, txtEquipSellCountA_800BE19C, txtEquipBuyConfirmA_800BE1A8,
+    txtEquipSellConfirmA_800BE1B4, txtItemMainB_800BE310, txtItemBuyListB_800BE31C, txtItemSellListB_800BE328,
+    txtItemBuyCountB_800BE334, txtItemSellCountB_800BE340, txtItemBuyConfirmB_800BE34C, txtItemSellConfirmB_800BE358,
+    txtEquipNoMoneyA_800BE214, txtItemNoMoneyB_800BE364, txtCantBuyMoreB_800BE370, txtCantBuyMoreB_800BE370,
+    txtReadyAskA_800BE244, txtReadiedA_800BE250, txtReadyLaterA_800BE25C,
 };
-int *storeTextsC_800BE434[23] = {
-    (void *)txtMainC_800BE268, (void *)txtEquipBuyKindC_800BE274, (void *)txtSellC_800BE280, (void *)txtBuyListC_800BE28C,
-    (void *)txtSellC_800BE280, (void *)txtBuyCountC_800BE298, (void *)txtSellCountC_800BE2A4, (void *)txtEquipBuyConfirmC_800BE2B0,
-    (void *)txtEquipSellConfirmC_800BE2BC, (void *)txtMainC_800BE268, (void *)txtBuyListC_800BE28C, (void *)txtSellC_800BE280,
-    (void *)txtBuyCountC_800BE298, (void *)txtSellCountC_800BE2A4, (void *)txtItemConfirmC_800BE2C8, (void *)txtItemConfirmC_800BE2C8,
-    (void *)txtNoMoneyC_800BE2D4, (void *)txtNoMoneyC_800BE2D4, (void *)txtCantBuyMoreC_800BE2E0, (void *)txtCantBuyMoreC_800BE2E0,
-    (void *)txtReadyAskC_800BE2EC, (void *)txtReadiedC_800BE2F8, (void *)txtReadyLaterC_800BE304,
+const char** storeTextsC_800BE434[23] = {
+    txtMainC_800BE268, txtEquipBuyKindC_800BE274, txtSellC_800BE280, txtBuyListC_800BE28C,
+    txtSellC_800BE280, txtBuyCountC_800BE298, txtSellCountC_800BE2A4, txtEquipBuyConfirmC_800BE2B0,
+    txtEquipSellConfirmC_800BE2BC, txtMainC_800BE268, txtBuyListC_800BE28C, txtSellC_800BE280,
+    txtBuyCountC_800BE298, txtSellCountC_800BE2A4, txtItemConfirmC_800BE2C8, txtItemConfirmC_800BE2C8,
+    txtNoMoneyC_800BE2D4, txtNoMoneyC_800BE2D4, txtCantBuyMoreC_800BE2E0, txtCantBuyMoreC_800BE2E0,
+    txtReadyAskC_800BE2EC, txtReadiedC_800BE2F8, txtReadyLaterC_800BE304,
 };
 int panelCursor0_800BE490[4] = { 0x30001, 3, 0xF0000, 0x68001C };
 int panelCursor4_800BE4A0[4] = { 0x40001, 0x400004, 0xF0000, 0x6C0012 };

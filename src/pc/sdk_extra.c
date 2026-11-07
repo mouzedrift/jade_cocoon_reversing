@@ -177,3 +177,4 @@ long SsVoKeyOn(long vab_pro, long pitch, u_short volL, u_short volR) { return 0;
 /* movies (MDEC): not decoded yet */
 void DecDCTvlcBuild(u_short* table) {}
 int DecDCTvlc2(unsigned long* bs, unsigned long* buf, DECDCTTAB table) { return 0; }
+void StCdInterrupt(void) {}

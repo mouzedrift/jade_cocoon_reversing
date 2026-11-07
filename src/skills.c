@@ -54,8 +54,8 @@ int CountLearnedSkills_80031968(void* skills)
     }
     return count;
 }
-extern int abilityNames_800834E4[];
-extern int abilityBonusNames_80083580[];
+extern const char* abilityNames_800834E4[];
+extern const char* abilityBonusNames_80083580[];
 const char* GetAbilityName_800319CC(int idx)
 {
     return abilityNames_800834E4[idx];

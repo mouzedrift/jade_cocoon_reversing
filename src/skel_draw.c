@@ -11,6 +11,10 @@
 #include "ftg_draw.h"
 #include "spadstack.h"
 #include "unit_query.h"
+/* defined further on / elsewhere without a prototype the callers see */
+void RotMatrixYXZ_80046874(SVECTOR* rot, MATRIX* m);
+void RotMatrixZXY_8004668C(SVECTOR* rot, MATRIX* m);
+
 
 EventEntry* AllocEventEntry_80043AF8(EventNode* node)
 {

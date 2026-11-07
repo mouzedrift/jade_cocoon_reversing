@@ -7,6 +7,10 @@
 #include "gte.h"
 #include "ftg_draw.h"
 #include "skel_draw.h"
+/* defined further on / elsewhere without a prototype the callers see */
+void RotMatrixZXY_8004668C(SVECTOR* rot, MATRIX* m);
+void ScaleVectorToFit_8003B684(int* v);
+
 
 #define ABS_8004B0A8(x) ((x) < 0 ? -(x) : (x))
 void BasisFromAxis_8004B0A8(VECTOR* axis, MATRIX* m)
