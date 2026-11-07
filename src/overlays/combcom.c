@@ -21,69 +21,24 @@ char pauseCursor_800CD2C8[8] = { 1, 0, 3, 0, 3 };
 short pauseCursorSel_800CD2D0 = 0;
 short *stateCursors_800CD2D4[6] = { cmdCursor_800CD28C, skillCursor_800CD298, magicCursor_800CD2A4, targetCursor_800CD2B0, cmdCursor_800CD28C, (void *)pauseCursor_800CD2C8 };
 CombComItem cmdItemAttack_800CD2EC[1] = { {
-        8,
-        1,
-        (void *)13,
-        (int)&uiTiySprts_8008D620,
-        (int)&uiTiyTPages_8008D3F4,
-        32,
-        157,
-        {
-            0x120020, 0x20002, 1, 0, 0, 0, -1, -1,
-            -1,
-        },
-    } };
+    { 8, 1, { .num = 13 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 32, 157, 32, 18, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+} };
 CombComItem cmdItemDefend_800CD324[1] = { {
-        8,
-        1,
-        (void *)48,
-        (int)&uiTiySprts_8008D620,
-        (int)&uiTiyTPages_8008D3F4,
-        64,
-        157,
-        {
-            0x120020, 0x20002, 1, 0, 0, 0, -1, -1,
-            -1,
-        },
-    } };
+    { 8, 1, { .num = 48 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 64, 157, 32, 18, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+} };
 CombComItem cmdItemSpecial_800CD35C[1] = { {
-        8,
-        1,
-        (void *)183,
-        (int)&uiTiySprts_8008D620,
-        (int)&uiTiyTPages_8008D3F4,
-        32,
-        176,
-        {
-            0x120020, 0x20002, 1, 0, 0, 0, -1, -1,
-            -1,
-        },
-    } };
+    { 8, 1, { .num = 183 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 32, 176, 32, 18, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+} };
 CombComItem cmdItemMagic_800CD394[1] = { {
-        8,
-        1,
-        (void *)108,
-        (int)&uiTiySprts_8008D620,
-        (int)&uiTiyTPages_8008D3F4,
-        64,
-        176,
-        {
-            0x120020, 0x20002, 1, 0, 0, 0, -1, -1,
-            -1,
-        },
-    } };
+    { 8, 1, { .num = 108 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 64, 176, 32, 18, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+} };
 CombComItem cmdItemChange_800CD3CC = {
-    8,
-    1,
-    (void *)40,
-    (int)&uiTiySprts_8008D620,
-    (int)&uiTiyTPages_8008D3F4,
-    32,
-    195,
-    {
-        0x120040, 0x20002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 8, 1, { .num = 40 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 32, 195, 64, 18, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 CombComItem* cmdItems_800CD404[6] = { cmdItemAttack_800CD2EC, cmdItemDefend_800CD324, cmdItemSpecial_800CD35C, cmdItemMagic_800CD394, 0 }; // [4]: Change (SetupCmdMenu_800CB88C), NULL ends the list
 CombComMenu cmdMenuWin_800CD41C = { 2, 0, 0, 0, cmdItems_800CD404 };
@@ -184,56 +139,20 @@ unsigned char prevState_800CD850 = 0;
 short *activeCursor_800CD854 = 0;
 
 const CombComItem pauseTitleItem_800CB4F0 = {
-    8,
-    1,
-    (void *)37,
-    (int)&uiTiySprts_8008D620,
-    (int)&uiTiyTPages_8008D3F4,
-    121,
-    79,
-    {
-        0x18004E, 0x50002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 8, 1, { .num = 37 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 121, 79, 78, 24, 2, 5 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const CombComItem pauseItemStart_800CB528 = {
-    8,
-    1,
-    (void *)35,
-    (int)&uiTiySprts_8008D620,
-    (int)&uiTiyTPages_8008D3F4,
-    126,
-    104,
-    {
-        0x140044, 0x40002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 8, 1, { .num = 35 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 126, 104, 68, 20, 2, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const CombComItem pauseItemGiveUp_800CB560 = {
-    8,
-    1,
-    (void *)65,
-    (int)&uiTiySprts_8008D620,
-    (int)&uiTiyTPages_8008D3F4,
-    126,
-    125,
-    {
-        0x140044, 0x40002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 8, 1, { .num = 65 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 126, 125, 68, 20, 2, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const CombComItem pauseItemReturn_800CB598 = {
-    8,
-    1,
-    (void *)25,
-    (int)&uiTiySprts_8008D620,
-    (int)&uiTiyTPages_8008D3F4,
-    126,
-    146,
-    {
-        0x140044, 0x40002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 8, 1, { .num = 25 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 126, 146, 68, 20, 2, 4 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const CombComMenu menuWinTmpl_800CB5D0 = { 2, 0, 8 };
 const char aStartFight_800CB5E8[] = "\202r\202\224\202\201\202\222\202\224\201@\202\206\202\211\202\207\202\210\202\224"; // Start fight
@@ -250,43 +169,16 @@ const CombComPos2 magicListPos_800CB688 = { {
         { 90, 100 },
     } };
 const CombComItem targetItem0_800CB690 = {
-    0x10,
-    4,
-    0,
-    0,
-    0,
-    0,
-    163,
-    {
-        0xC003C, 0x20002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 0x10, 4, 0, NULL, NULL, 0, 163, 60, 12, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const CombComItem targetItem1_800CB6C8 = {
-    0x10,
-    4,
-    0,
-    0,
-    0,
-    0,
-    176,
-    {
-        0xC003C, 0x20002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 0x10, 4, 0, NULL, NULL, 0, 176, 60, 12, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const CombComItem targetItem2_800CB700 = {
-    0x10,
-    4,
-    0,
-    0,
-    0,
-    0,
-    189,
-    {
-        0xC003C, 0x20002, 1, 0, 0, 0, -1, -1,
-        -1,
-    },
+    { 0x10, 4, 0, NULL, NULL, 0, 189, 60, 12, 2, 2 },
+    { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const int targetItemPad = 0;
 
@@ -341,7 +233,7 @@ void DisableChangeIfAlone_800CB924()
     if (CountTeamMinions_800A1AAC(side_800CD839) == 1)
     {
         cmdInfo_800CD46C[4].error_4 = errNoDivineMinions_800CD468;
-        cmdItemChange_800CD3CC.flags |= 2;
+        cmdItemChange_800CD3CC.item.flags_0 |= 2;
     }
 }
 
@@ -391,7 +283,7 @@ void UpdateCmdMenuWin_800CBA20(int state)
     cmdMenuWin_800CD41C.sel_C = cmdCursorSel_800CD294;
     for (i = 0; i < 5; i++)
     {
-        cmdItems_800CD404[i]->x_10 = cmdItemX_800CD434[i] + off * 192;
+        cmdItems_800CD404[i]->item.x_10 = cmdItemX_800CD434[i] + off * 192;
     }
 }
 
@@ -708,9 +600,9 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
     items[0] = p0;
     items[1] = &rows[1];
     items[2] = &rows[2];
-    rows[0].x_10 = rowX;
-    rows[1].x_10 = rowX;
-    rows[2].x_10 = rowX;
+    rows[0].item.x_10 = rowX;
+    rows[1].item.x_10 = rowX;
+    rows[2].item.x_10 = rowX;
     menu.ot_14 = ot;
     menu.time_4 = GetTime30Hz_8002C64C();
     menu.sel_C = sel;
@@ -722,16 +614,16 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
         {
             UnitStatus* status = GetUnitStatus_80014390((unsigned char)(((unsigned char*)target)[2] + 8));
             list[0] = p0;
-            p0->text_4 = status->name_10;
+            p0->item.text_4.str = status->name_10;
         }
         check.actor_2 = target[1] + 8;
         if (CheckMagicUsable_80034068(&check) == 0)
         {
-            list[0]->flags &= ~2;
+            list[0]->item.flags_0 &= ~2;
         }
         else
         {
-            list[0]->flags |= 2;
+            list[0]->item.flags_0 |= 2;
         }
         res = sideSlot_800A4078[target[1]];
     }
@@ -743,14 +635,14 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
             if (i != sideSlot_800A4078[side_800CD839] && IsMinionSlotEmpty_800A1934(minion) == 0)
             {
                 list[k] = items[k];
-                list[k]->text_4 = minion->status_84.name_10;
+                list[k]->item.text_4.str = minion->status_84.name_10;
                 if (IsMinionFainted_800A1958(minion))
                 {
-                    list[k]->flags |= 2;
+                    list[k]->item.flags_0 |= 2;
                 }
                 else
                 {
-                    list[k]->flags &= ~2;
+                    list[k]->item.flags_0 &= ~2;
                 }
                 if (sel == k)
                 {

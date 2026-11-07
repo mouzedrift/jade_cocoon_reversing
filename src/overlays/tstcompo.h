@@ -46,7 +46,7 @@ typedef struct TstCompoEnt
 {
     unsigned short x_0;
     unsigned short y_2;
-    int text_4; // string, 0 ends the list
+    const char* text_4; // NULL ends the list
 } TstCompoEnt;
 
 typedef struct TstCompoPage
@@ -59,7 +59,7 @@ typedef struct TstCompoPage
 
 typedef struct TstCompoPart
 {
-    int text_0;
+    const char* text_0;
     int id_4;
     int angle_8;
     int fC;
@@ -132,14 +132,14 @@ extern const char aNAMERATE_800A0798[];
 extern const char aTEXHANGL_800A07B8[];
 extern const char aENEMY_800A07D8[];
 extern TstCompoPart compoParts_800A20EC[48];
-extern int compoTexts0_800A24AC[4];
-extern int compoTexts1_800A24BC[4];
-extern int compoTexts2_800A24CC[4];
-extern int compoMenu0_800A24DC[4];
-extern int compoMenu1_800A24EC[4];
-extern int compoMenu2_800A24FC[4];
+extern TstCompoEnt compoTexts0_800A24AC[2];
+extern TstCompoEnt compoTexts1_800A24BC[2];
+extern TstCompoEnt compoTexts2_800A24CC[2];
+extern TstCompoMenu compoMenu0_800A24DC;
+extern TstCompoMenu compoMenu1_800A24EC;
+extern TstCompoMenu compoMenu2_800A24FC;
 extern TstCompoPage compoPages_800A250C[3];
-extern int tstCompoTaskDesc_800A2548[6];
+extern EventDesc tstCompoTaskDesc_800A2548;
 extern EventDesc* tstCompoTaskList_800A2560[4];
 extern char compoLight_800A2570[24];
 extern char compoBonePos_800A2588[480];

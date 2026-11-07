@@ -113,7 +113,8 @@ extern unsigned short slot2TextPos_800B7CE0[2];
 extern int unused_800B7CE4;
 extern ShelfRect shelfCursorRects_800B7CE8[4];
 extern ShelfMenuState shelfMenuStates_800B7D08[15];
-extern unsigned int shelfStatePages_800B7E34[30];
+extern unsigned int shelfStatePages_800B7E34[15];
+extern const char* shelfStateNames_800B7E70[15];
 extern int shelfMenuActive_800B7EAC;
 
 #endif

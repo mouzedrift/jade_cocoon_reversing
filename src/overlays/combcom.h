@@ -30,17 +30,11 @@ typedef struct CombComDlg
     const char* line3_C;
 } CombComDlg;
 
-// a menu entry / window (0x38 bytes)
+// a menu window row: the item and the row's end marker
 typedef struct CombComItem
 {
-    unsigned short flags;
-    short type_2;
-    void* text_4; // string, or sprite index for type 1
-    int sprts_8;
-    int tpages_C;
-    short x_10;
-    short y_12;
-    int rest[9];
+    MenuWindowItem item;
+    MenuWindowItem end;
 } CombComItem;
 
 // a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)

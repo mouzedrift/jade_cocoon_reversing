@@ -22,7 +22,7 @@ typedef struct TstModelBone
     unsigned short flags;
 } TstModelBone;
 
-typedef struct TstModelTbl { int modelId_0; TstModelBone* bones_4; int name_8; } TstModelTbl;
+typedef struct TstModelTbl { int modelId_0; TstModelBone* bones_4; const char* name_8; } TstModelTbl;
 
 
 extern int dword_800A05A0;
@@ -119,7 +119,7 @@ extern const int unused_800A0998;
 extern const TstModelBone defaultBone_800A09B8;
 extern MATRIX lightDirs_800A1E84;
 extern MATRIX lightColors_800A1EA4;
-extern int tstModelTaskDesc_800A1EC4[6];
+extern EventDesc tstModelTaskDesc_800A1EC4;
 extern EventDesc* tstModelTaskList_800A1EDC[3];
 extern char modelLight_800A1EE8[24];
 extern int minionBones_800A1F00[52];

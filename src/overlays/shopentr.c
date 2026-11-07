@@ -510,10 +510,11 @@ ShelfMenuState shelfMenuStates_800B7D08[15] = {
     { 14, -2, 0, 0, 0, 0, 1 },
     { 15, 15 },
 };
-unsigned int shelfStatePages_800B7E34[30] = {
-    1, 2, 1, 4, 8, 0, 0, 0,
-    0, 0, 0, 0, 0, 0, 0, (unsigned int)aCardCheck1_800B6E34,
-    (unsigned int)aSlotSelect_800B6E24, (unsigned int)aCardCheck2_800B6E10, (unsigned int)aDataSpaceBlock_800B6DEC, (unsigned int)aDataSpaceMinion_800B6DCC, (unsigned int)aNoDataSpace_800B6DB4, (unsigned int)aUnformatted_800B6DA0, (unsigned int)aFormatOrNot_800B6D84, (unsigned int)aFormatting_800B6D6C,
-    (unsigned int)aOverwriting_800B6D5C, (unsigned int)aOverwrite_800B6D48, (unsigned int)aSaveNew_800B6D30, (unsigned int)aNoSpace_800B6D24, (unsigned int)aSaving_800B6D14, (unsigned int)aSaved_800B6D04,
+unsigned int shelfStatePages_800B7E34[15] = { 1, 2, 1, 4, 8 };
+// the states' names (unused)
+const char* shelfStateNames_800B7E70[15] = {
+    aCardCheck1_800B6E34, aSlotSelect_800B6E24, aCardCheck2_800B6E10, aDataSpaceBlock_800B6DEC, aDataSpaceMinion_800B6DCC,
+    aNoDataSpace_800B6DB4, aUnformatted_800B6DA0, aFormatOrNot_800B6D84, aFormatting_800B6D6C, aOverwriting_800B6D5C,
+    aOverwrite_800B6D48, aSaveNew_800B6D30, aNoSpace_800B6D24, aSaving_800B6D14, aSaved_800B6D04,
 };
 int shelfMenuActive_800B7EAC = 0;

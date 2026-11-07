@@ -23,12 +23,12 @@ const char aSetDisplaySpeed_800C2C28[] = "\202r\202\205\202\224\201@\202\204\202
 const char aExit_800C2C50[] = "\202d\202\230\202\211\202\224"; // Exit
 const char aSelect_800C2C5C[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
 
-int topMenuHelp_800C4C80[4] = { (int)aChangeAudioSett_800C2A54, (int)aChangeSubtitleS_800C2A20, (int)aSetScreenColor_800C29FC, (int)aVibrationSettin_800C29D4 };
-int audioPageHelp_800C4C90[3] = { (int)aSetMusicVolume_800C2AE0, (int)aSetAudioEffects_800C2AAC, (int)aSetOutputFormat_800C2A84 };
-int subtitlePageHelp_800C4C9C[7] = { (int)aSetDisplaySpeed_800C2C28, (int)aAllowAnimationS_800C2BFC, (int)aSelectVoiceAudi_800C2BC4, (int)aAutoMessage_800C2BA8, (int)aMessageWindowDi_800C2B78, (int)aSetMagicSpecial_800C2B40, (int)aSetCaptureSpeci_800C2B04 };
-int screenColorPageHelp_800C4CB8[1] = { (int)aSetScreenColor_800C29FC };
-int vibrationPageHelp_800C4CBC[1] = { (int)aVibrationSettin_800C29D4 };
-int *pageHelpTexts_800C4CC0[5] = { topMenuHelp_800C4C80, audioPageHelp_800C4C90, subtitlePageHelp_800C4C9C, screenColorPageHelp_800C4CB8, vibrationPageHelp_800C4CBC };
+const char* topMenuHelp_800C4C80[4] = { aChangeAudioSett_800C2A54, aChangeSubtitleS_800C2A20, aSetScreenColor_800C29FC, aVibrationSettin_800C29D4 };
+const char* audioPageHelp_800C4C90[3] = { aSetMusicVolume_800C2AE0, aSetAudioEffects_800C2AAC, aSetOutputFormat_800C2A84 };
+const char* subtitlePageHelp_800C4C9C[7] = { aSetDisplaySpeed_800C2C28, aAllowAnimationS_800C2BFC, aSelectVoiceAudi_800C2BC4, aAutoMessage_800C2BA8, aMessageWindowDi_800C2B78, aSetMagicSpecial_800C2B40, aSetCaptureSpeci_800C2B04 };
+const char* screenColorPageHelp_800C4CB8[1] = { aSetScreenColor_800C29FC };
+const char* vibrationPageHelp_800C4CBC[1] = { aVibrationSettin_800C29D4 };
+const char** pageHelpTexts_800C4CC0[5] = { topMenuHelp_800C4C80, audioPageHelp_800C4C90, subtitlePageHelp_800C4C9C, screenColorPageHelp_800C4CB8, vibrationPageHelp_800C4CBC };
 CfgCursorHead pageCursors_800C4CD4[5] = {
     { { 1, 0, 4, 0, 4 } },
     { { 1, 0, 3, 0, 3 } },
@@ -950,7 +950,7 @@ void DrawVibrationPage_800C4390(CfgCtxConfig* c)
 
 void DrawConfigHelpText_800C450C(CfgCtxConfig* c)
 {
-    int text;
+    const char* text;
     short rect[4];
     short pos[2];
     short page = c->page_2;
