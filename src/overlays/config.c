@@ -37,221 +37,221 @@ CfgCursorHead pageCursors_800C4CD4[5] = {
     { { 1, 0, 1, 0, 1 } },
 };
 MenuWindowItem topItemAudio_800C4CFC[2] = {
-    { 8, 1, 221, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x51, 0x5C, 0x12, 0, 3 },
+    { 8, 1, { .num = 221 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x51, 0x5C, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem topItemSubtitle_800C4D34[2] = {
-    { 8, 1, 232, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x65, 0x5C, 0x12, 0, 3 },
+    { 8, 1, { .num = 232 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x65, 0x5C, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem topItemScreenColor_800C4D6C[2] = {
-    { 8, 1, 42, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x79, 0x5C, 0x12, 0, 2 },
+    { 8, 1, { .num = 42 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x79, 0x5C, 0x12, 0, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem topItemVibration_800C4DA4[2] = {
-    { 8, 1, 171, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x8D, 0x5C, 0x12, 0, 2 },
+    { 8, 1, { .num = 171 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x72, 0x8D, 0x5C, 0x12, 0, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* topMenuItems_800C4DDC[5] = { topItemAudio_800C4CFC, topItemSubtitle_800C4D34, topItemScreenColor_800C4D6C, topItemVibration_800C4DA4, NULL };
 MenuWindowItem audioItemMusic_800C4DF0[2] = {
-    { 8, 1, 126, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x24, 0x53, 0x4F, 0x12, 0, 3 },
+    { 8, 1, { .num = 126 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x24, 0x53, 0x4F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem audioItemSfx_800C4E28[2] = {
-    { 8, 1, 168, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x24, 0x67, 0x4F, 0x12, 0, 3 },
+    { 8, 1, { .num = 168 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x24, 0x67, 0x4F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem audioItemOutput_800C4E60[2] = {
-    { 8, 1, 146, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x24, 0x7B, 0x4F, 0x12, 0, 3 },
+    { 8, 1, { .num = 146 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x24, 0x7B, 0x4F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* audioPageItems_800C4E98[4] = { audioItemMusic_800C4DF0, audioItemSfx_800C4E28, audioItemOutput_800C4E60, NULL };
 MenuWindowItem musicVolume0_800C4EA8[2] = {
-    { 8, 1, 125, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x76, 0x53, 0x22, 0x12, 0, 3 },
+    { 8, 1, { .num = 125 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x76, 0x53, 0x22, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem musicVolume1_800C4EE0[2] = {
-    { 8, 1, 133, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x99, 0x53, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 133 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x99, 0x53, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem musicVolume2_800C4F18[2] = {
-    { 8, 1, 134, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xAC, 0x53, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 134 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xAC, 0x53, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem musicVolume3_800C4F50[2] = {
-    { 8, 1, 135, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xBF, 0x53, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 135 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xBF, 0x53, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem musicVolume4_800C4F88[2] = {
-    { 8, 1, 136, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xD2, 0x53, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 136 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xD2, 0x53, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem musicVolume5_800C4FC0[2] = {
-    { 8, 1, 137, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xE5, 0x53, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 137 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xE5, 0x53, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem musicVolume6_800C4FF8[2] = {
-    { 8, 1, 138, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF8, 0x53, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 138 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF8, 0x53, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem musicVolume7_800C5030[2] = {
-    { 8, 1, 139, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x10B, 0x53, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 139 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x10B, 0x53, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume0_800C5068[2] = {
-    { 8, 1, 125, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x76, 0x67, 0x22, 0x12, 0, 3 },
+    { 8, 1, { .num = 125 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x76, 0x67, 0x22, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume1_800C50A0[2] = {
-    { 8, 1, 133, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x99, 0x67, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 133 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x99, 0x67, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume2_800C50D8[2] = {
-    { 8, 1, 134, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xAC, 0x67, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 134 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xAC, 0x67, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume3_800C5110[2] = {
-    { 8, 1, 135, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xBF, 0x67, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 135 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xBF, 0x67, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume4_800C5148[2] = {
-    { 8, 1, 136, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xD2, 0x67, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 136 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xD2, 0x67, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume5_800C5180[2] = {
-    { 8, 1, 137, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xE5, 0x67, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 137 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xE5, 0x67, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume6_800C51B8[2] = {
-    { 8, 1, 138, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF8, 0x67, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 138 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF8, 0x67, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem sfxVolume7_800C51F0[2] = {
-    { 8, 1, 139, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x10B, 0x67, 0x12, 0x12, 0, 3 },
+    { 8, 1, { .num = 139 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x10B, 0x67, 0x12, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem outputItem0_800C5228[2] = {
-    { 8, 1, 188, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x76, 0x7B, 0x41, 0x12, 0, 3 },
+    { 8, 1, { .num = 188 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x76, 0x7B, 0x41, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem outputItem1_800C5260[2] = {
-    { 8, 1, 124, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xB9, 0x7B, 0x41, 0x12, 0, 3 },
+    { 8, 1, { .num = 124 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xB9, 0x7B, 0x41, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* musicVolumeItems_800C5298[9] = { musicVolume0_800C4EA8, musicVolume1_800C4EE0, musicVolume2_800C4F18, musicVolume3_800C4F50, musicVolume4_800C4F88, musicVolume5_800C4FC0, musicVolume6_800C4FF8, musicVolume7_800C5030, NULL };
 MenuWindowItem* sfxVolumeItems_800C52BC[9] = { sfxVolume0_800C5068, sfxVolume1_800C50A0, sfxVolume2_800C50D8, sfxVolume3_800C5110, sfxVolume4_800C5148, sfxVolume5_800C5180, sfxVolume6_800C51B8, sfxVolume7_800C51F0, NULL };
 MenuWindowItem* outputItems_800C52E0[3] = { outputItem0_800C5228, outputItem1_800C5260, NULL };
 MenuWindowItem subItemDisplaySpeed_800C52EC[2] = {
-    { 8, 1, 200, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x29, 0x4F, 0x12, 0, 3 },
+    { 8, 1, { .num = 200 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x29, 0x4F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem subItemAnimSkip_800C5324[2] = {
-    { 8, 1, 4, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x48, 0x4F, 0x12, 0, 3 },
+    { 8, 1, { .num = 4 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x48, 0x4F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem subItemSpeech_800C535C[2] = {
-    { 8, 1, 201, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x5C, 0x4F, 0x12, 0, 3 },
+    { 8, 1, { .num = 201 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x5C, 0x4F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem subItemMagicEffects_800C5394[2] = {
-    { 8, 1, 50, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x98, 0x4F, 0x12, 0, 2 },
+    { 8, 1, { .num = 50 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x98, 0x4F, 0x12, 0, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem subItemCaptureEffects_800C53CC[2] = {
-    { 8, 1, 229, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0xAC, 0x4F, 0x12, 0, 2 },
+    { 8, 1, { .num = 229 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0xAC, 0x4F, 0x12, 0, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem subItemAutoMessage_800C5404[2] = {
-    { 8, 1, 89, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x70, 0x4F, 0x12, 0, 2 },
+    { 8, 1, { .num = 89 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x70, 0x4F, 0x12, 0, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem subItemSubtitles_800C543C[2] = {
-    { 8, 1, 191, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x84, 0x4F, 0x12, 0, 2 },
+    { 8, 1, { .num = 191 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x84, 0x4F, 0x12, 0, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* subtitlePageItems_800C5474[8] = { subItemDisplaySpeed_800C52EC, subItemAnimSkip_800C5324, subItemSpeech_800C535C, subItemAutoMessage_800C5404, subItemSubtitles_800C543C, subItemMagicEffects_800C5394, subItemCaptureEffects_800C53CC };
 MenuWindowItem displaySpeed0_800C5494[2] = {
-    { 8, 1, 179, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x29, 0x25, 0x12, 0, 4 },
+    { 8, 1, { .num = 179 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x29, 0x25, 0x12, 0, 4 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem displaySpeed1_800C54CC[2] = {
-    { 8, 1, 131, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA3, 0x29, 0x25, 0x12, 0, 3 },
+    { 8, 1, { .num = 131 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA3, 0x29, 0x25, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem displaySpeed2_800C5504[2] = {
-    { 8, 1, 152, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x29, 0x25, 0x12, 0, 3 },
+    { 8, 1, { .num = 152 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x29, 0x25, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem displaySpeed3_800C553C[2] = {
-    { 8, 1, 195, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xEF, 0x29, 0x25, 0x12, 0, 3 },
+    { 8, 1, { .num = 195 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xEF, 0x29, 0x25, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* displaySpeedItems_800C5574[5] = { displaySpeed0_800C5494, displaySpeed1_800C54CC, displaySpeed2_800C5504, displaySpeed3_800C553C, NULL };
 MenuWindowItem animSkip0_800C5588[2] = {
-    { 8, 1, 44, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x48, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 44 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x48, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem animSkip1_800C55C0[2] = {
-    { 8, 1, 45, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x48, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 45 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x48, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* animSkipItems_800C55F8[3] = { animSkip0_800C5588, animSkip1_800C55C0, NULL };
 MenuWindowItem speech0_800C5604[2] = {
-    { 8, 1, 175, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x5C, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 175 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x5C, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem speech1_800C563C[2] = {
-    { 8, 1, 176, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x5C, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 176 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x5C, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* speechItems_800C5674[3] = { speech0_800C5604, speech1_800C563C, NULL };
 MenuWindowItem magicEffects0_800C5680[2] = {
-    { 8, 1, 143, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x98, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 143 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x98, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem magicEffects1_800C56B8[2] = {
-    { 8, 1, 144, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x98, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 144 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x98, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* magicEffectsItems_800C56F0[3] = { magicEffects0_800C5680, magicEffects1_800C56B8, NULL };
 MenuWindowItem captureEffects0_800C56FC[2] = {
-    { 8, 1, 143, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0xAC, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 143 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0xAC, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem captureEffects1_800C5734[2] = {
-    { 8, 1, 144, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0xAC, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 144 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0xAC, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* captureEffectsItems_800C576C[3] = { captureEffects0_800C56FC, captureEffects1_800C5734, NULL };
 MenuWindowItem autoMessage0_800C5778[2] = {
-    { 8, 1, 90, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x70, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 90 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x70, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem autoMessage1_800C57B0[2] = {
-    { 8, 1, 91, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x70, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 91 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x70, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* autoMessageItems_800C57E8[3] = { autoMessage0_800C5778, autoMessage1_800C57B0, NULL };
 MenuWindowItem subtitles0_800C57F4[2] = {
-    { 8, 1, 192, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x84, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 192 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x84, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem subtitles1_800C582C[2] = {
-    { 8, 1, 193, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x84, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 193 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x84, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* subtitlesItems_800C5864[3] = { subtitles0_800C57F4, subtitles1_800C582C, NULL };
 MenuWindowItem vibrationLabel_800C5870[2] = {
-    { 8, 1, 171, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x6C, 0x4F, 0x12, 0, 3 },
+    { 8, 1, { .num = 171 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x28, 0x6C, 0x4F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* vibrationLabelItems_800C58A8[2] = { vibrationLabel_800C5870, NULL };
 MenuWindowItem vibration0_800C58B0[2] = {
-    { 8, 1, 172, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x6C, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 172 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7D, 0x6C, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem vibration1_800C58E8[2] = {
-    { 8, 1, 173, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x6C, 0x4B, 0x12, 0, 3 },
+    { 8, 1, { .num = 173 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xC9, 0x6C, 0x4B, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* vibrationItems_800C5920[3] = { vibration0_800C58B0, vibration1_800C58E8, NULL };

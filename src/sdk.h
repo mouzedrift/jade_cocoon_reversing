@@ -14,7 +14,9 @@
 #include <libapi.h>
 #include <stdlib.h>
 #include <stdio.h>
-#include <libpad.h>
+#ifndef __psyz
+#include <libpad.h> /* PSY-Z has the pad functions in libetc.h */
+#endif
 #include <libsnd.h>
 #include <libmcx.h>
 #include <libpress.h>

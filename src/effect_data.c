@@ -2908,11 +2908,11 @@ unsigned char largeDigitColors_800826F8[4][4] = {
     { 26, 75, 67 },
 };
 MenuWindowItem yesNoItemYes_80082708[2] = {
-    { 8, 3, (int)aYes_80074190, NULL, NULL, 0x72, 0x78, 0x2E, 0x12, 2, 2 },
+    { 8, 3, aYes_80074190, NULL, NULL, 0x72, 0x78, 0x2E, 0x12, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem yesNoItemNo_80082740[2] = {
-    { 8, 3, (int)aNo_80074198, NULL, NULL, 0xCE, 0x78, 0x2E, 0x12, 2, 2 },
+    { 8, 3, aNo_80074198, NULL, NULL, 0xCE, 0x78, 0x2E, 0x12, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* yesNoRows_80082778[3] = { yesNoItemYes_80082708, yesNoItemNo_80082740, NULL };

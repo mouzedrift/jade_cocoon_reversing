@@ -17,8 +17,8 @@ const char* stateQuestions_800A4C04[4] = {
     "\202r\202\210\202\225\202\206\202\206\202\214\202\211\202\216\202\207\201@\202\215\202\211\202\216\202\211\202\217\202\216\201@\202\217\202\222\202\204\202\205\202\222\201D\201D\201D", // Shuffling minion order...
 };
 unsigned char setupState_800A4C14 = 255;
-MenuWindowItem playerLabelItemP1_800A4C18 = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 20, 0x32, 0x14, 2, 4 };
-MenuWindowItem playerLabelItemP2_800A4C34 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem playerLabelItemP1_800A4C18 = { 8, 1, { .num = 51 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem playerLabelItemP2_800A4C34 = { 8, 1, { .num = 223 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 20, 0x32, 0x14, 2, 4 };
 MenuWindowItem* playerLabelItems_800A4C50[2] = { &playerLabelItemP1_800A4C18, &playerLabelItemP2_800A4C34 };
 int slotLabelSprites_800A4C58[3] = { 219, 115, 102 };
 short minionSlotPos_800A4C64[2][3][2] = { { { 10, 64 }, { 10, 109 }, { 10, 154 } }, { { 166, 64 }, { 166, 109 }, { 166, 154 } } };
@@ -30,7 +30,7 @@ short shufflePhase_800A4C92 = 0;
 short shuffleTimer_800A4C94 = 0;
 short shuffleDelay_800A4C96 = 0;
 
-const MenuWindowItem titleItem_800A4138 = { 8, 1, 36, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7A, 0x14, 0x4C, 0x14, 2, 4 };
+const MenuWindowItem titleItem_800A4138 = { 8, 1, { .num = 36 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x7A, 0x14, 0x4C, 0x14, 2, 4 };
 const MenuWindowItem minionLabelItem_800A4154 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x32, 0x14, 2, 4 };
 
 // Versus fight setup: yes/no questions (allow minion changing, shuffle order, start fight) and the shuffle animation
@@ -287,7 +287,7 @@ void DrawTeamMinion_800A49DC(int side, int slot)
     if (IsMinionSlotEmpty_800A1934(minion) != 1)
     {
         label = minionLabelItem_800A4154;
-        label.text_4 = slotLabelSprites_800A4C58[slot];
+        label.text_4.num = slotLabelSprites_800A4C58[slot];
         label.x_10 = minionSlotPos_800A4C64[side][slot][0];
         label.y_12 = minionSlotPos_800A4C64[side][slot][1];
         c1.colorSet_2 = 0;

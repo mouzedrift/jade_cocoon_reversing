@@ -22,8 +22,8 @@ void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
     short cursor;
     short openStep;
     short i;
-    int name;
-    int bonusName;
+    const char* name;
+    const char* bonusName;
     MenuWindowItem** row;
     MenuWindowItem** row2;
     int y;
@@ -80,9 +80,9 @@ void DrawAbilityList_8002CE28(ListMenuState* menu, unsigned short* origin)
         }
         y = GetAbilityIcon_8002D1A4(GetAbilityAction_800318C8(menu->minion_C->skills_DE.slot[i].id_1)->element_8, i);
         row2 = &abilityListRows_80082D98[i];
-        (*row2)[0].text_4 = y;
-        (*row2)[1].text_4 = name;
-        (*row2)[2].text_4 = bonusName;
+        (*row2)[0].text_4.num = y;
+        (*row2)[1].text_4.str = name;
+        (*row2)[2].text_4.str = bonusName;
         (*row2)[0].sprts_8 = &uiTiySprts_8008D620;
         (*row2)[0].tpages_C = &uiTiyTPages_8008D3F4;
         (*row2)[0].x_10 = pos[0];
@@ -174,7 +174,7 @@ int DrawTargetSelectMenu_8002D250(TargetQuery* req, int mode, int cursor, int ot
     {
         status = GetUnitStatus_80014390(0);
         lists[k] = list0;
-        lists[k][0].text_4 = (int)status->name_10;
+        lists[k][0].text_4.str = status->name_10;
         req->target_4 = 0;
         if (mode == 0)
         {
@@ -209,7 +209,7 @@ int DrawTargetSelectMenu_8002D250(TargetQuery* req, int mode, int cursor, int ot
             state = 0;
             item = subs[i];
             lists[k] = item;
-            item->text_4 = (int)status->name_10;
+            item->text_4.str = status->name_10;
 
             lists[k]->y_12 = 0xA6 + row * 13;
             if (mode == 0)

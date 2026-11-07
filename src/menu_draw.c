@@ -179,30 +179,30 @@ void DrawMenuWindowContents_8002A710(void* item, int ot)
     switch (desc->type_2)
     {
     case 1:
-        if ((unsigned int)desc->text_4 < 0xFFFFFFFF)
+        if ((unsigned int)desc->text_4.num < 0xFFFFFFFF)
         {
             GetMenuItemColor_8002ACE8(desc->flags_0, col);
-            AlignMenuItem_8002AC88(desc->flags_0, rect, (*desc->sprts_8)[desc->text_4].w, loc);
+            AlignMenuItem_8002AC88(desc->flags_0, rect, (*desc->sprts_8)[desc->text_4.num].w, loc);
             {
                 DR_TPAGE** fc = desc->tpages_C;
-                mode = desc->text_4;
+                mode = desc->text_4.num;
                 AddSprtWithTPage_800331C4(loc, *desc->sprts_8 + mode, *fc + mode, pOT_8008D454 + ot, col);
             }
         }
         break;
     case 2:
         SetMenuItemFont1Clut_8002AD08(desc->flags_0);
-        AlignMenuItem_8002AC88(desc->flags_0, rect, MeasureTextWidthFont1_8003E6B0(desc->text_4), loc);
+        AlignMenuItem_8002AC88(desc->flags_0, rect, MeasureTextWidthFont1_8003E6B0(desc->text_4.str), loc);
         mode = 1;
         loc[1] += 2;
-        DrawText_8003E91C(mode, desc->text_4, loc, ot);
+        DrawText_8003E91C(mode, desc->text_4.str, loc, ot);
         break;
     case 3:
         SetMenuItemFont2Clut_8002AD44(desc->flags_0);
-        AlignMenuItem_8002AC88(desc->flags_0, rect, MeasureTextWidth_8003E4C8(desc->text_4), loc);
+        AlignMenuItem_8002AC88(desc->flags_0, rect, MeasureTextWidth_8003E4C8(desc->text_4.str), loc);
         mode = 2;
         loc[1] += 2;
-        DrawText_8003E91C(mode, desc->text_4, loc, ot);
+        DrawText_8003E91C(mode, desc->text_4.str, loc, ot);
         break;
     case 4:
         SetMenuItemFont1Clut_8002AD08(desc->flags_0);
@@ -210,16 +210,16 @@ void DrawMenuWindowContents_8002A710(void* item, int ot)
         loc[1] = rect[1];
         if (desc->flags_0 & 4)
         {
-            DrawSmallText_8002FAA0(1, loc, (unsigned char*)desc->text_4, ot);
+            DrawSmallText_8002FAA0(1, loc, (unsigned char*)desc->text_4.str, ot);
         }
         else if (desc->flags_0 & 8)
         {
             loc[0] += (short)rect[2] / 2;
-            DrawSmallText_8002FAA0(2, loc, (unsigned char*)desc->text_4, ot);
+            DrawSmallText_8002FAA0(2, loc, (unsigned char*)desc->text_4.str, ot);
         }
         else
         {
-            DrawSmallText_8002FAA0(0, loc, (unsigned char*)desc->text_4, ot);
+            DrawSmallText_8002FAA0(0, loc, (unsigned char*)desc->text_4.str, ot);
         }
         break;
     case 5:
@@ -228,35 +228,35 @@ void DrawMenuWindowContents_8002A710(void* item, int ot)
         loc[1] = rect[1];
         if (desc->flags_0 & 4)
         {
-            DrawLargeText_8002FBD8(1, loc, (unsigned char*)desc->text_4, ot);
+            DrawLargeText_8002FBD8(1, loc, (unsigned char*)desc->text_4.str, ot);
         }
         else if (desc->flags_0 & 8)
         {
             loc[0] += (short)rect[2] / 2;
-            DrawLargeText_8002FBD8(2, loc, (unsigned char*)desc->text_4, ot);
+            DrawLargeText_8002FBD8(2, loc, (unsigned char*)desc->text_4.str, ot);
         }
         else
         {
-            DrawLargeText_8002FBD8(0, loc, (unsigned char*)desc->text_4, ot);
+            DrawLargeText_8002FBD8(0, loc, (unsigned char*)desc->text_4.str, ot);
         }
         break;
     case 6:
         SetMenuItemFont1Clut_8002AD08(desc->flags_0);
         loc[0] = rect[0] + rect[2];
         loc[1] = rect[1];
-        DrawNumberRightAlignedFont1_8003F264(loc, desc->text_4, ot);
+        DrawNumberRightAlignedFont1_8003F264(loc, desc->text_4.num, ot);
         break;
     case 7:
         SetMenuItemFont2Clut_8002AD44(desc->flags_0);
         loc[0] = rect[0] + rect[2];
         loc[1] = rect[1];
-        DrawNumberRightAligned_8003EFBC(loc, desc->text_4, ot);
+        DrawNumberRightAligned_8003EFBC(loc, desc->text_4.num, ot);
         break;
     case 8:
         SetMenuItemDigitColor_8002AD80(desc->flags_0);
         loc[0] = rect[0] + rect[2] - 3;
         loc[1] = rect[1] + 2;
-        DrawLargeNumber_8002C100(loc, desc->text_4, ot);
+        DrawLargeNumber_8002C100(loc, desc->text_4.num, ot);
         SetLargeDigitColor_8002C5D0(0);
         break;
     }

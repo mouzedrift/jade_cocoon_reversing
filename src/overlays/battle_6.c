@@ -236,39 +236,39 @@ BatMenuItem minionMenuItems_800C93D4[5] = {
     { helpChangeFighter_800C9374 },
 };
 MenuWindowItem winAttack_800C93FC[2] = {
-    { 8, 1, 13, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 157, 38, 18, 2, 2 },
+    { 8, 1, { .num = 13 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 157, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winDefend_800C9434[2] = {
-    { 8, 1, 48, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 157, 38, 18, 2, 2 },
+    { 8, 1, { .num = 48 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 157, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winSummon_800C946C[2] = {
-    { 8, 1, 180, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
+    { 8, 1, { .num = 180 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winCapture_800C94A4[2] = {
-    { 8, 1, 224, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
+    { 8, 1, { .num = 224 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winItem_800C94DC[2] = {
-    { 8, 1, 88, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 38, 18, 2, 3 },
+    { 8, 1, { .num = 88 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 38, 18, 2, 3 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winFlee_800C9514[2] = {
-    { 8, 1, 57, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 195, 38, 18, 2, 2 },
+    { 8, 1, { .num = 57 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 195, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winSpecialAttack_800C954C[2] = {
-    { 8, 1, 183, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
+    { 8, 1, { .num = 183 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winMagic_800C9584[2] = {
-    { 8, 1, 108, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
+    { 8, 1, { .num = 108 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 60, 176, 38, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem winChangeFighter_800C95BC[2] = {
-    { 8, 1, 40, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 76, 18, 2, 2 },
+    { 8, 1, { .num = 40 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 22, 195, 76, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem *levantMenuWindows_800C95F4[7] = { winAttack_800C93FC, winDefend_800C9434, winSummon_800C946C, winCapture_800C94A4, winItem_800C94DC, winFlee_800C9514 };

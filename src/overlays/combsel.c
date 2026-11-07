@@ -47,15 +47,15 @@ MenuWindowItem listRow5_800A57AC[2] = {
 MenuWindowItem *listRows_800A57E4[7] = { listRow0_800A5694, listRow1_800A56CC, listRow2_800A5704, listRow3_800A573C, listRow4_800A5774, listRow5_800A57AC, 0 };
 MenuWindowList listWindow_800A5800 = { 2, 0, 8, 0, listRows_800A57E4, 0 };
 MenuWindowItem loadRow_800A5818[2] = {
-    { 8, 1, 155, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 99, 108, 18, 2, 2 },
+    { 8, 1, { .num = 155 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 99, 108, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem enterRow_800A5850[2] = {
-    { 8, 1, 29, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 118, 108, 18, 2, 2 },
+    { 8, 1, { .num = 29 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 118, 108, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem deleteRow_800A5888[2] = {
-    { 8, 1, 27, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 137, 108, 18, 2, 2 },
+    { 8, 1, { .num = 27 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 137, 108, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem nextRow_800A58C0[2] = {
@@ -63,7 +63,7 @@ MenuWindowItem nextRow_800A58C0[2] = {
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem quitRow_800A58F8[2] = {
-    { 8, 1, 28, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 175, 108, 18, 2, 2 },
+    { 8, 1, { .num = 28 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 175, 108, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem *mainRows_800A5930[6] = { loadRow_800A5818, enterRow_800A5850, deleteRow_800A5888, nextRow_800A58C0, quitRow_800A58F8, 0 };
@@ -83,12 +83,12 @@ const char *nextTextP2_800A59E0[1] = { "\202r\202\224\202\201\202\222\202\224\20
 ButtonHelpEntry buttonHelpP1_800A59E4[4] = { { 16, "\202r\202\205\202\214\202\205\202\203\202\224" }, { 167, "\202p\202\225\202\211\202\224" }, { 94, "\202d\202\216\202\224\202\205\202\222\201@\202o\202\214\202\201\202\231\202\205\202\222\201@\202Q\201f\202\223\201@\202l\202\211\202\216\202\211\202\217\202\216\202\223\201D" }, { -1 } }; // Select / Quit / Enter Player 2's Minions.
 ButtonHelpEntry buttonHelpP2_800A5A04[4] = { { 16, "\202r\202\205\202\214\202\205\202\203\202\224" }, { 167, "\202p\202\225\202\211\202\224" }, { 94, "\202r\202\224\202\201\202\222\202\224\201@\202\206\202\211\202\207\202\210\202\224\202\211\202\216\202\207\201D" }, { -1 } }; // Select / Quit / Start fighting.
 
-const MenuWindowItem titleItem_800A4238 = { 8, 1, 15, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x6A, 0x14, 0x6C, 0x12, 2, 2 };
+const MenuWindowItem titleItem_800A4238 = { 8, 1, { .num = 15 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x6A, 0x14, 0x6C, 0x12, 2, 2 };
 const MenuWindowItem playerItems_800A4254[2] = {
     { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x14, 0x4D, 0x12, 2, 2 },
-    { 16, 1, 1, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x27, 0x90, 0x13, 2, 2 },
+    { 16, 1, { .num = 1 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x27, 0x90, 0x13, 2, 2 },
 };
-const MenuWindowItem listHeaderItem_800A428C = { 8, 1, 1, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x9B, 0x37, 0x32, 0x12, 2, 2 };
+const MenuWindowItem listHeaderItem_800A428C = { 8, 1, { .num = 1 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x9B, 0x37, 0x32, 0x12, 2, 2 };
 
 void CombSelMain_800A4360(CombSelTask* t, int a)
 {
@@ -122,7 +122,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
     {
         curPad_800A3A94 = player2Pad_800A38D8;
     }
-    nextRow_800A58C0[0].text_4 = nextIcons_800A59AC[curPlayer_800A38D9];
+    nextRow_800A58C0[0].text_4.num = nextIcons_800A59AC[curPlayer_800A38D9];
     listCursor_800A596C.rows_2 = 6;
     listCursor_800A596C.count_4 = 15;
     PlaceSideWindows_800A4C74();
@@ -204,7 +204,7 @@ void CombSelMain_800A4360(CombSelTask* t, int a)
         short xs[2] = { 0xA, 0xE9 };
         MenuWindowItem unused; // never used (it keeps the original frame layout)
         item.x_10 = xs[curPlayer_800A38D9];
-        item.text_4 = playerIcons_800A59A4[curPlayer_800A38D9];
+        item.text_4.num = playerIcons_800A59A4[curPlayer_800A38D9];
         col.colorSet_2 = 0;
         col.semiTrans_3 = 1;
         col.color_0 = saveData_8008B570.uiColor_20.h;

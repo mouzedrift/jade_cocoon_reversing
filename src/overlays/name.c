@@ -45,25 +45,25 @@ NameGrid cursorGrids_800B8200[3] = {
     { 2, 10, 1, 1, 3, 0, 54, 10, 209, 99 },
 };
 MenuWindowItem cmdItemDefault_800B823C[2] = {
-    { 8, 1, 5, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x61, 0x40, 0x13, 0, 3 },
+    { 8, 1, { .num = 5 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x61, 0x40, 0x13, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem cmdItemRestore_800B8274[2] = {
-    { 8, 1, 142, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x75, 0x40, 0x13, 0, 3 },
+    { 8, 1, { .num = 142 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x75, 0x40, 0x13, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem cmdItemOk_800B82AC[2] = {
-    { 8, 1, 47, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x8E, 0x40, 0x13, 0, 4 },
+    { 8, 1, { .num = 47 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xF6, 0x8E, 0x40, 0x13, 0, 4 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* cmdItemLists_800B82E4[4] = { cmdItemDefault_800B823C, cmdItemRestore_800B8274, cmdItemOk_800B82AC, NULL };
 MenuWindowList cmdMenu_800B82F4 = { 2, 0, 8, 0, cmdItemLists_800B82E4, 0 };
 MenuWindowItem pageItemAbc_800B830C[2] = {
-    { 8, 2, (int)aABC_800B6E00, NULL, NULL, 0xCE, 0x61, 0x26, 0xD, 0, 0 },
+    { 8, 2, aABC_800B6E00, NULL, NULL, 0xCE, 0x61, 0x26, 0xD, 0, 0 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem pageItem123_800B8344[2] = {
-    { 8, 2, (int)a123_800B6E08, NULL, NULL, 0xCE, 0x6F, 0x26, 0xD, 0, 0 },
+    { 8, 2, a123_800B6E08, NULL, NULL, 0xCE, 0x6F, 0x26, 0xD, 0, 0 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* pageItemLists_800B837C[3] = { pageItemAbc_800B830C, pageItem123_800B8344, NULL };

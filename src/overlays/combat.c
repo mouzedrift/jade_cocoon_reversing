@@ -55,20 +55,20 @@ unsigned char rosterFill_800A38DA = 0;
 unsigned char selMode_800A38DB = 0;
 unsigned char battleResult_800A38DC = 0;
 int unused_800A38E0 = 0xDF0033;
-int combatTaskDesc_800A38E4[6] = { 1, 5, 0, 0, (int)CombatInit_800A13A0, (int)CombatFree_800A148C };
-int combatModelLoaderDesc_800A38FC[6] = { 1, 0x8000, 92, (int)&modelLoaderTask_8008B54C, (int)ModelLoaderTask_800209AC };
-int combatActorTaskDesc_800A3914[6] = { 2, 0x8000, 0x1CC, (int)&actorTasks_8008D43C };
-int enemyWindowTaskDef_800A392C[6] = { 2, 0x8000, 24, (int)&enemyWindowTasks_8008B564 };
-int announcerTaskDef_800A3944[6] = { 1, 0x8000, 0, (int)&announcerTasks_8008D458 };
-int combatCameraTaskDesc_800A395C[6] = { 1, 0x8000, 0x21C, (int)&cameraTask_8008D4A0 };
-int combatFadeTaskDesc_800A3974[6] = { 1, 0x8000, 8, (int)&fadeTask_8008D628 };
-void *combatTaskList_800A398C[25] = {
-    (void *)&eventDescs_80078EB8, (void *)((char *)&eventDescs_80078EB8 + 24), (void *)((char *)&eventDescs_80078EB8 + 120), (void *)((char *)&eventDescs_80078EB8 + 72),
-    (void *)combatCameraTaskDesc_800A395C, (void *)((char *)&eventDescs_80078EB8 + 384), (void *)combatFadeTaskDesc_800A3974, (void *)((char *)&eventDescs_80078EB8 + 504),
-    (void *)((char *)&eventDescs_80078EB8 + 528), (void *)((char *)&eventDescs_80078EB8 + 552), (void *)((char *)&eventDescs_80078EB8 + 576), (void *)((char *)&eventDescs_80078EB8 + 432),
-    (void *)((char *)&eventDescs_80078EB8 + 624), (void *)combatModelLoaderDesc_800A38FC, (void *)((char *)&eventDescs_80078EB8 + 456), (void *)combatTaskDesc_800A38E4,
-    (void *)combatActorTaskDesc_800A3914, (void *)((char *)&eventDescs_80078EB8 + 240), (void *)((char *)&eventDescs_80078EB8 + 216), (void *)((char *)&eventDescs_80078EB8 + 600),
-    (void *)enemyWindowTaskDef_800A392C, (void *)announcerTaskDef_800A3944, (void *)((char *)&eventDescs_80078EB8 + 192), (void *)((char *)&eventDescs_80078EB8 + 312),
+EventDesc combatTaskDesc_800A38E4 = { 1, 5, 0, NULL, (EventEntryFn)CombatInit_800A13A0, (EventEntryFn)CombatFree_800A148C };
+EventDesc combatModelLoaderDesc_800A38FC = { 1, 0x8000, 92, (EventNode**)&modelLoaderTask_8008B54C, (EventEntryFn)ModelLoaderTask_800209AC };
+EventDesc combatActorTaskDesc_800A3914 = { 2, 0x8000, 0x1CC, (EventNode**)&actorTasks_8008D43C };
+EventDesc enemyWindowTaskDef_800A392C = { 2, 0x8000, 24, (EventNode**)&enemyWindowTasks_8008B564 };
+EventDesc announcerTaskDef_800A3944 = { 1, 0x8000, 0, (EventNode**)&announcerTasks_8008D458 };
+EventDesc combatCameraTaskDesc_800A395C = { 1, 0x8000, 0x21C, (EventNode**)&cameraTask_8008D4A0 };
+EventDesc combatFadeTaskDesc_800A3974 = { 1, 0x8000, 8, (EventNode**)&fadeTask_8008D628 };
+EventDesc* combatTaskList_800A398C[25] = {
+    &eventDescs_80078EB8[0], &eventDescs_80078EB8[1], &eventDescs_80078EB8[5], &eventDescs_80078EB8[3],
+    &combatCameraTaskDesc_800A395C, &eventDescs_80078EB8[16], &combatFadeTaskDesc_800A3974, &eventDescs_80078EB8[21],
+    &eventDescs_80078EB8[22], &eventDescs_80078EB8[23], &eventDescs_80078EB8[24], &eventDescs_80078EB8[18],
+    &eventDescs_80078EB8[26], &combatModelLoaderDesc_800A38FC, &eventDescs_80078EB8[19], &combatTaskDesc_800A38E4,
+    &combatActorTaskDesc_800A3914, &eventDescs_80078EB8[10], &eventDescs_80078EB8[9], &eventDescs_80078EB8[25],
+    &enemyWindowTaskDef_800A392C, &announcerTaskDef_800A3944, &eventDescs_80078EB8[8], &eventDescs_80078EB8[13],
 };
 int stageOverlays_800A39F0[6] = { 22, 23, 24, 26, 27, 28 };
 CombatSlot combatSlots_800A3A08[2] = { { 0 } };

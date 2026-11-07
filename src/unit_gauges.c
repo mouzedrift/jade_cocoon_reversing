@@ -15,9 +15,9 @@
 #include "ui_gauge.h"
 #include "element_grid.h"
 
-const MenuWindowItem statusIcon0_800743D4 = { 0x10, 1, 151, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 210, 172, 21, 20, 3, 4 };
-const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, 189, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 3, 5 };
-const MenuWindowItem statusIcon2_8007440C = { 0x10, 1, 177, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 6, 5 };
+const MenuWindowItem statusIcon0_800743D4 = { 0x10, 1, { .num = 151 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 210, 172, 21, 20, 3, 4 };
+const MenuWindowItem statusIcon1_800743F0 = { 0x10, 1, { .num = 189 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 3, 5 };
+const MenuWindowItem statusIcon2_8007440C = { 0x10, 1, { .num = 177 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 34, 20, 6, 5 };
 const StatusIconMasks statusIconMasks_80074428 = { { 1, 0x3F8, 2 } };
 
 void DrawUnitStatusExp_8002ECE0(UnitStatus* unit, unsigned short* pos, int unused, short ot)

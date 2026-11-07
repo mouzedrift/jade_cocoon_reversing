@@ -18,7 +18,7 @@
 #include "tim.h"
 #include "menu_window.h"
 
-const int emptyString_800741EC = 0;
+const char emptyString_800741EC[4] = "";
 
 void DrawMenuBackground_8002BE10(void)
 {
@@ -237,7 +237,7 @@ void DrawScrollArrow_8002C6DC(short* pos, short dir, short ot)
     DrawScrollArrow_8002B3DC(arrow, frameCount_8008D3FC, pos, ot);
 }
 extern int GetLastInventorySlot_800AD308(int a0);
-extern const int emptyString_800741EC;
+extern const char emptyString_800741EC[4];
 void DrawItemList_8002C728(ListMenuState* menu)
 {
     MenuWindowList list;
@@ -247,7 +247,7 @@ void DrawItemList_8002C728(ListMenuState* menu)
     int idx;
     int count;
     int icon;
-    int name;
+    const char* name;
     MenuWindowItem** row;
     int y;
     int total;
@@ -265,15 +265,15 @@ void DrawItemList_8002C728(ListMenuState* menu)
         else
         {
             icon = -1;
-            name = (int)&emptyString_800741EC;
+            name = emptyString_800741EC;
             count = 0;
         }
         row = &itemListRows_800829E8[i];
-        (*row)[0].text_4 = icon;
+        (*row)[0].text_4.num = icon;
         (*row)[0].sprts_8 = &publicTiySprts_8008D434;
         (*row)[0].tpages_C = &publicTiyTPages_8008D440;
-        (*row)[1].text_4 = name;
-        (*row)[2].text_4 = count;
+        (*row)[1].text_4.str = name;
+        (*row)[2].text_4.num = count;
         (*row)[0].x_10 = 0x53;
         y = i * 22 + 0x36;
         (*row)[0].y_12 = y;
@@ -339,7 +339,7 @@ void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
     short i;
     int idx;
     int icon;
-    int name;
+    const char* name;
     MenuWindowItem** row;
     int y;
     int total;
@@ -370,11 +370,11 @@ void DrawMagicList_8002CAC8(ListMenuState* menu, unsigned short* origin)
         else
         {
             icon = -1;
-            name = (int)&emptyString_800741EC;
+            name = emptyString_800741EC;
         }
         row = &magicListRows_80082B54[i];
-        (*row)[0].text_4 = icon;
-        (*row)[1].text_4 = name;
+        (*row)[0].text_4.num = icon;
+        (*row)[1].text_4.str = name;
         (*row)[0].x_10 = pos[0];
         y = i * 22;
         (*row)[0].y_12 = pos[1] + y;

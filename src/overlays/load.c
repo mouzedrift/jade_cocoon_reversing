@@ -79,49 +79,49 @@ MenuWindowItem *cardSlot2Items_800BDBB4[2] = { cardSlot2Item_800BDB7C };
 MenuWindowList cardSlot2Win_800BDBBC = { 2, 0, 8, 0, cardSlot2Items_800BDBB4, 5 };
 MenuWindowList *cardSlotWins_800BDBD4[2] = { &cardSlot1Win_800BDB64, &cardSlot2Win_800BDBBC };
 MenuWindowItem topMenuSave_800BDBDC[2] = {
-    { 8, 1, 190, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 69, 108, 19, 0, 4 },
+    { 8, 1, { .num = 190 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 69, 108, 19, 0, 4 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem topMenuLoad_800BDC14[2] = {
-    { 8, 1, 197, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 90, 108, 19, 0, 4 },
+    { 8, 1, { .num = 197 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 90, 108, 19, 0, 4 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem topMenuExit_800BDC4C[2] = {
-    { 8, 1, 198, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 111, 108, 19, 0, 4 },
+    { 8, 1, { .num = 198 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 111, 108, 19, 0, 4 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem topMenuTitle_800BDC84[2] = {
-    { 8, 1, 196, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 132, 108, 19, 0, 4 },
+    { 8, 1, { .num = 196 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 106, 132, 108, 19, 0, 4 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem *topMenuItems_800BDCBC[5] = { topMenuSave_800BDBDC, topMenuLoad_800BDC14, topMenuExit_800BDC4C, topMenuTitle_800BDC84 };
 MenuWindowList topMenuWin_800BDCD0 = { 2, 0, 8, 0, topMenuItems_800BDCBC, 5 };
 MenuWindowItem formatYes_800BDCE8[2] = {
-    { 8, 3, (int)aYES_800B671C, NULL, NULL, 126, 106, 56, 18, 2, 2 },
+    { 8, 3, aYES_800B671C, NULL, NULL, 126, 106, 56, 18, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem formatNo_800BDD20[2] = {
-    { 8, 3, (int)aNO_800B6724, NULL, NULL, 126, 126, 56, 18, 2, 2 },
+    { 8, 3, aNO_800B6724, NULL, NULL, 126, 126, 56, 18, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem *formatItems_800BDD58[3] = { formatYes_800BDCE8, formatNo_800BDD20 };
 MenuWindowList formatWin_800BDD64 = { 2, 0, 8, 1, formatItems_800BDD58 };
 MenuWindowItem confirmYes_800BDD7C[2] = {
-    { 8, 3, (int)aYES_800B671C, NULL, NULL, 215, 193, 46, 19, 2, 2 },
+    { 8, 3, aYES_800B671C, NULL, NULL, 215, 193, 46, 19, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem confirmNo_800BDDB4[2] = {
-    { 8, 3, (int)aNO_800B6724, NULL, NULL, 0x105, 193, 48, 19, 2, 2 },
+    { 8, 3, aNO_800B6724, NULL, NULL, 0x105, 193, 48, 19, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem *confirmItems_800BDDEC[3] = { confirmYes_800BDD7C, confirmNo_800BDDB4 };
 MenuWindowList confirmWin_800BDDF8 = { 2, 0, 8, 1, confirmItems_800BDDEC };
 MenuWindowItem titleYes_800BDE10[2] = {
-    { 8, 3, (int)aYES_800B671C, NULL, NULL, 106, 121, 52, 19, 2, 2 },
+    { 8, 3, aYES_800B671C, NULL, NULL, 106, 121, 52, 19, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem titleNo_800BDE48[2] = {
-    { 8, 3, (int)aNO_800B6724, NULL, NULL, 163, 121, 52, 19, 2, 2 },
+    { 8, 3, aNO_800B6724, NULL, NULL, 163, 121, 52, 19, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
@@ -936,14 +936,14 @@ const CardTag aCRD0_800B7300 = { "CRD0" };
 const char aMemoryCard1Jp_800B7308[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202P"; // メモリーカード１
 const LoadMenuItemPair cardSlotMenuItem1_800B731C = {
     {
-        { 8, 3, (int)aMemoryCard1Jp_800B7308, NULL, NULL, 40, 100, 100, 34, 2, 2 },
+        { 8, 3, aMemoryCard1Jp_800B7308, NULL, NULL, 40, 100, 100, 34, 2, 2 },
         { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const char aMemoryCard2Jp_800B7354[] = "\203\201\203\202\203\212\201[\203J\201[\203h\202Q"; // メモリーカード２
 const LoadMenuItemPair cardSlotMenuItem2_800B7368 = {
     {
-        { 8, 3, (int)aMemoryCard2Jp_800B7354, NULL, NULL, 180, 100, 100, 34, 2, 2 },
+        { 8, 3, aMemoryCard2Jp_800B7354, NULL, NULL, 180, 100, 100, 34, 2, 2 },
         { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };

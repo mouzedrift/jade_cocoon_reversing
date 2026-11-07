@@ -3341,7 +3341,7 @@ void DrawSkinList_800BED48(short* ref)
     short i;
     int id;
     int icon;
-    int name;
+    const char* name;
     int cnt;
     int y;
     int n;
@@ -3357,14 +3357,14 @@ void DrawSkinList_800BED48(short* ref)
         else
         {
             icon = -1;
-            name = (int)aEmpty_800B6D7C;
+            name = aEmpty_800B6D7C;
             cnt = 0;
         }
-        skinListRows_800C0258[i][0].text_4 = icon;
+        skinListRows_800C0258[i][0].text_4.num = icon;
         skinListRows_800C0258[i][0].sprts_8 = &publicTiySprts_8008D434;
         skinListRows_800C0258[i][0].tpages_C = &publicTiyTPages_8008D440;
-        skinListRows_800C0258[i][1].text_4 = name;
-        skinListRows_800C0258[i][2].text_4 = cnt;
+        skinListRows_800C0258[i][1].text_4.str = name;
+        skinListRows_800C0258[i][2].text_4.num = cnt;
         skinListRows_800C0258[i][0].x_10 = 0x7B;
         y = i * 22 + 0x68;
         skinListRows_800C0258[i][0].y_12 = y;
@@ -3937,23 +3937,23 @@ const char *abilityDescLines_800C044C[39][4] = {
     { aSpecialAttackBr_800B8C70, aMakesItEasierTo_800B8C18, aSlightlyMoreDif_800B8CAC },
 };
 MenuWindowItem mainMenuItem0_800C06BC[2] = {
-    { 0x8, 1, 43, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 77, 56, 20, 0, 3 },
+    { 0x8, 1, { .num = 43 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 77, 56, 20, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem mainMenuItem1_800C06F4[2] = {
-    { 0x8, 1, 185, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 100, 56, 20, 0, 5 },
+    { 0x8, 1, { .num = 185 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 100, 56, 20, 0, 5 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem mainMenuItem2_800C072C[2] = {
-    { 0x8, 1, 145, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 123, 56, 20, 0, 3 },
+    { 0x8, 1, { .num = 145 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 123, 56, 20, 0, 3 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem mainMenuItem3_800C0764[2] = {
-    { 0x10, 1, 103, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 146, 56, 20, 14, 5 },
+    { 0x10, 1, { .num = 103 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 146, 56, 20, 14, 5 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem mainMenuItem4_800C079C[2] = {
-    { 0x8, 1, 53, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 169, 56, 20, 0, 5 },
+    { 0x8, 1, { .num = 53 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 15, 169, 56, 20, 0, 5 },
     { 0x1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 };
 MenuWindowItem* mainMenuItems_800C07D4[6] = {

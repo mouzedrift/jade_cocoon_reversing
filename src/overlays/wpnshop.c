@@ -1007,7 +1007,7 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
         StoreArrow p;
     } u40;
     StoreSprtBox b48;
-    int name = 0;
+    const char* name = NULL;
     int icon;
     int price;
     int sprt;
@@ -1092,9 +1092,9 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
             storeListRows_800BEA40[i][0].flags_0 &= ~0x40;
             storeListRows_800BEA40[i][1].flags_0 &= ~0x40;
             storeListRows_800BEA40[i][2].flags_0 &= ~0x40;
-            storeListRows_800BEA40[i][0].text_4 = icon;
-            storeListRows_800BEA40[i][1].text_4 = name;
-            storeListRows_800BEA40[i][2].text_4 = price;
+            storeListRows_800BEA40[i][0].text_4.num = icon;
+            storeListRows_800BEA40[i][1].text_4.str = name;
+            storeListRows_800BEA40[i][2].text_4.num = price;
             if (GetMoney_800AD02C() < price && (panel == 4 || panel == 10))
             {
                 storeListRows_800BEA40[i][0].flags_0 |= 2;
@@ -2134,28 +2134,28 @@ MenuWindowItem storeListRow3_800BE9D0[4] = {
 };
 MenuWindowItem* storeListRows_800BEA40[5] = { storeListRow0_800BE880, storeListRow1_800BE8F0, storeListRow2_800BE960, storeListRow3_800BE9D0, NULL };
 MenuWindowItem mainMenuItem0_800BEA54[2] = {
-    { 8, 1, 23, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x5E, 0x2F, 0x12, 0, 3 },
+    { 8, 1, { .num = 23 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x5E, 0x2F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem mainMenuItem1_800BEA8C[2] = {
-    { 8, 1, 170, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x71, 0x2F, 0x12, 0, 3 },
+    { 8, 1, { .num = 170 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x71, 0x2F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem mainMenuItem2_800BEAC4[2] = {
-    { 8, 1, 53, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x84, 0x2F, 0x12, 0, 3 },
+    { 8, 1, { .num = 53 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x84, 0x2F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* mainMenuItems_800BEAFC[4] = { mainMenuItem0_800BEA54, mainMenuItem1_800BEA8C, mainMenuItem2_800BEAC4, NULL };
 MenuWindowItem equipKindItem0_800BEB0C[2] = {
-    { 8, 1, 22, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x5E, 0x2F, 0x12, 0, 3 },
+    { 8, 1, { .num = 22 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x5E, 0x2F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem equipKindItem1_800BEB44[2] = {
-    { 8, 1, 20, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x71, 0x2F, 0x12, 0, 3 },
+    { 8, 1, { .num = 20 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x71, 0x2F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem equipKindItem2_800BEB7C[2] = {
-    { 8, 1, 3, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x84, 0x2F, 0x12, 0, 3 },
+    { 8, 1, { .num = 3 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0xA, 0x84, 0x2F, 0x12, 0, 3 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* equipKindItems_800BEBB4[4] = { equipKindItem0_800BEB0C, equipKindItem1_800BEB44, equipKindItem2_800BEB7C, NULL };

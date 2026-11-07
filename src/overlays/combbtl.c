@@ -376,7 +376,7 @@ void AnnounceWinner_800A51EC(CombBtlTask* t)
 }
 
 const MenuWindowItem winnerBanner_800A4A54 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x56, 0x32, 0x14, 2, 4 };
-const MenuWindowItem resultBanner_800A4A70 = { 8, 1, 0xE6, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x6B, 0x32, 0x14, 2, 4 };
+const MenuWindowItem resultBanner_800A4A70 = { 8, 1, { .num = 0xE6 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0x87, 0x6B, 0x32, 0x14, 2, 4 };
 
 void DrawWinnerBanner_800A5290(CombBtlTask* t)
 {
@@ -386,7 +386,7 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
     MenuWindowItem result;
     icons[0] = 0x33;
     icons[1] = 0xDF;
-    winner.text_4 = icons[loserSide_800A85F8 ^ 1];
+    winner.text_4.num = icons[loserSide_800A85F8 ^ 1];
     box.colorSet_2 = 1;
     box.semiTrans_3 = 1;
     box.color_0 = saveData_8008B570.uiColor_20.h;
@@ -1158,8 +1158,8 @@ const CombBtlSideRot sideActorArgs_800A4AEC = { {
         { 0 },
         { 0, 0, 0, 8 },
     } };
-const MenuWindowItem sideLabel0_800A4AFC = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 110, 20, 50, 20, 2, 4 };
-const MenuWindowItem sideLabel1_800A4B18 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 160, 20, 50, 20, 2, 4 };
+const MenuWindowItem sideLabel0_800A4AFC = { 8, 1, { .num = 51 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 110, 20, 50, 20, 2, 4 };
+const MenuWindowItem sideLabel1_800A4B18 = { 8, 1, { .num = 223 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 160, 20, 50, 20, 2, 4 };
 const CombBtlPos2 statusIconPos_800A4B34 = { {
         { 10, 79 },
         { 0x136, 79 },
@@ -1424,7 +1424,7 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     w2 = slotItem_800A4B3C;
     uA0.pos = slotItemPos_800A4B58;
     uA8.v = slotIcons_800A4B60;
-    w2.text_4 = uA8.v.v[sideSlot_800A4078[win->side_0]];
+    w2.text_4.num = uA8.v.v[sideSlot_800A4078[win->side_0]];
     w2.x_10 = uA0.pos.p[win->side_0].lo;
     w2.y_12 = uA0.pos.p[win->side_0].hi;
     box78.colorSet_2 = 0;

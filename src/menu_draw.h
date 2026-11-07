@@ -31,12 +31,19 @@ void InitReverbTask_8002A1BC();
 
 // an item of a menu window (DrawMenuWindowContents_8002A710 / DrawMenuItemWithWindow_8002ADB4), 0x1C bytes;
 // a row of items ends with an item with flags_0 & 1
+// what a menu window item shows: a text, or a number / sprite index
+typedef union MenuText
+{
+    const char* str;
+    int num;
+} MenuText;
+
 typedef struct MenuWindowItem
 {
     unsigned short flags_0; // 1: end of the row, 2: greyed out, 0x20: no window, 0x40: no contents; 4/8: alignment
     unsigned short type_2;  // 0: none, 1: TIY sprite (text_4 indexes sprts_8), 2/3: text (font 1/2), 4/5: small/large text,
                             // 6/7: number (font 1/2), ...
-    int text_4;             // the text, the number, or the sprite index into sprts_8
+    MenuText text_4;        // the text, the number, or the sprite index into sprts_8
     SPRT** sprts_8;         // a TIY sprite table (e.g. &uiTiySprts_8008D620)
     DR_TPAGE** tpages_C;
     unsigned short x_10;    // the window rect

@@ -8,8 +8,8 @@ int dword_800A4088 SDATA = 23; // first word of the overlay
 
 MenuCursor slotCursor_800A47E8 = { 1, 1, 1, 0x40, 0, 0 };
 int unused_800A47F4 = 0;
-MenuWindowItem playerLabelItemP1_800A47F8 = { 8, 1, 51, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 20, 0x32, 0x14, 2, 4 };
-MenuWindowItem playerLabelItemP2_800A4814 = { 8, 1, 223, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem playerLabelItemP1_800A47F8 = { 8, 1, { .num = 51 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 20, 0x32, 0x14, 2, 4 };
+MenuWindowItem playerLabelItemP2_800A4814 = { 8, 1, { .num = 223 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 260, 20, 0x32, 0x14, 2, 4 };
 MenuWindowItem* playerLabelItems_800A4830[2] = { &playerLabelItemP1_800A47F8, &playerLabelItemP2_800A4814 };
 // text_4 set to the win / lose / draw sprite (DrawPlayerResult_800A4240)
 MenuWindowItem resultItemP1_800A4838 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 10, 41, 0x32, 0x14, 2, 4 };
@@ -25,9 +25,9 @@ CombRsltPos minionSlotPos_800A48C4[2][3] = {
     { { 166, 64 }, { 166, 109 }, { 166, 154 } },
 };
 
-const MenuWindowItem resultTitleItem_800A408C = { 8, 1, 159, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 122, 20, 0x4C, 0x14, 2, 4 };
+const MenuWindowItem resultTitleItem_800A408C = { 8, 1, { .num = 159 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 122, 20, 0x4C, 0x14, 2, 4 };
 const MenuWindowItem minionLabelItem_800A40A8 = { 8, 1, 0, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x32, 0x14, 2, 4 };
-const MenuWindowItem minionHpItem_800A40C4 = { 10, 1, 64, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x5E, 0x14, 2, 4 };
+const MenuWindowItem minionHpItem_800A40C4 = { 10, 1, { .num = 64 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 0, 0, 0x5E, 0x14, 2, 4 };
 
 // Versus mode result screen: per player result, score and minions; any button fades back to the versus task
 void VersusResultTask_800A40E0(CombatTask* task)
@@ -74,15 +74,15 @@ void DrawPlayerResult_800A4240(int player)
     switch (result)
     {
     case 0:
-        resultItems_800A4870[player]->text_4 = 0xE6;
+        resultItems_800A4870[player]->text_4.num = 0xE6;
         box.colorSet_2 = 1;
         break;
     case 1:
-        resultItems_800A4870[player]->text_4 = 0x68;
+        resultItems_800A4870[player]->text_4.num = 0x68;
         box.colorSet_2 = 2;
         break;
     case 2:
-        resultItems_800A4870[player]->text_4 = 0x41;
+        resultItems_800A4870[player]->text_4.num = 0x41;
         box.colorSet_2 = 2;
         break;
     }
@@ -173,7 +173,7 @@ void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box)
     minion = &teams_800A3AA0[player][slot];
     if (IsMinionSlotEmpty_800A1934(minion) != 1)
     {
-        label.text_4 = slotLabelSprites_800A48B8[slot];
+        label.text_4.num = slotLabelSprites_800A48B8[slot];
         label.x_10 = minionSlotPos_800A48C4[player][slot].x;
         label.y_12 = minionSlotPos_800A48C4[player][slot].y;
         DrawMenuItemWithWindow_8002ADB4(&label, box, 0xF, GetTime30Hz_8002C64C());

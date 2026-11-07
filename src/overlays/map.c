@@ -144,12 +144,12 @@ const MenuWindowList menuTemplate_800B6960 = { 2, 0, 8 };
 const char aProceed_800B6978[] = "\202o\202\222\202\217\202\203\202\205\202\205\202\204\201H"; // Proceed?
 const char aYes_800B698C[] = "\202x\202\205\202\223"; // Yes
 const MapWin yesRow_800B6994 = { {
-    { 8, 3, (int)aYes_800B698C, 0, 0, 114, 184, 46, 18, 2, 2 },
+    { 8, 3, aYes_800B698C, 0, 0, 114, 184, 46, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 } };
 const char aNo_800B69CC[] = "\202m\202\217"; // No
 const MapWin noRow_800B69D4 = { {
-    { 8, 3, (int)aNo_800B69CC, 0, 0, 160, 184, 46, 18, 2, 2 },
+    { 8, 3, aNo_800B69CC, 0, 0, 160, 184, 46, 18, 2, 2 },
     { 1, 0, 0, 0, 0, -1, -1, -1, -1, -1, -1 },
 } };
 const char aField2_800B6A0C[16] = "\202e\202\211\202\205\202\214\202\204\202Q";
@@ -410,7 +410,7 @@ void DestinationSelect_800B7044(MapTask* task, int work)
                      i < mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A + mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].rows_2; i++)
                 {
                     GetNthOpenDest_800B8128((short)i, mapSelect_800AEBF8.area, &listDest);
-                    list[i - mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A][0].text_4 = (int)destNames_800B92FC[listDest.area][listDest.dest];
+                    list[i - mapSelectCursors_800AEBFC[mapSelect_800AEBF8.area].scroll_A][0].text_4.str = destNames_800B92FC[listDest.area][listDest.dest];
                 }
                 if (openDestCount_800B8CA4 < 3)
                 {

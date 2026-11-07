@@ -677,9 +677,9 @@ void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short ca
             v = (int)emptyText_800C4784;
             count = 0;
         }
-        equipListRows_800C598C[i][0].text_4 = icon;
-        equipListRows_800C598C[i][1].text_4 = v;
-        equipListRows_800C598C[i][2].text_4 = count;
+        equipListRows_800C598C[i][0].text_4.num = icon;
+        equipListRows_800C598C[i][1].text_4.num = v;
+        equipListRows_800C598C[i][2].text_4.num = count;
         equipListRows_800C598C[i][0].sprts_8 = &publicTiySprts_8008D434;
         equipListRows_800C598C[i][0].tpages_C = &publicTiyTPages_8008D440;
         equipListRows_800C598C[i][0].x_10 = rect->x;

@@ -45,11 +45,6 @@ typedef struct ItemDropRow
     unsigned char item2_7;
 } ItemDropRow;
 
-typedef struct MenuQ
-{
-    int w[4];
-} MenuQ;
-
 
 typedef struct BattleDrop
 {
@@ -303,7 +298,7 @@ extern const int menuOverlayId_800B66C0;
 extern const char aItemsObtained_800B66C4[];
 extern const char aStatus_800B66D0[];
 extern const char aQuit_800B66E0[];
-extern const int emptyHelpLabel_800B66EC;
+extern const char emptyHelpLabel_800B66EC[4];
 extern const char aNoNeedToUseThis_800B66F0[];
 extern const char aThisMinionCanno_800B6724[];
 extern const char aMinionsCannotUs_800B676C[];
@@ -616,8 +611,8 @@ typedef struct MenuTitledRect
 extern MenuTitledRect levelUpStatusRect_800C1060;
 extern ItemDropRow itemDropTable_800C1080[211];
 extern short unused_800C1718[10];
-extern int resultHelpBar_800C172C[7];
-extern char unused_800C1748[12];
+extern ButtonHelpEntry resultHelpBar_800C172C[4];
+extern char unused_800C174C[8];
 extern int equipSlotLabels_800C1754[3];
 extern MenuWindowItem equipRowWeapon_800C1760[4];
 extern MenuWindowItem equipRowArmor_800C17D0[4];
@@ -631,7 +626,7 @@ extern char rankRect_800C18DC[8];
 extern char moneyWindowRect_800C18E4[8];
 extern MenuCell itemGridCell_800C18EC;
 extern char statusWindowRect_800C18F4[8];
-extern int menuMessages_800C18FC[16];
+extern const char* menuMessages_800C18FC[16];
 extern unsigned short levantCmdStates_800C193C[6];
 extern unsigned short minionCmdStates_800C1948[4];
 extern short menuNextState_800C1950[18];
@@ -644,9 +639,9 @@ extern short cursorRestoreSlot_800C1B98[18];
 extern int levantCmdWindows_800C1BBC[5];
 extern int minionCmdWindows_800C1BD0[4];
 extern char statusStatsRect_800C1BE0[8];
-extern MenuQ itemDescs_800C1BE8[43];
-extern MenuQ keyItemDescs_800C1E98[38];
-extern MenuQ magicDescs_800C20F8[30];
+extern const char* itemDescs_800C1BE8[43][4];
+extern const char* keyItemDescs_800C1E98[38][4];
+extern const char* magicDescs_800C20F8[30][4];
 extern const char* abilityDescs_800C22D8[39][4];
 extern MenuWindowItem levantCmdItem0_800C2548[2];
 extern MenuWindowItem levantCmdItem1_800C2580[2];
