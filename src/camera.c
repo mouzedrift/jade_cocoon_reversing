@@ -97,7 +97,7 @@ void UpdatePadVibration_80036820(int port)
         }
     }
 }
-extern int FindMeshAtPos_800B8184(int pos, int b);
+extern int FindMeshAtPos_800B8184(Vec3i* pos, unsigned int mesh);
 
 void InitCameraTask_800368F8(EventEntry* entry, CameraCtrl* cam)
 {
@@ -320,7 +320,7 @@ void ResetCameraToLevant_800376A8(void)
     cam->mode_8 = 0;
     cam->blend_24 = 0;
     cam->blendStep_26 = 0x1000;
-    cam->target_0 = (int)&levantPos_8008BD18;
+    cam->target_0 = (Vec3i*)&levantPos_8008BD18;
 }
 void SetCameraBattleMode_80037720(void)
 {
@@ -441,7 +441,7 @@ void SetCameraZoom_80037A6C(int zoom, int steps)
         UpdateCameraFollow_80037918(cam);
     }
 }
-void SetCameraTarget_80037AC8(int target)
+void SetCameraTarget_80037AC8(Vec3i* target)
 {
     ((CameraCtrl*)cameraTask_8008D4A0->entry.buffer)->target_0 = target;
 }
@@ -685,9 +685,9 @@ void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target)
         UpdateScreenScroll_800398B4(cam, &cameraTargetScreenPos_8008D668);
     }
 }
-void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, int target, Vec3i* blendTarget, int blend)
+void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, Vec3i* target, Vec3i* blendTarget, int blend)
 {
-    Vec3i* targetPos = (Vec3i*)target;
+    Vec3i* targetPos = target;
     SVECTOR sv;
     SVECTOR sv2;
     ScreenPosZ blendScreenPos;

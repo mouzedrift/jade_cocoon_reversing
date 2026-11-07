@@ -117,7 +117,7 @@ extern void UpdateAction_800BE3C0();
 extern int IsActionDone_800BEA94();
 
 
-extern int GetUnitPos_800BC6CC();
+extern int* GetUnitPos_800BC6CC(int unit);
 
 
 
@@ -139,7 +139,7 @@ extern void DisableCameraPoints_800A096C();
 extern void BattleLoad_800BAC4C();
 
 
-extern int GetEnemyPos_800A2C28();
+extern int* GetEnemyPos_800A2C28(int idx);
 
 extern int IsActorActionDone_800BEB50();
 
@@ -598,9 +598,9 @@ extern void SetEnemyStatusTint_800A284C(int a);
 
 
 
-extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset);
+extern void StartHitNumber_800BF3DC(int unit, int kind, int amount, int* pos, int lineOffset);
 
-extern void ShowUnitHitResult_800BE834(int unit, int pos);
+extern void ShowUnitHitResult_800BE834(int unit, int* pos);
 
 extern int CreateSummonedMinionActor_800C0BF0(void);
 

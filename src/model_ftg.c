@@ -2689,18 +2689,18 @@ extern int fieldMode_800B0EC0;
 extern void SelectMapEntrance_800ADDAC(void);
 extern int GetSetReturnEntrance_800A683C(int a0);
 extern void ClearEventFlag_800AD124(int a0);
-extern int SelectEncounterSpecies_800A5030(int a0, int a1, int a2);
+extern int* SelectEncounterSpecies_800A5030(int a0, int a1, int a2);
 extern void SetBattleStageForMap_800A52AC(int a0);
 extern Model* GetLevantModel_800AC38C(void);
 extern int GetEventVar_800AD154(int a0);
-extern void StartEncounter_800B88A4(int a0);
+extern void StartEncounter_800B88A4(int* ids);
 void MapLoaderTask_80027CF8(void* entry, int* state)
 {
     int* st = state;
     short encounterSets[2];
     FileRequestDesc req;
     MapAreaEntry* e;
-    int encounter;
+    int* encounter;
     int music;
     int n;
     int k;

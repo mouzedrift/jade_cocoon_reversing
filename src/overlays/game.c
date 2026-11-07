@@ -260,7 +260,7 @@ void WaitBattleReturnFiles_800A14E0(GameTask* task, GameBattleWork* work)
     if (GetFileRequestStatus_8003BE30(work->req_0) == 0)
     {
         RequestGameMode_800A6D30(0xa);
-        work->battleTask_8 = dword_800BBB94();
+        work->battleTask_8 = StartBattleResult_800BBB94();
         task->next_8 = EncounterFadeInWait_800A167C;
         unknownFlags_8008D678 &= ~0x4000000;
         battleFlags_800B1228 &= ~0x4000;
@@ -960,12 +960,12 @@ UnitStatus* GetEnemyStatus_800A2B60(int idx)
     return &gCtx_800B1260.ents_ac[idx].st_0;
 }
 
-int GetEnemySkills_800A2BA0(int idx)
+UnitSkill* GetEnemySkills_800A2BA0(int idx)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
     {
         UnitStats* e = &gCtx_800B1260.ents_ac[idx];
-        return (int)&e->skills_6C;
+        return (UnitSkill*)&e->skills_6C;
     }
 }
 

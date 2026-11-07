@@ -1,5 +1,6 @@
 // EVENTFNC.BIN, source file 1 of 2
 #include "eventfnc.h"
+#include "memmap.h"
 #include "actor.h"
 
 int eventfncHeader_800B6D00 SDATA = 41;
@@ -615,13 +616,13 @@ void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* plac
     }
 }
 
-void StartEncounter_800B88A4(int ids)
+void StartEncounter_800B88A4(int* ids)
 {
     EventEntry* entry;
     EvEncounterWork* work;
     if (ids)
     {
-        LoadEncounterModels_800B8940((int*)ids);
+        LoadEncounterModels_800B8940(ids);
         eventDispatchHalt_8008B540 = 1;
     }
     entry = &encounterTask_8008D674->entry;
@@ -1843,10 +1844,10 @@ int EvCmdSetCameraZoom_800BAEBC(EvScriptCtx* ctx)
 
 int EvCmdSetCameraTarget_800BAF08(EvScriptCtx* ctx)
 {
-    int target = ctx->pc_8->c_C;
-    if (target == 0)
+    Vec3i* target = PSX_PTR(ctx->pc_8->c_C);
+    if (target == NULL)
     {
-        target = (int)GetActorPos_800BBBA0(ctx->pc_8->a_4);
+        target = (Vec3i*)GetActorPos_800BBBA0(ctx->pc_8->a_4);
     }
     SetCameraTarget_80037AC8(target);
     ctx->pc_8++;

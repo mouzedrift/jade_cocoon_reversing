@@ -829,7 +829,7 @@ void DropTrailTask_800C1450(EventEntry* task, BatDropTrail* trail)
     }
 }
 
-void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int target, int offset)
+void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int* target, int* offset)
 {
     int i;
     for (i = 0; i < 30; i++)
@@ -857,8 +857,8 @@ void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int
             spark->rot_34[2] = 0;
             spark->frame_0 = 0;
             spark->speed_8 = ((rand() & 0xFFF) >> 1) + 0x800;
-            spark->target_40 = (int*)target;
-            spark->offset_44 = (int*)offset;
+            spark->target_40 = target;
+            spark->offset_44 = offset;
             entry->cb_8 = (EventEntryFn)HomingSparkTask_800C17EC;
         }
     }

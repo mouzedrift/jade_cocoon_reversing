@@ -598,7 +598,11 @@ extern const char aLeaveTheForest_800BBA44[];
 extern const char aYesNo_800BBA68[];
 extern const int unused_800BBA7C;
 extern const MenuWindowList menuHdrActive_800BBB7C;
-extern const int dword_800BBB94[2];
+#ifdef __psyz
+EventEntry* StartBattleResult_800BBB94(void);
+#else
+extern const int StartBattleResult_800BBB94[2];
+#endif
 extern int unused_800C1050[4];
 // a window rect with a title (only the rect is read here)
 typedef struct MenuTitledRect

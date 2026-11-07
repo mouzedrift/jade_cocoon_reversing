@@ -19,7 +19,7 @@ add_subdirectory(external/psyz/psyz psyz EXCLUDE_FROM_ALL)
 target_compile_definitions(psyz PRIVATE __psyz)
 
 set(GAME_DEFINES __psyz)
-set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common
+set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common -fno-toplevel-reorder
     -Werror=implicit-function-declaration -Werror=int-conversion -Werror=return-type)
 
 # the executable's translation units, config/tus.txt (lines "name address")

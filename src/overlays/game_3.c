@@ -1040,7 +1040,7 @@ void StopAllEventScripts_800A58B4(void)
     nextScriptId_800AEBDC = 0;
     eventTempFlags_800AEBD4 = 0;
     StopAllEventEntries_80043B40(eventScripts_8008D410);
-    SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
+    SetCameraTarget_80037AC8((Vec3i*)&levantPos_8008BD18);
     if (!(loadFade_80091C30[2] & 0x40))
     {
         view = &viewport_8008D420;

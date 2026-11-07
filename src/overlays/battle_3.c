@@ -2,7 +2,7 @@
 #include "battle.h"
 
 
-void ShowUnitHitResult_800BE834(int unit, int pos)
+void ShowUnitHitResult_800BE834(int unit, int* pos)
 {
     switch (unitHitKinds_800C9CBC[unit])
     {
@@ -376,7 +376,7 @@ void FlashScreenWhite_800BF3AC()
     StartScreenFlash_8001C02C(rgb);
 }
 
-void StartHitNumber_800BF3DC(int unit, int kind, int amount, int pos, int lineOffset)
+void StartHitNumber_800BF3DC(int unit, int kind, int amount, int* pos, int lineOffset)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(hitNumberTasks_8008D778);
     if (entry)

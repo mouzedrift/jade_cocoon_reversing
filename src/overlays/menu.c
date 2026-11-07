@@ -2732,7 +2732,16 @@ void SetMenuCursorLayout_800BF8B4(MenuCtx* menu)
     }
 }
 const MenuWindowList menuHdrActive_800BBB7C = { 2, 0, 0, 0, 0, 14 };
-const int dword_800BBB94[2] = { 0x3C028009, 0x8C44D490 };
+#ifdef __psyz
+EventEntry* StartBattleResult_800BBB94(void)
+{
+    return CreateBattleResultTask_800BBB9C(taskSlots_8008D48C[1]);
+}
+#else
+/* StartBattleResult_800BBB94: lui v0, 0x8009; lw a0, -0x2B70(v0) (a0 = taskSlots_8008D48C[1]), then on into
+   CreateBattleResultTask_800BBB9C: a function C cannot write, so here it is as its two words (GAME calls it) */
+const int StartBattleResult_800BBB94[2] = { 0x3C028009, 0x8C44D490 };
+#endif
 
 int TopMenuCursorDown_800BFB10(MenuCtx* menu)
 {

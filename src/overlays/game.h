@@ -361,7 +361,7 @@ typedef struct GameBattleWork
 {
     int req_0; // file request
     int fadeWait_4; // frames to wait before fading back in
-    int battleTask_8; // StartBattle_800BA9E4 / dword_800BBB94
+    EventEntry* battleTask_8; // StartBattle_800BA9E4 / StartBattleResult_800BBB94
 } GameBattleWork;
 
 
@@ -394,7 +394,7 @@ extern void EvCmdEndScene_800B8A34(GameEvCtx* q);
 extern void ChooseEnemyCommand_800C4118(void* a, void* b, int c, int d);
 
 
-extern int StartBattle_800BA9E4(void);
+extern EventEntry* StartBattle_800BA9E4(void);
 
 extern void BattleEnd_800BA254();
 
@@ -561,7 +561,7 @@ extern void MapSelectStart_800B6BFC();
 
 extern void ChapterStartTask_800B66DC();
 
-extern int dword_800BBB94(void);
+extern EventEntry* StartBattleResult_800BBB94(void); /* MENU: the battle result screen */
 
 
 extern void GameMainStart_800A6968();

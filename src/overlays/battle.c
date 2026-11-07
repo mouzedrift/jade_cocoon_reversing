@@ -1252,9 +1252,9 @@ Vec3i* AveragePositions_800BC5EC(Vec3i* dst, Vec3i* src, unsigned int n)
     return dst;
 }
 
-int GetUnitPos_800BC6CC(int unit)
+int* GetUnitPos_800BC6CC(int unit)
 {
-    int pos = 0;
+    int* pos = NULL;
     int summonedSide;
     if (IsUnitInBattle_800BC784(unit))
     {
@@ -1266,12 +1266,12 @@ int GetUnitPos_800BC6CC(int unit)
             if (summonedSide == 0)
             {
             case 0:
-                pos = (int)&levantPos_8008BD18.pos;
+                pos = (int*)&levantPos_8008BD18.pos;
                 break;
             }
             if (summonedSide == side)
             {
-                pos = (int)GetSummonedMinionPos_800C0F9C();
+                pos = GetSummonedMinionPos_800C0F9C();
             }
             break;
         case 2:

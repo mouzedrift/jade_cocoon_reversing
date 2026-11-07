@@ -42,7 +42,7 @@ typedef struct
 /* the buffer of the camera task (cameraTask_8008D4A0->entry.buffer) */
 typedef struct CameraCtrl
 {
-    int target_0; // position the camera follows (Vec3i*, e.g. &levantPos_8008BD18)
+    Vec3i* target_0; // position the camera follows (e.g. &levantPos_8008BD18)
     unsigned int flags_4;
     short mode_8;
     unsigned short zoomStart_A;
@@ -122,7 +122,7 @@ void CameraOrbitReturnTask_800375F8(EventEntry* entry, CameraCtrl* cam);
 void UpdateCameraRotation_80039E14(void);
 void StartCameraSplineLong_8003970C(int action, int* spline);
 void StartCameraSplineShort_8003983C(int action, int* spline);
-void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, int target, Vec3i* blendTarget, int blend);
+void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, Vec3i* target, Vec3i* blendTarget, int blend);
 void MoveCameraToFocusPreset_80038E2C(CameraCtrl* cam, int preset, int eyeRaise);
 void UpdateCameraZoom_8003856C(CameraCtrl* cam);
 void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos);
@@ -135,7 +135,7 @@ void FocusBattleCamera_80037AE0(unsigned short mask);
 void SetCameraBattleMode_80037720(void);
 void SetCameraZoom_80037A6C(int zoom, int steps);
 void UpdatePadVibration_800366A0(EventEntry* entry, PadVibTask* vib);
-void SetCameraTarget_80037AC8(int target);
+void SetCameraTarget_80037AC8(Vec3i* target);
 void StopAllPadVibration_80036678(void);
 void MoveBattleCameraDefault_800378CC(void);
 void MoveBattleCamera_800390F4(CameraCtrl* cam, int mode);

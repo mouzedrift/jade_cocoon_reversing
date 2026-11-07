@@ -61,7 +61,7 @@ void InitRoomCamera_80028DC0(void)
         cam = cameraTask_8008D4A0->entry.buffer;
         if (mapJustLoaded_80082668)
         {
-            SetCameraTarget_80037AC8((int)&levantPos_8008BD18);
+            SetCameraTarget_80037AC8((Vec3i*)&levantPos_8008BD18);
         }
         UpdateCameraFollow_80037918(cam);
         SetGeomOffset(display_8008B4D8.w_C / 2 + screenOffset_8008D474[0], display_8008B4D8.h_E / 2 + screenOffset_8008D474[1]);

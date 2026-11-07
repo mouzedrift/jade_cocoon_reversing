@@ -264,7 +264,7 @@ extern int GetEventVar_800AD154(int a);
 
 extern void (*eventHook_800B1D98)(int);
 
-extern int StartEventScript_800A59D0(int a);
+extern EventEntry* StartEventScript_800A59D0(int a);
 
 extern SVECTOR* GetActorRot_800BBBD0(int actor); // rotation of Levant (0) or a party member
 
@@ -622,7 +622,7 @@ typedef struct EvModelLoader
 typedef struct EvEnemySlot
 {
     int f0;
-    int aiEvent_4;
+    void* aiEvent_4;
     EvEnemyGroup data_8;
 } EvEnemySlot;
 
@@ -715,7 +715,7 @@ int GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx);
 
 /* GAME-side (game.h; GAME stays loaded under EVENTFNC) */
 extern EvEnemySlot* AddEnemySlot_800A17F4(EvEnemyGroup* src, int b);
-extern int CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
+extern void* CreateEnemyAiEvent_800A2D90(Actor* a, UnitStats* b, int c);
 extern int fieldMode_800B0EC0;
 extern int gCtx_800B1260;
 extern int GetGameMode_800A6D50(int a);

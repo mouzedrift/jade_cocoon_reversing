@@ -166,7 +166,7 @@ int AddInventory_800AD184(int a, int b, int c);
 void RemoveInventory_800AD1E0(int a, int b, int c);
 int GetInventoryCount_800AD254(int a, int b);
 int GetLastInventorySlot_800AD308(int a);
-int FindInventorySlotForAdd_800AD4D8(int a, int b, int c);
+void* FindInventorySlotForAdd_800AD4D8(int id, int count, int table);
 int TestValuableFlag_800AD73C(int a);
 void SetEquipment_800AD9EC(int itemId, int category);
 
