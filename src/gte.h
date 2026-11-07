@@ -2,8 +2,37 @@
 #define GTE_H
 
 #ifdef __psyz
-/* PSY-Z's libgte.h has the macros, on its GTE emulation */
+/* PSY-Z's libgte.h has the macros, on its GTE emulation; the ones it lacks (the same register loads and
+   commands as INLINE_C.H) */
 #include <libgte.h>
+#include <psyz/gte.h>
+#ifndef gte_ldsv
+#define gte_ldsv(r0)                                                                                                  \
+    (Psyz_GteDataWrite(9, (unsigned short)((short*)(r0))[0]), Psyz_GteDataWrite(10, (unsigned short)((short*)(r0))[1]), \
+     Psyz_GteDataWrite(11, (unsigned short)((short*)(r0))[2]))
+#endif
+#ifndef gte_ldlvl
+#define gte_ldlvl(r0)                                                                                                 \
+    (Psyz_GteDataWrite(9, ((int*)(r0))[0]), Psyz_GteDataWrite(10, ((int*)(r0))[1]), Psyz_GteDataWrite(11, ((int*)(r0))[2]))
+#endif
+#ifndef gte_sqr0
+#define gte_sqr0() Psyz_GteCommand(0x0A00428)
+#endif
+#ifndef gte_ncds
+#define gte_ncds() Psyz_GteCommand(0x0E80413)
+#endif
+#ifndef gte_ncdt
+#define gte_ncdt() Psyz_GteCommand(0x0F80416)
+#endif
+#ifndef gte_dpct
+#define gte_dpct() Psyz_GteCommand(0x0F8002A)
+#endif
+#ifndef gte_MulMatrix0
+#define gte_MulMatrix0(r1, r2, r3) MulMatrix0(r1, r2, r3)
+#endif
+#ifndef gte_gpf12
+#define gte_gpf12() Psyz_GteCommand(0x198003D)
+#endif
 #else
 
 /* PSY-Q GTE macros: INLINE_C.H with the GTE commands as their real cop2 words (what DMPSX would
