@@ -1,7 +1,7 @@
 // BATTLE.BIN, source file 1 of 6
 #include "battle.h"
 
-int dword_800B66C0 SDATA = 31;
+int battleHeader_800B66C0 SDATA = 31;
 
 // GAME's encounter task buffer while a battle runs (GAME's GameQ_1; WaitBattleOverlay_800A1474 starts the battle)
 

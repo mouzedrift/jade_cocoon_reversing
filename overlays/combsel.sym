@@ -1,4 +1,4 @@
-unused_800A4088=0x800a4088; // overlay header / data
+combselHeader_800A4088=0x800a4088; // overlay header / data
 aReturnToTitleSc_800A408C=0x800a408c; // data
 aDeleteEnteredMi_800A40BC=0x800a40bc; // data
 aEnterMinionFrom_800A40EC=0x800a40ec; // data

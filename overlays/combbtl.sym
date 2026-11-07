@@ -1,4 +1,4 @@
-dword_800A4088=0x800a4088; // overlay header / data
+combbtlHeader_800A4088=0x800a4088; // overlay header / data
 aAreVictorious_800A408C=0x800a408c; // data
 aTheMinionsOfThe_800A40AC=0x800a40ac; // data
 aCongratulations_800A40DC=0x800a40dc; // data

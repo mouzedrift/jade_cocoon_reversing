@@ -175,7 +175,7 @@ void DrawScrollArrow_8002B3DC(StoreArrow arrow, int time, void* pos, int ot); //
 
 /* WPNSHOP data */
 
-extern int dword_800B66C0;
+extern int wpnshopHeader_800B66C0;
 extern const int aEmpty_800B66C4;
 extern const char aYesWhatDoYouWan_800B66C8[];
 extern const char aWhatDoYouWantTo_800B66F8[];

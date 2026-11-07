@@ -2,7 +2,7 @@
 #include "eventfnc.h"
 #include "actor.h"
 
-int dword_800B6D00 SDATA = 41;
+int eventfncHeader_800B6D00 SDATA = 41;
 const char aAssertionFaile_800B6D04[] = "Assertion failed: file \"%s\", line %d\n";
 const char aColiC_800B6D2C[8] = "COLI.C\000$";
 

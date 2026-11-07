@@ -152,7 +152,11 @@ extern int IsUnitInBattle_800BC784();
 
 extern unsigned int battleHitEnemies_800B122C;
 
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define encounterChainNext_800ADE88 (encounterRecord_800ADE78.next_10)
+#else
 extern int encounterChainNext_800ADE88;
+#endif
 
 extern int IsSummonedMinionIdle_800C0D60();
 
@@ -1007,7 +1011,7 @@ extern void CmdEnemyCall_800BBEFC();
 extern void CmdEnemySwap_800BBFFC();
 extern void CmdSimple_800BC0FC();
 
-extern int dword_800B66C0;
+extern int battleHeader_800B66C0;
 extern const char aAttackWithReadi_800B68AC[];
 extern const char aDefendToReduceD_800B68E4[];
 extern const char aSummonDivineMin_800B6914[];

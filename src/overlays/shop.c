@@ -14,7 +14,7 @@
 
 
 
-int dword_800B6D00 SDATA = 38;
+int shopHeader_800B6D00 SDATA = 38;
 const char aAssertFmt_800B6D04[] = "Assertion failed: file \"%s\", line %d\n";
 const char aCmpactC_800B6D2C[] = "CMPACT.C";
 const ShopElementOrder elementOrder_800B6D38 = { { 0, 1, 2, 3 } };

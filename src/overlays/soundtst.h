@@ -14,7 +14,7 @@
 #include "engine.h"
 #include "cursor.h"
 
-extern int dword_800A05A0;
+extern int soundtstHeader_800A05A0;
 extern const char aKY6A212XA_800A05A4[];
 extern const char aKY6A211XA_800A05B0[];
 extern const char aKY6A208XA_800A05BC[];

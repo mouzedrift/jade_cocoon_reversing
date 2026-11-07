@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "combload.h"
 
-int dword_800A4088 SDATA = 20; // first word of the overlay
+int combloadHeader_800A4088 SDATA = 20; // first word of the overlay
 
 MenuCursor cardSlotCursor_800A468C = { 2, 1, 2, 1, 0, 0 };
 MenuCursor dataCursor_800A4698 = { 1, 5, 15, 0x40, 0, 0 };

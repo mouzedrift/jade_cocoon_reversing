@@ -13,7 +13,7 @@
 #include "ui_sprites.h"
 
 
-extern int dword_800A4088;
+extern int combchuiHeader_800A4088;
 extern MenuCursor p2PadYesNoMenu_800A45B0;
 extern const char* introTextLines_800A45BC[12];
 

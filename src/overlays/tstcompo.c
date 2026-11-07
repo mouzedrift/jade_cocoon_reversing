@@ -8,7 +8,7 @@
 #include "tstcompo.h"
 
 
-int dword_800A05A0 SDATA = 17;
+int tstcompoHeader_800A05A0 SDATA = 17;
 const char a9_800A05A4[] = "\202X"; // 9
 const char a8_800A05A8[] = "\202W"; // 8
 const char a7_800A05AC[] = "\202V"; // 7

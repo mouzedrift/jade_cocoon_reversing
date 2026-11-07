@@ -21,7 +21,7 @@ typedef struct CombRsltPos
     unsigned short y;
 } CombRsltPos;
 
-extern int dword_800A4088;
+extern int combrsltHeader_800A4088;
 extern const MenuWindowItem resultTitleItem_800A408C;
 extern const MenuWindowItem minionLabelItem_800A40A8;
 extern const MenuWindowItem minionHpItem_800A40C4;

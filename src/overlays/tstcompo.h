@@ -79,7 +79,7 @@ typedef struct TstCompoModelParams
     int vram_30;      // ModelVramSlot* (ModelTaskState.vram_34)
 } TstCompoModelParams;
 
-extern int dword_800A05A0;
+extern int tstcompoHeader_800A05A0;
 extern const char a9_800A05A4[];
 extern const char a8_800A05A8[];
 extern const char a7_800A05AC[];

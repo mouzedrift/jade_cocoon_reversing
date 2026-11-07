@@ -1,4 +1,4 @@
-dword_800A05A0=0x800a05a0; // overlay header / data
+gameHeader_800A05A0=0x800a05a0; // overlay header / data
 aAssertionFaile_800A05A4=0x800a05a4; // data
 aEnmbatleC_800A05CC=0x800a05cc; // data
 jpt_800A05D8=0x800a05d8; // jump table of EnemyAiWanderChase_800A2FB8
@@ -609,6 +609,7 @@ mapArea3Maps_800B05A4=0x800b05a4; // data
 mapArea4Maps_800B05D8=0x800b05d8; // data
 mapArea5Maps_800B05F0=0x800b05f0; // data
 mapTable_800B0608=0x800b0608; // data
+areaMapCounts_800B0624=0x800b0624; // data
 gameModeChanged_800B0698=0x800b0698; // data
 levantStartPos_800B069C=0x800b069c; // data
 shopRequest_800B06B0=0x800b06b0; // data

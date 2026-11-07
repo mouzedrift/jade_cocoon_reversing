@@ -19,5 +19,3 @@ GAME     tintClutRectY_8007DC8A                  tintClutRect_8007DC88         0
 GAME     levantStatusBits_8008BD38                 saveData_8008B570            0x7C8    # saveData_8008B570 + 0x7C8
 BATTLE   encounterChainNext_800ADE88  encounterRecord_800ADE78     0x10     # encounterRecord_800ADE78.next_10 (GAME)
 MAP      mapSelectCursors_800AEBFC      mapSelect_800AEBF8           0x4      # mapSelect_800AEBF8 + 0x4
-MAP      areaMapCounts_800B0624                 mapTable_800B0608            0x1C     # mapTable_800B0608 + 0x1C
-CHAPTER  areaMapCounts_800B0624                 mapTable_800B0608            0x1C     # mapTable_800B0608 + 0x1C

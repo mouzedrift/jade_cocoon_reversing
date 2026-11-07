@@ -7,7 +7,7 @@
 
 
 
-int dword_800B66C0 SDATA = 28;
+int chapterHeader_800B66C0 SDATA = 28;
 
 
 

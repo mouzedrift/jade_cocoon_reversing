@@ -1,4 +1,4 @@
-dword_800B66C0=0x800b66c0; // overlay header / data
+wpnshopHeader_800B66C0=0x800b66c0; // overlay header / data
 aEmpty_800B66C4=0x800b66c4; // data
 aYesWhatDoYouWan_800B66C8=0x800b66c8; // data
 aWhatDoYouWantTo_800B66F8=0x800b66f8; // data

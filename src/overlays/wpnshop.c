@@ -10,7 +10,7 @@
 /* funcs.h declares unsigned short; the callers here use the full register */
 
 
-int dword_800B66C0 SDATA = 26;
+int wpnshopHeader_800B66C0 SDATA = 26;
 const int aEmpty_800B66C4 = 0;
 const char aYesWhatDoYouWan_800B66C8[] = "\202x\202\205\202\223\201H\201@\202v\202\210\202\201\202\224\201@\202\204\202\217\201@\202\231\202\217\202\225\201@\202\227\202\201\202\216\202\224\201H"; // Yes? What do you want?
 const char aWhatDoYouWantTo_800B66F8[] = "\202v\202\210\202\201\202\224\201@\202\204\202\217\201@\202\231\202\217\202\225\201@\202\227\202\201\202\216\202\224\201@\202\224\202\217\201@\202\202\202\225\202\231\201H"; // What do you want to buy?

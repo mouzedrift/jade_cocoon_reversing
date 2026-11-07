@@ -6,7 +6,7 @@
 #include "shopctrl.h"
 
 
-int dword_800B66C0 SDATA = 30;
+int shopctrlHeader_800B66C0 SDATA = 30;
 
 // starts the shop controller task: it loads SHOP (or NAME for a rename) into the slot behind it
 void StartShopCtrl_800B66C4(int shopId)

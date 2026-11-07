@@ -107,7 +107,7 @@ int mapFileLoaded_800B9430 = 0;
 int mapFileStage_800B9434 = 0;
 int chapterSel_800B9438 = 0;
 
-int dword_800B66C0 SDATA = 25;
+int mapHeader_800B66C0 SDATA = 25;
 const char aParelForest_800B66C4[] = "\202o\202\201\202\222\202\205\202\214\201@\202e\202\217\202\222\202\205\202\223\202\224"; // Parel Forest
 const char aSyrus_800B66E0[12] = "\202r\202\231\202\222\202\225\202\223";
 const char aForestGates_800B66EC[28] = "\202e\202\217\202\222\202\205\202\223\202\224\201@\202f\202\201\202\224\202\205\202\223";

@@ -254,7 +254,12 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     }
     return result;
 }
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+extern int* const encounterSwapped; /* GAME (game.c): &gCtx_800B1260.swapped_3C */
+#define encounterSwapped_800B129C encounterSwapped
+#else
 extern int encounterSwapped_800B129C[];
+#endif
 int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)
 {
     int animIdx;

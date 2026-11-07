@@ -6,7 +6,7 @@
 #include "unit_stats.h" // eventDescs_80078EB8
 #include "soundtst.h"
 
-int dword_800A05A0 SDATA = 15;
+int soundtstHeader_800A05A0 SDATA = 15;
 const char aKY6A212XA_800A05A4[] = "kY6A2_12_XA";
 const char aKY6A211XA_800A05B0[] = "kY6A2_11_XA";
 const char aKY6A208XA_800A05BC[] = "kY6A2_08_XA";

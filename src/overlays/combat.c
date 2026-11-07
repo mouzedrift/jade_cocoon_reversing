@@ -10,7 +10,7 @@
 #include "combat.h"
 #include "tim.h"
 
-int dword_800A05A0 SDATA = 14;
+int combatHeader_800A05A0 SDATA = 14;
 short combatCursor_800A1BBC[4] = { 1, 5, 5 };
 short combatMenuChoice_800A1BC4 = 0;
 Minion rosters_800A1BC8[2][15] = {

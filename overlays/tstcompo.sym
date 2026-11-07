@@ -1,4 +1,4 @@
-dword_800A05A0=0x800a05a0; // overlay header / data
+tstcompoHeader_800A05A0=0x800a05a0; // overlay header / data
 a9_800A05A4=0x800a05a4; // data
 a8_800A05A8=0x800a05a8; // data
 a7_800A05AC=0x800a05ac; // data

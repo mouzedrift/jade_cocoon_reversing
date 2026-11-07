@@ -425,8 +425,16 @@ extern volatile int gnFrame_8008D610;
 extern volatile int xaTimer_8008D450;
 extern volatile int unpausedFrames_8008D404;
 extern SaveData saveData_8008B570;
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define playerYan_8008B594 (saveData_8008B570.inv_24)
+#else
 extern SaveInventory playerYan_8008B594; // == saveData_8008B570.inv_24
+#endif
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define levantPos_8008BD18 (saveData_8008B570.levant_7A8)
+#else
 extern LevantPos levantPos_8008BD18; // == saveData_8008B570.levant_7A8
+#endif
 extern unsigned long bDoubleBuffer_8008D428;
 extern unsigned long OT_8008D798[2][8];
 extern unsigned long OT_8008D7D8[2][1024];

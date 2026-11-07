@@ -1,4 +1,4 @@
-dword_800B6D00=0x800b6d00; // overlay header / data
+eventfncHeader_800B6D00=0x800b6d00; // overlay header / data
 aAssertionFaile_800B6D04=0x800b6d04; // data
 aColiC_800B6D2C=0x800b6d2c; // data
 jpt_800B6D34=0x800b6d34; // jump table of EvCmdMessage_800BA020

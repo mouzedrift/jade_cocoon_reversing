@@ -693,16 +693,12 @@ void *mapArea3Maps_800B05A4[13] = {
 };
 void *mapArea4Maps_800B05D8[6] = { (void *)mapArea4Map00Entrances_800AFA54, (void *)mapArea4Map01Entrances_800AFAC4, (void *)mapArea4Map02Entrances_800AFBA4, (void *)mapArea4Map03Entrances_800AFCE4, (void *)mapArea4Map04Entrances_800B0004 };
 void *mapArea5Maps_800B05F0[6] = { (void *)mapArea4Map00Entrances_800AFA54, (void *)mapArea5Map01Entrances_800B0194, (void *)mapArea5Map02Entrances_800B0254, (void *)mapArea5Map03Entrances_800B0364, (void *)mapArea4Map04Entrances_800B0004 };
-GameMapEntrance **mapTable_800B0608[36] = {
-    (void *)mapArea0Maps_800B0524, (void *)mapArea1Maps_800B053C, (void *)mapArea2Maps_800B0570, (void *)mapArea3Maps_800B05A4,
-    (void *)mapArea4Maps_800B05D8, (void *)mapArea5Maps_800B05F0, 0, (GameMapEntrance **)5,
-    (GameMapEntrance **)12, (GameMapEntrance **)12, (GameMapEntrance **)12, (GameMapEntrance **)5,
-    (GameMapEntrance **)5, (GameMapEntrance **)1, (GameMapEntrance **)2, (GameMapEntrance **)3,
-    (GameMapEntrance **)4, (GameMapEntrance **)5, 0, (GameMapEntrance **)1,
-    (GameMapEntrance **)1, (GameMapEntrance **)1, (GameMapEntrance **)4, (GameMapEntrance **)4,
-    0, (GameMapEntrance **)2, (GameMapEntrance **)2, (GameMapEntrance **)2,
-    (GameMapEntrance **)4, (GameMapEntrance **)4, 0, (GameMapEntrance **)3,
-    (GameMapEntrance **)3, (GameMapEntrance **)3, (GameMapEntrance **)5, (GameMapEntrance **)5,
+GameMapEntrance **mapTable_800B0608[7] = {
+    (void *)mapArea0Maps_800B0524, (void *)mapArea1Maps_800B053C, (void *)mapArea2Maps_800B0570, (void *)mapArea3Maps_800B05A4, (void *)mapArea4Maps_800B05D8, (void *)mapArea5Maps_800B05F0, 0,
+};
+// the number of maps of each area (MAP, CHAPTER)
+int areaMapCounts_800B0624[29] = {
+    5, 12, 12, 12, 5, 5, 1, 2, 3, 4, 5, 0, 1, 1, 1, 4, 4, 0, 2, 2, 2, 4, 4, 0, 3, 3, 3, 5, 5,
 };
 int gameModeChanged_800B0698 = 0;
 int levantStartPos_800B069C[5] = { 0x462, -0x2B2, 0x772, 0xFC000000 };

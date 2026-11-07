@@ -2,7 +2,10 @@
 #include "game.h"
 #include "spadstack.h"
 
-const int dword_800A05A0 = 12;
+const int gameHeader_800A05A0 = 12;
+#ifdef __psyz
+int* const encounterSwapped = &gCtx_800B1260.swapped_3C; /* the exe's encounterSwapped_800B129C (config/aliases.txt) */
+#endif
 const char aAssertionFaile_800A05A4[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEnmbatleC_800A05CC[12] = "ENMBATLE.C\000a";
 

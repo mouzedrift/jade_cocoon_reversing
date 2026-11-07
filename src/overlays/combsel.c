@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "combsel.h"
 
-int unused_800A4088 SDATA = 19; // first word of the overlay
+int combselHeader_800A4088 SDATA = 19; // first word of the overlay
 
 MenuWindowItem teamRow0_800A55C4[2] = {
     { 0, 0, 0, 0, 0, 10, 39, 144, 19, 2, 4 },

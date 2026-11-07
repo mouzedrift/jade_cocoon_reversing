@@ -9,7 +9,7 @@
 
 
 
-int dword_800A05A0 SDATA = 16;
+int tstmodelHeader_800A05A0 SDATA = 16;
 const char aMDLOUMG_800A05A4[] = "MDL_OUMG";
 const char aMDLZIRA_800A05B0[] = "MDL_ZIRA";
 const char aMDLTORI_800A05BC[] = "MDL_TORI";

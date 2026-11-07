@@ -1,4 +1,4 @@
-dword_800A4088=0x800a4088; // overlay header / data
+combstrtHeader_800A4088=0x800a4088; // overlay header / data
 aShufflingMinion_800A408C=0x800a408c; // data
 aStartFight_800A40C0=0x800a40c0; // data
 aShuffleMinionOr_800A40DC=0x800a40dc; // data

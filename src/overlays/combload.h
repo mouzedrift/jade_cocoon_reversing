@@ -18,7 +18,7 @@
 
 
 
-extern int dword_800A4088;
+extern int combloadHeader_800A4088;
 extern MenuCursor cardSlotCursor_800A468C;
 extern MenuCursor dataCursor_800A4698;
 extern MenuWindowItem dataRow0_800A46A4[2]; // the row + its end

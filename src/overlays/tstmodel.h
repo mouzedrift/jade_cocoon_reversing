@@ -25,7 +25,7 @@ typedef struct TstModelBone
 typedef struct TstModelTbl { int modelId_0; TstModelBone* bones_4; const char* name_8; } TstModelTbl;
 
 
-extern int dword_800A05A0;
+extern int tstmodelHeader_800A05A0;
 extern const char aMDLOUMG_800A05A4[];
 extern const char aMDLZIRA_800A05B0[];
 extern const char aMDLTORI_800A05BC[];

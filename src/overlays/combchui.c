@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "combchui.h"
 
-int dword_800A4088 SDATA = 18; // first word of the overlay
+int combchuiHeader_800A4088 SDATA = 18; // first word of the overlay
 
 MenuCursor p2PadYesNoMenu_800A45B0 = { 2, 1, 2, 1, 0, 0 };
 // the arena intro (DrawTextLines_800A450C), 0-terminated

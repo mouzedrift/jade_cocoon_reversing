@@ -5,7 +5,7 @@
 #include "pad_text.h"
 #include "combstrt.h"
 
-int dword_800A4088 SDATA = 21; // first word of the overlay
+int combstrtHeader_800A4088 SDATA = 21; // first word of the overlay
 
 MenuCursor yesNoCursor_800A4BF0 = { 2, 1, 2, 0, 1, 0 };
 unsigned short stateDefaultSel_800A4BFC[4] = { 1, 0, 0, 0 };

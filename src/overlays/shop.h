@@ -272,7 +272,7 @@ void SetSceneFadeFrontOT_8001ABEC(int a);                  // engine.h
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
 
 /* SHOP data */
-extern int dword_800B6D00;
+extern int shopHeader_800B6D00;
 extern const char aAssertFmt_800B6D04[];
 extern const char aCmpactC_800B6D2C[];
 extern const ShopElementOrder elementOrder_800B6D38;

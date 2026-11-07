@@ -1,4 +1,4 @@
-dword_800B6D00=0x800b6d00; // overlay header / data
+shopHeader_800B6D00=0x800b6d00; // overlay header / data
 aAssertFmt_800B6D04=0x800b6d04; // data
 aCmpactC_800B6D2C=0x800b6d2c; // data
 elementOrder_800B6D38=0x800b6d38; // data

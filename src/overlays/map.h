@@ -76,7 +76,7 @@ typedef struct MapWin
 } MapWin;
 
 
-extern int dword_800B66C0;
+extern int mapHeader_800B66C0;
 extern const char aParelForest_800B66C4[];
 extern const char aSyrus_800B66E0[12];
 extern const char aForestGates_800B66EC[28];
@@ -226,7 +226,11 @@ extern int areaMapCounts_800B0624[];
 extern void ResetLevantActorToIdle_800A8DEC();
 extern void RequestGameMode_800A6D30(int);
 extern int SetEventVar_800AD16C(int var, int value);
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define mapSelectCursors_800AEBFC ((MenuCursor*)((char*)&mapSelect_800AEBF8 + 4))
+#else
 extern MenuCursor mapSelectCursors_800AEBFC[];
+#endif
 extern int GetEventVar_800AD154(int);
 extern MapDest mapSelect_800AEBF8;  // the selected destination (GAME data)
 extern void StartMapOverlay_800A75F8();

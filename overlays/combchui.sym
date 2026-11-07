@@ -1,4 +1,4 @@
-dword_800A4088=0x800a4088; // overlay header / data
+combchuiHeader_800A4088=0x800a4088; // overlay header / data
 aWillPlayer2UseC_800A408C=0x800a408c; // data
 aBlankLine_800A40D0=0x800a40d0; // data
 aYouHaveAMEMORYC_800A40D4=0x800a40d4; // data

@@ -71,7 +71,7 @@ typedef struct CombBtlInt3
     int v[3];
 } CombBtlInt3;
 
-extern int dword_800A4088;
+extern int combbtlHeader_800A4088;
 extern const CombBtlSidePos sideActorPos_800A4AD4;
 extern const CombBtlSideRot sideActorArgs_800A4AEC;
 extern const MenuWindowItem sideLabel0_800A4AFC;

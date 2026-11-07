@@ -1,4 +1,4 @@
-dword_800A05A0=0x800a05a0; // overlay header / data
+combatHeader_800A05A0=0x800a05a0; // overlay header / data
 jpt_800A05A4=0x800a05a4; // jump table of CombatEnterStage_800A15B4
 dword_800A05C0=0x800a05c0; // zero padding: the next jump table is .align 3
 jpt_800A05C4=0x800a05c4; // jump table of CombatNextStage_800A16FC

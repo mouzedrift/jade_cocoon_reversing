@@ -30,7 +30,7 @@ void ShopCtrlRequestExit_800B6CB8();
 void ShopCtrlRequestResume_800B6CC8();
 
 /* SHOPCTRL data */
-extern int dword_800B66C0;
+extern int shopctrlHeader_800B66C0;
 extern int shopOverlayIds_800B6CD8[3];
 extern int shopMinionCount_800B6CE4;
 extern short shopCtrlPrevMode_800B6CE8;

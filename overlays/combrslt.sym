@@ -1,4 +1,4 @@
-dword_800A4088=0x800a4088; // overlay header / data
+combrsltHeader_800A4088=0x800a4088; // overlay header / data
 resultTitleItem_800A408C=0x800a408c; // data
 minionLabelItem_800A40A8=0x800a40a8; // data
 minionHpItem_800A40C4=0x800a40c4; // data

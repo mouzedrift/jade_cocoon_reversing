@@ -17,7 +17,7 @@
 
 
 
-extern int dword_800A4088;
+extern int combstrtHeader_800A4088;
 extern MenuCursor yesNoCursor_800A4BF0;
 extern unsigned short stateDefaultSel_800A4BFC[4];
 extern const char* stateQuestions_800A4C04[4];

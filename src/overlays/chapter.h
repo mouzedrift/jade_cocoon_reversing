@@ -22,7 +22,7 @@ typedef struct ChapterEntry
     short *mapVars_18;    // (area, map, sub, value) map var records up to value -1
 } ChapterEntry;
 
-extern int dword_800B66C0;
+extern int chapterHeader_800B66C0;
 extern int chapter0Area2Vars_800B6BC4[12];
 extern int *chapter0AreaVars_800B6BF4[6];
 extern short chapter0MapVars_800B6C0C[8];

@@ -1,4 +1,4 @@
-dword_800B66C0=0x800b66c0; // overlay header / data
+battleHeader_800B66C0=0x800b66c0; // overlay header / data
 jpt_800B66C4=0x800b66c4; // jump table of BattleEnd_800BA254
 jpt_800B66DC=0x800b66dc; // jump table of BattleLoad_800BAC4C
 dword_800B6700=0x800b6700; // data behind the jump table

@@ -1,4 +1,4 @@
-dword_800B66C0=0x800b66c0; // overlay header / data
+shopctrlHeader_800B66C0=0x800b66c0; // overlay header / data
 StartShopCtrl_800B66C4=0x800b66c4;
 RestoreMapCamera_800B6720=0x800b6720;
 ShopCtrlInit_800B67C0=0x800b67c0;

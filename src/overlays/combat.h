@@ -69,7 +69,7 @@ typedef struct CombatVramPos
     unsigned short y;
 } CombatVramPos;
 
-extern int dword_800A05A0;
+extern int combatHeader_800A05A0;
 extern short combatCursor_800A1BBC[4];
 extern short combatMenuChoice_800A1BC4;
 extern unsigned char player2Pad_800A38D8;
@@ -157,10 +157,18 @@ void VersusIntroTask_800A4394();  // COMBCHUI.BIN
 void CombBtlStart_800A4B8C();     // COMBBTL.BIN
 
 /* exe-side, to move to <exe header> */
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define combatSlotModelParams_8007DC78 (*(char**)&modelVramSlotLists_8007DC74[1])
+#else
 extern char* combatSlotModelParams_8007DC78;                   // -> globals.h: the combat slots' model vram areas (0x40 bytes each)
+#endif
 extern CombatVramPos combatPortraitImagePos_8007DCAC[];         // -> globals.h: portrait image vram positions
 extern CombatVramPos combatPortraitClutPos_8007DCBC[];         // -> globals.h: portrait clut vram positions
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define saveMinions_8008BEF8 (saveData_8008B570.minions)
+#else
 extern Minion saveMinions_8008BEF8[];          // -> globals.h
+#endif
 extern short defaultBones_80079140[];          // -> globals.h: default bone table
 
 extern ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c); // -> effect_cmd.h

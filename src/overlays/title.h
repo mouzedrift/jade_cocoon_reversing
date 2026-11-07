@@ -146,7 +146,11 @@ extern void InitLevantEquipment_800A20F4(void);
 extern void ClearMapVars_800A2110(void);
 extern void InitFlagTables_800A2540(void);
 extern Vec3i levantStartPos_800B069C; // Levant's start position
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define levantStartRot_800B06A8 (*(SVECTOR*)((int*)&levantStartPos_800B069C + 3))
+#else
 extern SVECTOR levantStartRot_800B06A8; // Levant's start rotation
+#endif
 
 /* other overlays resident with TITLE: LOAD (and its LIBMCRD modules), NAME, CONFIG */
 extern void LoadMenuInit_800B7674(int mode, int b);
@@ -162,6 +166,10 @@ extern int IsConfigMenuActive_800C45D8(void);
 
 /* exe-side, to move to an exe header */
 extern void srand(unsigned int seed); // PSY-Q LIBC
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define titleStartMode_8008B55A (*(unsigned short*)&titleMenuState_8008B558[1])
+#else
 extern unsigned short titleStartMode_8008B55A;
+#endif
 
 #endif

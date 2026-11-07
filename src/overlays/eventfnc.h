@@ -565,7 +565,7 @@ extern int EvCmdIfBattleResult_800BB45C();
 extern int EvCmdFadeSound_800BB4A4();
 extern int EvCmdPadVibration_800BB7D8();
 
-extern int dword_800B6D00;
+extern int eventfncHeader_800B6D00;
 extern const char aAssertionFaile_800B6D04[];
 extern const char aColiC_800B6D2C[8];
 extern int (*eventFuncs_800BCDBC[157])();

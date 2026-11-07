@@ -4,7 +4,7 @@
 #include "globals.h"
 #include "combrslt.h"
 
-int dword_800A4088 SDATA = 23; // first word of the overlay
+int combrsltHeader_800A4088 SDATA = 23; // first word of the overlay
 
 MenuCursor slotCursor_800A47E8 = { 1, 1, 1, 0x40, 0, 0 };
 int unused_800A47F4 = 0;

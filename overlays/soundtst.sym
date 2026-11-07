@@ -1,4 +1,4 @@
-dword_800A05A0=0x800a05a0; // overlay header / data
+soundtstHeader_800A05A0=0x800a05a0; // overlay header / data
 aKY6A212XA_800A05A4=0x800a05a4; // data
 aKY6A211XA_800A05B0=0x800a05b0; // data
 aKY6A208XA_800A05BC=0x800a05bc; // data

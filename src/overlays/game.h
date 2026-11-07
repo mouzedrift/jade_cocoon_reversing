@@ -94,7 +94,11 @@ typedef struct GameEnemySlot
     GameEnemy data_8;
 } GameEnemySlot;
 
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define enemySlots_800B19F0 (gCtx_800B1260.enemySlots_790)
+#else
 extern GameEnemySlot enemySlots_800B19F0[3]; // == gCtx_800B1260.enemySlots_790 (config/aliases.txt)
+#endif
 
 extern short defaultBones_80079140[]; // default bone table
 extern GameEnemy* GetEventEnemy_800A5F6C(void);
@@ -547,7 +551,11 @@ extern EventNode* taskSlot_8008D478;
 extern TileAnimLayers tileAnim_8008D648;
 extern void DrawTileAnimLayers_800A0A5C(short* work);
 
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define Ratan2DifferenceInt_8003B9E0(a, b) ((int)ratan2Difference_8003B9E0(a, b))
+#else
 extern int Ratan2DifferenceInt_8003B9E0(int* a, int* b); // ratan2Difference_8003B9E0 as GAME declared it (config/aliases.txt)
+#endif
 
 extern void MapSelectStart_800B6BFC();
 
@@ -1048,11 +1056,19 @@ extern G2V12 statusTintPoisonLevel6_8007A140;
 
 extern G2V12 statusTintPoisonLevel7_8007A14C;
 
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define statusTint_8007A164 ((&statusTintPoisonLevel7_8007A14C)[2])
+#else
 extern G2V12 statusTint_8007A164;
+#endif
 
 
 
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define levantStatusBits_8008BD38 (*(unsigned int*)&saveData_8008B570.levantStatus_7C8)
+#else
 extern unsigned int levantStatusBits_8008BD38;
+#endif
 
 
 
@@ -1199,9 +1215,17 @@ typedef struct GameSkelDraw
 
 
 
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define tintImageRectY_8007DC82 (((short*)&tintImageRect_8007DC80)[1])
+#else
 extern short tintImageRectY_8007DC82;
+#endif
 
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define tintClutRectY_8007DC8A (((short*)&tintClutRect_8007DC88)[1])
+#else
 extern short tintClutRectY_8007DC8A;
+#endif
 
 
 extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
@@ -1254,7 +1278,7 @@ extern EventNode* equipTask_8008D4C4;
 extern EventNode* configTask_8008B4B8;
 extern EventNode* taskSlot_8008D62C;
 extern char ReturnWarpStart_800BCB00[];
-extern const int dword_800A05A0;
+extern const int gameHeader_800A05A0;
 extern const char aAssertionFaile_800A05A4[];
 extern const char aEnmbatleC_800A05CC[12];
 extern const char aAssertionFaile_800A0660[];
@@ -1519,7 +1543,8 @@ extern void *mapArea2Maps_800B0570[13];
 extern void *mapArea3Maps_800B05A4[13];
 extern void *mapArea4Maps_800B05D8[6];
 extern void *mapArea5Maps_800B05F0[6];
-extern GameMapEntrance **mapTable_800B0608[36];
+extern GameMapEntrance **mapTable_800B0608[7];
+extern int areaMapCounts_800B0624[29];
 extern int gameModeChanged_800B0698;
 extern int levantStartPos_800B069C[5];
 extern int shopRequest_800B06B0[3];

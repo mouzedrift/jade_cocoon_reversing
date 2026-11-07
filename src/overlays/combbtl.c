@@ -5,7 +5,7 @@
 #include "camera.h"
 #include "combbtl.h"
 
-int dword_800A4088 SDATA = 22;
+int combbtlHeader_800A4088 SDATA = 22;
 short previewHp_800A82D0 = 0;
 short previewMp_800A82D2 = 0;
 short sideWindowPos_800A82D4[2][2] = {
