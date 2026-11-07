@@ -93,8 +93,8 @@ void DrawCopyrightScreen_800408F4(void)
         sprts[5].y0 = 0x100;
         for (i = 0; i < 6; i++)
         {
-            AddPrimCopy_80040298(pOT_8008D3EC, &copyrightSprts_8008D47C[i], 5);
-            AddPrimCopy_80040298(pOT_8008D3EC, &copyrightTPages_8008B4EC[i], 2);
+            AddPrimCopy_80040298(pOT_8008D3EC, &copyrightSprts_8008D47C[i], sizeof(copyrightSprts_8008D47C[i]) / 4);
+            AddPrimCopy_80040298(pOT_8008D3EC, &copyrightTPages_8008B4EC[i], sizeof(copyrightTPages_8008B4EC[i]) / 4);
         }
     }
     else

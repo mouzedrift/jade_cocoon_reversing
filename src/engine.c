@@ -288,10 +288,10 @@ void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
         poly.x3 = display_8008B4D8.w_C;
         poly.y3 = display_8008B4D8.h_E;
         SetSemiTrans(&poly, 1);
-        AddPrimCopy_80040298(&ot[3], &poly, 6);
+        AddPrimCopy_80040298(&ot[3], &poly, sizeof(poly) / 4);
         setlen(&tp, 1);
         tp.code[0] = 0xE1000220;
-        AddPrimCopy_80040298(&ot[3], &tp, 2);
+        AddPrimCopy_80040298(&ot[3], &tp, sizeof(tp) / 4);
         if (--fade->count < 0)
         {
             fade->flags &= ~0x10;
@@ -334,10 +334,10 @@ void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
         poly.g0 = shade;
         poly.b0 = shade;
         SetSemiTrans(&poly, 1);
-        AddPrimCopy_80040298(&ot[3], &poly, 6);
+        AddPrimCopy_80040298(&ot[3], &poly, sizeof(poly) / 4);
         setlen(&tp, 1);
         tp.code[0] = 0xE1000220;
-        AddPrimCopy_80040298(&ot[3], &tp, 2);
+        AddPrimCopy_80040298(&ot[3], &tp, sizeof(tp) / 4);
         if (++fade->count > fade->duration)
         {
             fade->count = fade->duration;
@@ -361,10 +361,10 @@ void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
         poly.g0 = shade;
         poly.b0 = shade;
         SetSemiTrans(&poly, 1);
-        AddPrimCopy_80040298(&ot[3], &poly, 6);
+        AddPrimCopy_80040298(&ot[3], &poly, sizeof(poly) / 4);
         setlen(&tp, 1);
         tp.code[0] = 0xE1000220;
-        AddPrimCopy_80040298(&ot[3], &tp, 2);
+        AddPrimCopy_80040298(&ot[3], &tp, sizeof(tp) / 4);
         if (++fade->count > fade->duration)
         {
             fade->flags &= ~8;
@@ -928,10 +928,10 @@ void InitSprt_8001B9A0(int buffer)
             sprt.y0 = y;
             sprt.u0 = (display_8008B4D8.x_8 + x) % 64;
             sprt.v0 = y + top;
-            AddPrimCopy_80040298(pOT_8008D78C, &sprt, 5);
+            AddPrimCopy_80040298(pOT_8008D78C, &sprt, sizeof(sprt) / 4);
             tp = GetTPage(2, 0, (display_8008B4D8.x_8 + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
-            AddPrimCopy_80040298(pOT_8008D78C, &tpage, 2);
+            AddPrimCopy_80040298(pOT_8008D78C, &tpage, sizeof(tpage) / 4);
         }
     }
 }
@@ -958,10 +958,10 @@ void FadeToBlackStep_8001BB28(void)
     poly.x3 = w;
     poly.y3 = h;
     SetSemiTrans(&poly, 1);
-    AddPrimCopy_80040298(pOT_8008D78C, &poly, 6);
+    AddPrimCopy_80040298(pOT_8008D78C, &poly, sizeof(poly) / 4);
     setlen(&dr, 1);
     dr.code[0] = 0xE1000240;
-    AddPrimCopy_80040298(pOT_8008D78C, &dr, 2);
+    AddPrimCopy_80040298(pOT_8008D78C, &dr, sizeof(dr) / 4);
     fadeFrame_800918B4++;
     if ((unsigned int)fadeFrame_800918B4 > 0x20)
     {
@@ -991,10 +991,10 @@ void FadeToWhiteStep_8001BC00(void)
     poly.x3 = w;
     poly.y3 = h;
     SetSemiTrans(&poly, 1);
-    AddPrimCopy_80040298(pOT_8008D78C, &poly, 6);
+    AddPrimCopy_80040298(pOT_8008D78C, &poly, sizeof(poly) / 4);
     setlen(&dr, 1);
     dr.code[0] = 0xE1000220;
-    AddPrimCopy_80040298(pOT_8008D78C, &dr, 2);
+    AddPrimCopy_80040298(pOT_8008D78C, &dr, sizeof(dr) / 4);
     fadeFrame_800918B4++;
     if ((unsigned int)fadeFrame_800918B4 > 0x20)
     {
@@ -1019,9 +1019,9 @@ void DrawMotionBlur_8001BCE4(int buffer)
         return;
     }
     SetDrawStp(&stp, 1);
-    AddPrimCopy_80040298(pOT_8008D4AC + 3, &stp, 3);
+    AddPrimCopy_80040298(pOT_8008D4AC + 3, &stp, sizeof(stp) / 4);
     SetDrawStp(&stp, 0);
-    AddPrimCopy_80040298(pOT_8008D4AC, &stp, 3);
+    AddPrimCopy_80040298(pOT_8008D4AC, &stp, sizeof(stp) / 4);
     SetSprt(&sprt);
     sprt.r0 = 0x80;
     sprt.g0 = 0x80;
@@ -1046,10 +1046,10 @@ void DrawMotionBlur_8001BCE4(int buffer)
             sprt.y0 = y;
             sprt.u0 = (display_8008B4D8.x_8 + x) % 64;
             sprt.v0 = y + top;
-            AddPrimCopy_80040298(pOT_8008D4AC + 1, &sprt, 5);
+            AddPrimCopy_80040298(pOT_8008D4AC + 1, &sprt, sizeof(sprt) / 4);
             tp = GetTPage(2, 0, (display_8008B4D8.x_8 + x) / 64 * 64, top);
             setDrawTPage(&tpage, 0, 0, tp);
-            AddPrimCopy_80040298(pOT_8008D4AC + 1, &tpage, 2);
+            AddPrimCopy_80040298(pOT_8008D4AC + 1, &tpage, sizeof(tpage) / 4);
         }
     }
 }
@@ -1140,10 +1140,10 @@ void ScreenFlashTask_8001C0B4(EventEntry* entry, int* state)
     poly.x3 = w;
     poly.y3 = h;
     SetSemiTrans(&poly, 0);
-    AddPrimCopy_80040298(pOT_8008D5F4, &poly, 6);
+    AddPrimCopy_80040298(pOT_8008D5F4, &poly, sizeof(poly) / 4);
     setlen(&dr, 1);
     dr.code[0] = 0xE1000220;
-    AddPrimCopy_80040298(pOT_8008D5F4, &dr, 2);
+    AddPrimCopy_80040298(pOT_8008D5F4, &dr, sizeof(dr) / 4);
 }
 void SetFadeMode_8001C19C(unsigned int mode, int frames) // frames is unused
 {

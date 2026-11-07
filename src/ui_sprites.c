@@ -94,8 +94,8 @@ void DrawUiTiySprt_8002C06C(unsigned short* pos, int idx, int ot)
 {
     uiTiySprts_8008D620[idx].x0 = pos[0];
     uiTiySprts_8008D620[idx].y0 = pos[1];
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[idx], 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[idx], 2);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[idx], sizeof(uiTiySprts_8008D620[idx]) / 4);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[idx], sizeof(uiTiyTPages_8008D3F4[idx]) / 4);
 }
 void DrawLargeNumber_8002C100(unsigned short* origin, int value, int ot)
 {

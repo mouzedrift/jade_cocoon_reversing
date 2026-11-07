@@ -18,8 +18,8 @@ void DrawNextPrompt_8003CF88(short x, short y, int idx)
     publicTiySprts_8008D434[60].r0 = (unsigned int)frameCount_8008D3FC % 16 * 16;
     publicTiySprts_8008D434[60].g0 = (unsigned int)frameCount_8008D3FC % 16 * 16;
     publicTiySprts_8008D434[60].b0 = (unsigned int)frameCount_8008D3FC % 16 * 16;
-    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[60], 5);
-    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[60], 2);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[60], sizeof(publicTiySprts_8008D434[60]) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[60], sizeof(publicTiyTPages_8008D440[60]) / 4);
 }
 void DrawCursorHand_8003D034(unsigned short* pPos, int ot)
 {
@@ -58,6 +58,6 @@ void DrawBobbingCursorHand_8003D090(short x, short y, int a2, int a3, int idx)
     publicTiySprts_8008D434[5].x0 = x - offsetX;
     publicTiySprts_8008D434[5].y0 = y - 10;
     SetSemiTrans(&publicTiySprts_8008D434[5], 1);
-    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[5], 5);
-    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[5], 2);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiySprts_8008D434[5], sizeof(publicTiySprts_8008D434[5]) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + idx, &publicTiyTPages_8008D440[5], sizeof(publicTiyTPages_8008D440[5]) / 4);
 }

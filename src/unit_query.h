@@ -5,11 +5,11 @@
 #include "minion_menu.h"
 #include "msg_window.h" // TargetQuery
 
-void AddPolyFT4FlipXY_80032D34(unsigned short* poly, void* ot);
-void AddPolyFT4FlipX_80032DFC(short* poly, void* ot);
-void AddPolyFT4FlipY_80032E78(unsigned short* poly, void* ot);
-void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* poly, void* ot);
-void AddPolyFT4Rot90Cw_80032F88(unsigned short* poly, void* ot);
+void AddPolyFT4FlipXY_80032D34(POLY_FT4* poly, void* ot);
+void AddPolyFT4FlipX_80032DFC(POLY_FT4* poly, void* ot);
+void AddPolyFT4FlipY_80032E78(POLY_FT4* poly, void* ot);
+void AddPolyFT4Rot90Ccw_80032EF4(POLY_FT4* poly, void* ot);
+void AddPolyFT4Rot90Cw_80032F88(POLY_FT4* poly, void* ot);
 
 int CheckSkillUsable_80033C98(ListMenuState* menu);
 int CheckItemOnTarget_80033DF4(TargetQuery* use);
@@ -21,7 +21,7 @@ int GetAncestorElementMask_80033848(Minion* m, int idx);
 unsigned char* GetAncestorName_80033830(Minion* m, int idx);
 unsigned char GetStat_80033528(UnitStatus* status, int idx);
 int HasSkill_80033A70(UnitStats* stats, int idx);
-void AddPolyFT4Copy_8003301C(void* poly, void* ot);
+void AddPolyFT4Copy_8003301C(POLY_FT4* poly, void* ot);
 int GetDominantSpecies_800338B0(Minion* m);
 int GetTopSpecies_800338DC(unsigned char* history, unsigned char* ids, int* ratios);
 short GetMaxHp_800334CC(UnitStatus* status);
@@ -53,7 +53,7 @@ short GetLevel_80033514(UnitStatus* status);
 int MenuIndexToSkillSlot_80031BDC(int index);
 void AddDrawAreaPrim_8003326C(RECT* bounds, void* ot);
 void AddClipDrawAreaPrim_80033308(void* ot);
-void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, void* tpage, void* ot, unsigned char* col);
+void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, DR_TPAGE* tpage, void* ot, unsigned char* col);
 void GetPublicTiySprt_80032470(int idx, SPRT* pOut20, DR_TPAGE* pOut8);
 int CheckItemUsable_80033AFC(ListMenuState* menu);
 int CheckMagicCastable_80033C08(ListMenuState* menu);

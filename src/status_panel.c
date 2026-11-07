@@ -405,7 +405,7 @@ void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short
         if (level)
         {
             SetElementChartTri_8002E944(&tri, triPos, level, i);
-            AddPrimCopy_80040298(&pOT_8008D454[ot], &tri, 5);
+            AddPrimCopy_80040298(&pOT_8008D454[ot], &tri, sizeof(tri) / 4);
         }
     }
     DrawUiTiySprt_8002C06C(pos, 0xB, ot);
@@ -466,8 +466,8 @@ void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, shor
     prim[12].x0 = pos[0] + 2;
     prim[12].y0 = pos[1] + 2;
     SetSemiTrans(&prim[12], 1);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[12], 5);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[12], 2);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiySprts_8008D620[12], sizeof(uiTiySprts_8008D620[12]) / 4);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &uiTiyTPages_8008D3F4[12], sizeof(uiTiyTPages_8008D3F4[12]) / 4);
     rect.x = pos[0];
     rect.y = pos[1];
     rect.w = 0x32;

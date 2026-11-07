@@ -253,7 +253,7 @@ int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, unsigned long* ot, short x, short 
     {
         return 0;
     }
-    AddPrimCopy_80040298(ot, poly, 10);
+    AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
     return 1;
 }
 #define ROT_X(x, y, a) ((x) * sinTable_80084540[((a) + 0x400) & 0xFFF] / 4096 - (y) * sinTable_80084540[(a) & 0xFFF] / 4096)
@@ -311,7 +311,7 @@ void DrawRotatedPublicSprite_80031FF4(int idx, unsigned long* ot, unsigned short
     ry = ROT_Y(poly.x3, poly.y3, angle);
     poly.x3 = pos[0] + rx;
     poly.y3 = pos[1] + ry;
-    AddPrimCopy_80040298(ot, &poly, 10);
+    AddPrimCopy_80040298(ot, &poly, sizeof(poly) / 4);
 }
 void GetPublicTiySprt_80032470(int idx, SPRT* pOut20, DR_TPAGE* pOut8)
 {
@@ -331,7 +331,7 @@ void AddRotatedPolyFT4_800324D8(POLY_FT4* poly, int cx, int cy, int w, int h, in
     poly->y2 = cy + (h + (-*sinA * -w + *cosA * h) / 4096) / 2;
     poly->x3 = cx + (w + (*cosA * w + *sinA * h) / 4096) / 2;
     poly->y3 = cy + (h + (-*sinA * w + *cosA * h) / 4096) / 2;
-    AddPrimCopy_80040298(ot, poly, 10);
+    AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
 }
 void AddRotatedPolyFT4Uv_800327A8(POLY_FT4* poly, int cx, int cy, int w, int h, int du, int dv, int angle, void* ot)
 {
@@ -352,7 +352,7 @@ void AddRotatedPolyFT4Uv_800327A8(POLY_FT4* poly, int cx, int cy, int w, int h, 
     poly->y2 = cy + (h / 2 + (-*sinA * (-w / 2) + *cosA * (h / 2)) / 4096);
     poly->x3 = cx + (w / 2 + (*cosA * (w / 2) + *sinA * (h / 2)) / 4096);
     poly->y3 = cy + (h / 2 + (-*sinA * (w / 2) + *cosA * (h / 2)) / 4096);
-    AddPrimCopy_80040298(ot, poly, 10);
+    AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
 }
 void SetRotatedPolyFT4_80032A88(POLY_FT4* poly, int cx, int cy, int w, int h, int angle)
 {
@@ -368,73 +368,73 @@ void SetRotatedPolyFT4_80032A88(POLY_FT4* poly, int cx, int cy, int w, int h, in
     poly->x3 = cx + (w + (*cosA * w + *sinA * h) / 4096) / 2;
     poly->y3 = cy + (h + (-*sinA * w + *cosA * h) / 4096) / 2;
 }
-void AddPolyFT4FlipXY_80032D34(unsigned short* poly, void* ot)
+void AddPolyFT4FlipXY_80032D34(POLY_FT4* poly, void* ot)
 {
-    int dx = (short)poly[8] - (short)poly[4];
-    int dy = (short)poly[0xD] - (short)poly[5];
-    short* copy = AddPrimCopy_80040298(ot, poly, 10);
-    copy[4] = poly[4] + dx;
-    copy[5] = poly[5] + dy;
-    copy[8] = poly[4];
-    copy[9] = poly[5] + dy;
-    copy[0xC] = poly[4] + dx;
-    copy[0xD] = poly[5];
-    copy[0x10] = poly[4];
-    copy[0x11] = poly[5];
+    int dx = poly->x1 - poly->x0;
+    int dy = poly->y2 - poly->y0;
+    POLY_FT4* copy = AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
+    copy->x0 = poly->x0 + dx;
+    copy->y0 = poly->y0 + dy;
+    copy->x1 = poly->x0;
+    copy->y1 = poly->y0 + dy;
+    copy->x2 = poly->x0 + dx;
+    copy->y2 = poly->y0;
+    copy->x3 = poly->x0;
+    copy->y3 = poly->y0;
 }
-void AddPolyFT4FlipX_80032DFC(short* poly, void* ot)
+void AddPolyFT4FlipX_80032DFC(POLY_FT4* poly, void* ot)
 {
-    int d = poly[8] - poly[4];
-    short* copy = AddPrimCopy_80040298(ot, poly, 10);
-    copy[4] = poly[4] + d;
-    copy[8] = poly[4];
-    copy[12] = poly[4] + d;
-    copy[16] = poly[4];
+    int d = poly->x1 - poly->x0;
+    POLY_FT4* copy = AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
+    copy->x0 = poly->x0 + d;
+    copy->x1 = poly->x0;
+    copy->x2 = poly->x0 + d;
+    copy->x3 = poly->x0;
 }
-void AddPolyFT4FlipY_80032E78(unsigned short* poly, void* ot)
+void AddPolyFT4FlipY_80032E78(POLY_FT4* poly, void* ot)
 {
-    int d = ((short*)poly)[13] - ((short*)poly)[5];
-    unsigned short* copy = AddPrimCopy_80040298(ot, poly, 10);
-    copy[5] = poly[5] + d;
-    copy[9] = poly[5] + d;
-    copy[13] = poly[5];
-    copy[17] = poly[5];
+    int d = poly->y2 - poly->y0;
+    POLY_FT4* copy = AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
+    copy->y0 = poly->y0 + d;
+    copy->y1 = poly->y0 + d;
+    copy->y2 = poly->y0;
+    copy->y3 = poly->y0;
 }
-void AddPolyFT4Rot90Ccw_80032EF4(unsigned short* poly, void* ot)
+void AddPolyFT4Rot90Ccw_80032EF4(POLY_FT4* poly, void* ot)
 {
-    int x0 = ((short*)poly)[4];
-    int y0 = ((short*)poly)[5];
-    unsigned short* copy = AddPrimCopy_80040298(ot, poly, 10);
+    int x0 = poly->x0;
+    int y0 = poly->y0;
+    POLY_FT4* copy = AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
     unsigned short y1;
-    copy[4] = poly[12];
-    copy[5] = poly[13];
-    copy[12] = poly[16];
-    copy[13] = poly[17];
-    copy[16] = poly[8];
-    y1 = poly[9];
-    copy[8] = x0;
-    copy[9] = y0;
-    copy[17] = y1;
+    copy->x0 = poly->x2;
+    copy->y0 = poly->y2;
+    copy->x2 = poly->x3;
+    copy->y2 = poly->y3;
+    copy->x3 = poly->x1;
+    y1 = poly->y1;
+    copy->x1 = x0;
+    copy->y1 = y0;
+    copy->y3 = y1;
 }
-void AddPolyFT4Rot90Cw_80032F88(unsigned short* poly, void* ot)
+void AddPolyFT4Rot90Cw_80032F88(POLY_FT4* poly, void* ot)
 {
-    int x0 = ((short*)poly)[4];
-    int y0 = ((short*)poly)[5];
-    unsigned short* copy = AddPrimCopy_80040298(ot, poly, 10);
+    int x0 = poly->x0;
+    int y0 = poly->y0;
+    POLY_FT4* copy = AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
     unsigned short y1;
-    copy[4] = poly[8];
-    copy[5] = poly[9];
-    copy[8] = poly[16];
-    copy[9] = poly[17];
-    copy[16] = poly[12];
-    y1 = poly[13];
-    copy[12] = x0;
-    copy[13] = y0;
-    copy[17] = y1;
+    copy->x0 = poly->x1;
+    copy->y0 = poly->y1;
+    copy->x1 = poly->x3;
+    copy->y1 = poly->y3;
+    copy->x3 = poly->x2;
+    y1 = poly->y2;
+    copy->x2 = x0;
+    copy->y2 = y0;
+    copy->y3 = y1;
 }
-void AddPolyFT4Copy_8003301C(void* poly, void* ot)
+void AddPolyFT4Copy_8003301C(POLY_FT4* poly, void* ot)
 {
-    AddPrimCopy_80040298(ot, poly, 10);
+    AddPrimCopy_80040298(ot, poly, sizeof(*poly) / 4);
 }
 void SetDrTPageAbr_80033048(unsigned short* tpage, int abr)
 {
@@ -448,8 +448,8 @@ void DrawPublicTiySprt_80033080(unsigned short* pos, int idx, int otIdx)
 {
     publicTiySprts_8008D434[idx].x0 = pos[0];
     publicTiySprts_8008D434[idx].y0 = pos[1];
-    AddPrimCopy_80040298(pOT_8008D454 + otIdx, &publicTiySprts_8008D434[idx], 5);
-    AddPrimCopy_80040298(pOT_8008D454 + otIdx, &publicTiyTPages_8008D440[idx], 2);
+    AddPrimCopy_80040298(pOT_8008D454 + otIdx, &publicTiySprts_8008D434[idx], sizeof(publicTiySprts_8008D434[idx]) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + otIdx, &publicTiyTPages_8008D440[idx], sizeof(publicTiyTPages_8008D440[idx]) / 4);
 }
 void DrawPublicTiySprtColored_80033114(unsigned short* pos, int idx, void* ot, unsigned char* col)
 {
@@ -458,10 +458,10 @@ void DrawPublicTiySprtColored_80033114(unsigned short* pos, int idx, void* ot, u
     publicTiySprts_8008D434[idx].b0 = col[2];
     publicTiySprts_8008D434[idx].x0 = pos[0];
     publicTiySprts_8008D434[idx].y0 = pos[1];
-    AddPrimCopy_80040298(ot, &publicTiySprts_8008D434[idx], 5);
-    AddPrimCopy_80040298(ot, &publicTiyTPages_8008D440[idx], 2);
+    AddPrimCopy_80040298(ot, &publicTiySprts_8008D434[idx], sizeof(publicTiySprts_8008D434[idx]) / 4);
+    AddPrimCopy_80040298(ot, &publicTiyTPages_8008D440[idx], sizeof(publicTiyTPages_8008D440[idx]) / 4);
 }
-void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, void* tpage, void* ot, unsigned char* col)
+void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, DR_TPAGE* tpage, void* ot, unsigned char* col)
 {
     if (col)
     {
@@ -476,8 +476,8 @@ void AddSprtWithTPage_800331C4(unsigned short* pos, SPRT* sprt, void* tpage, voi
     }
     sprt->x0 = pos[0];
     sprt->y0 = pos[1];
-    AddPrimCopy_80040298(ot, sprt, 5);
-    AddPrimCopy_80040298(ot, tpage, 2);
+    AddPrimCopy_80040298(ot, sprt, sizeof(*sprt) / 4);
+    AddPrimCopy_80040298(ot, tpage, sizeof(*tpage) / 4);
 }
 extern DRAWENV drawEnv_8008D698[2];
 void AddDrawAreaPrim_8003326C(RECT* bounds, void* ot)
@@ -491,7 +491,7 @@ void AddDrawAreaPrim_8003326C(RECT* bounds, void* ot)
     rect.w = bounds->w;
     rect.h = bounds->h;
     SetDrawArea(&area, &rect);
-    AddPrimCopy_80040298(ot, &area, 3);
+    AddPrimCopy_80040298(ot, &area, sizeof(area) / 4);
 }
 void AddClipDrawAreaPrim_80033308(void* ot)
 {
@@ -504,7 +504,7 @@ void AddClipDrawAreaPrim_80033308(void* ot)
     rect.w = clip[2];
     rect.h = clip[3];
     SetDrawArea(&area, &rect);
-    AddPrimCopy_80040298(ot, &area, 3);
+    AddPrimCopy_80040298(ot, &area, sizeof(area) / 4);
 }
 void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int tick, int period, int half)
 {

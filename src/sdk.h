@@ -40,6 +40,23 @@
 #define OT_TYPE u_long
 #endif
 
+/* a GPU primitive copied into the primitive buffer: word by word on the PlayStation (as the game does it), as the
+   structure on PC (where primitives are bigger) */
+#ifdef __psyz
+#define COPY_SPRT(dst, src) (*(SPRT*)(dst) = *(SPRT*)(src))
+#define COPY_DR_TPAGE(dst, src) (*(DR_TPAGE*)(dst) = *(DR_TPAGE*)(src))
+#else
+#define COPY_SPRT(dst, src)                                                                                        \
+    ((u_long*)(dst))[0] = ((u_long*)(src))[0];                                                                     \
+    ((u_long*)(dst))[1] = ((u_long*)(src))[1];                                                                     \
+    ((u_long*)(dst))[2] = ((u_long*)(src))[2];                                                                     \
+    ((u_long*)(dst))[3] = ((u_long*)(src))[3];                                                                     \
+    ((u_long*)(dst))[4] = ((u_long*)(src))[4]
+#define COPY_DR_TPAGE(dst, src)                                                                                    \
+    ((u_long*)(dst))[0] = ((u_long*)(src))[0];                                                                     \
+    ((u_long*)(dst))[1] = ((u_long*)(src))[1]
+#endif
+
 #ifdef __psyz /* PSY-Z's malloc.h is the C library's on PC (src/pc/sdk_extra.c has these) */
 void InitHeap3(unsigned long* head, unsigned long size);
 void* malloc3(size_t size);

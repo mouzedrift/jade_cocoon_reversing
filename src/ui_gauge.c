@@ -84,8 +84,8 @@ void DrawScrollArrow_8002B3DC(ScrollArrow arrow, int time, short* pos, int ot)
     publicTiyPolyFT4s_8008D430[idx].y3 = pos[1] + ny;
     setShadeTex(&publicTiyPolyFT4s_8008D430[idx], 0);
     PulseColor_80033394((unsigned char*)&publicTiyPolyFT4s_8008D430[idx].r0, (unsigned char*)&c0, (unsigned char*)&c1, time, 0x28, 0xA);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyPolyFT4s_8008D430[idx], 10);
-    AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyTPages_8008D440[idx], 2);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyPolyFT4s_8008D430[idx], sizeof(publicTiyPolyFT4s_8008D430[idx]) / 4);
+    AddPrimCopy_80040298(&pOT_8008D454[ot], &publicTiyTPages_8008D440[idx], sizeof(publicTiyTPages_8008D440[idx]) / 4);
 }
 void DrawScrollArrows_8002B8DC(ScrollArrow arrow, short* list, short* pos, int ot)
 {

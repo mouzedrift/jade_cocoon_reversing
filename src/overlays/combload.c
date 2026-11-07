@@ -112,8 +112,8 @@ void DrawTitleWindow_800A4364()
     SPRT* sprt = &uiTiySprts_8008D620[15];
     sprt->x0 = x;
     sprt->y0 = 0x14;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, sizeof(*sprt) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], sizeof(uiTiyTPages_8008D3F4[15]) / 4);
     rect.x = 0x78;
     rect.w = 0x7E;
     rect.h = 0x12;
@@ -132,8 +132,8 @@ void DrawTitleWindow2_800A4420()
     SPRT* sprt = &uiTiySprts_8008D620[15];
     sprt->x0 = x;
     sprt->y0 = 0x14;
-    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, sizeof(*sprt) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[15], sizeof(uiTiyTPages_8008D3F4[15]) / 4);
     rect.x = 0x78;
     rect.w = 0x7E;
     rect.h = 0x12;
@@ -154,24 +154,24 @@ void DrawDataHeaderWindows_800A44DC()
         SPRT* sprt = &uiTiySprts_8008D620[155];
         sprt->x0 = x;
         sprt->y0 = 0x2A;
-        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, sizeof(*sprt) / 4);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], sizeof(uiTiyTPages_8008D3F4[155]) / 4);
     }
     {
         int x = 0x8E;
         SPRT* sprt = &uiTiySprts_8008D620[155];
         sprt->x0 = x;
         sprt->y0 = 0x2A;
-        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, sizeof(*sprt) / 4);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], sizeof(uiTiyTPages_8008D3F4[155]) / 4);
     }
     {
         int x = 0xD4;
         SPRT* sprt = &uiTiySprts_8008D620[155];
         sprt->x0 = x;
         sprt->y0 = 0x2A;
-        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, 5);
-        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], 2);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, sprt, sizeof(*sprt) / 4);
+        AddPrimCopy_80040298(pOT_8008D454 + 10, &uiTiyTPages_8008D3F4[155], sizeof(uiTiyTPages_8008D3F4[155]) / 4);
     }
     box.semiTrans_3 = 1;
     rect[0] = 0x64;

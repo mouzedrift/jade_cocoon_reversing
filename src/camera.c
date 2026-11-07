@@ -959,7 +959,7 @@ void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos)
         SetDrawArea(&area, &rect);
         *(DR_AREA*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = area;
         addPrim(pOT_8008D3EC, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0xC;
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_AREA);
         rect.x = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.x;
         rect.y = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.y;
         rect.w = drawEnv_8008D698[bDoubleBuffer_8008D428].clip.w;
@@ -967,7 +967,7 @@ void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos)
         SetDrawArea(&area, &rect);
         *(DR_AREA*)primAllocPtr_800960A8[bDoubleBuffer_8008D428] = area;
         addPrim(pOT_8008D5F4 + 2, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0xC;
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_AREA);
         if (cam->flags_4 & 0x40)
         {
             if (cam->flags_4 & 0x80)

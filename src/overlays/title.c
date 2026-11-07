@@ -240,8 +240,8 @@ void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, Name
         {
             sprts[j].x0 = ((j % 2) * 5) << 5;
             sprts[j].y0 = y;
-            AddPrimCopy_80040298(pOT_8008D3EC, &sprts[j], 5);
-            AddPrimCopy_80040298(pOT_8008D3EC, &tpages[j], 2);
+            AddPrimCopy_80040298(pOT_8008D3EC, &sprts[j], sizeof(sprts[j]) / 4);
+            AddPrimCopy_80040298(pOT_8008D3EC, &tpages[j], sizeof(tpages[j]) / 4);
         }
     }
     else
@@ -253,8 +253,8 @@ void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, Name
         sprts[i].y0 = y;
         PulseColor_80033394(&sprts[i].r0, zero, &color, c->pulseTime_5C, pulseMax_800A280C, pulseMin_800A2810);
         SetSemiTrans(&sprts[i], 1);
-        AddPrimCopy_80040298(pOT_8008D3EC, &sprts[i], 5);
-        AddPrimCopy_80040298(pOT_8008D3EC, &tpages[i], 2);
+        AddPrimCopy_80040298(pOT_8008D3EC, &sprts[i], sizeof(sprts[i]) / 4);
+        AddPrimCopy_80040298(pOT_8008D3EC, &tpages[i], sizeof(tpages[i]) / 4);
     }
 }
 
@@ -365,8 +365,8 @@ void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
     style.color_0 = 4;
     c->sprts_C[2].x0 = 0x54;
     c->sprts_C[2].y0 = 0xA7;
-    AddPrimCopy_80040298(pOT_8008D454 + 14, &c->sprts_C[2], 5);
-    AddPrimCopy_80040298(pOT_8008D454 + 14, &c->tpages_14[2], 2);
+    AddPrimCopy_80040298(pOT_8008D454 + 14, &c->sprts_C[2], sizeof(c->sprts_C[2]) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + 14, &c->tpages_14[2], sizeof(c->tpages_14[2]) / 4);
     DrawWindow_80042460(&rect, &style, pOT_8008D454 + 14, (unsigned int)frameCount_8008D3FC >> 1);
     DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
     if (padPressed_8009194C[0] & 0x800)
@@ -721,16 +721,16 @@ void DrawTitleBackground_800A1F98(SPRT* sprts, DR_TPAGE* tpages, TitleMenuWork* 
     logo->x0 = 0x55;
     PulseColor_80033394(&sprts[5].r0, zero, &color, frameCount_8008D3FC, 0xB4, 0x5A);
     SetSemiTrans(logo, 1);
-    AddPrimCopy_80040298((void*)pOT_8008D3EC, logo, 5);
-    AddPrimCopy_80040298((void*)pOT_8008D3EC, &tpages[5], 2);
+    AddPrimCopy_80040298((void*)pOT_8008D3EC, logo, sizeof(*logo) / 4);
+    AddPrimCopy_80040298((void*)pOT_8008D3EC, &tpages[5], sizeof(tpages[5]) / 4);
     y = 0;
     for (i = 7; i < 9; i++)
     {
         sprt = (SPRT*)((int)i * sizeof(SPRT) + (int)sprts); // &sprts[i] does not match
         sprt->x0 = (i - 7) * 5 << 5;
         sprt->y0 = y;
-        AddPrimCopy_80040298((void*)pOT_8008D3EC, sprt, 5);
-        AddPrimCopy_80040298((void*)pOT_8008D3EC, &tpages[i], 2);
+        AddPrimCopy_80040298((void*)pOT_8008D3EC, sprt, sizeof(*sprt) / 4);
+        AddPrimCopy_80040298((void*)pOT_8008D3EC, &tpages[i], sizeof(tpages[i]) / 4);
     }
 }
 

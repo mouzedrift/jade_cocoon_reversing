@@ -98,14 +98,13 @@ void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char
     setRGB2(&poly, rgb[2][0], rgb[2][1], rgb[2][2]);
     setRGB3(&poly, rgb[3][0], rgb[3][1], rgb[3][2]);
     setXY4(&poly, rect->x, rect->y, rect->x + rect->w, rect->y, rect->x, rect->y + rect->h, rect->x + rect->w, rect->y + rect->h);
-    AddPrimCopy_80040298(ot, &poly, 9);
+    AddPrimCopy_80040298(ot, &poly, sizeof(poly) / 4);
     if (abr)
     {
         SetDrawTPage(&dt, 0, 1, GetTPage(0, abr - 1, 0, 0));
-        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
-        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
+        COPY_DR_TPAGE(primAllocPtr_800960A8[bDoubleBuffer_8008D428], &dt);
         addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
     }
 }
 void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot)
@@ -116,7 +115,7 @@ void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot)
     setLineF4(&line);
     setRGB0(&line, rgb[0], rgb[1], rgb[2]);
     setXY4(&line, rect->x, rect->y, rect->x + rect->w, rect->y, rect->x + rect->w, rect->y + rect->h, rect->x, rect->y + rect->h);
-    AddPrimCopy_80040298(ot, &line, 7);
+    AddPrimCopy_80040298(ot, &line, sizeof(line) / 4);
     from.vx = line.x0;
     from.vy = line.y0;
     to.vx = line.x3;
@@ -130,12 +129,11 @@ void DrawLine_80042870(DVECTOR* from, DVECTOR* to, unsigned char* rgb, void* ot)
     setLineF2(&line);
     setRGB0(&line, rgb[0], rgb[1], rgb[2]);
     setXY2(&line, from->vx, from->vy, to->vx, to->vy);
-    AddPrimCopy_80040298(ot, &line, 4);
+    AddPrimCopy_80040298(ot, &line, sizeof(line) / 4);
     SetDrawTPage(&dt, 0, 1, GetTPage(0, 0, 0, 0));
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = dt.tag;
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = dt.code[0];
+    COPY_DR_TPAGE(primAllocPtr_800960A8[bDoubleBuffer_8008D428], &dt);
     addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
 }
 int IsWindowFrameFit_800429A8(RECT* rect)
 {
@@ -222,28 +220,28 @@ void DrawWindowBorder_80042B38(RECT* rect, int ot)
 
         EVT_SPRT[79].x0 = parts[0].x;
         EVT_SPRT[79].y0 = parts[0].y;
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[79], 5);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[79], 2);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[79], sizeof(EVT_SPRT[79]) / 4);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[79], sizeof(publicTiyTPages_8008D440[79]) / 4);
         EVT_SPRT[82].x0 = parts[1].x;
         EVT_SPRT[82].y0 = parts[1].y;
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[82], 5);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[82], 2);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[82], sizeof(EVT_SPRT[82]) / 4);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[82], sizeof(publicTiyTPages_8008D440[82]) / 4);
         EVT_SPRT[80].x0 = parts[2].x;
         EVT_SPRT[80].y0 = parts[2].y;
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[80], 5);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[80], 2);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[80], sizeof(EVT_SPRT[80]) / 4);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[80], sizeof(publicTiyTPages_8008D440[80]) / 4);
         EVT_SPRT[81].x0 = parts[3].x;
         EVT_SPRT[81].y0 = parts[3].y;
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[81], 5);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[81], 2);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &EVT_SPRT[81], sizeof(EVT_SPRT[81]) / 4);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyTPages_8008D440[81], sizeof(publicTiyTPages_8008D440[81]) / 4);
         setXYWH(&publicTiyPolyFT4s_8008D430[86], parts[4].x, parts[4].y, parts[4].w, parts[4].h);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[86], 10);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[86], sizeof(publicTiyPolyFT4s_8008D430[86]) / 4);
         setXYWH(&publicTiyPolyFT4s_8008D430[83], parts[5].x, parts[5].y, parts[5].w, parts[5].h);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[83], 10);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[83], sizeof(publicTiyPolyFT4s_8008D430[83]) / 4);
         setXYWH(&publicTiyPolyFT4s_8008D430[84], parts[6].x, parts[6].y, parts[6].w, parts[6].h);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[84], 10);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[84], sizeof(publicTiyPolyFT4s_8008D430[84]) / 4);
         setXYWH(&publicTiyPolyFT4s_8008D430[85], parts[7].x, parts[7].y, parts[7].w, parts[7].h);
-        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[85], 10);
+        AddPrimCopy_80040298(pOT_8008D454 + (short)ot, &publicTiyPolyFT4s_8008D430[85], sizeof(publicTiyPolyFT4s_8008D430[85]) / 4);
     }
 }
 extern int xaStartPos_80096108;

@@ -62,22 +62,17 @@ void DrawText_8003E91C(int idx, const char* str, short* pos, int ot)
             font->clut_E = getClut(font->clutX_20, font->clutOffset_2A + (font->clutY_22 + c));
             font->u_C = font->u0_18 + font->w_10 * col;
             font->v_D = font->v0_1A + font->h_12 * row;
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font)[1];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
+            COPY_SPRT(primAllocPtr_800960A8[bDoubleBuffer_8008D428], font);
             addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(SPRT);
             x -= k;
         }
         x += font->w_10;
         c = *codes;
     }
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
+    COPY_DR_TPAGE(primAllocPtr_800960A8[bDoubleBuffer_8008D428], font->tpage_14);
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
 }
 void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
 {
@@ -114,13 +109,9 @@ void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
             font->clut_E = getClut(font->clutX_20, font->clutOffset_2A + (font->clutY_22 + c));
             font->u_C = font->u0_18 + font->w_10 * col;
             font->v_D = font->v0_1A + font->h_12 * row;
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font)[1];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
-            ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
+            COPY_SPRT(primAllocPtr_800960A8[bDoubleBuffer_8008D428], font);
             addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+            primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(SPRT);
             x = font->w_10 + (x - k);
         }
         else
@@ -144,10 +135,9 @@ void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
         }
         c = *codes;
     }
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
+    COPY_DR_TPAGE(primAllocPtr_800960A8[bDoubleBuffer_8008D428], font->tpage_14);
     addPrim(&pOT_8008D454[ot], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
 }
 
 CharTable charTables_8008685C[1] = { { 0 } };

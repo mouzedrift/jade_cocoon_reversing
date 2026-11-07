@@ -459,14 +459,19 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
                     font->y0_A = y;
                     font->u_C = font->u0_18 + font->w_10 * col;
                     font->v_D = font->v0_1A + font->h_12 * cell;
+#ifdef __psyz
+                    COPY_SPRT(primAllocPtr_800960A8[bDoubleBuffer_8008D428], font);
+                    count++;
+#else /* the game copies the SPRT around the count */
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font)[0];
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font)[1];
                     count++;
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((u_long*)font)[2];
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[3] = ((u_long*)font)[3];
                     ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[4] = ((u_long*)font)[4];
+#endif
                     addPrim(&pOT_8008D454[w->ot_10], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 0x14;
+                    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(SPRT);
                     for (k = 12; k != 0; k--)
                     {
                         if (ci - 1 < charWidthThresholds_80086898[1][k - 1])
@@ -548,10 +553,9 @@ done:
     if (draw)
     {
         SetFontClutOffset_8003F900(2, 0);
-        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)font->tpage_14)[0];
-        ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)font->tpage_14)[1];
+        COPY_DR_TPAGE(primAllocPtr_800960A8[bDoubleBuffer_8008D428], font->tpage_14);
         addPrim(&pOT_8008D454[w->ot_10], primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+        primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
     }
 }
 void DrawMsgWindowNextPrompt_8003E268(unsigned short* pos)

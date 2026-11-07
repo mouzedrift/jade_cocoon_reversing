@@ -107,13 +107,13 @@ short GetMagicElementIcon_8002A3E0(int magic)
 extern void GetPortraitSprt_800A61CC(int a, void* b, void* c);
 void DrawPortrait_8002A42C(unsigned short* pos, short id, RECT* drawArea, short ot)
 {
-    unsigned short buf1[10];
-    char buf2[8];
-    GetPortraitSprt_800A61CC(id, buf1, buf2);
-    buf1[4] = pos[0];
-    buf1[5] = pos[1];
-    AddPrimCopy_80040298(pOT_8008D454 + ot, buf1, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + ot, buf2, 2);
+    SPRT buf1;
+    DR_TPAGE buf2;
+    GetPortraitSprt_800A61CC(id, &buf1, &buf2);
+    buf1.x0 = pos[0];
+    buf1.y0 = pos[1];
+    AddPrimCopy_80040298(pOT_8008D454 + ot, &buf1, sizeof(buf1) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + ot, &buf2, sizeof(buf2) / 4);
     if (drawArea)
     {
         AddDrawAreaPrim_8003326C(drawArea, &pOT_8008D454[ot]);
@@ -121,14 +121,14 @@ void DrawPortrait_8002A42C(unsigned short* pos, short id, RECT* drawArea, short 
 }
 void DrawPortraitWindow_8002A4E4(short ot)
 {
-    unsigned short buf1[10];
-    char buf2[8];
+    SPRT buf1;
+    DR_TPAGE buf2;
     DrawWindowBorder_80042B38(portraitWindowRect_800827E4, ot);
-    GetPortraitSprt_800A61CC(1, buf1, buf2);
-    buf1[4] = portraitWindowPos_800827EC[0];
-    buf1[5] = portraitWindowPos_800827EC[1];
-    AddPrimCopy_80040298(pOT_8008D454 + ot, buf1, 5);
-    AddPrimCopy_80040298(pOT_8008D454 + ot, buf2, 2);
+    GetPortraitSprt_800A61CC(1, &buf1, &buf2);
+    buf1.x0 = portraitWindowPos_800827EC[0];
+    buf1.y0 = portraitWindowPos_800827EC[1];
+    AddPrimCopy_80040298(pOT_8008D454 + ot, &buf1, sizeof(buf1) / 4);
+    AddPrimCopy_80040298(pOT_8008D454 + ot, &buf2, sizeof(buf2) / 4);
     DrawWindowBackground_800429F8(portraitWindowRect_800827E4, ot);
 }
 

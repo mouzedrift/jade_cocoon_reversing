@@ -94,13 +94,12 @@ void DrawWindowFrame_80041ED0(RECT* rect, unsigned char* rgb, u_long* ot, unsign
         quads[i].y2 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][5], rect->y, rect->h, 2);
         quads[i].x3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][6], rect->x, rect->w, 2);
         quads[i].y3 = FrameEdgeCoord_80041E68(windowFrameQuadEdges_80087070[i][7], rect->y, rect->h, 2);
-        AddPrimCopy_80040298(ot, &quads[i], 6);
+        AddPrimCopy_80040298(ot, &quads[i], sizeof(quads[i]) / 4);
     }
     setDrawTPage(&tpage, 0, 0, GetTPage(0, semi, 0, 0));
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((u_long*)&tpage)[0];
-    ((u_long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((u_long*)&tpage)[1];
+    COPY_DR_TPAGE(primAllocPtr_800960A8[bDoubleBuffer_8008D428], &tpage);
     addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += 8;
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
 }
 
 int windowFrameShades_80086F9C[5] = { 160, 210, 70, 40, 100 };

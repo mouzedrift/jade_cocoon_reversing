@@ -258,8 +258,8 @@ void DrawBlinkSprite_8003CE18(short x, short y)
         sprt->x0 = x;
         sprt->y0 = y;
         SetSemiTrans(sprt, 1);
-        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
-        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], 2);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], sizeof(publicTiySprts_8008D434[71]) / 4);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], sizeof(publicTiyTPages_8008D440[71]) / 4);
         break;
     case 1:
     case 3:
@@ -269,8 +269,8 @@ void DrawBlinkSprite_8003CE18(short x, short y)
         sprt->x0 = x;
         sprt->y0 = y;
         SetSemiTrans(sprt, 1);
-        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], 5);
-        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], 2);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[71], sizeof(publicTiySprts_8008D434[71]) / 4);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[71], sizeof(publicTiyTPages_8008D440[71]) / 4);
         break;
     case 2:
     case 4:
@@ -279,8 +279,8 @@ void DrawBlinkSprite_8003CE18(short x, short y)
         sprt->x0 = x;
         sprt->y0 = y;
         SetSemiTrans(sprt, 1);
-        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[72], 5);
-        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[72], 2);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiySprts_8008D434[72], sizeof(publicTiySprts_8008D434[72]) / 4);
+        AddPrimCopy_80040298(pOT_8008D454, &publicTiyTPages_8008D440[72], sizeof(publicTiyTPages_8008D440[72]) / 4);
         break;
     }
 }

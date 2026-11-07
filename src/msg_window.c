@@ -911,7 +911,7 @@ void DrawMsgWindowPortrait_80035900(MsgWindow* win)
         {
             setXY4(&win->prim_88, win->x_64, win->y_66, win->x_64 + 0x3F, win->y_66, win->x_64, win->y_66 + 0x3F, win->x_64 + 0x3F, win->y_66 + 0x3F);
         }
-        AddPrimCopy_80040298(pOT_8008D454 + 1, &win->prim_88, 10);
+        AddPrimCopy_80040298(pOT_8008D454 + 1, &win->prim_88, sizeof(win->prim_88) / 4);
     }
 }
 
@@ -1138,8 +1138,8 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 spr[i].b0 = 0x80;
                 spr[i].x0 = r.x + 6;
                 spr[i].y0 = r.y + (line * 16 + y) - 2;
-                AddPrimCopy_80040298(pOT_8008D454, &spr[i], 5);
-                AddPrimCopy_80040298(pOT_8008D454, &tp[i], 2);
+                AddPrimCopy_80040298(pOT_8008D454, &spr[i], sizeof(spr[i]) / 4);
+                AddPrimCopy_80040298(pOT_8008D454, &tp[i], sizeof(tp[i]) / 4);
             }
             p88.x = spr[i].w + r.x + 9;
             p88.y = r.y + (line * 16 + y) + 2;

@@ -356,7 +356,7 @@ void DestinationSelect_800B7044(MapTask* task, int work)
     r0.y = 0;
     r0.h = 0xF0;
     SetDrawMove(&mv, &r0, 0, y);
-    AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
+    AddPrimCopy_80040298(pOT_8008D3EC, &mv, sizeof(mv) / 4);
     wd = MeasureTextWidth_8003E4C8(mapAreas_800B9220[mapSelect_800AEBF8.area].name_8);
     tp[0] = mapAreas_800B9220[mapSelect_800AEBF8.area].x_C - (short)wd / 2;
     tp[1] = mapAreas_800B9220[mapSelect_800AEBF8.area].y_E;
@@ -372,8 +372,8 @@ void DestinationSelect_800B7044(MapTask* task, int work)
         id = elem->sprite_0;
         areaSprts_800B931C[id].x0 = elem->x_4;
         areaSprts_800B931C[id].y0 = elem->y_6;
-        AddPrimCopy_80040298(&pOT_8008D454[10], &areaSprts_800B931C[id], 5);
-        AddPrimCopy_80040298(&pOT_8008D454[10], &areaTPages_800B9320[id], 2);
+        AddPrimCopy_80040298(&pOT_8008D454[10], &areaSprts_800B931C[id], sizeof(areaSprts_800B931C[id]) / 4);
+        AddPrimCopy_80040298(&pOT_8008D454[10], &areaTPages_800B9320[id], sizeof(areaTPages_800B9320[id]) / 4);
         if (openDestCount_800B8CA4 > 0)
         {
             id2 = elem->marker_8;
@@ -388,13 +388,13 @@ void DestinationSelect_800B7044(MapTask* task, int work)
             {
                 SetSemiTrans(&areaSprts_800B931C[id2], 1);
             }
-            AddPrimCopy_80040298(&pOT_8008D454[9], &areaSprts_800B931C[id2], 5);
+            AddPrimCopy_80040298(&pOT_8008D454[9], &areaSprts_800B931C[id2], sizeof(areaSprts_800B931C[id2]) / 4);
             if ((unsigned short)mapSelect_800AEBF8.area >= 2)
             {
                 // the original reads this word here without using it
                 areaTPages_800B9320[id2].code[0] = areaTPages_800B9320[id2].code[0];
             }
-            AddPrimCopy_80040298(&pOT_8008D454[9], &areaTPages_800B9320[id2], 2);
+            AddPrimCopy_80040298(&pOT_8008D454[9], &areaTPages_800B9320[id2], sizeof(areaTPages_800B9320[id2]) / 4);
             if (openDestCount_800B8CA4 > 0)
             {
                 w0 = destListRow0_800B68B8;
@@ -593,7 +593,7 @@ void ConfirmDestination_800B7A90(MapTask* task, int work)
     r0.y = 0;
     r0.h = 0xF0;
     SetDrawMove(&mv, &r0, 0, y);
-    AddPrimCopy_80040298(pOT_8008D3EC, &mv, 6);
+    AddPrimCopy_80040298(pOT_8008D3EC, &mv, sizeof(mv) / 4);
     wd = MeasureTextWidth_8003E4C8(destNames_800B92FC[mapSelect_800AEBF8.area][mapSelect_800AEBF8.dest]);
     box.x = 0x9E - (short)wd / 2;
     box.y = 0x12;
