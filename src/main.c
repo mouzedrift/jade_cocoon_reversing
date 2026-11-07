@@ -1,6 +1,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "sdk.h"
+#include "memmap.h"
 #include "globals.h"
 #include "sound.h"
 #include "data_decls.h"
@@ -246,7 +247,7 @@ int main(void)
     SetMem(2);
 
     // calc heap size in multiple of 8
-    heapSize = ((0x801B9250 - (unsigned int)heapStart_800CD858));
+    heapSize = (char*)PSX_RAM(HEAP_END) - heapStart_800CD858;
     heapSize = (heapSize / 8) * 8;
 
     InitHeap3(heapStart_800CD858, heapSize);

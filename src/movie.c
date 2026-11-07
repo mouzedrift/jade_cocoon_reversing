@@ -1,6 +1,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "sdk.h"
+#include "memmap.h"
 #include "globals.h"
 /* the game calls SsSetSerialVol without the header's short prototype (no sign extension) */
 #define SsSetSerialVol SsSetSerialVol_proto
@@ -109,7 +110,7 @@ int PlayMovie_80040EB4(int idx)
     SsSetSerialVol(0, movie->volL * 0x70 / 0x1000, movie->volR * 0x70 / 0x1000);
     InitMovieCtx_80041240(&movieCtx_800960C0, movie);
     AllocMdecVLCBuffer_80041848();
-    ringBufferStart_800960B0 = (unsigned long*)0x801DB250;
+    ringBufferStart_800960B0 = PSX_RAM(0x801DB250);
     InitMovieStream_80041358((int)&file, (int)MovieDctOutCallback_80041424, (int*)movie);
     bMovieFinished_800960FC = 0;
     do
@@ -168,11 +169,11 @@ void InitMovieCtx_80041240(MovieCtx* ctx, MovieInfo* movie)
     int y;
     int x2;
     int y2;
-    ctx->vlcbuf[0] = (void*)0x801B9250;
-    ctx->vlcbuf[1] = (void*)0x801CA250;
+    ctx->vlcbuf[0] = PSX_RAM(HEAP_END);
+    ctx->vlcbuf[1] = PSX_RAM(0x801CA250);
     ctx->vlcIdx_8 = 0;
-    ctx->imgbuf[0] = (void*)0x801F0250;
-    ctx->imgbuf[1] = (void*)0x801F2F50;
+    ctx->imgbuf[0] = PSX_RAM(0x801F0250);
+    ctx->imgbuf[1] = PSX_RAM(0x801F2F50);
     ctx->imgIdx_14 = 0;
     x = MOVIE_W(movie, movie->decodeX_10);
     y = movie->decodeY_12;

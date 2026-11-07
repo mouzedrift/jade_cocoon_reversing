@@ -1,6 +1,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "sdk.h"
+#include "memmap.h"
 #include "globals.h"
 #include "sound.h"
 #include "data_decls.h"
@@ -160,8 +161,8 @@ void* Data001Reader_LoadIntoGlobal_8003CB40(int idx)
     Data001File file;
     int pad[2]; // the original frame has 8 more bytes of locals
     DATA_GetFile_8003C7CC(&file, idx);
-    LoadFileIntoBuffer_8003CB7C(&file.position_0, (unsigned long*)0x801B9250, file.sectors_4);
-    return (void*)0x801B9250;
+    LoadFileIntoBuffer_8003CB7C(&file.position_0, PSX_RAM(HEAP_END), file.sectors_4);
+    return PSX_RAM(HEAP_END);
 }
 void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors)
 {

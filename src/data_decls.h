@@ -3,7 +3,10 @@
 
 /* declarations of game data that is defined in the TU files */
 
-extern char heapStart_800CD858[2*1024];
+#include "memmap.h"
+#ifndef __psyz
+extern char heapStart_800CD858[2*1024]; /* config/fixed_symbols.txt */
+#endif
 extern unsigned char pads_800918E8[2][9];
 extern char SEQDataAttributeTable_80091D60[SS_SEQ_TABSIZ * 5 * 16];
 extern char* data001Path_80086570;

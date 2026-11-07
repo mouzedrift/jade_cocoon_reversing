@@ -1,6 +1,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "sdk.h"
+#include "memmap.h"
 #include "globals.h"
 #include "engine.h"
 #include "camera.h"
@@ -56,7 +57,7 @@ const int overlayAddr3_80073200 = 0x800A05A0;
 const int overlayAddr4_80073204 = 0x800B66C0;
 const int overlayAddr5_80073208 = 0x800C29D0;
 const int overlayAddr6_8007320C = 0x800B6D00;
-unsigned int *const mapCodeAddr_80073210 = (unsigned int *)0x800B22C0;
+unsigned int *const mapCodeAddr_80073210 = PSX_RAM(0x800B22C0);
 /* char* data001Path_80086570 = "\\DATA\\DATA.001;1"; (the string literal would be emitted into .rdata, not owned yet) */
 
 signed char GetMinionElement_80019BF0(int idx)
@@ -139,9 +140,9 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
     int dirY;
     int dirZ;
 
-    delta = (int*)0x1F800014;
+    delta = (int*)((MATRIX*)getScratchAddr(0))->t; // the scratch matrix's translation
     cam = &cameraState_8008D4F0;
-    sm = (MATRIX*)0x1F800000;
+    sm = (MATRIX*)getScratchAddr(0);
     sm->m[0][0] = lightMatrix_80087114.m[0][0];
     sm->m[0][1] = lightMatrix_80087114.m[0][1];
     sm->m[0][2] = lightMatrix_80087114.m[0][2];
@@ -200,9 +201,9 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
         dirX = (delta[0] << 12) / dist;
         dirY = (delta[1] << 12) / dist;
         dirZ = (delta[2] << 12) / dist;
-        ((MATRIX*)0x1F800000)->m[1][0] = dirX;
-        ((MATRIX*)0x1F800000)->m[1][1] = dirY;
-        ((MATRIX*)0x1F800000)->m[1][2] = dirZ;
+        ((MATRIX*)getScratchAddr(0))->m[1][0] = dirX;
+        ((MATRIX*)getScratchAddr(0))->m[1][1] = dirY;
+        ((MATRIX*)getScratchAddr(0))->m[1][2] = dirZ;
         if (unknownFlags_8008D678 & 0x400)
         {
             intensity = (((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14) * sceneBrightness_8008D40C >> 12;
@@ -216,17 +217,17 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
         gte_gpf12();
         gte_stclmv(&colorMatrix_80087134.m[0][1]);
     }
-    gte_SetRotMatrix((MATRIX*)0x1F800000);
+    gte_SetRotMatrix((MATRIX*)getScratchAddr(0));
     gte_ldclmv(&m->m[0][0]);
     gte_rtir();
-    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][0]);
+    gte_stclmv(&((MATRIX*)getScratchAddr(0))->m[0][0]);
     gte_ldclmv(&m->m[0][1]);
     gte_rtir();
-    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][1]);
+    gte_stclmv(&((MATRIX*)getScratchAddr(0))->m[0][1]);
     gte_ldclmv(&m->m[0][2]);
     gte_rtir();
-    gte_stclmv(&((MATRIX*)0x1F800000)->m[0][2]);
-    gte_SetLightMatrix((MATRIX*)0x1F800000);
+    gte_stclmv(&((MATRIX*)getScratchAddr(0))->m[0][2]);
+    gte_SetLightMatrix((MATRIX*)getScratchAddr(0));
     gte_SetColorMatrix(&colorMatrix_80087134);
 }
 void InitSceneFade_8001A38C(void)

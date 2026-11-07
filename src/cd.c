@@ -1,6 +1,7 @@
 #include "common.h"
 #include "funcs.h"
 #include "sdk.h"
+#include "memmap.h"
 #include "globals.h"
 #include "model.h"
 #include "cdread.h"
@@ -664,7 +665,7 @@ int SetCdXaLock_8003C0A4(int lock)
 void InitFileRequestTask_8003C128(int* entry, FileTask* task)
 {
     InitFileRequestQueue_8003BBE4();
-    fileBuffer_8008656C = (void*)0x801B9250;
+    fileBuffer_8008656C = PSX_RAM(HEAP_END);
     task->cur = 0;
     task->state = 0;
     task->buf = 0;
@@ -738,7 +739,7 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             }
             else
             {
-                task->buf = (void*)0x801B9250;
+                task->buf = PSX_RAM(HEAP_END);
             }
             if (task->cur->flags_C & 0x10)
             {

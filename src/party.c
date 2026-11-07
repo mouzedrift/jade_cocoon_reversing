@@ -11,8 +11,13 @@
 #include "model_ftg.h"
 
 
-// hand-written assembly (no PSY-Q module has it, and the compiler always fills the jr delay slot):
-// char* GetHeapStart_80010538(void) returns heapStart_800CD858
+// hand-written assembly (no PSY-Q module has it, and the compiler always fills the jr delay slot)
+#ifdef __psyz
+char* GetHeapStart_80010538(void)
+{
+    return heapStart_800CD858;
+}
+#else
 __asm__(
     "\t.text\n"
     "\t.globl\tGetHeapStart_80010538\n"
@@ -23,6 +28,7 @@ __asm__(
     "\tjr\t$31\n"
     "\tnop\n"
     "\t.set\treorder\n");
+#endif
 int CountMinions_80010548(int id)
 {
     int count;
