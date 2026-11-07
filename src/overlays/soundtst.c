@@ -3,7 +3,6 @@
 #include "funcs.h"
 #include "globals.h"
 #include "sound.h"
-#include <LIBSND.H>
 #include "unit_stats.h" // eventDescs_80078EB8
 #include "soundtst.h"
 

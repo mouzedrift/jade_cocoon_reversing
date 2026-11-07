@@ -816,7 +816,7 @@ void GameLoop_8004047C(void)
     } while ((unknownFlags_8008D678 & 4) == 0);
 }
 
-int unused_8008686C[3] = { 112, 138, (int)&font2CharCodes_800865B8[71] };
+UnusedFontRef unused_8008686C = { 112, 138, &font2CharCodes_800865B8[71] };
 int unused_80086878[8] = { 126, 194, 0x808080, 0x8080, 0x404040, 128, 0x8000, 0x800000 };
 int charWidthThresholds_80086898[3][12] = {
     { 112, 112, 96, 48, 32 },

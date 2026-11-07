@@ -236,6 +236,5 @@ extern void StartMapOverlay_800A75F8();
 extern void PulseColor_80033394(unsigned char* out, unsigned char* c0, unsigned char* c1, unsigned int t, int period,
                                 int half);
 extern void DrawScrollArrows_8002B8DC(MapXY arrow, MenuCursor* sel, MapXY* pos, int ot);
-extern void* memset(void* p, int c, unsigned int n);
 
 #endif

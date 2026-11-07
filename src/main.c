@@ -221,7 +221,7 @@ SoundStruct sfxSound_80091D20 BSS = { 0 };
 int unused_80091D3C BSS = 0;
 SoundStruct systemSound_80091D40 BSS = { 0 };
 int unused_80091D5C BSS = 0;
-char SEQDataAttributeTable_80091D60[(176 * 5) * 16] BSS = { 0 };
+char SEQDataAttributeTable_80091D60[SS_SEQ_TABSIZ * 5 * 16] BSS = { 0 };
 PadVibration padVibration_80095460[2] BSS = { 0 };
 EffectFile battleEffectFile_80095468 BSS = { 0 };
 int unused_800954A4 BSS = 0;
@@ -270,7 +270,11 @@ int main(void)
     _96_remove();
     _96_init();
     LoadExec(name, 0x801FFFF0, 0);
-    exit();
+#ifdef __psyz
+    exit(0);
+#else
+    exit(); /* PSY-Q's exit takes no status */
+#endif
 }
 void InitGame_80010110(void)
 {

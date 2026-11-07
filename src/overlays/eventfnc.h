@@ -426,7 +426,6 @@ typedef struct EvItemMsgSrc
 } EvItemMsgSrc;
 
 
-extern void memset(void* p, int v, int n);
 
 extern int mdecBufferMode_800AEB7C;
 

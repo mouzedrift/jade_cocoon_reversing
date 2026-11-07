@@ -270,7 +270,6 @@ extern Minion name_8008EF18[];
 void Heal_80011CD0(UnitStatus* p);          // unit_stats.h
 void SetSceneFadeFrontOT_8001ABEC(int a);                  // engine.h
 void DrawScrollArrow_8002B3DC(ShopPair p, int b, void* c, int d); // ui_gauge
-void* memset(void* p, int c, unsigned int n);        // libc
 
 /* SHOP data */
 extern int dword_800B6D00;

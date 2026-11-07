@@ -272,6 +272,5 @@ extern TstCompoBone defaultBones_80079140[];
 extern MATRIX lightMatrix_80087114; // event.h
 extern MATRIX colorMatrix_80087134; // event.h
 /* PSY-Q library */
-extern void* memset(void* p, int c, unsigned int n);
 
 #endif

@@ -299,7 +299,6 @@ extern void RemoveEnemy_800A2924();
 
 
 
-extern void* memset(void* dst, int c, unsigned int n); // the exe's libc memset
 
 
 

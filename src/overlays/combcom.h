@@ -172,7 +172,6 @@ extern unsigned char swapSlot_800A85BC;
 extern unsigned char actorSlot_800A85BD;
 
 /* exe-side, to move to <exe header> */
-extern void* memset(void* p, int c, unsigned int n);
 extern int MeasureTextWidth_8003E4C8(const char* str);       // -> pad_text.h
 
 #endif

@@ -1,6 +1,11 @@
 #ifndef GTE_H
 #define GTE_H
 
+#ifdef __psyz
+/* PSY-Z's libgte.h has the macros, on its GTE emulation */
+#include <libgte.h>
+#else
+
 /* PSY-Q GTE macros: INLINE_C.H with the GTE commands as their real cop2 words (what DMPSX would
    patch the .word placeholders to; values as in the DMPSX-less inline_n.h). */
 #include <inline_c.h>
@@ -605,5 +610,7 @@
         : "g"( r0 ) )
 
 #include <gtemac.h>
+
+#endif /* __psyz */
 
 #endif

@@ -1712,6 +1712,16 @@ void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
    short GetLevantAnimLoopEnd_800AC878(int anim, int set)
    short GetLevantAnimLoopStart_800AC834(int anim, int set)
    short GetLevantAnimStartFrame_800AC7F0(int anim, int set) */
+#ifdef __psyz /* a modern compiler wants them declared (the result is the same, the callee extends it) */
+short GetLevantActionEndFrame_800AB4D8(int anim);
+short GetLevantActionHitFrame_800AB750(int anim);
+short GetLevantAnimEventFrame_800AC944(int anim, int set);
+unsigned char GetLevantAnimFileId_800AC988(int anim, int set);
+unsigned short GetLevantAnimLastFrame_800AC8BC(int anim, int set);
+short GetLevantAnimLoopEnd_800AC878(int anim, int set);
+short GetLevantAnimLoopStart_800AC834(int anim, int set);
+short GetLevantAnimStartFrame_800AC7F0(int anim, int set);
+#endif
 /* exe-side, to move to unit_query.h */
 /* exe-side, to move to effect_data.h */
 /* exe-side, to move to engine.h */
