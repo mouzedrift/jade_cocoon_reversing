@@ -102,6 +102,12 @@ int PlayMovie_80040EB4(int idx)
     int x;
     int y;
 
+#ifdef __psyz
+    if (!getenv("JC_MOVIES")) /* the PC build has no MDEC decoding yet: the movie is over at once */
+    {
+        return 1;
+    }
+#endif
     SetDispMask(0);
     movie = &strMovies_80086A4C[idx];
     ClearMovieRect_80040E28(movie);
