@@ -71,7 +71,7 @@ int GetTiyFileCount_80028E68(int* file)
 {
     return file[0];
 }
-void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, int heap)
+void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, void* heap)
 {
     int count = *file;
     AllocTiyPrims_800295D8(sprts, polys, tpages, count, heap);
@@ -158,7 +158,7 @@ void ShiftVramImageHsv_800290FC(RECT* rect, short* dst, short* delta)
     DrawSync(0);
     free3_8003FC6C(buf);
 }
-void TintVramImage_800292D0(void* rect, void* dst, int tint)
+void TintVramImage_800292D0(void* rect, void* dst, short* tint)
 {
     short rgb[4];
     short out[4];
@@ -180,9 +180,9 @@ void TintVramImage_800292D0(void* rect, void* dst, int tint)
             if (rgb[0] || rgb[1] || rgb[2])
             {
                 gray = (rgb[0] + rgb[1] + rgb[2]) / 3;
-                out[0] = ((rgb[0] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[0] * ((short*)tint)[4] / 4096;
-                out[1] = ((rgb[1] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[1] * ((short*)tint)[4] / 4096;
-                out[2] = ((rgb[2] * (0x1000 - ((short*)tint)[3]) + gray * ((short*)tint)[3]) / 4096) * (0x1000 - ((short*)tint)[4]) / 4096 + ((short*)tint)[2] * ((short*)tint)[4] / 4096;
+                out[0] = ((rgb[0] * (0x1000 - tint[3]) + gray * tint[3]) / 4096) * (0x1000 - tint[4]) / 4096 + tint[0] * tint[4] / 4096;
+                out[1] = ((rgb[1] * (0x1000 - tint[3]) + gray * tint[3]) / 4096) * (0x1000 - tint[4]) / 4096 + tint[1] * tint[4] / 4096;
+                out[2] = ((rgb[2] * (0x1000 - tint[3]) + gray * tint[3]) / 4096) * (0x1000 - tint[4]) / 4096 + tint[2] * tint[4] / 4096;
                 out[3] = rgb[3];
                 PackColor555_80029CB4(pixel, (unsigned short*)out);
             }
@@ -197,7 +197,7 @@ void TintVramImage_800292D0(void* rect, void* dst, int tint)
     DrawSync(0);
     free3_8003FC6C(buf);
 }
-void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int count, int heap)
+void AllocTiyPrims_800295D8(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int count, void* heap)
 {
     if (sprts)
     {

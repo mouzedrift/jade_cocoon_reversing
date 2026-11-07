@@ -384,10 +384,10 @@ void free3_8003FC6C(void* block)
 {
     free3(block);
 }
-void* HeapAlloc_8003FC8C(int size, int heap)
+void* HeapAlloc_8003FC8C(int size, void* heap)
 {
     Pool* pool = (Pool*)heap;
-    switch (heap)
+    switch ((u_long)heap)
     {
     case 0:
         return ListAlloc_8003FDC0(&defaultAllocList_80096090, size);
@@ -406,10 +406,10 @@ void* HeapAlloc_8003FC8C(int size, int heap)
     }
     return ListAlloc_8003FDC0((List*)pool, size);
 }
-void HeapFree_8003FD18(void* ptr, int heap)
+void HeapFree_8003FD18(void* ptr, void* heap)
 {
     Pool* pool = (Pool*)heap;
-    switch (heap)
+    switch ((u_long)heap)
     {
     case 0:
         ListFree_8003FE38(&defaultAllocList_80096090, ptr);

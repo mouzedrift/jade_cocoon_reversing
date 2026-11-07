@@ -38,7 +38,7 @@ typedef struct ShopFormModel
 {
     int task_0;        // StartModelTask_80010850 handle, -1: none
     Minion* minion_4;
-    int desc_8[13];    // BuildFormModelDesc_800BF02C
+    ModelTaskParams desc_8; // BuildFormModelDesc_800BF02C
     Actor* actor_3C;   // SpawnFormActor_800BF574
 } ShopFormModel;
 
@@ -119,9 +119,10 @@ typedef struct ShopMenu
     short messageTimer_98;
 } ShopMenu;
 
+// the CreateActor_8001D45C ActorDesc without hasMatrices_4C (it reads whatever follows on the stack)
 typedef struct FormActorDesc
 {
-    int modelId_0; // the CreateActor_8001D45C ActorDesc without hasMatrices_4C
+    int modelId_0;
     int kind_4;
     int posX_8;
     int posY_C;
@@ -136,12 +137,15 @@ typedef struct FormActorDesc
     int frameSpeed_28;
     int blendDiv_2C;
     int visible_30;
-    int bones_34;
-    int baseScale_38;
-    int boneScale_3C;
-    int anims_40;
-    int effectTbl_44;
-    int model_48;
+    short* bones_34;
+    int* baseScale_38;
+    SVECTOR* boneScale_3C;
+    ActorAnim* anims_40;
+    short (*effectTbl_44)[6];
+    Model* model_48;
+#ifdef __psyz
+    int hasMatrices_4C; /* the PC build has it, 0 */
+#endif
 } FormActorDesc;
 
 
@@ -237,7 +241,7 @@ int GetStoredListScroll_800BEB60(ShopMenu* menu);
 void UpdateSelectedMinions_800BEBC8(ShopMenu* menu);
 void UpdateShownMinion_800BECC8(ShopMenu* menu);
 void DrawSkinList_800BED48(short* ref);
-void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c);
+void BuildFormModelDesc_800BF02C(Minion* minion, ModelTaskParams* desc, struct ModelVramSlot* c);
 int GetElementHue_800BF2E4(unsigned char* elements);
 int ElementMixAngle_800BF3B4(unsigned char* elements);
 void ResetFormModel_800BF474(void);

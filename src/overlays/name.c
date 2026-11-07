@@ -81,7 +81,7 @@ NameCursorTbl cursorExitTbl_800B83D8[4] = {
 };
 int nameEntryActive_800B83F8 = 0;
 
-void StartNameEntry_800B6E4C(int nameDest, int flags)
+void StartNameEntry_800B6E4C(unsigned char* nameDest, int flags)
 {
     EventEntry* e = AllocEventEntry_80043AF8(nameEntryTask_8008D484);
     NameEntry* entry;
@@ -99,7 +99,7 @@ void StartNameEntry_800B6E4C(int nameDest, int flags)
         entry->length_44 = 0;
         entry->nameDest_40 = nameDest;
         buf = nameBufInit_800B6E30;
-        CopyPlayerName_8003F860((unsigned char*)nameDest, (unsigned short*)&buf);
+        CopyPlayerName_8003F860(nameDest, (unsigned short*)&buf);
         DecodeText_8003F748(1, &buf);
         NameEntryNop_800B8018(&buf);
         MemCopy_800403E8(entry->savedName_28, &buf, 0x14);

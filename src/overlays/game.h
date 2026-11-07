@@ -188,7 +188,7 @@ extern int AssertEnemyIndex_800A2CA8(int idx, int noExit);
 extern void ResetEncounter_800A170C(void);
 
 
-extern int GetFieldMinionActor_800A7A60(int idx);
+extern Actor* GetFieldMinionActor_800A7A60(int idx);
 
 
 
@@ -729,7 +729,7 @@ typedef struct GameMainWork
     int prevMode_4;
     int nextMode_8; // RequestGameMode_800A6D30
     int modeInited_C[12]; // the mode's init tasks (flag 0x1000) were run
-    int eventList_3C; // CreateEventList_800435B4(gameEventListDefs_800B0DA4)
+    EventNode* eventList_3C; // CreateEventList_800435B4(gameEventListDefs_800B0DA4)
 } GameMainWork;
 
 // the work area of CheckSubOverlayRequests_800A6DAC / WaitSubOverlayLoad_800A70F8
@@ -1171,7 +1171,7 @@ typedef struct GameActorCmd
     int x_18;
     int y_1C;
     int z_20;
-    int data_24;
+    void* data_24; // kind 3: the script, kind 9..11: the path
 } GameActorCmd;
 
 typedef struct GameLevantActorInit
@@ -1470,7 +1470,16 @@ extern EffectFile eventEffects_800AEB80;
 extern int *eventReloc_800AEBBC;
 extern void *eventTiy_800AEBC0[2];
 extern void *eventDataBuf_800AEBC8;
-extern int eventRecords_800AEBCC[2];
+#ifndef EVENT_RECORDS_DEFINED
+#define EVENT_RECORDS_DEFINED
+// the event record tables a map's event data brings (LoadEventData_800A5628 kind 4)
+typedef struct EventRecords
+{
+    int count_0;
+    RecordTable* tables_4;
+} EventRecords;
+#endif
+extern EventRecords eventRecords_800AEBCC;
 extern int eventTempFlags_800AEBD4;
 extern int sceneScriptId_800AEBD8;
 extern int nextScriptId_800AEBDC;
@@ -1671,10 +1680,10 @@ extern GameSpawnEntry* sub_800B2B40();
 
 /* EVENTFNC-side (eventfnc.h; EVENTFNC is loaded under GAME) */
 extern void LoadEventEffectFile_800BC7A8(int* file);
-extern void LoadRelocBlob_800BC854(int src);
-extern void LoadEventTiy_800BC98C(int tiy);
-extern void CopyEventData_800BCA18(int src, unsigned int size);
-extern void LoadEventRecordTables_800BCA68(int data);
+extern void LoadRelocBlob_800BC854(int* src);
+extern void LoadEventTiy_800BC98C(int* tiy);
+extern void CopyEventData_800BCA18(unsigned int* src, unsigned int size);
+extern void LoadEventRecordTables_800BCA68(int* data);
 
 /* exe-side, to move to effect_data.h (declared there as ActorScriptCmd* commandScripts_8007A024[]) */
 extern int name_8007A024[];
@@ -1726,6 +1735,9 @@ void SetLevantFlag100000_800ABB98(int fromLoop);
 void UpdateLevantActionState_800AAF58(GameLevantActor* lev);
 void UpdateLevantActorModel_800AB8DC();
 void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
+void UpdateLevantMove_800A9A9C(GameLevantActor* lev);
+int CollideLevantWithMap_800B6DD4(); /* EVENTFNC */
+int PlayActorEffect_800184DC(struct ActorEffectReq* req, int slot);
 
 /* left undeclared on purpose: these return short/u_char, but their callers in game_3.c see them as int (implicit
    declarations, no sign extension of the result; a prototype changes the code):

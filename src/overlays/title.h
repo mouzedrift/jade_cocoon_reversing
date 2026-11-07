@@ -159,7 +159,7 @@ extern int GetLoadMenuLoaded_800B7914(void);
 extern void ScanCardSaves_800BAFB0(int slot);
 extern int GetCardFreeBlocks_800BAE2C(void);
 extern int GetCardSaveCount_800BAE3C(void);
-extern void StartNameEntry_800B6E4C(void* a0, int a1);
+extern void StartNameEntry_800B6E4C(unsigned char* nameDest, int flags);
 extern int IsNameEntryActive_800B6FC8(void);
 extern void StartConfigMenu_800C2EB4(void);
 extern int IsConfigMenuActive_800C45D8(void);

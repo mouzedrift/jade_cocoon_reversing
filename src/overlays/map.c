@@ -245,11 +245,11 @@ void OnMapFileLoaded_800B6DE0(MapTask* task, int* data)
     FreeMapTiys_800B6FAC(task);
     if (mapFileStage_800B9434 == 1)
     {
-        LoadTiy_80028E74(&areaSprts_800B931C, 0, &areaTPages_800B9320, data, 1);
+        LoadTiy_80028E74(&areaSprts_800B931C, 0, &areaTPages_800B9320, data, HEAP_MALLOC3);
     }
     else
     {
-        LoadTiy_80028E74(&areaBgSprts_800B9314, 0, &areaBgTPages_800B9318, data, 1);
+        LoadTiy_80028E74(&areaBgSprts_800B9314, 0, &areaBgTPages_800B9318, data, HEAP_MALLOC3);
     }
     mapFileLoaded_800B9430 = 1;
 }

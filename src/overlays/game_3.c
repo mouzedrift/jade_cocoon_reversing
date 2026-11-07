@@ -378,7 +378,7 @@ EffectFile eventEffects_800AEB80 = { 0 };
 int *eventReloc_800AEBBC = 0;
 void *eventTiy_800AEBC0[2] = { 0 };
 void *eventDataBuf_800AEBC8 = 0;
-int eventRecords_800AEBCC[2] = { 0 };
+EventRecords eventRecords_800AEBCC = { 0 };
 int eventTempFlags_800AEBD4 = 0;
 int sceneScriptId_800AEBD8 = -1;
 int nextScriptId_800AEBDC = 0;
@@ -1407,7 +1407,7 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
-    InitSprtFromTim_800298AC((int)sprt, (int)sprtArg, &tim);
+    InitSprtFromTim_800298AC(sprt, sprtArg, &tim);
 }
 
 void GetPortraitPoly_800A6308(int who, void* poly)
@@ -2155,11 +2155,11 @@ GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx)
     return 0;
 }
 
-int GetFieldMinionActor_800A7A60(int idx)
+Actor* GetFieldMinionActor_800A7A60(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        return (int)GetFieldMinion_800A77F4(idx)->cb_14.actor_4;
+        return GetFieldMinion_800A77F4(idx)->cb_14.actor_4;
     }
     return 0;
 }
@@ -4758,7 +4758,7 @@ void LevantModelTask_800ACB64(int* task, void* buf)
                 {
                     FreeModelList_80024BB0(&gameModelList_8007DC60);
                 }
-                InitModelList_80024ADC(&gameModelList_8007DC60, gameModelVramSlots_8007DC6C, (int)&levantPool_800B1DD0);
+                InitModelList_80024ADC(&gameModelList_8007DC60, gameModelVramSlots_8007DC6C, &levantPool_800B1DD0);
                 LoadModel_80025200(gameModelList_8007DC60, levantModelIds_800B1164[saveData_8008B570.hasArmor_830], 0, 2, 1);
                 work->prevModel_C = work->model_8;
                 work->model_8 = saveData_8008B570.hasArmor_830;

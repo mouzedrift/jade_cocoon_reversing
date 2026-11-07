@@ -260,8 +260,8 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
     style.color_0 = saveData_8008B570.uiColor_20.s;
     DrawWindow_80042460(&rect, &style, &pOT_8008D454[ot], 0);
 }
-extern void DrawElementIcons_8002B2A4(short a, int b, int c, Block16* d, int e);
-void DrawElementIconsRow_8002B1B0(short mask, int pos, int ot)
+extern void DrawElementIcons_8002B2A4(short a, short* b, int c, Block16* d, int e);
+void DrawElementIconsRow_8002B1B0(short mask, short* pos, int ot)
 {
     Block16 local = elementIconRowOffsets_800741C4;
     DrawElementIcons_8002B2A4(mask, pos, ot, &local, 0);

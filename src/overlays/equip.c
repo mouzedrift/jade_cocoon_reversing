@@ -130,8 +130,8 @@ const char aOrnamentalItem_800C4764[] = "\202n\202\222\202\216\202\201\202\215\2
 const char emptyText_800C4784[4] = { 0 };
 const char aCannotUnequip_800C4788[32] = { 130, 98, 130, 129, 130, 142, 130, 142, 130, 143, 130, 148, 129, 64, 130, 149, 130, 142, 130, 133, 130, 145, 130, 149, 130, 137, 130, 144, 0, 0, 0, 148 };
 
-char scrollUpArrowPos_800C5834[4] = { 160, 0, 131 };
-char scrollDownArrowPos_800C5838[4] = { 159, 0, 208 };
+short scrollUpArrowPos_800C5834[2] = { 160, 131 };
+short scrollDownArrowPos_800C5838[2] = { 159, 208 };
 MenuWindowItem equipListRow0_800C583C[4] = {
     { 0x10, 1, 0, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 0x53, 0x89, 0x15, 0x15, 3, 5 },
     { 0x10, 3, 0, NULL, NULL, 0x68, 0x89, 0x70, 0x15, 4, 4 },
@@ -151,7 +151,7 @@ MenuWindowItem equipListRow2_800C591C[4] = {
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 MenuWindowItem* equipListRows_800C598C[4] = { equipListRow0_800C583C, equipListRow1_800C58AC, equipListRow2_800C591C, NULL };
-char descBoxPos_800C599C[4] = { 10, 0, 61 };
+Pos16 descBoxPos_800C599C = { 10, 61 };
 char statCompareWindowRect_800C59A0[8] = { 25, 1, 49, 0, 29, 0, 77 };
 char statsWindowRect_800C59A8[8] = { 194, 0, 49, 0, 75, 0, 77 };
 short equipMenuStepModes_800C59B0[4] = { 0, 1, 2, -1 };
@@ -410,7 +410,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                 {
                     short j = c->category_18 + 1;
                     short slot = c->stepCursor_0[j] + c->stepScroll_C[j];
-                    DrawEquipDescription_800C5440(GetInventorySlotId_800AD288(slot, c->category_18 + 1), c->category_18, (int)descBoxPos_800C599C);
+                    DrawEquipDescription_800C5440(GetInventorySlotId_800AD288(slot, c->category_18 + 1), c->category_18, &descBoxPos_800C599C);
                 }
                 AddClipDrawAreaPrim_80033308(&pOT_8008D454[ot]);
                 break;
@@ -620,7 +620,7 @@ void DrawEquipStats_800C5314(EquipCtx* c)
 }
 
 
-void DrawEquipDescription_800C5440(short itemId, short category, int pos)
+void DrawEquipDescription_800C5440(short itemId, short category, Pos16* pos)
 {
     const char** desc = 0;
     switch (category)
@@ -658,6 +658,7 @@ void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short ca
 {
     short i;
     int v;
+    const char* name;
     int icon;
     int count;
     MenuWindowList win;
@@ -668,17 +669,17 @@ void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short ca
         if (v != 0xff)
         {
             icon = GetEquipmentIcon_8001D2D4(v, category);
-            v = GetEquipmentName_8001D128(v, category);
+            name = GetEquipmentName_8001D128(v, category);
             count = GetInventorySlotCount_800AD2C8(i + list->scroll, category + 1);
         }
         else
         {
             icon = -1;
-            v = (int)emptyText_800C4784;
+            name = emptyText_800C4784;
             count = 0;
         }
         equipListRows_800C598C[i][0].text_4.num = icon;
-        equipListRows_800C598C[i][1].text_4.num = v;
+        equipListRows_800C598C[i][1].text_4.str = name;
         equipListRows_800C598C[i][2].text_4.num = count;
         equipListRows_800C598C[i][0].sprts_8 = &publicTiySprts_8008D434;
         equipListRows_800C598C[i][0].tpages_C = &publicTiyTPages_8008D440;
@@ -716,10 +717,10 @@ void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short ca
     }
     if (list->scroll != 0)
     {
-        DrawScrollArrow_8002C6DC((int)scrollUpArrowPos_800C5834, 3, list->ot);
+        DrawScrollArrow_8002C6DC(scrollUpArrowPos_800C5834, 3, list->ot);
     }
     if (list->scroll < v - 3 && v >= 4)
     {
-        DrawScrollArrow_8002C6DC((int)scrollDownArrowPos_800C5838, 1, list->ot);
+        DrawScrollArrow_8002C6DC(scrollDownArrowPos_800C5838, 1, list->ot);
     }
 }

@@ -645,8 +645,8 @@ void DrawStoreDialog_800BB8CC(StoreMenu* store)
 {
     DrawPortraitWindow_8002A4E4(0xE);
     DrawTextList_8002A310(dialogLines_800BE134, 0xE);
-    DrawWindowBackground_800429F8((int)dialogWindowRect_800BE7C4, 0xE);
-    DrawWindowBorder_80042B38((int)dialogWindowRect_800BE7C4, 0xE);
+    DrawWindowBackground_800429F8((RECT*)dialogWindowRect_800BE7C4, 0xE);
+    DrawWindowBorder_80042B38((RECT*)dialogWindowRect_800BE7C4, 0xE);
     if (store->state_0 < 0x11)
     {
         if (store->state_0 >= 0xC)

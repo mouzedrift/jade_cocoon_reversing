@@ -54,13 +54,16 @@ void CopyBytes_800403C8(char *pOut, unsigned char *fileBuffer, int fileSize);
 void ListFreeAll_8003FEC8(List* l);
 void SetFontClutOffset_8003F900(int idx, int val);
 void ListFree_8003FE38(List* l, void* ptr);
-void HeapFree_8003FD18(void* ptr, int heap);
+void HeapFree_8003FD18(void* ptr, void* heap);
 void* AddPrimCopy_80040298(void* ot, void* prim, int words);
 void ListInit_8003FDB0(List* list);
 int IsPoolBlock_80040274(Pool* pool, void* ptr);
 void ClearUnusedWord_8004028C(void);
 /* heap: 0 = defaultAllocList_80096090, 1 = malloc3, else the address of a Pool (magic 0x8FFFFFFF) or of a List */
-void* HeapAlloc_8003FC8C(int size, int heap);
+/* the heap argument of HeapAlloc_8003FC8C / HeapFree_8003FD18 and what passes one on: these two, or a Pool / List */
+#define HEAP_LIST ((void*)0)    /* defaultAllocList_80096090 */
+#define HEAP_MALLOC3 ((void*)1) /* malloc3 */
+void* HeapAlloc_8003FC8C(int size, void* heap);
 void PoolSetInited_80040148(Pool* pool, int inited);
 unsigned short* EncodeText_8003F684(int mode, unsigned short* text);
 void SetFontAbr_8003F9E8(int idx, int abr);

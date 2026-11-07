@@ -27,11 +27,11 @@ int GetFtgObjectCount_80021738(int* file)
 {
     return file[1];
 }
-void AllocFtgObjects_80021744(FtgObject** out, int count, int heap)
+void AllocFtgObjects_80021744(FtgObject** out, int count, void* heap)
 {
     *out = HeapAlloc_8003FC8C(count * 0x54, heap);
 }
-void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, int heap)
+void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, void* heap)
 {
     FtgObject* obj = *objs;
     unsigned int i;
@@ -43,11 +43,11 @@ void FreeFtgObjects_80021784(FtgObject** objs, unsigned int count, int heap)
     HeapFree_8003FD18(*objs, heap);
     *objs = 0;
 }
-void FreeFtgObjectData_80021804(FtgObject* obj, int heap)
+void FreeFtgObjectData_80021804(FtgObject* obj, void* heap)
 {
     FreeFtgObject_800229B0(obj, heap);
 }
-void LoadFtgObjects_80021824(int* file, FtgObject* out, int count, int heap, int reloc)
+void LoadFtgObjects_80021824(int* file, FtgObject* out, int count, void* heap, int reloc)
 {
     unsigned int fileCount = GetFtgObjectCount_80021738(file);
     int src = (int)(file + 4);
@@ -58,7 +58,7 @@ void LoadFtgObjects_80021824(int* file, FtgObject* out, int count, int heap, int
         out++;
     }
 }
-void CopyFtgObject_800218A8(FtgObject* src, FtgObject* dst, int heap)
+void CopyFtgObject_800218A8(FtgObject* src, FtgObject* dst, void* heap)
 {
     char* buf;
     int size;
@@ -156,13 +156,13 @@ int GetFtgMatCount_80021DE4(int* file)
 {
     return file[2];
 }
-void AllocFtgMatList_80021DF0(FtgMatList* list, int count, int heap)
+void AllocFtgMatList_80021DF0(FtgMatList* list, int count, void* heap)
 {
     list->count_0 = count;
     list->items_4 = HeapAlloc_8003FC8C(count * 16, heap);
 }
 // p is volatile to keep the store before the load
-void FreeFtgMatList_80021E24(volatile FtgMatList* list, int h)
+void FreeFtgMatList_80021E24(volatile FtgMatList* list, void* h)
 {
     list->count_0 = 0;
     HeapFree_8003FD18(list->items_4, h);
@@ -336,7 +336,7 @@ void MakeFtgSprt_800221DC(FtgPolyFT4* src, SPRT* dst, DR_TPAGE* tpage)
     dst->clut = src->clut;
     SetDrawTPage(tpage, 0, 1, src->tpage);
 }
-int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
+int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, void* h, int reloc)
 {
     int typeCounts[10];
     FtgSpriteGroups8 A;
@@ -391,7 +391,7 @@ int LoadFtgObject_80022458(FtgObject* out, unsigned char* src, int h, int reloc)
     FreeFtgSpriteGroups_800229E0(&A, &B, h);
     return (int)src;
 }
-int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
+int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, void* h)
 {
     int spriteCount;
     int texSpriteCount;
@@ -454,7 +454,7 @@ int AllocFtgObjectPrims_80022634(FtgObject* out, FtgSrcObjectHeader* hdr, int h)
     out->texSprites_50 = (FtgSprite*)buf;
     return total;
 }
-int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, FtgSrcObjectHeader* hdr, int heap)
+int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, FtgSrcObjectHeader* hdr, void* heap)
 {
     int count;
     int m;
@@ -481,7 +481,7 @@ int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* g
     }
     return count;
 }
-void FreeFtgObject_800229B0(FtgObject* obj, int heap)
+void FreeFtgObject_800229B0(FtgObject* obj, void* heap)
 {
     FtgPolyF3* a = obj->f3_0.items;
     if (a)
@@ -489,7 +489,7 @@ void FreeFtgObject_800229B0(FtgObject* obj, int heap)
         HeapFree_8003FD18(a, heap);
     }
 }
-void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h)
+void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, void* h)
 {
     int i;
     if (groups8->groups != 0)
@@ -586,7 +586,7 @@ void CountFtgSprites_80022B84(unsigned char* cursor, int* sprites, int* texSprit
     *sprites = spriteCount;
     *texSprites = texSpriteCount;
 }
-void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, int h)
+void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, void* h)
 {
     int j;
     int sprite;
@@ -657,7 +657,7 @@ void MergeFtgSpriteGroups_80022CC4(FtgObject* obj, FtgSpriteGroups8* groups8, Ft
         }
     }
 }
-int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* groups8, int k, int h)
+int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteGroups8* groups8, int k, void* h)
 {
     FtgSrcSprites8* src = p_in;
     int read = 4;
@@ -684,7 +684,7 @@ int LoadFtgSprites_8002300C(FtgPrimHeader* hdr, FtgSrcSprites8* p_in, FtgSpriteG
     }
     return read;
 }
-int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* groups9, int k, int h)
+int LoadFtgTexSprites_8002320C(FtgPrimHeader* hdr, FtgSrcSprites9* p_in, FtgSpriteGroups9* groups9, int k, void* h)
 {
     FtgSrcSprites9* src = p_in;
     int read;
@@ -1087,7 +1087,7 @@ void RelocFtgPolyGT4_80024AB8(FtgSrcPolyGT4* poly, int reloc)
 {
     RelocateTPageClut_80022AE8(&poly->tex.tpage, &poly->tex.clut, reloc);
 }
-void InitModelList_80024ADC(ModelList** out, ModelVramSlot* vram, int heap)
+void InitModelList_80024ADC(ModelList** out, ModelVramSlot* vram, void* heap)
 {
     ModelList* l;
     int i;
@@ -1274,7 +1274,7 @@ char* GetModelHeaderRecord_80024FA8(Model* model, int record)
 void SaveModelFtgs_80024FFC(Model* model, int* ids)
 {
     int count;
-    int heap;
+    void* heap;
     for (count = 0; ids[count] >= 0; count++)
     {
     }
@@ -1553,7 +1553,7 @@ void FreeModelAnimSet_80025884(Model* model)
     int* list = model->animSet_58;
     if (list)
     {
-        int heap = model->list_0->heap_4;
+        void* heap = model->list_0->heap_4;
         int count = list[0];
         int i;
         for (i = 0; i < count; i++)
@@ -1629,7 +1629,7 @@ int LoadModelAltFtgs_80025974(Model* model, int idx, int flag)
 }
 void FreeModelAltFtgs_80025AB0(Model* model)
 {
-    int h = model->list_0->heap_4;
+    void* h = model->list_0->heap_4;
     if (model->ftg2_68)
     {
         FreeFtgObjects_80021784(&model->ftg2_68, model->ftg2Count_42, h);
@@ -1791,7 +1791,7 @@ void LoadModelHeader_80026014(ModelLoadParams* params)
 {
     ModelHeaderSection* section = params->header_1C;
     Model* model = params->model_14;
-    int h = model->list_0->heap_4;
+    void* h = model->list_0->heap_4;
     int size = section->size_0;
     void* buf;
     model->headerSize_48 = size;
@@ -1813,7 +1813,7 @@ void LoadModelFtg_800260FC(ModelLoadParams* params)
     Model* model = params->model_14;
     int* list = params->ftg_24;
     ModelVramSlot* vram = params->vram_18;
-    int h = model->list_0->heap_4;
+    void* h = model->list_0->heap_4;
     model->ftgCount_3C = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&model->ftg_50, model->ftgCount_3C, h);
     LoadFtgObjects_80021824(params->ftg_24, model->ftg_50, model->ftgCount_3C, h, (int)vram->reloc_4);
@@ -1826,7 +1826,7 @@ void LoadModelFtg_800260FC(ModelLoadParams* params)
 void LoadModelAnims_800261C8(ModelLoadParams* params)
 {
     Model* model = params->model_14;
-    int h = model->list_0->heap_4;
+    void* h = model->list_0->heap_4;
     int i;
     int j;
     int mode;
@@ -1913,7 +1913,7 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* params)
     ModelAnimSetSection* section = params->animSet_30;
     Model* model = params->model_14;
     int count = section->count_0;
-    int h = model->list_0->heap_4;
+    void* h = model->list_0->heap_4;
     int* list = HeapAlloc_8003FC8C((count + 1) * 4, h);
     int i;
     int id;
@@ -1941,7 +1941,7 @@ void LoadModelAltFtgSection_8002651C(ModelLoadParams* params)
     Model* model = params->model_14;
     int* list = params->ftg2_34;
     ModelVramSlot* vram = params->vram_18;
-    int heap = model->list_0->heap_4;
+    void* heap = model->list_0->heap_4;
     model->ftg2Count_42 = GetFtgObjectCount_80021738(list);
     AllocFtgObjects_80021744(&model->ftg2_68, model->ftg2Count_42, heap);
     LoadFtgObjects_80021824(params->ftg2_34, model->ftg2_68, model->ftg2Count_42, heap, (int)vram->reloc_4);
@@ -1950,7 +1950,7 @@ void LoadModelFtgSwaps_8002659C(ModelLoadParams* params)
 {
     unsigned char* src = params->extra_38;
     Model* model = params->model_14;
-    int h = model->list_0->heap_4;
+    void* h = model->list_0->heap_4;
     void* buf;
     model->swapCount_43 = *src;
     src += 4;
@@ -2022,7 +2022,7 @@ int GetModelAnimCount_80026724(int* section)
 {
     return section[0];
 }
-void AllocModelAnims_80026730(ModelAnim** out, int count, int heap)
+void AllocModelAnims_80026730(ModelAnim** out, int count, void* heap)
 {
     ModelAnim* anims = HeapAlloc_8003FC8C(count * 28, heap);
     int i;
@@ -2034,7 +2034,7 @@ void AllocModelAnims_80026730(ModelAnim** out, int count, int heap)
         anims[i].frames_18 = 0;
     }
 }
-void FreeModelAnims_8002679C(ModelAnim** anims, int count, int heap)
+void FreeModelAnims_8002679C(ModelAnim** anims, int count, void* heap)
 {
     ModelAnim* arr;
     int i;
@@ -2060,13 +2060,13 @@ void FreeModelAnims_8002679C(ModelAnim** anims, int count, int heap)
         *anims = 0;
     }
 }
-void LoadModelAnimSection_80026870(ModelAnim** out, int section, int heap)
+void LoadModelAnimSection_80026870(ModelAnim** out, int section, void* heap)
 {
     int count = GetModelAnimCount_80026724((int*)section);
     AllocModelAnims_80026730(out, count, heap);
     LoadModelAnimsMasked_800268E8(out[0], section, count, heap, -1);
 }
-void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int count, int h, int mask)
+void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int count, void* h, int mask)
 {
     int* offsets = (int*)section;
     int i;
@@ -2079,7 +2079,7 @@ void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int count, int
         }
     }
 }
-void FreeModelAnimData_800269C4(ModelAnim* anims, int count, int sel, int h)
+void FreeModelAnimData_800269C4(ModelAnim* anims, int count, int sel, void* h)
 {
     ModelAnim* anim = anims;
     int i;
@@ -2099,7 +2099,7 @@ void FreeModelAnimData_800269C4(ModelAnim* anims, int count, int sel, int h)
         }
     }
 }
-void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, int heap)
+void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, void* heap)
 {
     int hasDivisor = 0;
     int hasCues = hasDivisor;
@@ -2195,7 +2195,7 @@ int GetRecordTableCount_80026D6C(int* file)
 {
     return file[0];
 }
-void AllocRecordTables_80026D78(RecordTable** out, int count, int heap)
+void AllocRecordTables_80026D78(RecordTable** out, int count, void* heap)
 {
     RecordTable* tables = HeapAlloc_8003FC8C(count * 12, heap);
     int i;
@@ -2207,7 +2207,7 @@ void AllocRecordTables_80026D78(RecordTable** out, int count, int heap)
     }
     *out = tables;
 }
-void FreeRecordTables_80026DE8(RecordTable** tables, int count, int h)
+void FreeRecordTables_80026DE8(RecordTable** tables, int count, void* h)
 {
     RecordTable* table = *tables;
     int i;
@@ -2221,7 +2221,7 @@ void FreeRecordTables_80026DE8(RecordTable** tables, int count, int h)
     HeapFree_8003FD18(*tables, h);
     *tables = 0;
 }
-void LoadRecordTables_80026E74(RecordTable* tables, int* file, int heap)
+void LoadRecordTables_80026E74(RecordTable* tables, int* file, void* heap)
 {
     int i;
     for (i = 0; i < GetRecordTableCount_80026D6C(file); i++)
@@ -2237,7 +2237,7 @@ typedef struct
     unsigned short c;
     unsigned short d;
 } RecordEntry; // one 8-byte entry of a record table (LoadRecordTable_80026EF8)
-void LoadRecordTable_80026EF8(RecordTable* table, unsigned short* src, int heap)
+void LoadRecordTable_80026EF8(RecordTable* table, unsigned short* src, void* heap)
 {
     unsigned short* d;
     int i;
@@ -2537,7 +2537,7 @@ int* LoadMapSpawns_80027650(int* file, int unused, List* h)
     }
     return src;
 }
-void LoadMapFtg_80027708(int* file, int heap)
+void LoadMapFtg_80027708(int* file, void* heap)
 {
     int count = GetFtgObjectCount_80021738(file);
     mapState_8008B500.ftgCount_38 = count;

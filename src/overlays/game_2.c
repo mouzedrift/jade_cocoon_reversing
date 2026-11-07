@@ -19,7 +19,7 @@ void* GetEventDataSlot_800A55B0(int kind)
         slot = eventDataBuf_800AEBC8;
         break;
     case 4:
-        slot = eventRecords_800AEBCC;
+        slot = &eventRecords_800AEBCC;
         break;
     }
     return slot;
@@ -27,12 +27,12 @@ void* GetEventDataSlot_800A55B0(int kind)
 
 
 
-void LoadEventData_800A5628(int kind, int data, int arg)
+void LoadEventData_800A5628(int kind, int* data, int arg)
 {
     switch (kind)
     {
     case 0:
-        LoadEventEffectFile_800BC7A8((int*)data);
+        LoadEventEffectFile_800BC7A8(data);
         break;
     case 1:
         LoadRelocBlob_800BC854(data);
@@ -41,7 +41,7 @@ void LoadEventData_800A5628(int kind, int data, int arg)
         LoadEventTiy_800BC98C(data);
         break;
     case 3:
-        CopyEventData_800BCA18(data, arg);
+        CopyEventData_800BCA18((unsigned int*)data, arg);
         break;
     case 4:
         LoadEventRecordTables_800BCA68(data);
@@ -86,10 +86,10 @@ void FreeEventData_800A56BC(int kind)
         }
         break;
     case 4:
-        if (eventRecords_800AEBCC[1])
+        if (eventRecords_800AEBCC.tables_4)
         {
-            FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], (int)&eventHeap_80091C10);
-            eventRecords_800AEBCC[0] = 0;
+            FreeRecordTables_80026DE8(&eventRecords_800AEBCC.tables_4, eventRecords_800AEBCC.count_0, &eventHeap_80091C10);
+            eventRecords_800AEBCC.count_0 = 0;
         }
         break;
     }

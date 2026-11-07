@@ -34,6 +34,18 @@ typedef struct
       __stop_jc_##name##_bss },
 static PcOverlay pcOverlays[] = { OVERLAY_SECTIONS(ENTRY) };
 
+/* byte copies (whole sections, across the variables: not what AddressSanitizer checks) */
+__attribute__((no_sanitize_address)) static void CopyBytes(char* dst, const char* src, long n)
+{
+    while (n-- > 0)
+        *dst++ = *src++;
+}
+__attribute__((no_sanitize_address)) static void ClearBytes(char* dst, long n)
+{
+    while (n-- > 0)
+        *dst++ = 0;
+}
+
 void Pc_SaveOverlays(void)
 {
     unsigned int i;
@@ -43,7 +55,7 @@ void Pc_SaveOverlays(void)
         if (o->data && o->dataEnd > o->data)
         {
             o->saved = malloc(o->dataEnd - o->data);
-            memcpy(o->saved, o->data, o->dataEnd - o->data);
+            CopyBytes(o->saved, o->data, o->dataEnd - o->data);
         }
     }
 }
@@ -57,8 +69,8 @@ void Pc_OverlayLoaded(int fileId)
         if (o->fileId != fileId)
             continue;
         if (o->saved)
-            memcpy(o->data, o->saved, o->dataEnd - o->data);
+            CopyBytes(o->data, o->saved, o->dataEnd - o->data);
         if (o->bss && o->bssEnd > o->bss)
-            memset(o->bss, 0, o->bssEnd - o->bss);
+            ClearBytes(o->bss, o->bssEnd - o->bss);
     }
 }

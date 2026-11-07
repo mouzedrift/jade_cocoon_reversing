@@ -463,10 +463,10 @@ void GetSlotEffectTarget_800A111C(int i, EffectTarget* out)
     out->scale_30 = s->actor_3C->scale_2C;
 }
 
-int GetSlotSkills_800A11A0(int i)
+UnitSkill* GetSlotSkills_800A11A0(int i)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    return (int)&s->minion_4->skills_DE;
+    return (UnitSkill*)&s->minion_4->skills_DE;
 }
 
 unsigned int* GetSlotMagicBits_800A11BC(int i)

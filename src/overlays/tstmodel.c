@@ -246,7 +246,7 @@ void TstModelSelectModel_800A0C00(TstModelWork* c)
 
 void TstModelLoadModel_800A0EC8(TstModelWork* work)
 {
-    InitModelList_80024ADC(&work->models_14, modelLoaderVram_8007DC70, 1);
+    InitModelList_80024ADC(&work->models_14, modelLoaderVram_8007DC70, HEAP_MALLOC3);
     LoadModel_80025200(work->models_14, work->modelId_24, work->loadSel_20, 2, 0);
     work->loadSel_20 = 0;
     work->state_0 = 2;

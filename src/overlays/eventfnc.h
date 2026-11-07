@@ -444,7 +444,16 @@ typedef struct
 } EvTiyData;
 extern EvTiyData eventTiy_800AEBC0;
 
-extern int eventRecords_800AEBCC[2];
+#ifndef EVENT_RECORDS_DEFINED
+#define EVENT_RECORDS_DEFINED
+// the event record tables a map's event data brings (LoadEventData_800A5628 kind 4)
+typedef struct EventRecords
+{
+    int count_0;
+    RecordTable* tables_4;
+} EventRecords;
+#endif
+extern EventRecords eventRecords_800AEBCC;
 
 
 

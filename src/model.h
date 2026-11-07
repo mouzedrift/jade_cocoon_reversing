@@ -454,7 +454,7 @@ struct Model
 struct ModelList
 {
     int count_0;
-    int heap_4;
+    void* heap_4; // HeapAlloc_8003FC8C heap
     Model* items_8;
     ModelVramSlot* vram_C; // one per model, ended by id_2 == -1
 };
@@ -720,7 +720,7 @@ extern MapList16 mapSpawns_80091C60;
 
 // the loaders / relocators of the primitive kinds of an FTG model (LoadFtgObject_80022458)
 typedef void (*FtgPrimRelocFn)(unsigned char* body, int a3);
-typedef int (*FtgPrimLoadFn)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, int h);
+typedef int (*FtgPrimLoadFn)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, void* h);
 extern FtgPrimRelocFn ftgPrimRelocators_8007DB08[];
 extern FtgPrimLoadFn ftgPrimLoaders_8007DAE0[];
 

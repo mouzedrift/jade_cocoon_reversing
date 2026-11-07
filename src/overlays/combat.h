@@ -124,7 +124,7 @@ UnitStatus* GetSlotStatus_800A10C0(int i);
 int* GetSlotPos_800A10DC(int i);
 int* GetSlotBonePos_800A10F8(int i);
 void GetSlotEffectTarget_800A111C(int i, EffectTarget* out);
-int GetSlotSkills_800A11A0(int i);
+UnitSkill* GetSlotSkills_800A11A0(int i);
 unsigned int* GetSlotMagicBits_800A11BC(int i);
 Minion* GetSlotMinion_800A11D8(int i);
 void StartCombatCamera_800A11F4(void);

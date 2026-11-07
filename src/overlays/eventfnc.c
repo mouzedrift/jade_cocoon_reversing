@@ -2864,7 +2864,7 @@ void LoadEventTiy_800BC98C(int* tiy)
         ListFree_8003FE38(&eventHeap_80091C10, eventTiy_800AEBC0.tpages_4);
         eventTiy_800AEBC0.tpages_4 = 0;
     }
-    LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, tiy, (int)&eventHeap_80091C10);
+    LoadTiy_80028E74(&eventTiy_800AEBC0.sprts_0, 0, &eventTiy_800AEBC0.tpages_4, tiy, &eventHeap_80091C10);
 }
 
 void CopyEventData_800BCA18(unsigned int* src, unsigned int size)
@@ -2874,16 +2874,16 @@ void CopyEventData_800BCA18(unsigned int* src, unsigned int size)
     MemCopy_800403E8(buf, src, size);
 }
 
-void LoadEventRecordTables_800BCA68(int data)
+void LoadEventRecordTables_800BCA68(int* data)
 {
-    if (eventRecords_800AEBCC[1] != 0)
+    if (eventRecords_800AEBCC.tables_4 != 0)
     {
-        FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], (int)&eventHeap_80091C10);
-        eventRecords_800AEBCC[0] = 0;
+        FreeRecordTables_80026DE8(&eventRecords_800AEBCC.tables_4, eventRecords_800AEBCC.count_0, &eventHeap_80091C10);
+        eventRecords_800AEBCC.count_0 = 0;
     }
-    eventRecords_800AEBCC[0] = GetRecordTableCount_80026D6C((int*)data);
-    AllocRecordTables_80026D78(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], (int)&eventHeap_80091C10);
-    LoadRecordTables_80026E74(eventRecords_800AEBCC[1], data, (int)&eventHeap_80091C10);
+    eventRecords_800AEBCC.count_0 = GetRecordTableCount_80026D6C(data);
+    AllocRecordTables_80026D78(&eventRecords_800AEBCC.tables_4, eventRecords_800AEBCC.count_0, &eventHeap_80091C10);
+    LoadRecordTables_80026E74(eventRecords_800AEBCC.tables_4, data, &eventHeap_80091C10);
 }
 
 void ReturnWarpStart_800BCB00(EvTaskEntry* task, int* state)

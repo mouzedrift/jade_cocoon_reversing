@@ -579,7 +579,7 @@ void EnemyAiCB_800C4424(EnemyAi* ai)
     }
 }
 
-void EnemyAiCC_800C4470(int ai)
+void EnemyAiCC_800C4470(EnemyAi* ai)
 {
     AiSetCommand_800C6AFC(ai, 1, 0x14);
 }
@@ -2216,7 +2216,7 @@ int IsTargetWeakToMagic_800C6EE4(EnemyAi* ai)
     return ai->target_14->stats_2C.cur_0[1] > ai->target_14->stats_2C.cur_0[3];
 }
 
-int StartBattleMenu_800C6EFC()
+EventEntry* StartBattleMenu_800C6EFC()
 {
     int i;
     int bit;
@@ -2262,7 +2262,7 @@ int StartBattleMenu_800C6EFC()
         DisableMenuCommands_800C71C8();
         cameraFocus_800C9E38 = -1;
     }
-    return (int)entry;
+    return entry;
 }
 
 void InitMenuCursors_800C7088()
@@ -2636,7 +2636,7 @@ int GetSelectedMagic_800C7A1C()
 
 void AdvanceMenuPage_800C7A6C()
 {
-    int skills;
+    UnitSkill* skills;
     char* magicBits;
     prevMenuPage_800C9E40 = menuPage_800C9E50;
     switch (menuPage_800C9E50)

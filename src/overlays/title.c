@@ -15,25 +15,25 @@ const char aThereAreNoFreeB_800A0658[] = "\202s\202\210\202\205\202\222\202\205\
 const char aTheMEMORYCARDIn_800A069C[] = "\202\224\202\210\202\205\201@\202l\202d\202l\202n\202q\202x\201@\202b\202`\202q\202c\201@\202\211\202\216\201@\202\224\202\210\202\211\202\223\201@\202r\202k\202n\202s\201D"; // the MEMORY CARD in this SLOT.
 const TitleMenuWindow titleMenuWin0_800A06D8 = {
     {
-        { 8, 1, 3, NULL, NULL, 106, 140, 108, 16, 0, 2 },
+        { 8, 1, { .num = 3 }, NULL, NULL, 106, 140, 108, 16, 0, 2 },
         { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin1_800A0710 = {
     {
-        { 8, 1, 4, NULL, NULL, 106, 157, 108, 16, 0, 2 },
+        { 8, 1, { .num = 4 }, NULL, NULL, 106, 157, 108, 16, 0, 2 },
         { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin2_800A0748 = {
     {
-        { 8, 1, 0, NULL, NULL, 106, 174, 108, 16, 0, 2 },
+        { 8, 1, { .num = 0 }, NULL, NULL, 106, 174, 108, 16, 0, 2 },
         { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
 const TitleMenuWindow titleMenuWin3_800A0780 = {
     {
-        { 8, 1, 1, NULL, NULL, 106, 191, 108, 16, 0, 2 },
+        { 8, 1, { .num = 1 }, NULL, NULL, 106, 191, 108, 16, 0, 2 },
         { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
     },
 };
@@ -91,7 +91,7 @@ void NewGameLoadSprites_800A093C(TitleTask* t, NameEntryWork* c)
         c->sprts_70 = 0;
         c->tpages_74 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x39);
-        LoadTiy_80028E74(&c->sprts_70, 0, &c->tpages_74, buf, 1);
+        LoadTiy_80028E74(&c->sprts_70, 0, &c->tpages_74, buf, HEAP_MALLOC3);
         free3_8003FC6C(buf);
         t->next_8 = NewGameOpeningMovie_800A09C0;
     }
@@ -296,7 +296,7 @@ void TitleInit_800A0F6C(TitleTask* t, TitleMenuWork* c)
         c->sprts_C = 0;
         c->tpages_14 = 0;
         buf = DATA_GetFileBuffer_8003CAA0(0x36);
-        LoadTiy_80028E74(&c->sprts_C, 0, &c->tpages_14, buf, 1);
+        LoadTiy_80028E74(&c->sprts_C, 0, &c->tpages_14, buf, HEAP_MALLOC3);
         free3_8003FC6C(buf);
         (t->next_8 = TitleEnterScreen_800A1070)(t, c);
     }

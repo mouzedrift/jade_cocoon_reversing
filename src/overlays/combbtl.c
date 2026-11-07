@@ -403,7 +403,7 @@ void DrawWinnerBanner_800A5290(CombBtlTask* t)
     }
 }
 
-MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side)
+MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, const char** lines, int side)
 {
     MsgWindowCfg cfg;
     int kinds[2] = {2, 3};
@@ -1099,7 +1099,7 @@ void RunExchange_800A68E0(CombBtlTask* t)
             if (AreSideModelsReady_800A758C() == 1)
             {
                 CreateSideActor_800A74A0(actorSide_800A85B8);
-                MoveSlotActorTo_800A0E1C(actorSide_800A85B8, (int)GetSlotPos_800A10DC(actorSide_800A85B8 ^ 1));
+                MoveSlotActorTo_800A0E1C(actorSide_800A85B8, GetSlotPos_800A10DC(actorSide_800A85B8 ^ 1));
                 exchangeStep_800A8488 = 0;
                 actorCmd_800A85A8.kind_0 = 2;
                 actorCmd_800A85A8.targets_C = 0;
@@ -1586,7 +1586,7 @@ void SetAnnouncerXa_800A8078(short channel, short startSector, short length)
     pendingXa_800A82E0[3] = length;
 }
 
-int StartAnnouncer_800A8098(int which, int lines, int side)
+void* StartAnnouncer_800A8098(int which, const char** lines, int side)
 {
     EventEntry* e = AllocEventEntry_80043AF8(announcerTasks_8008D458);
     if (e)
@@ -1599,7 +1599,7 @@ int StartAnnouncer_800A8098(int which, int lines, int side)
         combatFlags_800A3A88 &= ~8;
         combatFlags_800A3A88 &= ~0x10;
     }
-    return (int)e;
+    return e;
 }
 
 void AnnouncerTask_800A816C(EventEntry* e)

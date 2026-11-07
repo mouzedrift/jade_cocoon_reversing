@@ -1107,7 +1107,7 @@ int NeedsStatusReaction_800BC1A8(unsigned int mask)
     return 0;
 }
 
-int StartActionTask_800BC28C()
+EventEntry* StartActionTask_800BC28C()
 {
     EventEntry* entry = AllocEventEntry_80043AF8(actionTask_8008B4C0);
     if (entry)
@@ -1124,7 +1124,7 @@ int StartActionTask_800BC28C()
             entry->cb_8 = (EventEntryFn)ActionStart_800BDA28;
         }
     }
-    return (int)entry;
+    return entry;
 }
 
 void WaitBtlExecLoaded_800BC324(BatTaskEntry* task, int buffer)

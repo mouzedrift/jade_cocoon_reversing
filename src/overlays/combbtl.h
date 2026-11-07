@@ -186,7 +186,7 @@ void WaitVictoryJingle_800A5080(CombBtlTask* t);
 void RecordBattleResult_800A50E4(CombBtlTask* t);
 void AnnounceWinner_800A51EC(CombBtlTask* t);
 void DrawWinnerBanner_800A5290(CombBtlTask* t);
-MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, int lines, int side);
+MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, const char** lines, int side);
 void CombBtlEnd_800A54CC(CombBtlTask* t);
 void CombBtlExit_800A5544(CombBtlTask* t);
 void SendInMinions_800A5638(CombBtlTask* t, int a);
@@ -220,11 +220,12 @@ void StartHitNumber_800A7E34(int side, int kind, int amount);
 void FlashScreenWhite_800A7ECC(void);
 void HitNumberTask_800A7EFC(EventEntry* e, CombBtlHitNum* buf);
 void SetAnnouncerXa_800A8078(short channel, short startSector, short length);
-int StartAnnouncer_800A8098(int which, int lines, int side);
+extern void DrawMenuWindowItems_8002F480(UnitStatus* unit, short* pos, int ot, int reverse);
+void* StartAnnouncer_800A8098(int which, const char** lines, int side);
 void AnnouncerTask_800A816C(EventEntry* e);
 
 /* COMBCOM.BIN */
-EventEntry* CombComStart_800CB7AC(int cmd, int side);
+EventEntry* CombComStart_800CB7AC(BattleCmd* cmd, int side);
 
 /* BATTLE.BIN (loaded alongside) */
 void LoadStageEffects_800BC878(void);

@@ -159,7 +159,7 @@ void ShopCtrlStartMode_800B6AE0(EventEntry* task, void* buffer)
         }
         break;
     case 1:
-        StartNameEntry_800B6E4C(shopCtrlNameTarget_800B6CFC, 0x10);
+        StartNameEntry_800B6E4C((unsigned char*)shopCtrlNameTarget_800B6CFC, 0x10);
         SetFadeMode_8001C19C(3, 0x20);
         break;
     case 2:

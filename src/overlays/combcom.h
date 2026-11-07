@@ -142,7 +142,7 @@ extern const CombComItem targetItem0_800CB690;
 extern const CombComItem targetItem1_800CB6C8;
 extern const CombComItem targetItem2_800CB700;
 
-EventEntry* CombComStart_800CB7AC(int cmd, int side);
+EventEntry* CombComStart_800CB7AC(BattleCmd* cmd, int side);
 void SetupCmdMenu_800CB88C(void);
 void DisableChangeIfAlone_800CB924(void);
 short* GetStateCursor_800CB974(int state);

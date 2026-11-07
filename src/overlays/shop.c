@@ -1901,8 +1901,8 @@ void DrawShopMenu_800BC380(ShopMenu* menu)
     {
         DrawPortraitWindow_8002A4E4(0xE);
         DrawTextList_8002A310(dialogLines_800BF7C8, 0xE);
-        DrawWindowBackground_800429F8((int)&dialogWindowRect_800BF798, 0xE);
-        DrawWindowBorder_80042B38((int)&dialogWindowRect_800BF798, 0xE);
+        DrawWindowBackground_800429F8((RECT*)&dialogWindowRect_800BF798, 0xE);
+        DrawWindowBorder_80042B38((RECT*)&dialogWindowRect_800BF798, 0xE);
     }
     else
     {
@@ -3409,104 +3409,104 @@ void DrawSkinList_800BED48(short* ref)
     }
 }
 
-void BuildFormModelDesc_800BF02C(Minion* minion, int* desc, int c)
+void BuildFormModelDesc_800BF02C(Minion* minion, ModelTaskParams* desc, struct ModelVramSlot* c)
 {
     TopSpeciesBuf top;
     unsigned int h = GetSpeciesModelDesc_80019C70(minion->species_2)->modelId_0;
-    desc[0] = GetTopSpecies_800338DC(minion->species_4C, top.b, top.w);
-    desc[1] = GetSpeciesModelDesc_80019C70(top.b[0])->modelId_0;
-    desc[2] = GetSpeciesModelDesc_80019C70(top.b[1])->modelId_0;
-    desc[3] = GetSpeciesModelDesc_80019C70(top.b[2])->modelId_0;
-    desc[4] = top.w[0];
-    desc[5] = top.w[1];
-    desc[6] = top.w[2];
-    if (desc[1] == desc[2])
+    desc->count_0 = GetTopSpecies_800338DC(minion->species_4C, top.b, top.w);
+    desc->ids_4[0] = GetSpeciesModelDesc_80019C70(top.b[0])->modelId_0;
+    desc->ids_4[1] = GetSpeciesModelDesc_80019C70(top.b[1])->modelId_0;
+    desc->ids_4[2] = GetSpeciesModelDesc_80019C70(top.b[2])->modelId_0;
+    desc->weights_10[0] = top.w[0];
+    desc->weights_10[1] = top.w[1];
+    desc->weights_10[2] = top.w[2];
+    if (desc->ids_4[0] == desc->ids_4[1])
     {
-        if (desc[2] == desc[3])
+        if (desc->ids_4[1] == desc->ids_4[2])
         {
-            desc[4] = desc[4] + desc[5];
-            desc[4] = desc[4] + desc[6];
-            desc[5] = 0;
-            desc[6] = 0;
-            desc[0] = 1;
+            desc->weights_10[0] = desc->weights_10[0] + desc->weights_10[1];
+            desc->weights_10[0] = desc->weights_10[0] + desc->weights_10[2];
+            desc->weights_10[1] = 0;
+            desc->weights_10[2] = 0;
+            desc->count_0 = 1;
         }
         else
         {
             int t;
-            desc[0] = 2;
-            t = desc[6];
-            desc[4] = desc[4] + desc[5];
-            desc[6] = 0;
-            desc[2] = desc[3];
-            desc[5] = t;
+            desc->count_0 = 2;
+            t = desc->weights_10[2];
+            desc->weights_10[0] = desc->weights_10[0] + desc->weights_10[1];
+            desc->weights_10[2] = 0;
+            desc->ids_4[1] = desc->ids_4[2];
+            desc->weights_10[1] = t;
         }
     }
-    else if (desc[1] == desc[3])
+    else if (desc->ids_4[0] == desc->ids_4[2])
     {
-        desc[4] = desc[4] + desc[6];
-        desc[6] = 0;
-        desc[0] = 2;
+        desc->weights_10[0] = desc->weights_10[0] + desc->weights_10[2];
+        desc->weights_10[2] = 0;
+        desc->count_0 = 2;
     }
-    else if (desc[2] == desc[3])
+    else if (desc->ids_4[1] == desc->ids_4[2])
     {
-        desc[5] = desc[5] + desc[6];
-        desc[6] = 0;
-        desc[0] = 2;
+        desc->weights_10[1] = desc->weights_10[1] + desc->weights_10[2];
+        desc->weights_10[2] = 0;
+        desc->count_0 = 2;
     }
-    desc[11] = 0;
-    if (desc[1] != h)
+    desc->main_2C = 0;
+    if (desc->ids_4[0] != h)
     {
-        if (desc[2] == h)
+        if (desc->ids_4[1] == h)
         {
-            int t = desc[5];
-            desc[2] = desc[1];
-            desc[1] = h;
-            desc[5] = desc[4];
-            desc[4] = t;
+            int t = desc->weights_10[1];
+            desc->ids_4[1] = desc->ids_4[0];
+            desc->ids_4[0] = h;
+            desc->weights_10[1] = desc->weights_10[0];
+            desc->weights_10[0] = t;
         }
-        else if (desc[3] == h)
+        else if (desc->ids_4[2] == h)
         {
-            int t = desc[6];
-            desc[3] = desc[1];
-            desc[1] = h;
-            desc[6] = desc[4];
-            desc[4] = t;
+            int t = desc->weights_10[2];
+            desc->ids_4[2] = desc->ids_4[0];
+            desc->ids_4[0] = h;
+            desc->weights_10[2] = desc->weights_10[0];
+            desc->weights_10[0] = t;
         }
-        else if (desc[0] < 2)
+        else if (desc->count_0 < 2)
         {
-            int t = desc[4];
-            desc[2] = desc[1];
-            desc[1] = h;
-            desc[4] = 0;
-            desc[0] = 2;
-            desc[5] = t;
+            int t = desc->weights_10[0];
+            desc->ids_4[1] = desc->ids_4[0];
+            desc->ids_4[0] = h;
+            desc->weights_10[0] = 0;
+            desc->count_0 = 2;
+            desc->weights_10[1] = t;
         }
         else
         {
-            int t = desc[4];
-            desc[3] = desc[1];
-            desc[1] = h;
-            desc[4] = 0;
-            desc[0] = 3;
-            desc[6] = t;
+            int t = desc->weights_10[0];
+            desc->ids_4[2] = desc->ids_4[0];
+            desc->ids_4[0] = h;
+            desc->weights_10[0] = 0;
+            desc->count_0 = 3;
+            desc->weights_10[2] = t;
         }
     }
-    desc[7] = GetRankForLevel_80019A80(minion->status_84.level_44);
-    desc[8] = desc[0] - 1;
-    desc[10] = GetSpeciesModelDesc_80019C70(minion->field_3)->modelId_0;
-    desc[12] = c;
-    desc[9] = GetElementHue_800BF2E4(minion->status_84.element_3E);
-    if (desc[9] == -1000)
+    desc->record_1C = GetRankForLevel_80019A80(minion->status_84.level_44);
+    desc->texPart_20 = desc->count_0 - 1;
+    desc->texId_28 = GetSpeciesModelDesc_80019C70(minion->field_3)->modelId_0;
+    desc->vram_30 = c;
+    desc->texSel_24 = GetElementHue_800BF2E4(minion->status_84.element_3E);
+    if (desc->texSel_24 == -1000)
     {
-        desc[9] = GetSpeciesModelDesc_80019C70(minion->field_3)->field_2 << 1;
+        desc->texSel_24 = GetSpeciesModelDesc_80019C70(minion->field_3)->field_2 << 1;
     }
     else
     {
-        desc[9] = desc[9] - (GetSpeciesModelDesc_80019C70(minion->field_3)->field_3 << 1);
+        desc->texSel_24 = desc->texSel_24 - (GetSpeciesModelDesc_80019C70(minion->field_3)->field_3 << 1);
 
-        if (desc[9] < 0)
+        if (desc->texSel_24 < 0)
         {
-            desc[9] = desc[9] + 0x168;
+            desc->texSel_24 = desc->texSel_24 + 0x168;
         }
     }
 }
@@ -3591,16 +3591,16 @@ void FreeFormModel_800BF484()
 void LoadFormModel_800BF4B8(Minion* minion)
 {
     ShopFormModel* form = &formModel_800C09E0;
-    BuildFormModelDesc_800BF02C(minion, form->desc_8, modelVramSlotLists_8007DC74[0]);
+    BuildFormModelDesc_800BF02C(minion, &form->desc_8, modelVramSlotLists_8007DC74[0]);
     form->minion_4 = minion;
-    form->task_0 = StartModelTask_80010850(form->desc_8);
+    form->task_0 = StartModelTask_80010850(&form->desc_8);
     form->actor_3C = 0;
 }
 
 // the caller reads the step result RunModelTask_80010A10 leaves in v0 (1: model loaded)
 int RunFormModelTask_800BF520()
 {
-    RunModelTask_80010A10(formModel_800C09E0.task_0);
+    return RunModelTask_80010A10(formModel_800C09E0.task_0);
 }
 
 void FreeFormModelTask_800BF548()
@@ -3614,9 +3614,13 @@ void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
 {
     FormActorDesc desc;
     ShopFormModel* form = &formModel_800C09E0;
-    int model = GetModelTaskModel_80010A44(form->task_0);
+    Model* model = GetModelTaskModel_80010A44(form->task_0);
     int stage;
-    int levels;
+    unsigned short* levels;
+    unsigned short* flags;
+#ifdef __psyz
+    desc.hasMatrices_4C = 0;
+#endif
     desc.modelId_0 = -1;
     desc.kind_4 = 2;
     desc.posX_8 = pos[0];
@@ -3632,16 +3636,16 @@ void SpawnFormActor_800BF574(int* pos, unsigned short* rot)
     desc.blendDiv_2C = 4;
     desc.visible_30 = 1;
     desc.model_48 = model;
-    desc.bones_34 = (int)defaultBones_80079140;
-    stage = form->desc_8[7];
+    desc.bones_34 = defaultBones_80079140;
+    stage = form->desc_8.record_1C;
     desc.baseScale_38 = GetModelBaseScale_80024E90(model, stage);
     desc.boneScale_3C = GetModelBoneScale_80024EC8(model, stage);
     desc.anims_40 = GetModelActorAnims_80024E38(model);
     desc.effectTbl_44 = GetModelEffectTable_80024E64(model);
-    form->actor_3C = CreateActor_8001D45C(&desc);
+    form->actor_3C = CreateActor_8001D45C((ActorDesc*)&desc);
     levels = GetModelBoneGroupLevels_80024F00(model, stage);
-    model = GetModelBoneGroupFlags_80024F38(model, stage);
-    SetBoneGroupFlags_80019B14((int)form->actor_3C->bones_134, levels, model);
+    flags = GetModelBoneGroupFlags_80024F38(model, stage);
+    SetBoneGroupFlags_80019B14(form->actor_3C->bones_134, levels, flags);
     SetActorGroundMove_8001D68C(form->actor_3C, 0);
 }
 

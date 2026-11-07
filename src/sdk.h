@@ -35,6 +35,12 @@
 #define WAIT_INTERRUPT()
 #endif
 
+#ifdef __psyz /* PSY-Z's malloc.h is the C library's on PC (src/pc/sdk_extra.c has these) */
+void InitHeap3(unsigned long* head, unsigned long size);
+void* malloc3(size_t size);
+void free3(void* block);
+#endif
+
 #if defined(__psyz) && !defined(DslModeSpeed)
 #include <libcd.h>
 #define DslModeSpeed CdlModeSpeed

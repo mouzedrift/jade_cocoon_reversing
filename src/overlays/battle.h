@@ -193,7 +193,7 @@ extern void sub_800B42A8();
 
 extern void EnemyChooseCommand_800A2618();
 
-extern int StartBattleMenu_800C6EFC();
+extern EventEntry* StartBattleMenu_800C6EFC();
 
 extern void WaitBattleMenu_800BB940();
 
@@ -226,12 +226,12 @@ typedef struct BatModelReq
     int angle_24;
     int f28;
     int f2C;
-    int f30;
+    struct ModelVramSlot* vram_30;
     int f34;
 } BatModelReq;
 
 
-extern void BuildMinionModelReq_800C064C();
+extern void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq* req, struct ModelVramSlot* vram);
 
 
 extern int GetUnitTurnSpeed_800BF784();
@@ -378,7 +378,7 @@ typedef struct BatTurnWork
     int pad_0;
     void (*resume_4)(); // state function to return to after the command
     void (*next_8)();
-    int handle_C;
+    void* handle_C; // the message window, or the task (EventEntry) waited on
 } BatTurnWork;
 
 // when a unit's action hits and when it ends (frames of the action timeline)
@@ -485,7 +485,7 @@ extern void CmdSummonWait_800BBCC8();
 extern void WaitActionTask_800BC144();
 
 
-extern int StartActionTask_800BC28C(void);
+extern EventEntry* StartActionTask_800BC28C(void);
 
 extern int NeedsStatusReaction_800BC1A8();
 
@@ -551,7 +551,7 @@ extern short* GetEncounterLeaderRot_800A1E68(void); // GAME.BIN: the same actor'
 
 extern void StartBattleWindows_800BFB80();
 
-extern int sub_800B4200(BatChainRecord* chain);
+extern MsgWindowEntry* sub_800B4200(BatChainRecord* chain); // map code
 
 extern int sub_800B41D0(BatChainRecord* chain);
 
@@ -949,7 +949,7 @@ extern unsigned char GetSelectedCommand_800C78D0();
 
 
 
-extern int GetUnitSkills_80031B30(int a);
+extern UnitSkill* GetUnitSkills_80031B30(int a);
 
 
 
@@ -1511,7 +1511,7 @@ int EnemyAi1F_800C5840(EnemyAi* ai);
 void EnemyAiC9_800C4328(EnemyAi* ai);
 void EnemyAiCA_800C43D8(EnemyAi* ai);
 void EnemyAiCB_800C4424(EnemyAi* ai);
-void EnemyAiCC_800C4470(int ai);
+void EnemyAiCC_800C4470(EnemyAi* ai);
 void EnemyAiCD_800C4494(EnemyAi* ai);
 void EnemyAiCE_800C44FC(EnemyAi* ai);
 void EnemyAiCF_800C4548(EnemyAi* ai);

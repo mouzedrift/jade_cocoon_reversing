@@ -295,7 +295,7 @@ void HelpWindowTask_800C04A4(EventEntry* task, void* buf)
     AddDrawAreaPrim_8003326C(win->rect_C, pOT_8008D454);
 }
 
-void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq* req, int f30)
+void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq* req, struct ModelVramSlot* vram)
 {
     unsigned char ids[8];
     int counts[3];
@@ -379,7 +379,7 @@ void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq* req, int f30)
     req->rank_1C = GetRankForLevel_80019A80(minion->status_84.level_44);
     req->f20 = req->count_0 - 1;
     req->f28 = GetSpeciesModelDesc_80019C70(minion->field_3)->modelId_0;
-    req->f30 = f30;
+    req->vram_30 = vram;
     req->angle_24 = GetElementModelAngle_800C0904(minion->status_84.element_3E);
     if (req->angle_24 == -1000)
     {
@@ -518,7 +518,7 @@ int CreateSummonedMinionActor_800C0BF0()
     ActorDesc desc;
     Model* model;
     int rank;
-    int levels;
+    unsigned short* levels;
     // RunModelTask_80010A10 is declared void in funcs.h, but its result is used here
     if (RunModelTask_80010A10(0) != 0)
     {
@@ -569,7 +569,7 @@ int IsSummonedMinionReady_800C0D88()
     return IsActorActionReady_8001E1DC(summonedActor_800C9190.actor_0);
 }
 
-void TurnSummonedMinionToward_800C0DB0(int pos)
+void TurnSummonedMinionToward_800C0DB0(int* pos)
 {
     SetActorTurnTarget_8001DB00(summonedActor_800C9190.actor_0, pos, 0x55);
 }
@@ -629,7 +629,7 @@ void GetPartyMinionName_800C0F54(int slot)
 
 UnitStatus* GetPartyMinionStatus_800C0F78(int slot)
 {
-    GetMinionStatus_800107A0(3, slot); // sic: no return, the result is left in $v0
+    return GetMinionStatus_800107A0(3, slot);
 }
 
 int* GetSummonedMinionPos_800C0F9C()
@@ -1463,7 +1463,7 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
         if (glow->alpha_30 <= 0)
         {
             ClearPointLight_800C410C();
-            FreeFtgObjectData_80021804(glow->work_94, 1);
+            FreeFtgObjectData_80021804(glow->work_94, HEAP_MALLOC3);
             free3_8003FC6C(glow->work_94);
             task->flags = (task->flags & ~1) | 0x8000;
         }
@@ -1507,7 +1507,7 @@ void SpawnOrb_800C3B50(int* pos, int id)
         model = &effectFile_80091BD0.models_28[idx];
         orb->clip_88 = model;
         orb->model_94 = malloc3_8003FC4C(0x54);
-        CopyFtgObject_800218A8(model->ftg_4, orb->model_94, 1);
+        CopyFtgObject_800218A8(model->ftg_4, orb->model_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, orb->model_94);
         hero = gameTask_8008B4A4->entry.buffer;
         orb->pos_44[0] = hero->pos_5E4[0];
@@ -1538,7 +1538,7 @@ void OrbFadeTask_800C3D34(EventEntry* task, BatOrb* orb)
     else
     {
         task->flags = (task->flags & ~1) | 0x8000;
-        FreeFtgObjectData_80021804(orb->model_94, 1);
+        FreeFtgObjectData_80021804(orb->model_94, HEAP_MALLOC3);
         free3_8003FC6C(orb->model_94);
     }
     DrawFtgObjectAtSlot0_8004D1EC(clip->ftg_4, pOT_8008D690, orb->pos_44, orb->rot_80, cameraState_8008D4F0.ent_44, ((0x1000 - orb->alpha_30) << 16) | 0xB0, 0);

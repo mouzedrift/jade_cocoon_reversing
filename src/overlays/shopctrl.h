@@ -42,7 +42,7 @@ extern int shopCtrlReloadUi_800B6CF8;
 extern char* shopCtrlNameTarget_800B6CFC; // the name StartNameEntry_800B6E4C edits
 
 /* other overlays */
-void StartNameEntry_800B6E4C(char* nameDest, int flags); // NAME.BIN (name.c: nameDest is typed int there)
+void StartNameEntry_800B6E4C(unsigned char* nameDest, int flags); // NAME.BIN
 int CommitShopMinionList_800B9DA8(void);                 // SHOP.BIN (shop.h)
 void StartShop_800BB058(int shopId);                      // SHOP.BIN (shop.h)
 void* GetEventDataSlot_800A55B0(int a);                   // GAME.BIN (eventfnc.h)

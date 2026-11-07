@@ -85,7 +85,7 @@ extern void TryEquipItem_800C5064(EquipCtx* c);
 extern void CannotUnequipTask_800C50F0(EventEntry* t, EquipCtx* c);
 extern void UpdateEquipSelection_800C51B0(EquipCtx* c);
 extern void DrawEquipStats_800C5314(EquipCtx* c);
-extern void DrawEquipDescription_800C5440(short itemId, short category, int pos);
+extern void DrawEquipDescription_800C5440(short itemId, short category, Pos16* pos);
 extern void DrawEquipItemList_800C5510(EquipListParams* list, EquipRect* rect, short category);
 
 /* EQUIP data */
@@ -213,13 +213,13 @@ extern const char aBandWithLeather_800C472C[];
 extern const char aOrnamentalItem_800C4764[];
 extern const char emptyText_800C4784[4];
 extern const char aCannotUnequip_800C4788[32];
-extern char scrollUpArrowPos_800C5834[4];
-extern char scrollDownArrowPos_800C5838[4];
+extern short scrollUpArrowPos_800C5834[2];
+extern short scrollDownArrowPos_800C5838[2];
 extern MenuWindowItem equipListRow0_800C583C[4];
 extern MenuWindowItem equipListRow1_800C58AC[4];
 extern MenuWindowItem equipListRow2_800C591C[4];
 extern MenuWindowItem* equipListRows_800C598C[4];
-extern char descBoxPos_800C599C[4];
+extern Pos16 descBoxPos_800C599C;
 extern char statCompareWindowRect_800C59A0[8];
 extern char statsWindowRect_800C59A8[8];
 extern short equipMenuStepModes_800C59B0[4];

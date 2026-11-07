@@ -92,6 +92,7 @@ typedef union
 } SaveTitle;
 
 extern int unused_800B66C0;
+int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir);
 extern const char aSelectGameToLoa_800B66C4[44];
 extern const char aSelectSaveLocat_800B66F0[44];
 extern const char aYES_800B671C[];

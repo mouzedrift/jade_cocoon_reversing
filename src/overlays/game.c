@@ -2088,9 +2088,9 @@ void FreeAllEventData_800A54A0(void)
         ListFree_8003FE38(&eventHeap_80091C10, eventDataBuf_800AEBC8);
         eventDataBuf_800AEBC8 = 0;
     }
-    if (eventRecords_800AEBCC[1])
+    if (eventRecords_800AEBCC.tables_4)
     {
-        FreeRecordTables_80026DE8(&eventRecords_800AEBCC[1], eventRecords_800AEBCC[0], (int)&eventHeap_80091C10);
-        eventRecords_800AEBCC[0] = 0;
+        FreeRecordTables_80026DE8(&eventRecords_800AEBCC.tables_4, eventRecords_800AEBCC.count_0, &eventHeap_80091C10);
+        eventRecords_800AEBCC.count_0 = 0;
     }
 }

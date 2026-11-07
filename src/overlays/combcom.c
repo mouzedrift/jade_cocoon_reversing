@@ -183,13 +183,13 @@ const CombComItem targetItem2_800CB700 = {
 const int targetItemPad = 0;
 
 // Versus battle command menu of one side: starts the menu event that fills *cmd (COMBBTL's command)
-EventEntry* CombComStart_800CB7AC(int cmd, int side)
+EventEntry* CombComStart_800CB7AC(BattleCmd* cmd, int side)
 {
     EventEntry* e = AllocEventEntry_80043AF8(cmdMenuTask_8008D614);
     if (e)
     {
         e->cb_8 = (EventEntryFn)CmdMenuTask_800CD16C;
-        cmd_800CD840 = (BattleCmd*)cmd;
+        cmd_800CD840 = cmd;
         side_800CD839 = side;
         e->flags = (e->flags | 1) & ~0x8000;
         if (!side)
@@ -804,7 +804,7 @@ int GetDefaultTargets_800CCD84()
 // Confirm: takes the highlighted entry and moves to the next menu state
 void AdvanceCmdMenu_800CCDD0()
 {
-    int skills;
+    UnitSkill* skills;
     prevState_800CD850 = menuState_800CD83A;
     switch (menuState_800CD83A)
     {

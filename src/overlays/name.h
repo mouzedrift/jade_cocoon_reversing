@@ -65,7 +65,7 @@ typedef struct
     short pad_26;
     short savedName_28[10];
     short pad_3C[2];
-    int nameDest_40;
+    unsigned char* nameDest_40;
     short length_44; // length of name_10 in bytes
 } NameEntry;
 
@@ -80,7 +80,7 @@ typedef struct
 } NameTextItem;
 
 /* NAME functions */
-extern void StartNameEntry_800B6E4C(int nameDest, int flags);
+extern void StartNameEntry_800B6E4C(unsigned char* nameDest, int flags);
 extern void NameEntryTask_800B6FD8(EventEntry* e, NameEntry* entry);
 extern void UpdateNameEntry_800B70F4(NameEntry* entry);
 extern void DrawNameField_800B7414(NameEntry* entry);

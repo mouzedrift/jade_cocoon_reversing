@@ -20,6 +20,20 @@ typedef struct ModelTaskState
     int next_3C;
 } ModelTaskState;
 
+/* what StartModelTask_80010850 builds a model from (copied to ModelTaskState.count_4..vram_34) */
+typedef struct ModelTaskParams
+{
+    int count_0;    // models blended (1..3)
+    int ids_4[3];   // model ids
+    int weights_10[3];
+    int record_1C;  // model header record index
+    int texPart_20; // ids_4 index of the model the textures come from
+    int texSel_24;  // texture slot / hue
+    int texId_28;   // >= 0: model id to take the textures from instead
+    int main_2C;    // ids_4 index of the model whose animations are kept
+    struct ModelVramSlot* vram_30;
+} ModelTaskParams;
+
 /* the buffer of a modelTasks_8008D618 entry */
 typedef struct
 {
