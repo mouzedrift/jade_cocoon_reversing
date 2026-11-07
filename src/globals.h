@@ -436,23 +436,23 @@ extern SaveInventory playerYan_8008B594; // == saveData_8008B570.inv_24
 extern LevantPos levantPos_8008BD18; // == saveData_8008B570.levant_7A8
 #endif
 extern unsigned long bDoubleBuffer_8008D428;
-extern unsigned long OT_8008D798[2][8];
-extern unsigned long OT_8008D7D8[2][1024];
-extern unsigned long OT_8008F7D8[2][1024];
-extern unsigned long OT_800917D8[2][16];
-extern unsigned long OT_80091858[2][1];
-extern unsigned long OT_80091868[2][4];
-extern unsigned long OT_80091888[2][4];
-extern unsigned long OT_800918A8[2][1];
+extern OT_TYPE OT_8008D798[2][8];
+extern OT_TYPE OT_8008D7D8[2][1024];
+extern OT_TYPE OT_8008F7D8[2][1024];
+extern OT_TYPE OT_800917D8[2][16];
+extern OT_TYPE OT_80091858[2][1];
+extern OT_TYPE OT_80091868[2][4];
+extern OT_TYPE OT_80091888[2][4];
+extern OT_TYPE OT_800918A8[2][1];
 
-extern unsigned long* pOT_8008D788;
-extern unsigned long* pOT_8008D4AC;
-extern unsigned long* pOT_8008D454;
-extern unsigned long* pOT_8008D690;
-extern unsigned long* pOT_8008D78C;
-extern unsigned long* pOT_8008D5F4;
-extern unsigned long* pOT_8008B4C8;
-extern unsigned long* pOT_8008D3EC;
+extern OT_TYPE* pOT_8008D788;
+extern OT_TYPE* pOT_8008D4AC;
+extern OT_TYPE* pOT_8008D454;
+extern OT_TYPE* pOT_8008D690;
+extern OT_TYPE* pOT_8008D78C;
+extern OT_TYPE* pOT_8008D5F4;
+extern OT_TYPE* pOT_8008B4C8;
+extern OT_TYPE* pOT_8008D3EC;
 
 extern int numFilesInsideTiy_8008B4BC;
 

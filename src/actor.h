@@ -66,7 +66,7 @@ typedef struct
     int drawMode_1C;        // 0x180: Actor.drawMode_8
     int* bonePos_20;        // 0x184: Actor.bonePos_1C4
     int* scale_24;          // 0x188: Actor.scale_2C
-    unsigned long* ot_28;   // 0x18C
+    OT_TYPE* ot_28;   // 0x18C
 } ActorDrawArgs;
 
 // one command of an actor animation script (Actor.script_D0, run by RunActorScript_8001EA48); len_1 counts words

@@ -259,7 +259,7 @@ void DrawBattleStage_800BC90C(CameraCtrl* ctrl)
             unsigned short* ent = battleStages_800C8EAC[battleStageId_80083BD0].models_C;
             int id = ent[i * 4];
             int flags = ent[i * 4 + 1];
-            unsigned long* ot = pOT_8008B4C8;
+            OT_TYPE* ot = pOT_8008B4C8;
             if (id != 0xFF)
             {
                 EffectModel* mdl = &battleEffectFile_80095468.models_28[FindEffectIndex_80020F00(&battleEffectFile_80095468, 1, id)];

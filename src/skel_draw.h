@@ -146,7 +146,7 @@ typedef struct
     int drawMode_1C;
     LVec3* bonePos_20; // out: world position per bone
     VECTOR* scale_24;  // optional per-axis scale (rotation matrix diagonal)
-    unsigned long* ot_28;
+    OT_TYPE* ot_28;
     PointLight* light_2C;
 } AnimSkel;
 

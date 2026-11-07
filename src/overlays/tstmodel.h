@@ -169,7 +169,7 @@ typedef struct TstModelDraw
     int drawMode_1C;
     char* bonePos_20;
     VECTOR* scale_24;
-    unsigned long* ot_28;
+    OT_TYPE* ot_28;
 } TstModelDraw;
 
 // work area of the TSTMODEL task (TstModelInit_800A09C0)

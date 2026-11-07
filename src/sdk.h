@@ -35,8 +35,9 @@
 #define WAIT_INTERRUPT()
 #endif
 
-#ifndef O_TAG
-#define O_TAG u_long tag /* the head of a GPU primitive (PSY-Z's is bigger on 64-bit) */
+#ifndef __psyz /* PSY-Z's: an ordering table entry and the head of a GPU primitive (bigger on 64-bit) */
+#define O_TAG u_long tag
+#define OT_TYPE u_long
 #endif
 
 #ifdef __psyz /* PSY-Z's malloc.h is the C library's on PC (src/pc/sdk_extra.c has these) */

@@ -171,7 +171,7 @@ typedef struct TstCompoDraw
     int drawMode_1C;
     char* bonePos_20;
     VECTOR* scale_24;
-    unsigned long* ot_28;
+    OT_TYPE* ot_28;
 } TstCompoDraw;
 
 // work area of the TSTCOMPO task (TstCompoInit_800A0800)

@@ -1209,7 +1209,7 @@ typedef struct GameSkelDraw
     int flags;
     char* pos; // out: bone positions
     int scale_24;
-    unsigned long* ot;
+    OT_TYPE* ot;
 } GameSkelDraw;
 
 

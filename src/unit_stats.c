@@ -1288,7 +1288,7 @@ typedef struct
     int drawMode_1C;
     int* pos;
     int scale_24;
-    unsigned long* ot;
+    OT_TYPE* ot;
 } FuseSkel;
 extern void BlendSkelPoses_8004A4FC(FuseSkel* sk, char* scale1, char* pose1, int t1, char* scale2, char* pose2, int t2, char* rotBase, char* posBase,
                          char* out, void* vout);

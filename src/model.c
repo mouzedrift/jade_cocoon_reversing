@@ -614,8 +614,8 @@ void DrawActor_8001FD08(void* actor)
     Actor* o = (Actor*)actor;
     int light;
     ModelAnim* altPose;
-    unsigned long* ot;
-    unsigned long* ot2;
+    OT_TYPE* ot;
+    OT_TYPE* ot2;
     if (!(o->flags_4 & 0x2000) && IsActorOnScreen_8001FC90(o))
     {
         light = FindNearestCameraPoint_80019CC4(o->pos_38);

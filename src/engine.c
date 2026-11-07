@@ -257,7 +257,7 @@ void InitSceneFade_8001A38C(void)
 }
 void SceneFadeTask_8001A41C(EventEntry* entry, SceneFade* fade)
 {
-    unsigned long* ot;
+    OT_TYPE* ot;
     POLY_F4 poly;
     DR_TPAGE tp;
     int shade;
