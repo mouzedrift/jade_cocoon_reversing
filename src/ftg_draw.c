@@ -763,7 +763,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
     {
         ProjectFtgTexSprites_8004C4F0(obj, ot, ctx, slot);
     }
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_18;
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (char*)ctx->next_18;
 }
 extern unsigned char backColor_8008D460[3]; // back colour
 extern MATRIX lightMatrix_80087114;            // light matrix

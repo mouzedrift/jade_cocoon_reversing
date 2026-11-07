@@ -488,7 +488,7 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
         }
         ctx->ref_28++;
     }
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_14;
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (char*)ctx->next_14;
     ResetFtgSpriteVtx_8004D924();
 }
 void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
@@ -547,7 +547,7 @@ void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int 
         }
         ctx->ref_44++;
     }
-    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (int)ctx->next_30;
+    primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (char*)ctx->next_30;
     ResetFtgSpriteVtx_8004D924();
 }
 /* inline copy of GetBonePos_8004D224 */

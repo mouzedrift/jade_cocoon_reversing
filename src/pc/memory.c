@@ -2,6 +2,7 @@
 #include "memmap.h"
 
 unsigned char psxRam[0x200000];
+char pcPrimRam[(0x80200000u - HEAP_END) * PRIM_RAM_SCALE];
 
 /* an address from the game's data: 0 stays NULL, RAM addresses are psxRam's */
 void* Pc_PsxPtr(unsigned int addr)

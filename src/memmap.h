@@ -25,4 +25,14 @@ void* Pc_PsxPtr(unsigned int addr);
 #define heapStart_800CD858 ((char*)PSX_RAM(0x800CD858))
 #endif
 
+/* the primitive buffers (InitPrimBuffers_8001BF90) are in the RAM above the heap; PC primitives are bigger, so there
+   they are in a buffer of their own, laid out the same at PRIM_RAM_SCALE times the size */
+#ifdef __psyz
+#define PRIM_RAM_SCALE 4
+extern char pcPrimRam[(0x80200000u - HEAP_END) * PRIM_RAM_SCALE];
+#define PRIM_RAM(addr) (&pcPrimRam[((unsigned int)(addr) - HEAP_END) * PRIM_RAM_SCALE])
+#else
+#define PRIM_RAM(addr) ((char*)(addr))
+#endif
+
 #endif

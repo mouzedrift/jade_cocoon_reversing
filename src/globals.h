@@ -406,8 +406,8 @@ extern int currentArea_80091C44;
 extern int fadeFrame_800918B4;
 extern unsigned char armorOutfits_8007D588[16];
 extern int primBufferOffset_8008B550;
-extern int primBufferStart_800960A0[2];
-extern int primAllocPtr_800960A8[2];
+extern char* primBufferStart_800960A0[2]; /* the primitive buffers (PRIM_RAM) */
+extern char* primAllocPtr_800960A8[2];
 extern unsigned long* decodedImageData_8008B4A0;
 extern enum GameStates currentGameState_8008D4B4;
 extern volatile int unknownFlags_8008D678;

@@ -1083,17 +1083,17 @@ void InitPrimBuffers_8001BF90(void)
 {
     if (unknownFlags_8008D678 & 0x200)
     {
-        primAllocPtr_800960A8[0] = primBufferOffset_8008B550 + 0x801B9250;
-        primBufferStart_800960A0[0] = primBufferOffset_8008B550 + 0x801B9250;
-        primAllocPtr_800960A8[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - primBufferOffset_8008B550) >> 1);
-        primBufferStart_800960A0[1] = 0x801FC000 - ((unsigned int)(0x42DB0 - primBufferOffset_8008B550) >> 1);
+        primAllocPtr_800960A8[0] = PRIM_RAM(primBufferOffset_8008B550 + 0x801B9250);
+        primBufferStart_800960A0[0] = PRIM_RAM(primBufferOffset_8008B550 + 0x801B9250);
+        primAllocPtr_800960A8[1] = PRIM_RAM(0x801FC000 - ((unsigned int)(0x42DB0 - primBufferOffset_8008B550) >> 1));
+        primBufferStart_800960A0[1] = PRIM_RAM(0x801FC000 - ((unsigned int)(0x42DB0 - primBufferOffset_8008B550) >> 1));
     }
     else
     {
-        primAllocPtr_800960A8[0] = 0x801D4000;
-        primBufferStart_800960A0[0] = 0x801D4000;
-        primAllocPtr_800960A8[1] = 0x801E8000;
-        primBufferStart_800960A0[1] = 0x801E8000;
+        primAllocPtr_800960A8[0] = PRIM_RAM(0x801D4000);
+        primBufferStart_800960A0[0] = PRIM_RAM(0x801D4000);
+        primAllocPtr_800960A8[1] = PRIM_RAM(0x801E8000);
+        primBufferStart_800960A0[1] = PRIM_RAM(0x801E8000);
     }
 }
 void StartScreenFlash_8001C02C(unsigned char* rgb)
@@ -2783,5 +2783,5 @@ void UpdateActorScript_8001EA28(void* actor)
     RunActorScript_8001EA48(actor);
 }
 
-int primBufferStart_800960A0[2] BSS = { 0 };
-int primAllocPtr_800960A8[2] BSS = { 0 };
+char* primBufferStart_800960A0[2] BSS = { 0 };
+char* primAllocPtr_800960A8[2] BSS = { 0 };

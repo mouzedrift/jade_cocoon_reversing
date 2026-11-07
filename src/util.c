@@ -638,10 +638,9 @@ void ClearUnusedWord_8004028C(void)
 {
     unusedWord_80098688 = 0;
 }
-extern unsigned long* primAllocPtrs_800960A8[];
 void* AddPrimCopy_80040298(void* ot, void* prim, int words)
 {
-    int cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
+    char* cur = primAllocPtr_800960A8[bDoubleBuffer_8008D428];
     ReadBytesInto_80040388((int*)cur, (int*)prim, words);
     addPrim(ot, primAllocPtr_800960A8[bDoubleBuffer_8008D428]);
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += words * 4;
