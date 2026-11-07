@@ -818,10 +818,14 @@ void Draw_8001B5EC(void)
     if (unknownFlags_8008D678 & 0x20)
     {
         ResetGraph(1);
+#ifdef __psyz /* no interlaced fields to wait for (PSY-Z's GPU status has no odd/even bit) */
+        ode = !ODEIsEvenAddressDrawn_800918C0;
+#else
         do
         {
             ode = GetODE();
         } while (ODEIsEvenAddressDrawn_800918C0 == ode);
+#endif
         ODEIsEvenAddressDrawn_800918C0 = ode;
     }
     vsyncCounter_8008B4B4 = 0;
