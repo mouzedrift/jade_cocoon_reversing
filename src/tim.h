@@ -25,7 +25,7 @@ void InitPolyFT4_80029A10(void* polyArg, void* timArg);
 void InitPolyFT4FromTimData_800299DC(void* poly, void* tim);
 void InitSprtFromTim_800298AC(SPRT* sprt, DR_TPAGE* tpage, TimInfo* tim);
 void LoadTiy_80028E74(SPRT** sprts, POLY_FT4** polys, DR_TPAGE** tpages, int* file, void* heap);
-void InitSprtFromTimData_80029868(int sprt, int tim, int tpage);
+void InitSprtFromTimData_80029868(SPRT* sprt, void* tim, DR_TPAGE* tpage);
 void TintVramImage_800292D0(void* rect, void* dst, short* tint);
 void InitRoomCamera_80028DC0(void);
 void OnRoomDataLoaded_80028C60(int req, char* data);

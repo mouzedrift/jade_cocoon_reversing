@@ -560,7 +560,7 @@ void DrawMsgWindowNextPrompt_8003E268(unsigned short* pos)
     short y = pos[1] + 0x23;
     DrawNextPrompt_8003CF88(x, y, 0);
 }
-TextSize MeasureTextLinesMasked_8003E2A8(int* list, unsigned int mask)
+TextSize MeasureTextLinesMasked_8003E2A8(const char** list, unsigned int mask)
 {
     TextSize size;
     short width;
@@ -588,7 +588,7 @@ typedef struct
     short h;
 } Size2;
 
-TextSize MeasureTextLines_8003E3B4(int* list)
+TextSize MeasureTextLines_8003E3B4(const char** list)
 {
     TextSize size;
     short width;
@@ -610,7 +610,7 @@ TextSize MeasureTextLines_8003E3B4(int* list)
     size.h *= 12;
     return size;
 }
-int IsTextMarkerLine_8003E484(int text)
+int IsTextMarkerLine_8003E484(const char* text)
 {
     int ch = *EncodeText_8003F684(2, (unsigned short*)text);
     if (ch < 0xC3)
@@ -679,7 +679,7 @@ int MeasureTextWidth_8003E4C8(const char* str)
     }
     return width;
 }
-int MeasureTextWidthFont1_8003E6B0(int str)
+int MeasureTextWidthFont1_8003E6B0(const char* str)
 {
     unsigned short num[12];
     TextBuf22 name;

@@ -118,11 +118,11 @@ void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text,
     UppercaseSjisName_8003F89C(buf.s);
     if (align == 1)
     {
-        offset = (short)MeasureTextWidthFont1_8003E6B0((int)buf.s); // built against a short-returning prototype
+        offset = (short)MeasureTextWidthFont1_8003E6B0((const char*)buf.s); // built against a short-returning prototype
     }
     else if (align == 2)
     {
-        offset = (short)MeasureTextWidthFont1_8003E6B0((int)buf.s) / 2;
+        offset = (short)MeasureTextWidthFont1_8003E6B0((const char*)buf.s) / 2;
     }
     else
     {

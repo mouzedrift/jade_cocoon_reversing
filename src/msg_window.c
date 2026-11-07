@@ -107,7 +107,7 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     EventEntry* e;
     MsgWindow* w;
     int** list;
-    int* p;
+    const char** p;
     int n;
     int i;
     TextSize sz;
@@ -211,7 +211,7 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
         {
             w->lines_1B4 = (unsigned short**)p;
         }
-        sz = MeasureTextLinesMasked_8003E2A8((int*)w->lines_1B4, w->mask_14);
+        sz = MeasureTextLinesMasked_8003E2A8((const char**)w->lines_1B4, w->mask_14);
         w->res_18.count_18 = CountUntilZero_80034B14((int*)w->lines_1B4);
         w->w_50 = sz.w;
         w->h_52 = sz.h;

@@ -719,7 +719,7 @@ extern MapList16 mapSpawns_80091C60;
 
 
 // the loaders / relocators of the primitive kinds of an FTG model (LoadFtgObject_80022458)
-typedef void (*FtgPrimRelocFn)(unsigned char* body, int a3);
+typedef void (*FtgPrimRelocFn)(unsigned char* body, short* reloc);
 typedef int (*FtgPrimLoadFn)(FtgPrimHeader* hdr, unsigned char* body, FtgObject* obj, int k, void* h);
 extern FtgPrimRelocFn ftgPrimRelocators_8007DB08[];
 extern FtgPrimLoadFn ftgPrimLoaders_8007DAE0[];
@@ -769,8 +769,8 @@ void StopActorScript_8001EFC4(Actor* actor);
 void ReleaseModelAnim_800203B0(int ref, int user, int anim);
 void LoadRequestedModels_80020A38(ModelLoader* loader);
 int AreRequestedModelsLoaded_80020B70(ModelLoader* loader);
-void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, List* heap);
-void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, List* heap);
+void LoadEffectSprite_80021298(int* src, EffectSprite* out, short* reloc, int sel, List* heap);
+void LoadEffectModel_80021464(int* hdr, EffectModel* out, short* reloc, int sel, List* heap);
 int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, List* heap);
 void AllocMdecBuffers_800216E8(EffectMdecBuffers* out, int maxSize, List* heap);
 int AreLoaderModelsLoaded_80020924(void);

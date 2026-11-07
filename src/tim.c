@@ -273,10 +273,10 @@ void RelocateTimInfo_800297C0(TimInfo* tim, TimReloc* reloc)
     *(unsigned short*)&tim->prect.x += reloc->pixelDx_0;
     *(unsigned short*)&tim->prect.y += reloc->pixelDy_2;
 }
-void InitSprtFromTimData_80029868(int sprt, int tim, int tpage)
+void InitSprtFromTimData_80029868(SPRT* sprt, void* tim, DR_TPAGE* tpage)
 {
     TimInfo buf;
-    ParseTim_80029708(&buf, (void*)tim);
+    ParseTim_80029708(&buf, tim);
     InitSprtFromTim_800298AC(sprt, tpage, &buf);
 }
 void InitSprtFromTim_800298AC(SPRT* sprt, DR_TPAGE* tpage, TimInfo* tim)

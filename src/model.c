@@ -1259,7 +1259,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
         for (i = 0; i < out->spriteCount_1C; i++)
         {
             EffectSprite* d = &out->sprites_20[i];
-            LoadEffectSprite_80021298((int*)((char*)spriteSec + spriteSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, &out->list_4);
+            LoadEffectSprite_80021298((int*)((char*)spriteSec + spriteSec[i + 1]), d, (short*)arg->reloc_4, arg->sel_10, &out->list_4);
         }
     }
     count = modelSec[0];
@@ -1270,7 +1270,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
         for (i = 0; i < out->modelCount_24; i++)
         {
             EffectModel* d = &out->models_28[i];
-            LoadEffectModel_80021464((int*)((char*)modelSec + modelSec[i + 1]), d, (int)arg->reloc_4, arg->sel_10, &out->list_4);
+            LoadEffectModel_80021464((int*)((char*)modelSec + modelSec[i + 1]), d, (short*)arg->reloc_4, arg->sel_10, &out->list_4);
         }
     }
     count = imageSec[0];
@@ -1295,7 +1295,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
         LoadTiyTimsRelocated_80028FDC(NULL, NULL, NULL, tiySec, GetTiyFileCount_80028E68(tiySec), (TimReloc*)arg->reloc_4, arg->sel_10);
     }
 }
-void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, List* heap)
+void LoadEffectSprite_80021298(int* src, EffectSprite* out, short* reloc, int sel, List* heap)
 {
     POLY_FT4 buf;
     int i;
@@ -1329,7 +1329,7 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, int reloc, int sel, 
     MemCopy_800403E8(&buf, src, 0x28);
     InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
-void LoadEffectModel_80021464(int* hdr, EffectModel* out, int reloc, int sel, List* heap)
+void LoadEffectModel_80021464(int* hdr, EffectModel* out, short* reloc, int sel, List* heap)
 {
     int* models = (int*)((char*)hdr + hdr[1]);
     int* images = (int*)((char*)hdr + hdr[2]);

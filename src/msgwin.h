@@ -48,7 +48,7 @@ typedef struct
     int field_10;
     int cancelable_14;
     unsigned int mask_18;
-    int* lines_1C; // choice lines
+    const char** lines_1C; // choice lines
     int portraitKind_20; // 1: portrait, 7: combat portrait
     int portraitId_24;
     int style_28;
