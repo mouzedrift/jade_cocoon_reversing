@@ -2931,91 +2931,94 @@ int abilityTypeIcons_800827F8[5] = { 0x48F120A4, 0x46EF1EA2, 0x45EE1AA1, 0x4CF42
 unsigned char *abilityIconsByType_8008280C[5] = { (void *)abilityTypeIcons_800827F8, (void *)&abilityTypeIcons_800827F8[1], (void *)&abilityTypeIcons_800827F8[2], (void *)&abilityTypeIcons_800827F8[3], (void *)&abilityTypeIcons_800827F8[4] };
 short itemScrollUpPos_80082820[2] = { 0xA0, 0x2F }; // arrow x, y
 short itemScrollDownPos_80082824[2] = { 0xA0, 0x94 };
-int itemListRowData_80082828[11] = { 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053, 0x150015, 0x50003, 0x30010 };
-int aH6p[14] = {
-    0x360068, 0x150070, 0x40004, 0x80004, 0, 0, 0, 0x3600D8,
-    0x150017, 0x30000, 1,
+// the item list rows (icon, name, count + the row end)
+MenuWindowItem itemListRowItems_80082828[4][4] = {
+    {
+        { 16, 1, { .num = 0 }, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 54, 21, 21, 3, 5 },
+        { 16, 3, 0, NULL, NULL, 104, 54, 112, 21, 4, 4 },
+        { 4, 8, 0, NULL, NULL, 216, 54, 23, 21, 0, 3 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 16, 1, { .num = 0 }, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 54, 21, 21, 3, 5 },
+        { 16, 3, 0, NULL, NULL, 104, 54, 112, 21, 4, 4 },
+        { 4, 8, 0, NULL, NULL, 216, 54, 23, 21, 0, 3 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 16, 1, { .num = 0 }, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 54, 21, 21, 3, 5 },
+        { 16, 3, 0, NULL, NULL, 104, 54, 112, 21, 4, 4 },
+        { 4, 8, 0, NULL, NULL, 216, 54, 23, 21, 0, 3 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 16, 1, { .num = 0 }, &publicTiySprts_8008D434, &publicTiyTPages_8008D440, 83, 54, 21, 21, 3, 5 },
+        { 16, 3, 0, NULL, NULL, 104, 54, 112, 21, 4, 4 },
+        { 4, 8, 0, NULL, NULL, 216, 54, 23, 21, 0, 3 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
 };
-int itemListRowData_8008288C[14] = {
-    -1, -1, -1, 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053,
-    0x150015, 0x50003, 0x30010,
-};
-int aH6p_0[14] = {
-    0x360068, 0x150070, 0x40004, 0x80004, 0, 0, 0, 0x3600D8,
-    0x150017, 0x30000, 1,
-};
-int itemListRowData_800828FC[14] = {
-    -1, -1, -1, 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053,
-    0x150015, 0x50003, 0x30010,
-};
-int aH6p_1[14] = {
-    0x360068, 0x150070, 0x40004, 0x80004, 0, 0, 0, 0x3600D8,
-    0x150017, 0x30000, 1,
-};
-int itemListRowData_8008296C[14] = {
-    -1, -1, -1, 0x10010, 0, (int)&publicTiySprts_8008D434, (int)&publicTiyTPages_8008D440, 0x360053,
-    0x150015, 0x50003, 0x30010,
-};
-int aH6p_2[17] = {
-    0x360068, 0x150070, 0x40004, 0x80004, 0, 0, 0, 0x3600D8,
-    0x150017, 0x30000, 1, 0, 0, 0, -1, -1,
-    -1,
-};
-MenuWindowItem *itemListRows_800829E8[5] = { (void *)itemListRowData_80082828, (void *)&itemListRowData_8008288C[3], (void *)&itemListRowData_800828FC[3], (void *)&itemListRowData_8008296C[3] };
+MenuWindowItem *itemListRows_800829E8[5] = { itemListRowItems_80082828[0], itemListRowItems_80082828[1], itemListRowItems_80082828[2], itemListRowItems_80082828[3] };
 unsigned short magicScrollUpPos_800829FC[2] = { 160, 47 };
 unsigned short magicScrollDownPos_80082A00[2] = { 160, 148 };
-int magicListRowData_80082A04[11] = { 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060, 0x150015, 0x40004, 0x30010 };
-int aU6k[7] = { 0x360075, 0x15006B, 0x40003, 1 };
-int magicListRowData_80082A4C[14] = {
-    -1, -1, -1, 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060,
-    0x150015, 0x40004, 0x30010,
+// the magic list rows (icon, name + the row end)
+MenuWindowItem magicListRowItems_80082A04[4][3] = {
+    {
+        { 16, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 96, 54, 21, 21, 4, 4 },
+        { 16, 3, 0, NULL, NULL, 117, 54, 107, 21, 3, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 16, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 96, 54, 21, 21, 4, 4 },
+        { 16, 3, 0, NULL, NULL, 117, 54, 107, 21, 3, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 16, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 96, 54, 21, 21, 4, 4 },
+        { 16, 3, 0, NULL, NULL, 117, 54, 107, 21, 3, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 16, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 96, 54, 21, 21, 4, 4 },
+        { 16, 3, 0, NULL, NULL, 117, 54, 107, 21, 3, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
 };
-int aU6k_0[7] = { 0x360075, 0x15006B, 0x40003, 1 };
-int magicListRowData_80082AA0[14] = {
-    -1, -1, -1, 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060,
-    0x150015, 0x40004, 0x30010,
+MenuWindowItem *magicListRows_80082B54[5] = { magicListRowItems_80082A04[0], magicListRowItems_80082A04[1], magicListRowItems_80082A04[2], magicListRowItems_80082A04[3] };
+// the ability list rows (icon, name, bonus + the row end)
+MenuWindowItem abilityListRowItems_80082B68[5][4] = {
+    {
+        { 8, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 56, 44, 38, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 94, 44, 93, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 187, 44, 78, 21, 0, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 8, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 56, 44, 38, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 94, 44, 93, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 187, 44, 78, 21, 0, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 8, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 56, 44, 38, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 94, 44, 93, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 187, 44, 78, 21, 0, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 8, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 56, 44, 38, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 94, 44, 93, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 187, 44, 78, 21, 0, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
+    {
+        { 8, 1, { .num = 0 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 56, 44, 38, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 94, 44, 93, 21, 0, 4 },
+        { 8, 3, 0, NULL, NULL, 187, 44, 78, 21, 0, 4 },
+        { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
+    },
 };
-int aU6k_1[7] = { 0x360075, 0x15006B, 0x40003, 1 };
-int magicListRowData_80082AF4[14] = {
-    -1, -1, -1, 0x10010, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4, 0x360060,
-    0x150015, 0x40004, 0x30010,
-};
-int aU6k_2[10] = {
-    0x360075, 0x15006B, 0x40003, 1, 0, 0, 0, -1,
-    -1, -1,
-};
-MenuWindowItem *magicListRows_80082B54[5] = { (void *)magicListRowData_80082A04, (void *)&magicListRowData_80082A4C[3], (void *)&magicListRowData_80082AA0[3], (void *)&magicListRowData_80082AF4[3] };
-int abilityListRowData_80082B68[4] = { 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
-int a8[21] = {
-    0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
-    0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
-    0x40000, 1,
-};
-int abilityListRowData_80082BCC[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
-int a8_0[21] = {
-    0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
-    0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
-    0x40000, 1,
-};
-int abilityListRowData_80082C3C[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
-int a8_1[21] = {
-    0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
-    0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
-    0x40000, 1,
-};
-int abilityListRowData_80082CAC[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
-int a8_2[21] = {
-    0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
-    0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
-    0x40000, 1,
-};
-int abilityListRowData_80082D1C[7] = { -1, -1, -1, 0x10008, 0, (int)&uiTiySprts_8008D620, (int)&uiTiyTPages_8008D3F4 };
-int a8_3[24] = {
-    0x2C0038, 0x150026, 0x40000, 0x30008, 0, 0, 0, 0x2C005E,
-    0x15005D, 0x40000, 0x30008, 0, 0, 0, 0x2C00BB, 0x15004E,
-    0x40000, 1, 0, 0, 0, -1, -1, -1,
-};
-MenuWindowItem *abilityListRows_80082D98[6] = { (void *)abilityListRowData_80082B68, (void *)&abilityListRowData_80082BCC[3], (void *)&abilityListRowData_80082C3C[3], (void *)&abilityListRowData_80082CAC[3], (void *)&abilityListRowData_80082D1C[3] };
+MenuWindowItem *abilityListRows_80082D98[6] = { abilityListRowItems_80082B68[0], abilityListRowItems_80082B68[1], abilityListRowItems_80082B68[2], abilityListRowItems_80082B68[3], abilityListRowItems_80082B68[4] };
 int aKumu[3] = { 0x6B0028, 0x4D0075, 0x8A0075 };
 int familyTreeBoxPosData_80082DBC[4] = { 0x3E00C2, 0x5C00C2, 0x7A00C2, 0x9800C2 };
 Pos16 *familyTreeBoxPos_80082DCC[7] = { (void *)aKumu, (void *)&aKumu[1], (void *)&aKumu[2], (void *)familyTreeBoxPosData_80082DBC, (void *)&familyTreeBoxPosData_80082DBC[1], (void *)&familyTreeBoxPosData_80082DBC[2], (void *)&familyTreeBoxPosData_80082DBC[3] };
