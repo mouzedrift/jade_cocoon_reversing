@@ -1197,7 +1197,7 @@ EventDesc eventDescs_80078EB8[27] = {
     { 1, 0x8000, 124, &taskSlot_8008D62C },
     { 1, 0x8000, 0x2A8, (void *)&messageWindowTask_8008D640 },
     { 2, 1, 6, (void *)&vibrationTasks_8008D4B8, (EventEntryFn)InitPadVibration_800364E4 },
-    { 1, 0x8000, 72, (void *)((char *)&loadMenuTask_8008D480 + 4) },
+    { 1, 0x8000, 72, &nameEntryTask_8008D484 },
     { 1, 0x8000, 72, (void *)&configTask_8008B4B8 },
     { 1, 0x8000, 124, (void *)&loadMenuTask_8008D480, LoadMenuStart_800B7650 },
     { 1, 0x8000, 72, (void *)&equipTask_8008D4C4 },

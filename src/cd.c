@@ -406,9 +406,9 @@ void DelayLoop_8003BA90(void)
 }
 int GetMemCardInfoSync_8003BADC(int port)
 {
-    int out[2];
+    long out[2];
     McxAllInfo(port, (unsigned char*)&memCardInfo_8008D4D8);
-    while (!McxSync(0, (long*)&out[0], (long*)&out[1]))
+    while (!McxSync(0, &out[0], &out[1]))
     {
     }
     return out[1];

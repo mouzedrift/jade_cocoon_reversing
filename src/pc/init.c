@@ -1,4 +1,7 @@
 /* PC only: start-up */
+#define _GNU_SOURCE
+#include <link.h>
+#include <sys/mman.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <psyz.h>
@@ -57,10 +60,34 @@ static void FrameHook(void)
             PressButtons(inputs[i].mask);
 }
 
+/* the game edits constant data in place (text is encoded where it is), which on PSX is RAM: the program's read-only
+   segments become writable */
+static int MakeWritable(struct dl_phdr_info* info, size_t size, void* data)
+{
+    int i;
+    (void)size;
+    (void)data;
+    if (info->dlpi_name && info->dlpi_name[0])
+        return 1; /* the program is listed first */
+    for (i = 0; i < info->dlpi_phnum; i++)
+    {
+        const ElfW(Phdr)* ph = &info->dlpi_phdr[i];
+        if (ph->p_type == PT_LOAD && !(ph->p_flags & (PF_W | PF_X)))
+        {
+            uintptr_t start = (info->dlpi_addr + ph->p_vaddr) & ~(uintptr_t)4095;
+            uintptr_t end = info->dlpi_addr + ph->p_vaddr + ph->p_memsz;
+            if (mprotect((void*)start, end - start, PROT_READ | PROT_WRITE))
+                WARNF("cannot make the constant data writable");
+        }
+    }
+    return 1;
+}
+
 /* the disc image: $JC_DISC, or jade_cocoon.cue in the working directory */
 void Pc_Init(void)
 {
     const char* disc = getenv("JC_DISC");
+    dl_iterate_phdr(MakeWritable, NULL);
     if (!disc)
         disc = "jade_cocoon.cue";
     if (Psyz_CdSetDiskPath(disc) < 0)

@@ -25,7 +25,8 @@ int DsPosToInt(DslLOC* p) { return CdPosToInt((CdlLOC*)p); }
 DslLOC* DsIntToPos(int i, DslLOC* p) { return (DslLOC*)CdIntToPos(i, (CdlLOC*)p); }
 int DsControl(u_char com, u_char* param, u_char* result) { return CdControl(com, param, result); }
 int DsControlB(u_char com, u_char* param, u_char* result) { return CdControlB(com, param, result); }
-int DsSystemStatus(void) { return CdSync(1, NULL) == CdlComplete || CdSync(1, NULL) == CdlNoIntr ? DslReady : DslBusy; }
+/* PSY-Q's values (DslReady 1, DslBusy 2): PSY-Z's libds.h has 0 and 1 */
+int DsSystemStatus(void) { return CdSync(1, NULL) == CdlComplete || CdSync(1, NULL) == CdlNoIntr ? 1 : 2; }
 int DsRead(DslLOC* pos, int sectors, u_long* buf, int mode)
 {
     return CdControlB(CdlSetloc, (u_char*)pos, NULL) && CdRead(sectors, buf, mode);
@@ -33,7 +34,31 @@ int DsRead(DslLOC* pos, int sectors, u_long* buf, int mode)
 int DsRead2(DslLOC* pos, int mode) { return CdControlB(CdlSetloc, (u_char*)pos, NULL) && CdRead2(mode); }
 int DsReadSync(u_char* result) { return CdReadSync(0, result); }
 DslFILE* DsSearchFile(DslFILE* fp, char* name) { return (DslFILE*)CdSearchFile((CdlFILE*)fp, name); }
-int DsGetSector(void* madr, int size) { return CdGetSector(madr, size); }
+
+/* DsPacket's CdlReadN without CdlModeRT (PSY-Z only streams XA): the sectors are read here, one per DsGetSector,
+   and handed to the DsStartReadySystem callback until it calls DsEndReadySystem */
+static int packetSector = -1;
+static u_char packetMode;
+static DslRCB readyFunc;
+int DsGetSector(void* madr, int size)
+{
+    static u_long sector[2048 / 4];
+    CdlLOC pos;
+    if (packetSector < 0)
+        return CdGetSector(madr, size);
+    CdIntToPos(packetSector++, &pos);
+    CdControlB(CdlSetloc, (u_char*)&pos, NULL);
+    CdRead(1, sector, packetMode);
+    CdReadSync(0, NULL);
+    memcpy(madr, sector, size * 4);
+    return 1;
+}
+static void DeliverSectors(void)
+{
+    u_char result[8] = { 0 };
+    while (packetSector >= 0 && readyFunc)
+        readyFunc(CdlDataReady, result);
+}
 
 static int dsLastId;
 int DsControlF(u_char com, u_char* param)
@@ -52,7 +77,16 @@ int DsCommand(u_char com, u_char* param, DslCB cbsync, int count)
 /* setmode, setloc and the command */
 int DsPacket(u_char mode, DslLOC* pos, u_char com, DslCB cbsync, int count)
 {
-    u_char result[8];
+    u_char result[8] = { 0 };
+    if (com == CdlReadN && pos && !(mode & CdlModeRT))
+    {
+        packetSector = CdPosToInt((CdlLOC*)pos);
+        packetMode = mode & ~(CdlModeSize0 | CdlModeSize1); /* DsGetSector takes the 2048 data bytes */
+        if (cbsync)
+            cbsync(CdlComplete, result);
+        DeliverSectors();
+        return ++dsLastId;
+    }
     CdControlB(CdlSetmode, &mode, NULL);
     if (pos)
         CdControlB(CdlSetloc, (u_char*)pos, NULL);
@@ -68,10 +102,17 @@ int DsSync(int id, u_char* result)
 }
 int DsStartReadySystem(DslRCB func, int count)
 {
-    CdReadyCallback((CdlCB)func);
+    readyFunc = func;
+    if (packetSector < 0)
+        CdReadyCallback((CdlCB)func);
     return 1;
 }
-void DsEndReadySystem(void) { CdReadyCallback(NULL); }
+void DsEndReadySystem(void)
+{
+    readyFunc = NULL;
+    packetSector = -1;
+    CdReadyCallback(NULL);
+}
 
 /* the heap (InitHeap3 gets the area above the overlays, the C library's heap stands in for it) */
 void InitHeap3(unsigned long* head, unsigned long size) {}

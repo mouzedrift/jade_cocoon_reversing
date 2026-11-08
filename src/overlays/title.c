@@ -417,8 +417,8 @@ void TitleMenu_800A1310(TitleTask* t, TitleMenuWork* c)
 void NewGameCheckMemCards_800A14A8(TitleTask* t)
 {
     int i;
-    int a;
-    int b;
+    long a;
+    long b;
     b = 0;
     a = 0;
     t->next_8 = NoMemCardWarning_800A158C;

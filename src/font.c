@@ -140,5 +140,8 @@ void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += sizeof(DR_TPAGE);
 }
 
-CharTable charTables_8008685C[1] = { { 0 } };
-void *unused_80086868[1] = { (void *)font2CharCodes_800865BC };
+CharTable charTables_8008685C[3] = {
+    { 0 },
+    { font2CharCodes_800865BC, 112, 138 },
+    { &font2CharCodes_800865BC[140], 126, 194 },
+};

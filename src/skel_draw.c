@@ -402,8 +402,8 @@ void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SV
                         line.g0 = rgb[1];
                         line.b0 = rgb[2];
                     }
-                    *(long*)&line.x0 = sxy[j % 3];
-                    *(long*)&line.x1 = sxy[(j + 1) % 3];
+                    *(int*)&line.x0 = sxy[j % 3];
+                    *(int*)&line.x1 = sxy[(j + 1) % 3];
                     ((unsigned long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[0] = ((unsigned long*)&line)[0];
                     ((unsigned long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[1] = ((unsigned long*)&line)[1];
                     ((unsigned long*)primAllocPtr_800960A8[bDoubleBuffer_8008D428])[2] = ((unsigned long*)&line)[2];
@@ -444,10 +444,10 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
             ctx->v_18[1] = ftgSpriteVtxSlots_800987D8[ctx->ref_28->v[1].slot][ctx->ref_28->v[1].idx];
             ctx->v_18[2] = ftgSpriteVtxSlots_800987D8[ctx->ref_28->v[2].slot][ctx->ref_28->v[2].idx];
             ctx->v_18[3] = ftgSpriteVtxSlots_800987D8[ctx->ref_28->v[3].slot][ctx->ref_28->v[3].idx];
-            *(long*)&prim->x0 = ctx->v_18[0]->sxy_0;
-            *(long*)&prim->x1 = ctx->v_18[1]->sxy_0;
-            *(long*)&prim->x2 = ctx->v_18[2]->sxy_0;
-            gte_ldsxy3(*(long*)&prim->x0, *(long*)&prim->x1, *(long*)&prim->x2);
+            *(int*)&prim->x0 = ctx->v_18[0]->sxy_0;
+            *(int*)&prim->x1 = ctx->v_18[1]->sxy_0;
+            *(int*)&prim->x2 = ctx->v_18[2]->sxy_0;
+            gte_ldsxy3(*(int*)&prim->x0, *(int*)&prim->x1, *(int*)&prim->x2);
             gte_nclip();
             *(long*)&prim->x3 = ctx->v_18[3]->sxy_0;
             gte_stopz(&ctx->opz_8);

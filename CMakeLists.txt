@@ -50,10 +50,10 @@ foreach(ovl ${OVERLAYS})
     set(out ${CMAKE_CURRENT_BINARY_DIR}/overlay_${name}.o)
     add_custom_command(
         OUTPUT ${out}
-        COMMAND ${CMAKE_LINKER} -r -o ${out}.tmp $<TARGET_OBJECTS:ovl_${name}>
+        COMMAND ${CMAKE_LINKER} -r -T ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/overlay.ld -o ${out}.tmp $<TARGET_OBJECTS:ovl_${name}>
         COMMAND ${CMAKE_OBJCOPY} --rename-section .data=jc_${ovl}_data --rename-section .bss=jc_${ovl}_bss
                 ${out}.tmp ${out}
-        DEPENDS $<TARGET_OBJECTS:ovl_${name}>
+        DEPENDS $<TARGET_OBJECTS:ovl_${name}> ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/overlay.ld
         COMMAND_EXPAND_LISTS
         VERBATIM)
     list(APPEND OVERLAY_OBJECTS ${out})

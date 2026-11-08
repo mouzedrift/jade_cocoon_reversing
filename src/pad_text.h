@@ -12,7 +12,7 @@ extern const TextBuf22 emptyNameBuf_80074998;
 
 extern const int unused_800749B0;
 
-extern int font2CharCodes_800865BC[168];
+extern unsigned short font2CharCodes_800865BC[336];
 
 // cursor over a grid of menu items (UpdateMenuCursor_8003D794)
 typedef struct MenuCursor

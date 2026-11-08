@@ -8,9 +8,7 @@ typedef struct CharTable
     int lastChar_4; // codes up to this one are glyphs, the ones above are control codes
     int count;
 } CharTable;
-extern CharTable charTables_8008685C[];
-
-extern void *unused_80086868[1];
+extern CharTable charTables_8008685C[3];
 
 void DrawText_8003E91C(int font, const char* str, short* pos, int ot);
 void DrawColorText_8003EC2C(unsigned short* str, unsigned short* pos, int ot);

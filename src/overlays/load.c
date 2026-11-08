@@ -1337,8 +1337,8 @@ void ConfirmPromptInput_800B9654(LoadMenuWork* work)
 int ReadSaveSummaries_800B9724(LoadMenuWork* work)
 {
     int ret = 1;
-    int cmd = 0;
-    int res = 0;
+    long cmd = 0;
+    long res = 0;
     int chan = loadMenuRows_800BDF4C[1].cursor_C << 4;
     char* name;
     switch (MemCardSync(1, &cmd, &res))
@@ -1402,8 +1402,8 @@ void WriteSaveTask_800B98C4(void* t, void* buf)
 {
     LoadMenuTaskEntry* task = t;
     LoadMenuWork* work = buf;
-    int cmd = 0;
-    int res = 0;
+    long cmd = 0;
+    long res = 0;
     int chan = loadMenuRows_800BDF4C[1].cursor_C << 4;
     int save = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
     char* name;
@@ -1617,8 +1617,8 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
 // the incoming argument move and the call setup scheduled differently)
 void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf)
 {
-    int cmd = 0;
-    int res = 0;
+    long cmd = 0;
+    long res = 0;
     LoadMenuWork* work = buf;
     int chan = loadMenuRows_800BDF4C[1].cursor_C << 4;
     int save = loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C;
@@ -1956,8 +1956,8 @@ void ResetMenuRow_800BADE0(LoadMenuRow* row)
 
 void WaitCardSync_800BADF4(void)
 {
-    int result = 0;
-    int cmd = 0;
+    long result = 0;
+    long cmd = 0;
     MemCardSync(0, &cmd, &result);
 }
 
@@ -1984,7 +1984,7 @@ char* GetCardSaveName_800BAE4C(int i)
 
 int PollCardAccept_800BAE68(int slot)
 {
-    int sync[2]; // the MemCardSync command and result
+    long sync[2]; // the MemCardSync command and result
     int ret = -1;
     int state;
     int chan = slot << 4;
@@ -2010,7 +2010,7 @@ int PollCardAccept_800BAE68(int slot)
 
 int PollCardExist_800BAF0C(int slot)
 {
-    int sync[2]; // the MemCardSync command and result
+    long sync[2]; // the MemCardSync command and result
     int ret = -1;
     int state;
     int chan = slot << 4;

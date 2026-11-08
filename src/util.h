@@ -28,15 +28,7 @@ typedef struct Pool
     PoolBlock* tail;
 } Pool;
 
-// unused: a position and a font 2 character code
-typedef struct UnusedFontRef
-{
-    int x_0;
-    int y_4;
-    int* code_8;
-} UnusedFontRef;
-extern UnusedFontRef unused_8008686C;
-extern int unused_80086878[8];
+extern int unused_80086880[6];
 extern int unused_80086928[2];
 extern EventDesc copyrightData_80086930;
 
