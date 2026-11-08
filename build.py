@@ -446,8 +446,27 @@ def build_all(iso):
         if build() != 0:
             sys.exit(1)
         if link_files() == before:
+            results.update(build_maps(iso))
             return results
     sys.exit("the images' symbols did not settle after 3 rounds")
+
+
+def build_maps(iso):
+    """the code of the map files with a source file (scripts/mapcode.py, src/maps/NAME.c), written back into
+    the map file (build_psyq/maps/NAME.SBH). A map's hash is checked once config/hashes.txt has it (map-NAME,
+    the original map file's); until then the build says how much of its code differs."""
+    if not glob.glob(os.path.join(CURRENT_DIR, "src", "maps", "*.c")):
+        return {}
+    r = subprocess.run([sys.executable, os.path.join(CURRENT_DIR, "scripts", "mapcode.py"), iso if iso else "orig",
+                        os.path.join(BUILD_DIR, f"{EXE_NAME}.exe")], cwd=CURRENT_DIR, capture_output=True, text=True)
+    got = dict(re.findall(r"^(map-\w+) (\w+)$", r.stdout, re.M))
+    if not got:
+        sys.exit("map code build failed:\n" + (r.stdout + r.stderr).strip())
+    expected = read_hashes()
+    for line in r.stderr.strip().split("\n"):
+        if line and not any(k[4:] + ":" in line and k in expected for k in got):
+            print("map code (not checked yet): " + line)
+    return {k: h for k, h in got.items() if k in expected}
 
 
 def build_overlays(iso):

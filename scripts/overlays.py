@@ -71,7 +71,11 @@ def bcd(x):
 
 def extract(name, iso_path, exe):
     """exe: the executable image without header (as loaded at 0x80010000)"""
-    idx = file_id(name)
+    return extract_file(file_id(name), iso_path, exe)
+
+
+def extract_file(idx, iso_path, exe):
+    """file idx of the game's file table (src/enums.h) from the disc image"""
     table = 0x80075AA0 - 0x80010000
 
     def entry(i):
@@ -170,23 +174,37 @@ def main(argv):
     base = LOAD_ADDRESSES[name]
     data = data + b"\0" * (-len(data) % 4)
     print("%s.BIN: %d bytes, loaded at 0x%08X" % (name, len(data), base))
-    syms = load_symbols(os.path.join("overlays", name.lower() + ".sym"))
-    libs = lib_objs(name)
+    own = {n for _, n in load_symbols(os.path.join("overlays", name.lower() + ".sym"))}
     # an overlay built from several source files (as the original was, which matters for the .rdata alignment
     # of each file) has src/overlays/<name>.c, <name>_2.c, <name>_3.c, ..., linked in that order
     srcs = [os.path.join(REPO, "src", "overlays", name.lower() + ".c")]
     while os.path.exists(os.path.join(REPO, "src", "overlays", "%s_%d.c" % (name.lower(), len(srcs) + 1))):
         srcs.append(os.path.join(REPO, "src", "overlays", "%s_%d.c" % (name.lower(), len(srcs) + 1)))
+    built = build_image(name, base, srcs, own, lib_objs(name), "overlay_" + name.lower(), shift=True)
+    size = max(len(data), len(built))
+    built += b"\0" * (size - len(built))  # .bss at the end of the overlay file
+    diff = sum(1 for i in range(0, len(data), 4) if data[i:i + 4] != built[i:i + 4])
+    print("%s.BIN: %d of %d words identical" % (name, len(data) // 4 - diff, len(data) // 4))
+    if size > len(data):
+        print("%s.BIN: %d bytes longer than the original (it must still fit where the game loads it)" % (name, size - len(data)))
+    open(os.path.join(BUILD, name + ".BIN"), "wb").write(built)
+    open(os.path.join(BUILD, name + ".orig"), "wb").write(data)
+    return 1 if diff else 0
+
+
+def build_image(name, base, srcs, own, libs, tag, shift):
+    """compile srcs and link them (and the lib objects) at base, against the executable's symbols, other
+    images' and the fixed ones (names in own are the image's). Returns the image up to the end of its .bss
+    (rounded to a word); build_psyq/TAG.map has where everything went."""
     src_text = "".join(open(p).read() for p in srcs)
     b = BUILD
-    tag = "overlay_" + name.lower()
     inc = ["-I", os.path.join(PSYQ, "INCLUDE"), "-I", os.path.join(REPO, "src")]
     # extra defines for experiments, e.g. JC_DEFINES=DEBUG_TTY (see docs/testing_in_emulator.md); unset = matching build
     inc += ["-D" + d for d in os.environ.get("JC_DEFINES", "").split()]
     objs = []
     sys.path.insert(0, REPO)
     import build as bp  # JC_SHIFT padding, config/aliases.txt
-    if bp.shift_padding():
+    if shift and bp.shift_padding():
         bp.write_if_changed(os.path.join(b, tag + "_shift.s"), bp.shift_asm())
         run([os.path.join(BIN, "ASPSX.EXE"), "-G0", "-q", "-0", os.path.join(b, tag + "_shift.s"), "-o",
              os.path.join(b, tag + "_shift.obj")])
@@ -212,7 +230,6 @@ def main(argv):
     equ = {n: a for n, a in equ.items() if 0x80010000 <= a < exe_end and n not in exe_equates}
     # names of the source outside of the executable and of this overlay: other overlays' symbols (where their
     # last link put them, see build.overlay_symbols) and the fixed addresses (config/fixed_symbols.txt)
-    own = {n for _, n in syms}
     others = bp.overlay_symbols(exclude=name)
     fixed = bp.read_fixed_symbols()
     for n in sorted(set(re.findall(r"\b[A-Za-z_]\w*\b", src_text)) - own - set(equ)):
@@ -281,17 +298,7 @@ def main(argv):
     # (e.g. debug) builds, which are then written in full (scripts/patch_disc.py can place them)
     end = max(int(m.group(1), 16) + 1 for m in re.finditer(r"^ [0-9A-F]{8} ([0-9A-F]{8}) [0-9A-F]{8} ",
                                                               open(os.path.join(b, tag + ".map")).read(), re.M))
-    size = max(len(data), end - base + (-(end - base) % 4))
-    built = built[:size]
-    built += b"\0" * (size - len(built))  # .bss at the end of the overlay file
-    diff = sum(1 for i in range(0, len(data), 4) if data[i:i + 4] != built[i:i + 4])
-    print("%s.BIN: %d of %d words identical" % (name, len(data) // 4 - diff, len(data) // 4))
-    if size > len(data):
-        print("%s.BIN: %d bytes longer than the original (it must still fit where the game loads it)" % (name, size - len(data)))
-    open(os.path.join(b, name + ".BIN"), "wb").write(built)
-    open(os.path.join(b, name + ".orig"), "wb").write(data)
-    return 1 if diff else 0
-
+    return built[:end - base + (-(end - base) % 4)]
 
 if __name__ == "__main__":
     sys.exit(main(sys.argv[1:]))
