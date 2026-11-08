@@ -75,4 +75,13 @@ int IsWindowFrameFit_800429A8(RECT* rect);
 void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, u_long* ot, int time);
 int XaRequestStop_80043524(void);
 void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot);
+/* the start of an event entity (the buffer of an eventEntities_8008D400 entry), the same in each view of it
+   (GAME's GameEvEnt, EVENTFNC's EvEntity, the maps' MapEnt); each type's own work follows (int work_14[0x19]) */
+#define EVENT_ENTITY_HEAD                                                                                          \
+    struct EventEntry* entry_0;                                                                                    \
+    void* event_4; /* what made it (a map's MapEvent) */                                                         \
+    int areas_8;                                                                                                   \
+    int type_C;                                                                                                    \
+    void* data_10;
+
 #endif

@@ -112,9 +112,9 @@ extern void SuspendEnemyAi_800A2EC8(GameAi* ai);
 typedef struct GameEvCtx
 {
     unsigned int flags_0;
-    int start_4;
-    int pc_8;
-    int ret_C;
+    struct EvInstr* start_4;
+    struct EvInstr* pc_8;
+    struct EvInstr* ret_C;
     int id_10;
     int heldActors_14;
     int busyActors_18;
@@ -150,14 +150,8 @@ typedef struct GameEvCtx
 // an event entity (list eventEntities_8008D400); same layout as EvEntity in eventfnc.h
 typedef struct GameEvEnt
 {
-    int f0;
-    int f4;
-    int f8;
-    int fC;
-    int id_10;
-    char pad_14[0x34];
-    int pos_48[3];
-    char pad_54[0x24];
+    EVENT_ENTITY_HEAD
+    int work_14[0x19];
     int armed_78; // waits for a trigger (FireEventTrigger_800A5C40)
     int f7C;
     int pad_80;
@@ -166,7 +160,7 @@ typedef struct GameEvEnt
     int pad_8C;
 } GameEvEnt;
 
-extern EventEntry* StartEventScript_800A59D0(int script);
+extern EventEntry* StartEventScript_800A59D0(void* script);
 
 extern int FindTriAtXZ_800B76B8(char* p, int* pos);
 
@@ -211,7 +205,10 @@ typedef struct GameActorDesc
 // a party member (fieldMinions_800B0EC4.a)
 typedef struct GameMember
 {
-    char pad_0[0x10];
+    struct EventEntry* entry_0; /* EVENT_ENTITY_HEAD, with its data as the model */
+    void* event_4;
+    int areas_8;
+    int type_C;
     GameModelHdr** hdr_10;
     GameMemberCb cb_14;
 } GameMember;
@@ -1266,7 +1263,7 @@ extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
 extern int currentMessageId_800AEBE8;
 extern int currentVoice_800AEBEC;
-extern int voiceTable_800AEBF0;
+extern void* voiceTable_800AEBF0;
 extern int eventResult_800AEBF4;
 // a menu cursor of the MAP overlay's destination select (UpdateMenuCursor_8003D794 / GetMenuCursorIndex_8003DA54)
 typedef struct GameMapCursor
@@ -1408,7 +1405,8 @@ extern GameEnemyResult battleEnemyResults_800B1238[3]; // the enemies of the las
 extern int unused_800B125C;
 extern GameEncounter gCtx_800B1260;
 extern GameEnemy eventEnemy_800B1CB8;
-extern int eventHook_800B1D98;
+typedef void (*EventHookFn)(void* arg); // the map code's (SetEventHook_800A5F90), for the script command EvCmdCallHook_800B91CC
+extern EventHookFn eventHook_800B1D98;
 extern int unused_800B1D9C;
 extern EventNode *levantModelTask_800B1DA0[1];
 extern EventNode *mapOverlayTask_800B1DA4[1];

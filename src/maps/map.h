@@ -4,6 +4,15 @@
    mapCodeAddr_80073210 (0x800B22C0, behind GAME), from src/maps/NAME.c. Most maps are built from the same
    pieces (the functions here), with the map's own tables. */
 #include "overlays/game.h"
+#include "ftg_draw.h"
+
+/* a map name in an event script (an int): its address; on PC the PlayStation's (scripts/pc_maps.py's REF_
+   defines), which PSX_PTR turns into the name's object */
+#ifdef __psyz
+#define MAP_REF(name) REF_##name
+#else
+#define MAP_REF(name) ((int)&name)
+#endif
 
 #define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : ((hi) < (x) ? (hi) : (x)))
 
@@ -33,11 +42,7 @@ typedef struct MapEvent
 /* a map entity (the buffer of an eventEntities_8008D400 entry): GAME's GameEvEnt and an update function */
 struct MapEnt
 {
-    EventEntry* entry_0;
-    MapEvent* event_4;
-    int areas_8;
-    int type_C;
-    void* data_10;
+    EVENT_ENTITY_HEAD /* event_4: the MapEvent */
     int work_14[0x19]; /* what the entity's functions keep */
     int armed_78;
     int state_7C; /* -1: running; -2: done (its entry stops); -3 */
@@ -145,8 +150,8 @@ typedef struct MapVoice
 extern int AddFieldMinion_800A77A0(MapEnt* ent);
 extern void ClearFieldMinions_800A7784(void);
 extern void LoadLevantAnimSet_800AC708(int set, int arg1);
-extern void SetEventHook_800A5F90(int hook);
-extern void SetVoiceTable_800A6830(int table);
+extern void SetEventHook_800A5F90(EventHookFn hook);
+extern void SetVoiceTable_800A6830(void* table);
 extern int AreLevantFilesLoaded_800AC768();
 extern int levantAnimSet_80091C74; /* main.h (which GAME does not include) */
 extern int pointLightRange_8008D3F0;

@@ -17,6 +17,7 @@ void FreeRecordTables_80026DE8(RecordTable** tables, int count, void* h);
 void AllocRecordTables_80026D78(RecordTable** out, int count, void* heap);
 void LoadRecordTables_80026E74(RecordTable* tables, int* file, void* heap);
 void SetLoadFadeFlag_80027478(int mask, int set);
+void MakeFtgSprt_800221DC(struct FtgPolyFT4* src, SPRT* dst, DR_TPAGE* tpage); /* a sprite and its texture page for an FTG quad */
 void InitMapState_80026FAC(void);
 void ResetMapLoaderTask_8002830C(EventEntry* entry);
 void LoadTileSets_80027778(int* data, List* heap);

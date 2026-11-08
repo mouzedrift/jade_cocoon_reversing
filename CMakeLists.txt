@@ -59,7 +59,42 @@ foreach(ovl ${OVERLAYS})
     list(APPEND OVERLAY_OBJECTS ${out})
 endforeach()
 
-add_executable(jade_cocoon ${EXE_SOURCES} ${PC_SOURCES} ${OVERLAY_OBJECTS})
+# map code: src/maps/NAME.c with the table of its PlayStation addresses (scripts/pc_maps.py), one object each
+# with only its table global (the maps use the same names)
+file(GLOB MAP_SOURCES ${CMAKE_SOURCE_DIR}/src/maps/*.c)
+set(MAP_GEN ${CMAKE_CURRENT_BINARY_DIR}/maps)
+file(MAKE_DIRECTORY ${MAP_GEN})
+set(MAP_GENERATED ${MAP_GEN}/maps_pc.c)
+foreach(src ${MAP_SOURCES})
+    get_filename_component(name ${src} NAME_WE)
+    list(APPEND MAP_GENERATED ${MAP_GEN}/map_${name}_pc.c)
+endforeach()
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_custom_command(
+    OUTPUT ${MAP_GENERATED}
+    COMMAND Python3::Interpreter ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${MAP_GEN} ${MAP_SOURCES}
+    DEPENDS ${MAP_SOURCES} ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${CMAKE_SOURCE_DIR}/src/enums.h
+    VERBATIM)
+set(MAP_OBJECTS)
+foreach(src ${MAP_SOURCES})
+    get_filename_component(name ${src} NAME_WE)
+    add_library(map_${name} OBJECT ${MAP_GEN}/map_${name}_pc.c)
+    target_include_directories(map_${name} PRIVATE src src/overlays)
+    target_compile_definitions(map_${name} PRIVATE ${GAME_DEFINES})
+    target_compile_options(map_${name} PRIVATE ${GAME_OPTIONS})
+    target_link_libraries(map_${name} PRIVATE psyz)
+    set(out ${CMAKE_CURRENT_BINARY_DIR}/map_${name}.o)
+    add_custom_command(
+        OUTPUT ${out}
+        COMMAND ${CMAKE_LINKER} -r -o ${out}.tmp $<TARGET_OBJECTS:map_${name}>
+        COMMAND ${CMAKE_OBJCOPY} --keep-global-symbol=pcMap_${name} ${out}.tmp ${out}
+        DEPENDS $<TARGET_OBJECTS:map_${name}>
+        COMMAND_EXPAND_LISTS
+        VERBATIM)
+    list(APPEND MAP_OBJECTS ${out})
+endforeach()
+
+add_executable(jade_cocoon ${EXE_SOURCES} ${PC_SOURCES} ${OVERLAY_OBJECTS} ${MAP_GEN}/maps_pc.c ${MAP_OBJECTS})
 target_include_directories(jade_cocoon PRIVATE src)
 target_compile_definitions(jade_cocoon PRIVATE ${GAME_DEFINES})
 target_compile_options(jade_cocoon PRIVATE ${GAME_OPTIONS})

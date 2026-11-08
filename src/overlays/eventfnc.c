@@ -969,21 +969,21 @@ int EvCmdCountYanVar_800B9110(EvScriptCtx* ctx)
 
 int EvCmdCallHook_800B91CC(EvScriptCtx* ctx)
 {
-    eventHook_800B1D98(ctx->pc_8->c_C);
+    eventHook_800B1D98(PSX_PTR(ctx->pc_8->c_C));
     ctx->pc_8++;
     return 1;
 }
 
 int EvCmdStartScript_800B9218(EvScriptCtx* ctx)
 {
-    StartEventScript_800A59D0(ctx->pc_8->c_C);
+    StartEventScript_800A59D0(PSX_PTR(ctx->pc_8->c_C));
     ctx->pc_8++;
     return 1;
 }
 
 int EvCmdWarpActor_800B9260(EvScriptCtx* ctx)
 {
-    int* dest = (int*)ctx->pc_8->c_C;
+    int* dest = (int*)PSX_PTR(ctx->pc_8->c_C);
     EvVec* pos = GetActorPos_800BBBA0(ctx->pc_8->a_4);
     SVECTOR* rot = GetActorRot_800BBBD0(ctx->pc_8->a_4);
     int ang;
@@ -1009,7 +1009,7 @@ int EvCmdWarpActor_800B9260(EvScriptCtx* ctx)
 int EvCmdMoveToPoint_800B93A8(EvScriptCtx* ctx)
 {
     EvActorCmd cmd;
-    EvVec* dest = (EvVec*)ctx->pc_8->c_C;
+    EvVec* dest = (EvVec*)PSX_PTR(ctx->pc_8->c_C);
     cmd.actor_0 = ctx->pc_8->a_4;
     cmd.kind_4 = ctx->pc_8->op_0 != 0x14;
     cmd.x_18 = dest->x_0;
@@ -1050,7 +1050,7 @@ int EvCmdTurnToPoint_800B95BC(EvScriptCtx* ctx)
 {
     EvActorCmd cmd;
     EvInstr* ins = ctx->pc_8;
-    EvVec* dest = (EvVec*)ins->c_C;
+    EvVec* dest = (EvVec*)PSX_PTR(ins->c_C);
     int actor = ins->a_4;
     cmd.actor_0 = actor;
     cmd.kind_4 = 2;
@@ -1354,7 +1354,7 @@ int EvCmdSetMsgPosMode_800B9FB4(EvScriptCtx* ctx)
 
 int EvCmdSetVoiceTable_800B9FD8(EvScriptCtx* ctx)
 {
-    SetVoiceTable_800A6830(ctx->pc_8->c_C);
+    SetVoiceTable_800A6830(PSX_PTR(ctx->pc_8->c_C));
     ctx->pc_8++;
     return 1;
 }
@@ -1662,7 +1662,7 @@ int EvCmdChangeMap_800BA930(EvScriptCtx* ctx)
     s->mapId_2E4[1].cur_0 = ((unsigned short*)&ctx->pc_8->b_8)[1];
     s->mapId_2E4[2].cur_0 = ((unsigned short*)&ctx->pc_8->b_8)[0];
     s->mapId_2E4[2].prev_2 = -1;
-    dest = (int*)ctx->pc_8->c_C;
+    dest = (int*)PSX_PTR(ctx->pc_8->c_C);
     if (dest)
     {
         s->levant_7A8.pos.x = dest[0];
@@ -1772,7 +1772,7 @@ int EvCmdOpenShop_800BABB0(EvScriptCtx* ctx)
 int EvCmdCameraLookAtPoint_800BAC60(EvScriptCtx* ctx)
 {
     EvVec target;
-    EvVec* src = (EvVec*)ctx->pc_8->c_C;
+    EvVec* src = (EvVec*)PSX_PTR(ctx->pc_8->c_C);
     target.x_0 = src->x_0;
     target.y_4 = src->y_4 + 0x15E;
     target.z_8 = src->z_8;
@@ -1811,7 +1811,7 @@ int EvCmdSetViewRect_800BADF8(EvScriptCtx* ctx)
 {
     if (ctx->pc_8->c_C)
     {
-        viewport_8008D420 = *(EvViewRect*)ctx->pc_8->c_C;
+        viewport_8008D420 = *(EvViewRect*)PSX_PTR(ctx->pc_8->c_C);
     }
     else
     {
@@ -1966,7 +1966,7 @@ int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
     switch (ctx->step_B8)
     {
     case 0:
-        args = (EvBattleArgs*)ctx->pc_8->c_C;
+        args = (EvBattleArgs*)PSX_PTR(ctx->pc_8->c_C);
         eventBattleLoseWarp_800AEBE4 = args->loseWarp_14;
         eventEnemy_800B1CB8.f0_0[0] = args->f0_0[0];
         eventEnemy_800B1CB8.f0_0[1] = args->f0_0[1];
@@ -2122,14 +2122,14 @@ int EvCmdFadeSound_800BB4A4(EvScriptCtx* ctx)
         break;
     case 14:
         op = ctx->pc_8->b_8;
-        keyOut = (int*)ctx->pc_8->c_C;
+        keyOut = (int*)PSX_PTR(ctx->pc_8->c_C);
         *keyOut = SfxKeyOn_800314F4(op);
         break;
     case 15:
-        SfxKeyOff_80031574(*(short*)ctx->pc_8->c_C, *(short*)&ctx->pc_8->b_8);
+        SfxKeyOff_80031574(*(short*)PSX_PTR(ctx->pc_8->c_C), *(short*)&ctx->pc_8->b_8);
         break;
     case 16:
-        xa = (short*)ctx->pc_8->c_C;
+        xa = (short*)PSX_PTR(ctx->pc_8->c_C);
         XaRequestPlay_80043564(xa[0], xa[1], xa[2]);
         break;
     case 17:

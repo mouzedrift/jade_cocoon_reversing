@@ -14,7 +14,7 @@ int LeaveArea_800B33D4(MapEvent* ev, int area);
 int EnterArea_800B34F0(MapEvent* ev, int area, int prev);
 void RequestModels_800B35F8(MapEvent* ev);
 void EntityTask_800B36C8(EventEntry* entry, MapEnt* ent);
-int AddEntity_800B3748(MapEvent* ev);
+int AddEntity_800B3748(void* ev);
 int MinionF_800B3874(void);
 int MinionF_800B387C(void);
 int AddEffects_800B2994(MapFx* fx);
@@ -61,21 +61,21 @@ MapInstr script_800B3CB0[] = {
     { 7, 0, 7, 0 },
     { 0x1A, 4, 0, 0 },
     { 0x5E, 0, 1, 0 },
-    { 0x11, 0, 0, (int)&doorEvent_800B3C18 },
-    { 0x5A, 0, 1, (int)pos_800B3C0C },
+    { 0x11, 0, 0, MAP_REF(doorEvent_800B3C18) },
+    { 0x5A, 0, 1, MAP_REF(pos_800B3C0C) },
     { 0x67, 1, 0, 0 },
-    { 0x60, 0, 0, (int)pos_800B3BFC },
-    { 0x13, 0, 0, (int)pos_800B3BFC },
+    { 0x60, 0, 0, MAP_REF(pos_800B3BFC) },
+    { 0x13, 0, 0, MAP_REF(pos_800B3BFC) },
     { 0x48, 0, 0x6E, 1 },
     { 0x48, 1, 0x11, 1 },
     { 0x1B, 7, 0, 0 },
     { 0x1C, 7, 1, 0 },
     { 0x67, 2, 0x1E, 0 },
     { 0xC, 0, 0x1E, 0 },
-    { 0x4B, 0, 0, (int)effects_800B3C2C },
-    { 0x4D, 0, 0, (int)AddEffects_800B2994 },
+    { 0x4B, 0, 0, MAP_REF(effects_800B3C2C) },
+    { 0x4D, 0, 0, MAP_REF(AddEffects_800B2994) },
     { 0xC, 0, 0x1E, 0 },
-    { 0x2E, 0, 0, (int)&doorEvent_800B3C18 },
+    { 0x2E, 0, 0, MAP_REF(doorEvent_800B3C18) },
     { 0x5C, 0, 0x78, 0 },
     { 0x5D, 0, 0, 0 },
     { 0xC, 0, 0x1E, 0 },
@@ -555,7 +555,7 @@ void MapInit_800B3008(int phase)
         levantAnimSet_80091C74 = 0;
         LoadLevantAnimSet_800AC708(0, 1);
         SetLoadFadeFlag_80027478(0x18, 1);
-        SetEventHook_800A5F90((int)AddEntity_800B3748);
+        SetEventHook_800A5F90((EventHookFn)AddEntity_800B3748);
     }
 }
 
@@ -728,12 +728,12 @@ int EnterArea_800B34F0(MapEvent* ev, int area, int prev)
         {
             if (ev->type_4 == MAP_EV_VOICES)
             {
-                SetVoiceTable_800A6830((int)ev->data_8);
+                SetVoiceTable_800A6830(ev->data_8);
             }
             else if (ev->type_4 == MAP_EV_SCRIPT)
             {
                 n++;
-                ev->run_10.script = StartEventScript_800A59D0((int)ev->data_8);
+                ev->run_10.script = StartEventScript_800A59D0(ev->data_8);
             }
             else
             {
@@ -782,7 +782,7 @@ void EntityTask_800B36C8(EventEntry* entry, MapEnt* ent)
     StepEntity(entry, ent);
 }
 
-int AddEntity_800B3748(MapEvent* ev)
+int AddEntity_800B3748(void* ev)
 {
     return NewEntity(ev);
 }

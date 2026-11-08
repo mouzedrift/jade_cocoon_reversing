@@ -3000,6 +3000,7 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     if (size != 0 && dword_80091C8C == 0)
     {
         MemCopy_800403E8(mapCodeAddr_80073210, cur, size);
+        MAP_CODE_LOADED(MAP_ENTRY_CF8(saveData_8008B570.mapId_2E4[2].cur_0).f0);
         mapCallback_80091CB4 = ((MapAreaEntryb*)mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0])[saveData_8008B570.mapId_2E4[2].cur_0].fC;
     }
     cur = (int*)((char*)cur + size);

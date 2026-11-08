@@ -1,5 +1,6 @@
 // GAME.BIN, source file 3 of 3 from 0x800A5804 (.rdata from 0x800A0660)
 #include "game.h"
+#include "memmap.h"
 
 const char aAssertionFaile_800A0660[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEventcomC_800A0688[] = "EVENTCOM.C";
@@ -386,7 +387,7 @@ int eventBattlePending_800AEBE0 = 0;
 int eventBattleLoseWarp_800AEBE4 = 1;
 int currentMessageId_800AEBE8 = 0x8000;
 int currentVoice_800AEBEC = 0;
-int voiceTable_800AEBF0 = 0;
+void* voiceTable_800AEBF0 = 0;
 int eventResult_800AEBF4 = 0;
 GameMapSelect mapSelect_800AEBF8 = {
     -1, -1,
@@ -977,7 +978,7 @@ int unused_800B125C = 0xB00;
 GameEncounter gCtx_800B1260 = { 0 };
 int dword_800B1CA8[4] = { 0 };
 GameEnemy eventEnemy_800B1CB8 = { 0 };
-int eventHook_800B1D98 = 0;
+EventHookFn eventHook_800B1D98 = 0;
 int unused_800B1D9C = 0;
 EventNode *levantModelTask_800B1DA0[1] = { 0 };
 EventNode *mapOverlayTask_800B1DA4[1] = { 0 };
@@ -1057,7 +1058,7 @@ void StopAllEventScripts_800A58B4(void)
     eventResult_800AEBF4 = 0;
 }
 
-EventEntry* StartEventScript_800A59D0(int script)
+EventEntry* StartEventScript_800A59D0(void* script)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(eventScripts_8008D410);
     if (entry)
@@ -1083,7 +1084,7 @@ EventEntry* StartEventScript_800A59D0(int script)
     return 0;
 }
 
-EventEntry* StartEventScriptForEntity_800A5AA0(int script, int ent)
+EventEntry* StartEventScriptForEntity_800A5AA0(void* script, int ent)
 {
     EventEntry* entry = StartEventScript_800A59D0(script);
     GameEvCtx* ctx = entry->buffer;
@@ -1217,7 +1218,7 @@ int FireEventTrigger_800A5C40(int trigger)
                     ent->f7C = 0;
                     if (ent->script_88)
                     {
-                        StartEventScript_800A59D0(ent->script_88);
+                        StartEventScript_800A59D0(PSX_PTR(ent->script_88));
                         sceneScriptId_800AEBD8 = nextScriptId_800AEBDC - 1;
                         fired = 1;
                     }
@@ -1244,14 +1245,14 @@ GameEvEnt* FindEventEntity_800A5DDC(int key, int byId, GameEvEnt* skip)
             {
                 if (byId == 0)
                 {
-                    if (key == ent->f4)
+                    if (PSX_PTR(key) == ent->event_4)
                     {
                         return ent;
                     }
                 }
                 else
                 {
-                    if (key == ent->id_10)
+                    if (PSX_PTR(key) == ent->data_10)
                     {
                         return ent;
                     }
@@ -1309,7 +1310,7 @@ GameEnemy* GetEventEnemy_800A5F6C(void)
     return 0;
 }
 
-void SetEventHook_800A5F90(int hook)
+void SetEventHook_800A5F90(EventHookFn hook)
 {
     eventHook_800B1D98 = hook;
 }
@@ -1574,7 +1575,7 @@ int SkipActorAnims_800A67B4(unsigned int* args)
     return 0;
 }
 
-void SetVoiceTable_800A6830(int tbl)
+void SetVoiceTable_800A6830(void* tbl)
 {
     voiceTable_800AEBF0 = tbl;
 }

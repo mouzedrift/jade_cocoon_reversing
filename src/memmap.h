@@ -25,8 +25,11 @@ void* Pc_PsxPtr(unsigned int addr);
 #ifdef __psyz
 int Pc_MapCodeCall(unsigned int addr, int arg);
 #define MAP_CODE_CALL(addr, arg) Pc_MapCodeCall((unsigned int)(addr), (arg))
+#define MAP_CODE_LOADED(fileId) Pc_MapCodeLoaded(fileId)
+void Pc_MapCodeLoaded(int fileId);
 #else
 #define MAP_CODE_CALL(addr, arg) ((int (*)(int))(addr))(arg)
+#define MAP_CODE_LOADED(fileId) /* the PlayStation runs the code where it was copied */
 #endif
 
 #define HEAP_END 0x801B9250 /* the heap runs from heapStart_800CD858 up to here, the buffers follow */

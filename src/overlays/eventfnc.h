@@ -43,7 +43,9 @@ typedef struct EvInstr
 // an event entity as the script commands see it (GAME's GameEvEnt)
 typedef struct EvEntity
 {
-    char pad_0[0x7C];
+    EVENT_ENTITY_HEAD
+    int work_14[0x19];
+    int armed_78;
     int f7C_7C;
     int tri_80; // a state EvCmdWaitEntityState_800B9E48 waits for
     int mesh_84;
@@ -262,9 +264,9 @@ extern int SetEventVar_800AD16C(int a, int b);
 
 extern int GetEventVar_800AD154(int a);
 
-extern void (*eventHook_800B1D98)(int);
+extern void (*eventHook_800B1D98)(void* arg); // GAME's EventHookFn
 
-extern EventEntry* StartEventScript_800A59D0(int a);
+extern EventEntry* StartEventScript_800A59D0(void* script);
 
 extern SVECTOR* GetActorRot_800BBBD0(int actor); // rotation of Levant (0) or a party member
 
@@ -302,7 +304,7 @@ extern UnitStatus* GetLevantStatus_800A8C34();
 
 extern EvEntity* FindEventEntity_800A5DDC(int a, int b, int c);
 
-extern void SetVoiceTable_800A6830(int a);
+extern void SetVoiceTable_800A6830(void* tbl);
 
 extern void EvMessageNop_800BC7A0(EvScriptCtx* ctx);
 
