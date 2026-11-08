@@ -1417,8 +1417,8 @@ extern EventNode *subOverlayTask_800B1DB4[1];
 extern EventNode *tileAnimTask_800B1DBC;
 extern EventNode *prevModeTask_800B1DC0[1];
 extern int gameStartMode_800B1DC8[2];
-extern char levantPool_800B1DD0;
-extern int unused_800B1DD4[9];
+extern Pool levantPool_800B1DD0;
+extern int unused_800B1DF4;
 extern char levantByte_800B1DF8;
 extern int unused_800B1DFC[304];
 

@@ -991,8 +991,8 @@ EventNode *tileAnimTask_800B1DBC = 0;
 EventNode *prevModeTask_800B1DC0[1] = { 0 };
 int** mapLoaderTask_800B1DC4 = 0;
 int gameStartMode_800B1DC8[2] = { 0 };
-char levantPool_800B1DD0 = 0;
-int unused_800B1DD4[9] = { 0 };
+Pool levantPool_800B1DD0 = { 0 }; // Levant's models (LevantModelTaskInit_800ACAA4)
+int unused_800B1DF4 = 0;
 char levantByte_800B1DF8 = 0;
 int unused_800B1DFC[304] = { 0 };
 

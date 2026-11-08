@@ -146,7 +146,6 @@ dword_800B1060 unused_800B1060
 dword_800B1234 unused_800B1234
 dword_800B125C unused_800B125C
 dword_800B1D9C unused_800B1D9C
-dword_800B1DD4 unused_800B1DD4
 dword_800B1DFC unused_800B1DFC
 [LOAD]
 dword_800B66C0 unused_800B66C0

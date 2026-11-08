@@ -702,6 +702,6 @@ prevModeTask_800B1DC0=0x800b1dc0; // data
 mapLoaderTask_800B1DC4=0x800b1dc4;
 gameStartMode_800B1DC8=0x800b1dc8; // data
 levantPool_800B1DD0=0x800b1dd0; // data
-unused_800B1DD4=0x800b1dd4;
+unused_800B1DF4=0x800b1df4;
 levantByte_800B1DF8=0x800b1df8;
 unused_800B1DFC=0x800b1dfc;
