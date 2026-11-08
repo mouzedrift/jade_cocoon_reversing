@@ -26,7 +26,7 @@ extern const LoadingIconFrames loadingIconFrames_8007490C;
 
 extern int cdXaLock_80086568;
 
-void UpdateFileRequestTask_8003C76C(int* entry, int* task);
+void UpdateFileRequestTask_8003C76C(EventEntry* entry, int* task);
 int StartFileRequestTask_8003C6C8(FileRequestDesc* req);
 int LoadData001File_8003CD1C(void);
 void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx);

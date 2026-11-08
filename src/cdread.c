@@ -38,7 +38,7 @@ int StartFileRequestTask_8003C6C8(FileRequestDesc* req)
     }
     return 0;
 }
-void UpdateFileRequestTask_8003C76C(int* entry, int* task)
+void UpdateFileRequestTask_8003C76C(EventEntry* entry, int* task)
 {
     if (task[1])
     {
@@ -46,7 +46,7 @@ void UpdateFileRequestTask_8003C76C(int* entry, int* task)
     }
     if (GetFileRequestStatus_8003BE30(task[0]) == 0)
     {
-        entry[0] = (entry[0] & ~1) | 0x8000;
+        entry->flags = (entry->flags & ~1) | 0x8000;
     }
 }
 void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx)

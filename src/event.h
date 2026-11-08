@@ -32,6 +32,13 @@ extern MATRIX colorMatrix_80087134;
 
 extern int unused_8009611C;
 
+/* the task buffers are sized for the PSX structures: twice that on PC, where pointers are 8 bytes */
+#ifdef __psyz
+#define TASK_BUFFER_SIZE(size) ((size) * 2)
+#else
+#define TASK_BUFFER_SIZE(size) (size)
+#endif
+
 /* how CreateEventList_800435B4 makes an event list (eventDescs_80078EB8) */
 typedef struct
 {

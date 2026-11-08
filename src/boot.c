@@ -105,14 +105,14 @@ void DrawCopyrightScreen_800408F4(void)
         bStopDrawingMovie_8008D45C = 1;
     }
 }
-void InitCopyrightScreen_80040A10(int* entry)
+void InitCopyrightScreen_80040A10(EventEntry* entry)
 {
     void* pFile = DATA_GetFileBuffer_8003CAA0(0x38);
     copyrightSprts_8008D47C = 0;
     copyrightTPages_8008B4EC = 0;
     LoadTiy_80028E74(&copyrightSprts_8008D47C, 0, &copyrightTPages_8008B4EC, pFile, HEAP_MALLOC3);
     free3_8003FC6C(pFile);
-    entry[2] = (int)DrawCopyrightScreen_800408F4;
+    entry->cb_8 = (EventEntryFn)DrawCopyrightScreen_800408F4;
 }
 void ShowCopyright_80040A84(void)
 {

@@ -14,7 +14,7 @@ extern const char aReturned_800747D0[];
 extern const char aReceived_800747E8[];
 extern const char aPickedUp_80074800[];
 
-void InitPadVibration_800364E4();
+void InitPadVibration_800364E4(EventEntry* entry);
 
 // a target check of an item / magic command (CheckMagicUsable_80034068)
 typedef struct TargetQuery
@@ -36,7 +36,7 @@ int CountUntilZero_80034B14(int* list);
 void DrawMsgWindowBackground_80035898(MsgWindow* win, RECT* rect, int ot);
 void DrawMsgWindowBorder_800358CC(MsgWindow* win, RECT* rect, int ot);
 int CountMaskedUntilZero_80034B40(int* list, unsigned int mask);
-void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win);
+void UpdateMessageWindow_80034BB8(EventEntry* entry, MsgWindow* win);
 void UpdateMsgWindowState_80034C18(MsgWindow* w);
 void HandleMsgWindowInput_800353A0(MsgWindow* win);
 int DrawMsgWindowText_8003580C(MsgWindow* win, RECT* rect);

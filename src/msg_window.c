@@ -457,13 +457,13 @@ int NthMaskedIndex_80034B88(int n, unsigned int mask)
     }
     return i - 1;
 }
-void UpdateMessageWindow_80034BB8(int* entry, MsgWindow* win)
+void UpdateMessageWindow_80034BB8(EventEntry* entry, MsgWindow* win)
 {
     UpdateMsgWindowState_80034C18(win);
     HandleMsgWindowInput_800353A0(win);
     if (win->mode_8 == 7)
     {
-        entry[0] = (entry[0] & ~1) | 0x8000;
+        entry->flags = (entry->flags & ~1) | 0x8000;
     }
 }
 /* defined below (their parameter types are declared there) */
@@ -1268,9 +1268,9 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         e->flags = (e->flags & ~1) | 0x8000;
     }
 }
-void InitPadVibration_800364E4(int* entry)
+void InitPadVibration_800364E4(EventEntry* entry)
 {
-    padVibration_80095460[entry[1]].flags_0 = 0;
-    padVibration_80095460[entry[1]].motor_2[0] = 0;
-    padVibration_80095460[entry[1]].motor_2[1] = 0;
+    padVibration_80095460[entry->index_4].flags_0 = 0;
+    padVibration_80095460[entry->index_4].motor_2[0] = 0;
+    padVibration_80095460[entry->index_4].motor_2[1] = 0;
 }

@@ -726,7 +726,7 @@ void DrawTitleBackground_800A1F98(SPRT* sprts, DR_TPAGE* tpages, TitleMenuWork* 
     y = 0;
     for (i = 7; i < 9; i++)
     {
-        sprt = (SPRT*)((int)i * sizeof(SPRT) + (int)sprts); // &sprts[i] does not match
+        sprt = (SPRT*)((int)i * sizeof(SPRT) + (long)sprts); // &sprts[i] does not match
         sprt->x0 = (i - 7) * 5 << 5;
         sprt->y0 = y;
         AddPrimCopy_80040298((void*)pOT_8008D3EC, sprt, sizeof(*sprt) / 4);

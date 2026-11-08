@@ -4,7 +4,29 @@
 extern const char aDataData0011[];
 extern const int unused_800748DC;
 
+/* the pending file requests, oldest (processed first) to newest. Four variables on PSX: code reads them both
+   through the structure and as plain variables, which the compiler schedules differently */
+typedef struct
+{
+    int count;
+    int nextkey;
+    FileRequest* first;
+    FileRequest* last;
+} FileRequestQueue;
+#ifdef __psyz
+extern FileRequestQueue fileRequestQueue;
+#define fileRequestQueue_80086540 (fileRequestQueue.count)
+#define fileRequestNextKey_80086544 (fileRequestQueue.nextkey)
+#define fileRequestHead_80086548 (fileRequestQueue.first)
+#define fileRequestTail_8008654C (fileRequestQueue.last)
+#define FILE_REQUEST_QUEUE (&fileRequestQueue)
+#else
+extern int fileRequestQueue_80086540;
 extern int fileRequestNextKey_80086544;
+extern FileRequest* fileRequestHead_80086548;
+extern FileRequest* fileRequestTail_8008654C;
+#define FILE_REQUEST_QUEUE ((FileRequestQueue*)&fileRequestQueue_80086540)
+#endif
 
 /* the file request task's buffer (fileRequestTask_8008B544) */
 typedef struct FileTask
@@ -18,12 +40,12 @@ typedef struct FileTask
     int retry;
 } FileTask;
 
-void InitFileRequestTask_8003C128(int* entry, FileTask* task);
+void InitFileRequestTask_8003C128(EventEntry* entry, FileTask* task);
 
 unsigned int DistanceSquaredXZ_8003B860(int* a, int* b);
 int DistanceSquared3D_8003B80C(int* a, int* b);
 void RemoveFileRequest_8003BF18(FileRequest* req);
-void ProcessFileRequests_8003C184(int* entry, FileTask* task);
+void ProcessFileRequests_8003C184(EventEntry* entry, FileTask* task);
 int QueueFileRequest_8003BC84(FileRequestDesc* req);
 int SetCdXaLock_8003C0A4(int lock);
 int GetCapturedMinionsFromBitfield_8003BA58(int bits);

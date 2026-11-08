@@ -34,7 +34,7 @@ typedef struct ModelList ModelList;
 
 typedef struct EventNode
 {
-    int prev_0; // the previous node
+    struct EventNode* prev_0;
     struct EventNode* next;
     int index_8; // index in the list
     int count;
@@ -306,7 +306,6 @@ extern unsigned short accessoryPrices_8007D914[0x11];
 extern unsigned int xaRequestPending_80096118;
 extern int battleMusic_80091CFC;
 extern int battleStageId_80083BD0;
-extern int fileRequestQueue_80086540;
 extern void* fileBuffer_8008656C;
 extern int sealResultFlags_80079320[];
 extern MinionBaseStats minionBaseStats_8007A4B4[];
@@ -352,7 +351,7 @@ typedef struct
 typedef struct FileRequest
 {
     struct FileRequest* next; // the older neighbour (toward the queue head that is processed first)
-    int newer_4;              // FileRequest*: the newer neighbour, processed after this one
+    struct FileRequest* newer_4; // the newer neighbour, processed after this one
     int key;
     unsigned int flags_C; // 0x100 / 0x1000: GetFileRequestStatus returns 2 / 3
     int fileId_10;        // DATA.001 file id
@@ -383,7 +382,6 @@ extern short equipmentIcons_8007D938[];
 extern int areaReload_80082670;
 extern int areaPreloading_80082678;
 extern short areaPreload_80091C40[];
-extern FileRequest* fileRequestTail_8008654C;
 extern SPRT* uiTiySprts_8008D620;        // the UI TIY (OnUiTiyLoaded_8002BFCC)
 extern DR_TPAGE* uiTiyTPages_8008D3F4;
 extern int uiTiyLoaded_8008B4E8;

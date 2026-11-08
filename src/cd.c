@@ -438,10 +438,11 @@ void InitFileRequestQueue_8003BBE4(void)
 {
     int freeId = 0x10000;
     int i;
-    fileRequestQueue_80086540 = 0;
-    ((int*)&fileRequestQueue_80086540)[1] = 0;
-    ((int*)&fileRequestQueue_80086540)[2] = 0;
-    ((int*)&fileRequestQueue_80086540)[3] = 0;
+    FileRequestQueue* queue = FILE_REQUEST_QUEUE;
+    queue->count = 0;
+    queue->nextkey = 0;
+    queue->first = 0;
+    queue->last = 0;
     for (i = 0x13; i >= 0; i--)
     {
         fileRequests_80095C90[i].fileId_10 = freeId;
@@ -465,16 +466,9 @@ int FindFreeFileRequest_8003BC44(void)
     }
     return -1;
 }
-typedef struct
-{
-    int count;
-    int nextkey;
-    FileRequest* first;
-    FileRequest* last;
-} FileRequestQueue;
 int QueueFileRequest_8003BC84(FileRequestDesc* req)
 {
-    FileRequestQueue* head = (FileRequestQueue*)&fileRequestQueue_80086540;
+    FileRequestQueue* head = FILE_REQUEST_QUEUE;
     int i = FindFreeFileRequest_8003BC44();
     FileRequest* node = (FileRequest*)&fileRequests_80095C90[i];
     FileRequest* prev;
@@ -512,13 +506,13 @@ int QueueFileRequest_8003BC84(FileRequestDesc* req)
                 after = prev->next;
             } while (after->flags_C & 0x10);
             node->next = after;
-            node->newer_4 = (int)prev;
+            node->newer_4 = prev;
             prev->next = node;
         }
         else
         {
             node->next = prev;
-            (head->last)->newer_4 = (int)node;
+            (head->last)->newer_4 = node;
         }
     }
     head->last = node;
@@ -571,10 +565,10 @@ FileRequest* FindFileRequest_8003BED4(int key)
 void RemoveFileRequest_8003BF18(FileRequest* req)
 {
     // req->next (offset 0) is the previous node, req->newer_4 the next one
-    FileRequestQueue* list = (FileRequestQueue*)&fileRequestQueue_80086540;
+    FileRequestQueue* list = FILE_REQUEST_QUEUE;
     if (req->next == 0)
     {
-        list->first = (FileRequest*)req->newer_4;
+        list->first = req->newer_4;
     }
     else
     {
@@ -586,7 +580,7 @@ void RemoveFileRequest_8003BF18(FileRequest* req)
     }
     else
     {
-        ((FileRequest*)req->newer_4)->next = req->next;
+        req->newer_4->next = req->next;
     }
     req->fileId_10 = 0x10000;
     list->count--;
@@ -662,7 +656,7 @@ int SetCdXaLock_8003C0A4(int lock)
     }
     return 0;
 }
-void InitFileRequestTask_8003C128(int* entry, FileTask* task)
+void InitFileRequestTask_8003C128(EventEntry* entry, FileTask* task)
 {
     InitFileRequestQueue_8003BBE4();
     fileBuffer_8008656C = PSX_RAM(HEAP_END);
@@ -670,10 +664,9 @@ void InitFileRequestTask_8003C128(int* entry, FileTask* task)
     task->state = 0;
     task->buf = 0;
     task->retry = 0;
-    entry[2] = (int)ProcessFileRequests_8003C184;
+    entry->cb_8 = (EventEntryFn)ProcessFileRequests_8003C184;
 }
-extern FileRequest* fileRequestHead_80086548;
-void ProcessFileRequests_8003C184(int* entry, FileTask* task)
+void ProcessFileRequests_8003C184(EventEntry* entry, FileTask* task)
 {
     int loop;
     FileRequest* req;
@@ -851,7 +844,7 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
             }
             task->state = 10;
         case 10:
-            req = (FileRequest*)task->cur->newer_4;
+            req = task->cur->newer_4;
             if ((req == 0 || !(req->flags_C & 4)) && task->retry != 0)
             {
                 loop = 0;
@@ -861,7 +854,7 @@ void ProcessFileRequests_8003C184(int* entry, FileTask* task)
                 break;
             }
             req = task->cur;
-            task->cur = (FileRequest*)req->newer_4;
+            task->cur = req->newer_4;
             RemoveFileRequest_8003BF18(req);
             task->state = 0;
             break;
@@ -877,7 +870,11 @@ void AssertFileRequestQueueEmpty_8003C684(void)
     }
 }
 
+#ifdef __psyz
+FileRequestQueue fileRequestQueue;
+#else
 int fileRequestQueue_80086540 = 0;
 int fileRequestNextKey_80086544 = 0;
-FileRequest *fileRequestHead_80086548 = 0;
-FileRequest *fileRequestTail_8008654C = 0;
+FileRequest* fileRequestHead_80086548 = 0;
+FileRequest* fileRequestTail_8008654C = 0;
+#endif

@@ -422,7 +422,7 @@ EventNode* CreateEventList_800435B4(EventDesc** list)
     prev = NULL;
     node = head;
     next = head + 1;
-    head->prev_0 = (int)prev;
+    head->prev_0 = prev;
     next2 = next;
     head->next = next;
     next2++;
@@ -444,11 +444,11 @@ EventNode* CreateEventList_800435B4(EventDesc** list)
         }
         if (desc->size != 0)
         {
-            buf = malloc3_dbg(desc->size * desc->count, aDWorkPsusEvent, 0xF1);
+            buf = malloc3_dbg(TASK_BUFFER_SIZE(desc->size) * desc->count, aDWorkPsusEvent, 0xF1);
         }
         for (i = 0; i < desc->count; i++)
         {
-            node->prev_0 = (int)prev;
+            node->prev_0 = prev;
             node->next = next;
             node->entry.size = 0;
             node->entry.buffer = NULL;
@@ -461,8 +461,8 @@ EventNode* CreateEventList_800435B4(EventDesc** list)
             if (desc->size != 0)
             {
                 node->entry.buffer = buf;
-                node->entry.size = desc->size;
-                buf += desc->size;
+                node->entry.size = TASK_BUFFER_SIZE(desc->size);
+                buf += TASK_BUFFER_SIZE(desc->size);
             }
             node->entry.cb_8 = desc->cb_8;
             node->entry.cb_C = desc->cb_C;
@@ -480,27 +480,27 @@ EventNode* CreateEventList_800435B4(EventDesc** list)
     last->next = NULL;
     return head;
 }
-void* EventEntryAllocBuffer_800437E8(int* entry, int size)
+void* EventEntryAllocBuffer_800437E8(EventEntry* entry, int size)
 {
     void* buffer = malloc3_dbg(size, aDWorkPsusEvent, 0x2C);
     if (buffer == 0)
     {
         return 0;
     }
-    entry[5] = (int)buffer;
-    entry[4] = size;
+    entry->buffer = buffer;
+    entry->size = size;
     return buffer;
 }
-int EventEntryFreeBuffer_80043840(int* entry)
+int EventEntryFreeBuffer_80043840(EventEntry* entry)
 {
-    if (entry[5])
+    if (entry->buffer)
     {
-        if (entry[1] == 0)
+        if (entry->index_4 == 0)
         {
-            free3_dbg((void*)entry[5], aDWorkPsusEvent, 0x45);
+            free3_dbg(entry->buffer, aDWorkPsusEvent, 0x45);
         }
-        entry[5] = 0;
-        entry[4] = 0;
+        entry->buffer = 0;
+        entry->size = 0;
     }
     return 1;
 }
