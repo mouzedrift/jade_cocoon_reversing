@@ -347,7 +347,7 @@ void LoadModelTexToVram_800A0D64(int vramSlot, int modelId)
     req.size_C = desc->tex_6.size << 11;
     req.dest_10 = 0;
     req.params_14 = &params;
-    req.paramsSize_18 = 0x3C;
+    req.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
     req.callback_1C = OnModelFileLoaded_80025D7C;
     QueueFileRequest_8003BC84(&req);
 }

@@ -9,7 +9,7 @@ const char aColiC_800B6D2C[8] = "COLI.C\000$";
 
 // FindLevantMesh_800B80C8 is inlined; the edge points are written through `(edgePts + i * 2)->` so the address is
 // expanded as an address sum (index term first), as in the original.
-int CollideLevantWithMap_800B6DD4(EvEntity* ent)
+int CollideLevantWithMap_800B6DD4(GameLevantActor* ent)
 {
     EvSVec edgePts[4];
     int normal[4];
@@ -103,7 +103,7 @@ int CollideWithMap_800B716C(EvVec* pos, int* prevPos, SVECTOR* rot)
         }
         SlideOffEdge_800B8220((int*)pos, (int)prevPos, (int)mapState_8008B500.mesh_28, &edgeTri, &edge, normal);
         verts = mapState_8008B500.mesh_28->tris_4[edgeTri].v_0;
-        pt = (EvSVec*)(i * 16 + (int)edgePts); // &edgePts[i * 2]; that form allocates registers differently
+        pt = (EvSVec*)(i * 16 + (long)edgePts); // &edgePts[i * 2]; that form allocates registers differently
         pt->x_0 = verts[edge % 3].x_0;
         pt->y_2 = verts[edge % 3].y_2;
         pt->z_4 = verts[edge % 3].z_4;
@@ -423,7 +423,7 @@ int FindDuplicatePoint_800B8028(int* out, EvSVec* pts)
     return 0;
 }
 
-int FindLevantMesh_800B80C8(EvEntity* ent)
+int FindLevantMesh_800B80C8(GameLevantActor* ent)
 {
     unsigned int i;
     unsigned int mesh = ent->mesh_84;

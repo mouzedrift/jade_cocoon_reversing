@@ -434,7 +434,7 @@ void ListInit_8003FDB0(List* list)
 }
 void* ListAlloc_8003FDC0(List* list, int size)
 {
-    ListNode* node = malloc3_8003FC4C(size + 8);
+    ListNode* node = malloc3_8003FC4C(size + sizeof(ListNode));
     node->prev = 0;
     node->next = 0;
     if (list->count == 0)
@@ -518,10 +518,10 @@ void* PoolAlloc_8003FFD0(Pool* pool, unsigned int size)
     size = (size & 3) ? size + align - (size & 3) : size;
     if (!(pool->size - pool->used < size))
     {
-        block = PoolFindFreeSpace_80040150(pool, size + 0x10);
+        block = PoolFindFreeSpace_80040150(pool, size + sizeof(PoolBlock));
     }
     block->magic = 0x8FFFFFFF;
-    block->size = size + 0x10;
+    block->size = size + sizeof(PoolBlock);
     block->next = 0;
     block->prev = 0;
     if (pool->count == 0)

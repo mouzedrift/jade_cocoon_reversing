@@ -371,7 +371,7 @@ typedef struct ModelLoadParams
     ModelAnimSetSection* animSet_30;
     int* ftg2_34;
     unsigned char* extra_38;
-    int pad_3C;
+    int pad_3C; // not copied with the file request (paramsSize_18)
 } ModelLoadParams;
 
 // model header section (Model.header_4C, copied by LoadModelHeader_80026014)

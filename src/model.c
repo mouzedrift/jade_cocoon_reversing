@@ -1192,7 +1192,7 @@ void LoadEffectFile_80020DDC(int fileId, EffectFile* out, short* tpagePos, short
     req.size_C = 0;
     req.dest_10 = 0;
     req.params_14 = &arg;
-    req.paramsSize_18 = 0x14;
+    req.paramsSize_18 = sizeof(arg);
     req.callback_1C = OnEffectFileLoaded_80020F5C;
     out->request_0 = StartFileRequestTask_8003C6C8(&req);
 }

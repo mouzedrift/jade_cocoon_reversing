@@ -15,7 +15,7 @@
 extern int mapHasCode_8008266C;
 extern int dword_80091C5C;
 extern int dword_80091C8C;
-extern void (*mapCallback_80091CB4)(int);
+extern int mapCallback_80091CB4;
 extern int mapJustLoaded_80082668;
 void OnRoomDataLoaded_80028C60(int req, char* data)
 {
@@ -49,7 +49,7 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     SetCurrentArea_800272BC(mapState_8008B500.id_0, saveData_8008B570.mapId_2E4[3].cur_0);
     if (mapJustLoaded_80082668 && mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
     {
-        mapCallback_80091CB4(1);
+        MAP_CODE_CALL(mapCallback_80091CB4, 1);
     }
 }
 extern short screenOffset_8008D474[2];

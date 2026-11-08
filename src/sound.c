@@ -208,7 +208,7 @@ int PlayMusic_800300E0(int idx, int unused)
     req.offset_8 = 0;
     req.size_C = 0;
     req.dest_10 = 0;
-    req.paramsSize_18 = 4;
+    req.paramsSize_18 = sizeof(task->bgm_4);
     req.callback_1C = LoadSoundFromBuffer_800307B4;
     task->request_10 = QueueFileRequest_8003BC84(&req);
     sub = soundFiles_80082F0C[idx].subSound_6;
@@ -222,7 +222,7 @@ int PlayMusic_800300E0(int idx, int unused)
         req.size_C = 0;
         req.dest_10 = 0;
         req.params_14 = &task->sfx_8;
-        req.paramsSize_18 = 4;
+        req.paramsSize_18 = sizeof(task->sfx_8);
         req.callback_1C = LoadSoundFromBuffer_800307B4;
         task->request_14 = QueueFileRequest_8003BC84(&req);
     }
@@ -243,7 +243,7 @@ int LoadSeqSlotSound_800303E8(void)
     req.flags_0 = 0x2C;
     req.fileId_4 = 0x301;
     req.params_14 = &task->seqSlot_C;
-    req.paramsSize_18 = 4;
+    req.paramsSize_18 = sizeof(task->seqSlot_C);
     req.offset_8 = 0;
     req.size_C = 0;
     req.dest_10 = 0;

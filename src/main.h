@@ -113,7 +113,13 @@ extern int unused_80091D1C;
 extern int unused_80091D3C;
 extern int unused_80091D5C;
 extern int unused_800954A4;
-extern unsigned char fileRequestParams_800954C0[][0x64];
+/* a copy of each file request's parameters (FileRequestDesc.params_14), up to FILE_REQUEST_PARAMS bytes */
+#ifdef __psyz
+#define FILE_REQUEST_PARAMS 0xC8
+#else
+#define FILE_REQUEST_PARAMS 0x64
+#endif
+extern unsigned char fileRequestParams_800954C0[][FILE_REQUEST_PARAMS];
 extern short unused_80096034;
 extern short unused_80096036;
 extern int textNumberArgs_80096038[];

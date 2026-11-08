@@ -20,6 +20,15 @@ void* Pc_PsxPtr(unsigned int addr);
 #define PSX_PTR(addr) ((void*)(addr))
 #endif
 
+/* a call of the code a map file brings along (loaded to 0x800B22C0), by the address the game's tables hold; on PC
+   that code is not there yet (src/pc/mapcode.c) */
+#ifdef __psyz
+int Pc_MapCodeCall(unsigned int addr, int arg);
+#define MAP_CODE_CALL(addr, arg) Pc_MapCodeCall((unsigned int)(addr), (arg))
+#else
+#define MAP_CODE_CALL(addr, arg) ((int (*)(int))(addr))(arg)
+#endif
+
 #define HEAP_END 0x801B9250 /* the heap runs from heapStart_800CD858 up to here, the buffers follow */
 #ifdef __psyz
 #define heapStart_800CD858 ((char*)PSX_RAM(0x800CD858))

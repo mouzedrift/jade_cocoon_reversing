@@ -31,9 +31,9 @@
 #include "party.h"
 #include "effect_data.h"
 #include "battle_damage.h"
+#include "levant_actor.h"
 
 extern void RequestGameMode_800A6D30(int mode);
-
 
 // AI of an enemy actor (CreateEnemyAiEvent_800A2D90; the enemyAiBySpecies_800ADEB8 state handlers)
 typedef struct GameAi
@@ -104,15 +104,9 @@ extern short defaultBones_80079140[]; // default bone table
 extern GameEnemy* GetEventEnemy_800A5F6C(void);
 extern GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* ai);
 
-
-
 extern void FreeEnemyAi_800A2D28(GameAi* ai);
 
 extern void SuspendEnemyAi_800A2EC8(GameAi* ai);
-
-
-
-
 
 // context of an event script (list eventScripts_8008D410); same layout as EvScriptCtx in eventfnc.h
 typedef struct GameEvCtx
@@ -176,23 +170,13 @@ extern EventEntry* StartEventScript_800A59D0(int script);
 
 extern int FindTriAtXZ_800B76B8(char* p, int* pos);
 
-
-
-
 extern void ResumeEnemyAi_800A2D48(GameAi* ai);
 
 extern int AssertEnemyIndex_800A2CA8(int idx, int noExit);
 
-
-
 extern void ResetEncounter_800A170C(void);
 
-
 extern Actor* GetFieldMinionActor_800A7A60(int idx);
-
-
-
-
 
 // model header of a party member (first word: model id)
 typedef struct GameModelHdr
@@ -241,29 +225,16 @@ typedef struct GameFieldMinions
     int hidden[4];    // SuspendFieldMinions_800A7B00 paused and hid it
 } GameFieldMinions;
 
-
-
 extern GameMember* GetFieldMinion_800A77F4(int idx);
 extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx);
 
-
-
-
-
-
-
-
-
 extern EventNode* gameMainTask_8008D46C;
-
 
 // a map location (saveData_8008B570.mapId_2E4[0..2]; FindMapEntrance_800ADCEC)
 typedef struct GameMapLoc
 {
     unsigned short area, map, entrance; // mapTable_800B0608[area][map][entrance]
 } GameMapLoc;
-
-
 
 extern void FindMapEntrance_800ADCEC();
 
@@ -283,7 +254,6 @@ typedef struct GameTask
     void (*next_8)();
 } GameTask;
 
-
 // a menu request handed to the sub overlay once it is loaded (shopRequest_800B06B0 / saveRequest_800B06BC)
 typedef struct GameMenuRequest
 {
@@ -293,12 +263,7 @@ typedef struct GameMenuRequest
     int endOfGame_C; // save menu: LoadMenuSetEndOfGame_800B78D0
 } GameMenuRequest;
 
-
-
-
-
 extern int FindInLists_800A52EC(short** tab, int count, int key);
-
 
 extern void WaitChapterOverlay_800A76D8();
 
@@ -307,9 +272,6 @@ extern void SetLoadMenuSavePlace_800B78B8(int a);
 extern void LoadMenuSetEndOfGame_800B78D0();
 
 extern int GetFieldMinionCount_800A7790(void);
-
-
-
 
 typedef struct GameEncounter
 {
@@ -348,7 +310,6 @@ typedef struct GameEnemyResult
     short kind_A;    // the command that ended it (7: none)
 } GameEnemyResult;
 
-
 // the walls an event toggles (SetWallsEnabled_800A6564)
 typedef struct GameWallPair
 {
@@ -364,21 +325,15 @@ typedef struct GameBattleWork
     EventEntry* battleTask_8; // StartBattle_800BA9E4 / StartBattleResult_800BBB94
 } GameBattleWork;
 
-
 extern void ReflectPoint_800A47B8(Vec3i* center, Vec3i* point, Vec3i* out);
 
 extern void WaitMapOverlay_800A7654();
 
 extern void EncounterWatchTask_800A1314();
 
-
-
-
 extern void SetLevantWallEnabled_800A6534(int wall, int on);
 
 extern void SetActorWallEnabled_800A654C(int wall, int on);
-
-
 
 // fieldModeHandlers_800B0EB8 (FieldModeTask_800A7720)
 typedef struct GameFieldModeHandler
@@ -387,17 +342,13 @@ typedef struct GameFieldModeHandler
     void (*fn)();
 } GameFieldModeHandler;
 
-
-
 extern void EvCmdEndScene_800B8A34(GameEvCtx* q);
 
 extern void ChooseEnemyCommand_800C4118(void* a, void* b, int c, int d);
 
-
 extern EventEntry* StartBattle_800BA9E4(void);
 
 extern void BattleEnd_800BA254();
-
 
 extern void SuspendFieldMinions_800A7B00(int idx);
 
@@ -407,12 +358,9 @@ extern void SuspendEnemySlot_800A188C(GameEnemySlot* slot);
 
 extern void ResumeEnemySlot_800A18C8(GameEnemySlot* slot);
 
-
-
 extern int dword_800B199C[];
 
 extern short sinTable_80084540[];
-
 
 typedef struct GameObjList_1
 {
@@ -444,8 +392,6 @@ extern void StartShopCtrl_800B66C4(int a);
 
 extern void* GetEventDataSlot_800A55B0(int kind); // one of the loaded event data blocks (what each holds depends on a)
 
-
-
 extern void WaitMapReloadAfterBattle_800A15FC();
 
 extern void EncounterFadeInWait_800A167C();
@@ -457,8 +403,6 @@ typedef struct GameV6_1
     int a, b, c, d, e, f;
 } GameV6_1;
 
-
-
 extern void EnterLevantBattleMode_800A895C();
 
 extern void SetupEncounter_800A1BD0();
@@ -467,13 +411,7 @@ extern void SuspendOtherEnemies_800A1E98();
 
 extern void FreeLevantAnimSet_800AC73C();
 
-
-
-
-
 extern void WaitBattleOverlay_800A1474();
-
-
 
 extern unsigned short* sub_800B322C();
 
@@ -563,17 +501,9 @@ extern void ChapterStartTask_800B66DC();
 
 extern EventEntry* StartBattleResult_800BBB94(void); /* MENU: the battle result screen */
 
-
 extern void GameMainStart_800A6968();
 
-
-
-
-
 extern void EnableCameraPoints_800A094C(void);
-
-
-
 
 extern void InitLevantControl_800A8140(void);
 
@@ -594,8 +524,6 @@ typedef struct GameStartMode
 
 extern GameStartMode* GetGameStartMode_800A72C8(GameStartMode* out);
 
-
-
 extern void ClearEncounterGroupFlags_800A4940(int group, int encIndex);
 
 extern void ResetEventCtx_800A5B54(GameEvCtx* ctx);
@@ -603,7 +531,6 @@ extern void ResetEventCtx_800A5B54(GameEvCtx* ctx);
 extern void RunEventScript_800A6060();
 
 extern void EndEventScript_800A6168();
-
 
 extern void TileAnimTask_800A0A04();
 
@@ -634,10 +561,7 @@ typedef struct GameTaskListDef
     int modes_4; // bit n: exit the list when switching to mode n (SwitchGameMode_800A6C00); 0x1000: run once when the mode starts
 } GameTaskListDef;
 
-
-
 extern void GameMainExit_800A6CCC();
-
 
 extern void SwitchGameMode_800A6C00();
 
@@ -653,17 +577,13 @@ extern void StartEncounterBattle_800A13B8();
 
 extern int CheckEnemyContact_800A19E4();
 
-
 extern EventNode* enemyAiTasks_8008D49C;
 
-
 extern void EnemyAiNone_800A2EE4(EventEntry* e, void* ai);
-
 
 extern int ApplySporeToEnemyAi_800A4278();
 
 extern void SetEnemyAiState_800A433C();
-
 
 extern int GetLevantMoveCmd_800AB39C();
 
@@ -673,20 +593,9 @@ extern void EnemyAiFleeTurnStep_800A44C0();
 
 extern int* sub_800B3198(void);
 
-
 extern int encounterVariantToggle_8008B554;
 
 #define ELEM(x) ((short)((int (*)(int))GetMinionElement_80019BF0)(x))
-
-
-
-
-
-
-
-
-
-
 
 extern int (*eventFuncs_800BCDBC[])(GameEvCtx*);
 
@@ -719,8 +628,6 @@ extern GameVramXY fieldModelClutPos_8007DCA8;
 extern GameVramXY combatPortraitImagePos_8007DCAC[];
 
 extern GameVramXY combatPortraitClutPos_8007DCBC[];
-
-
 
 // the work area of the GAME main task (GameMainInit_800A68CC); its entry.buffer
 typedef struct GameMainWork
@@ -756,24 +663,13 @@ extern EventNode* fieldMenuTask_8008D498;
 extern EventNode* loadMenuTask_8008D480;
 extern EventNode* nameEntryTask_8008D484;
 
-
-
-
 extern void WaitSubOverlayLoad_800A70F8();
 
 extern void StartShopRequest_800A7204();
 
 extern void StartSaveMenuRequest_800A7280();
 
-
-
-
-
 extern void CheckSubOverlayRequests_800A6DAC();
-
-
-
-
 
 /* ---- GAME second half (G2) ---- */
 
@@ -821,7 +717,7 @@ extern void SetLevantMapCollision_800ABC34(int collide);
 
 typedef struct GameLevantCtlNode
 {
-    char pad_0[0x24];
+    char pad_0[offsetof(EventNode, entry.buffer)]; // the EventNode up to entry.buffer
     GameLevantCtl* buffer_24; // EventNode.entry.buffer
 } GameLevantCtlNode;
 
@@ -831,13 +727,6 @@ typedef struct GameLevantFade
     char pad_4[0x2C];
     int fade_30;
 } GameLevantFade;
-
-typedef struct G2V12
-{
-    int a;
-    int b;
-    int c;
-} G2V12;
 
 typedef struct G2PathStep
 {
@@ -854,75 +743,12 @@ typedef struct G2Path
     G2PathStep* steps_8;
 } G2Path;
 
-// Levant's controller object (gameTask_8008B4A4->buffer_24); the field reads disagree on signedness at 0x10/0x14
-// (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
-typedef struct GameLevantActor
-{
-    // 1: acting, 2: fading out, 4: fading in, 8: animation changed this frame, 0x10: blending from prevAnim_1E,
-    // 0x20: continue (ContinueLevantAnim_800AB1A4), 0x100: in battle (field position saved in basePos_60),
-    // 0x200: the action plays an effect, 0x400: defending, 0x800: loop between the loop frames, 0x1000: victory
-    // pose, 0x2000: action finished, 0x4000: battle stance, 0x8000: the loop wrapped, 0x20000: hidden,
-    // 0x40000: no map collision, 0x80000: root motion from basePos_60, 0x200000: turning on the spot,
-    // 0x400000: walking path_78, 0x800000: skip the script animation, 0x1000000: capture of the last enemy
-    unsigned int flags_0;
-    int moveCmd_4; // input bits
-    int action_8;  // step of the mode_C state machine (0 / 1: idle animations)
-    int mode_C;    // 0 field, 1 battle action, 2 script animation, 3 queued animation
-    int frame_10; // animation frame
-    int blendFrame_14; // blend animation frame
-    unsigned short frameStep_18;
-    unsigned short frameFrac_1A;
-    short anim_1C;
-    short prevAnim_1E;
-    short actionAnim_20;
-    unsigned short queuedAnim_22;
-    short nextAnim_24;
-    short blend_26;
-    short idleTimer_28;
-    short hitRepeat_2A;
-    int effect_2C;
-    int fade_30;
-    int arg_34;
-    int targets_38;
-    int status_3C;
-    Model* model_40;
-    char pad_44[4];
-    G2V12 pos_48;
-    G2V12 savedPos_54;
-    G2V12 basePos_60;
-    G2V12 rootMotion_6C; // root motion of the current animation frame (SetLevantRootMotion_800AA140)
-    struct G2Path* path_78; // scripted walk (flag 0x400000, SetLevantPath_800ABAA4)
-    int pathStep_7C;    // step of path_78
-    int tri_80; // floor triangle under Levant (mapState_8008B500.meshes_C[mesh_84].tris_4)
-    int mesh_84;
-    char pad_88[8];
-    MATRIX mats_90[40];
-    int bonePos_590[40][3];
-    FirFilter turn_770;  // input_8: turn speed; output_C.low is added to Levant's facing
-    int turnBuf_780[4];
-} GameLevantActor;
-
-typedef struct GameLevantActorNode
-{
-    char pad_0[0x24];
-    GameLevantActor* buffer_24; // EventNode.entry.buffer
-} GameLevantActorNode;
-
 extern GameLevantCtlNode* levantControlTask_8008B4CC;
 extern EventNode* encounterWatchTask_8008B4D0;
 
 extern GameLevantActorNode* gameTask_8008B4A4;
 
-
-
-
-
-
-
-
-
 extern void SetLevantHasArmor_800AC380(int has);
-
 
 extern ModelList* gameModelList_8007DC60; // the GAME overlay's model list
 
@@ -961,8 +787,6 @@ extern void EndLevantPath_800ABAD4();
 
 extern void ExitLevantActorBattle_800AB444();
 
-
-
 // a window's screen rectangle (PlaceWindowAwayFromQuadrant_800A88E0)
 typedef struct GameWinRect
 {
@@ -972,20 +796,11 @@ typedef struct GameWinRect
     unsigned short h_6;
 } GameWinRect;
 
-
-
-
 extern InvSlot* FindInventorySlotForAdd_800AD4D8();
 
 extern int GetEmptyCocoons_800AD8E4();
 
-
-
-
 extern int GetFieldMinionCount_800A7790();
-
-
-
 
 extern void SetLevantRootMotionMode_800ABC78();
 
@@ -999,11 +814,7 @@ extern void UpdateLevantQueuedAnim_800AC02C();
 
 extern int CanAddInventoryCount_800AD670(int have, int count);
 
-
-
 extern void LevantModelTask_800ACB64();
-
-
 
 // a map entrance (mapTable_800B0608[area][map][n], ends with id -1)
 typedef struct GameMapEntrance
@@ -1015,16 +826,7 @@ typedef struct GameMapEntrance
     char pad_8[8];
 } GameMapEntrance;
 
-
-
-
-
-
-
 extern int GetWeaponEffect_800189F8();
-
-
-
 
 extern G2V12 statusTintLevel1_8007A0A4;
 
@@ -1062,35 +864,21 @@ extern G2V12 statusTintPoisonLevel7_8007A14C;
 extern G2V12 statusTint_8007A164;
 #endif
 
-
-
 #ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
 #define levantStatusBits_8008BD38 (*(unsigned int*)&saveData_8008B570.levantStatus_7C8)
 #else
 extern unsigned int levantStatusBits_8008BD38;
 #endif
 
-
-
-
 extern int IsFieldMinionVisible_800A79C8(int idx);
 
 extern int* GetFieldMinionPos_800A7940(int idx);
 
-
-
 extern int GetGameMode_800A6D50(int which);
-
 
 extern int eventDispatchHalt_8008B540;
 
 extern void ResetLevantActor_800A9414(void* buf, int action, int anim);
-
-
-
-
-
-
 
 extern int GetLevantAnimSet_800AC474(int anim);
 
@@ -1117,7 +905,6 @@ extern unsigned char* GetLevantAnimSetTable_800AC7B4(int set);
 extern int TestValuableFlag_800AD73C(int valuable);
 
 extern int CountCocoonsAndMinions_800AD8BC();
-
 
 extern short cameraTargetScreenPos_8008D668[2];
 
@@ -1153,10 +940,8 @@ typedef struct GameLevantBattleAction
     int anim_4;
 } GameLevantBattleAction;
 
-
 extern GameLevantBattleAction levantBattleActions_800B1084[28];
 extern int levantModelIds_800B1164[2];
-
 
 // an actor command (eventfnc.h EvActorCmdEventfnc): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held
 // animation, 5 play animation data, 6 visible, 7 ground move, 8 root motion, 9..11 play a motion
@@ -1194,8 +979,6 @@ typedef struct GameLevantActorInit
     int status_3C;
 } GameLevantActorInit;
 
-extern void FindLevantMesh_800B80C8(void* p);
-
 // skeleton draw arguments (skel_draw.h AnimSkel)
 typedef struct GameSkelDraw
 {
@@ -1212,9 +995,6 @@ typedef struct GameSkelDraw
     OT_TYPE* ot;
 } GameSkelDraw;
 
-
-
-
 #ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
 #define tintImageRectY_8007DC82 (((short*)&tintImageRect_8007DC80)[1])
 #else
@@ -1226,7 +1006,6 @@ extern short tintImageRectY_8007DC82;
 #else
 extern short tintClutRectY_8007DC8A;
 #endif
-
 
 extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
 
@@ -1736,7 +1515,7 @@ void UpdateLevantActionState_800AAF58(GameLevantActor* lev);
 void UpdateLevantActorModel_800AB8DC();
 void UpdateLevantTurn_800A99DC(GameLevantActor* lev);
 void UpdateLevantMove_800A9A9C(GameLevantActor* lev);
-int CollideLevantWithMap_800B6DD4(); /* EVENTFNC */
+
 int PlayActorEffect_800184DC(struct ActorEffectReq* req, int slot);
 
 /* left undeclared on purpose: these return short/u_char, but their callers in game_3.c see them as int (implicit

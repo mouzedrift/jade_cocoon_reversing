@@ -11,6 +11,21 @@
         return 0;                                                                                                     \
     }
 
+/* a call by address (MAP_CODE_CALL): reported once per address */
+int Pc_MapCodeCall(unsigned int addr, int arg)
+{
+    static unsigned int reported[64];
+    int i;
+    for (i = 0; i < 64 && reported[i] && reported[i] != addr; i++)
+        ;
+    if (i < 64 && !reported[i])
+    {
+        reported[i] = addr;
+        WARNF("map code %08X(%d) is not decompiled yet", addr, arg);
+    }
+    return 0;
+}
+
 MAP_CODE_STUB(sub_800B2B40)
 MAP_CODE_STUB(sub_800B3198)
 MAP_CODE_STUB(sub_800B322C)

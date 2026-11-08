@@ -1302,7 +1302,7 @@ void GetSavedModelFtg_8002512C(unsigned int* out, Model* model, int id)
     int i;
     for (i = 0; i < model->savedCount_40; i++)
     {
-        ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)model->saved_64); // integer sum: the original adds the base second
+        ModelSavedFtg* e = (ModelSavedFtg*)(i * sizeof(ModelSavedFtg) + (long)model->saved_64); // integer sum: the original adds the base second
         if (id == e->id_0)
         {
             MemCopy_800403E8(out, &e->ftg_4, 0x54);
@@ -1382,7 +1382,7 @@ int LoadModel_80025200(ModelList* list, int id, int texSel, int animMode, int fl
         req.size_C = size;
         req.dest_10 = 0;
         req.params_14 = &params;
-        req.paramsSize_18 = 0x3C;
+        req.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
         req.callback_1C = OnModelFileLoaded_80025D7C;
         AddFileRequest_80025D00(model, &req);
         if (separateHeader != 0)
@@ -1404,7 +1404,7 @@ int LoadModel_80025200(ModelList* list, int id, int texSel, int animMode, int fl
             req.offset_8 = desc->header_2.offset;
             req.size_C = desc->header_2.size;
             req.params_14 = &params;
-            req.paramsSize_18 = 0x3C;
+            req.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
             req.dest_10 = 0;
             req.callback_1C = OnModelFileLoaded_80025D7C;
             AddFileRequest_80025D00(model, &req);
@@ -1431,7 +1431,7 @@ int LoadModelAnim_80025440(Model* model, int idx, int flag)
         k = idx * 2 + 10;
         entry = e[9];
         entry += k;
-        sectors = (unsigned short*)(entry * 2 + (int)e);
+        sectors = (unsigned short*)(entry * 2 + (long)e);
         offset = sectors[0];
         size = sectors[1];
         *f = 1;
@@ -1454,7 +1454,7 @@ int LoadModelAnim_80025440(Model* model, int idx, int flag)
         c.size_C = size;
         c.dest_10 = 0;
         c.params_14 = &b;
-        c.paramsSize_18 = 0x3C;
+        c.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
         c.callback_1C = OnModelFileLoaded_80025D7C;
         AddFileRequest_80025D00(model, &c);
         return 1;
@@ -1492,7 +1492,7 @@ int LoadModelListTextures_800255F0(ModelList* list, int id, int sel)
     req.size_C = desc->tex_6.size;
     req.dest_10 = 0;
     req.params_14 = &params;
-    req.paramsSize_18 = 0x3C;
+    req.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
     req.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00(model, &req);
     return 1;
@@ -1514,7 +1514,7 @@ int LoadAllModelAnims_800256B8(ModelList* list, int id)
     req.size_C = desc->anims_E.size;
     req.dest_10 = 0;
     req.params_14 = &params;
-    req.paramsSize_18 = 0x3C;
+    req.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
     req.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00(model, &req);
     return 1;
@@ -1550,7 +1550,7 @@ int LoadModelAnimSet_80025780(Model* model, int idx, int flag)
     req.size_C = size;
     req.dest_10 = 0;
     req.params_14 = &params;
-    req.paramsSize_18 = 0x3C;
+    req.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
     req.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00(model, &req);
     return 1;
@@ -1629,7 +1629,7 @@ int LoadModelAltFtgs_80025974(Model* model, int idx, int flag)
     req.size_C = size;
     req.dest_10 = 0;
     req.params_14 = &params;
-    req.paramsSize_18 = 0x3C;
+    req.paramsSize_18 = offsetof(ModelLoadParams, pad_3C);
     req.callback_1C = OnModelFileLoaded_80025D7C;
     AddFileRequest_80025D00(model, &req);
     return 1;
@@ -1676,14 +1676,14 @@ void ApplyModelFtgSwaps_80025C38(Model* model, int flag)
     int i;
     for (i = 0; i < model->savedCount_40; i++)
     {
-        ModelSavedFtg* e = (ModelSavedFtg*)(i * 0x58 + (int)model->saved_64); // integer sum, as above
+        ModelSavedFtg* e = (ModelSavedFtg*)(i * sizeof(ModelSavedFtg) + (long)model->saved_64); // integer sum, as above
         SetModelFtg_80025B5C(model, e->id_0, e->id_0);
     }
     if (flag)
     {
         for (i = 0; i < model->swapCount_43; i++)
         {
-            ModelFtgSwap* swap = (ModelFtgSwap*)(i * 4 + (int)model->swaps_6C);
+            ModelFtgSwap* swap = (ModelFtgSwap*)(i * 4 + (long)model->swaps_6C);
             SetModelFtg_80025B5C(model, swap->dst_0, swap->src_2);
         }
     }
@@ -2611,7 +2611,7 @@ void LoadTileAnimLayers_800278BC(int* data, List* heap)
     tileAnim_8008D648.pairs_18 = ListAlloc_8003FDC0(heap, tileAnim_8008D648.listCount_10 * 4);
     for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
-        timer = (TileAnimTimer*)(i * 4 + (int)tileAnim_8008D648.pairs_18); // integer sum, as the original
+        timer = (TileAnimTimer*)(i * 4 + (long)tileAnim_8008D648.pairs_18); // integer sum, as the original
         timer->frame_2 = 0;
         timer->timer_0 = 0;
     }
@@ -3040,7 +3040,7 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     MemCopy_800403E8(mapAreas_80082674, cur, mapState_8008B500.nMeshes_4 * 12);
     if (mapHasCode_8008266C && dword_80091C5C && dword_80091C8C == 0 && mapCallback_80091CB4)
     {
-        ((void (*)(int))mapCallback_80091CB4)(0);
+        MAP_CODE_CALL(mapCallback_80091CB4, 0);
     }
     if (useSavedLevantPos_80091C98)
     {

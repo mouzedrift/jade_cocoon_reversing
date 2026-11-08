@@ -689,7 +689,7 @@ void DrawIntroMovie_8001AF64(void* descs)
             SetDispMask(0);
         }
         PutDispEnv(&dispEnv_8008D750[bDoubleBuffer_8008D428]);
-        PutDrawEnv((DRAWENV*)(bDoubleBuffer_8008D428 * sizeof(DRAWENV) + (int)e0));
+        PutDrawEnv((DRAWENV*)(bDoubleBuffer_8008D428 * sizeof(DRAWENV) + (long)e0));
         if (unknownFlags_8008D678 & 8)
         {
             DrawOTag(pOT_8008D78C);
@@ -1224,7 +1224,7 @@ void PlayAnimFrameSfx_8001C364(Model* model, int idx, int frame)
     int i;
     for (i = 0; i < anim->cueCount_C; i++)
     {
-        ModelAnimCue* cue = (ModelAnimCue*)(i * sizeof(ModelAnimCue) + (int)anim->cues_10); // integer sum: the original adds the base second
+        ModelAnimCue* cue = (ModelAnimCue*)(i * sizeof(ModelAnimCue) + (long)anim->cues_10); // integer sum: the original adds the base second
         if (frame == cue->frame_0 && cue->kind_2 == 0)
         {
             unsigned int cueIdx = (unsigned short)cue->arg_4;
@@ -1241,7 +1241,7 @@ void PlayAnimFrameSfx_8001C364(Model* model, int idx, int frame)
 }
 void RunAnimFrameCues_8001C440(Model* model, int idx, int frame)
 {
-    ModelAnim* anim = (ModelAnim*)(idx * 28 + (int)model->anims_54); // integer sum: the original adds the base second
+    ModelAnim* anim = (ModelAnim*)(idx * sizeof(ModelAnim) + (long)model->anims_54); // integer sum: the original adds the base second
     ModelAnimCue* cue = anim->cues_10;
     int n = anim->cueCount_C;
     int i;

@@ -12,6 +12,7 @@
 #include "sound.h"
 #include "camera.h"
 #include "model_ftg.h"
+#include "levant_actor.h"
 #include "util.h"
 #include "msgwin.h"
 #include "msg_window.h"
@@ -39,16 +40,15 @@ typedef struct EvInstr
 } EvInstr;
 
 
+// an event entity as the script commands see it (GAME's GameEvEnt)
 typedef struct EvEntity
 {
-    char pad_0[0x48];
-    EvVec pos_48;
-    char pad_54[0x28];
+    char pad_0[0x7C];
     int f7C_7C;
-    int tri_80;
+    int tri_80; // a state EvCmdWaitEntityState_800B9E48 waits for
     int mesh_84;
     int slideTri_88;
-    int slideEdge_8C;
+    int slideEdge_8C; // GetOwnEntityParam_800BBDF4
 } EvEntity;
 
 
@@ -167,7 +167,7 @@ static inline int EvFindTri(int* out, MapState* map, EvVec* pos)
 extern int FindTriAtXZ_800B76B8(MapMesh* mesh, EvVec* pos);
 
 // FindLevantMesh_800B80C8, inlined into CollideLevantWithMap_800B6DD4
-static inline int EvFindLevantMesh(EvEntity* ent)
+static inline int EvFindLevantMesh(GameLevantActor* ent)
 {
     unsigned int i;
     unsigned int mesh = ent->mesh_84;

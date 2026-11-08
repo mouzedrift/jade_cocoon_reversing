@@ -2,6 +2,11 @@
 #define _COMMON_H
 
 #define COUNTOF(x) (sizeof(x) / sizeof(*(x)))
+#ifdef __psyz
+#include <stddef.h>
+#else
+#define offsetof(type, field) ((unsigned long)&((type*)0)->field) /* PSY-Q has no stddef.h */
+#endif
 
 /*
 if this countof version is used then the original code was probably
