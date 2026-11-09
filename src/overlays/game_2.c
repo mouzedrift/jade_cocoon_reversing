@@ -1,5 +1,6 @@
 // GAME.BIN, source file 2 of 3 from 0x800A55B0 (.rdata from 0x800A061C)
 #include "game.h"
+#include "memmap.h"
 
 void* GetEventDataSlot_800A55B0(int kind)
 {
@@ -10,7 +11,11 @@ void* GetEventDataSlot_800A55B0(int kind)
         slot = &eventEffects_800AEB80;
         break;
     case 1:
+#ifdef __psyz
+        slot = pcEventMsgTable;
+#else
         slot = eventReloc_800AEBBC;
+#endif
         break;
     case 2:
         slot = eventTiy_800AEBC0;

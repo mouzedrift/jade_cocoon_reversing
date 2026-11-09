@@ -2399,8 +2399,8 @@ int GetCtxEntityMesh_800BBE18(EvScriptCtx* ctx)
     return -1;
 }
 
-int* FindMsgChoiceList_800BC560(int* p);
-int GetChoiceMask_800BC58C(int* p);
+void** FindMsgChoiceList_800BC560(void** text);
+int GetChoiceMask_800BC58C(void** list);
 int IsActorLeftOf_800BC5C8(int a, int b);
 void SetupItemMsgSlots_800BC6C4(ItemMsgInit* cfg, EvItemMsgSrc* src, int n);
 
@@ -2411,7 +2411,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     ItemMsgInit it;
     EvSpeaker pair;
     EvItemMsgSrc src;
-    int* list;
+    void** list;
     int bc;
     int c0;
     int c4;
@@ -2420,7 +2420,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     int mode;
     EvInstr* pc;
     int posMode;
-    int str;
+    void* str;
     int mask;
     MsgWindowEntry* ret;
     short* pos;
@@ -2453,7 +2453,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     {
         if (pc->c_C == -1)
         {
-            str = GetOwnEntityParam_800BBDF4(ctx);
+            str = PSX_PTR(GetOwnEntityParam_800BBDF4(ctx));
         }
         else
         {
@@ -2466,7 +2466,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         mask = 0;
         mode = 0;
         str = GetEventString_800A6738(pc->c_C);
-        list = FindMsgChoiceList_800BC560((int*)str);
+        list = FindMsgChoiceList_800BC560(str);
         mask = GetChoiceMask_800BC58C(list);
         mask &= ~ctx->choiceMask_114;
     }
@@ -2600,7 +2600,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         it.pos_4 = pos;
         it.field_8 = 0;
         it.mode_48 = 0xB;
-        it.text_4C = (int*)str;
+        it.text_4C = str;
         SetupItemMsgSlots_800BC6C4(&it, 0, 0);
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
@@ -2695,7 +2695,7 @@ int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx)
     return 0;
 }
 
-int* FindMsgChoiceList_800BC560(int* text)
+void** FindMsgChoiceList_800BC560(void** text)
 {
     int zeros = 0;
     do
@@ -2710,7 +2710,7 @@ int* FindMsgChoiceList_800BC560(int* text)
     return text;
 }
 
-int GetChoiceMask_800BC58C(int* list)
+int GetChoiceMask_800BC58C(void** list)
 {
     int mask = 0;
     int i;
@@ -2828,6 +2828,10 @@ void LoadRelocBlob_800BC854(int* src)
     data = src + 1;
     eventReloc_800AEBBC.p_0 = ListAlloc_8003FDC0(&eventHeap_80091C10, size);
     MemCopy_800403E8(eventReloc_800AEBBC.p_0, data, size);
+#ifdef __psyz
+    pcEventMsgTable = Pc_EventMsgTable(eventReloc_800AEBBC.p_0);
+    return;
+#endif
     n = eventReloc_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
     {

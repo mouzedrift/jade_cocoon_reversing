@@ -678,12 +678,12 @@ typedef struct EvMsgWindowCfg
 {
     int posMode_0;
     short* pos_4;
-    int str_8;
+    void* str_8;
     int fC;
     int f10;
     int cancelable_14; // MsgWindowCfg (msgwin.h)
     int mask_18;
-    int* list_1C;
+    void** list_1C;
     EvSpeaker pair_20;
     int style_28;
     int f2C;
@@ -731,7 +731,7 @@ extern void DisableCameraPoints_800A096C();
 extern int FieldMinionCommand_800A7D40(int a, int* p);
 extern int FinishLevantCommand_800A9008(int* p);
 extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
-extern int GetEventString_800A6738(int a);
+extern void* GetEventString_800A6738(unsigned int id);
 extern int GetFieldMinionModelId_800A78A8(int a);
 extern int GetFieldMinionHeaderF2A_800A78F4(int a);
 extern EvRelocBlob eventReloc_800AEBBC;

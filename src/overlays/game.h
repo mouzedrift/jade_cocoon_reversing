@@ -368,8 +368,8 @@ typedef struct GameObjList_1
 
 typedef struct GameMsgEntry
 {
-    int v;
-    int w;
+    void** text; // the message's lines: pages end with 0, the last with two, then the choice lines (0 ended)
+    int count;   // its words
 } GameMsgEntry;
 
 // the event message table (GetEventDataSlot_800A55B0(1), GetEventString_800A6738)
@@ -992,17 +992,9 @@ typedef struct GameSkelDraw
     OT_TYPE* ot;
 } GameSkelDraw;
 
-#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
 #define tintImageRectY_8007DC82 (((short*)&tintImageRect_8007DC80)[1])
-#else
-extern short tintImageRectY_8007DC82;
-#endif
 
-#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
 #define tintClutRectY_8007DC8A (((short*)&tintClutRect_8007DC88)[1])
-#else
-extern short tintClutRectY_8007DC8A;
-#endif
 
 extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
 

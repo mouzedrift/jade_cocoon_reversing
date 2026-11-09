@@ -166,10 +166,6 @@ extern int IsConfigMenuActive_800C45D8(void);
 
 /* exe-side, to move to an exe header */
 extern void srand(unsigned int seed); // PSY-Q LIBC
-#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
 #define titleStartMode_8008B55A (*(unsigned short*)&titleMenuState_8008B558[1])
-#else
-extern unsigned short titleStartMode_8008B55A;
-#endif
 
 #endif

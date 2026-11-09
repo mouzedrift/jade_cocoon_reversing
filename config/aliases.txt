@@ -9,13 +9,7 @@ GAME     enemySlots_800B19F0    gCtx_800B1260        0x790    # gCtx_800B1260.en
 GAME     Ratan2DifferenceInt_8003B9E0  ratan2Difference_8003B9E0  0  # GAME declared it returning int (its callers do not sign-extend)
 # places inside other images' objects that the code names on their own
 EXE      encounterSwapped_800B129C                 gCtx_800B1260                0x3C     # gCtx_800B1260 + 0x3C
-TITLE    titleStartMode_8008B55A                  titleMenuState_8008B558      0x2      # titleMenuState_8008B558 + 0x2
 TITLE    levantStartRot_800B06A8                 levantStartPos_800B069C      0xC      # levantStartPos_800B069C + 0xC
-COMBAT   combatSlotModelParams_8007DC78                 modelVramSlotLists_8007DC74               0x4      # modelVramSlotLists_8007DC74 + 0x4
-COMBAT   saveMinions_8008BEF8           saveData_8008B570            0x988    # saveData_8008B570 + 0x988
 GAME     statusTint_8007A164                 statusTintPoisonLevel7_8007A14C 0x18     # statusTintPoisonLevel7_8007A14C + 0x18
-GAME     tintImageRectY_8007DC82                  tintImageRect_8007DC80        0x2
-GAME     tintClutRectY_8007DC8A                  tintClutRect_8007DC88         0x2
 GAME     levantStatusBits_8008BD38                 saveData_8008B570            0x7C8    # saveData_8008B570 + 0x7C8
-BATTLE   encounterChainNext_800ADE88  encounterRecord_800ADE78     0x10     # encounterRecord_800ADE78.next_10 (GAME)
 MAP      mapSelectCursors_800AEBFC      mapSelect_800AEBF8           0x4      # mapSelect_800AEBF8 + 0x4

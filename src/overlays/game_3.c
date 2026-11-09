@@ -1536,7 +1536,7 @@ int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot)
     return 0;
 }
 
-int GetEventString_800A6738(unsigned int id)
+void* GetEventString_800A6738(unsigned int id)
 {
     currentMessageId_800AEBE8 = 0x8000;
     if (id <= 0xfffe)
@@ -1546,13 +1546,13 @@ int GetEventString_800A6738(unsigned int id)
         tbl = GetEventDataSlot_800A55B0(1);
         if (id < tbl->count)
         {
-            int off = id * 8;
-            off += 4;
-            return *(int*)((char*)tbl + off);
+            int off = id * sizeof(GameMsgEntry);
+            off += offsetof(GameMsgTable, e);
+            return ((GameMsgEntry*)((char*)tbl + off))->text;
         }
         return 0;
     }
-    return id;
+    return PSX_PTR(id); // the text's address itself
 }
 
 int SkipActorAnims_800A67B4(unsigned int* args)

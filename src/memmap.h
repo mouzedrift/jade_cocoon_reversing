@@ -32,6 +32,13 @@ void Pc_MapCodeLoaded(int fileId);
 #define MAP_CODE_LOADED(fileId) /* the PlayStation runs the code where it was copied */
 #endif
 
+/* the event message table (LoadRelocBlob_800BC854): the blob holds 32 bit offsets, which the PlayStation turns into
+   pointers in place; on PC they do not fit there, so the table the game reads is built beside the blob */
+#ifdef __psyz
+void* Pc_EventMsgTable(int* blob);
+extern void* pcEventMsgTable;
+#endif
+
 #define HEAP_END 0x801B9250 /* the heap runs from heapStart_800CD858 up to here, the buffers follow */
 #ifdef __psyz
 #define heapStart_800CD858 ((char*)PSX_RAM(0x800CD858))

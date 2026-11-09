@@ -152,11 +152,7 @@ extern int IsUnitInBattle_800BC784();
 
 extern unsigned int battleHitEnemies_800B122C;
 
-#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
 #define encounterChainNext_800ADE88 (encounterRecord_800ADE78.next_10)
-#else
-extern int encounterChainNext_800ADE88;
-#endif
 
 extern int IsSummonedMinionIdle_800C0D60();
 
