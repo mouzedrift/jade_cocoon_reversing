@@ -48,7 +48,7 @@ void DrawBattleStage_800BC90C(CameraCtrl* ctrl)
                         {
                             sz[0] = frame->size_C[0] * 5;
                             sz[1] = frame->size_C[1] * 5;
-                            DrawRotSprite_80044010(&sprite->poly_C, &pos, &stageRot_800C9124, &frame->u_0, &frame->w_4, &frame->pivotX_8, sz, &frame->pos_10[0], &col, 0, 0, pOT_8008B4C8);
+                            DrawRotSprite_80044010(&sprite->poly_C, &pos, &stageRot_800C9124, &frame->u_0, &frame->w_4, &frame->pivotX_8, sz, (SVECTOR*)&frame->pos_10[0], (unsigned char*)&col, 0, 0, pOT_8008B4C8);
                         }
                         else
                         {

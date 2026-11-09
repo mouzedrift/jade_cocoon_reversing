@@ -273,6 +273,12 @@ TYPES = {
     "MapChest": [("flag_0", "i32", 1), ("item_4", "i32", 1), ("kind_8", "i32", 1), ("flags_C", "u32", 1),
                  ("point_10", "i32", 1), ("pos_14", "i32", 3), ("rotY_20", "i32", 1), ("text_24", "ptr:text", 1),
                  ("text_28", "ptr:text", 1), ("f2C", "i32", 6), ("ftg_44", "i16", 2)],
+    "MapGate": [("valuable_0", "i32", 1), ("pos_4", "i32", 3), ("rotY_10", "i16", 1), ("pad_12", "i16", 1),
+                ("dest_14", "i32", 3), ("destRotY_20", "u16", 1), ("pad_22", "i16", 1), ("point_24", "i16", 1),
+                ("entrance_26", "i16", 1)],
+    "MapGateMusic": [("track", "i32", 4)],
+    "MapSavePoint": [("pos_0", "i32", 3), ("name_C", "ptr:str", 1)],
+    "MapRgb": [("r", "u8", 1), ("g", "u8", 1), ("b", "u8", 1), ("pad", "u8", 1)],
     "SVECTOR": [("vx", "i16", 1), ("vy", "i16", 1), ("vz", "i16", 1), ("pad", "i16", 1)],
     "ActorScriptCmd*": [("", "ptr:ActorScriptCmd", 1)],
     "ActorScriptCmd": [("op_0", "u8", 1), ("len_1", "u8", 1), ("frame_2", "i16", 1), ("field_4", "i16", 1),
@@ -287,13 +293,14 @@ POINTEE = {"str": "const char", "short": "short", "int": "int", "SVECTOR": "SVEC
 KIND_SIZE = {"i8": 1, "u8": 1, "i16": 2, "u16": 2, "i32": 4, "u32": 4, "ref": 4}
 # the data of an event by its init function (MapEvent.run_10) or its type (MapEvent.type_4)
 EVENT_DATA = {"MinionInit": "MapMinion", "FxInit": "MapFx", "Warp": "MapWarp", "ChestInit": "MapChest", 8: "MapInstr",
+              "GateInit": "MapGate", "SavePointInit": "MapSavePoint",
               0xB: "MapVoice"}
 # what an event script instruction's address operand (MapInstr.c_C) is, by its op
 INSTR_DATA = {0x11: "MapEvent", 0x2E: "MapEvent", 0x4B: "MapFx", 0x13: "int", 0x5A: "int", 0x60: "int"}
 TYPE_NAME = {"MapEvent": "event", "MapInstr": "script", "MapVoice": "voices", "MapMinion": "minion",
              "MapMinionSpecies": "species", "MapActorModel": "model", "MapFx": "effects", "SVECTOR": "boneScale",
              "ActorScriptCmd*": "script", "ActorScriptCmd": "anim", "int": "data", "short": "bones",
-             "unsigned char": "bytes", "str": "str", "MapFxInits": "fxInits", "MapWarp": "warp", "MapChest": "chest",
+             "unsigned char": "bytes", "str": "str", "MapFxInits": "fxInits", "MapWarp": "warp", "MapChest": "chest", "MapGate": "gate", "MapSavePoint": "savePoint",
              "text": "text"}
 
 
@@ -332,6 +339,7 @@ class MapSource:
         self.funcs = {}  # address -> (exemplar, template name, words); exemplar None: no template (a stub)
         self.renames = {}  # (exemplar name, name) -> address
         self.anon = set()  # starts of what the functions make themselves (their constants, jump tables)
+        self.anon_owner = {}  # anon -> the function that makes it
         self.stub_refs = []  # what the functions without a template use
         self.inexact = []  # functions whose template does not compile to the original's code yet
         self.scalars = set()  # objects that are not arrays (pointers to them take &)
@@ -366,6 +374,7 @@ class MapSource:
                 r = ex.resolve(ae)
                 if r is None:
                     self.anon.add(ai)
+                    self.anon_owner.setdefault(ai, a)
                     continue
                 n, off = r
                 self.renames[(ex.name, n)] = ai - off
@@ -414,6 +423,7 @@ class MapSource:
                     # a jump table: from the first word into the code
                     if not (self.rdata_end <= self.word(a - 4) < self.text_end and self.word(a - 4) not in self.funcs):
                         self.anon.add(a)
+                        self.anon_owner.setdefault(a, max(f for f in self.funcs if f <= v))
 
     def walk(self):
         """types of what the code's data points to, from the fields of the types the code uses"""
@@ -498,6 +508,13 @@ class MapSource:
 
     def objects(self):
         """(address, size) of what the source defines"""
+        # a single typed object with bytes behind it (padding before a jump table): those on their own
+        for a in sorted(self.syms):
+            d = self.types.get(a)
+            if d and d[2] == "" and d[1] in TYPES and not self.is_func(a):
+                ts = type_size(d[1])
+                if self.extent(a) > ts and (a + ts) not in self.syms and (a + ts) not in self.anon:
+                    self.syms[a + ts] = "pad_%08X" % (a + ts)
         out = []
         for a in self.starts_sorted():
             if a in self.anon:
@@ -614,8 +631,22 @@ class MapSource:
         protos = []
         bodies = []
         helpers_done = set()
+        objs = self.objects()
+        for a, size in objs:
+            self.object_text(a, size)  # which are arrays
+        decls = {a: self.object_text(a, size) for a, size in objs}
+        # read-only data behind the functions' own constants: in the code's object (cc1psx puts a definition's
+        # data where the source has it), before the function that makes the next constant
+        anon_rdata = sorted(x for x in self.anon if x < self.rdata_end)
+        in_code = {}
+        for a, size in objs:
+            if anon_rdata and anon_rdata[0] < a < self.rdata_end:
+                nxt = [x for x in anon_rdata if x > a]
+                in_code.setdefault(self.anon_owner.get(nxt[0]) if nxt else None, []).append(a)
         for a in sorted(self.funcs):
             ex, tn, ws = self.funcs[a]
+            for d in in_code.get(a, []):
+                bodies.append(decls[d][1] + "\n")
             if ex is None:
                 n = self.syms[a]
                 protos.append("int %s();" % n)
@@ -633,14 +664,13 @@ class MapSource:
             if a in self.inexact:
                 body = "/* NONMATCHING: %s's C does not compile to its code yet */\n" % tn + body
             bodies.append(body)
-        objs = self.objects()
-        for a, size in objs:
-            self.object_text(a, size)  # which are arrays
-        decls = {a: self.object_text(a, size) for a, size in objs}
+        for d in in_code.get(None, []):
+            bodies.append(decls[d][1] + "\n")
+        code_data = set(x for v in in_code.values() for x in v)
         head = [GENERATED, '#include "maps/map.h"', ""] + protos + [""] + [decls[a][0] for a, _ in objs] + [""]
         # the data: .data first (its definitions in order), then .rdata (named data before the functions' constants)
         data = head + [decls[a][1] for a, _ in objs if a >= self.text_end]
-        data += [decls[a][1] for a, _ in objs if a < self.text_end]
+        data += [decls[a][1] for a, _ in objs if a < self.text_end and a not in code_data]
         return "\n".join(data) + "\n", "\n".join(head + bodies)
 
     def rename_map(self, ex):

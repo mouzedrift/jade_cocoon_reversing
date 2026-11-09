@@ -722,7 +722,6 @@ typedef struct BatDropTrail
 } BatDropTrail;
 
 
-extern int* DrawRotSprite_80044010();
 
 /* battle_2.c */
 void DrawBattleStage_800BC90C(CameraCtrl* ctrl);

@@ -168,4 +168,9 @@ extern int unused_80096620[2];
 // billboard sprite with an RGB tint (DrawBillboardRgb_80043DE0)
 int DrawBillboardRgb_80043DE0(POLY_FT4* poly, VECTOR* pos, short* size, unsigned char* rgb);
 
+// rotated / scaled sprite: uv, size and pivot are an EffectSpriteFrame's (u_0, w_4, pivotX_8); returns the
+// scratchpad position
+VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short* size, short* pivot, short* scale,
+                               SVECTOR* ofs, unsigned char* rgb, short flags, int abr, OT_TYPE* ot);
+
 #endif

@@ -136,6 +136,53 @@ typedef struct MapChestWork
     int script_14; /* its event script's id (-1: none) */
 } MapChestWork;
 
+/* a gate out of the map (type 0x11, GateInit): with the valuable, Levant walks through it to an entrance of
+   the map */
+typedef struct MapGate
+{
+    int valuable_0; /* what opens it (TestValuableFlag_800AD73C; < 0: nothing) */
+    int pos_4[3];   /* where it is (GateSpot) */
+    short rotY_10;
+    short pad_12;
+    int dest_14[3]; /* where Levant starts behind it */
+    unsigned short destRotY_20;
+    short pad_22;
+    short point_24;    /* the event point in front of it */
+    short entrance_26; /* the entrance he comes back in by (saveData_8008B570.mapId_2E4[2]) */
+} MapGate;
+
+typedef struct MapGateWork
+{
+    int state_0; /* 0: start, 1: shut, 2: going through, 3: coming back */
+    int script_4;
+    int voice_8; /* its sound (SfxKeyOn_800314F4) */
+} MapGateWork;
+
+/* the gate's music, by map (saveData_8008B570.mapId_2E4[1]) */
+typedef struct MapGateMusic
+{
+    int track[4];
+} MapGateMusic;
+
+/* a save point (type 0xC, SavePointInit) */
+typedef struct MapSavePoint
+{
+    int pos_0[3];
+    const char* name_C; /* the save place (GameMenuRequest.arg_8) */
+} MapSavePoint;
+
+typedef struct MapSavePointWork
+{
+    int angle_0; /* its spin */
+    int phase_4; /* its bob */
+    int glow_8;  /* 0 .. 15: Levant near */
+} MapSavePointWork;
+
+typedef struct MapRgb
+{
+    unsigned char r, g, b, pad;
+} MapRgb;
+
 /* an effect placed in the map (a list ends with type_0 MAP_FX_END) */
 #define MAP_FX_MODEL 1
 #define MAP_FX_MDEC 3
@@ -235,6 +282,8 @@ extern EventEntry* FindEventScript_800A5AE4(int id);
 extern int IsEventPointValid_800A6504(int point, int* pos);
 extern int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot);
 extern int TestEventFlag_800AD0D4(unsigned flag);
+extern void ClearEventFlag_800AD124(unsigned flag);
+extern int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int range);
 extern int GetInventoryCount_800AD254(int id, int table);
 extern void ResetLevantActorToIdle_800A8DEC();
 extern int savedLevantPos_80091C78[4]; /* main.h: where Levant starts on the next map (useSavedLevantPos_80091C98) */

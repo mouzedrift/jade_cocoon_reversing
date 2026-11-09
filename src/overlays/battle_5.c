@@ -768,7 +768,7 @@ void DropSpriteTask_800C1220(EventEntry* task, BatDrop* drop)
     offset[1] = 0;
     offset[2] = 0;
     drop->rot_34[1] += 0x80;
-    DrawRotSprite_80044010(&sprite->poly_C, pos, drop->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, size, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
+    DrawRotSprite_80044010(&sprite->poly_C, (VECTOR*)pos, (SVECTOR*)drop->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, size, (SVECTOR*)offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
 }
 
 void DropTrailTask_800C1450(EventEntry* task, BatDropTrail* trail)
@@ -887,7 +887,7 @@ void HomingSparkTask_800C17EC(EventEntry* task, BatSpark* spark)
         for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[spark->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, (int*)&zeroSvector_800795D4, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, (VECTOR*)spark->pos_10, (SVECTOR*)spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, &zeroSvector_800795D4, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -931,7 +931,7 @@ void SpriteAnimTask_800C1B2C(EventEntry* task, void* buf)
         for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[spark->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, (VECTOR*)spark->pos_10, (SVECTOR*)spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, (SVECTOR*)frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -996,7 +996,7 @@ void BounceSparkTask_800C1DA4(EventEntry* task, BatSpark* spark)
         for (i = 0; i < sprite->frameCounts_4[spark->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[spark->frame_0 / 4096] + i;
-            DrawRotSprite_80044010(&sprite->poly_C, spark->pos_10, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, (VECTOR*)spark->pos_10, (SVECTOR*)spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, (SVECTOR*)frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -1064,7 +1064,7 @@ void RisingSparkTask_800C2170(EventEntry* task, BatSpark* spark)
             offset[0] = spark->pos_10[0];
             offset[1] = spark->pos_10[1];
             offset[2] = spark->pos_10[2];
-            DrawRotSprite_80044010(&sprite->poly_C, spark->base_1C, spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            DrawRotSprite_80044010(&sprite->poly_C, (VECTOR*)spark->base_1C, (SVECTOR*)spark->rot_34, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, (SVECTOR*)offset, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         spark->frame_0 += spark->speed_8;
     }
@@ -1296,7 +1296,7 @@ void SpriteTrailTask_800C2FC8(EventEntry* task, BatSpriteTrail* trail)
         for (i = 0; i < sprite->frameCounts_4[trail->frame_0 / 4096]; i++)
         {
             frame = sprite->frames_8[trail->frame_0 / 4096] + i;
-            offset = DrawRotSprite_80044010(&sprite->poly_C, trail->pos_44, trail->rot_80, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
+            offset = (int*)DrawRotSprite_80044010(&sprite->poly_C, (VECTOR*)trail->pos_44, (SVECTOR*)trail->rot_80, &frame->u_0, &frame->w_4, &frame->pivotX_8, frame->size_C, (SVECTOR*)frame->pos_10, frame->rgb_18, 0, 0x30, pOT_8008D690);
         }
         trail->trail_50[0].x = trail->pos_44[0] + offset[0];
         trail->trail_50[0].y = trail->pos_44[1] + offset[1];

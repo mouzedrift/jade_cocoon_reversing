@@ -449,7 +449,7 @@ void FxModel_800B2B20(MapEnt* ent)
             rot[2] += key->rot_10[2];
             light = FindNearestCameraPoint_80019CC4(pos);
             DrawFtgObjectAtSlot0_8004D1EC(&model->ftg_4[key->model_0], pOT_8008D690, pos, rot, &cameraState_8008D4F0.ent_44[light],
-                                          ((0x1000 - key->alpha_2) << 16) | (key->mode_24 | 0x80), key->f18);
+                                          ((0x1000 - key->alpha_2) << 16) | 0x80 | key->mode_24, key->f18);
         }
     }
 }

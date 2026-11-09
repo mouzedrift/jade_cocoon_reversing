@@ -2,17 +2,17 @@
 
 void Warp_800B2420(MapEnt* ent);
 int AddEffects_800B2544(MapFx* fx);
-int fn_800B26D0();
+void FxSprite_800B26D0(MapEnt* ent);
 void FxModel_800B2844(MapEnt* ent);
-int fn_800B2A6C();
-int fn_800B2D54();
+void Gate_800B2A6C(MapEnt* ent);
+void SavePoint_800B2D54(MapEnt* ent);
 void Chest_800B31C4(MapEnt* ent);
 void ChestDraw_800B33B8(MapChest* chest, MapChestWork* w);
 void MapInit_800B3684(int phase);
 void FxInit_800B36F4(MapEnt* ent);
-int fn_800B37AC();
-int fn_800B37E8();
-int fn_800B3920();
+void GateInit_800B37AC(MapEnt* ent);
+void GateSpot_800B37E8(int* pos, short* rot);
+void SavePointInit_800B3920(MapEnt* ent);
 void ChestInit_800B3960(MapEnt* ent);
 int ChestShut_800B3A40(MapEnt* ent);
 int ChestTake_800B3A4C(void* arg);
@@ -37,17 +37,18 @@ extern const char data_800B22C4[44];
 extern const char data_800B22F0[72];
 extern const char data_800B2338[20];
 extern const MapFxInits fxInits_800B234C;
-extern const int data_800B2360[4];
-extern const int data_800B2370[5];
-extern const char data_800B2398[4];
-extern const char data_800B239C[4];
+extern const MapGateMusic gateOpen_800B2360;
+extern const MapGateMusic gateShut_800B2370;
+extern const int pad_800B2380;
+extern const MapRgb savePointDim_800B2398;
+extern const MapRgb savePointLit_800B239C;
 extern const char data_800B23A0[28];
 extern const char data_800B23BC[56];
 extern int text_800B4410[4];
 extern MapChest chest_800B4420;
-extern int data_800B4468[4];
+extern MapSavePoint savePoint_800B4468;
 extern MapWarp warp_800B4478;
-extern int data_800B4490[10];
+extern MapGate gate_800B4490;
 extern MapEvent events_800B44B8[5];
 extern int data_800B451C[66];
 extern int data_800B4624[33];
@@ -129,7 +130,7 @@ static inline int NewEntity(MapEvent* ev)
     return 0;
 }
 
-/* NONMATCHING: AddEffects_800B2994's C does not compile to its code yet */
+/* NONMATCHING: the original keeps EntityTask's address in the loop (gcc hoists it here) */
 int AddEffects_800B2544(MapFx* fx)
 {
     MapEvent ev;
@@ -147,13 +148,35 @@ int AddEffects_800B2544(MapFx* fx)
     return 1;
 }
 
-/* TODO: not decompiled yet (93 words) */
-int fn_800B26D0()
+/* NONMATCHING: the loop's flags (arg_24) are scheduled before the frame in the original */
+void FxSprite_800B26D0(MapEnt* ent)
 {
-    return 0;
+    MapFx* fx;
+    MapFxWork* w;
+    EffectSprite* sprite;
+    EffectSpriteFrame* f;
+    int frame;
+    int i;
+    unsigned short arg;
+
+    fx = ent->data_10;
+    w = (MapFxWork*)ent->work_14;
+    sprite = &w->file_0->sprites_20[FindEffectIndex_80020F00(w->file_0, 0, fx->id_2)];
+    frame = FxFrame_800B4168(fx, w, sprite->count_0);
+    FxTime_800B41EC(ent, fx, w);
+    FxPlace_800B42B8(fx, w);
+    if (frame >= 0)
+    {
+        for (i = 0; i < sprite->frameCounts_4[frame]; i++)
+        {
+            arg = fx->arg_24;
+            f = &sprite->frames_8[frame][i];
+            DrawRotSprite_80044010(&sprite->poly_C, (VECTOR*)w->pos_4, (SVECTOR*)w->rot_10, &f->u_0, &f->w_4, &f->pivotX_8, f->size_C,
+                                   (SVECTOR*)f->pos_10, f->rgb_18, (arg >> 2) & 2, (short)arg & ~8, pOT_8008D690);
+        }
+    }
 }
 
-/* NONMATCHING: FxModel_800B2B20's C does not compile to its code yet */
 void FxModel_800B2844(MapEnt* ent)
 {
     int pos[3];
@@ -191,22 +214,163 @@ void FxModel_800B2844(MapEnt* ent)
             rot[2] += key->rot_10[2];
             light = FindNearestCameraPoint_80019CC4(pos);
             DrawFtgObjectAtSlot0_8004D1EC(&model->ftg_4[key->model_0], pOT_8008D690, pos, rot, &cameraState_8008D4F0.ent_44[light],
-                                          ((0x1000 - key->alpha_2) << 16) | (key->mode_24 | 0x80), key->f18);
+                                          ((0x1000 - key->alpha_2) << 16) | 0x80 | key->mode_24, key->f18);
         }
     }
 }
 
-/* TODO: not decompiled yet (186 words) */
-int fn_800B2A6C()
+void Gate_800B2A6C(MapEnt* ent)
 {
-    return 0;
+    MapGateWork* w;
+    MapGate* gate;
+
+    gate = ent->data_10;
+    w = (MapGateWork*)ent->work_14;
+    switch (ent->state_7C)
+    {
+    case 0:
+        w->voice_8 = SfxKeyOn_800314F4(0x2D);
+        break;
+    case 1:
+    {
+        MapGateMusic music = gateOpen_800B2360;
+
+        PlayMusic_800300E0(music.track[saveData_8008B570.mapId_2E4[1].cur_0 - 1], 1);
+        break;
+    }
+    case 2:
+        break;
+    case 3:
+        SfxKeyOff_80031574(w->voice_8, 0x2D);
+        break;
+    case 4:
+    {
+        MapGateMusic music = gateShut_800B2370;
+
+        PlayMusic_800300E0(music.track[saveData_8008B570.mapId_2E4[1].cur_0 - 1], 1);
+        PlaySfx_80031494(0x30);
+        break;
+    }
+    }
+    ent->state_7C = -1;
+    switch (w->state_0)
+    {
+    case 0:
+        if (TestEventFlag_800AD0D4(0x72))
+        {
+            ClearEventFlag_800AD124(0x72);
+            w->script_4 = GetEventScriptId_800A5AD0(StartEventScriptForEntity_800A5AA0(data_800B47C8, ent));
+            w->state_0 = 3;
+            break;
+        }
+        w->state_0 = 1;
+        break;
+    case 1:
+        if (IsEventPointValid_800A6504(gate->point_24, (int*)&levantPos_8008BD18) && gate->valuable_0 >= 0 &&
+            TestValuableFlag_800AD73C(gate->valuable_0) && fieldMode_800B0EC0 == 1)
+        {
+            SetEventFlag_800AD0F8(0x72);
+            w->script_4 = GetEventScriptId_800A5AD0(StartEventScriptForEntity_800A5AA0(data_800B46A8, ent));
+            w->state_0 = 2;
+        }
+        break;
+    case 2:
+        if (!FindEventScript_800A5AE4(w->script_4))
+        {
+            useSavedLevantPos_80091C98 = 1;
+            forceMapReload_80091C9C = 1;
+            savedLevantPos_80091C78[0] = gate->dest_14[0];
+            savedLevantPos_80091C78[1] = gate->dest_14[1];
+            savedLevantPos_80091C78[2] = gate->dest_14[2];
+            savedLevantRot_80091CA8[0] = 0;
+            savedLevantRot_80091CA8[1] = gate->destRotY_20;
+            savedLevantRot_80091CA8[2] = 0;
+            saveData_8008B570.mapId_2E4[2].cur_0 = gate->entrance_26;
+        }
+        break;
+    case 3:
+        if (!FindEventScript_800A5AE4(w->script_4) && !IsEventPointValid_800A6504(gate->point_24, (int*)&levantPos_8008BD18))
+        {
+            w->script_4 = -1;
+            w->state_0 = 1;
+        }
+        break;
+    }
 }
 
-/* TODO: not decompiled yet (284 words) */
-int fn_800B2D54()
+const MapRgb savePointDim_800B2398 = { 0x80, 0x40, 0x20 };
+const MapRgb savePointLit_800B239C = { 0x20, 0x40, 0x80 };
+
+void SavePoint_800B2D54(MapEnt* ent)
 {
-    return 0;
+    int pos[3];
+    short rot[4];
+    int scale[3];
+    MapRgb dim;
+    MapRgb lit;
+    MapRgb rgb;
+    MapSavePoint* save;
+    MapSavePointWork* w;
+    FtgPolyG3List* list;
+    int i;
+    int alpha;
+    int light;
+    int near;
+
+    save = ent->data_10;
+    w = (MapSavePointWork*)ent->work_14;
+    if (IsPointInViewCone_800A65F0(save->pos_0, (int*)&levantPos_8008BD18, (unsigned short*)&levantPos_8008BD18.rot, 300))
+    {
+        ent->armed_78 = 1;
+    }
+    if (ent->state_7C == 0)
+    {
+        saveRequest_800B06BC.active_0 = 1;
+        saveRequest_800B06BC.kind_4 = 0;
+        saveRequest_800B06BC.arg_8 = (int)save->name_C;
+        saveRequest_800B06BC.endOfGame_C = 0;
+        ent->state_7C = -1;
+    }
+    list = &publicFtg_8008D4D0[1].g3_8;
+    dim = savePointDim_800B2398;
+    lit = savePointLit_800B239C;
+    rgb.r = dim.r + (lit.r - dim.r) * w->glow_8 / 15;
+    rgb.g = dim.g + (lit.g - dim.g) * w->glow_8 / 15;
+    rgb.b = dim.b + (lit.b - dim.b) * w->glow_8 / 15;
+    for (i = 0; i < list->count; i++)
+    {
+        list->items[i].c[0].r = list->items[i].c[1].r = list->items[i].c[2].r = rgb.r;
+        list->items[i].c[0].g = list->items[i].c[1].g = list->items[i].c[2].g = rgb.g;
+        list->items[i].c[0].b = list->items[i].c[1].b = list->items[i].c[2].b = rgb.b;
+    }
+    w->glow_8 = CLAMP(w->glow_8 + (ent->armed_78 ? 1 : -1), 0, 15);
+    pos[0] = save->pos_0[0];
+    pos[1] = save->pos_0[1] + (short)(sinTable_80084540[w->phase_4 & 0xFFF] / 163);
+    pos[2] = save->pos_0[2];
+    scale[0] = scale[1] = scale[2] = (sinTable_80084540[w->phase_4 & 0xFFF] + 0x1000) / 10 + 0x1000;
+    rot[0] = 0;
+    rot[1] = w->angle_0;
+    rot[2] = 0;
+    alpha = (short)sinTable_80084540[w->phase_4 & 0xFFF] / 2 + 0x1000;
+    light = FindNearestCameraPoint_80019CC4(pos);
+    near = ent->armed_78 != 0;
+    DrawFtgObjectAtSlot0_8004D1EC(&publicFtg_8008D4D0[1], pOT_8008D690, pos, rot, &cameraState_8008D4F0.ent_44[light],
+                                  (near << 5) | 0x91 | ((0x1000 - alpha) << 16), 0);
+    DrawFtgObjectAtSlot0_8004D1EC(&publicFtg_8008D4D0[2], pOT_8008D690, save->pos_0, rot, &cameraState_8008D4F0.ent_44[light], 0x31, scale);
+    if (ent->armed_78)
+    {
+        w->angle_0 += 0x40;
+        w->phase_4 += 0xE2;
+    }
+    else
+    {
+        w->angle_0 += 0x20;
+        w->phase_4 += 0x71;
+    }
 }
+
+const char data_800B23A0[28] = "\x82h\x82\x94\x81""f\x82\x93\x81@\x82k\x82\x8f\x82\x83\x82\x8b\x82\x85\x82\x84\x81""D";
+const char data_800B23BC[56] = "\x82s\x82\x88\x82\x85\x82\x92\x82\x85\x81@\x82\x89\x82\x93\x81@\x82\x8e\x82\x8f\x82\x94\x82\x88\x82\x89\x82\x8e\x82\x87\x81@\x82\x89\x82\x8e\x82\x93\x82\x89\x82\x84\x82\x85\x81""D";
 
 void Chest_800B31C4(MapEnt* ent)
 {
@@ -361,22 +525,70 @@ void FxInit_800B36F4(MapEnt* ent)
     ent->update_90(ent);
 }
 
-/* TODO: not decompiled yet (15 words) */
-int fn_800B37AC()
+void GateInit_800B37AC(MapEnt* ent)
 {
-    return 0;
+    MapGateWork* w = (MapGateWork*)ent->work_14;
+
+    w->state_0 = 0;
+    w->script_4 = -1;
+    Gate_800B2A6C(ent);
+    ent->update_90 = Gate_800B2A6C;
 }
 
-/* TODO: not decompiled yet (78 words) */
-int fn_800B37E8()
+/* where the open gate is (an event script's camera / position callback) */
+void GateSpot_800B37E8(int* pos, short* rot)
 {
-    return 0;
+    int p[3];
+    SVECTOR r;
+    EventNode* node;
+    EventEntry* entry;
+    MapEnt* ent;
+    MapGate* gate;
+    int i;
+    int count;
+
+    memset(p, 0, sizeof(p));
+    memset(&r, 0, sizeof(r));
+    node = eventEntities_8008D400;
+    count = node->count;
+    for (i = 0; i < count; i++)
+    {
+        entry = &node->entry;
+        if ((entry->flags & 0x8001) == 1)
+        {
+            ent = entry->buffer;
+            if (ent->type_C == 0x11)
+            {
+                gate = ent->data_10;
+                if (((MapGateWork*)ent->work_14)->script_4 >= 0)
+                {
+                    p[0] = gate->pos_4[0];
+                    p[1] = gate->pos_4[1];
+                    p[2] = gate->pos_4[2];
+                    r.vy = gate->rotY_10;
+                    break;
+                }
+            }
+        }
+        node = node->next;
+    }
+    pos[0] = p[0];
+    pos[1] = p[1];
+    pos[2] = p[2];
+    rot[0] = r.vx;
+    rot[1] = r.vy;
+    rot[2] = r.vz;
 }
 
-/* TODO: not decompiled yet (16 words) */
-int fn_800B3920()
+void SavePointInit_800B3920(MapEnt* ent)
 {
-    return 0;
+    MapSavePointWork* w = (MapSavePointWork*)ent->work_14;
+
+    w->angle_0 = 0;
+    w->phase_4 = 0;
+    w->glow_8 = 0;
+    SavePoint_800B2D54(ent);
+    ent->update_90 = SavePoint_800B2D54;
 }
 
 void ChestInit_800B3960(MapEnt* ent)
