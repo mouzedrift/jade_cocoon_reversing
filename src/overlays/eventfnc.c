@@ -2399,19 +2399,19 @@ int GetCtxEntityMesh_800BBE18(EvScriptCtx* ctx)
     return -1;
 }
 
-void** FindMsgChoiceList_800BC560(void** text);
-int GetChoiceMask_800BC58C(void** list);
+const char** FindMsgChoiceList_800BC560(const char** text);
+int GetChoiceMask_800BC58C(const char** list);
 int IsActorLeftOf_800BC5C8(int a, int b);
 void SetupItemMsgSlots_800BC6C4(ItemMsgInit* cfg, EvItemMsgSrc* src, int n);
 
 // Opens the message/item window for the current say/ask instruction (ops 0x37-0x3E) and resets the per-message options
 int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
 {
-    EvMsgWindowCfg cfg;
+    MsgWindowCfg cfg;
     ItemMsgInit it;
-    EvSpeaker pair;
+    MsgPortrait pair;
     EvItemMsgSrc src;
-    void** list;
+    const char** list;
     int bc;
     int c0;
     int c4;
@@ -2495,15 +2495,15 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     }
     if (pc->op_0 >= 0x37 && pc->op_0 < 0x3B)
     {
-        pair.a_0 = 1;
-        pair.b_4 = pc->a_4;
+        pair.kind_0 = 1;
+        pair.id_4 = pc->a_4;
         bc = IsActorLeftOf_800BC5C8(pc->a_4, pc->b_8);
     }
     else if (pc->op_0 == 0x3B)
     {
         bc = 1;
-        pair.a_0 = 0;
-        pair.b_4 = -1;
+        pair.kind_0 = 0;
+        pair.id_4 = -1;
     }
     fl = ctx->msgOptions_108;
     if (fl & 1)
@@ -2530,34 +2530,34 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     {
         cfg.posMode_0 = posMode;
         cfg.pos_4 = pos;
-        cfg.str_8 = str;
-        cfg.f10 = skip;
+        cfg.text_8 = str;
+        cfg.field_10 = skip;
         cfg.mask_18 = mask;
         cfg.cancelable_14 = cc;
-        cfg.list_1C = list;
-        cfg.pair_20 = pair;
+        cfg.lines_1C = list;
+        cfg.portrait_20 = pair;
         cfg.style_28 = bc;
-        cfg.f30 = c0;
-        cfg.f34 = c4;
-        cfg.f38 = c8;
-        cfg.f3C = 0;
-        cfg.f40 = 0;
-        cfg.fC = GetFieldMinionModelId_800A78A8(pc->a_4 - 1);
-        cfg.f2C = GetFieldMinionHeaderF2A_800A78F4(pc->a_4 - 1);
+        cfg.field_30 = c0;
+        cfg.field_34 = c4;
+        cfg.field_38 = c8;
+        cfg.field_3C = 0;
+        cfg.field_40 = 0;
+        cfg.title_C = GetFieldMinionName_800A78A8(pc->a_4 - 1);
+        cfg.field_2C = GetFieldMinionHeaderF2A_800A78F4(pc->a_4 - 1);
         voice = voiceTable_800AEBF0;
-        cfg.voice_44 = 0;
+        cfg.voiced_44 = 0;
         if (voice != 0)
         {
             for (; voice->xa_2.a_0 >= 0; voice++)
             {
                 if (currentMessageId_800AEBE8 == voice->id_0)
                 {
-                    cfg.voice_44 = 1;
+                    cfg.voiced_44 = 1;
                     break;
                 }
             }
         }
-        ret = OpenMessageWindow_8003422C((MsgWindowCfg*)&cfg);
+        ret = OpenMessageWindow_8003422C(&cfg);
     }
     else if (mode == 1)
     {
@@ -2695,7 +2695,7 @@ int UpdateEventMessage_800BC2B4(EvScriptCtx* ctx)
     return 0;
 }
 
-void** FindMsgChoiceList_800BC560(void** text)
+const char** FindMsgChoiceList_800BC560(const char** text)
 {
     int zeros = 0;
     do
@@ -2710,7 +2710,7 @@ void** FindMsgChoiceList_800BC560(void** text)
     return text;
 }
 
-int GetChoiceMask_800BC58C(void** list)
+int GetChoiceMask_800BC58C(const char** list)
 {
     int mask = 0;
     int i;

@@ -376,8 +376,8 @@ typedef struct FileRequestDesc
 } FileRequestDesc;
 extern FileRequest fileRequests_80095C90[0x14];
 
-extern int** mapLoaderTask_800B1DC4;
-extern int** areaLoaderTask_800B1DB8;
+extern EventNode* mapLoaderTask_800B1DC4;
+extern EventNode* areaLoaderTask_800B1DB8;
 extern short equipmentIcons_8007D938[];
 extern int areaReload_80082670;
 extern int areaPreloading_80082678;

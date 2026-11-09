@@ -2387,8 +2387,8 @@ void SetCurrentArea_800272BC(int map, int area)
 }
 int IsMapLoading_800272D0(void)
 {
-    int* a = mapLoaderTask_800B1DC4[9];
-    int* b = areaLoaderTask_800B1DB8[9];
+    int* a = mapLoaderTask_800B1DC4->entry.buffer;
+    int* b = areaLoaderTask_800B1DB8->entry.buffer;
     if (a[0] != 0 || b[0] != 0)
     {
         return 1;
@@ -2419,7 +2419,7 @@ int UsePreloadedArea_80027358(int id)
             saveData_8008B570.mapId_2E4[3].cur_0 = id;
             return 0;
         }
-        task = areaLoaderTask_800B1DB8[9];
+        task = areaLoaderTask_800B1DB8->entry.buffer;
         if (GetFileRequestStatus_8003BE30(task[1]) != 3)
         {
             return 0;
@@ -2440,7 +2440,7 @@ void CancelAreaPreload_8002741C(void)
     int* task;
     if (areaPreloading_80082678 == 1)
     {
-        task = areaLoaderTask_800B1DB8[9];
+        task = areaLoaderTask_800B1DB8->entry.buffer;
         CancelFileRequest_8003C060(task[1]);
         areaPreloading_80082678 = 0;
         task[0] = 0;

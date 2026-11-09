@@ -400,7 +400,7 @@ void DestinationSelect_800B7044(MapTask* task, int work)
                 w0 = destListRow0_800B68B8;
                 w1 = destListRow1_800B68F0;
                 w2 = destListRow2_800B6928;
-                memset(list, 0, 0x10);
+                memset(list, 0, sizeof(list));
                 menu = menuTemplate_800B6960;
                 list[0] = w0.items;
                 list[1] = w1.items;
@@ -615,7 +615,7 @@ void ConfirmDestination_800B7A90(MapTask* task, int work)
     DrawUiColorWindow_800424C0(&box2, 0, pOT_8008D454, 0);
     w0 = yesRow_800B6994;
     w1 = noRow_800B69D4;
-    memset(list, 0, 0xC);
+    memset(list, 0, sizeof(list));
     menu = menuTemplate_800B6960;
     list[0] = w0.items;
     list[1] = w1.items;

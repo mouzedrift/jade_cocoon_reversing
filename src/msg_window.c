@@ -167,14 +167,14 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     w->field_C = 1;
     w->field_10 = 0;
     w->title_74 = cfg->title_C;
-    w->portraitKind_84 = cfg->portraitKind_20;
-    if (cfg->portraitKind_20 == 1)
+    w->portraitKind_84 = cfg->portrait_20.kind_0;
+    if (cfg->portrait_20.kind_0 == 1)
     {
-        GetPortraitPoly_800A6308(cfg->portraitId_24, &w->prim_88);
+        GetPortraitPoly_800A6308(cfg->portrait_20.id_4, &w->prim_88);
     }
-    else if (cfg->portraitKind_20 == 7)
+    else if (cfg->portrait_20.kind_0 == 7)
     {
-        GetCombatPortraitPoly_800A1B2C(cfg->portraitId_24, &w->prim_88);
+        GetCombatPortraitPoly_800A1B2C(cfg->portrait_20.id_4, &w->prim_88);
         w->portraitKind_84 = 1;
     }
     list = cfg->text_8;

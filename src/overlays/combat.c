@@ -535,7 +535,7 @@ enum GameStates CombatMain_800A1324(void)
 {
     unknownFlags_8008D678 |= 0x2000000;
     unknownFlags_8008D678 |= 0x4000000;
-    DrawIntroMovie_8001AF64(combatTaskList_800A398C);
+    RunMainLoop_8001AF64(combatTaskList_800A398C);
     unknownFlags_8008D678 &= ~0x2000000;
     unknownFlags_8008D678 &= ~0x4000000;
     return 6;

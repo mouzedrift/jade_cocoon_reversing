@@ -267,7 +267,7 @@ enum GameStates TitleMain_800A0EF0(void)
     drawEnvRed_8008D448[2] = 0;
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
     PlayMusicSeq_80031260(&bgmSound_80091CE0, 0x1B, 1);
-    DrawIntroMovie_8001AF64(titleTaskList_800A27C0);
+    RunMainLoop_8001AF64(titleTaskList_800A27C0);
     FreeSound_80030D00(&bgmSound_80091CE0);
     return titleResult_800A2818;
 }
@@ -951,7 +951,7 @@ UnitStatus levantInitStatus_800A2730 = {
 EventDesc titleMenuTaskDesc_800A2778 = { 1, 5, 52, 0, (EventEntryFn)TitleInit_800A0F6C, (EventEntryFn)TitleFree_800A10D0 };
 EventDesc newGameTaskDesc_800A2790 = { 1, 0x8000, 120, &newGameTask_8008D638, (EventEntryFn)NewGameInit_800A08C8 };
 EventDesc titleSoundTaskDesc_800A27A8 = { 1, 5, 64, &soundTask_8008D4A4, (EventEntryFn)InitSoundTask_8002FF10, (EventEntryFn)FreeSoundTask_8003006C };
-// the title's event lists (DrawIntroMovie_8001AF64), 0-terminated
+// the title's event lists (RunMainLoop_8001AF64), 0-terminated
 EventDesc* titleTaskList_800A27C0[10] = {
     &eventDescs_80078EB8[0],
     &titleMenuTaskDesc_800A2778,

@@ -38,6 +38,13 @@ typedef struct ItemMsgInit
     unsigned short** text_4C; /* lines after the items (ItemMsgWindow.text) */
 } ItemMsgInit;
 
+/* the portrait beside a message */
+typedef struct MsgPortrait
+{
+    int kind_0; // 1: portrait, 7: combat portrait
+    int id_4;
+} MsgPortrait;
+
 /* OpenMessageWindow_8003422C's argument */
 typedef struct
 {
@@ -49,8 +56,7 @@ typedef struct
     int cancelable_14;
     unsigned int mask_18;
     const char** lines_1C; // choice lines
-    int portraitKind_20; // 1: portrait, 7: combat portrait
-    int portraitId_24;
+    MsgPortrait portrait_20;
     int style_28;
     int field_2C;
     int field_30;

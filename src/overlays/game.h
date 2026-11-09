@@ -173,11 +173,17 @@ extern void ResetEncounter_800A170C(void);
 
 extern Actor* GetFieldMinionActor_800A7A60(int idx);
 
-// model header of a party member (first word: model id)
+// model of a party member: the map's actor model (MapActorModel in src/maps/map.h)
 typedef struct GameModelHdr
 {
-    int id_0;
-    char pad_4[0x1C];
+    char* name_0; // shown as the title of the member's messages (OpenEventMessage_800BBE3C)
+    int modelId_4;
+    short* bones_8;
+    int* baseScale_C;
+    SVECTOR* boneScale_10;
+    int* ftgs_14;
+    int blendDiv_18;
+    ActorScriptCmd** script_1C;
     short walkAnim_20; // the actor command animations (FieldMinionCommand_800A7D40)
     short runAnim_22;
     short turnAnim_24;
@@ -1329,7 +1335,7 @@ extern GameTaskListDef gameModeLoadingTasks_800B0D5C[3];
 extern GameTaskListDef *gameModeTaskLists_800B0D74[12];
 extern EventDesc* gameEventListDefs_800B0DA4[58];
 extern EventDesc gameMainTaskDef_800B0E8C;
-extern EventDesc* endMovie_800B0EA4[5];
+extern EventDesc* gameTaskList_800B0EA4[5];
 extern GameFieldModeHandler fieldModeHandlers_800B0EB8[1];
 extern int fieldMode_800B0EC0;
 extern GameFieldMinions fieldMinions_800B0EC4;

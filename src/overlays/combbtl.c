@@ -415,8 +415,8 @@ MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, const char** lines, int 
     cfg.cancelable_14 = 0;
     cfg.mask_18 = 0;
     cfg.lines_1C = 0;
-    cfg.portraitKind_20 = 7;
-    cfg.portraitId_24 = kinds[which];
+    cfg.portrait_20.kind_0 = 7;
+    cfg.portrait_20.id_4 = kinds[which];
     cfg.style_28 = side;
     cfg.field_2C = 1;
     cfg.field_30 = 0;

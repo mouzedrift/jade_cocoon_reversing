@@ -1057,7 +1057,7 @@ EventDesc* gameEventListDefs_800B0DA4[58] = {
     &subOverlayTaskDef_800B09E4,
 };
 EventDesc gameMainTaskDef_800B0E8C = { 1, 1, 64, (void *)&gameMainTask_8008D46C, (EventEntryFn)GameMainInit_800A68CC };
-EventDesc* endMovie_800B0EA4[5] = {
+EventDesc* gameTaskList_800B0EA4[5] = {
     &eventDescs_80078EB8[0], &eventDescs_80078EB8[1], &eventDescs_80078EB8[5], &gameMainTaskDef_800B0E8C, 0,
 };
 GameFieldModeHandler fieldModeHandlers_800B0EB8[1] = { { 52, (void (*)())ReturnWarpStart_800BCB00 } };
@@ -1175,10 +1175,10 @@ EventNode *mapEventTasks_800B1DA8[1] = { 0 };
 EventNode *fieldModeTask_800B1DAC = 0;
 EventNode *chapterOverlayTask_800B1DB0[1] = { 0 };
 EventNode *subOverlayTask_800B1DB4[1] = { 0 };
-int** areaLoaderTask_800B1DB8 = 0;
+EventNode* areaLoaderTask_800B1DB8 = 0;
 EventNode *tileAnimTask_800B1DBC = 0;
 EventNode *prevModeTask_800B1DC0[1] = { 0 };
-int** mapLoaderTask_800B1DC4 = 0;
+EventNode* mapLoaderTask_800B1DC4 = 0;
 int gameStartMode_800B1DC8[2] = { 0 };
 Pool levantPool_800B1DD0 = { 0 }; // Levant's models (LevantModelTaskInit_800ACAA4)
 int unused_800B1DF4 = 0;
@@ -2182,9 +2182,9 @@ void RunEventListExit_800A74F0(EventNode* node)
     }
 }
 
-enum GameStates GameShutdown_800A7574(void)
+enum GameStates GameMain_800A7574(void)
 {
-    DrawIntroMovie_8001AF64(endMovie_800B0EA4);
+    RunMainLoop_8001AF64(gameTaskList_800B0EA4);
     ListFreeAll_8003FEC8(&defaultAllocList_80096090);
     SsUtAllKeyOff(0);
     if (unknownFlags_8008D678 & 0x40000000)
@@ -2291,11 +2291,11 @@ void ReleaseFieldMinion_800A785C(int idx)
     }
 }
 
-int GetFieldMinionModelId_800A78A8(int idx)
+char* GetFieldMinionName_800A78A8(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        return (*GetFieldMinion_800A77F4(idx)->hdr_10)->id_0;
+        return (*GetFieldMinion_800A77F4(idx)->hdr_10)->name_0;
     }
     return 0;
 }

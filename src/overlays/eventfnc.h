@@ -674,28 +674,6 @@ typedef struct EvSpeaker
     int b_4;
 } EvSpeaker;
 
-typedef struct EvMsgWindowCfg
-{
-    int posMode_0;
-    short* pos_4;
-    void* str_8;
-    int fC;
-    int f10;
-    int cancelable_14; // MsgWindowCfg (msgwin.h)
-    int mask_18;
-    void** list_1C;
-    EvSpeaker pair_20;
-    int style_28;
-    int f2C;
-    int f30;
-    int f34;
-    int f38;
-    int f3C;
-    int f40;
-    int voice_44;
-} EvMsgWindowCfg;
-
-
 typedef struct EvMsgOptions
 {
     EvSpeaker pair_A8;
@@ -732,7 +710,7 @@ extern int FieldMinionCommand_800A7D40(int a, int* p);
 extern int FinishLevantCommand_800A9008(int* p);
 extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
 extern void* GetEventString_800A6738(unsigned int id);
-extern int GetFieldMinionModelId_800A78A8(int a);
+extern char* GetFieldMinionName_800A78A8(int a);
 extern int GetFieldMinionHeaderF2A_800A78F4(int a);
 extern EvRelocBlob eventReloc_800AEBBC;
 extern void* eventDataBuf_800AEBC8;

@@ -638,7 +638,7 @@ int GetMagicIcon_8001AF3C(int idx)
     }
     return 0;
 }
-void DrawIntroMovie_8001AF64(void* descs)
+void RunMainLoop_8001AF64(void* descs)
 {
     void* list;
     DRAWENV* e0;

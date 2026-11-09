@@ -40,7 +40,7 @@ void ShowDemoDisclaimer_80040C8C(void)
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
-    DrawIntroMovie_8001AF64(demoDisclaimer_800869A8);
+    RunMainLoop_8001AF64(demoDisclaimer_800869A8);
 }
 void PlayAnimeMovie_80040CCC(void)
 {
@@ -48,7 +48,7 @@ void PlayAnimeMovie_80040CCC(void)
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
-    DrawIntroMovie_8001AF64(introAnime_800869C8);
+    RunMainLoop_8001AF64(introAnime_800869C8);
 }
 void PlayAnimeMovie_80040D0C(void)
 {
@@ -445,7 +445,7 @@ int InterpolateWindowRect_8004196C(RECT* dst, RECT* src, int cur, int max, int m
 EventDesc* demoDisclaimer_800869A8[2] = { &demoDisclaimerData_80086990 };
 EventDesc introAnimeData_800869B0 = { 1, 1, 0, (EventNode**)dword_8008D3E4, (EventEntryFn)StartIntroAnime_80040D34 };
 EventDesc* introAnime_800869C8[2] = { &introAnimeData_800869B0 };
-enum GameStates (*overlayCallbacks_800869D0[31])(void) = { TitleMain_800A0EF0, CombatMain_800A1324, SoundTestMain_800A51AC, TstModelMain_800A1B24, TstCompoMain_800A200C, GameShutdown_800A7574 };
+enum GameStates (*overlayCallbacks_800869D0[31])(void) = { TitleMain_800A0EF0, CombatMain_800A1324, SoundTestMain_800A51AC, TstModelMain_800A1B24, TstCompoMain_800A200C, GameMain_800A7574 };
 MovieInfo strMovies_80086A4C[26] = {
     {
         0x43A,

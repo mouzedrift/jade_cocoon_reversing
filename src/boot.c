@@ -120,7 +120,7 @@ void ShowCopyright_80040A84(void)
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
-    DrawIntroMovie_8001AF64(copyright_80086948);
+    RunMainLoop_8001AF64(copyright_80086948);
 }
 void PlayGenkiMovie_80040AC4(void)
 {
@@ -133,7 +133,7 @@ void PlayGenkiMovie_80040AEC(void)
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
-    DrawIntroMovie_8001AF64(genkiMovie_80086968);
+    RunMainLoop_8001AF64(genkiMovie_80086968);
 }
 void PlayCraveMovie_80040B2C(void)
 {
@@ -146,7 +146,7 @@ void PlayCraveEntertainmentMovie_80040B54(void)
     drawEnvRed_8008D448[2] = 0;
     drawEnvRed_8008D448[1] = 0;
     drawEnvRed_8008D448[0] = 0;
-    DrawIntroMovie_8001AF64(craveEntertainmentMovie_80086988);
+    RunMainLoop_8001AF64(craveEntertainmentMovie_80086988);
 }
 extern const char aWarning_80074A24[];
 extern const char aThisDemoVersion_80074A34[];

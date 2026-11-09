@@ -1626,7 +1626,7 @@ const char strSoundNumber_800A519C[16] = "\203T\203E\203\223\203h\224\324\215\20
 enum GameStates SoundTestMain_800A51AC(void)
 {
     EndFade_8001C290();
-    DrawIntroMovie_8001AF64(soundTestTaskList_800AA340);
+    RunMainLoop_8001AF64(soundTestTaskList_800AA340);
     return 6;
 }
 

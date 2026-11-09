@@ -599,7 +599,7 @@ void SetCameraLookAt_800A1A24(TstModelWork* c)
 
 enum GameStates TstModelMain_800A1B24(void)
 {
-    DrawIntroMovie_8001AF64(tstModelTaskList_800A1EDC);
+    RunMainLoop_8001AF64(tstModelTaskList_800A1EDC);
     return 6;
 }
 

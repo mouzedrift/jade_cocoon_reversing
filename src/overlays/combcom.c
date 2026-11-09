@@ -364,7 +364,7 @@ void DrawPauseMenu_800CBCA0()
     start = pauseItemStart_800CB528;
     giveUp = pauseItemGiveUp_800CB560;
     ret = pauseItemReturn_800CB598;
-    memset(list, 0, 0x10);
+    memset(list, 0, sizeof(list));
     menu = menuWinTmpl_800CB5D0;
     list[0] = &start;
     list[1] = &giveUp;
@@ -592,8 +592,8 @@ int DrawTargetList_800CC674(short* target, int mode, int sel, int ot)
     rows[0] = targetItem0_800CB690;
     rows[1] = targetItem1_800CB6C8;
     rows[2] = targetItem2_800CB700;
-    memset(list, 0, 0x10);
-    memset(items, 0, 0xC);
+    memset(list, 0, sizeof(list));
+    memset(items, 0, sizeof(items));
     menu = menuWinTmpl_800CB5D0;
     rowX = side_800CD839 * 62 + 100;
     p0 = &rows[0];
