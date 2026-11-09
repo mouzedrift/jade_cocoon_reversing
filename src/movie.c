@@ -277,15 +277,15 @@ int MovieDecodeNextFrame_800415D8(MovieCtx* ctx, MovieInfo* movie)
     while (StGetNext(&addr, &hdr) == 1)
     {
     }
-    if (hdr[2] >= movie->frameCount_A)
+    if (((StrSectorHeader*)hdr)->frame_8 >= movie->frameCount_A)
     {
         bMovieFinished_800960FC = 1;
     }
-    if (movieWidth_80086F98 != ((u_short*)hdr)[8] || movieHeight_80086F9A != ((u_short*)hdr)[9])
+    if (movieWidth_80086F98 != ((StrSectorHeader*)hdr)->width_10 || movieHeight_80086F9A != ((StrSectorHeader*)hdr)->height_12)
     {
         ClearMovieRect_80040E28(movie);
-        movieWidth_80086F98 = ((u_short*)hdr)[8];
-        movieHeight_80086F9A = ((u_short*)hdr)[9];
+        movieWidth_80086F98 = ((StrSectorHeader*)hdr)->width_10;
+        movieHeight_80086F9A = ((StrSectorHeader*)hdr)->height_12;
     }
     ctx->rect[0].w = ctx->rect[1].w = MOVIE_W(movie, movieWidth_80086F98);
     ctx->rect[0].h = ctx->rect[1].h = movieHeight_80086F9A;

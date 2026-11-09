@@ -5,6 +5,19 @@
 
 #include "globals.h"
 
+/* the header of a movie (STR) sector, as StGetNext gives it (32-bit words on both machines) */
+typedef struct
+{
+    unsigned short status_0;
+    unsigned short type_2;
+    unsigned short sector_4;  // this sector's number in the frame
+    unsigned short sectors_6; // the frame's sectors
+    unsigned int frame_8;     // frame number
+    unsigned int size_C;      // the frame's bitstream size
+    unsigned short width_10;
+    unsigned short height_12;
+} StrSectorHeader;
+
 typedef struct
 {
     short x;
