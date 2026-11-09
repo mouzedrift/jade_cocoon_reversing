@@ -12,7 +12,7 @@ typedef struct
     short x_0; // projected centre
     unsigned short y_2;
     SVECTOR rel_4; // position relative to the camera eye
-    long otz_C;    // gte_stszotz
+    int otz_C;    // gte_stszotz
     int w_10;      // projected size
     int h_14;
     unsigned char shade_18;
@@ -23,7 +23,7 @@ typedef struct
 typedef struct
 {
     SVECTOR v[3]; // pad: edge v[i] -> v[i + 1] is an inner edge
-    long pad_18[2];
+    int pad_18[2];
 } WireTri;
 typedef struct
 {
@@ -41,7 +41,7 @@ typedef struct
     SVECTOR rel_2C;  // position relative to the camera eye
     LVec3 ofs_34;    // sprite offset (model space)
     LVec3 wofs_40;   // sprite offset rotated (returned; ApplyMatrixLV output)
-    long otz_4C;
+    int otz_4C;
     int pad_50[3];
     int x0_5C; // corner offsets on screen
     int y0_60;
@@ -72,29 +72,29 @@ typedef struct
 // POLY_GT4 as the sprite-vertex quads build it (colours and uv as words / halves)
 typedef struct
 {
-    unsigned long tag;
-    unsigned long rgbc0;
+    O_TAG;
+    unsigned int rgbc0;
     short x0, y0;
     unsigned short uv0;
     unsigned short clut;
-    unsigned long rgbc1;
+    unsigned int rgbc1;
     short x1, y1;
     unsigned short uv1;
     unsigned short tpage;
-    unsigned long rgbc2;
+    unsigned int rgbc2;
     short x2, y2;
-    unsigned long uv2;
-    unsigned long rgbc3;
+    unsigned int uv2;
+    unsigned int rgbc3;
     short x3, y3;
-    unsigned long uv3;
+    unsigned int uv3;
 } FtgPrimGT4;
 // their state, in the scratchpad at 0x1F800214
 typedef struct
 {
     int attr_0;   // slot's attribute (SVECTOR pad of the slot table): bit 1 visible, bit 2 opaque, bit 4 semi-trans
-    long otz_4;
-    long opz_8;
-    long opz2_C;
+    int otz_4;
+    int opz_8;
+    int opz2_C;
     int slot_10;
     unsigned char* next_14;
     FtgSpriteVtx* v_18[4];
@@ -104,8 +104,8 @@ typedef struct
 // DrawSpriteVtxQuadsG4_80045E48 (untextured quads), same place
 typedef struct
 {
-    long opz_0;
-    long opz2_4;
+    int opz_0;
+    int opz2_4;
     DR_TPAGE tpage_8;
     int pad_10[8];
     unsigned char* next_30;
@@ -119,7 +119,9 @@ typedef struct
 {
     int pad_0;
     int n_4; // bones; rot holds n + 2 entries per frame ([1] is the root translation)
-    char pad_8[0xC];
+    int pad_8;
+    int pad_C;
+    void* cues_10; // as ModelAnim
     short* pos; // x, y, z per bone
     short* rot; // x, y, z per entry
 } AnimPose;
@@ -159,7 +161,7 @@ void GetRotationAxis_8004AD44(MATRIX* in, VECTOR* out);
 extern MATRIX boneMatrices_80096120[]; // per-bone draw matrices
 
 // draws an FTG object at pos / rot (optional per-axis scale) through DrawFtgObject_8004C7BC
-extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot);
+extern void DrawFtgObjectAt_80044D0C(FtgObject* obj, OT_TYPE* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot);
 
 extern int unused_80096620[2];
 

@@ -79,7 +79,7 @@ typedef struct EvScriptCtx
     int trigger_C8; // the trigger id waited for (EvCmdWaitTrigger_800B9B98, GAME's FireEventTrigger_800A5C40)
     int vars_CC[8]; // script local variables (EvCmdSetVar_800B8FB8)
     int branch_EC; // the selected branch: choice / test / random result, indexes the goto / jump instructions
-    int callArg_F0;
+    long callArg_F0; // the argument of the map code a script calls: a value, or an address (a pointer on PC)
     int callArg0_F4;
     int callArg1_F8;
     int callArg2_FC;
@@ -147,7 +147,7 @@ extern void LoadEncounterModels_800B8940(int* ids);
 
 extern int CollideWithMapEnts_800B82C8(int* pos, int* prevPos, MapMesh* ents, unsigned char* flags, int n);
 
-extern void SlideOffEdge_800B8220(int* pos, int prevPos, int mesh, int* tri, int* edge, int* dir);
+extern void SlideOffEdge_800B8220(int* pos, int* prevPos, MapMesh* mesh, int* tri, int* edge, int* dir);
 
 extern int FindDuplicatePoint_800B8028(int* out, EvSVec* pts);
 
@@ -193,7 +193,7 @@ static inline int EvFindLevantMesh(GameLevantActor* ent)
 
 extern void FindCrossedEdge_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge);
 
-extern void SlideAlongEdge_800B7E40(int* pos, int mesh, int tri, int edge, int* out);
+extern void SlideAlongEdge_800B7E40(int* pos, MapMesh* mesh, int tri, int edge, int* out);
 
 typedef struct EvMapEntry
 {

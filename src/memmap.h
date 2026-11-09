@@ -23,7 +23,7 @@ void* Pc_PsxPtr(unsigned int addr);
 /* a call of the code a map file brings along (loaded to 0x800B22C0), by the address the game's tables hold; on PC
    that code is not there yet (src/pc/mapcode.c) */
 #ifdef __psyz
-int Pc_MapCodeCall(unsigned int addr, int arg);
+int Pc_MapCodeCall(unsigned int addr, long arg); /* arg: a value, a pointer, or a PlayStation address (PSX_PTR) */
 #define MAP_CODE_CALL(addr, arg) Pc_MapCodeCall((unsigned int)(addr), (arg))
 #define MAP_CODE_LOADED(fileId) Pc_MapCodeLoaded(fileId)
 void Pc_MapCodeLoaded(int fileId);

@@ -68,8 +68,8 @@ void DrawBattleStage_800BC90C(CameraCtrl* ctrl)
             VECTOR rel;
             POLY_FT4 poly;
             SVECTOR sv;
-            long depth;
-            long flag;
+            int depth;
+            int flag;
             int sx;
             int yaw;
             int column;
@@ -86,7 +86,7 @@ void DrawBattleStage_800BC90C(CameraCtrl* ctrl)
             sv.vx = rel.vx;
             sv.vy = rel.vy;
             sv.vz = rel.vz;
-            RotTransPers(&sv, (long*)&sxy, &depth, &flag);
+            RotTransPers(&sv, (void*)&sxy, &depth, &flag);
             poly = battleEffectFile_80095468.sprites_20[battleStages_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
             yaw = (cameraRot_8008D4C8.vy & 0xFFF) / 4;
             column = i * 96 - 0x400;

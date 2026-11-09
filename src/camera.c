@@ -656,8 +656,8 @@ extern ScreenPosZ cameraTargetScreenPos_8008D668;
 void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target)
 {
     SVECTOR sv;
-    long pr;
-    long flag;
+    int pr;
+    int flag;
     int screen;
     unsigned int prevScreen;
     UpdateCameraRotation_80039E14();
@@ -673,7 +673,7 @@ void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target)
     sv.vz -= cameraEye_8008D600.vz;
     geomScreenDistance_8008B548 = prevScreen >> 12;
     SetGeomScreen(screen / 4096);
-    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (long*)&cameraTargetScreenPos_8008D668.xy, &pr, &flag);
+    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (void*)&cameraTargetScreenPos_8008D668.xy, &pr, &flag);
     if (flag < 0)
     {
         cameraTargetScreenPos_8008D668.xy.vx = 0xA0;
@@ -691,8 +691,8 @@ void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, Vec3i* target, Vec3i* blen
     SVECTOR sv;
     SVECTOR sv2;
     ScreenPosZ blendScreenPos;
-    long pr;
-    long flag;
+    int pr;
+    int flag;
     int screen;
     unsigned int prevScreen;
 
@@ -709,7 +709,7 @@ void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, Vec3i* target, Vec3i* blen
     sv.vx -= cameraEye_8008D600.vx;
     sv.vy -= cameraEye_8008D600.vy;
     sv.vz -= cameraEye_8008D600.vz;
-    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (long*)&cameraTargetScreenPos_8008D668.xy, &pr, &flag);
+    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (void*)&cameraTargetScreenPos_8008D668.xy, &pr, &flag);
     sv2.vx = blendTarget->x;
     sv2.vy = blendTarget->y;
     sv2.vz = blendTarget->z;
@@ -717,7 +717,7 @@ void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, Vec3i* target, Vec3i* blen
     sv2.vx -= cameraEye_8008D600.vx;
     sv2.vy -= cameraEye_8008D600.vy;
     sv2.vz -= cameraEye_8008D600.vz;
-    blendScreenPos.z = RotTransPers(&sv2, (long*)&blendScreenPos.xy, &pr, &flag);
+    blendScreenPos.z = RotTransPers(&sv2, (void*)&blendScreenPos.xy, &pr, &flag);
     cameraTargetScreenPos_8008D668.xy.vx += (blendScreenPos.xy.vx - cameraTargetScreenPos_8008D668.xy.vx) * blend / 4096;
     cameraTargetScreenPos_8008D668.xy.vy += (blendScreenPos.xy.vy - cameraTargetScreenPos_8008D668.xy.vy) * blend / 4096;
     cameraTargetScreenPos_8008D668.z += (blendScreenPos.z - cameraTargetScreenPos_8008D668.z) * blend / 4096;

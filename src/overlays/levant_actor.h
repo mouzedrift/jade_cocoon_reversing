@@ -59,7 +59,7 @@ typedef struct GameLevantActor
     int slideTri_88;  // CollideLevantWithMap_800B6DD4: the triangle and edge it slides along
     int slideEdge_8C;
     MATRIX mats_90[40];
-    int bonePos_590[40][3];
+    LVec3 bonePos_590[40];
     FirFilter turn_770;  // input_8: turn speed; output_C.low is added to Levant's facing
     int turnBuf_780[4];
 } GameLevantActor;

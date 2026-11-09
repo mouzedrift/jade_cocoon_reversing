@@ -32,6 +32,7 @@
 #include "effect_data.h"
 #include "battle_damage.h"
 #include "levant_actor.h"
+#include "skel_draw.h" // AnimBone
 
 extern void RequestGameMode_800A6D30(int mode);
 
@@ -231,6 +232,7 @@ extern EventNode* gameMainTask_8008D46C;
 typedef struct GameMapLoc
 {
     unsigned short area, map, entrance; // mapTable_800B0608[area][map][entrance]
+    unsigned short encIndex;            // the entrance's encIndex_4
 } GameMapLoc;
 
 extern void FindMapEntrance_800ADCEC();
@@ -432,12 +434,12 @@ typedef union TileUVClut
         unsigned char u0, v0;
         unsigned short clut;
     } f;
-    unsigned long word;
+    unsigned int word;
 } TileUVClut;
 // POLY_FT4 / SPRT with the u0, v0, clut word as a TileUVClut
 typedef struct TileFT4
 {
-    unsigned long tag;
+    O_TAG;
     unsigned char r0, g0, b0, code;
     short x0, y0;
     TileUVClut uv0;
@@ -453,7 +455,7 @@ typedef struct TileFT4
 } TileFT4;
 typedef struct TileSprt
 {
-    unsigned long tag;
+    O_TAG;
     unsigned char r0, g0, b0, code;
     short x0, y0;
     TileUVClut uv0;
@@ -816,11 +818,13 @@ extern void LevantModelTask_800ACB64();
 // a map entrance (mapTable_800B0608[area][map][n], ends with id -1)
 typedef struct GameMapEntrance
 {
-    short id_0;
-    char pad_2[2];
+    short id_0;       // the map file (MapAreaEntry.f0)
+    short f2;
     short encIndex_4; // the map's slot in the encounter flag tables (GetMapEncounterFlags_800A53CC)
     short entrance_6; // the entrance id (FindMapEntrance_800ADCEC)
-    char pad_8[8];
+    short music_8;    // MapAreaEntry.music_8
+    short fA;
+    int callback_C;   // map code address (0: none)
 } GameMapEntrance;
 
 extern int GetWeaponEffect_800189F8();
@@ -976,21 +980,6 @@ typedef struct GameLevantActorInit
     int status_3C;
 } GameLevantActorInit;
 
-// skeleton draw arguments (skel_draw.h AnimSkel)
-typedef struct GameSkelDraw
-{
-    FtgObject* ftg_0;
-    void* pos_4;
-    void* rot_8;
-    void* bones;
-    void* base;
-    char* pose;
-    unsigned int frame;
-    int flags;
-    char* pos; // out: bone positions
-    int scale_24;
-    OT_TYPE* ot;
-} GameSkelDraw;
 
 #define tintImageRectY_8007DC82 (((short*)&tintImageRect_8007DC80)[1])
 
@@ -1000,7 +989,7 @@ extern void DrawAnimSkel_80046A58(void* sk, void* buf, char* pose);
 
 extern void DrawAnimSkelBlend_80047E28(void* sk, void* base, char* pose, unsigned int frame, int w, void* buf, char* t);
 
-extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, unsigned long* ot, int flags);
+extern void DrawSpriteVtxQuadsGT4_800459E4(void* bones, void* m, OT_TYPE* ot, int flags);
 
 extern void GetAnimRootMotion_8004D288(void* out, void* s, int k);
 
@@ -1277,49 +1266,13 @@ typedef struct GameMapSelect
 } GameMapSelect;
 
 extern GameMapSelect mapSelect_800AEBF8;
-extern int mapArea0Map00Entrances_800AEC44[20];
-extern int mapArea0Map01Entrances_800AEC94[20];
-extern int mapArea0Map02Entrances_800AECE4[16];
-extern int mapArea0Map03Entrances_800AED24[304];
-extern int mapArea0Map04Entrances_800AF1E4[32];
-extern int mapArea1Map00Entrances_800AF264[36];
-extern int mapArea1Map01Entrances_800AF2F4[32];
-extern int mapArea1Map02Entrances_800AF374[20];
-extern int mapArea1Map03Entrances_800AF3C4[20];
-extern int mapArea1Map04Entrances_800AF414[36];
-extern int mapArea1Map05Entrances_800AF4A4[24];
-extern int mapArea1Map06Entrances_800AF504[56];
-extern int mapArea1Map07Entrances_800AF5E4[20];
-extern int mapArea1Map08Entrances_800AF634[20];
-extern int mapArea1Map09Entrances_800AF684[20];
-extern int mapArea1Map10Entrances_800AF6D4[20];
-extern int mapArea1Map11Entrances_800AF724[8];
-extern int mapArea2Map00Entrances_800AF744[16];
-extern int mapArea2Map01Entrances_800AF784[24];
-extern int mapArea2Map02Entrances_800AF7E4[12];
-extern int mapArea2Map03Entrances_800AF814[12];
-extern int mapArea2Map04Entrances_800AF844[20];
-extern int mapArea2Map05Entrances_800AF894[20];
-extern int mapArea2Map06Entrances_800AF8E4[28];
-extern int mapArea2Map07Entrances_800AF954[8];
-extern int mapArea2Map08Entrances_800AF974[8];
-extern int mapArea2Map09Entrances_800AF994[16];
-extern int mapArea2Map10Entrances_800AF9D4[16];
-extern int mapArea2Map11Entrances_800AFA14[16];
-extern int mapArea4Map00Entrances_800AFA54[28];
-extern int mapArea4Map01Entrances_800AFAC4[56];
-extern int mapArea4Map02Entrances_800AFBA4[80];
-extern int mapArea4Map03Entrances_800AFCE4[200];
-extern int mapArea4Map04Entrances_800B0004[100];
-extern int mapArea5Map01Entrances_800B0194[48];
-extern int mapArea5Map02Entrances_800B0254[68];
-extern int mapArea5Map03Entrances_800B0364[112];
-extern void *mapArea0Maps_800B0524[6];
-extern void *mapArea1Maps_800B053C[13];
-extern void *mapArea2Maps_800B0570[13];
-extern void *mapArea3Maps_800B05A4[13];
-extern void *mapArea4Maps_800B05D8[6];
-extern void *mapArea5Maps_800B05F0[6];
+extern GameMapEntrance* mapArea0Maps_800B0524[6];
+extern GameMapEntrance* mapArea1Maps_800B053C[13];
+extern GameMapEntrance* mapArea2Maps_800B0570[13];
+extern GameMapEntrance* mapArea3Maps_800B05A4[13];
+extern GameMapEntrance* mapArea4Maps_800B05D8[6];
+extern GameMapEntrance* mapArea5Maps_800B05F0[6];
+extern GameMapEntrance mapEntrances_800AEC44[];
 extern GameMapEntrance **mapTable_800B0608[7];
 extern int areaMapCounts_800B0624[29];
 extern int gameModeChanged_800B0698;
@@ -1381,8 +1334,7 @@ extern EventDesc* endMovie_800B0EA4[5];
 extern GameFieldModeHandler fieldModeHandlers_800B0EB8[1];
 extern int fieldMode_800B0EC0;
 extern GameFieldMinions fieldMinions_800B0EC4;
-extern char levantBones_800B0EF8;
-extern int unused_800B0EFC[45];
+extern AnimBone levantBones_800B0EF8[];
 extern SVECTOR levantBoneScale_800B0FB0[22];
 extern int dword_800B1168;
 extern int levantBaseModels_800B116C[19];

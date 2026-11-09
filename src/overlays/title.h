@@ -54,8 +54,6 @@ extern const TitleColor logoPulseColor_800A08B0;
 extern const char debugLevantName_800A08B4[];
 extern const int unused_800A08C0[2];
 extern char levantName_800A2718[];
-extern int unused_800A2728;
-extern int unused_800A272C;
 extern EventDesc titleMenuTaskDesc_800A2778;
 extern EventDesc newGameTaskDesc_800A2790;
 extern EventDesc titleSoundTaskDesc_800A27A8;

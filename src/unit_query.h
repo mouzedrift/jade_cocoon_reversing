@@ -59,7 +59,7 @@ int CheckItemUsable_80033AFC(ListMenuState* menu);
 int CheckMagicCastable_80033C08(ListMenuState* menu);
 int GetSkillTargetFlags_80031B0C(UnitSkill* base, int idx);
 int GetEquipmentId_8003356C(UnitStatus* status, unsigned int idx);
-int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, unsigned long* ot, short x, short y, int scaleX, int scaleY, short* offset, int anchorFlags);
-void DrawRotatedPublicSprite_80031FF4(int idx, unsigned long* ot, unsigned short* pos, int angle);
+int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, OT_TYPE* ot, short x, short y, int scaleX, int scaleY, short* offset, int anchorFlags);
+void DrawRotatedPublicSprite_80031FF4(int idx, OT_TYPE* ot, unsigned short* pos, int angle);
 void ApplyEquipmentModifiers_80033754(unsigned char* dst, UnitStatus* src);
 #endif

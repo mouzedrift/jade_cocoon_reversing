@@ -118,7 +118,7 @@ void BasisFromAxis_8004B0A8(VECTOR* axis, MATRIX* m)
     m->m[1][2] = n2.vy;
     m->m[2][2] = n2.vz;
 }
-void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyF3_8004B320(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
 {
     POLY_F3* prim = (POLY_F3*)FTG_PRIM_SCRATCH;
     FtgPolyF3* poly = obj->f3_0.items;
@@ -168,7 +168,7 @@ void DrawFtgPolyF3_8004B320(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyF4_8004B590(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
 {
     POLY_F4* prim = (POLY_F4*)FTG_PRIM_SCRATCH;
     FtgPolyF4* poly = obj->f4_20.items;
@@ -223,7 +223,7 @@ void DrawFtgPolyF4_8004B590(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyG3_8004B844(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
 {
     POLY_G3* prim = (POLY_G3*)FTG_PRIM_SCRATCH;
     FtgPolyG3* poly = obj->g3_8.items;
@@ -291,7 +291,7 @@ void DrawFtgPolyG3_8004B844(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyG4_8004BB9C(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
 {
     POLY_G4* prim = (POLY_G4*)FTG_PRIM_SCRATCH;
     FtgPolyG4* poly = obj->g4_28.items;
@@ -373,7 +373,7 @@ void DrawFtgPolyG4_8004BB9C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
 {
     POLY_FT3* prim;
     FtgPolyFT3* poly;
@@ -390,10 +390,10 @@ void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         FtgVert* normal = &poly->n;
         gte_ldv3c(poly->v);
         gte_rtpt();
-        *(unsigned long*)&prim->u0 = *(unsigned long*)&poly->u0 + ctx->clutAdd_1C;
+        *(unsigned int*)&prim->u0 = *(unsigned int*)&poly->u0 + ctx->clutAdd_1C;
         gte_stsxy3_ft3(prim);
         gte_nclip();
-        *(unsigned long*)&prim->u1 = *(unsigned long*)&poly->u1;
+        *(unsigned int*)&prim->u1 = *(unsigned int*)&poly->u1;
         *(unsigned short*)&prim->u2 = poly->v[2].uv;
         gte_stopz(&ctx->opz_10);
         if (ctx->opz_10 > 0)
@@ -430,7 +430,7 @@ void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
+void DrawFtgPolyFT4_8004C21C(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
 {
     POLY_FT4* prim;
     FtgPolyFT4* poly;
@@ -447,13 +447,13 @@ void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         FtgVert* normal = &poly->n;
         gte_ldv3c(poly->v);
         gte_rtpt();
-        *(unsigned long*)&prim->u0 = *(unsigned long*)&poly->u0 + ctx->clutAdd_1C;
+        *(unsigned int*)&prim->u0 = *(unsigned int*)&poly->u0 + ctx->clutAdd_1C;
         gte_nclip();
         gte_stopz(&ctx->opz_10);
         gte_stsxy3_ft4(prim);
         gte_ldv0(&poly->v[3]);
         gte_rtps();
-        *(unsigned long*)&prim->u1 = *(unsigned long*)&poly->u1;
+        *(unsigned int*)&prim->u1 = *(unsigned int*)&poly->u1;
         gte_nclip();
         gte_stopz(&ctx->opz2_14);
         if (ctx->opz_10 > 0 || ctx->opz2_14 < 0)
@@ -495,7 +495,7 @@ void DrawFtgPolyFT4_8004C21C(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx)
         }
     }
 }
-void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctxArg, int slot)
+void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctxArg, int slot)
 {
     FtgDrawCtx* ctx = ctxArg;
     FtgSpriteVtx* vtx;
@@ -513,7 +513,7 @@ void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, unsigned long* ot, FtgDrawCtx
     {
         gte_ldv3(&sprite[0].p1, &sprite[1].p1, &sprite[2].p1);
         gte_rtpt();
-        ftgSpriteTPageClut_8009AAD8.word = *(unsigned long*)&obj->tpage_4C + ctx->clutAdd_1C;
+        ftgSpriteTPageClut_8009AAD8.word = *(unsigned int*)&obj->tpage_4C + ctx->clutAdd_1C;
         gte_stsxy3(&vtx[0].sxy_0, &vtx[1].sxy_0, &vtx[2].sxy_0);
         gte_stsz3(&vtx[0].sz_4, &vtx[1].sz_4, &vtx[2].sz_4);
         if (ctx->flags_20 & 1)
@@ -575,7 +575,7 @@ static inline void FtgDrawSprites(FtgObject* obj, FtgDrawCtx* ctxArg, int slot)
     }
     ftgSpriteVtxNext_80098180 = vtx;
 }
-void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot)
+void DrawFtgObject_8004C7BC(FtgObject* obj, OT_TYPE* ot, int flags, int slot)
 {
     FtgDrawCtx* ctx = FTG_DRAW_CTX;
     int i;
@@ -632,7 +632,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
     {
         POLY_GT3* t = (POLY_GT3*)FTG_PRIM_SCRATCH;
         FtgPolyGT3* e = obj->gt3_18.items;
-        *(unsigned long*)&t->r0 = 0x34808080;
+        *(unsigned int*)&t->r0 = 0x34808080;
         setlen(t, 9);
         t->code = 0x34;
         gte_ldrgb(&t->r0);
@@ -641,7 +641,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
             FtgVert* n = e->n;
             gte_ldv3c(e->v);
             gte_rtpt();
-            *(unsigned long*)&t->u0 = *(unsigned long*)&e->u0 + ctx->clutAdd_1C;
+            *(unsigned int*)&t->u0 = *(unsigned int*)&e->u0 + ctx->clutAdd_1C;
             gte_stsxy3_gt3(t);
             gte_nclip();
             gte_stopz(&ctx->opz_10);
@@ -656,13 +656,13 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
                     {
                         gte_ldv3(n, &e->n[1], &e->n[2]);
                         gte_ncdt();
-                        *(unsigned long*)&t->u1 = *(unsigned long*)&e->u1;
+                        *(unsigned int*)&t->u1 = *(unsigned int*)&e->u1;
                         *(unsigned short*)&t->u2 = e->v[2].uv;
                         gte_strgb3(&t->r0, &t->r1, &t->r2);
                     }
                     else
                     {
-                        *(unsigned long*)&t->u1 = *(unsigned long*)&e->u1;
+                        *(unsigned int*)&t->u1 = *(unsigned int*)&e->u1;
                         *(unsigned short*)&t->u2 = e->v[2].uv;
                         gte_ldrgb(&e->c[0]);
                         gte_lddp(ctx->dq_C);
@@ -694,7 +694,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
     {
         POLY_GT4* t = (POLY_GT4*)FTG_PRIM_SCRATCH;
         FtgPolyGT4* e = obj->gt4_38.items;
-        *(unsigned long*)&t->r0 = 0x3C808080;
+        *(unsigned int*)&t->r0 = 0x3C808080;
         setlen(t, 12);
         t->code = 0x3C;
         gte_ldrgb(&t->r0);
@@ -703,13 +703,13 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int sl
             FtgVert* n = e->n;
             gte_ldv3c(e->v);
             gte_rtpt();
-            *(unsigned long*)&t->u0 = *(unsigned long*)&e->u0 + ctx->clutAdd_1C;
+            *(unsigned int*)&t->u0 = *(unsigned int*)&e->u0 + ctx->clutAdd_1C;
             gte_nclip();
             gte_stopz(&ctx->opz_10);
             gte_stsxy3_gt4(t);
             gte_ldv0(&e->v[3]);
             gte_rtps();
-            *(unsigned long*)&t->u1 = *(unsigned long*)&e->u1;
+            *(unsigned int*)&t->u1 = *(unsigned int*)&e->u1;
             gte_nclip();
             gte_stopz(&ctx->opz2_14);
             if (ctx->opz_10 > 0 || ctx->opz2_14 < 0)
@@ -784,7 +784,7 @@ void SetGteLightAndCamera_8004D0E8(void)
     gte_SetTransMatrix(m);
 }
 
-void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* light, int flags, void* scale)
+void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, OT_TYPE* ot, void* pos, void* rot, void* light, int flags, void* scale)
 {
     DrawFtgObjectAt_80044D0C(obj, ot, pos, rot, light, flags, scale, 0);
 }
@@ -813,7 +813,10 @@ typedef struct
 {
     int pad_0;
     int boneCount_4;
-    char pad_8[0x10];
+    int pad_8;
+    int pad_C;
+    void* cues_10;     // as ModelAnim
+    short* basePose_14;
     short* frames_18; // per frame: root motion, root rotation, then one rotation per bone (x, y, z)
 } AnimFrames;
 void GetAnimRootMotion_8004D288(int* out, AnimFrames* anim, int frame)
@@ -847,17 +850,14 @@ void GetAnimBoneRot_8004D354(short* out, AnimFrames* anim, int bone, int frame)
     out[1] = anim->frames_18[i * 3 + 1];
     out[2] = anim->frames_18[i * 3 + 2];
 }
-/* 4096-entry sine table at 0x80084540 (inside the battleCamSpline1Tail_80084350 data chunk) */
-extern short battleCamSpline1Tail_80084350[];
-#define SIN_TABLE (battleCamSpline1Tail_80084350 + 0xF8)
 void RotMatrixXYZ_8004D3D8(SVECTOR* rot, MATRIX* m)
 {
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int a;
     int b;
     m->m[0][2] = sy;
@@ -874,12 +874,12 @@ void RotMatrixXYZ_8004D3D8(SVECTOR* rot, MATRIX* m)
 }
 void RotMatrixZYX_8004D5CC(SVECTOR* rot, MATRIX* m)
 {
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int a;
     int b;
     m->m[2][0] = -sy;
@@ -929,12 +929,12 @@ void ResetFtgSpriteVtx_8004D924(void)
 // RotMatrixZYX_8004D5CC's matrix with its rows 1 and 2 turned by roll (a rotation about X applied after it)
 void RotMatrixZYXRollX_8004D938(short roll, SVECTOR* rot, MATRIX* m)
 {
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int a = (cz * sy) >> 12;
     int b = (sz * sy) >> 12;
     int m21 = (sx * cy) >> 12;
@@ -945,8 +945,8 @@ void RotMatrixZYXRollX_8004D938(short roll, SVECTOR* rot, MATRIX* m)
     int m00 = (cz * cy) >> 12;
     int m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
     int m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
-    int cr = SIN_TABLE[(roll + 0x400) & 0xFFF];
-    int sr = SIN_TABLE[roll & 0xFFF];
+    int cr = sinTable_80084540[(roll + 0x400) & 0xFFF];
+    int sr = sinTable_80084540[roll & 0xFFF];
     int r10 = ((m10 * cr) >> 12) + ((sy * sr) >> 12);
     int r11 = ((m11 * cr) >> 12) - ((m21 * sr) >> 12);
     int r12 = ((m12 * cr) >> 12) - ((m22 * sr) >> 12);
@@ -969,7 +969,7 @@ void PrintMatrix_8004DC54(MATRIX* m)
     printf("%d,%d,%d\r", m->m[1][0], m->m[1][1], m->m[1][2]);
     printf("%d,%d,%d\r", m->m[2][0], m->m[2][1], m->m[2][2]);
 }
-void ProjectFtgSprites_8004DCC0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx, int slot)
+void ProjectFtgSprites_8004DCC0(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx, int slot)
 {
     if (obj->spriteCount_40 == 0)
     {

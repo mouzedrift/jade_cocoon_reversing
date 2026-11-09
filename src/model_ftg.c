@@ -22,7 +22,6 @@ int IsOverlayLoaderIdle_80020D84(void);
 unsigned char* LoadFtgObject_80022458(FtgObject* out, unsigned char* src, void* h, short* reloc);
 
 
-extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];
@@ -1305,7 +1304,7 @@ void GetSavedModelFtg_8002512C(unsigned int* out, Model* model, int id)
         ModelSavedFtg* e = (ModelSavedFtg*)(i * sizeof(ModelSavedFtg) + (long)model->saved_64); // integer sum: the original adds the base second
         if (id == e->id_0)
         {
-            MemCopy_800403E8(out, &e->ftg_4, 0x54);
+            MemCopy_800403E8(out, &e->ftg_4, sizeof(FtgObject));
             break;
         }
     }
@@ -2031,7 +2030,7 @@ int GetModelAnimCount_80026724(int* section)
 }
 void AllocModelAnims_80026730(ModelAnim** out, int count, void* heap)
 {
-    ModelAnim* anims = HeapAlloc_8003FC8C(count * 28, heap);
+    ModelAnim* anims = HeapAlloc_8003FC8C(count * sizeof(ModelAnim), heap);
     int i;
     *out = anims;
     for (i = 0; i < count; i++)
@@ -2144,6 +2143,10 @@ void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, void* heap)
     {
         anim->cueCount_C = 0;
     }
+#ifdef __psyz
+    /* the PlayStation keeps the cue flag in boneCount_4: the frame data's index sums (x6, 32 bit) drop it there */
+    anim->boneCount_4 = m;
+#endif
     anim->basePose_14 = HeapAlloc_8003FC8C(m * 6, heap);
     anim->frames_18 = HeapAlloc_8003FC8C((m + 2) * (frames << 1) * 3, heap);
     dst = anim->basePose_14;
@@ -2575,7 +2578,7 @@ void LoadTileSets_80027778(int* data, List* heap)
         cur = (unsigned short*)src;
         arr[i].columns_8 = *cur++;
         arr[i].rows_A = *cur++;
-        arr[i].items = ListAlloc_8003FDC0(heap, arr[i].count * 2);
+        arr[i].items = ListAlloc_8003FDC0(heap, arr[i].count * sizeof(*arr[i].items));
         for (j = 0; j < arr[i].count; j++)
         {
             arr[i].items[j] = *cur++;
@@ -2594,12 +2597,12 @@ void LoadTileAnimLayers_800278BC(int* data, List* heap)
     TileAnimTimer* timer;
     count = file[0];
     tileAnim_8008D648.listCount_10 = count;
-    tileAnim_8008D648.lists_14 = ListAlloc_8003FDC0(heap, count * 8);
+    tileAnim_8008D648.lists_14 = ListAlloc_8003FDC0(heap, count * sizeof(TileAnimLayer));
     for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
         src = (int*)((char*)file + file[i + 1]);
         tileAnim_8008D648.lists_14[i].count = *src;
-        tileAnim_8008D648.lists_14[i].items = ListAlloc_8003FDC0(heap, tileAnim_8008D648.lists_14[i].count * 4);
+        tileAnim_8008D648.lists_14[i].items = ListAlloc_8003FDC0(heap, tileAnim_8008D648.lists_14[i].count * sizeof(TileAnimFrame));
         frames = (TileAnimFrame*)(src + 1);
         for (j = 0; j < tileAnim_8008D648.lists_14[i].count; j++)
         {
@@ -2608,10 +2611,10 @@ void LoadTileAnimLayers_800278BC(int* data, List* heap)
             tileAnim_8008D648.lists_14[i].items[j].time_2 = frames[j].time_2;
         }
     }
-    tileAnim_8008D648.pairs_18 = ListAlloc_8003FDC0(heap, tileAnim_8008D648.listCount_10 * 4);
+    tileAnim_8008D648.pairs_18 = ListAlloc_8003FDC0(heap, tileAnim_8008D648.listCount_10 * sizeof(TileAnimTimer));
     for (i = 0; i < tileAnim_8008D648.listCount_10; i++)
     {
-        timer = (TileAnimTimer*)(i * 4 + (long)tileAnim_8008D648.pairs_18); // integer sum, as the original
+        timer = (TileAnimTimer*)(i * sizeof(TileAnimTimer) + (long)tileAnim_8008D648.pairs_18); // integer sum, as the original
         timer->frame_2 = 0;
         timer->timer_0 = 0;
     }

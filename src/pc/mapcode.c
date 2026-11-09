@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "pc/mapcode.h"
+#include "memmap.h"
 
 #define MAP_CODE_STUB(name)                                                                                           \
     void* name(void)                                                                                                  \
@@ -55,28 +56,38 @@ void* Pc_MapPtr(unsigned int addr)
     if (!curMap)
         return 0;
     for (i = 0; i < curMap->count; i++)
+        if (addr == curMap->syms[i].addr)
+            return curMap->syms[i].ptr;
+    /* inside one: on the PlayStation it ends where the next name starts (the table is in address order; the PC
+       object may be bigger) */
+    for (i = 0; i < curMap->count; i++)
     {
         const PcMapSym* s = &curMap->syms[i];
-        if (addr == s->addr || (addr > s->addr && addr < s->addr + s->size))
+        unsigned int end = s->addr + s->size;
+        if (i + 1 < curMap->count && curMap->syms[i + 1].addr < end)
+            end = curMap->syms[i + 1].addr;
+        if (addr > s->addr && addr < end)
             return (char*)s->ptr + (addr - s->addr);
     }
     return 0;
 }
 
 /* a call by address (MAP_CODE_CALL); one that is not in the current map's code is reported once */
-int Pc_MapCodeCall(unsigned int addr, int arg)
+int Pc_MapCodeCall(unsigned int addr, long arg)
 {
     static unsigned int reported[64];
     void* fn = Pc_MapPtr(addr);
     int i;
+    if (arg == (long)(int)arg && (unsigned int)arg >= 0x80000000u && (unsigned int)arg < 0x80200000u)
+        arg = (long)Pc_PsxPtr((unsigned int)arg); /* an address from a script (an int operand, sign-extended) */
     if (fn)
-        return ((int (*)(int))fn)(arg);
+        return ((int (*)(long))fn)(arg);
     for (i = 0; i < 64 && reported[i] && reported[i] != addr; i++)
         ;
     if (i < 64 && !reported[i])
     {
         reported[i] = addr;
-        WARNF("map code %08X(%d) is not decompiled yet", addr, arg);
+        WARNF("map code %08X(%ld) is not decompiled yet", addr, arg);
     }
     return 0;
 }

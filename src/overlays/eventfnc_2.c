@@ -40,7 +40,7 @@ int (*eventFuncs_800BCDBC[157])() = {
 void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
 {
     EvActorCmd cmd;
-    unsigned short v[3];
+    unsigned short v[4]; // area, map, entrance, encounter index (FindMapEntrance_800ADCEC)
     SaveData* save;
     switch (st[0])
     {

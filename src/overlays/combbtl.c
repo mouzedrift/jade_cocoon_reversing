@@ -1545,8 +1545,8 @@ void HitNumberTask_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     CombBtlHitNum* num = buf;
     DVECTOR sxy;
     SVECTOR pos;
-    long z;
-    long flag;
+    int z;
+    int flag;
     int step;
     pos.vx = buf->pos_10[0];
     pos.vy = buf->pos_10[1];
@@ -1554,7 +1554,7 @@ void HitNumberTask_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     pos.vx -= cameraEye_8008D600.vx;
     pos.vy -= cameraEye_8008D600.vy;
     pos.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&pos, (long*)&sxy, &z, &flag);
+    RotTransPers(&pos, (void*)&sxy, &z, &flag);
     if (++num->frame_8 > 16)
     {
         e->flags = (e->flags & ~1) | 0x8000;

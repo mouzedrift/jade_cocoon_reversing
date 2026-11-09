@@ -22,9 +22,9 @@ enum foo
 // a VECTOR without the pad word
 typedef struct
 {
-    long vx;
-    long vy;
-    long vz;
+    int vx; // 32 bit, as VECTOR's (long is 64 bit on a PC)
+    int vy;
+    int vz;
 } LVec3;
 
 #define COUNTOF_S(x) (int)(sizeof(x) / sizeof(*(x)))

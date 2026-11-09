@@ -14,12 +14,12 @@ const char aAbcdefghijkl_800B6D90[28] = "\202\201\202\202\202\203\202\204\202\20
 const char aYZ_800B6DAC[28] = "\202x\202y\201@\201@\201@\201@\201@\201@\201@\201@\201@\201@";
 const char aMNOPQRSTUVWX_800B6DC8[28] = "\202l\202m\202n\202o\202p\202q\202r\202s\202t\202u\202v\202w";
 const char aABCDEFGHIJKL_800B6DE4[28] = "\202`\202a\202b\202c\202d\202e\202f\202g\202h\202i\202j\202k";
-const char aABC_800B6E00[] = "\202`\202a\202b"; // ABC
-const char a123_800B6E08[] = "\202P\202Q\202R"; // 123
-const char aCancel_800B6E10[] = "\202b\202\201\202\216\202\203\202\205\202\214"; // Cancel
-const char aSelect_800B6E20[] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
+const char aABC_800B6E00[8] = "\202`\202a\202b"; // ABC
+const char a123_800B6E08[8] = "\202P\202Q\202R"; // 123
+const char aCancel_800B6E10[16] = "\202b\202\201\202\216\202\203\202\205\202\214"; // Cancel
+const char aSelect_800B6E20[16] = "\202r\202\205\202\214\202\205\202\203\202\224"; // Select
 const NameBuf nameBufInit_800B6E30 = { { -1 } };
-const char nameUnderlineChar_800B6E48[] = "\201["; // ー
+const char nameUnderlineChar_800B6E48[4] = "\201["; // ー
 
 NameCharRow charPages_800B8190[2][7] = {
     {

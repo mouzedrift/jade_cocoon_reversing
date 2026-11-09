@@ -37,7 +37,7 @@ int CollideLevantWithMap_800B6DD4(GameLevantActor* ent)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
-        SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int)&ent->pos_48, (int)&mapState_8008B500.meshes_C[ent->mesh_84], &ent->slideTri_88, &ent->slideEdge_8C, normal);
+        SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int*)&ent->pos_48, &mapState_8008B500.meshes_C[ent->mesh_84], &ent->slideTri_88, &ent->slideEdge_8C, normal);
         verts = mapState_8008B500.meshes_C[ent->mesh_84].tris_4[ent->slideTri_88].v_0;
         (edgePts + i * 2)->x_0 = verts[ent->slideEdge_8C % 3].x_0;
         (edgePts + i * 2)->y_2 = verts[ent->slideEdge_8C % 3].y_2;
@@ -101,7 +101,7 @@ int CollideWithMap_800B716C(EvVec* pos, int* prevPos, SVECTOR* rot)
             printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 255);
             exit(1);
         }
-        SlideOffEdge_800B8220((int*)pos, (int)prevPos, (int)mapState_8008B500.mesh_28, &edgeTri, &edge, normal);
+        SlideOffEdge_800B8220((int*)pos, (int*)prevPos, mapState_8008B500.mesh_28, &edgeTri, &edge, normal);
         verts = mapState_8008B500.mesh_28->tris_4[edgeTri].v_0;
         pt = (EvSVec*)(i * 16 + (long)edgePts); // &edgePts[i * 2]; that form allocates registers differently
         pt->x_0 = verts[edge % 3].x_0;
@@ -376,9 +376,9 @@ void FindCrossedEdge_800B79E0(MapMesh* m, int* p, int* q, int* tri, int* edge)
     }
 }
 
-void SlideAlongEdge_800B7E40(int* pos, int mesh, int tri, int edge, int* out)
+void SlideAlongEdge_800B7E40(int* pos, MapMesh* mesh, int tri, int edge, int* out)
 {
-    int triAddr = (int)&((MapMesh*)mesh)->tris_4[tri];
+    long triAddr = (long)&mesh->tris_4[tri];
     MapVtx* v0 = (MapVtx*)(((edge + 1) % 3) * 8 + triAddr);
     MapVtx* v1 = (MapVtx*)((edge % 3) * 8 + triAddr);
     int dir[3];
@@ -460,9 +460,9 @@ int FindMeshAtPos_800B8184(EvVec* pos, unsigned int mesh)
     return -1;
 }
 
-void SlideOffEdge_800B8220(int* pos, int prevPos, int mesh, int* tri, int* edge, int* dir)
+void SlideOffEdge_800B8220(int* pos, int* prevPos, MapMesh* mesh, int* tri, int* edge, int* dir)
 {
-    FindCrossedEdge_800B79E0((MapMesh*)mesh, pos, (int*)prevPos, tri, edge);
+    FindCrossedEdge_800B79E0(mesh, pos, prevPos, tri, edge);
     SlideAlongEdge_800B7E40(pos, mesh, *tri, *edge, dir);
     pos[0] += dir[2] >> 10;
     pos[2] -= dir[0] >> 10;
@@ -483,7 +483,7 @@ int CollideWithMapEnts_800B82C8(int* pos, int* prevPos, MapMesh* ents, unsigned 
             FindCrossedEdge_800B79E0(&ents[i], prevPos, pos, &tri, &edge);
             if (tri != -1 && edge != -1)
             {
-                SlideAlongEdge_800B7E40(pos, (int)&ents[i], tri, edge, dir);
+                SlideAlongEdge_800B7E40(pos, &ents[i], tri, edge, dir);
                 pos[0] -= dir[2] >> 10;
                 pos[2] += dir[0] >> 10;
                 return 0;
@@ -1594,7 +1594,7 @@ int EvCmdSetCallArgs_800BA6D0(EvScriptCtx* ctx)
     ctx->callArg0_F4 = ctx->pc_8->a_4;
     ctx->callArg1_F8 = ctx->pc_8->b_8;
     ctx->callArg2_FC = ctx->pc_8->c_C;
-    ctx->callArg_F0 = (int)&ctx->callArg0_F4;
+    ctx->callArg_F0 = (long)&ctx->callArg0_F4;
     ctx->pc_8++;
     return 1;
 }
@@ -1603,7 +1603,7 @@ int EvCmdCallUntilDone_800BA714(EvScriptCtx* ctx)
 {
     if (ctx->pc_8->b_8 == 1 || sceneScriptId_800AEBD8 < 0 || sceneScriptId_800AEBD8 == ctx->id_10)
     {
-        if (((int (*)(int))ctx->pc_8->c_C)(ctx->callArg_F0) == 1)
+        if (MAP_CODE_CALL(ctx->pc_8->c_C, ctx->callArg_F0) == 1)
         {
             ctx->callArg_F0 = 0;
             ctx->pc_8++;
@@ -1617,7 +1617,7 @@ int EvCmdCallSelect_800BA7A4(EvScriptCtx* ctx)
 {
     if (ctx->pc_8->b_8 == 1 || sceneScriptId_800AEBD8 < 0 || sceneScriptId_800AEBD8 == ctx->id_10)
     {
-        ctx->branch_EC = ((int (*)(int))ctx->pc_8->c_C)(ctx->callArg_F0);
+        ctx->branch_EC = MAP_CODE_CALL(ctx->pc_8->c_C, ctx->callArg_F0);
         ctx->callArg_F0 = 0;
         ctx->pc_8++;
         return 1;
@@ -1681,7 +1681,7 @@ int EvCmdChangeMap_800BA930(EvScriptCtx* ctx)
 
 int EvCmdChangeMapToPoint_800BA9E4(EvScriptCtx* ctx)
 {
-    unsigned short v[3];
+    unsigned short v[4]; // area, map, entrance, encounter index
     SaveData* s;
     FindMapEntrance_800ADCEC(v, ctx->pc_8->b_8);
     forceMapReload_80091C9C = 1;

@@ -71,19 +71,19 @@ void GetWindowColors_8004226C(int colorSet, unsigned char* out, int time, int co
         PulseColor_80033394(out, c0, c1, time, 40, 10);
     }
 }
-void DrawWindow_80042460(RECT* rect, WindowStyle* style, u_long* ot, int time)
+void DrawWindow_80042460(RECT* rect, WindowStyle* style, OT_TYPE* ot, int time)
 {
     unsigned char rgb[8];
     GetWindowColors_8004226C(style->colorSet_2, rgb, time, style->color_0);
     DrawWindowFrame_80041ED0(rect, rgb, ot, style->semiTrans_3);
 }
-void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, u_long* ot, int time)
+void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, OT_TYPE* ot, int time)
 {
     unsigned char rgb[8];
     GetWindowColors_8004226C(colorSet, rgb, time, saveData_8008B570.uiColor_20.s);
     DrawWindowFrame_80041ED0(rect, rgb, ot, 1);
 }
-void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char abr, unsigned long* ot)
+void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char abr, OT_TYPE* ot)
 {
     POLY_G4 poly;
     DR_TPAGE dt;
@@ -585,19 +585,30 @@ int windowPulseScale_80086FB0[5][3] = {
     { 150, 140, 100 },
     { 100, 100, 100 },
 };
-unsigned char windowBgColor0_80086FEC = 42;
-unsigned char unused_80086FED = 38;
-unsigned char unused_80086FEE = 110;
-unsigned char unused_80086FEF = 0;
-int windowBgColorData_80086FF0[9] = {
-    0x5A266E, 0x666E26, 0x254470, 0x293A55, 0xD81FF, 0xFFFF0A, 0xD81FF, 0x73FF0A,
-    0x254470,
+/* window colours (r, g, b, pad): the background's five, the alternative set's five, the pulse's five */
+unsigned char windowBgRgb_80086FEC[10][4] = {
+    { 42, 38, 110, 0 },
+    { 110, 38, 90, 0 },
+    { 38, 110, 102, 0 },
+    { 112, 68, 37, 0 },
+    { 85, 58, 41, 0 },
+    { 255, 129, 13, 0 },
+    { 10, 255, 255, 0 },
+    { 255, 129, 13, 0 },
+    { 10, 255, 115, 0 },
+    { 112, 68, 37, 0 },
 };
-int windowPulseColorData_80087014[5] = { 0xFFFF0A, 0x5161FF, 0xA5FF4B, 0x25E1FF, 0x427595 };
-unsigned char *windowBgColors_80087028[5] = { &windowBgColor0_80086FEC, (void *)windowBgColorData_80086FF0, (void *)&windowBgColorData_80086FF0[1], (void *)&windowBgColorData_80086FF0[2], (void *)&windowBgColorData_80086FF0[3] };
-void *windowColorsAlt_8008703C[5] = { (void *)&windowBgColorData_80086FF0[4], (void *)&windowBgColorData_80086FF0[5], (void *)&windowBgColorData_80086FF0[6], (void *)&windowBgColorData_80086FF0[7], (void *)&windowBgColorData_80086FF0[8] };
-unsigned char *windowPulseColors_80087050[5] = { (void *)windowPulseColorData_80087014, (void *)&windowPulseColorData_80087014[1], (void *)&windowPulseColorData_80087014[2], (void *)&windowPulseColorData_80087014[3], (void *)&windowPulseColorData_80087014[4] };
-unsigned char **windowColorSets_80087064[3] = { windowBgColors_80087028, windowBgColors_80087028, (void *)windowColorsAlt_8008703C };
+unsigned char windowPulseRgb_80087014[5][4] = {
+    { 10, 255, 255, 0 },
+    { 255, 97, 81, 0 },
+    { 75, 255, 165, 0 },
+    { 255, 225, 37, 0 },
+    { 149, 117, 66, 0 },
+};
+unsigned char* windowBgColors_80087028[5] = { windowBgRgb_80086FEC[0], windowBgRgb_80086FEC[1], windowBgRgb_80086FEC[2], windowBgRgb_80086FEC[3], windowBgRgb_80086FEC[4] };
+unsigned char* windowColorsAlt_8008703C[5] = { windowBgRgb_80086FEC[5], windowBgRgb_80086FEC[6], windowBgRgb_80086FEC[7], windowBgRgb_80086FEC[8], windowBgRgb_80086FEC[9] };
+unsigned char* windowPulseColors_80087050[5] = { windowPulseRgb_80087014[0], windowPulseRgb_80087014[1], windowPulseRgb_80087014[2], windowPulseRgb_80087014[3], windowPulseRgb_80087014[4] };
+unsigned char** windowColorSets_80087064[3] = { windowBgColors_80087028, windowBgColors_80087028, windowColorsAlt_8008703C };
 int windowFrameQuadEdges_80087070[5][8] = {
     { 0, 0, 3, 0, 1, 1, 2, 1 },
     { 0, 0, 1, 1, 0, 3, 1, 2 },

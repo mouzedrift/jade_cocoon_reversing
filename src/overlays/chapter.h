@@ -57,6 +57,7 @@ typedef struct ChapterMapKey
     short area;
     short map;
     short sub;
+    short encIndex; // FindMapEntrance_800ADCEC writes it too
 } ChapterMapKey;
 typedef struct ChapterTask
 {

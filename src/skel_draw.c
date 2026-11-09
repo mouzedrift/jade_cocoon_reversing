@@ -106,9 +106,6 @@ int DrawBillboardRgb_80043DE0(POLY_FT4* poly, VECTOR* pos, short* size, unsigned
     }
     return 0;
 }
-/* 4096-entry sine table at 0x80084540 (inside the battleCamSpline1Tail_80084350 data chunk) */
-extern short battleCamSpline1Tail_80084350[];
-#define SIN_TABLE (battleCamSpline1Tail_80084350 + 0xF8)
 #define ROT_SPRITE_UV(s, src, uv, size)                       \
     {                                                         \
         (s)->prim_0.u0 = (src)->u0 + (uv)[0];                 \
@@ -122,7 +119,7 @@ extern short battleCamSpline1Tail_80084350[];
     }
 #define ROT_SPRITE_EXTENT(v, piv, sc) (((v) * (sc) * geomScreenDistance_8008B548 / 256) / s->otz_4C / 4)
 VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* uv, short* size, short* pivot, short* scale,
-                     SVECTOR* ofs, unsigned char* rgb, short flags, int abr, unsigned long* ot)
+                     SVECTOR* ofs, unsigned char* rgb, short flags, int abr, OT_TYPE* ot)
 {
     RotSpriteScratch* s = ROT_SPRITE_SCRATCH;
     short min;
@@ -278,7 +275,7 @@ VECTOR* DrawRotSprite_80044010(POLY_FT4* src, VECTOR* pos, SVECTOR* rot, short* 
     return (VECTOR*)&s->wofs_40;
 }
 extern MATRIX lightMatrix_80087114; // light matrix
-void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot)
+void DrawFtgObjectAt_80044D0C(FtgObject* obj, OT_TYPE* ot, VECTOR* pos, SVECTOR* rot, PointLight* light, int flags, VECTOR* scale, int slot)
 {
     MATRIX* m;
     VECTOR zero;
@@ -316,7 +313,7 @@ void DrawFtgObjectAt_80044D0C(FtgObject* obj, unsigned long* ot, VECTOR* pos, SV
     PopMatrix();
     gte_SetLightMatrix(&lightMatrix_80087114);
 }
-void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos, PointLight* light, int flags, VECTOR* scale)
+void DrawFtgObjectCurRot_800451BC(FtgObject* obj, OT_TYPE* ot, VECTOR* pos, PointLight* light, int flags, VECTOR* scale)
 {
     MATRIX* m;
     VECTOR zero;
@@ -352,13 +349,13 @@ void DrawFtgObjectCurRot_800451BC(FtgObject* obj, unsigned long* ot, VECTOR* pos
     gte_SetLightMatrix(&lightMatrix_80087114);
     PopMatrix();
 }
-void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SVECTOR* rot, unsigned char* rgb)
+void DrawWireTris_80045534(WireTriList* list, OT_TYPE* ot, VECTOR* pos, SVECTOR* rot, unsigned char* rgb)
 {
     MATRIX* m;
     LINE_F2 line;
-    long opz;
-    long otz;
-    long* sxy;
+    int opz;
+    int otz;
+    int* sxy;
     WireTri* tri;
     int i;
     int j;
@@ -373,7 +370,7 @@ void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SV
     gte_MulMatrix0((MATRIX*)getScratchAddr(8), (MATRIX*)getScratchAddr(0), (MATRIX*)getScratchAddr(8));
     gte_SetRotMatrix((MATRIX*)getScratchAddr(8));
     gte_SetTransMatrix((MATRIX*)getScratchAddr(8));
-    sxy = (long*)FTG_PRIM_SCRATCH;
+    sxy = (int*)FTG_PRIM_SCRATCH;
     tri = list->items;
     setLineF2(&line);
     for (i = 0; i < list->count; i++, tri++)
@@ -416,7 +413,7 @@ void DrawWireTris_80045534(WireTriList* list, unsigned long* ot, VECTOR* pos, SV
     }
     PopMatrix();
 }
-void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsigned long* ot, int flags)
+void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, OT_TYPE* ot, int flags)
 {
     FtgQuadCtx* ctx = FTG_QUAD_CTX;
     FtgPrimGT4* prim;
@@ -449,9 +446,9 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
             *(int*)&prim->x2 = ctx->v_18[2]->sxy_0;
             gte_ldsxy3(*(int*)&prim->x0, *(int*)&prim->x1, *(int*)&prim->x2);
             gte_nclip();
-            *(long*)&prim->x3 = ctx->v_18[3]->sxy_0;
+            *(int*)&prim->x3 = ctx->v_18[3]->sxy_0;
             gte_stopz(&ctx->opz_8);
-            gte_ldsxy3(*(long*)&prim->x1, *(long*)&prim->x2, *(long*)&prim->x3);
+            gte_ldsxy3(*(int*)&prim->x1, *(int*)&prim->x2, *(int*)&prim->x3);
             gte_nclip();
             ctx->otz_4 = (ctx->v_18[0]->sz_4 + ctx->v_18[1]->sz_4 + ctx->v_18[2]->sz_4 + ctx->v_18[3]->sz_4) / 16;
             gte_stopz(&ctx->opz2_C);
@@ -471,8 +468,8 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
                     }
                     prim->uv0 = ctx->v_18[0]->uv_8;
                     prim->uv1 = ctx->v_18[1]->uv_8;
-                    prim->uv2 = *(unsigned long*)&ctx->v_18[2]->uv_8;
-                    prim->uv3 = *(unsigned long*)&ctx->v_18[3]->uv_8;
+                    prim->uv2 = *(unsigned int*)&ctx->v_18[2]->uv_8;
+                    prim->uv3 = *(unsigned int*)&ctx->v_18[3]->uv_8;
                     setPolyGT4(prim);
                     if (ctx->attr_0 & 0x10)
                     {
@@ -491,7 +488,7 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, unsign
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (char*)ctx->next_14;
     ResetFtgSpriteVtx_8004D924();
 }
-void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int flags)
+void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, OT_TYPE* ot, int flags)
 {
     FtgQuadG4Ctx* ctx = FTG_QUAD_G4_CTX;
     unsigned int i;
@@ -525,14 +522,14 @@ void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, unsigned long* ot, int 
             gte_stopz(&ctx->opz2_4);
             if (ctx->opz_0 > 0 || ctx->opz2_4 < 0)
             {
-                *(long*)&((POLY_G4*)ctx->next_30)->x0 = ctx->v_34[0]->sxy_0;
-                *(long*)&((POLY_G4*)ctx->next_30)->x1 = ctx->v_34[1]->sxy_0;
-                *(long*)&((POLY_G4*)ctx->next_30)->x2 = ctx->v_34[2]->sxy_0;
-                *(long*)&((POLY_G4*)ctx->next_30)->x3 = ctx->v_34[3]->sxy_0;
-                *(unsigned long*)&((POLY_G4*)ctx->next_30)->r0 = ctx->v_34[0]->rgbc_C;
-                *(unsigned long*)&((POLY_G4*)ctx->next_30)->r1 = ctx->v_34[1]->rgbc_C;
-                *(unsigned long*)&((POLY_G4*)ctx->next_30)->r2 = ctx->v_34[2]->rgbc_C;
-                *(unsigned long*)&((POLY_G4*)ctx->next_30)->r3 = ctx->v_34[3]->rgbc_C;
+                *(int*)&((POLY_G4*)ctx->next_30)->x0 = ctx->v_34[0]->sxy_0;
+                *(int*)&((POLY_G4*)ctx->next_30)->x1 = ctx->v_34[1]->sxy_0;
+                *(int*)&((POLY_G4*)ctx->next_30)->x2 = ctx->v_34[2]->sxy_0;
+                *(int*)&((POLY_G4*)ctx->next_30)->x3 = ctx->v_34[3]->sxy_0;
+                *(unsigned int*)&((POLY_G4*)ctx->next_30)->r0 = ctx->v_34[0]->rgbc_C;
+                *(unsigned int*)&((POLY_G4*)ctx->next_30)->r1 = ctx->v_34[1]->rgbc_C;
+                *(unsigned int*)&((POLY_G4*)ctx->next_30)->r2 = ctx->v_34[2]->rgbc_C;
+                *(unsigned int*)&((POLY_G4*)ctx->next_30)->r3 = ctx->v_34[3]->rgbc_C;
                 setPolyG4((POLY_G4*)ctx->next_30);
                 if (flags & 0x10)
                 {
@@ -649,12 +646,12 @@ void GetBoneOffsets_80046248(AnimSkel* sk, SVECTOR* out, AnimPose* alt)
 }
 void RotMatrixZXY_8004668C(SVECTOR* rot, MATRIX* m)
 {
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
     int a;
     int b;
     m->m[2][1] = sx;
@@ -671,12 +668,12 @@ void RotMatrixZXY_8004668C(SVECTOR* rot, MATRIX* m)
 }
 void RotMatrixYXZ_80046874(SVECTOR* rot, MATRIX* m)
 {
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
     int a;
     int b;
     m->m[1][2] = -sx;
@@ -713,12 +710,12 @@ static inline void GetRot(SVECTOR* out, AnimPose* pose, int bone)
 /* inline copy of RotMatrixZYX_8004D5CC */
 static inline void RotZYX(SVECTOR* rot, MATRIX* m)
 {
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int a;
     int b;
     m->m[2][0] = -sy;
@@ -755,12 +752,12 @@ static inline void GetFrameRot(SVECTOR* out, AnimPose* pose, int frame, int bone
 /* RotZYX followed by a rotation about x by rx->vx (applied from the left) */
 static inline void RotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
 {
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int c;
     int s;
     int a;
@@ -783,8 +780,8 @@ static inline void RotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
     m00 = (cz * cy) >> 12;
     m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
     m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
-    c = SIN_TABLE[(rx->vx + 0x400) & 0xFFF];
-    s = SIN_TABLE[rx->vx & 0xFFF];
+    c = sinTable_80084540[(rx->vx + 0x400) & 0xFFF];
+    s = sinTable_80084540[rx->vx & 0xFFF];
     m->m[0][0] = m00;
     m->m[0][1] = m01;
     m->m[0][2] = m02;
@@ -796,16 +793,16 @@ static inline void RotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
     m->m[2][2] = ((m12 * s) >> 12) + ((m22 * c) >> 12);
 }
 /* adds the translation b to a */
-static inline void AddTrans(long* a, long* b)
+static inline void AddTrans(int* a, int* b)
 {
     a[0] += b[0];
     a[1] += b[1];
     a[2] += b[2];
 }
 /* stores the bone's world position (the translation of the matrix before cur) and returns it */
-static inline long* SetBonePos(AnimSkel* sk, int i, MATRIX* cur)
+static inline int* SetBonePos(AnimSkel* sk, int i, MATRIX* cur)
 {
-    long* t = cur[-1].t;
+    int* t = cur[-1].t;
     sk->bonePos_20[i].vx = t[0];
     sk->bonePos_20[i].vy = t[1];
     sk->bonePos_20[i].vz = t[2];
@@ -833,12 +830,12 @@ static inline void SkelFrameRot(SVECTOR* out, AnimPose* pose, int frame, int bon
 /* RotZYX followed by a rotation about x by rx->vx, rows 1 and 2 computed row by row; same as BlendRotZYXThenX */
 static inline void SkelRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
 {
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int c;
     int s;
     int a;
@@ -861,8 +858,8 @@ static inline void SkelRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
     m00 = (cz * cy) >> 12;
     m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
     m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
-    c = SIN_TABLE[(rx->vx + 0x400) & 0xFFF];
-    s = SIN_TABLE[rx->vx & 0xFFF];
+    c = sinTable_80084540[(rx->vx + 0x400) & 0xFFF];
+    s = sinTable_80084540[rx->vx & 0xFFF];
     m->m[0][0] = m00;
     m->m[0][1] = m01;
     m->m[0][2] = m02;
@@ -884,8 +881,8 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
     int level;
     int i;
     int flags;
-    long* t;
-    long* u;
+    int* t;
+    int* u;
 
     m = SKEL_MATS;
     sk->light_2C = light;
@@ -918,11 +915,11 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
         gte_rtv0();
         gte_stlvnl(m[level].t);
         AddTrans(m[level].t, m[level - 1].t);
-        ((long*)boneMatrices_80098188[i].m)[0] = ((long*)m[level].m)[0];
-        ((long*)boneMatrices_80098188[i].m)[1] = ((long*)m[level].m)[1];
-        ((long*)boneMatrices_80098188[i].m)[2] = ((long*)m[level].m)[2];
-        ((long*)boneMatrices_80098188[i].m)[3] = ((long*)m[level].m)[3];
-        ((long*)boneMatrices_80098188[i].m)[4] = ((long*)m[level].m)[4];
+        ((int*)boneMatrices_80098188[i].m)[0] = ((int*)m[level].m)[0];
+        ((int*)boneMatrices_80098188[i].m)[1] = ((int*)m[level].m)[1];
+        ((int*)boneMatrices_80098188[i].m)[2] = ((int*)m[level].m)[2];
+        ((int*)boneMatrices_80098188[i].m)[3] = ((int*)m[level].m)[3];
+        ((int*)boneMatrices_80098188[i].m)[4] = ((int*)m[level].m)[4];
         level++;
         t = SetBonePos(sk, i, &m[level]);
         if (sk->bones[i].flags_6 & 2)
@@ -966,11 +963,11 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
             {
                 gte_MulMatrix0(&m[level], (MATRIX*)getScratchAddr(0), &m[level]);
             }
-            ((long*)boneMatrices_80096120[i].m)[0] = ((long*)m[level].m)[0];
-            ((long*)boneMatrices_80096120[i].m)[1] = ((long*)m[level].m)[1];
-            ((long*)boneMatrices_80096120[i].m)[2] = ((long*)m[level].m)[2];
-            ((long*)boneMatrices_80096120[i].m)[3] = ((long*)m[level].m)[3];
-            ((long*)boneMatrices_80096120[i].m)[4] = ((long*)m[level].m)[4];
+            ((int*)boneMatrices_80096120[i].m)[0] = ((int*)m[level].m)[0];
+            ((int*)boneMatrices_80096120[i].m)[1] = ((int*)m[level].m)[1];
+            ((int*)boneMatrices_80096120[i].m)[2] = ((int*)m[level].m)[2];
+            ((int*)boneMatrices_80096120[i].m)[3] = ((int*)m[level].m)[3];
+            ((int*)boneMatrices_80096120[i].m)[4] = ((int*)m[level].m)[4];
         }
     }
     for (i = 0; sk->bones[i].parent >= 0; i++)
@@ -1008,12 +1005,12 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
 /* RotZYXThenX with the last two rows computed row by row (the blend's inline copy) */
 static inline void BlendRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
 {
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int c;
     int s;
     int a;
@@ -1036,8 +1033,8 @@ static inline void BlendRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
     m00 = (cz * cy) >> 12;
     m01 = -((sz * cx) >> 12) + ((a * sx) >> 12);
     m02 = ((sz * sx) >> 12) + ((a * cx) >> 12);
-    c = SIN_TABLE[(rx->vx + 0x400) & 0xFFF];
-    s = SIN_TABLE[rx->vx & 0xFFF];
+    c = sinTable_80084540[(rx->vx + 0x400) & 0xFFF];
+    s = sinTable_80084540[rx->vx & 0xFFF];
     m->m[0][0] = m00;
     m->m[0][1] = m01;
     m->m[0][2] = m02;
@@ -1051,12 +1048,12 @@ static inline void BlendRotZYXThenX(SVECTOR* rot, SVECTOR* rx, MATRIX* m)
 /* RotZYX with the matrix stored column by column (the blend's inline copy) */
 static inline void BlendRotZYX(SVECTOR* rot, MATRIX* m)
 {
-    int cz = SIN_TABLE[(rot->vz + 0x400) & 0xFFF];
-    int cy = SIN_TABLE[(rot->vy + 0x400) & 0xFFF];
-    int sy = SIN_TABLE[rot->vy & 0xFFF];
-    int sz = SIN_TABLE[rot->vz & 0xFFF];
-    int cx = SIN_TABLE[(rot->vx + 0x400) & 0xFFF];
-    int sx = SIN_TABLE[rot->vx & 0xFFF];
+    int cz = sinTable_80084540[(rot->vz + 0x400) & 0xFFF];
+    int cy = sinTable_80084540[(rot->vy + 0x400) & 0xFFF];
+    int sy = sinTable_80084540[rot->vy & 0xFFF];
+    int sz = sinTable_80084540[rot->vz & 0xFFF];
+    int cx = sinTable_80084540[(rot->vx + 0x400) & 0xFFF];
+    int sx = sinTable_80084540[rot->vx & 0xFFF];
     int a;
     int b;
     a = (cz * sy) >> 12;
@@ -1182,8 +1179,8 @@ void DrawAnimSkelBlend_80047E28(AnimSkel* sk, SVECTOR* scale2, AnimPose* pose2, 
             }
             else
             {
-                rel[i].m[1][1] = SIN_TABLE[(a + 0x400) & 0xFFF];
-                rel[i].m[1][2] = SIN_TABLE[a & 0xFFF];
+                rel[i].m[1][1] = sinTable_80084540[(a + 0x400) & 0xFFF];
+                rel[i].m[1][2] = sinTable_80084540[a & 0xFFF];
                 rel[i].m[2][1] = -rel[i].m[1][2];
                 rel[i].m[2][2] = rel[i].m[1][1];
                 gte_MulMatrix0(&axis[i], &rel[i], &tmp.m);

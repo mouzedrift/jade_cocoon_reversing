@@ -18,13 +18,9 @@ typedef struct XaTask
     short vol_A;   // fade-out volume
 } XaTask;
 
-extern unsigned char windowBgColor0_80086FEC;
-extern unsigned char unused_80086FED;
-extern unsigned char unused_80086FEE;
-extern unsigned char unused_80086FEF;
-extern int windowBgColorData_80086FF0[9];
-extern int windowPulseColorData_80087014[5];
-extern void *windowColorsAlt_8008703C[5];
+extern unsigned char windowBgRgb_80086FEC[10][4];
+extern unsigned char windowPulseRgb_80087014[5][4];
+extern unsigned char* windowColorsAlt_8008703C[5];
 extern int windowFrameQuadEdges_80087070[][8];
 extern int unused_80087110;
 extern MATRIX lightMatrix_80087114;
@@ -70,9 +66,9 @@ void DrawWindowBorder_80042B38(RECT* rect, int ot);
 void XaStop_800430B0(void);
 void XaStartReadTask_80043204(EventEntry* entry, XaTask* task);
 void XaWaitFilterTask_800431C4(EventEntry* entry, XaTask* task);
-void DrawWindow_80042460(RECT* rect, WindowStyle* style, u_long* ot, int time);
+void DrawWindow_80042460(RECT* rect, WindowStyle* style, OT_TYPE* ot, int time);
 int IsWindowFrameFit_800429A8(RECT* rect);
-void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, u_long* ot, int time);
+void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, OT_TYPE* ot, int time);
 int XaRequestStop_80043524(void);
 void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot);
 /* the start of an event entity (the buffer of an eventEntities_8008D400 entry), the same in each view of it

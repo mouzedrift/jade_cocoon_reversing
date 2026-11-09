@@ -415,8 +415,8 @@ void HitNumberTask_800BF4D0(EventEntry* task, BatHitNumber* hit)
 {
     DVECTOR sxy;
     SVECTOR rel;
-    long depth;
-    long flag;
+    int depth;
+    int flag;
     int step;
     rel.vx = hit->pos_10[0];
     rel.vy = hit->pos_10[2];
@@ -424,7 +424,7 @@ void HitNumberTask_800BF4D0(EventEntry* task, BatHitNumber* hit)
     rel.vx -= cameraEye_8008D600.vx;
     rel.vy -= cameraEye_8008D600.vy;
     rel.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&rel, (long*)&sxy, &depth, &flag);
+    RotTransPers(&rel, (void*)&sxy, &depth, &flag);
     hit->frame_8++;
     if (hit->frame_8 > 0x10)
     {

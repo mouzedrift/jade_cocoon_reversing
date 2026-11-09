@@ -7,31 +7,31 @@
 typedef struct FtgDrawCtx
 {
     DR_TPAGE tpage_0; // queued behind every polygon
-    long otz_8;       // gte_stotz
-    long dq_C;        // depth cue (IR0) for gte_dpcs / gte_ncds
-    long opz_10;      // gte_stopz (nclip)
-    long opz2_14;     // nclip of the second triangle of a quad
+    int otz_8;       // gte_stotz
+    int dq_C;        // depth cue (IR0) for gte_dpcs / gte_ncds
+    int opz_10;      // gte_stopz (nclip)
+    int opz2_14;     // nclip of the second triangle of a quad
     unsigned char* next_18; // next free primitive
-    unsigned long clutAdd_1C; // added to the textured kinds' u0 / v0 / clut word (CLUT row offset)
+    unsigned int clutAdd_1C; // added to the textured kinds' u0 / v0 / clut word (CLUT row offset)
     int flags_20; // bit 0: lit (normal + ncds), bit 4: semi-transparent, bits 5-6: blend mode for textured kinds
 } FtgDrawCtx;
 
 // a projected FTG sprite vertex (ProjectFtgTexSprites_8004C4F0), three per sprite triple
 typedef struct FtgSpriteVtx
 {
-    long sxy_0;
-    long sz_4;
+    int sxy_0;
+    int sz_4;
     unsigned short uv_8;
     unsigned short pad_A;
-    unsigned long rgbc_C;
-    long pad_10;
+    unsigned int rgbc_C;
+    int pad_10;
 } FtgSpriteVtx;
 extern FtgSpriteVtx ftgSpriteVtxPool_80096628[350];      // the sprite vertices of a frame (ResetFtgSpriteVtx_8004D924)
 extern FtgSpriteVtx* ftgSpriteVtxNext_80098180;        // next free sprite vertex
 extern FtgSpriteVtx* ftgSpriteVtxSlots_800987D8[][56];  // per slot: the projected vertices, three per triple
 typedef union
 {
-    unsigned long word;
+    unsigned int word;
     struct
     {
         unsigned short tpage;
@@ -42,7 +42,7 @@ extern FtgTPageClut ftgSpriteTPageClut_8009AAD8; // tpage / clut of the textured
 
 // draws an FTG object with the current GTE matrices (flags: see FtgDrawCtx.flags_20, bits 8-15 CLUT
 // row offset, bit 7 + bits 16-31 depth cue); slot indexes ftgSpriteVtxSlots_800987D8
-extern void DrawFtgObject_8004C7BC(FtgObject* obj, unsigned long* ot, int flags, int slot);
+extern void DrawFtgObject_8004C7BC(FtgObject* obj, OT_TYPE* ot, int flags, int slot);
 
 extern void RotMatrixZYX_8004D5CC(SVECTOR* rot, MATRIX* m);
 extern void BasisFromAxis_8004B0A8(VECTOR* axis, MATRIX* m);
@@ -60,9 +60,9 @@ extern int unused_80098184;
 extern int unused_8009AADC;
 
 void SetGteLightAndCamera_8004D0E8(void);
-void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, unsigned long* ot, void* pos, void* rot, void* light, int flags, void* scale);
+void DrawFtgObjectAtSlot0_8004D1EC(struct FtgObject* obj, OT_TYPE* ot, void* pos, void* rot, void* light, int flags, void* scale);
 void ResetFtgSpriteVtx_8004D924(void);
 void RotMatrixZYXRollX_8004D938(short roll, SVECTOR* rot, MATRIX* m);
 void PrintMatrix_8004DC54(MATRIX* m);
-void ProjectFtgSprites_8004DCC0(FtgObject* obj, unsigned long* ot, FtgDrawCtx* ctx, int slot);
+void ProjectFtgSprites_8004DCC0(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx, int slot);
 #endif

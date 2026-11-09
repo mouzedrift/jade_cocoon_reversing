@@ -81,6 +81,15 @@ typedef struct
     short arg_A;
 } ActorScriptCmd;
 
+// an actor script as the words it is: each command is a word { op, len (its words), frame } and its arguments,
+// the script ends with op 0
+typedef struct
+{
+    unsigned char op_0;
+    unsigned char len_1;
+    short frame_2;
+} ActorScriptWord;
+
 
 // actor (CreateActor_8001D45C, actorTasks_8008D43C); names carry the offset, fN fields are still unknown
 typedef struct Actor

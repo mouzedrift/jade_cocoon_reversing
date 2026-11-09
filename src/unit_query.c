@@ -82,7 +82,7 @@ int MenuIndexToSkillSlot_80031BDC(int index)
 {
     return index;
 }
-int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, unsigned long* ot, short x, short y, int scaleX, int scaleY, short* offset, int anchorFlags)
+int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, OT_TYPE* ot, short x, short y, int scaleX, int scaleY, short* offset, int anchorFlags)
 {
     int d;
     int w;
@@ -258,7 +258,7 @@ int AddScaledPolyFT4_80031BE4(POLY_FT4* poly, unsigned long* ot, short x, short 
 }
 #define ROT_X(x, y, a) ((x) * sinTable_80084540[((a) + 0x400) & 0xFFF] / 4096 - (y) * sinTable_80084540[(a) & 0xFFF] / 4096)
 #define ROT_Y(x, y, a) ((x) * sinTable_80084540[(a) & 0xFFF] / 4096 + (y) * sinTable_80084540[((a) + 0x400) & 0xFFF] / 4096)
-void DrawRotatedPublicSprite_80031FF4(int idx, unsigned long* ot, unsigned short* pos, int angle)
+void DrawRotatedPublicSprite_80031FF4(int idx, OT_TYPE* ot, unsigned short* pos, int angle)
 {
     POLY_FT4 poly;
     short x;

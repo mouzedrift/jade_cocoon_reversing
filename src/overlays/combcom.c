@@ -155,9 +155,9 @@ const CombComItem pauseItemReturn_800CB598 = {
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
 };
 const CombComMenu menuWinTmpl_800CB5D0 = { 2, 0, 8 };
-const char aStartFight_800CB5E8[] = "\202r\202\224\202\201\202\222\202\224\201@\202\206\202\211\202\207\202\210\202\224"; // Start fight
-const char aGiveUpResultsIn_800CB600[] = "\202f\202\211\202\226\202\205\201@\202\225\202\220\201@\201i\202\222\202\205\202\223\202\225\202\214\202\224\202\223\201@\202\211\202\216\201@\202\201\201@\202\214\202\217\202\223\202\223\201j"; // Give up (results in a loss)
-const char aReturnToStartOf_800CB638[] = "\202q\202\205\202\224\202\225\202\222\202\216\201@\202\224\202\217\201@\202\223\202\224\202\201\202\222\202\224\201@\202\217\202\206\201@\202\224\202\217\202\225\202\222\202\216\202\201\202\215\202\205\202\216\202\224"; // Return to start of tournament
+const char aStartFight_800CB5E8[24] = "\202r\202\224\202\201\202\222\202\224\201@\202\206\202\211\202\207\202\210\202\224"; // Start fight
+const char aGiveUpResultsIn_800CB600[56] = "\202f\202\211\202\226\202\205\201@\202\225\202\220\201@\201i\202\222\202\205\202\223\202\225\202\214\202\224\202\223\201@\202\211\202\216\201@\202\201\201@\202\214\202\217\202\223\202\223\201j"; // Give up (results in a loss)
+const char aReturnToStartOf_800CB638[60] = "\202q\202\205\202\224\202\225\202\222\202\216\201@\202\224\202\217\201@\202\223\202\224\202\201\202\222\202\224\201@\202\217\202\206\201@\202\224\202\217\202\225\202\222\202\216\202\201\202\215\202\205\202\216\202\224"; // Return to start of tournament
 // (kept as named arrays: inlined into the table gcc would emit them after it)
 const CombComMsgs3 pauseOptionDescs_800CB674 = { { aStartFight_800CB5E8, aGiveUpResultsIn_800CB600, aReturnToStartOf_800CB638 } };
 const CombComPos2 skillListPos_800CB680 = { {

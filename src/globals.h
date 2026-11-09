@@ -406,7 +406,7 @@ extern unsigned char armorOutfits_8007D588[16];
 extern int primBufferOffset_8008B550;
 extern char* primBufferStart_800960A0[2]; /* the primitive buffers (PRIM_RAM) */
 extern char* primAllocPtr_800960A8[2];
-extern unsigned long* decodedImageData_8008B4A0;
+extern unsigned int* decodedImageData_8008B4A0;
 extern enum GameStates currentGameState_8008D4B4;
 extern volatile int unknownFlags_8008D678;
 extern short titleMenuState_8008B558[2]; // [0]: title screen entry (0 press start, 1 menu); [1]: title menu selection (GAME GetGameStartMode_800A72C8)

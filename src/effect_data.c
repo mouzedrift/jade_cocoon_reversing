@@ -2097,27 +2097,18 @@ short equipmentIcons_8007D938[18] = {
     36, 37, 37, 35, 53, 39, 50, 54,
     44,
 };
-ActorScriptCmd moveToScript_8007D95C[3] = {
-    { 15, 1, -2, 0x103, -1, 0x201, -1 },
-    { 0, 0, 0x4003, 0x112, -2, 0x110, -2 },
-    { 3, 1, -1, 0x111, -2, 0x100, -2 },
+ActorScriptWord moveToScript_8007D95C[9] = {
+    { 15, 1, -2 }, { 3, 1, -1 }, { 1, 2, -1 }, { 0, 0, 16387 }, { 18, 1, -2 }, { 16, 1, -2 }, { 3, 1, -1 }, { 17, 1, -2 }, { 0, 1, -2 },
 };
-ActorScriptCmd moveToScriptAlt_8007D980[3] = {
-    { 15, 1, -2, 0x103, -1, 0x201, -1 },
-    { 0, 0, 0x4003, 0x113, -2, 0x110, -2 },
-    { 3, 1, -1, 0x111, -2, 0x100, -2 },
+ActorScriptWord moveToScriptAlt_8007D980[9] = {
+    { 15, 1, -2 }, { 3, 1, -1 }, { 1, 2, -1 }, { 0, 0, 16387 }, { 19, 1, -2 }, { 16, 1, -2 }, { 3, 1, -1 }, { 17, 1, -2 }, { 0, 1, -2 },
 };
-ActorScriptCmd playAnimScript_8007D9A4[2] = {
-    { 15, 1, -2, 0x103, -1, 0x201, -1 },
-    { 0, 0, 0x4003, 0x115, -2, 0x110, -2 },
+ActorScriptWord playAnimScript_8007D9A4[7] = {
+    { 15, 1, -2 }, { 3, 1, -1 }, { 1, 2, -1 }, { 0, 0, 16387 }, { 21, 1, -2 }, { 16, 1, -2 }, { 0, 1, -2 },
 };
-int unused_8007D9BC = 0xFFFE0100;
-ActorScriptCmd playQueuedAnimScript_8007D9C0[3] = {
-    { 15, 1, -2, 0x103, -1, 0x201, -1 },
-    { 0, 0, 0x4003, 0x115, -2, 0x110, -2 },
-    { 3, 1, -1, 0x201, -1, 0, 0x4003 },
+ActorScriptWord playQueuedAnimScript_8007D9C0[10] = {
+    { 15, 1, -2 }, { 3, 1, -1 }, { 1, 2, -1 }, { 0, 0, 16387 }, { 21, 1, -2 }, { 16, 1, -2 }, { 3, 1, -1 }, { 1, 2, -1 }, { 0, 0, 16387 }, { 0, 1, -2 },
 };
-int unused_8007D9E4 = 0xFFFE0100;
 OverlayEntry overlays_8007D9E8[31] = {
     { 23, &overlayAddr3_80073200 },
     { 28, &overlayAddr3_80073200 },
@@ -2967,9 +2958,11 @@ char *rankNames_80082EC4[8] = { aApprentice_800743B4, aNovice_800743A4, aAdept_8
 char *developerRankName_80082EE4 = aDeveloper_80074320;
 unsigned char statRowY_80082EE8[] = "#1FTf";
 unsigned char elementChartSizes_80082EF0[20] = { 0, 6, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24 };
-unsigned char levantStatRowY_80082F04[8] = { 3, 17, 31, 45, 59 };
-SoundInfo soundFiles_80082F0C[155] =
-{
+/* the status window's row heights and the sound table: one object, as GetSoundFileId_80030D4C reads files[-1] (a
+   free sound slot's index) and gets the row heights there */
+SoundTable soundTable_80082F04 = {
+  { 3, 17, 31, 45, 59 },
+  {
   { SOUND_PUBLIC_SND, 0, 7u, 0u, -1 },
   { SOUND_PUBLIC_SND, 1, 7u, 0u, -1 },
   { SOUND_PUBLIC_SND, 2, 7u, 0u, -1 },
@@ -3125,6 +3118,7 @@ SoundInfo soundFiles_80082F0C[155] =
   { SOUND_SE_KIKI_SND, 0, 1u, 0u, -1 },
   { SOUND_TAISEN_SND, 0, 1u, 0u, -1 },
   { SOUND_SAIRASU_SND, -1, 1u, 0u, 44 }
+  }
 };
 SeqSlot seqSlots_800833E4[32] = {
     { 0 },
@@ -3960,7 +3954,7 @@ void RepeatUntilOutcomeTask_80014C28(int* flags, EffectObj* obj)
     }
 }
 extern void DrawRotSprite_80044010(POLY_FT4* src, int* pos, void* rot, short* uv, short* size, short* pivot, short* scale, short* ofs,
-                         unsigned char* rgb, int flags, int abr, unsigned long* ot);
+                         unsigned char* rgb, int flags, int abr, OT_TYPE* ot);
 void LensFlareTask_80014CCC(int* flags, void* buf)
 {
     EffectObj* obj = buf;
@@ -4362,7 +4356,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             e2->flags = (e2->flags | 1) & 0xFFFF7FFF;
             res = &effectFile_80091BD0.models_28[idx];
             child->res_88 = (int)res;
-            CopyFtgObject_800218A8(res->ftg_4, child->work_94 = malloc3_8003FC4C(0x54), HEAP_MALLOC3);
+            CopyFtgObject_800218A8(res->ftg_4, child->work_94 = malloc3_8003FC4C(sizeof(FtgObject)), HEAP_MALLOC3);
             DiffFtgObjects_80039FE4(res->ftg_4, res->ftg_4 + 1, child->work_94);
             PlaySeqSlot_80031160(9, 1);
             e2->cb_8 = GlowTask_800C371C;
@@ -4471,7 +4465,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x15);
             res = &effectFile_80091BD0.models_28[idx];
             obj->res_88 = (int)res;
-            CopyFtgObject_800218A8(res->ftg_4, obj->work_94 = malloc3_8003FC4C(0x54), HEAP_MALLOC3);
+            CopyFtgObject_800218A8(res->ftg_4, obj->work_94 = malloc3_8003FC4C(sizeof(FtgObject)), HEAP_MALLOC3);
             DiffFtgObjects_80039FE4(res->ftg_4, res->ftg_4 + 1, obj->work_94);
             obj->field_30 = 0x1000;
             entry->cb_8 = MorphInModelTask_80017E30;

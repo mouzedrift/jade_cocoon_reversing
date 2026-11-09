@@ -116,7 +116,10 @@ void DsEndReadySystem(void)
 
 /* the heap (InitHeap3 gets the area above the overlays, the C library's heap stands in for it) */
 void InitHeap3(unsigned long* head, unsigned long size) {}
-void* malloc3(size_t size) { return malloc(size); }
+/* on the PlayStation a block is always followed by more heap (the next block's header), and the game reads a little
+   past some of its blocks (sprites projected three at a time); the slack stands in for that */
+#define HEAP3_SLACK 64
+void* malloc3(size_t size) { return calloc(1, size + HEAP3_SLACK); }
 void free3(void* p) { free(p); }
 
 void SetMem(unsigned long n) {}

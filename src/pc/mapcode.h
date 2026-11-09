@@ -19,5 +19,5 @@ typedef struct PcMap
 extern const PcMap* const pcMaps[];
 void Pc_MapCodeLoaded(int fileId);
 void* Pc_MapPtr(unsigned int addr);
-int Pc_MapCodeCall(unsigned int addr, int arg);
+int Pc_MapCodeCall(unsigned int addr, long arg);
 #endif

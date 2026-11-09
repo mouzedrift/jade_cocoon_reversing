@@ -24,7 +24,6 @@ void RequestActorAnim_8001D8B4(Actor* actor, int idx);
 void StartActorScale_8001DA4C(Actor* actor, int div, int from, int to);
 
 
-extern short battleCamSpline1Tail_80084350[]; // a short table (indexed & 0xFFF) starts at +0x1F0 (0x80084540)
 extern unsigned short padPrevHeld_800918C8[];
 extern unsigned short padRepeat_800918CC[];
 extern unsigned short padReleased_800918D4[];
@@ -450,21 +449,21 @@ void UpdateActorMotion_8001F354(void* actor)
     else if (o->flags_4 & 0x1000000)
     {
         a = o->rot_5C[1];
-        sin = (battleCamSpline1Tail_80084350 + 0xF8)[a & 0xFFF];
-        c = (battleCamSpline1Tail_80084350 + 0xF8)[(a + 0x400) & 0xFFF];
+        sin = sinTable_80084540[a & 0xFFF];
+        c = sinTable_80084540[(a + 0x400) & 0xFFF];
         o->pos_38[2] = o->basePos_50[2] + (o->animDelta_64[2] * c - o->animDelta_64[0] * sin) / 4096 / anim->divisor_8;
         o->pos_38[0] = o->basePos_50[0] + (o->animDelta_64[2] * sin + o->animDelta_64[0] * c) / 4096 / anim->divisor_8;
         o->pos_38[1] = o->basePos_50[1] + o->animDelta_64[1] / anim->divisor_8;
     }
     else if (o->flags_4 & 0x40000)
     {
-        o->pos_38[0] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 * boneScale->vz / 4096 * baseScale[2] / 4096 / anim->divisor_8;
-        o->pos_38[2] += dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * boneScale->vz / 4096 * baseScale[2] / 4096 / anim->divisor_8;
+        o->pos_38[0] += dz * sinTable_80084540[o->rot_5C[1] & 0xFFF] / 4096 * boneScale->vz / 4096 * baseScale[2] / 4096 / anim->divisor_8;
+        o->pos_38[2] += dz * sinTable_80084540[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 * boneScale->vz / 4096 * baseScale[2] / 4096 / anim->divisor_8;
     }
     else
     {
-        o->pos_38[0] = o->basePos_50[0] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[o->rot_5C[1] & 0xFFF] / 4096 / anim->divisor_8;
-        o->pos_38[2] = o->basePos_50[2] + dz * (battleCamSpline1Tail_80084350 + 0xF8)[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / anim->divisor_8;
+        o->pos_38[0] = o->basePos_50[0] + dz * sinTable_80084540[o->rot_5C[1] & 0xFFF] / 4096 / anim->divisor_8;
+        o->pos_38[2] = o->basePos_50[2] + dz * sinTable_80084540[(o->rot_5C[1] + 0x400) & 0xFFF] / 4096 / anim->divisor_8;
     }
     if (o->flags_4 & 0x40000)
     {
@@ -557,7 +556,7 @@ void UpdateActorDrawMode_8001FB00(Actor* o)
     }
     if (o->flags_4 & 0x40000000)
     {
-        value = (battleCamSpline1Tail_80084350 + 0xF8)[(o->pulse_BC * o->pulseRate_BE + 0x400) & 0xFFF];
+        value = sinTable_80084540[(o->pulse_BC * o->pulseRate_BE + 0x400) & 0xFFF];
         (o->pulse_BC)++;
         o->drawMode_8 = mode | 0x80 | (-((value + 0x1000) / 2) << 16);
     }
@@ -594,9 +593,9 @@ void UpdateActorDrawMode_8001FB00(Actor* o)
 int IsActorOnScreen_8001FC90(Actor* actor)
 {
     SVECTOR rel;
-    long sxy;
-    long z;
-    long flag;
+    int sxy;
+    int z;
+    int flag;
     rel.vx = *(unsigned short*)&actor->pos_38[0];
     rel.vy = *(unsigned short*)&actor->pos_38[1];
     rel.vz = *(unsigned short*)&actor->pos_38[2];
@@ -1277,7 +1276,7 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
     if (count)
     {
         out->imageSetCount_2C = count;
-        out->imageSets_30 = ListAlloc_8003FDC0(&out->list_4, count * 8);
+        out->imageSets_30 = ListAlloc_8003FDC0(&out->list_4, count * sizeof(MdecImageSet));
         i = 0;
         max = i;
         for (; i < out->imageSetCount_2C; i++)
@@ -1305,7 +1304,7 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, short* reloc, int se
     EffectSpriteFrameBytes* cur;
     out->count_0 = *src++;
     out->frameCounts_4 = ListAlloc_8003FDC0(heap, out->count_0);
-    out->frames_8 = ListAlloc_8003FDC0(heap, out->count_0 * 4);
+    out->frames_8 = ListAlloc_8003FDC0(heap, out->count_0 * sizeof(*out->frames_8));
     for (i = 0; i < out->count_0; i++)
     {
         count = *src++;
@@ -1368,7 +1367,7 @@ int LoadMdecImages_800215E8(int* hdr, MdecImageSet* out, List* heap)
     int bufSize;
     int count = hdr[0];
     out->count_0 = count;
-    out->images_4 = ListAlloc_8003FDC0(heap, count * 4);
+    out->images_4 = ListAlloc_8003FDC0(heap, count * sizeof(*out->images_4));
     i = 0;
     max = i;
     for (; i < out->count_0; i++)

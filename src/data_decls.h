@@ -11,7 +11,18 @@ extern unsigned char pads_800918E8[2][9];
 extern char SEQDataAttributeTable_80091D60[SS_SEQ_TABSIZ * 5 * 16];
 extern char* data001Path_80086570;
 extern Data001File Data001Files_80075AA0[1108];
-extern SoundInfo soundFiles_80082F0C[155];
+typedef struct
+{
+    unsigned char levantStatRowY[8];
+    SoundInfo files[155];
+} SoundTable;
+extern SoundTable soundTable_80082F04;
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define soundFiles_80082F0C (soundTable_80082F04.files)
+#else
+extern SoundInfo soundFiles_80082F0C[155]; // == soundTable_80082F04.files
+#endif
+#define levantStatRowY_80082F04 (soundTable_80082F04.levantStatRowY)
 extern enum GameStates currentGameState_8008D4B4;
 
 extern const char aAssertionFaile[];
