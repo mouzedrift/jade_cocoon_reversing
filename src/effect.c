@@ -418,7 +418,7 @@ void RequestEffect_800148F4(int id)
     state->idx_38 = id;
     if (state->state_2C != 0)
     {
-        printf(aAssertionFaile_3, aEffectC, 0x124);
+        printf((char*)aAssertionFaile_3, aEffectC, 0x124);
         exit(1);
     }
 }

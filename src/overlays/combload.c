@@ -77,7 +77,7 @@ void CardSelectScreen_800A41FC(CombatTask* task)
     {
         str = "\202r\202\205\202\214\202\205\202\203\202\224\201@\202\204\202\201\202\224\202\201"; // Select data
     }
-    DrawSmallTextBox_8002AF58(&str, code, 0xF);
+    DrawSmallTextBox_8002AF58(&str, (Pos16*)code, 0xF);
     switch (cardSelectState_800A47F0)
     {
     case 0:
@@ -180,15 +180,15 @@ void DrawDataHeaderWindows_800A44DC()
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &box, pOT_8008D454 + 10, 0);
+    DrawWindow_80042460((RECT*)rect, &box, pOT_8008D454 + 10, 0);
     rect[0] = 0x8C;
     rect[1] = 0x28;
     rect[2] = 0x3C;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &box, pOT_8008D454 + 10, 0);
+    DrawWindow_80042460((RECT*)rect, &box, pOT_8008D454 + 10, 0);
     rect[0] = 0xD2;
     rect[1] = 0x28;
     rect[2] = 0x20;
     rect[3] = 0x10;
-    DrawWindow_80042460(rect, &box, pOT_8008D454 + 10, 0);
+    DrawWindow_80042460((RECT*)rect, &box, pOT_8008D454 + 10, 0);
 }

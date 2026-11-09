@@ -27,6 +27,15 @@ typedef struct
     int vz;
 } LVec3;
 
+/* a call the original made without a prototype in scope: the caller took the int return as it was, without
+   extending it again (IMPLICIT_INT(fn)(args)). The function already extends what it returns, so on PC (where
+   calling through another type is undefined) it is the function itself */
+#ifdef __psyz
+#define IMPLICIT_INT(fn) (fn)
+#else
+#define IMPLICIT_INT(fn) ((int (*)())(fn))
+#endif
+
 #define COUNTOF_S(x) (int)(sizeof(x) / sizeof(*(x)))
 
 #define MAX_PLAYER_NAME_LENGTH 10

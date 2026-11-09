@@ -802,7 +802,7 @@ static inline void AddTrans(int* a, int* b)
 /* stores the bone's world position (the translation of the matrix before cur) and returns it */
 static inline int* SetBonePos(AnimSkel* sk, int i, MATRIX* cur)
 {
-    int* t = cur[-1].t;
+    int* t = (int*)cur[-1].t;
     sk->bonePos_20[i].vx = t[0];
     sk->bonePos_20[i].vy = t[1];
     sk->bonePos_20[i].vz = t[2];
@@ -914,7 +914,7 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
         gte_ldv0(&boneOffsets_80098690[i]);
         gte_rtv0();
         gte_stlvnl(m[level].t);
-        AddTrans(m[level].t, m[level - 1].t);
+        AddTrans((void*)m[level].t, (void*)m[level - 1].t);
         ((int*)boneMatrices_80098188[i].m)[0] = ((int*)m[level].m)[0];
         ((int*)boneMatrices_80098188[i].m)[1] = ((int*)m[level].m)[1];
         ((int*)boneMatrices_80098188[i].m)[2] = ((int*)m[level].m)[2];
@@ -930,7 +930,7 @@ void DrawAnimSkel_80046A58(AnimSkel* sk, PointLight* light, AnimPose* alt)
             gte_SetRotMatrix(&m[0]);
             gte_ldv0(&rot);
             gte_rtv0();
-            u = m[level].t;
+            u = (int*)m[level].t;
             gte_stlvnl(u);
             u[0] += m[0].t[0];
             u[1] += m[0].t[1];

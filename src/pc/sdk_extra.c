@@ -9,6 +9,9 @@
 #include <libetc.h>
 #include <libgpu.h>
 #include <libgte.h>
+/* psyz.h brings the host's <fcntl.h>; libmcrd.h has the memory card's O_RDONLY / O_WRONLY */
+#undef O_RDONLY
+#undef O_WRONLY
 #include <libmcrd.h>
 #include <libmcx.h>
 #include <libpress.h>

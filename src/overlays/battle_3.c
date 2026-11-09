@@ -424,7 +424,7 @@ void HitNumberTask_800BF4D0(EventEntry* task, BatHitNumber* hit)
     rel.vx -= cameraEye_8008D600.vx;
     rel.vy -= cameraEye_8008D600.vy;
     rel.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&rel, (void*)&sxy, &depth, &flag);
+    RotTransPers(&rel, (void*)&sxy, (void*)&depth, (void*)&flag);
     hit->frame_8++;
     if (hit->frame_8 > 0x10)
     {

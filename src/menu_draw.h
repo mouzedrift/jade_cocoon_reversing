@@ -27,7 +27,7 @@ typedef struct
     const char* text_4; // NULL ends the list
 } TextListEntry;
 
-void InitReverbTask_8002A1BC();
+void InitReverbTask_8002A1BC(EventEntry* task);
 
 // an item of a menu window (DrawMenuWindowContents_8002A710 / DrawMenuItemWithWindow_8002ADB4), 0x1C bytes;
 // a row of items ends with an item with flags_0 & 1

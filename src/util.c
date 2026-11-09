@@ -25,7 +25,7 @@ void DrawNumber_8003EF74(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, val);
-    DrawText_8003E91C(2, (int*)buf, pos, ot);
+    DrawText_8003E91C(2, (const char*)((int*)buf), pos, ot);
 }
 void DrawNumberRightAligned_8003EFBC(short* pos, int val, int ot)
 {
@@ -122,7 +122,7 @@ void DrawNumber_8003F544(short* pos, int val, int ot)
 {
     unsigned short buf[12];
     IntToText_8003F610(buf, val);
-    DrawText_8003E91C(1, (int*)buf, pos, ot);
+    DrawText_8003E91C(1, (const char*)((int*)buf), pos, ot);
 }
 void IntToSjisReversed_8003F58C(unsigned char* buf, int val)
 {
@@ -203,7 +203,7 @@ unsigned short* DecodeText_8003F748(int mode, unsigned short* text)
     }
     return text;
 }
-void EncodeName_8003F7C8(void* text, unsigned char* out)
+void EncodeName_8003F7C8(const void* text, unsigned char* out)
 {
     unsigned short buf[11];
     unsigned short* encoded;
@@ -359,11 +359,11 @@ void DecodeNames_8003FBD4(int mode)
 {
     int count;
     int i;
-    DecodeText_8003F748(mode, saveData_8008B570.levantStatus_7C8.name_10);
+    DecodeText_8003F748(mode, (unsigned short*)saveData_8008B570.levantStatus_7C8.name_10);
     count = CountMinions_80010548(3);
     for (i = 0; i < count; i++)
     {
-        DecodeText_8003F748(mode, GetMinionName_800106F8(3, i));
+        DecodeText_8003F748(mode, (unsigned short*)GetMinionName_800106F8(3, i));
     }
 }
 void* malloc3_8003FC4C(unsigned int size)
@@ -646,7 +646,7 @@ void* AddPrimCopy_80040298(void* ot, void* prim, int words)
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] += words * 4;
     return (void*)cur;
 }
-void CopyDoubleWords_80040360(int *pOut, int *pDataToWrite, int fileSize)
+void CopyDoubleWords_80040360(int *pOut, const int *pDataToWrite, int fileSize)
 {
   int first; // $v0
   int second; // $v1
@@ -682,7 +682,7 @@ void CopyHalfwords_800403A8(unsigned short* pOut, unsigned short* pSource, int c
         --count;
     } while (count);
 }
-void CopyBytes_800403C8(char *pOut, unsigned char *fileBuffer, int fileSize)
+void CopyBytes_800403C8(char *pOut, const unsigned char *fileBuffer, int fileSize)
 {
   do
   {
@@ -691,10 +691,10 @@ void CopyBytes_800403C8(char *pOut, unsigned char *fileBuffer, int fileSize)
   }
   while ( fileSize );
 }
-void MemCopy_800403E8(void *overlayAddr, void *fileBuffer, unsigned int fileSize)
+void MemCopy_800403E8(void *overlayAddr, const void *fileBuffer, unsigned int fileSize)
 {
   unsigned int *overlayAddr_copy; // $s2
-  unsigned char *pFileBuffer; // $s3
+  const unsigned char *pFileBuffer; // $s3
   unsigned int fileSize_copy; // $s1
   unsigned int alignedFileSize; // $s0
 
@@ -703,10 +703,10 @@ void MemCopy_800403E8(void *overlayAddr, void *fileBuffer, unsigned int fileSize
   fileSize_copy = fileSize;
   if ( fileSize )
   {
-    if ( ((unsigned char)overlayAddr & 3) == 0 )
+    if ( ((unsigned long)overlayAddr & 3) == 0 )
     {
       alignedFileSize = fileSize >> 3;
-      if ( ((unsigned char)fileBuffer & 3) == 0 )
+      if ( ((unsigned long)fileBuffer & 3) == 0 )
       {
         fileSize_copy = fileSize & 7;
         if ( alignedFileSize )
@@ -718,7 +718,7 @@ void MemCopy_800403E8(void *overlayAddr, void *fileBuffer, unsigned int fileSize
       }
     }
     if ( fileSize_copy )
-      CopyBytes_800403C8(overlayAddr_copy, pFileBuffer, fileSize_copy);
+      CopyBytes_800403C8((char*)overlayAddr_copy, pFileBuffer, fileSize_copy);
   }
 }
 void SetGameBootState_80040470(void)

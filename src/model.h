@@ -762,7 +762,7 @@ void UpdateOverlayLoaderTask_80020CD8(int entry, OverlayLoader* loader);
 void ClearModelAnimRefs_800201A4(void);
 void ResetModelLoader_800204D0(void);
 void StopModelLoader_800205F0(void);
-int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int frame);
+int GetActorScriptTime_8001F03C(void* actorAddr, void* scriptAddr, int target, int frame);
 void ModelLoaderTask_800209AC(EventEntry* entry, int* buf);
 int RequestModelAnim_8002032C(int ref, int user, int anim);
 void StopActorScript_8001EFC4(Actor* actor);

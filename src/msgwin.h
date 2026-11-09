@@ -35,7 +35,7 @@ typedef struct ItemMsgInit
     int field_8;
     ItemMsgEntry entries_C[3];
     int mode_48;
-    int* text_4C;
+    unsigned short** text_4C; /* lines after the items (ItemMsgWindow.text) */
 } ItemMsgInit;
 
 /* OpenMessageWindow_8003422C's argument */
@@ -43,7 +43,7 @@ typedef struct
 {
     int posMode_0; // window position preset when pos_4 is 0
     short* pos_4; // speaker position (x, height)
-    int* text_8; // pages, see FindTextResumePage_80034900
+    void** text_8; // pages (their lines, each list ends with 0; 0 0 ends them), see FindTextResumePage_80034900
     char* title_C;
     int field_10;
     int cancelable_14;
@@ -63,7 +63,7 @@ typedef struct
 
 typedef struct MsgWindow
 {
-    int self_0; // EventEntry* of the window
+    EventEntry* self_0; // the window's EventEntry
     unsigned int flags_4;
     unsigned int mode_8;
     int field_C;
@@ -98,7 +98,7 @@ typedef struct MsgWindow
     POLY_FT4 prim_88;
     unsigned short choiceCount_B0; // shown lines of lines_1B4
     short choice_B2;
-    int* list_B4[0x40];
+    void** list_B4[0x40]; // the pages' lines
     unsigned short** lines_1B4;
     TextWindow text_1B8;
     ItemMsgInit item_214;

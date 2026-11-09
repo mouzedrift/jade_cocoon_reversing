@@ -1633,7 +1633,7 @@ extern const char *xaNames_800A57D4[1607];
 extern short xaTracks_800A70F0[1607][4];
 extern EventDesc soundTestTaskDesc_800AA328;
 extern EventDesc* soundTestTaskList_800AA340[4];
-extern char *soundTestLabels_800AA350[8];
+extern const char* soundTestLabels_800AA350[8];
 
 extern const char strSoundNumber_800A519C[16];
 
@@ -1654,7 +1654,7 @@ typedef union SndTest
     short v[8];
 } SndTest;
 
-extern void SoundTestUpdate_800A5238(int* task, SndTest* st);
+extern void SoundTestUpdate_800A5238(EventEntry* task, SndTest* st);
 
 /* exe-side, to move to an exe header */
 

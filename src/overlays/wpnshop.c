@@ -381,9 +381,9 @@ void StoreWaitUiTiy_800BB130(EventEntry* task, StoreMenu* store)
     {
         DrawMenuBackground_8002BE10();
         DrawPortraitWindow_8002A4E4(0xE);
-        DrawStoreButtonHelp_800BCF80(store);
+        DrawStoreButtonHelp_800BCF80((unsigned short*)store);
         DrawStore_800BB950(store);
-        task->cb_8 = StoreFadeIn_800BB194;
+        task->cb_8 = (EventEntryFn)StoreFadeIn_800BB194;
     }
 }
 
@@ -391,10 +391,10 @@ void StoreFadeIn_800BB194(EventEntry* task, StoreMenu* store)
 {
     DrawMenuBackground_8002BE10();
     DrawPortraitWindow_8002A4E4(0xE);
-    DrawStoreButtonHelp_800BCF80(store);
+    DrawStoreButtonHelp_800BCF80((unsigned short*)store);
     DrawStore_800BB950(store);
     SetFadeMode_8001C19C(3, 0x20);
-    task->cb_8 = StoreTask_800BB1F4;
+    task->cb_8 = (EventEntryFn)StoreTask_800BB1F4;
 }
 
 void StoreTask_800BB1F4(EventEntry* task, StoreMenu* store)
@@ -422,7 +422,7 @@ void StoreWaitMapReload_800BB298(EventEntry* task, void* buffer)
     if (IsMapLoading_800272D0() == 0)
     {
         ResumeFieldMinions_800A7BF0(-1);
-        task->cb_8 = StoreTask_800BB1F4;
+        task->cb_8 = (EventEntryFn)StoreTask_800BB1F4;
         task->flags = (task->flags & ~1) | 0x8000;
         SetLoadFadeFlag_80027478(0x40, 0);
         RequestGameMode_800A6D30(1);
@@ -623,7 +623,7 @@ void StoreInput_800BB664(StoreMenu* store)
         }
     }
     DrawStore_800BB950(store);
-    DrawStoreButtonHelp_800BCF80(store);
+    DrawStoreButtonHelp_800BCF80((unsigned short*)store);
 }
 const MenuWindowList menuWindow_800BADF0 = { 2, 0, 8, 0, 0, 14 };
 const int unused_800BAE08 = 0;
@@ -812,7 +812,7 @@ void DrawStore_800BB950(StoreMenu* store)
     }
     if (p)
     {
-        DrawLargeTextBox_8002AF10(p, &pos, 0xE);
+        DrawLargeTextBox_8002AF10(p, (Pos16*)&pos, 0xE);
     }
     else
     {
@@ -840,7 +840,7 @@ void UpdateStoreCursor_800BBDD0(StoreMenu* store)
         s = store->state_0;
         if ((unsigned short)(s - 10) >= 2 && s != 8 && s != 9)
         {
-            UpdateMenuCursor_8003D794(store->cursor_28, 0);
+            UpdateMenuCursor_8003D794((MenuCursor*)store->cursor_28, 0);
         }
     }
 }
@@ -885,14 +885,14 @@ void DrawMoneyWindow_800BBED0(void* unused, StorePos* pos)
     box.frame_B = 1;
     box.x_0 = pos->x + 4;
     box.y_2 = pos->y + 3;
-    DrawUiTiySprt_8002C06C(&box, 0x7A, 0xE);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0x7A, 0xE);
     box.x_0 = pos->x + 0x60;
     box.y_2 = pos->y + 6;
-    DrawSmallNumber9_8002C414(&box, GetMoney_800AD02C(), 0xE);
+    DrawSmallNumber9_8002C414((unsigned short*)&box, GetMoney_800AD02C(), 0xE);
     box.x_0 = pos->x + 0x61;
     box.y_2 = pos->y + 4;
-    DrawUiTiySprt_8002C06C(&box, 0xEA, 0xE);
-    DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, 0);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0xEA, 0xE);
+    DrawWindow_80042460(&rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, 0);
 }
 
 void DrawHeldCountWindow_800BBFD4(int count)
@@ -908,13 +908,13 @@ void DrawHeldCountWindow_800BBFD4(int count)
     box.frame_B = 1;
     box.x_0 = 0x7B;
     box.y_2 = 0x50;
-    DrawUiTiySprt_8002C06C(&box, 0x93, 0xE);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0x93, 0xE);
     box.x_0 = 0xB8;
     box.y_2 = 0x52;
-    DrawSmallNumber9_8002C414(&box, count, 0xE);
+    DrawSmallNumber9_8002C414((unsigned short*)&box, count, 0xE);
     box.x_0 = 0x77;
     box.y_2 = 0x4D;
-    DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460(&rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, 0);
 }
 
 void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
@@ -937,13 +937,13 @@ void DrawQuantityWindow_800BC0AC(StoreMenu* store, int panel)
     box.x_0 = 0x7B;
     box.col_8 = saveData_8008B570.uiColor_20.h;
     box.y_2 = 0x61;
-    DrawUiTiySprt_8002C06C(&box, 0x53, 0xE);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0x53, 0xE);
     box.x_0 = 0xB8;
     box.y_2 = 0x63;
-    DrawSmallNumber9_8002C414(&box, store->quantity_18, 0xE);
+    DrawSmallNumber9_8002C414((unsigned short*)&box, store->quantity_18, 0xE);
     box.x_0 = 0x77;
     box.y_2 = 0x5E;
-    DrawWindow_80042460(&rect, &box.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
+    DrawWindow_80042460(&rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
 }
 
 
@@ -1139,8 +1139,8 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     u30.b.col_8 = saveData_8008B570.uiColor_20.h;
     u30.b.state_A = 0;
     u30.b.y_2 = 0xC8;
-    DrawUiTiySprt_8002C06C(&u30.b, 0x80, 0xE);
-    DrawWindow_80042460(&r28, &u30.b.col_8, pOT_8008D454 + 14, 0);
+    DrawUiTiySprt_8002C06C((unsigned short*)&u30.b, 0x80, 0xE);
+    DrawWindow_80042460(&r28, (WindowStyle*)&u30.b.col_8, pOT_8008D454 + 14, 0);
     if (panel == store->panel_34)
     {
         if (store->cursorScroll_32 != 0)
@@ -1199,8 +1199,8 @@ void DrawStoreList_800BC374(StoreMenu* store, short panel)
     b48.state_A = 0;
     b48.x_0 = r28.x + 0xD;
     b48.y_2 = r28.y + 0x4F;
-    DrawUiTiySprt_8002C06C(&b48, sprt, 0xE);
-    DrawWindow_80042460(&u30.r, &b48.col_8, pOT_8008D454 + 14, 0);
+    DrawUiTiySprt_8002C06C((unsigned short*)&b48, sprt, 0xE);
+    DrawWindow_80042460(&u30.r, (WindowStyle*)&b48.col_8, pOT_8008D454 + 14, 0);
 }
 
 void DrawEquippedMark_800BCABC(StoreMenu* store, short panel)
@@ -1246,7 +1246,7 @@ void DrawEquippedMark_800BCABC(StoreMenu* store, short panel)
         win.ot_A = 0xE;
         box.x = 0x54;
         box.y = 0x50;
-        DrawUiTiySprt_8002C06C(&box, 0xB6, 0xE);
+        DrawUiTiySprt_8002C06C((unsigned short*)&box, 0xB6, 0xE);
         DrawUiWindow_8002A384(&win);
     }
 }
@@ -1401,14 +1401,14 @@ void DrawTotalPrice_800BCFCC(StoreMenu* store)
         b.col_8 = saveData_8008B570.uiColor_20.h;
         b.state_A = 0;
         b.y_2 = 0x60;
-        DrawUiTiySprt_8002C06C(&b, 0xCE, 0xE);
+        DrawUiTiySprt_8002C06C((unsigned short*)&b, 0xCE, 0xE);
         b.x_0 = 0x11D;
         b.y_2 = 0x64;
-        DrawSmallNumber9_8002C414(&b, v * store->quantity_18, 0xE);
+        DrawSmallNumber9_8002C414((unsigned short*)&b, v * store->quantity_18, 0xE);
         b.x_0 = 0x11E;
         b.y_2 = 0x62;
-        DrawUiTiySprt_8002C06C(&b, 0xEA, 0xE);
-        DrawWindow_80042460(&r, &b.col_8, pOT_8008D454 + 14, 0);
+        DrawUiTiySprt_8002C06C((unsigned short*)&b, 0xEA, 0xE);
+        DrawWindow_80042460(&r, (WindowStyle*)&b.col_8, pOT_8008D454 + 14, 0);
     }
 }
 
@@ -2058,35 +2058,35 @@ int panelCursor16_800BE540[4] = { 0x20001, 2, 0xF0000, 0x2C0076 };
 int panelCursor27_800BE550[4] = { 0x10001, 1, 0xF0000, 0x2C0076 };
 int panelCursor19_800BE560[8] = { 0x20001, 2, 0xF0000, 0x2C0076, 0x20001, 2, 0xF0000, 0x2C0076 };
 StorePanel storePanels_800BE580[29] = {
-    { panelCursor0_800BE490, 0, { 12, 100, 62, 30 }, 14 },
+    { (unsigned short*)panelCursor0_800BE490, 0, { 12, 100, 62, 30 }, 14 },
     { 0, 0, { 119, 79, 75, 20 }, 14 },
     { 0, 0, { 10, 79, 107, 20 }, 14 },
     { 0, 0, { 10, 79, 107, 20 }, 14 },
-    { panelCursor4_800BE4A0, 0, { 14, 100, 178, 75 }, 14 },
-    { panelCursor5_800BE4B0, 0, { 14, 100, 178, 75 }, 14 },
-    { panelCursor6_800BE4C0, 0, { 12, 100, 62, 30 }, 14 },
+    { (unsigned short*)panelCursor4_800BE4A0, 0, { 14, 100, 178, 75 }, 14 },
+    { (unsigned short*)panelCursor5_800BE4B0, 0, { 14, 100, 178, 75 }, 14 },
+    { (unsigned short*)panelCursor6_800BE4C0, 0, { 12, 100, 62, 30 }, 14 },
     { 0, 0, { 119, 79, 75, 20 }, 14 },
     { 0, 0, { 10, 79, 107, 20 }, 14 },
-    { panelCursor9_800BE4D0, 0, { 12, 100, 98, 44 }, 14 },
-    { panelCursor10_800BE4E0, 0, { 14, 100, 178, 75 }, 14 },
-    { panelCursor11_800BE4F0, 0, { 14, 100, 178, 75 }, 14 },
-    { panelCursor12_800BE510, 0, { 0, 0, 0, 0 }, 14 },
+    { (unsigned short*)panelCursor9_800BE4D0, 0, { 12, 100, 98, 44 }, 14 },
+    { (unsigned short*)panelCursor10_800BE4E0, 0, { 14, 100, 178, 75 }, 14 },
+    { (unsigned short*)panelCursor11_800BE4F0, 0, { 14, 100, 178, 75 }, 14 },
+    { (unsigned short*)panelCursor12_800BE510, 0, { 0, 0, 0, 0 }, 14 },
     { 0, 0, { 10, 176, 75, 20 }, 14 },
     { 0, 0, { 10, 176, 75, 20 }, 14 },
-    { panelCursor15_800BE530, 0, { 0, 0, 0, 0 }, 14 },
-    { panelCursor16_800BE540, 0, { 0, 0, 0, 0 }, 14 },
+    { (unsigned short*)panelCursor15_800BE530, 0, { 0, 0, 0, 0 }, 14 },
+    { (unsigned short*)panelCursor16_800BE540, 0, { 0, 0, 0, 0 }, 14 },
     { 0, 0, { 10, 176, 75, 20 }, 14 },
     { 0, 0, { 10, 176, 75, 20 }, 14 },
-    { panelCursor19_800BE560, 0, { 0, 0, 0, 0 }, 14 },
+    { (unsigned short*)panelCursor19_800BE560, 0, { 0, 0, 0, 0 }, 14 },
     { 0, quantityLine0_800BE114, { 12, 197, 296, 20 }, 14 },
     { 0, quantityLine1_800BE124, { 12, 197, 296, 20 }, 14 },
     { 0, 0, { 194, 112, 116, 96 }, 14 },
     { 0, dialogLines_800BE134, { 10, 18, 300, 58 }, 14 },
     { 0, 0, { 12, 218, 296, 12 }, 14 },
     { 0, 0, { 87, 176, 107, 20 }, 14 },
-    { panelCursor15_800BE530, 0, { 87, 176, 107, 20 }, 14 },
-    { panelCursor27_800BE550, 0, { 87, 176, 107, 20 }, 14 },
-    { panelCursor27_800BE550, 0, { 87, 176, 107, 20 }, 14 },
+    { (unsigned short*)panelCursor15_800BE530, 0, { 87, 176, 107, 20 }, 14 },
+    { (unsigned short*)panelCursor27_800BE550, 0, { 87, 176, 107, 20 }, 14 },
+    { (unsigned short*)panelCursor27_800BE550, 0, { 87, 176, 107, 20 }, 14 },
 };
 char dialogWindowRect_800BE7C4[8] = { 80, 0, 20, 0, 223, 0, 54 };
 int stateWindows_800BE7CC[19] = {

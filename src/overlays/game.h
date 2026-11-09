@@ -84,7 +84,7 @@ typedef struct GameEnemy
     UnitStats minion_1C;
     Actor* actors_A4[3];
     GameEnemyMember members_B0[3];
-    int* anims_C8[3]; // [0]: when it is the group being fought, [1]: otherwise (default name_8007A024)
+    ActorScriptCmd** anims_C8[3]; // [0]: when it is the group being fought, [1]: otherwise (default name_8007A024)
     int fD4[3];
 } GameEnemy;
 
@@ -145,7 +145,7 @@ typedef struct GameEvCtx
     int choiceMask_114;
     int msgOpen_118;
     struct MsgWindowEntry* msgWindow_11C;
-    int ent_120;
+    void* ent_120; // the entity the script runs for (EVENTFNC: EvEntity, a map's MapEnt)
 } GameEvCtx;
 
 // an event entity (list eventEntities_8008D400); same layout as EvEntity in eventfnc.h
@@ -191,7 +191,7 @@ typedef struct GameMemberCb
 {
     int f0;
     Actor* actor_4;
-    int* anims_8; // animation table (indexed by the script commands)
+    ActorScriptCmd** anims_8; // animation table (indexed by the script commands)
     int (*hold_C)();     // HoldFieldMinion_800A7810 (0: busy)
     void (*release_10)(); // ReleaseFieldMinion_800A785C
 } GameMemberCb;
@@ -285,7 +285,7 @@ typedef struct GameEncounter
     int gone_4C[12];
     Actor* actors_7c[12];
     UnitStats ents_ac[12]; // the encounter's minions (minion data)
-    int anims_70C[12];
+    ActorScriptCmd** anims_70C[12];
     int f73c[12];
     int activeCount_76C;
     int memberCount_770;
@@ -594,7 +594,7 @@ extern int* sub_800B3198(void);
 
 extern int encounterVariantToggle_8008B554;
 
-#define ELEM(x) ((short)((int (*)(int))GetMinionElement_80019BF0)(x))
+#define ELEM(x) ((short)IMPLICIT_INT(GetMinionElement_80019BF0)(x))
 
 extern int (*eventFuncs_800BCDBC[])(GameEvCtx*);
 
@@ -647,8 +647,8 @@ typedef struct GameSubOverlayWork
     int freeze_C; // nonzero: FreezeScreen_8001C224 instead of EndFade_8001C290
     int halt_10;  // eventDispatchHalt_8008B540 when done
     int fading_14;
-    int startArg_18; // start_1C's argument
-    void (*start_1C)(int); // StartShopRequest_800A7204 / StartSaveMenuRequest_800A7280
+    void* startArg_18; // start_1C's argument
+    void (*start_1C)(struct GameMenuRequest* req); // StartShopRequest_800A7204 / StartSaveMenuRequest_800A7280
 } GameSubOverlayWork;
 
 extern unsigned short padPressed_8009194C;
@@ -664,9 +664,9 @@ extern EventNode* nameEntryTask_8008D484;
 
 extern void WaitSubOverlayLoad_800A70F8();
 
-extern void StartShopRequest_800A7204();
+extern void StartShopRequest_800A7204(struct GameMenuRequest* req);
 
-extern void StartSaveMenuRequest_800A7280();
+extern void StartSaveMenuRequest_800A7280(struct GameMenuRequest* req);
 
 extern void CheckSubOverlayRequests_800A6DAC();
 
@@ -813,7 +813,7 @@ extern void UpdateLevantQueuedAnim_800AC02C();
 
 extern int CanAddInventoryCount_800AD670(int have, int count);
 
-extern void LevantModelTask_800ACB64();
+extern void LevantModelTask_800ACB64(EventEntry* task, void* buf);
 
 // a map entrance (mapTable_800B0608[area][map][n], ends with id -1)
 typedef struct GameMapEntrance
@@ -1278,8 +1278,7 @@ extern int areaMapCounts_800B0624[29];
 extern int gameModeChanged_800B0698;
 extern int levantStartPos_800B069C[5];
 extern int shopRequest_800B06B0[3];
-extern int saveRequest_800B06BC;
-extern int unused_800B06C0[3];
+extern struct GameMenuRequest saveRequest_800B06BC;
 extern EventDesc mapLoaderTaskDef_800B06CC;
 extern EventDesc areaLoaderTaskDef_800B06E4;
 extern EventDesc levantModelTaskDef_800B06FC;
@@ -1418,7 +1417,7 @@ void GameMainInit_800A68CC(GameTask* task, GameMainWork* work);
 void LevantActorTask_800A9564(int entry, GameLevantActor* lev);
 void LevantActorTaskExit_800A955C();
 void LevantModelTaskExit_800ACF0C();
-void LevantModelTaskInit_800ACAA4(int* task, int* work);
+void LevantModelTaskInit_800ACAA4(EventEntry* task, int* work);
 void ReturnToPrevGameMode_800A8108();
 void StartChapterOverlay_800A7690(GameTask* task, int* work);
 void StartMapOverlay_800A75F8(GameTask* task, int* work);

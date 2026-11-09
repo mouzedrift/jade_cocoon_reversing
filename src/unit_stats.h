@@ -82,7 +82,7 @@ int BaseMaxMpForLevel_80012178(int level, void* unused);
 int BaseMaxHpForLevel_80012140(int level, void* unused);
 unsigned int GetCapturedMinionsCount_800125B8(void);
 int GetSporeMode_80011B6C(void);
-void ApplyLevelUpsBonus_80011D78(UnitStatus* status);
+int ApplyLevelUpsBonus_80011D78(UnitStatus* status);
 void ApplyLevelUpsPlain_80012188(UnitStatus* status);
 void FillHpMp_80011C0C(UnitStatus* dst, UnitStatus* src);
 void ClearStatus_80011C30(UnitStatus* status);

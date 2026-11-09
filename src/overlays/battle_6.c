@@ -364,8 +364,8 @@ const char* magicDescriptions_800C9978[30][4] = {
     { aEnhanceWind_800B8DD0, aIncreasesWindAt_800B8D7C, aEffectivenessOf_800B8D1C },
 };
 const char* skillDescriptions_800C9B58[16][4] = {
-    { emptyText_800BA174, emptyText_800BA174, emptyText_800BA174, 0 },
-    { emptyText_800BA174, emptyText_800BA174, emptyText_800BA174, 0 },
+    { (const char*)emptyText_800BA174, (const char*)emptyText_800BA174, (const char*)emptyText_800BA174, 0 },
+    { (const char*)emptyText_800BA174, (const char*)emptyText_800BA174, (const char*)emptyText_800BA174, 0 },
     { aSpecialEarthAtt_800BA148, aVeryEffectiveAg_800BA0F0, aHigherEarthElem_800B94E8, 0 },
     { aSpecialWaterAtt_800BA0C4, aVeryEffectiveAg_800BA06C, aHigherWaterElem_800B9610, 0 },
     { aSpecialFireAtta_800BA044, aVeryEffectiveAg_800B9FEC, aHigherFireEleme_800B9730, 0 },
@@ -2174,7 +2174,7 @@ int FindUsableSkill_800C6D6C(UnitSkills* skills, UnitStats* self)
         if (skills->slot[i].flags_0 & 1)
         {
             short mp = self->st_0.mp_C.cur_0;
-            if (!(mp < GetSkillMpCost_80031A04(skills, i)))
+            if (!(mp < GetSkillMpCost_80031A04((UnitSkill*)skills, i)))
             {
                 return i;
             }
@@ -2637,7 +2637,7 @@ int GetSelectedMagic_800C7A1C()
 void AdvanceMenuPage_800C7A6C()
 {
     UnitSkill* skills;
-    char* magicBits;
+    unsigned int* magicBits;
     prevMenuPage_800C9E40 = menuPage_800C9E50;
     switch (menuPage_800C9E50)
     {
@@ -2759,7 +2759,7 @@ void BattleMenuDraw_800C7DA8()
         else if (menuPage_800C9E50 == 2)
         {
             Minion* minion = GetMinion_80010598(3, actingUnit_800C9C7C - 1);
-            DrawAbilityDescription_8002C670(minion, 0, skillDescriptions_800C9B58, (short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4), 0xF);
+            DrawAbilityDescription_8002C670((char*)minion, 0, skillDescriptions_800C9B58, (short)GetMenuCursorIndex_8003DA54(skillMenu_800C92E4), 0xF);
             mode = 1;
         }
         else if (menuPage_800C9E50 == 3)
@@ -2795,7 +2795,7 @@ void BattleMenuDraw_800C7DA8()
         {
             if (targetFlags_800C9E68 & 2)
             {
-                menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 0, cursor, 0xF);
+                menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250((TargetQuery*)sel, 0, cursor, 0xF);
                 flags |= 1;
             }
         }
@@ -2806,18 +2806,18 @@ void BattleMenuDraw_800C7DA8()
         {
             if (targetFlags_800C9E68 & 2)
             {
-                menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 1, cursor, 0xF);
+                menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250((TargetQuery*)sel, 1, cursor, 0xF);
                 flags |= 1;
             }
         }
         else if (GetSelectedCommand_800C78D0() == 2)
         {
-            menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 2, cursor, 0xF);
+            menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250((TargetQuery*)sel, 2, cursor, 0xF);
             flags |= 1;
         }
         else if (GetSelectedCommand_800C78D0() == 8)
         {
-            menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250(sel, 3, cursor, 0xF);
+            menuTarget_800C9E54 = DrawTargetSelectMenu_8002D250((TargetQuery*)sel, 3, cursor, 0xF);
             flags |= 1;
         }
     }
@@ -3029,7 +3029,7 @@ void DrawMenuHelpText_800C8828(const char* text)
     origin[1] = rect[1];
     pos[0] = rect[0] + 2;
     pos[1] = rect[1] + 4;
-    DrawTextLinesWindow_8002AE38(lines, pos, 0xF, rect, 1);
+    DrawTextLinesWindow_8002AE38(lines, (Pos16*)pos, 0xF, (RECT*)rect, 1);
 }
 
 void DrawMenuMessage_800C88AC(const char* text)

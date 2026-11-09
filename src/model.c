@@ -125,19 +125,19 @@ void RunActorScript_8001EA48(void* actor)
             o->waitLen_CA = o->loopCount_F4;
             break;
         case 6:
-            StartActorFadeIn_8001D9E4(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            StartActorFadeIn_8001D9E4(o, GetActorScriptTime_8001F03C(o, cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 7:
-            StartActorFadeOut_8001DA08(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4000, 0), cmd->arg_6);
+            StartActorFadeOut_8001DA08(o, GetActorScriptTime_8001F03C(o, cmd, 0x4000, 0), cmd->arg_6);
             break;
         case 8:
             StopActorFade_8001DA2C(o);
             break;
         case 9:
-            StartActorScale_8001DA4C(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
+            StartActorScale_8001DA4C(o, GetActorScriptTime_8001F03C(o, cmd, 0x4001, 0), o->scale_26, cmd->arg_6);
             break;
         case 10:
-            StartActorScale_8001DA4C(o, GetActorScriptTime_8001F03C((int)o, (int)cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
+            StartActorScale_8001DA4C(o, GetActorScriptTime_8001F03C(o, cmd, 0x4001, 0), o->scale_26, o->scaleTarget_F6);
             break;
         case 11:
             SetActorVisible_8001D730(o, cmd->arg_6);
@@ -264,10 +264,10 @@ void StopActorScript_8001EFC4(Actor* actor)
     }
     actor->flags_4 &= 0xFF17FFFF;
 }
-int GetActorScriptTime_8001F03C(int actorAddr, int scriptAddr, int target, int frame)
+int GetActorScriptTime_8001F03C(void* actorAddr, void* scriptAddr, int target, int frame)
 {
-    Actor* o = (Actor*)actorAddr;
-    ActorScriptCmd* cmd = (ActorScriptCmd*)scriptAddr;
+    Actor* o = actorAddr;
+    ActorScriptCmd* cmd = scriptAddr;
     int time;
     int repeats;
     int fromLoop;
@@ -361,8 +361,8 @@ short GetActorHitTimes_8001F268(Actor* o, HitTimes* out, ActorScriptCmd* script,
         }
         else
         {
-            out[i].start_0 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2]);
-            out[i].end_2 = GetActorScriptTime_8001F03C((int)o, (int)script, anim, e[i * 2 + 1]);
+            out[i].start_0 = GetActorScriptTime_8001F03C(o, script, anim, e[i * 2]);
+            out[i].end_2 = GetActorScriptTime_8001F03C(o, script, anim, e[i * 2 + 1]);
         }
     }
     return out[0].start_0;
@@ -602,7 +602,7 @@ int IsActorOnScreen_8001FC90(Actor* actor)
     rel.vx -= cameraEye_8008D600.vx;
     rel.vy -= cameraEye_8008D600.vy;
     rel.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&rel, &sxy, &z, &flag);
+    RotTransPers(&rel, (void*)&sxy, (void*)&z, (void*)&flag);
     return flag >= 0;
 }
 extern void DrawAnimSkelBlend_80047E28();

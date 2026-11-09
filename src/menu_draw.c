@@ -26,12 +26,12 @@ const char aNo_80074198[8] = "\202m\202\217"; // No
 const int unused_800741A0 = 0;
 
 
-void InitReverbTask_8002A1BC(int* task)
+void InitReverbTask_8002A1BC(EventEntry* task)
 {
     reverbAttr_80091CC8.mask = 0;
     SetReverbMode_8002A280(&reverbAttr_80091CC8, 0);
     SetReverbDepth_8002A2A0(&reverbAttr_80091CC8, 0x42, 0x42);
-    task[2] = (int)UpdateReverb_8002A218;
+    task->cb_8 = (EventEntryFn)UpdateReverb_8002A218;
 }
 void UpdateReverb_8002A218(void)
 {
@@ -123,13 +123,13 @@ void DrawPortraitWindow_8002A4E4(short ot)
 {
     SPRT buf1;
     DR_TPAGE buf2;
-    DrawWindowBorder_80042B38(portraitWindowRect_800827E4, ot);
+    DrawWindowBorder_80042B38((RECT*)portraitWindowRect_800827E4, ot);
     GetPortraitSprt_800A61CC(1, &buf1, &buf2);
     buf1.x0 = portraitWindowPos_800827EC[0];
     buf1.y0 = portraitWindowPos_800827EC[1];
     AddPrimCopy_80040298(pOT_8008D454 + ot, &buf1, sizeof(buf1) / 4);
     AddPrimCopy_80040298(pOT_8008D454 + ot, &buf2, sizeof(buf2) / 4);
-    DrawWindowBackground_800429F8(portraitWindowRect_800827E4, ot);
+    DrawWindowBackground_800429F8((RECT*)portraitWindowRect_800827E4, ot);
 }
 
 void DrawMenuWindows_8002A5A4(MenuWindowList* list)
@@ -141,7 +141,7 @@ void DrawMenuWindows_8002A5A4(MenuWindowList* list)
     {
         for (j = 0; !(list->items_10[i][j].flags_0 & 1); j++)
         {
-            InterpolateWindowRect_8004196C(&rect, &list->items_10[i][j].x_10, list->open_8, 8, 0);
+            InterpolateWindowRect_8004196C(&rect, (RECT*)&list->items_10[i][j].x_10, list->open_8, 8, 0);
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + list->ot_14);
             DrawMenuWindowContents_8002A710(&list->items_10[i][j], list->ot_14);
             AddDrawAreaPrim_8003326C(&rect, pOT_8008D454 + list->ot_14);

@@ -23,6 +23,6 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsign
 void DrawStatIcons_8002E0D8(unsigned short* origin, short ot);
 void DrawStatDelta_8002E004(unsigned short* origin, int delta, int ot);
 void DrawElementChart_8002E730(unsigned short* pos, unsigned char* levels, short ot);
-void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, short ot);
+void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, unsigned char* unused, short ot);
 void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level, short quadrant);
 #endif

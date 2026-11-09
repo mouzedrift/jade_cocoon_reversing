@@ -267,7 +267,7 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
             SsSepOpen(sound->sepDataPtr_8, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_4);
         if (sound->sepAccessNum_C == -1)
         {
-            printf(aAssertionFaile_0, aSoundC, 411);
+            printf((char*)aAssertionFaile_0, aSoundC, 411);
             exit(1);
         }
         SsSepSetVol(sound->sepAccessNum_C, 1, 0, 0);
@@ -287,7 +287,7 @@ void LoadSoundSeqFromBuffer_800304D0(SoundStruct** req, char* pSndFileBuffer)
             SsSepOpen(sound->sepDataPtr_10, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_5);
         if (sound->sepAccessNum_14 == -1)
         {
-            printf(aAssertionFaile_0, aSoundC, 426);
+            printf((char*)aAssertionFaile_0, aSoundC, 426);
             exit(1);
         }
         SsSepSetVol(sound->sepAccessNum_14, 1, 0, 0);
@@ -343,13 +343,13 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
     sound->vabId_0 = SsVabOpenHead(sound->vabHeaderPtr_18, -1);
     if (sound->vabId_0 == -1)
     {
-        printf(aAssertionFaile_0, aSoundC, 540);
+        printf((char*)aAssertionFaile_0, aSoundC, 540);
         exit(1);
     }
 
     if (SsVabTransBody((unsigned char*)((char*)pSndFileHeader + pSndFileHeader->vabBodyStart_8), sound->vabId_0) == -1)
     {
-        printf(aAssertionFaile_0, aSoundC, 546);
+        printf((char*)aAssertionFaile_0, aSoundC, 546);
         exit(1);
     }
     SsVabTransCompleted(1);
@@ -365,7 +365,7 @@ void LoadSoundFromBuffer_800307B4(SoundStruct** req, GenkiSoundHeader* pSndFileH
             SsSepOpen(sound->sepDataPtr_8, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_4);
         if (sound->sepAccessNum_C == -1)
         {
-            printf(aAssertionFaile_0, aSoundC, 559);
+            printf((char*)aAssertionFaile_0, aSoundC, 559);
             exit(1);
         }
         SsSepSetVol(sound->sepAccessNum_C, 1, 0, 0);
@@ -424,13 +424,13 @@ void LoadSound_80030A84(short soundId, SoundStruct* sound)
     sound->vabId_0 = SsVabOpenHead(sound->vabHeaderPtr_18, -1);
     if (sound->vabId_0 == -1)
     {
-        printf(aAssertionFaile_0, aSoundC, 631);
+        printf((char*)aAssertionFaile_0, aSoundC, 631);
         exit(1);
     }
 
     if (SsVabTransBody((unsigned char*)(pSndFileBuffer + pSndFileHeader->vabBodyStart_8), sound->vabId_0) == -1)
     {
-        printf(aAssertionFaile_0, aSoundC, 639);
+        printf((char*)aAssertionFaile_0, aSoundC, 639);
         exit(1);
     }
     SsVabTransCompleted(1);
@@ -446,7 +446,7 @@ void LoadSound_80030A84(short soundId, SoundStruct* sound)
             SsSepOpen(sound->sepDataPtr_8, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_4);
         if (sound->sepAccessNum_C == -1)
         {
-            printf(aAssertionFaile_0, aSoundC, 652);
+            printf((char*)aAssertionFaile_0, aSoundC, 652);
             exit(1);
         }
         SsSepSetVol(sound->sepAccessNum_C, 1, 0, 0);
@@ -466,7 +466,7 @@ void LoadSound_80030A84(short soundId, SoundStruct* sound)
             SsSepOpen(sound->sepDataPtr_10, sound->vabId_0, soundFiles_80082F0C[sound->soundIdx_6].seqCount_5);
         if (sound->sepAccessNum_14 == -1)
         {
-            printf(aAssertionFaile_0, aSoundC, 667);
+            printf((char*)aAssertionFaile_0, aSoundC, 667);
             exit(1);
         }
         SsSepSetVol(sound->sepAccessNum_14, 1, 0, 0);

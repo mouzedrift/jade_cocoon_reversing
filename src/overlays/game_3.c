@@ -2,6 +2,17 @@
 #include "game.h"
 #include "memmap.h"
 
+/* defined further on: the calls before their definitions go through IMPLICIT_INT (the original's had no
+   prototype; a short result would change their code) */
+short GetLevantActionHitFrame_800AB750(int anim);
+short GetLevantActionEndFrame_800AB4D8(int anim);
+unsigned short GetLevantAnimLastFrame_800AC8BC(int anim, int set);
+short GetLevantAnimStartFrame_800AC7F0(int anim, int set);
+short GetLevantAnimEventFrame_800AC944(int anim, int set);
+short GetLevantAnimLoopEnd_800AC878(int anim, int set);
+short GetLevantAnimLoopStart_800AC834(int anim, int set);
+unsigned char GetLevantAnimFileId_800AC988(int anim, int set);
+
 const char aAssertionFaile_800A0660[] = "Assertion failed: file \"%s\", line %d\n";
 const char aEventcomC_800A0688[12] = "EVENTCOM.C";
 const int unused_800A0694 = 0;
@@ -867,8 +878,7 @@ int areaMapCounts_800B0624[29] = {
 int gameModeChanged_800B0698 = 0;
 int levantStartPos_800B069C[5] = { 0x462, -0x2B2, 0x772, 0xFC000000 };
 int shopRequest_800B06B0[3] = { 0 };
-int saveRequest_800B06BC = 0;
-int unused_800B06C0[3] = { 0 };
+GameMenuRequest saveRequest_800B06BC = { 0 };
 EventDesc mapLoaderTaskDef_800B06CC = { 1, 5, 8, (void *)&mapLoaderTask_800B1DC4, (EventEntryFn)InitMapLoaderTask_80027CC0, (EventEntryFn)ResetMapLoaderTask_8002830C };
 EventDesc areaLoaderTaskDef_800B06E4 = { 1, 1, 8, (void *)&areaLoaderTask_800B1DB8, (EventEntryFn)InitAreaLoaderTask_80028388 };
 EventDesc levantModelTaskDef_800B06FC = { 1, 5, 40, (void *)levantModelTask_800B1DA0, (EventEntryFn)LevantModelTaskInit_800ACAA4, (EventEntryFn)LevantModelTaskExit_800ACF0C };
@@ -1263,7 +1273,7 @@ EventEntry* StartEventScript_800A59D0(void* script)
     return 0;
 }
 
-EventEntry* StartEventScriptForEntity_800A5AA0(void* script, int ent)
+EventEntry* StartEventScriptForEntity_800A5AA0(void* script, void* ent)
 {
     EventEntry* entry = StartEventScript_800A59D0(script);
     GameEvCtx* ctx = entry->buffer;
@@ -1276,7 +1286,7 @@ int GetEventScriptId_800A5AD0(EventEntry* entry)
     return ((GameEvCtx*)entry->buffer)->id_10;
 }
 
-int FindEventScript_800A5AE4(int id)
+EventEntry* FindEventScript_800A5AE4(int id)
 {
     EventNode* node = eventScripts_8008D410;
     EventEntry* entry;
@@ -1289,7 +1299,7 @@ int FindEventScript_800A5AE4(int id)
         {
             if (id == ((GameEvCtx*)entry->buffer)->id_10)
             {
-                return (int)entry;
+                return entry;
             }
         }
         node = node->next;
@@ -1587,7 +1597,7 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
-    InitSprtFromTim_800298AC(sprt, sprtArg, &tim);
+    InitSprtFromTim_800298AC(sprt, sprtArg, (TimInfo*)&tim);
 }
 
 void GetPortraitPoly_800A6308(int who, void* poly)
@@ -1649,7 +1659,7 @@ void GetIconSprtByKind_800A6434(int kind, int id, void* sprt, void* sprtArg)
         GetPublicTiySprt_80032470(icon, sprt, sprtArg);
         break;
     case 7:
-        printf(aAssertionFaile_800A0660, aEventcomC_800A0688, 0x2de);
+        printf((char*)aAssertionFaile_800A0660, aEventcomC_800A0688, 0x2de);
         exit(1);
         break;
     }
@@ -2000,18 +2010,18 @@ void CheckSubOverlayRequests_800A6DAC(GameTask* task, GameSubOverlayWork* work)
         req->waitReq_8 = 1;
         req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, ov);
         req->mode_0 = 5;
-        req->startArg_18 = (int)shopRequest_800B06B0;
-        req->start_1C = (void (*)(int))StartShopRequest_800A7204;
+        req->startArg_18 = shopRequest_800B06B0;
+        req->start_1C = StartShopRequest_800A7204;
     }
-    else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && saveRequest_800B06BC)
+    else if (IsSceneHeld_800A5E68() == 0 && gCtx_800B1260.active_0 == 0 && saveRequest_800B06BC.active_0)
     {
         req->waitReq_8 = 1;
         req->req_4 = (int)LoadOverlayIfChanged_80020D1C(1, 0x10);
         entry = AllocEventEntry_80043AF8(loadMenuTask_8008D480);
         entry->flags = (entry->flags | 1) & ~0x8000;
         req->mode_0 = 6;
-        req->startArg_18 = (int)&saveRequest_800B06BC;
-        req->start_1C = (void (*)(int))StartSaveMenuRequest_800A7280;
+        req->startArg_18 = &saveRequest_800B06BC;
+        req->start_1C = StartSaveMenuRequest_800A7280;
     }
     if (req->mode_0 >= 0)
     {
@@ -2344,11 +2354,11 @@ Actor* GetFieldMinionActor_800A7A60(int idx)
     return 0;
 }
 
-int GetFieldMinionAnims_800A7A9C(int idx)
+ActorScriptCmd** GetFieldMinionAnims_800A7A9C(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        return (int)GetFieldMinion_800A77F4(idx)->cb_14.anims_8;
+        return GetFieldMinion_800A77F4(idx)->cb_14.anims_8;
     }
     return 0;
 }
@@ -2502,7 +2512,7 @@ void FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd)
             break;
         case 3:
         case 4:
-            desc.script_4 = (ActorScriptCmd*)cb->anims_8[cmd->arg_C];
+            desc.script_4 = cb->anims_8[cmd->arg_C];
             start = 1;
             break;
         case 5:
@@ -3006,8 +3016,8 @@ GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
     {
         ClearLevantFlag10000_800AB2DC();
     }
-    frames.hit = GetLevantActionHitFrame_800AB750(ctl->anim_CC);
-    frames.end = GetLevantActionEndFrame_800AB4D8(ctl->anim_CC);
+    frames.hit = IMPLICIT_INT(GetLevantActionHitFrame_800AB750)(ctl->anim_CC);
+    frames.end = IMPLICIT_INT(GetLevantActionEndFrame_800AB4D8)(ctl->anim_CC);
     return frames;
 }
 
@@ -3250,7 +3260,7 @@ int FindFacingFieldMinion_800A9164(int* out)
         if (IsFieldMinionVisible_800A79C8(i))
         {
             pos = GetFieldMinionPos_800A7940(i);
-            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, pos, &dist);
+            IsWithinDistance_8003B740((int*)&saveData_8008B570.levant_7A8.pos, pos, &dist);
             if (dist <= 0x9C3F)
             {
                 angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - Ratan2DifferenceInt_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
@@ -3275,7 +3285,7 @@ int IsFieldMinionBehind_800A926C()
         if (IsFieldMinionVisible_800A79C8(i))
         {
             pos = GetFieldMinionPos_800A7940(i);
-            IsWithinDistance_8003B740(&saveData_8008B570.levant_7A8.pos, pos, &dist);
+            IsWithinDistance_8003B740((int*)&saveData_8008B570.levant_7A8.pos, pos, &dist);
             if (dist <= 0x9C3F)
             {
                 angle = WrapAngle_8003BA18((short)((unsigned short)saveData_8008B570.levant_7A8.rot.vy - Ratan2DifferenceInt_8003B9E0(&saveData_8008B570.levant_7A8.pos.x, pos)));
@@ -3338,7 +3348,7 @@ void InitLevantActor_800A94CC(void)
     UpdateLevantActorModel_800AB8DC();
     ResetLevantActor_800A9414(lev, 0, 3);
     ClearLevantFade_800AB150((GameLevantFade*)lev);
-    FindLevantMesh_800B80C8(lev);
+    FindLevantMesh_800B80C8((GameLevantActor*)lev);
     lev->status_3C = levantStatusBits_8008BD38;
     SetLevantStatusTint_800ABECC(levantStatusBits_8008BD38);
 }
@@ -3370,10 +3380,10 @@ void LevantActorTask_800A9564(int entry, GameLevantActor* lev)
     }
     if (lev->flags_0 & 0x800)
     {
-        if (lev->frame_10 == (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
+        if (lev->frame_10 == (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
             lev->flags_0 |= 0x8000;
-            lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+            lev->frame_10 = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
             SetLevantRootMotion_800AA140(lev);
         }
     }
@@ -3396,7 +3406,7 @@ void DrawLevantModel_800A9708(GameLevantActor* lev)
     int flags;
     int st;
     char* sd; // read as a scalar: through SaveData* gcc reloads the status after the p->status_3C store
-    light = FindNearestCameraPoint_80019CC4(&saveData_8008B570.levant_7A8);
+    light = FindNearestCameraPoint_80019CC4((int*)&saveData_8008B570.levant_7A8);
     sd = (char*)&saveData_8008B570;
     if (lev->status_3C != *(int*)(sd + 0x7c8))
     {
@@ -3431,7 +3441,7 @@ void DrawLevantModel_800A9708(GameLevantActor* lev)
         if (lev->fade_30 < 0)
         {
             lev->fade_30 = 0;
-            ClearLevantFade_800AB150(lev);
+            ClearLevantFade_800AB150((GameLevantFade*)lev);
         }
     }
     if (lev->fade_30 == 0x1000)
@@ -3443,7 +3453,7 @@ void DrawLevantModel_800A9708(GameLevantActor* lev)
         return;
     }
     sk.ftg_0 = lev->model_40->ftg_50;
-    sk.pos_4 = &levantPos_8008BD18.pos;
+    sk.pos_4 = (VECTOR*)&levantPos_8008BD18.pos;
     sk.rot_8 = &levantPos_8008BD18.rot;
     sk.bones = levantBones_800B0EF8;
     sk.base = levantBoneScale_800B0FB0;
@@ -3515,11 +3525,11 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
         GetLevantAnimFile_800AC4A8(lev->anim_1C);
         lev->rootMotion_6C.c -= (dz & 0x1f) * Sign_8003B664(dz);
     }
-    if (lev->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) ||
-        ((lev->flags_0 & 0x800) && lev->frame_10 == (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C))))
+    if (lev->frame_10 == (unsigned short)IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) ||
+        ((lev->flags_0 & 0x800) && lev->frame_10 == (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C))))
     {
         lev->flags_0 |= 0x8000;
-        lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+        lev->frame_10 = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
         SetLevantRootMotion_800AA140(lev);
     }
     if (lev->action_8 == 2 && (lev->flags_0 & 0x200000))
@@ -3587,7 +3597,7 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
 void SetLevantRootMotion_800AA140(GameLevantActor* lev)
 {
     ModelAnim* anim = &lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)];
-    GetAnimRootMotion_8004D288((char*)lev + 0x6c, anim, (unsigned)lev->frame_10 % ((GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) & 0xffff) + 1));
+    GetAnimRootMotion_8004D288((char*)lev + 0x6c, anim, (unsigned)lev->frame_10 % ((IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) & 0xffff) + 1));
 }
 
 int GetLevantMoveDir_800AA1C0(GameLevantActor* lev)
@@ -3614,7 +3624,7 @@ void RunLevantAnimCues_800AA220(GameLevantActor* lev)
 
 void UpdateLevantFieldAnim_800AA25C(GameLevantActor* lev)
 {
-    if (IsLevantInBattle_800AA1D4(lev) == 1)
+    if (IsLevantInBattle_800AA1D4((unsigned char*)lev) == 1)
     {
         SetLevantAnim_800AB010(lev, 7, 3, 0);
         lev->mode_C = 1;
@@ -3687,8 +3697,8 @@ void PlayLevantActionEffect_800AA430(GameLevantActor* lev)
             repeat = lev->hitRepeat_2A;
         req.effect_0 = lev->effect_2C;
         hitFrames = GetLevantAnimHitFrames_800AC9CC(lev->actionAnim_20);
-        loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
-        req.hitTimes_4 = RepeatHitTimes_80018200(hitFrames, loopStart, (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)), repeat, lev->effect_2C);
+        loopStart = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+        req.hitTimes_4 = RepeatHitTimes_80018200(hitFrames, loopStart, (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)), repeat, lev->effect_2C);
         GetLevantEffectTarget_800A93A4((EffectTarget*)&req.tbl_8);
         CollectEffectTargets_800182B8(&req, lev->targets_38);
         PlayActorEffect_800184DC(&req, 0);
@@ -3711,7 +3721,7 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
         }
         break;
     case 9:
-        if (IsLevantInBattle_800AA1D4(lev) == 0 && !(lev->flags_0 & 0x1000))
+        if (IsLevantInBattle_800AA1D4((unsigned char*)lev) == 0 && !(lev->flags_0 & 0x1000))
         {
             SetModelFtg_80025B5C(lev->model_40, 2, 0x17);
             SetModelFtg_80025B5C(lev->model_40, 7, 0x19);
@@ -3724,14 +3734,14 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
             SetModelFtg_80025B5C(lev->model_40, 7, 0x1A);
         }
     case 8:
-        if ((unsigned int)lev->frame_10 >= (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
+        if ((unsigned int)lev->frame_10 >= (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
             lev->action_8 = 10;
         }
         break;
     case 10:
         lev->flags_0 = (lev->flags_0 | 0x800) & ~0x8000;
-        if (IsLevantInBattle_800AA1D4(lev) == 1)
+        if (IsLevantInBattle_800AA1D4((unsigned char*)lev) == 1)
         {
             if (lev->flags_0 & 1)
             {
@@ -3852,7 +3862,7 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
         RunLevantActionCues_800ABDF0(lev);
         if (lev->anim_1C == 0x19 || lev->anim_1C == 7 || lev->anim_1C == 0x1A || lev->anim_1C == 0x1C || lev->anim_1C == 8)
         {
-            if ((unsigned int)lev->frame_10 >= (unsigned short)GetLevantAnimLoopEnd_800AC878(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
+            if ((unsigned int)lev->frame_10 >= (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
             {
                 if (effectOutcomeFlag_8008D780[0] == 1)
                 {
@@ -3860,7 +3870,7 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
                 }
                 else if (--lev->hitRepeat_2A >= 0)
                 {
-                    lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+                    lev->frame_10 = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
                 }
             }
         }
@@ -3893,7 +3903,7 @@ void UpdateLevantBattleAction_800AA51C(GameLevantActor* lev)
                 }
                 else
                 {
-                    SetLevantAnim_800AB010(lev, 10, 0xE, (unsigned short)GetLevantAnimLoopEnd_800AC878(0xE, GetLevantAnimSet_800AC474(0xE)));
+                    SetLevantAnim_800AB010(lev, 10, 0xE, (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(0xE, GetLevantAnimSet_800AC474(0xE)));
                 }
             }
             else if (lev->flags_0 & 0x1000000)
@@ -3970,7 +3980,7 @@ void UpdateLevantScriptAnim_800AACF8(GameLevantActor* lev)
         {
             if (lev->flags_0 & 0x100000)
             {
-                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20)));
+                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20)));
             }
             else
             {
@@ -3989,16 +3999,16 @@ void UpdateLevantScriptAnim_800AACF8(GameLevantActor* lev)
             if (lev->flags_0 & 0x800)
             {
                 lev->flags_0 &= ~0x800000;
-                lev->frame_10 = (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+                lev->frame_10 = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
                 lev->flags_0 &= ~0x8000;
             }
             else
             {
                 lev->flags_0 &= ~0x800000;
-                lev->frame_10 = (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
+                lev->frame_10 = (unsigned short)IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C));
             }
         }
-        if (lev->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
+        if (lev->frame_10 == (unsigned short)IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
             if (lev->nextAnim_24 < 0)
             {
@@ -4009,7 +4019,7 @@ void UpdateLevantScriptAnim_800AACF8(GameLevantActor* lev)
             {
                 if (lev->flags_0 & 0x100000)
                 {
-                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->nextAnim_24, GetLevantAnimSet_800AC474(lev->nextAnim_24)));
+                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->nextAnim_24, GetLevantAnimSet_800AC474(lev->nextAnim_24)));
                 }
                 else
                 {
@@ -4029,7 +4039,7 @@ void UpdateLevantScriptAnim_800AACF8(GameLevantActor* lev)
             }
             else
             {
-                printf(aAssertionFailed_800A07E0, aPLDISPC_800A0808, 0x44e);
+                printf((char*)aAssertionFailed_800A07E0, aPLDISPC_800A0808, 0x44e);
                 exit(1);
             }
         }
@@ -4069,7 +4079,7 @@ int IsLevantAnimLoadedOrFree_800AAFD8(int anim)
 void SetLevantAnim_800AB010(GameLevantActor* lev, int action, int anim, int frame)
 {
     if (frame == 0)
-        frame = (short)GetLevantAnimStartFrame_800AC7F0(anim, GetLevantAnimSet_800AC474(anim));
+        frame = (short)IMPLICIT_INT(GetLevantAnimStartFrame_800AC7F0)(anim, GetLevantAnimSet_800AC474(anim));
     if (lev->action_8 == action && lev->anim_1C == anim)
         return;
     lev->idleTimer_28 = 0;
@@ -4127,7 +4137,7 @@ void ClearLevantFade_800AB150(GameLevantFade* lev)
 
 unsigned short GetLevantAnimEventFrameCur_800AB170(int anim)
 {
-    return GetLevantAnimEventFrame_800AC944(anim, GetLevantAnimSet_800AC474(anim));
+    return IMPLICIT_INT(GetLevantAnimEventFrame_800AC944)(anim, GetLevantAnimSet_800AC474(anim));
 }
 
 void ContinueLevantAnim_800AB1A4(int loop)
@@ -4249,51 +4259,51 @@ void ExitLevantActorBattle_800AB444(int victoryPose)
 
 short GetLevantActionEndFrame_800AB4D8(int anim)
 {
-    int loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
-    int loopEnd = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
+    int loopStart = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(anim, GetLevantAnimSet_800AC474(anim));
+    int loopEnd = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(anim, GetLevantAnimSet_800AC474(anim));
     int stanceEnd;
     switch ((unsigned)anim)
     {
     case 25:
     case 26:
     case 28:
-        return GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 2;
+        return IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 2;
     case 7:
     case 8:
-        stanceEnd = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        return stanceEnd + GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 30;
+        stanceEnd = IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(14, GetLevantAnimSet_800AC474(14));
+        return stanceEnd + IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 30;
     }
-    return GetLevantAnimLastFrame_800AC8BC(anim, GetLevantAnimSet_800AC474(anim));
+    return IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(anim, GetLevantAnimSet_800AC474(anim));
 }
 
 short GetLevantAnimLoopStartCur_800AB5F8(int anim)
 {
-    return GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
+    return IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(anim, GetLevantAnimSet_800AC474(anim));
 }
 
 short GetLevantActionLoopEndFrame_800AB630(int anim)
 {
-    int loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
-    int loopEnd = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
+    int loopStart = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(anim, GetLevantAnimSet_800AC474(anim));
+    int loopEnd = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(anim, GetLevantAnimSet_800AC474(anim));
     int stanceEnd;
     switch ((unsigned)anim)
     {
     case 25:
     case 26:
     case 28:
-        return GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 2;
+        return IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 2;
     case 7:
     case 8:
-        stanceEnd = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
-        return stanceEnd + GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 30;
+        stanceEnd = IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(14, GetLevantAnimSet_800AC474(14));
+        return stanceEnd + IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(anim, GetLevantAnimSet_800AC474(anim)) + (loopEnd - loopStart) * 30;
     }
-    return GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
+    return IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(anim, GetLevantAnimSet_800AC474(anim));
 }
 
 short GetLevantActionHitFrame_800AB750(int anim)
 {
-    int loopStart = (unsigned short)GetLevantAnimLoopStart_800AC834(anim, GetLevantAnimSet_800AC474(anim));
-    int loopEnd = (unsigned short)GetLevantAnimLoopEnd_800AC878(anim, GetLevantAnimSet_800AC474(anim));
+    int loopStart = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(anim, GetLevantAnimSet_800AC474(anim));
+    int loopEnd = (unsigned short)IMPLICIT_INT(GetLevantAnimLoopEnd_800AC878)(anim, GetLevantAnimSet_800AC474(anim));
     short frame;
     switch ((unsigned)anim)
     {
@@ -4302,11 +4312,11 @@ short GetLevantActionHitFrame_800AB750(int anim)
     case 28:
         return GetLevantAnimEventFrameCur_800AB170(anim) + (loopEnd - loopStart) * 2;
     case 7:
-        frame = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
+        frame = IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(14, GetLevantAnimSet_800AC474(14));
         frame = frame + GetLevantAnimEventFrameCur_800AB170(anim) + 0x4c;
         return frame;
     case 8:
-        frame = GetLevantAnimLastFrame_800AC8BC(14, GetLevantAnimSet_800AC474(14));
+        frame = IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(14, GetLevantAnimSet_800AC474(14));
         frame = frame + GetLevantAnimEventFrameCur_800AB170(anim);
         return frame;
     }
@@ -4372,7 +4382,7 @@ void PlayLevantScriptAnim_800AB9A8(int anim, int nextAnim, int blend)
     }
     else
     {
-        printf(aAssertionFailed_800A07E0, aPLDISPC_800A0808, 0x6B9);
+        printf((char*)aAssertionFailed_800A07E0, aPLDISPC_800A0808, 0x6B9);
         exit(1);
     }
     lev->queuedAnim_22 = anim;
@@ -4492,7 +4502,7 @@ void RequestLevantActionEffect_800ABCF4(GameLevantActor* lev)
     }
     else if (lev->actionAnim_20 == 0x1D)
     {
-        lev->effect_2C = ((int (*)(int))GetItemEffect_8001CDCC)(lev->arg_34);
+        lev->effect_2C = IMPLICIT_INT(GetItemEffect_8001CDCC)(lev->arg_34);
         RequestEffect_800148F4(lev->effect_2C);
     }
 }
@@ -4501,7 +4511,7 @@ void RunLevantActionCues_800ABDF0(GameLevantActor* lev)
 {
     if (lev->anim_1C == 0x1A)
     {
-        if (lev->frame_10 == (unsigned short)GetLevantAnimLoopStart_800AC834(lev->anim_1C, GetLevantAnimSet_800AC474(0x1A)))
+        if (lev->frame_10 == (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->anim_1C, GetLevantAnimSet_800AC474(0x1A)))
             StartLevantFadeOut_800AB134((GameLevantFade*)lev);
     }
     if (lev->anim_1C == 0x1D)
@@ -4572,7 +4582,7 @@ void SetLevantStatusTint_800ABECC()
     {
         tint = &statusTintPoison_8007A0F8;
     }
-    TintVramImage_800292D0(&tintImageRect_8007DC80, &tintClutRect_8007DC88, tint);
+    TintVramImage_800292D0(&tintImageRect_8007DC80, &tintClutRect_8007DC88, (short*)tint);
 }
 
 void UpdateLevantQueuedAnim_800AC02C(GameLevantActor* lev)
@@ -4598,7 +4608,7 @@ void UpdateLevantQueuedAnim_800AC02C(GameLevantActor* lev)
         {
             if (lev->flags_0 & 0x100000)
             {
-                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20)));
+                SetLevantAnim_800AB010(lev, 0x18, lev->actionAnim_20, (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->actionAnim_20, GetLevantAnimSet_800AC474(lev->actionAnim_20)));
             }
             else
             {
@@ -4612,7 +4622,7 @@ void UpdateLevantQueuedAnim_800AC02C(GameLevantActor* lev)
         }
         break;
     case 0x18:
-        if (lev->frame_10 == (unsigned short)GetLevantAnimLastFrame_800AC8BC(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
+        if (lev->frame_10 == (unsigned short)IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)))
         {
             if (lev->nextAnim_24 < 0)
             {
@@ -4631,7 +4641,7 @@ void UpdateLevantQueuedAnim_800AC02C(GameLevantActor* lev)
                 }
                 else
                 {
-                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, (unsigned short)GetLevantAnimLoopStart_800AC834(lev->nextAnim_24, GetLevantAnimSet_800AC474(lev->nextAnim_24)));
+                    SetLevantAnim_800AB010(lev, -1, lev->nextAnim_24, (unsigned short)IMPLICIT_INT(GetLevantAnimLoopStart_800AC834)(lev->nextAnim_24, GetLevantAnimSet_800AC474(lev->nextAnim_24)));
                 }
                 lev->actionAnim_20 = lev->queuedAnim_22;
                 if (IsLevantAnimLoadedOrFree_800AAFD8(lev->actionAnim_20) == 1)
@@ -4756,7 +4766,7 @@ int IsLevantAnimLoaded_800AC518(int anim)
     int idx = GetLevantAnimIndex_800AC794(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]);
     if (anims[idx].resident_1)
         return 1;
-    return IsAnimInModelAnimSet_80025924(gameModelList_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]));
+    return IsAnimInModelAnimSet_80025924(gameModelList_8007DC60->items_8, (short)IMPLICIT_INT(GetLevantAnimFileId_800AC988)(anim, levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()]));
 }
 
 int LoadLevantAnim_800AC5D0(int fileId, int resident)
@@ -4767,7 +4777,7 @@ int LoadLevantAnim_800AC5D0(int fileId, int resident)
 int LoadLevantAnimById_800AC604(int anim, int resident)
 {
     int set = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
-    return LoadModelAnim_80025440(gameModelList_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set), resident) != 0;
+    return LoadModelAnim_80025440(gameModelList_8007DC60->items_8, (short)IMPLICIT_INT(GetLevantAnimFileId_800AC988)(anim, set), resident) != 0;
 }
 
 void FreeLevantAnim_800AC678(int fileId)
@@ -4778,7 +4788,7 @@ void FreeLevantAnim_800AC678(int fileId)
 void FreeLevantAnimById_800AC6A8(int anim)
 {
     int set = levantAnimSets_800B11DC[GetLevantWeaponKind_800AC3E4()];
-    FreeModelAnim_8002556C(gameModelList_8007DC60->items_8, (short)GetLevantAnimFileId_800AC988(anim, set));
+    FreeModelAnim_8002556C(gameModelList_8007DC60->items_8, (short)IMPLICIT_INT(GetLevantAnimFileId_800AC988)(anim, set));
 }
 
 void LoadLevantAnimSet_800AC708(int set, int flag)
@@ -4880,7 +4890,7 @@ int* GetLevantAnimF34_800ACA38(int anim)
     return &anims[idx].f34;
 }
 
-void LevantModelTaskInit_800ACAA4(int* task, int* work)
+void LevantModelTaskInit_800ACAA4(EventEntry* task, int* work)
 {
     SaveData* sd = &saveData_8008B570;
     work[0] = 0;
@@ -4897,10 +4907,10 @@ void LevantModelTaskInit_800ACAA4(int* task, int* work)
     SetLevantWeaponKind_800AC3A4(GetWeaponData_8001CF84(sd->levantStatus_7C8.equipment_1C[0])->kind_2);
     PoolInit_8003FF1C(&levantPool_800B1DD0, 0x2BF20);
     LevantModelTask_800ACB64(task, work);
-    task[2] = (int)LevantModelTask_800ACB64;
+    task->cb_8 = (EventEntryFn)LevantModelTask_800ACB64;
 }
 
-void LevantModelTask_800ACB64(int* task, void* buf)
+void LevantModelTask_800ACB64(EventEntry* task, void* buf)
 {
     int more = 1;
     GameLevantModelWork* work = buf;
@@ -4927,7 +4937,7 @@ void LevantModelTask_800ACB64(int* task, void* buf)
             }
             else
             {
-                PoolSetInited_80040148((int*)&levantPool_800B1DD0, 1);
+                PoolSetInited_80040148((Pool*)((int*)&levantPool_800B1DD0), 1);
                 work->state = 1;
             }
             break;
@@ -4995,7 +5005,7 @@ void LevantModelTask_800ACB64(int* task, void* buf)
                 ClearOTagRAll_8001B260();
                 EndFade_8001C290();
             }
-            PoolSetInited_80040148((int*)&levantPool_800B1DD0, 0);
+            PoolSetInited_80040148((Pool*)((int*)&levantPool_800B1DD0), 0);
             work->state = 0;
             break;
         }
@@ -5521,7 +5531,7 @@ void SelectMapEntrance_800ADDAC(void)
     loc.area = saveData_8008B570.mapId_2E4[0].cur_0;
     loc.map = saveData_8008B570.mapId_2E4[1].cur_0;
     loc.entrance = saveData_8008B570.mapId_2E4[2].cur_0;
-    savedEntrance = GetMapVar_800ADC1C(&loc);
+    savedEntrance = GetMapVar_800ADC1C((short*)&loc);
     ents = mapTable_800B0608[saveData_8008B570.mapId_2E4[0].cur_0][saveData_8008B570.mapId_2E4[1].cur_0];
     key = saveData_8008B570.mapId_2E4[2].cur_0;
     i = 0;

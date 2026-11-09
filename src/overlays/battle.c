@@ -426,7 +426,7 @@ void BattleLoad_800BAC4C(BatTaskEntry* task)
         StartBattleCamera_80037748();
         battleLoadState_800C9C58 = 5;
     case 5:
-        if (((int (*)())IsSceneFadeDone_8001AB94)() == 0) // called without its argument here
+        if (IsSceneFadeDone_8001AB94() == 0) // called without its argument here
         {
             break;
         }
@@ -1173,7 +1173,7 @@ void TurnUnitsToward_800BC468(int targetMask, int unitMask)
     char center[0x10];
     unsigned int i;
     int bit;
-    if (GetUnitsCenter_800BC378(targetMask, center))
+    if (GetUnitsCenter_800BC378(targetMask, (Vec3i*)center))
     {
         for (i = 0; i < 7; i++)
         {
@@ -1347,7 +1347,7 @@ void LoadStageEffects_800BC878()
 {
     char buf[4];
     memset(buf, 0, 4);
-    LoadEffectFile_80020DDC(battleStages_800C8EAC[battleStageId_80083BD0].effect_4, &battleEffectFile_80095468, buf, buf, 0, 0);
+    LoadEffectFile_80020DDC(battleStages_800C8EAC[battleStageId_80083BD0].effect_4, &battleEffectFile_80095468, (short*)buf, (short*)buf, 0, 0);
     stageAnimUv_800C9D8C[1] = -1;
     stageAnimUv_800C9D8C[0] = -1;
 }

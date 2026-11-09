@@ -62,6 +62,7 @@ endforeach()
 # map code: src/maps/NAME.c with the table of its PlayStation addresses (scripts/pc_maps.py), one object each
 # with only its table global (the maps use the same names)
 file(GLOB MAP_SOURCES ${CMAKE_SOURCE_DIR}/src/maps/*.c)
+file(GLOB MAP_DATA_SOURCES ${CMAKE_SOURCE_DIR}/src/maps/data/*.c)
 set(MAP_GEN ${CMAKE_CURRENT_BINARY_DIR}/maps)
 file(MAKE_DIRECTORY ${MAP_GEN})
 set(MAP_GENERATED ${MAP_GEN}/maps_pc.c)
@@ -73,7 +74,7 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 add_custom_command(
     OUTPUT ${MAP_GENERATED}
     COMMAND Python3::Interpreter ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${MAP_GEN} ${MAP_SOURCES}
-    DEPENDS ${MAP_SOURCES} ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${CMAKE_SOURCE_DIR}/src/enums.h
+    DEPENDS ${MAP_SOURCES} ${MAP_DATA_SOURCES} ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${CMAKE_SOURCE_DIR}/src/enums.h
     VERBATIM)
 set(MAP_OBJECTS)
 foreach(src ${MAP_SOURCES})

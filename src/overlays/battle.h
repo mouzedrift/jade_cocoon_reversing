@@ -825,7 +825,7 @@ extern void SpawnOrb_800C3B50(int* pos, int id);
 
 
 
-extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
+extern void SetPointLight_800C4090(void* pos, void* rgb, int range, int intensity);
 
 
 

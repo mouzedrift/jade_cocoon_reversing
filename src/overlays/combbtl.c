@@ -410,7 +410,7 @@ MsgWindowEntry* OpenAnnouncerWindow_800A5408(int which, const char** lines, int 
     char* tbl[2] = {"\202q\202\201" /* Ra */, "\202l\202\225" /* Mu */};
     cfg.posMode_0 = 2;
     cfg.pos_4 = 0;
-    cfg.text_8 = (int*)lines;
+    cfg.text_8 = (void**)lines;
     cfg.field_10 = (saveData_8008B570.settings_1C.word & 7) != 3;
     cfg.cancelable_14 = 0;
     cfg.mask_18 = 0;
@@ -980,8 +980,8 @@ void RunExchange_800A68E0(CombBtlTask* t)
             }
             break;
         case 1:
-            sideHitWindows_800A84C8[actorSide_800A85B8] = StartSlotAction_800A0F50(actorSide_800A85B8, &actorCmd_800A85A8, 0);
-            sideHitWindows_800A84C8[targetSide_800A8620] = StartSlotAction_800A0F50(targetSide_800A8620, &targetCmd_800A8610, 1);
+            sideHitWindows_800A84C8[actorSide_800A85B8] = StartSlotAction_800A0F50(actorSide_800A85B8, (int*)&actorCmd_800A85A8, 0);
+            sideHitWindows_800A84C8[targetSide_800A8620] = StartSlotAction_800A0F50(targetSide_800A8620, (int*)&targetCmd_800A8610, 1);
             hitWindow_800A8494 = MergeHitWindows_800A71E4(2, sideHitWindows_800A84C8);
             exchangeStep_800A8488 = 2;
             break;
@@ -995,7 +995,7 @@ void RunExchange_800A68E0(CombBtlTask* t)
         case 3:
             if (sideHitWindows_800A84C8[actorSide_800A85B8].a == hitWindow_800A8494.a)
             {
-                TriggerSlotEffect_800A0FF0(actorSide_800A85B8, &actorCmd_800A85A8, 0);
+                TriggerSlotEffect_800A0FF0(actorSide_800A85B8, (int*)&actorCmd_800A85A8, 0);
                 StartHitNumber_800A7E34(actorSide_800A85B8, 1, actorHpLoss_800A84BC);
                 if (actorHpLoss_800A84BC > 0)
                 {
@@ -1010,7 +1010,7 @@ void RunExchange_800A68E0(CombBtlTask* t)
             }
             if (sideHitWindows_800A84C8[targetSide_800A8620].a == hitWindow_800A8494.a)
             {
-                TriggerSlotEffect_800A0FF0(targetSide_800A8620, &targetCmd_800A8610, 1);
+                TriggerSlotEffect_800A0FF0(targetSide_800A8620, (int*)&targetCmd_800A8610, 1);
                 if (targetSfx_800A84A4 >= 0)
                 {
                     PlaySfx_80031494(targetSfx_800A84A4);
@@ -1290,7 +1290,7 @@ void CreateSideActor_800A74A0(int side)
 {
     CombBtlSidePos pos = sideActorPos_800A4AD4;
     CombBtlSideRot rot = sideActorArgs_800A4AEC;
-    CreateSlotActor_800A0BA8(side, pos.pos_0[side], rot.rot_0[side]);
+    CreateSlotActor_800A0BA8(side, pos.pos_0[side], (short*)rot.rot_0[side]);
 }
 
 void RemoveSideMinion_800A7560(int side)
@@ -1390,7 +1390,7 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     AddDrawAreaPrim_8003326C(&win->cur_10, pOT_8008D454);
     pt.lo = pos70.p[win->side_0].lo;
     pt.hi = pos70.p[win->side_0].hi;
-    DrawMenuWindowItems_8002F480(status, &pt, 0xF, win->side_0);
+    DrawMenuWindowItems_8002F480(status, (short*)&pt, 0xF, win->side_0);
     if (win->side_0)
     {
         label = &w1;
@@ -1440,11 +1440,11 @@ void SideWindowTask_800A7694(EventEntry* e, void* buf)
     uA8.r.y = pt.hi;
     if (win->side_0 == actorSide_800A85B8)
     {
-        DrawMpGauge_8002F120(status, &pt, previewMp_800A82D2, 0xF);
+        DrawMpGauge_8002F120(status, (unsigned short*)&pt, previewMp_800A82D2, 0xF);
     }
     else
     {
-        DrawMpGauge_8002F120(status, &pt, 0, 0xF);
+        DrawMpGauge_8002F120(status, (unsigned short*)&pt, 0, 0xF);
     }
     uA0.box.semiTrans_3 = 1;
     uA0.box.color_0 = saveData_8008B570.uiColor_20.h;
@@ -1554,7 +1554,7 @@ void HitNumberTask_800A7EFC(EventEntry* e, CombBtlHitNum* buf)
     pos.vx -= cameraEye_8008D600.vx;
     pos.vy -= cameraEye_8008D600.vy;
     pos.vz -= cameraEye_8008D600.vz;
-    RotTransPers(&pos, (void*)&sxy, &z, &flag);
+    RotTransPers(&pos, (void*)&sxy, (void*)&z, (void*)&flag);
     if (++num->frame_8 > 16)
     {
         e->flags = (e->flags & ~1) | 0x8000;

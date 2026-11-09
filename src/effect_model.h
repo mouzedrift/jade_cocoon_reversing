@@ -6,7 +6,7 @@ extern const int unused_80072278[0];
 // effect is unused (the GAME caller passes the effect id)
 HitTimes* RepeatHitTimes_80018200(HitTimes* src, unsigned short loopStart, unsigned short loopEnd, short loops, int effect);
 
-void SpawnMdecEffect_80017A6C(int parent, int frames);
+void SpawnMdecEffect_80017A6C(void* parent, int frames);
 void SpawnPulseModel_800174F8(EffectObj* parent, int modelId);
 void MorphInModelTask_80017E30(EventEntry* entry, void* buf);
 void PulseModelTask_8001761C(int* flags, EffectObj* obj);

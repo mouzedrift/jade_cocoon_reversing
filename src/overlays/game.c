@@ -507,7 +507,7 @@ void SetupEncounter_800A1BD0(void)
     Actor* actor;
     GameEnemySlot* slot;
     GameEnemySlot* s;
-    int* anims;
+    ActorScriptCmd** anims;
     GameAi* ai;
     int done;
     int i;
@@ -540,7 +540,7 @@ void SetupEncounter_800A1BD0(void)
             if (!found && gCtx_800B1260.leader_4 == s)
             {
                 SuspendEnemyAi_800A2EC8(ai);
-                StartActorScript_8001DC34(ai->actor_8, (void*)anims[0]);
+                StartActorScript_8001DC34(ai->actor_8, anims[0]);
                 found = 1;
                 done = found;
                 gCtx_800B1260.leader_4 = s;
@@ -548,7 +548,7 @@ void SetupEncounter_800A1BD0(void)
             if (!done)
             {
                 SuspendEnemyAi_800A2EC8(ai);
-                StartActorScript_8001DC34(ai->actor_8, (void*)anims[1]);
+                StartActorScript_8001DC34(ai->actor_8, anims[1]);
                 gCtx_800B1260.others_C[gCtx_800B1260.otherCount_8] = slot;
                 gCtx_800B1260.otherCount_8++;
             }
@@ -738,7 +738,7 @@ void SpawnEncounterEnemies_800A1F80(void)
         SetActorGroundMove_8001D68C(actor, 0);
         gCtx_800B1260.actors_7c[gCtx_800B1260.count_40] = actor;
         gCtx_800B1260.gone_4C[gCtx_800B1260.count_40] = i >= gCtx_800B1260.activeCount_76C;
-        gCtx_800B1260.anims_70C[gCtx_800B1260.count_40] = (int)leader->data_8.anims_C8[i];
+        gCtx_800B1260.anims_70C[gCtx_800B1260.count_40] = leader->data_8.anims_C8[i];
         gCtx_800B1260.f73c[gCtx_800B1260.count_40] = leader->data_8.fD4[i];
         i++;
         gCtx_800B1260.count_40++;
@@ -818,7 +818,7 @@ GameActionFrames StartEnemyCommandAction_800A2684(int* cmd, int arg)
         if (((unsigned)cmd[2] & (1 << i)) != 0)
         {
             actor = gCtx_800B1260.actors_7c[i - 4];
-            frames = StartCommandAction_80018A4C(actor, cmd, (ActorScriptCmd**)gCtx_800B1260.anims_70C[i - 4], arg);
+            frames = StartCommandAction_80018A4C(actor, cmd, gCtx_800B1260.anims_70C[i - 4], arg);
         }
     }
     return frames;
@@ -909,12 +909,12 @@ int EnemyReturnZero_800A2A50(int idx)
     return 0;
 }
 
-int GetEnemyMagicBits_800A2A70(int idx)
+unsigned int* GetEnemyMagicBits_800A2A70(int idx)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
     {
         UnitStats* e = &gCtx_800B1260.ents_ac[idx];
-        return (int)&e->magicBits_80;
+        return &e->magicBits_80;
     }
 }
 
@@ -1001,7 +1001,7 @@ int AssertEnemyIndex_800A2CA8(int idx, int noExit)
     {
         if (!noExit)
         {
-            printf(aAssertionFaile_800A05A4, aEnmbatleC_800A05CC, 0x512);
+            printf((char*)aAssertionFaile_800A05A4, aEnmbatleC_800A05CC, 0x512);
             exit(1);
         }
     }
@@ -1148,7 +1148,7 @@ void EnemyAiWatchFlee_800A31DC(int unused, GameAi* ai)
             SetActorSpeedScale_8001DB58(ai->actor_8, 0x1000, 0);
             break;
         case 1:
-            TurnActorTowards_8001DDFC(ai->actor_8, &levantPos_8008BD18.pos, 0x155);
+            TurnActorTowards_8001DDFC(ai->actor_8, (VECTOR*)&levantPos_8008BD18.pos, 0x155);
             if (DistanceSquaredXZ_8003B860(ai->actor_8->pos_38, &levantPos_8008BD18.pos.x) <= 0xDBB9F)
             {
                 SetEnemyAiState_800A433C(ai, 5, 2, 0, -1, state, 2);
@@ -1299,7 +1299,7 @@ void EnemyAiChaseAlert_800A3954(int unused, GameAi* ai)
                 SetEnemyAiState_800A433C(ai, 0xa, 4, 0x46, -1, 1, 2);
             break;
         case 0xa:
-            TurnActorTowards_8001DDFC(aiCopy->actor_8, &levantPos_8008BD18.pos, 0x155);
+            TurnActorTowards_8001DDFC(aiCopy->actor_8, (VECTOR*)&levantPos_8008BD18.pos, 0x155);
             if (DistanceSquaredXZ_8003B860(aiCopy->actor_8->pos_38, &levantPos_8008BD18.pos.x) > 0xDBBA0)
                 aiCopy->state_c = -1;
             break;
@@ -1535,7 +1535,7 @@ void EnemyAiFleeTurnStep_800A44C0(GameAi* ai)
     idx = (ang - ai->actor_8->rot_5C[1]) & 0xfff;
     away.x = ai->actor_8->pos_38[0] + (ai->actor_8->pos_38[0] - saveData_8008B570.levant_7A8.pos.x);
     away.z = ai->actor_8->pos_38[2] + (ai->actor_8->pos_38[2] - saveData_8008B570.levant_7A8.pos.z);
-    if (TurnActorTowards_8001DDFC(ai->actor_8, (Vec3i*)&away, TurnStepForAngle_800A48F4(idx * 3)) == 0)
+    if (TurnActorTowards_8001DDFC(ai->actor_8, (VECTOR*)((Vec3i*)&away), TurnStepForAngle_800A48F4(idx * 3)) == 0)
     {
         RestartActorMotion_8001D71C(ai->actor_8);
     }
@@ -1545,7 +1545,7 @@ void EnemyAiFleeStep_800A459C(GameAi* ai)
 {
     Vec3i away;
     ReflectPoint_800A47B8(&levantPos_8008BD18.pos, (Vec3i*)ai->actor_8->pos_38, &away);
-    if (TurnActorTowards_8001DDFC(ai->actor_8, &away, 0x155) == 0)
+    if (TurnActorTowards_8001DDFC(ai->actor_8, (VECTOR*)&away, 0x155) == 0)
     {
         RestartActorMotion_8001D71C(ai->actor_8);
     }

@@ -22,6 +22,11 @@
 #include <libmcx.h>
 #include <libpress.h>
 #include <libetc.h>
+#ifdef __psyz
+/* psyz.h brings the host's <fcntl.h>; libmcrd.h has the memory card's O_RDONLY / O_WRONLY */
+#undef O_RDONLY
+#undef O_WRONLY
+#endif
 #include <libmcrd.h>
 #include <libspu.h>
 #include <memory.h>

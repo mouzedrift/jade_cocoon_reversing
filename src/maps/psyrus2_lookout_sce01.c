@@ -22,9 +22,6 @@ int FxFrame_800B3884(MapFx* fx, MapFxWork* w, int count);
 void FxTime_800B3908(MapEnt* ent, MapFx* fx, MapFxWork* w);
 void FxPlace_800B39D4(MapFx* fx, MapFxWork* w);
 
-
-
-
 const char unknown_800B22C0[] = "w";
 ActorScriptCmd* script_800B3B1C[] = { 0 };
 MapActorModel model_800B3B20 = { "\x82\x6c\x82\x81\x82\x88\x82\x82\x82\x95", 0x2E, 0, 0, 0, 0, 4, script_800B3B1C, 0, 0x800000, 0, 1 };
@@ -171,11 +168,6 @@ short bones_800B42FC[] = {
 };
 int scale_800B43B4[3] = { 0x1000, 0x1000, 0x1000 };
 
-/* the update of each MapFx.type_0 */
-typedef struct MapFxInits
-{
-    MapEntFn init[5];
-} MapFxInits;
 const MapFxInits fxInits_800B22D8 = { { 0, FxModel_800B2B20, 0, FxMdec_800B3130, 0 } };
 
 void MinionInit_800B2328(MapEnt* ent)
@@ -310,13 +302,6 @@ void MinionInit_800B2328(MapEnt* ent)
     ent->update_90 = MinionIdle_800B3070;
 }
 
-typedef struct MapFadeWork
-{
-    EffectModel* model_0;
-    int index_4;
-    short time_8[2];
-} MapFadeWork;
-
 void FadeSprites_800B2660(MapEnt* ent)
 {
     SPRT sprt;
@@ -377,23 +362,6 @@ void FadeSprites_800B2660(MapEnt* ent)
     }
 }
 
-/* runs the entity's update unless it is done (-2) or waits (-3) */
-static inline void StepEntity(EventEntry* entry, void* buffer)
-{
-    MapEnt* ent = buffer;
-
-    ent->armed_78 = 0;
-    ent->trigger_84 = -1;
-    if ((unsigned)(ent->state_7C + 3) >= 2)
-    {
-        ent->update_90(ent);
-    }
-    if (ent->state_7C == -2)
-    {
-        entry->flags = (entry->flags & ~1) | 0x8000;
-    }
-}
-
 /* an entity for the event (MapEvent.run_10.init its update) */
 static inline int NewEntity(MapEvent* ev)
 {
@@ -412,10 +380,10 @@ static inline int NewEntity(MapEvent* ev)
         ent->data_10 = ev->data_8;
         ent->armed_78 = 0;
         ent->state_7C = -1;
-        ent->f80 = -1;
+        ent->prev_80 = -1;
         ent->trigger_84 = -1;
         ent->script_88 = 0;
-        ent->f8C = 0;
+        ent->arg_8C = 0;
         ent->update_90 = ev->run_10.init;
         if ((unsigned)ev->type_4 >= 14)
         {
@@ -485,12 +453,6 @@ void FxModel_800B2B20(MapEnt* ent)
         }
     }
 }
-
-typedef struct MapDoorWork
-{
-    int state_0;
-    int t_4;
-} MapDoorWork;
 
 void Door_800B2D48(MapEnt* ent)
 {
@@ -662,12 +624,6 @@ void MapTask_800B331C(EventEntry* entry, int* st)
     }
 }
 
-/* is area one of the areas (a MapEvent.areas_0 mask) */
-static inline int InAreas(int areas, int area)
-{
-    return areas & (1 << area);
-}
-
 int LeaveArea_800B33D4(MapEvent* ev, int area)
 {
     EventNode* node;
@@ -682,10 +638,11 @@ int LeaveArea_800B33D4(MapEvent* ev, int area)
     {
         if (ev->type_4 == MAP_EV_SCRIPT && ev->areas_0 != -1 && !InAreas(ev->areas_0, area))
         {
-            if (ev->run_10.script)
+            entry = ev->run_10.script;
+            if (entry)
             {
                 n++;
-                ev->run_10.script->flags = (ev->run_10.script->flags & ~1) | 0x8000;
+                entry->flags = (entry->flags & ~1) | 0x8000;
             }
             ev->run_10.script = 0;
         }

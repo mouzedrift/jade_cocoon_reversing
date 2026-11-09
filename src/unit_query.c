@@ -743,7 +743,7 @@ int GetDominantSpecies_800338B0(Minion* m)
 {
     unsigned char ids[8];
     unsigned char ratios[16];
-    GetTopSpecies_800338DC(m->species_4C, ids, ratios);
+    GetTopSpecies_800338DC(m->species_4C, ids, (int*)ratios);
     return ids[0];
 }
 int GetTopSpecies_800338DC(unsigned char* history, unsigned char* ids, int* ratios)

@@ -76,7 +76,7 @@ typedef struct TstCompoModelParams
     int angle_24;     // 0..359
     int enemyPart_28; // TstCompoPart.id_4 of the ENEMY pick
     int main_2C;      // part_4 index of the model whose animations are kept
-    int vram_30;      // ModelVramSlot* (ModelTaskState.vram_34)
+    struct ModelVramSlot* vram_30; // ModelTaskState.vram_34
 } TstCompoModelParams;
 
 extern int tstcompoHeader_800A05A0;
@@ -251,8 +251,9 @@ extern LVec3 cameraEye_8008D600;
 extern ShortPair screenOffset_8008D474;
 extern MATRIX defaultLightMatrix_8007C2EC; // effect_data.h
 extern MATRIX defaultColorMatrix_8007C30C; // effect_data.h
-/* exe-side: effect_data.h declares it as int modelVramSlotLists_8007DC74[6] */
-extern int modelVramSlotLists_8007DC74;
+/* exe-side: effect_data.h's list (ModelVramSlot* [3]); read here as its first entry, as the original did (an
+   array read schedules differently) */
+extern struct ModelVramSlot* modelVramSlotLists_8007DC74;
 /* exe-side: data_decls.h declares it (that header needs LIBSND.H) */
 extern short sinTable_80084540[];
 /* exe-side, to move to pad_text.h */

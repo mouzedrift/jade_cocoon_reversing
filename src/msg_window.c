@@ -106,7 +106,7 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
 {
     EventEntry* e;
     MsgWindow* w;
-    int** list;
+    void** list;
     const char** p;
     int n;
     int i;
@@ -119,7 +119,7 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
         return 0;
     }
     w = (MsgWindow*)e->buffer;
-    w->self_0 = (int)e;
+    w->self_0 = e;
     w->flags_4 = 0;
     w->mask_14 = 0;
     w->res_18.count_18 = 0;
@@ -177,15 +177,15 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
         GetCombatPortraitPoly_800A1B2C(cfg->portraitId_24, &w->prim_88);
         w->portraitKind_84 = 1;
     }
-    list = (int**)cfg->text_8;
+    list = cfg->text_8;
     if (list)
     {
-        list = (int**)FindTextResumePage_80034900((short**)list);
+        list = FindTextResumePage_80034900(list);
         while (*list)
         {
             w->res_18.pageCount_1C++;
-            w->list_B4[w->count_7C++] = (int*)list;
-            sz = MeasureTextLines_8003E3B4((int*)list);
+            w->list_B4[w->count_7C++] = list;
+            sz = MeasureTextLines_8003E3B4(list);
             if (w->rect_38.w < sz.w)
             {
                 w->rect_38.w = sz.w;
@@ -336,13 +336,13 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
     e->flags = (e->flags | 1) & ~0x8000;
     return (MsgWindowEntry*)e;
 }
-short** FindTextResumePage_80034900(short** list)
+void** FindTextResumePage_80034900(void** list)
 {
-    short** cur = list;
+    void** cur = list;
     short* text;
     while (*cur)
     {
-        text = (short*)EncodeText_8003F684(2, (unsigned short*)*cur);
+        text = (short*)EncodeText_8003F684(2, *cur);
         if (*text == 0xC1)
         {
             *text = 0xC2;
@@ -710,7 +710,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->mode_8 = 3;
             w->res_18.field_24 = 1;
         }
-        InterpolateWindowRect_8004196C(&r, &w->x_4C, w->field_48, 8, 5);
+        InterpolateWindowRect_8004196C(&r, (RECT*)&w->x_4C, w->field_48, 8, 5);
         if (IsWindowFrameFit_800429A8(&r) == 1)
         {
             DrawMsgWindowChoices_800355EC(w, &r);
@@ -719,9 +719,9 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
         }
         break;
     case 2:
-        DrawMsgWindowChoices_800355EC(w, &w->x_4C);
-        DrawMsgWindowBackground_80035898(w, &w->x_4C, 2);
-        DrawMsgWindowBorder_800358CC(w, &w->x_4C, 0);
+        DrawMsgWindowChoices_800355EC(w, (RECT*)&w->x_4C);
+        DrawMsgWindowBackground_80035898(w, (RECT*)&w->x_4C, 2);
+        DrawMsgWindowBorder_800358CC(w, (RECT*)&w->x_4C, 0);
         break;
     case 3:
         w->field_48--;
@@ -731,7 +731,7 @@ void UpdateMsgWindowState_80034C18(MsgWindow* w)
             w->field_10 = 0;
             w->mode_8 = 6;
         }
-        InterpolateWindowRect_8004196C(&r, &w->x_4C, w->field_48, 8, 5);
+        InterpolateWindowRect_8004196C(&r, (RECT*)&w->x_4C, w->field_48, 8, 5);
         if (IsWindowFrameFit_800429A8(&r) == 1)
         {
             DrawMsgWindowChoices_800355EC(w, &r);
@@ -807,7 +807,7 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
     union
     {
         unsigned short loc[2];
-        int st[3];
+        PulseState st;
         struct
         {
             int pad[2];
@@ -856,14 +856,14 @@ void DrawMsgWindowChoices_800355EC(MsgWindow* win, RECT* rect)
         win->choice_B2 = u.menu.grid.pos_6;
     }
     sel = win->choice_B2;
-    u.st[0] = (int)&win->pulse_6C;
-    u.st[1] = 1;
-    u.st[2] = 1;
+    u.st.time_0 = &win->pulse_6C;
+    u.st.on_4 = 1;
+    u.st.pulse_8 = 1;
     cursorRect.x = win->x_4C + 4;
     cursorRect.y = win->y_4E + sel * 12 + 3;
     cursorRect.w = rect->w - 8;
     cursorRect.h = 13;
-    DrawPulsingWindow_8002F6F8(&cursorRect, u.st, 0);
+    DrawPulsingWindow_8002F6F8(&cursorRect, &u.st, 0);
     win->res_18.sel_1A = NthMaskedIndex_80034B88(win->choice_B2, win->mask_14);
 }
 int DrawMsgWindowText_8003580C(MsgWindow* win, RECT* rect)
@@ -930,8 +930,8 @@ void DrawMsgWindowTitle_800359F8(MsgWindow* win)
             rect[1] = win->titleY_70;
             rect[2] = MeasureTextWidth_8003E4C8(win->title_74) + 0x11;
             rect[3] = 0x12;
-            DrawMsgWindowBackground_80035898(win, rect, 2);
-            DrawMsgWindowBorder_800358CC(win, rect, 0);
+            DrawMsgWindowBackground_80035898(win, (RECT*)rect, 2);
+            DrawMsgWindowBorder_800358CC(win, (RECT*)rect, 0);
         }
     }
 }
@@ -943,7 +943,7 @@ MsgWindowEntry* OpenItemMessageWindow_80035AC8(ItemMsgInit* init)
     if (entry)
     {
         win = entry->buffer;
-        win->self_0 = (int)entry;
+        win->self_0 = entry;
         win->flags_4 = 0;
         win->mask_14 = 0;
         win->res_18.count_18 = 0;
@@ -991,7 +991,7 @@ typedef struct
     int field_21C;
     ItemMsgEntry entries[3];
     int mode;
-    int* text;
+    unsigned short** text; /* lines after the items (the first: a title when it starts with 0x91) */
 } ItemMsgWindow;
 typedef struct
 {
@@ -1024,7 +1024,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     int i;
     int line;
     int y;
-    int* text;
+    unsigned short** text;
     int sfx;
 
     flag = 0;
@@ -1043,12 +1043,12 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     }
     if (o->text)
     {
-        int* q = o->text;
+        unsigned short** q = o->text;
         while (*q++)
         {
             n++;
         }
-        EncodeText_8003F684(2, (unsigned short*)o->text[0]);
+        EncodeText_8003F684(2, o->text[0]);
         if (*(short*)o->text[0] == 0x91)
         {
             n--;
@@ -1061,7 +1061,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     r.y = (3 - n) * 9 + 0x5A;
     if (o->text)
     {
-        p70 = MeasureTextLines_8003E3B4(o->text);
+        p70 = MeasureTextLines_8003E3B4((void**)o->text);
         p70.w += 8;
         if (r.w < p70.w)
         {
@@ -1077,7 +1077,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p70.w = r.x + 6;
             p70.h = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawText_8003E91C(2, aMoney_80074850, &p70, 0);
+            DrawText_8003E91C(2, (const char*)aMoney_80074850, (short*)&p70, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             p78.x = r.x + r.w - 4;
             p78.y = r.y + (line * 16 + y) + 2;
@@ -1091,14 +1091,14 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p80.x = r.x + 6;
             p80.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawText_8003E91C(2, aEmptyCocoon_8007485C, &p80, 0);
+            DrawText_8003E91C(2, (const char*)aEmptyCocoon_8007485C, (short*)&p80, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             if (flag)
             {
                 p88.x = r.x + 0x84;
                 p88.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawText_8003E91C(1, aTimesSign_80074864, &p88, 0);
+                DrawText_8003E91C(1, (const char*)aTimesSign_80074864, (short*)&p88, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
                 p90.x = r.x + 0x8D;
                 p90.y = r.y + (line * 16 + y) + 2;
@@ -1144,14 +1144,14 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p88.x = spr[i].w + r.x + 9;
             p88.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawText_8003E91C(2, nameGetters_8007CB08[o->entries[i].type](o->entries[i].id), &p88, 0);
+            DrawText_8003E91C(2, nameGetters_8007CB08[o->entries[i].type](o->entries[i].id), (short*)&p88, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             if (flag)
             {
                 p98.x = r.x + 0x84;
                 p98.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawText_8003E91C(1, aTimesSign_80074864, &p98, 0);
+                DrawText_8003E91C(1, (const char*)aTimesSign_80074864, (short*)&p98, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
                 pA0.x = r.x + 0x8D;
                 pA0.y = r.y + (line * 16 + y) + 2;
@@ -1169,7 +1169,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         p70.w = r.x + w;
         p70.h = h;
         AddClipDrawAreaPrim_80033308(pOT_8008D454);
-        DrawText_8003E91C(2, itemMessageSuffixes_80083818[o->mode], &p70, 0);
+        DrawText_8003E91C(2, itemMessageSuffixes_80083818[o->mode], (short*)&p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
     }
     if (o->entries[0].type != -1 && line == 1 && o->mode < 0 && !flag)
@@ -1179,7 +1179,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         p70.w = r.x + w;
         p70.h = h;
         AddClipDrawAreaPrim_80033308(pOT_8008D454);
-        DrawText_8003E91C(2, itemMessageDefaultSuffix_80083820, &p70, 0);
+        DrawText_8003E91C(2, itemMessageDefaultSuffix_80083820, (short*)&p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
     }
     if (o->text)
@@ -1190,7 +1190,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p70.w = r.x + 6;
             p70.h = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawText_8003E91C(2, (void*)*text, &p70, 0);
+            DrawText_8003E91C(2, (const char*)(*text), (short*)&p70, 0);
             text++;
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             line++;

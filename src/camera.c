@@ -673,7 +673,7 @@ void TrackCameraTarget_8003891C(CameraCtrl* cam, Vec3i* target)
     sv.vz -= cameraEye_8008D600.vz;
     geomScreenDistance_8008B548 = prevScreen >> 12;
     SetGeomScreen(screen / 4096);
-    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (void*)&cameraTargetScreenPos_8008D668.xy, &pr, &flag);
+    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (void*)&cameraTargetScreenPos_8008D668.xy, (void*)&pr, (void*)&flag);
     if (flag < 0)
     {
         cameraTargetScreenPos_8008D668.xy.vx = 0xA0;
@@ -709,7 +709,7 @@ void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, Vec3i* target, Vec3i* blen
     sv.vx -= cameraEye_8008D600.vx;
     sv.vy -= cameraEye_8008D600.vy;
     sv.vz -= cameraEye_8008D600.vz;
-    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (void*)&cameraTargetScreenPos_8008D668.xy, &pr, &flag);
+    cameraTargetScreenPos_8008D668.z = RotTransPers(&sv, (void*)&cameraTargetScreenPos_8008D668.xy, (void*)&pr, (void*)&flag);
     sv2.vx = blendTarget->x;
     sv2.vy = blendTarget->y;
     sv2.vz = blendTarget->z;
@@ -717,7 +717,7 @@ void TrackCameraTargetBlend_80038A5C(CameraCtrl* cam, Vec3i* target, Vec3i* blen
     sv2.vx -= cameraEye_8008D600.vx;
     sv2.vy -= cameraEye_8008D600.vy;
     sv2.vz -= cameraEye_8008D600.vz;
-    blendScreenPos.z = RotTransPers(&sv2, (void*)&blendScreenPos.xy, &pr, &flag);
+    blendScreenPos.z = RotTransPers(&sv2, (void*)&blendScreenPos.xy, (void*)&pr, (void*)&flag);
     cameraTargetScreenPos_8008D668.xy.vx += (blendScreenPos.xy.vx - cameraTargetScreenPos_8008D668.xy.vx) * blend / 4096;
     cameraTargetScreenPos_8008D668.xy.vy += (blendScreenPos.xy.vy - cameraTargetScreenPos_8008D668.xy.vy) * blend / 4096;
     cameraTargetScreenPos_8008D668.z += (blendScreenPos.z - cameraTargetScreenPos_8008D668.z) * blend / 4096;
@@ -944,7 +944,7 @@ void UpdateScreenScroll_800398B4(CameraCtrl* cam, void* screenPos)
     {
         screenOffset_8008D474.a = screenOffset_8008D474.a - (pos->xy.vx - (viewport_8008D420.x + viewport_8008D420.w / 2));
         screenOffset_8008D474.b = screenOffset_8008D474.b - (pos->xy.vy - (viewport_8008D420.y + viewport_8008D420.h / 2));
-        tiles = tileAnim_8008D648.items_C;
+        tiles = (short*)tileAnim_8008D648.items_C;
         scale = cameraZoom_8008B4F8 << 5;
         rangeX = tiles[4] * scale / 4096 - viewport_8008D420.w;
         rangeY = tiles[5] * scale / 4096 - viewport_8008D420.h;

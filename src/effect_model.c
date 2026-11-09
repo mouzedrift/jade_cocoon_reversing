@@ -37,7 +37,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         entry->flags = (entry->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
-        obj->res_88 = (int)model;
+        obj->res_88 = model;
         obj->work_94 = malloc3_8003FC4C(sizeof(*obj->work_94));
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
@@ -46,7 +46,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
 }
 void PulseModelTask_8001761C(int* flags, EffectObj* obj)
 {
-    EffectModel* model = (EffectModel*)obj->res_88;
+    EffectModel* model = obj->res_88;
     int scale[3];
     int fade;
     obj->field_34 = obj->field_34 * 7 / 8;
@@ -84,7 +84,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         entry->flags = (entry->flags | 1) & ~0x8000;
         model = &effectFile_80091BD0.models_28[idx];
-        obj->res_88 = (int)model;
+        obj->res_88 = model;
         obj->work_94 = malloc3_8003FC4C(sizeof(*obj->work_94));
         CopyFtgObject_800218A8(model->ftg_4, obj->work_94, HEAP_MALLOC3);
         DiffFtgObjects_80039FE4(model->ftg_4, model->ftg_4 + 1, obj->work_94);
@@ -93,7 +93,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
 }
 void MorphModelTask_800178C0(int* flags, EffectObj* obj)
 {
-    EffectModel* model = (EffectModel*)obj->res_88;
+    EffectModel* model = obj->res_88;
     int scale[3];
     obj->field_34 = obj->field_34 * 7 / 8;
     obj->field_30 += obj->field_34;
@@ -124,14 +124,14 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
     DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, cameraState_8008D4F0.ent_44, 0x10, scale);
 }
 extern EventNode* effectObjects_8008B4A8;
-void SpawnMdecEffect_80017A6C(int parent, int frames)
+void SpawnMdecEffect_80017A6C(void* parent, int frames)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     EffectObj* obj;
     if (entry)
     {
         obj = entry->buffer;
-        obj->field_8C = (int)effectFile_80091BD0.imageSets_30;
+        obj->field_8C = effectFile_80091BD0.imageSets_30;
         obj->frame_0 = 0;
         if (frames > 0)
         {
@@ -149,12 +149,12 @@ void SpawnMdecEffect_80017A6C(int parent, int frames)
 }
 void MdecEffectTask_80017B10(unsigned int* flags, EffectObj* obj)
 {
-    int* schedule = (int*)obj->field_8C;
+    MdecImageSet* images = obj->field_8C;
     if (++obj->frame_0 < obj->field_4 && effectOutcomeFlag_8008D780[0] == 0)
     {
         if (!(unknownFlags_8008D678 & 0x800))
         {
-            DecodeMdec_80041920(((unsigned long**)schedule[1])[obj->frame_0 % schedule[0]], mdecEffectVlcBuffer_8008D42C, 2);
+            DecodeMdec_80041920(images->images_4[obj->frame_0 % images->count_0], mdecEffectVlcBuffer_8008D42C, 2);
             unknownFlags_8008D678 |= 0x800;
         }
     }
@@ -184,7 +184,7 @@ void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
         obj->rot_80.vx = 0;
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         entry->flags = (entry->flags | 1) & 0xFFFF7FFF;
-        obj->res_88 = (int)&effectFile_80091BD0.models_28[idx];
+        obj->res_88 = &effectFile_80091BD0.models_28[idx];
         entry->cb_8 = WaveModelTask_80017CE4;
     }
 }
@@ -192,7 +192,7 @@ void WaveModelTask_80017CE4(EventEntry* entry, void* buf)
 {
     int* flags = (int*)entry;
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->res_88;
+    EffectModel* model = obj->res_88;
     int i;
     int scale[3];
     int scaleY;
@@ -215,7 +215,7 @@ void WaveModelTask_80017CE4(EventEntry* entry, void* buf)
 void MorphInModelTask_80017E30(EventEntry* entry, void* buf)
 {
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->res_88;
+    EffectModel* model = obj->res_88;
     int pos[3];
     int scale[3];
     int* scalePtr;
@@ -245,7 +245,7 @@ void MorphInModelTask_80017E30(EventEntry* entry, void* buf)
 void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
 {
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->res_88;
+    EffectModel* model = obj->res_88;
     int pos[3];
     int scale[3];
     int* scalePtr;

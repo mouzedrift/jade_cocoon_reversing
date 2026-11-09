@@ -50,7 +50,7 @@ typedef struct EvEntity
     int tri_80; // a state EvCmdWaitEntityState_800B9E48 waits for
     int mesh_84;
     int slideTri_88;
-    int slideEdge_8C; // GetOwnEntityParam_800BBDF4
+    void* param_8C; /* a map entity's (MapEnt.arg_8C): what its scripts get, GetOwnEntityParam_800BBDF4 */
 } EvEntity;
 
 
@@ -658,13 +658,13 @@ typedef struct EvBattleEnemy
     int loseWarp_14;
     int useMinion_18;
     char pad_1C[0xA4 - 0x1C];
-    int actors_A4[3];
+    Actor* actors_A4[3];
     struct
     {
         int species_0;
         int b_4;
     } members_B0[3];
-    int anims_C8[3];
+    ActorScriptCmd** anims_C8[3];
     int fD4_D4[3];
 } EvBattleEnemy;
 
@@ -713,7 +713,7 @@ typedef struct EvRelocBlob
     int* p_0;
 } EvRelocBlob;
 
-int GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx);
+void* GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx);
 
 /* GAME-side (game.h; GAME stays loaded under EVENTFNC) */
 extern EvEnemySlot* AddEnemySlot_800A17F4(EvEnemyGroup* src, int b);
@@ -725,7 +725,7 @@ extern void SuspendAllEnemySlots_800A1904(void);
 extern EvBattleEnemy eventEnemy_800B1CB8;
 extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
-extern int GetFieldMinionAnims_800A7A9C(int i);
+extern ActorScriptCmd** GetFieldMinionAnims_800A7A9C(int i);
 extern void EnableCameraPoints_800A094C();
 extern void DisableCameraPoints_800A096C();
 extern int FieldMinionCommand_800A7D40(int a, int* p);
@@ -735,7 +735,7 @@ extern void* GetEventString_800A6738(unsigned int id);
 extern int GetFieldMinionModelId_800A78A8(int a);
 extern int GetFieldMinionHeaderF2A_800A78F4(int a);
 extern EvRelocBlob eventReloc_800AEBBC;
-extern int eventDataBuf_800AEBC8;
+extern void* eventDataBuf_800AEBC8;
 /* exe-side, to move to unit_stats.h */
 extern short defaultBones_80079140[]; // default bone table
 /* exe-side, to move to engine.h */

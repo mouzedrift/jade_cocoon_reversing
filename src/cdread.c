@@ -122,7 +122,7 @@ void CdReadSyncCallback_8003C9FC(unsigned char mode)
 {
     if (mode == 2)
     {
-        DsStartReadySystem(CdReadReadyCallback_8003CA30, -1);
+        DsStartReadySystem((DslRCB)CdReadReadyCallback_8003CA30, -1);
     }
 }
 void CdReadReadyCallback_8003CA30(unsigned char mode)
@@ -227,7 +227,7 @@ int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFi
 }
 int LoadData001File_8003CD1C(void)
 {
-    while (DsSearchFile(&Data001File_800954A8, data001Path_80086570) == 0)
+    while (DsSearchFile(&Data001File_800954A8, (char*)data001Path_80086570) == 0)
     {
     }
 
@@ -290,4 +290,4 @@ CdReadState cdReadState_80086550 = { 1 };
 int fileBufferInUse_80086564 = 0;
 int cdXaLock_80086568 = 0;
 void *fileBuffer_8008656C = 0;
-char *data001Path_80086570 = aDataData0011;
+const char *data001Path_80086570 = aDataData0011;

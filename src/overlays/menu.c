@@ -1123,7 +1123,7 @@ void UpdateExpCountUp_800BC56C(BattleResult* result)
         {
             result->st_8C[i].exp_4 += result->expGain_6C[i] - result->expAdded_34[i];
             if (result->st_8C[i].exp_4 > 0x3FFFFFF)
-                result->levelUps_5C[i] = ((int (*)())ApplyLevelUpsBonus_80011D78)(&result->st_8C[i]);
+                result->levelUps_5C[i] = ApplyLevelUpsBonus_80011D78(&result->st_8C[i]);
             if (result->levelUps_5C[i])
                 result->leveledUp_7C[i] = 1;
             if (i > 0 && result->levelUps_5C[i])
@@ -1165,7 +1165,7 @@ void UpdateExpCountUp_800BC56C(BattleResult* result)
                     {
                         unsigned int rest = result->st_8C[i].exp_4 - 0x4000000;
                         result->st_8C[i].exp_4 = 0x4000000;
-                        result->levelUps_5C[i] = ((int (*)())ApplyLevelUpsBonus_80011D78)(&result->st_8C[i]);
+                        result->levelUps_5C[i] = ApplyLevelUpsBonus_80011D78(&result->st_8C[i]);
                         if (i > 0)
                             OnMinionLevelUp_800BCF74(i - 1);
                         result->st_8C[i].exp_4 = rest;
@@ -1194,11 +1194,11 @@ void DrawLevantLevelUp_800BC8A8(void)
     rect[3] = 0x12;
     box.x_0 = 0x6F;
     box.y_2 = 0x1C;
-    DrawUiTiySprt_8002C06C(&box, 0xE4, 0xE);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0xE4, 0xE);
     box.colorSet_A = 1;
     box.semiTrans_B = 1;
     box.col_8 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
+    DrawWindow_80042460((RECT*)rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
 }
 
 void DrawMinionLevelUp_800BC934(int unit, int count)
@@ -1214,11 +1214,11 @@ void DrawMinionLevelUp_800BC934(int unit, int count)
         rect[3] = 0x12;
         bx.x_0 = x + 0xE;
         bx.y_2 = 0xC1;
-        DrawUiTiySprt_8002C06C(&bx, 0x5D, 0xE);
+        DrawUiTiySprt_8002C06C((unsigned short*)&bx, 0x5D, 0xE);
         bx.colorSet_A = 1;
         bx.semiTrans_B = 1;
         bx.col_8 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(rect, &bx.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
+        DrawWindow_80042460((RECT*)rect, (WindowStyle*)&bx.col_8, pOT_8008D454 + 14, frameCount_8008D3FC);
     }
 }
 
@@ -1395,7 +1395,7 @@ void DrawMinionLevelUpStatus_800BCEA0(BattleResult* result, int ot, void* status
 void OnMinionLevelUp_800BCF74(short index)
 {
     int idx = index - 1;
-    int magicBits = (int)GetMinionMagicBits_80010824(3, idx);
+    unsigned int* magicBits = GetMinionMagicBits_80010824(3, idx);
     Minion* minion = GetMinion_80010598(3, idx);
     MinionLevelUpHook_8001AEB8(GetDominantSpecies_800338B0(minion), &minion->status_84, magicBits);
 }
@@ -1453,7 +1453,7 @@ void DropMessageTask_800BD1B0(MenuTask* task)
     if (f != 1)
         task->next_8 = BattleResultTask_800BBF48;
     if (IsConfirmPressedP1_8003D380(1) || IsCancelPressedP1_8003D41C(1))
-        CloseMsgWindow_80034A84(msgEntry);
+        CloseMsgWindow_80034A84((MsgWindowEntry*)msgEntry);
 }
 
 int RollBattleDrops_800BD230(BattleResult* result)
@@ -1650,7 +1650,7 @@ void MinionListScreen_800BD80C(MenuTask* task, char* a)
     DrawUiTiySprt_8002C06C(pos, 0xDA, 0xE);
     pos[0] += 0xF;
     DrawSmallNumber3_8002C290(pos, 3, 0xE);
-    DrawUiWindow_8002A384(&win);
+    DrawUiWindow_8002A384((UiWindowDesc*)&win);
     r.x = 0xE0;
     r.y = 0x10;
     r.w = 0x58;
@@ -1665,7 +1665,7 @@ void MinionListScreen_800BD80C(MenuTask* task, char* a)
     DrawUiTiySprt_8002C06C(pos, 0xDA, 0xE);
     pos[0] += 0x1C;
     DrawSmallNumber3_8002C290(pos, 0xAB, 0xE);
-    DrawUiWindow_8002A384(&win);
+    DrawUiWindow_8002A384((UiWindowDesc*)&win);
     DrawMinionListPage_800BDBFC(aa, minionListPage_800C2980);
     }
     r2.x = 0xE;
@@ -1676,7 +1676,7 @@ void MinionListScreen_800BD80C(MenuTask* task, char* a)
     win2.f4 = 0;
     win2.f8 = 0;
     win2.ot_A = 0xE;
-    DrawUiWindow_8002A384(&win2);
+    DrawUiWindow_8002A384((UiWindowDesc*)&win2);
     pr.a = 2;
     pr.b = 2;
     p2[0] = 8;
@@ -1693,7 +1693,7 @@ void MinionListScreen_800BD80C(MenuTask* task, char* a)
 char* GetMinionSpeciesName_800BDB74(int species)
 {
     if (species < 0xC9)
-        return minionSpeciesNames_8007A170[species];
+        return (char*)minionSpeciesNames_8007A170[species];
     return sub_800B32D4(species - 0xC9);
 }
 
@@ -1729,7 +1729,7 @@ void DrawMinionListPage_800BDBFC(char* work, int page)
             pos[0] += 8;
             if (buf)
             {
-                UppercaseSjisName_8003F89C(buf);
+                UppercaseSjisName_8003F89C((unsigned short*)buf);
                 DrawText_8003E91C(1, buf, pos, 0xE);
             }
         }
@@ -2104,9 +2104,9 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
                 int found = 0;
                 int abilities = menu->state_2 == 11;
                 if (IsCircleHeldP1_8003D480() && abilities && !menu->showMessage_24)
-                    found = DrawAbilityDescription_8002C670(GetMinion_80010598(3, menu->cursors_2A[1]), 0, abilityDescs_800C22D8, menu->cursors_2A[10], 14) != 0;
+                    found = DrawAbilityDescription_8002C670((char*)GetMinion_80010598(3, menu->cursors_2A[1]), 0, abilityDescs_800C22D8, menu->cursors_2A[10], 14) != 0;
                 if (!found)
-                    DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, statusWindowRect_800C18F4, 14, 0);
+                    DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, (RECT*)statusWindowRect_800C18F4, 14, 0);
             }
             break;
         }
@@ -2115,7 +2115,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
             MenuPair p;
             p.a = 0;
             p.b = 0;
-            DrawFamilyTree_8002D7D0(GetMinion_80010598(3, menu->cursors_2A[1]), 14, &p);
+            DrawFamilyTree_8002D7D0(GetMinion_80010598(3, menu->cursors_2A[1]), 14, (Pos16*)&p);
             break;
         }
         case 10:
@@ -2216,7 +2216,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
                     unit = GetUnitStatus_80014390((unsigned char)menu->cursors_2A[5]);
                     p.a = 0xD2;
                     p.b = 0xBB;
-                    DrawMpGauge_8002F120(unit, &p, mp, 14);
+                    DrawMpGauge_8002F120(unit, (unsigned short*)&p, mp, 14);
                     r.x = 0xD2;
                     r.y = 0xBB;
                     r.w = 0x64;
@@ -2225,7 +2225,7 @@ void DrawFieldMenu_800BE4A0(MenuCtx* menu)
                     win.f4 = 0;
                     win.f8 = 0;
                     win.ot_A = 14;
-                    DrawUiWindow_8002A384(&win);
+                    DrawUiWindow_8002A384((UiWindowDesc*)&win);
                 }
             }
             break;
@@ -2352,9 +2352,9 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
     summary.highlight_4 = 1;
     summary.time_8 = time;
     DrawLevantSummary_8002E334(&saveData_8008B570.levantStatus_7C8, &summary);
-    InterpolateWindowRect_8004196C(&tmp, levantSummaryRect_800C2994, (short)openStep, 8, 0);
+    InterpolateWindowRect_8004196C(&tmp, (RECT*)levantSummaryRect_800C2994, (short)openStep, 8, 0);
     AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
-    InterpolateWindowRect_8004196C(&tmp, levantHeaderRect_800C298C, (short)openStep, 8, 0);
+    InterpolateWindowRect_8004196C(&tmp, (RECT*)levantHeaderRect_800C298C, (short)openStep, 8, 0);
     AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
     DrawLevantHeaderWindows_8002FD0C(b, (short)openStep, 1, flag, &tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
@@ -2363,14 +2363,14 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
         pos[0] = 0x93;
         pos[1] = 0x15;
         DrawUiTiySprt_8002C06C(pos, 0xBB, b);
-        DrawAnimatedWindow_8002BEC8(&tmp, menuTitleRect_800C18CC, (short)openStep, b, 0, 0);
+        DrawAnimatedWindow_8002BEC8(&tmp, (RECT*)menuTitleRect_800C18CC, (short)openStep, b, 0, 0);
         pos[0] = 0x84;
         pos[1] = 0xC4;
         DrawUiTiySprt_8002C06C(pos, 0x4F, b);
         if (menu->flags_0 & 4)
-            DrawAnimatedWindow_8002BEC8(&tmp, configLabelRect_800C18D4, (short)openStep, b, 1, frameCount_8008D3FC);
+            DrawAnimatedWindow_8002BEC8(&tmp, (RECT*)configLabelRect_800C18D4, (short)openStep, b, 1, frameCount_8008D3FC);
         else
-            DrawAnimatedWindow_8002BEC8(&tmp, configLabelRect_800C18D4, (short)openStep, b, 1, 0);
+            DrawAnimatedWindow_8002BEC8(&tmp, (RECT*)configLabelRect_800C18D4, (short)openStep, b, 1, 0);
         if (unknownFlags_8008D678 & 0x20000)
         {
             int v = sub_800B330C();
@@ -2380,7 +2380,7 @@ void DrawLevantWindow_800BECE4(MenuCtx* menu, short b)
             pos[0] = 0x54;
             pos[1] = 0x19;
             DrawLargeNumber_8002C100(pos, v, b);
-            DrawAnimatedWindow_8002BEC8(&tmp, name_800C2984, (short)openStep, b, 0, 0);
+            DrawAnimatedWindow_8002BEC8(&tmp, (RECT*)name_800C2984, (short)openStep, b, 0, 0);
         }
     }
 }
@@ -2443,16 +2443,16 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
     summary.highlight_4 = 0;
     summary.time_8 = 0;
     DrawLevantSummary_8002E334(lv, &summary);
-    InterpolateWindowRect_8004196C(&tmp, levantSummaryRect_800C2994, (short)openStep, 8, 0);
+    InterpolateWindowRect_8004196C(&tmp, (RECT*)levantSummaryRect_800C2994, (short)openStep, 8, 0);
     AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
-    InterpolateWindowRect_8004196C(&tmp, levantHeaderRect_800C298C, (short)openStep, 8, 0);
+    InterpolateWindowRect_8004196C(&tmp, (RECT*)levantHeaderRect_800C298C, (short)openStep, 8, 0);
     AddDrawAreaPrim_8003326C(&tmp, &pOT_8008D454[b]);
     DrawLevantHeaderWindows_8002FD0C(b, (short)openStep, 0, 0, &tmp);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[b]);
     pos[0] = 0xD1;
     pos[1] = 0x88;
     DrawLevantStats_8002F7D0(pos, 0xE);
-    DrawAnimatedWindow_8002BEC8(&tmp, statusStatsRect_800C1BE0, (short)openStep, b, 0, 0);
+    DrawAnimatedWindow_8002BEC8(&tmp, (RECT*)statusStatsRect_800C1BE0, (short)openStep, b, 0, 0);
     eq.sel_0 = -1;
     pp[0] = 0xA;
     pp[1] = 0x88;
@@ -2470,7 +2470,7 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
     pos2[0] = 0x2F;
     pos2[1] = 0x77;
     DrawText_8003E91C(2, GetRankName_8002FCD8(GetLevelRank_800121A8(lv->level_44)), pos2, b);
-    DrawAnimatedWindow_8002BEC8(t50, rankRect_800C18DC, (short)openStep, b, 0, 0);
+    DrawAnimatedWindow_8002BEC8((RECT*)t50, (RECT*)rankRect_800C18DC, (short)openStep, b, 0, 0);
     pos[0] = 0x9A;
     pos[1] = 0x75;
     DrawUiTiySprt_8002C06C(pos, 0x7B, b);
@@ -2480,7 +2480,7 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
     pos[0] = 0x104;
     pos[1] = 0x76;
     DrawUiTiySprt_8002C06C(pos, 0xE9, b);
-    DrawAnimatedWindow_8002BEC8(t50, moneyWindowRect_800C18E4, (short)openStep, b, 0, 0);
+    DrawAnimatedWindow_8002BEC8((RECT*)t50, (RECT*)moneyWindowRect_800C18E4, (short)openStep, b, 0, 0);
 }
 
 void UseSpore_800BF3AC(int item)
@@ -2506,7 +2506,7 @@ void ExecuteMenuAction_800BF3E0(MenuCtx* menu)
         tmp.f0 = 4;
         unit = GetUnitStatus_80014390(*(unsigned char*)&menu->cursors_2A[5]);
         if (unit)
-            UseItemOnUnit_80013C28(&saveData_8008B570.levantStatus_7C8, unit, &tmp, &tmp.d_10);
+            UseItemOnUnit_80013C28(&saveData_8008B570.levantStatus_7C8, unit, (BattleCmd*)&tmp, (ActionResult*)&tmp.d_10);
         ApplyItemUseDelta_800C00F8(&tmp, &tmp.d_10);
         RemoveInventory_800AD1E0(item, 1, 0);
         break;
@@ -2544,7 +2544,7 @@ int CheckMenuAction_800BF540(MenuCtx* menu)
         q.e = 0;
         q.f = 1;
         q.g = 0;
-        r = CheckItemUsable_80033AFC(&q);
+        r = CheckItemUsable_80033AFC((ListMenuState*)&q);
         if (r == 1)
             return 1;
         if (r <= 0)
@@ -2558,7 +2558,7 @@ int CheckMenuAction_800BF540(MenuCtx* menu)
         q2.b = 0;
         q2.target_4 = menu->cursors_2A[5];
         q2.d = 1;
-        r = CheckItemOnTarget_80033DF4(&q2);
+        r = CheckItemOnTarget_80033DF4((TargetQuery*)&q2);
         switch (r)
         {
         case 2:
@@ -2827,12 +2827,12 @@ void HandleMenuCursorInput_800BFCA8(MenuCtx* menu)
 {
     if (menu->state_2 != 0)
     {
-        UpdateMenuCursor_8003D794(&menu->cols_58, 0);
+        UpdateMenuCursor_8003D794((MenuCursor*)&menu->cols_58, 0);
     }
     else
     {
         int r16 = 0;
-        int x = UpdateMenuCursor_8003D794(&menu->cols_58, r16);
+        int x = UpdateMenuCursor_8003D794((MenuCursor*)&menu->cols_58, r16);
         if (x == 4)
             r16 = TopMenuCursorDown_800BFB10(menu);
         else if (x == 3)
@@ -3032,7 +3032,7 @@ void DrawItemGrid_800C01F4(MenuCtx* menu)
             r.y = itemGridCell_800C18EC.y + dy;
             it = GetSaveItem_80033AE4(&saveData_8008B570, k + menu->cursors_2A[9] * 3);
             if (it && it->species_5C != 0xD3)
-                DrawUnitStatusWindow_8002F1C8(it, 0, 0, 0, &r, 0xE, 0);
+                DrawUnitStatusWindow_8002F1C8((UnitStatus*)it, 0, 0, 0, (RECT*)&r, 0xE, 0);
         }
     }
     if (menu->cursors_2A[9] != 0)
@@ -3081,9 +3081,9 @@ void DrawItemInfo_800C0428(MenuCtx* menu)
         }
         r = GetUnitStatus_80014390(u & 0xFF);
         if (u == 0)
-            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, statusWindowRect_800C18F4, 0xE, 2);
+            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, (RECT*)statusWindowRect_800C18F4, 0xE, 2);
         else
-            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, statusWindowRect_800C18F4, 0xE, 0);
+            DrawUnitStatusWindow_8002F1C8(r, a, 0, 0, (RECT*)statusWindowRect_800C18F4, 0xE, 0);
     }
 }
 
@@ -3095,7 +3095,7 @@ void DrawLevantStatsWindow_800C0578(MenuCtx* menu)
     pos[0] = 0xC2;
     pos[1] = 0x31;
     DrawLevantStats_8002F7D0(pos, 0xE);
-    DrawAnimatedWindow_8002BEC8(buf, levantStatsRect_800C18C4, openStep, 0xE, 0, 0);
+    DrawAnimatedWindow_8002BEC8((RECT*)buf, (RECT*)levantStatsRect_800C18C4, openStep, 0xE, 0, 0);
 }
 
 void DrawKeyItemInfo_800C05E0(MenuCtx* menu)
@@ -3113,7 +3113,7 @@ void DrawKeyItemInfo_800C05E0(MenuCtx* menu)
         }
     }
     if (!found && menu->showMessage_24 == 0 && menu->state_2 != 0x10)
-        DrawUnitStatusWindow_8002F1C8(&saveData_8008B570.levantStatus_7C8, 0, 0, 0, statusWindowRect_800C18F4, 0xE, 2);
+        DrawUnitStatusWindow_8002F1C8(&saveData_8008B570.levantStatus_7C8, 0, 0, 0, (RECT*)statusWindowRect_800C18F4, 0xE, 2);
 }
 
 void DrawMagicInfo_800C06E8(MenuCtx* menu)
@@ -3132,7 +3132,7 @@ void DrawMagicInfo_800C06E8(MenuCtx* menu)
         }
     }
     if (!found && menu->showMessage_24 == 0)
-        DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, statusWindowRect_800C18F4, 0xE, 0);
+        DrawUnitStatusWindow_8002F1C8(&m->status_84, 0, 0, 0, (RECT*)statusWindowRect_800C18F4, 0xE, 0);
 
 }
 
@@ -3197,12 +3197,12 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq)
         if (id < 0x26)
         {
             icon = GetKeyItemIcon_8001D344(id);
-            nm = GetKeyItemName_8001D318(id);
+            nm = (void*)GetKeyItemName_8001D318(id);
         }
         else
         {
             icon = -1;
-            nm = emptyText_800B6838;
+            nm = (void*)emptyText_800B6838;
         }
         keyItemRows_800C28C4[i][0].text_4.num = icon;
         keyItemRows_800C28C4[i][0].sprts_8 = &publicTiySprts_8008D434;
@@ -3236,9 +3236,9 @@ void DrawKeyItemsWindow_800C09B0(MenuEquipQ* eq)
     if (n < 4)
         n = 4;
     if (eq->scroll_2 != 0)
-        DrawScrollArrow_8002C6DC(keyItemsUpArrowPos_800C276C, 3, eq->ot_6);
+        DrawScrollArrow_8002C6DC((short*)keyItemsUpArrowPos_800C276C, 3, eq->ot_6);
     if (eq->scroll_2 < n - 4 && n >= 5)
-        DrawScrollArrow_8002C6DC(keyItemsDownArrowPos_800C2770, 1, eq->ot_6);
+        DrawScrollArrow_8002C6DC((short*)keyItemsDownArrowPos_800C2770, 1, eq->ot_6);
 }
 
 int IsKeyItemUsable_800C0C3C(int item)
@@ -3282,10 +3282,10 @@ void PreviewItemRecovery_800C0CA4(MenuCtx* menu, int* out)
     tmp.f8 = 1;
     InitItemUse_800C00D4(&tmp, item, (short)targetIdx);
     tmp.f0 = 4;
-    if (CheckItemOnTarget_80033DF4(&target) == 0 && IsRecoveryItem_800C0DD4(item))
+    if (CheckItemOnTarget_80033DF4((TargetQuery*)&target) == 0 && IsRecoveryItem_800C0DD4(item))
     {
         int v;
-        UseItemOnUnit_80013C28(&saveData_8008B570.levantStatus_7C8, unit, &tmp, &tmp.d_10);
+        UseItemOnUnit_80013C28(&saveData_8008B570.levantStatus_7C8, unit, (BattleCmd*)&tmp, (ActionResult*)&tmp.d_10);
         out[0] = -tmp.d_10.hp_1C;
         out[1] = -tmp.d_10.mp_20;
         v = unit->hp_8.max_2 - unit->hp_8.cur_0;
@@ -3331,7 +3331,7 @@ void DrawEquipmentWindow_800C0E04(MenuEquipQ* eq, short* pos, short openStep)
         else
         {
             icon = -1;
-            nm = emptyText_800B6838;
+            nm = (void*)emptyText_800B6838;
         }
         equipRows_800C18B0[i][0].text_4.num = equipSlotLabels_800C1754[i];
         equipRows_800C18B0[i][1].text_4.num = icon;

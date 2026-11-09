@@ -18,26 +18,26 @@
 const NameBuf emptyNameBuf_80074434 = { { 0xFFFF } };
 
 
-void DrawPulsingWindow_8002F6F8(RECT* rect, int* st, int unused)
+void DrawPulsingWindow_8002F6F8(RECT* rect, PulseState* st, int unused)
 {
     unsigned char col[4];
     UiWindowDesc desc;
     short pulse = 20;
-    if (st[2])
+    if (st->pulse_8)
     {
-        (*(short*)st[0])++;
-        if (*(short*)st[0] == 40)
+        (*st->time_0)++;
+        if (*st->time_0 == 40)
         {
-            *(short*)st[0] = 0;
+            *st->time_0 = 0;
         }
-        pulse = *(short*)st[0];
+        pulse = *st->time_0;
         if (pulse > 20)
         {
             pulse = 40 - pulse;
         }
     }
     col[0] = col[1] = col[2] = pulse * 8;
-    if (!st[1])
+    if (!st->on_4)
     {
         col[0] = col[1] = col[2] = 0xA0;
     }
@@ -130,7 +130,7 @@ void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text,
     }
     loc[0] = pos[0] - offset;
     loc[1] = pos[1];
-    DrawText_8003E91C(1, &buf, loc, ot);
+    DrawText_8003E91C(1, (const char*)&buf, loc, ot);
 }
 void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text, int ot)
 {
@@ -149,13 +149,13 @@ void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text,
     }
     loc[0] = pos[0] - offset;
     loc[1] = pos[1];
-    DrawText_8003E91C(2, &buf, loc, ot);
+    DrawText_8003E91C(2, (const char*)&buf, loc, ot);
 }
 char* GetRankName_8002FCD8(int idx)
 {
     if (idx >= 9)
     {
-        return developerRankName_80082EE4;
+        return (char*)developerRankName_80082EE4;
     }
-    return rankNames_80082EC4[idx];
+    return (char*)rankNames_80082EC4[idx];
 }

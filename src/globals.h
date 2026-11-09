@@ -394,7 +394,7 @@ extern void* mdecVLCBuffer_80086F94;
 extern Font fonts_80095FB0[];
 extern unsigned char magicIcons_8007C708[0x1E];
 extern unsigned char itemIcons_8007CEAC[0x2B];
-extern char* keyItemNames_8007CF30[0x26];
+extern const char* keyItemNames_8007CF30[0x26];
 extern const char* magicNames_8007C348[0x1E * 2];
 extern unsigned short statGrowthTable_80079348[0x15];
 extern int fadeFlags_800918B0;

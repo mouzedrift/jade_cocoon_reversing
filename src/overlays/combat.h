@@ -36,7 +36,7 @@ typedef struct CombatModelParams
     int angle_24;
     int texId_28;       // model id to take the textures from
     int main_2C;        // parts_4 index of the model whose animations are kept
-    int vram_30;        // ModelVramSlot* (ModelTaskState.vram_34)
+    struct ModelVramSlot* vram_30; // ModelTaskState.vram_34
 } CombatModelParams;
 
 typedef struct CombatSlot
@@ -101,7 +101,7 @@ extern int stageOvlRequest_800A4080;
 extern Minion rosters_800A1BC8[2][15];
 extern Minion teams_800A3AA0[2][3];
 
-void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram);
+void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, struct ModelVramSlot* vram);
 int GetElementHueAngle_800A0898(unsigned char* elements);
 int ElementMixAngle_800A0968(unsigned char* elements);
 void InitCombatSlots_800A0A28(void);
@@ -119,7 +119,7 @@ ShortPair StartSlotAction_800A0F50(int i, int* cmd, int x);
 void TriggerSlotEffect_800A0FF0(int i, int* cmd, int x);
 int GetSlotHitFrame_800A1034(int i, unsigned int idx);
 void SetSlotStatusTint_800A1068(int i);
-int GetSlotAncestors_800A10A4(int i);
+unsigned char (*GetSlotAncestors_800A10A4(int i))[0xC];
 UnitStatus* GetSlotStatus_800A10C0(int i);
 int* GetSlotPos_800A10DC(int i);
 int* GetSlotBonePos_800A10F8(int i);

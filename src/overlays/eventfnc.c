@@ -34,7 +34,7 @@ int CollideLevantWithMap_800B6DD4(GameLevantActor* ent)
             {
                 return ret;
             }
-            printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
+            printf((char*)aAssertionFaile_800B6D04, aColiC_800B6D2C, 153);
             exit(1);
         }
         SlideOffEdge_800B8220(&levantPos_8008BD18.pos.x, (int*)&ent->pos_48, &mapState_8008B500.meshes_C[ent->mesh_84], &ent->slideTri_88, &ent->slideEdge_8C, normal);
@@ -55,7 +55,7 @@ int CollideLevantWithMap_800B6DD4(GameLevantActor* ent)
     {
         return ret;
     }
-    angle = ((unsigned short)levantPos_8008BD18.rot.vy - ((int (*)(long, long))ratan2_8003B548)(normal[0], normal[2])) & 0xFFF;
+    angle = ((unsigned short)levantPos_8008BD18.rot.vy - IMPLICIT_INT(ratan2_8003B548)(normal[0], normal[2])) & 0xFFF;
     if (angle > 0xC00 || (angle > 0x400 && angle < 0x800))
     {
         ret = 1;
@@ -98,7 +98,7 @@ int CollideWithMap_800B716C(EvVec* pos, int* prevPos, SVECTOR* rot)
             {
                 return 3;
             }
-            printf(aAssertionFaile_800B6D04, aColiC_800B6D2C, 255);
+            printf((char*)aAssertionFaile_800B6D04, aColiC_800B6D2C, 255);
             exit(1);
         }
         SlideOffEdge_800B8220((int*)pos, (int*)prevPos, mapState_8008B500.mesh_28, &edgeTri, &edge, normal);
@@ -126,7 +126,7 @@ int CollideWithMap_800B716C(EvVec* pos, int* prevPos, SVECTOR* rot)
     {
         return 0;
     }
-    angle = ((unsigned short)rot->vy - ((int (*)(long, long))ratan2_8003B548)(normal[0], normal[2])) & 0xFFF;
+    angle = ((unsigned short)rot->vy - IMPLICIT_INT(ratan2_8003B548)(normal[0], normal[2])) & 0xFFF;
     if (angle > 0xC00 || (angle > 0x400 && angle < 0x800))
     {
         return 1;
@@ -854,7 +854,7 @@ int EvCmdGotoLabel_800B8E9C(EvScriptCtx* ctx)
 
 int EvCmdJumpScript_800B8F14(EvScriptCtx* ctx)
 {
-    EvInstr* p = (EvInstr*)ctx->pc_8[ctx->branch_EC].c_C;
+    EvInstr* p = PSX_PTR(ctx->pc_8[ctx->branch_EC].c_C);
     ctx->branch_EC = 0;
     ctx->pc_8 = p;
     ctx->start_4 = p;
@@ -1583,7 +1583,7 @@ int EvCmdSetCallArg_800BA678(EvScriptCtx* ctx)
     ctx->callArg_F0 = ctx->pc_8->c_C;
     if (ctx->callArg_F0 == 0)
     {
-        ctx->callArg_F0 = GetOwnEntityParam_800BBDF4(ctx);
+        ctx->callArg_F0 = (long)GetOwnEntityParam_800BBDF4(ctx);
     }
     ctx->pc_8++;
     return 1;
@@ -1698,7 +1698,7 @@ int EvCmdChangeMapToPoint_800BA9E4(EvScriptCtx* ctx)
 
 int EvCmdPreloadArea_800BAA6C(EvScriptCtx* ctx)
 {
-    if (((int (*)(int))RequestAreaPreload_80027330)(ctx->pc_8->b_8))
+    if (IMPLICIT_INT(RequestAreaPreload_80027330)(ctx->pc_8->b_8))
     {
         ctx->pc_8++;
         return 1;
@@ -1729,7 +1729,7 @@ int EvCmdOpenMapSelect_800BAB5C(EvScriptCtx* ctx)
 {
     do
     {
-        if ((int)ctx == 1)
+        if (ctx == (EvScriptCtx*)1)
         {
             SetFadeMode_8001C19C(1, 0x20);
         }
@@ -1776,14 +1776,14 @@ int EvCmdCameraLookAtPoint_800BAC60(EvScriptCtx* ctx)
     target.x_0 = src->x_0;
     target.y_4 = src->y_4 + 0x15E;
     target.z_8 = src->z_8;
-    SetCameraBlendTarget_800379DC(&target, ctx->pc_8->b_8);
+    SetCameraBlendTarget_800379DC((int*)&target, ctx->pc_8->b_8);
     ctx->pc_8++;
     return 1;
 }
 
 int EvCmdCameraLookAtActor_800BACE0(EvScriptCtx* ctx)
 {
-    SetCameraBlendTarget_800379DC(GetActorPos_800BBBA0(ctx->pc_8->a_4), ctx->pc_8->b_8);
+    SetCameraBlendTarget_800379DC((int*)GetActorPos_800BBBA0(ctx->pc_8->a_4), ctx->pc_8->b_8);
     ctx->pc_8++;
     return 1;
 }
@@ -1797,7 +1797,7 @@ int EvCmdCameraClearLookAt_800BAD3C(EvScriptCtx* ctx)
 
 int EvCmdWaitCameraBlend_800BAD88(EvScriptCtx* ctx)
 {
-    int blend = ((int (*)())GetCameraBlend_80037A4C)();
+    int blend = IMPLICIT_INT(GetCameraBlend_80037A4C)();
     int mode = ctx->pc_8->b_8;
     if ((mode == 1 && (short)blend == 0x1000) || (mode == 0 && (short)blend == 0))
     {
@@ -1980,7 +1980,7 @@ int EvCmdBattle_800BB27C(EvScriptCtx* ctx)
             k = args->ids_18[i];
             if (k != 5)
             {
-                eventEnemy_800B1CB8.actors_A4[i] = (int)GetFieldMinionActor_800A7A60(k - 1);
+                eventEnemy_800B1CB8.actors_A4[i] = GetFieldMinionActor_800A7A60(k - 1);
                 eventEnemy_800B1CB8.members_B0[i].species_0 = args->e_24[i].a_0;
                 eventEnemy_800B1CB8.members_B0[i].b_4 = args->e_24[i].b_4;
                 eventEnemy_800B1CB8.anims_C8[i] = GetFieldMinionAnims_800A7A9C(k - 1);
@@ -2381,11 +2381,11 @@ int TestTempFlags_800BBDD8(int mask)
     return (~eventTempFlags_800AEBD4 & mask) == 0;
 }
 
-int GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx)
+void* GetOwnEntityParam_800BBDF4(EvScriptCtx* ctx)
 {
     if (ctx->ent_120 != 0)
     {
-        return ctx->ent_120->slideEdge_8C;
+        return ctx->ent_120->param_8C;
     }
     return 0;
 }
@@ -2453,7 +2453,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
     {
         if (pc->c_C == -1)
         {
-            str = PSX_PTR(GetOwnEntityParam_800BBDF4(ctx));
+            str = GetOwnEntityParam_800BBDF4(ctx);
         }
         else
         {
@@ -2557,7 +2557,7 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
                 }
             }
         }
-        ret = OpenMessageWindow_8003422C(&cfg);
+        ret = OpenMessageWindow_8003422C((MsgWindowCfg*)&cfg);
     }
     else if (mode == 1)
     {
@@ -2567,12 +2567,12 @@ int OpenEventMessage_800BBE3C(EvScriptCtx* ctx)
         it.mode_48 = pc->b_8;
         it.text_4C = 0;
         {
-            int arg = pc->c_C;
+            void* arg = PSX_PTR(pc->c_C);
             if (arg == 0)
             {
                 arg = GetOwnEntityParam_800BBDF4(ctx);
             }
-            SetupItemMsgSlots_800BC6C4(&it, (EvItemMsgSrc*)arg, pc->a_4);
+            SetupItemMsgSlots_800BC6C4(&it, arg, pc->a_4);
         }
         ret = OpenItemMessageWindow_80035AC8(&it);
     }
@@ -2735,7 +2735,7 @@ int IsActorLeftOf_800BC5C8(int actorA, int actorB)
     rel[0] -= (unsigned short)cameraEye_8008D600.vx;
     rel[1] -= (unsigned short)cameraEye_8008D600.vy;
     rel[2] -= (unsigned short)cameraEye_8008D600.vz;
-    RotTransPers(rel, scr1, scratch, scratch);
+    RotTransPers((SVECTOR*)rel, (void*)scr1, (void*)scratch, (void*)scratch);
     posB = (unsigned short*)GetActorPos_800BBBA0(actorB);
     rel[0] = posB[0];
     rel[1] = posB[2];
@@ -2743,7 +2743,7 @@ int IsActorLeftOf_800BC5C8(int actorA, int actorB)
     rel[0] -= (unsigned short)cameraEye_8008D600.vx;
     rel[1] -= (unsigned short)cameraEye_8008D600.vy;
     rel[2] -= (unsigned short)cameraEye_8008D600.vz;
-    RotTransPers(rel, scr2, scratch, scratch);
+    RotTransPers((SVECTOR*)rel, (void*)scr2, (void*)scratch, (void*)scratch);
     return scr1[0] < scr2[0];
 }
 
@@ -2830,8 +2830,7 @@ void LoadRelocBlob_800BC854(int* src)
     MemCopy_800403E8(eventReloc_800AEBBC.p_0, data, size);
 #ifdef __psyz
     pcEventMsgTable = Pc_EventMsgTable(eventReloc_800AEBBC.p_0);
-    return;
-#endif
+#else
     n = eventReloc_800AEBBC.p_0[0];
     for (i = 0; i < n; i++)
     {
@@ -2855,6 +2854,7 @@ void LoadRelocBlob_800BC854(int* src)
             }
         }
     }
+#endif
 }
 
 void LoadEventTiy_800BC98C(int* tiy)
@@ -2875,7 +2875,7 @@ void LoadEventTiy_800BC98C(int* tiy)
 void CopyEventData_800BCA18(unsigned int* src, unsigned int size)
 {
     unsigned int* buf = ListAlloc_8003FDC0(&eventHeap_80091C10, size);
-    eventDataBuf_800AEBC8 = (int)buf;
+    eventDataBuf_800AEBC8 = buf;
     MemCopy_800403E8(buf, src, size);
 }
 

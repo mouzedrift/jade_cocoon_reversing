@@ -143,7 +143,7 @@ void DrawUnitStatusPanel_8002DB48(UnitStatus* unit, int ot, void* unused, unsign
     DrawElementChart_8002E730(loc, elements, ot);
     loc[0] = pos[0] + 0xA2;
     loc[1] = pos[1] + 0x3D;
-    DrawStatGrid_8002EACC(unit, loc, (int)minion->field_CC.cur_0, ot);
+    DrawStatGrid_8002EACC(unit, loc, minion->field_CC.cur_0, ot);
     CalcEquippedStats_80033624(stats, unit);
     if (cmp)
     {
@@ -288,7 +288,7 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     rect[1] = 0x2C;
     rect[2] = 0x5B;
     rect[3] = 0x17;
-    DrawAnimatedWindow_8002BEC8(buf, rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
+    DrawAnimatedWindow_8002BEC8((RECT*)buf, (RECT*)rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
     loc[0] = 0xE0;
     loc[1] = 0x48;
     DrawUiTiySprt_8002C06C(loc, 0x52, args->ot_0);
@@ -299,7 +299,7 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     rect[0] = 0xDB;
     rect[2] = 0x5B;
     rect[3] = 0x16;
-    DrawAnimatedWindow_8002BEC8(buf, rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
+    DrawAnimatedWindow_8002BEC8((RECT*)buf, (RECT*)rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
     loc[0] = 0xE0;
     loc[1] = 0x5E;
     DrawUiTiySprt_8002C06C(loc, 0x6F, args->ot_0);
@@ -310,7 +310,7 @@ void DrawLevantSummary_8002E334(UnitStatus* st, MenuDrawArgs* args)
     rect[1] = 0x59;
     rect[2] = 0x5B;
     rect[3] = 0x17;
-    DrawAnimatedWindow_8002BEC8(buf, rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
+    DrawAnimatedWindow_8002BEC8((RECT*)buf, (RECT*)rect, args->open_2, args->ot_0, args->highlight_4, args->time_8);
     AddClipDrawAreaPrim_80033308(&pOT_8008D454[args->ot_0]);
     loc2[0] = base[0] + 4;
     loc2[1] = base[1] + 5;
@@ -450,7 +450,7 @@ void SetElementChartTri_8002E944(POLY_F3* tri, unsigned short* pos, short level,
         break;
     }
 }
-void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, int unused, short ot)
+void DrawStatGrid_8002EACC(UnitStatus* st, unsigned short* pos, unsigned char* unused, short ot)
 {
     short loc[2];
     DVECTOR from;

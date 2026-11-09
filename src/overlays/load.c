@@ -45,7 +45,7 @@ LoadUiSprite saveIconSprites_800BD9E8[4] = {
     { 0x110, 52, 58, 1 },
     { -1, -1, -1, -1 },
 };
-char *saveListPrompts_800BDA08[2] = { aSelectSaveLocat_800B66F0, aSelectGameToLoa_800B66C4 };
+const char* saveListPrompts_800BDA08[2] = { aSelectSaveLocat_800B66F0, aSelectGameToLoa_800B66C4 };
 RECT saveListClip_800BDA10 = { 10, 49, 0x12C, 129 };
 MenuWindowItem saveListRow0_800BDA18[2] = {
     { 64, 0, 0, NULL, NULL, 10, 49, 300, 31, 0, 0 },
@@ -127,14 +127,14 @@ MenuWindowItem titleNo_800BDE48[2] = {
 MenuWindowItem *titleItems_800BDE80[3] = { titleYes_800BDE10, titleNo_800BDE48 };
 MenuWindowList titleWin_800BDE8C = { 2, 0, 8, 1, titleItems_800BDE80 };
 ButtonHelpEntry loadMenuButtonHelp_800BDEA4[3] = { { 16, aSelect_800B6738 }, { 167, aExit_800B672C }, { -1 } };
-char *msgCardFull_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
-char *msgFormatting_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
-char *msgLoading_800BDEDC[4] = { aLoading_800B67D8, aDoNotRemoveMEMO_800B676C };
-char *msgSaving_800BDEEC[4] = { aSaving_800B67F0, aDoNotRemoveMEMO_800B676C };
-char *msgNoSaveData_800BDEFC[8] = { aNoSaveGameData_800B6804, 0, 0, 0, aMEMORYCARDNotFo_800B682C };
-char *msgFormatFailed_800BDF1C[4] = { aFormattingFaile_800B6864 };
-char *msgSaveFailed_800BDF2C[4] = { aSaveFailed_800B688C };
-char *msgLoadFailed_800BDF3C[4] = { aLoadFailed_800B68A8 };
+const char* msgCardFull_800BDEBC[4] = { aMEMORYCARDFull_800B6748 };
+const char* msgFormatting_800BDECC[4] = { aFormattingMEMOR_800B67A4, aDoNotRemoveMEMO_800B676C };
+const char* msgLoading_800BDEDC[4] = { aLoading_800B67D8, aDoNotRemoveMEMO_800B676C };
+const char* msgSaving_800BDEEC[4] = { aSaving_800B67F0, aDoNotRemoveMEMO_800B676C };
+const char* msgNoSaveData_800BDEFC[8] = { aNoSaveGameData_800B6804, 0, 0, 0, aMEMORYCARDNotFo_800B682C };
+const char* msgFormatFailed_800BDF1C[4] = { aFormattingFaile_800B6864 };
+const char* msgSaveFailed_800BDF2C[4] = { aSaveFailed_800B688C };
+const char* msgLoadFailed_800BDF3C[4] = { aLoadFailed_800B68A8 };
 LoadMenuRow loadMenuRows_800BDF4C[6] = {
     { { 68, 0, 116, 0, 0, 14 }, 1, 4, 4 },
     { { 68, 0, 116, 0, 0, 14 }, 2, 1, 2 },
@@ -144,7 +144,7 @@ LoadMenuRow loadMenuRows_800BDF4C[6] = {
     { { 10, 0, 64, 0, 0, 33 }, 2, 1, 2, 1 },
 };
 SaveTitle *saveTitle_800BDFAC = (void *)aJadeCocoonLevel_800B6BAC;
-char *cardTitles_800BDFB0[30] = {
+const char* cardTitles_800BDFB0[30] = {
     aJadeCocoon01_800B6F88, aJadeCocoon02_800B6F6C, aJadeCocoon03_800B6F50, aJadeCocoon04_800B6F34,
     aJadeCocoon05_800B6F18, aJadeCocoon06_800B6EFC, aJadeCocoon07_800B6EE0, aJadeCocoon08_800B6EC4,
     aJadeCocoon09_800B6EA8, aJadeCocoon10_800B6E8C, aJadeCocoon11_800B6E70, aJadeCocoon12_800B6E54,
@@ -154,7 +154,7 @@ char *cardTitles_800BDFB0[30] = {
     aCombDataTitle10_800B6CE8, aCombDataTitle11_800B6CCC, aCombDataTitle12_800B6CB0, aCombDataTitle13_800B6C94,
     aCombDataTitle14_800B6C78, aCombDataTitle15_800B6C5C,
 };
-char *saveFileNames_800BE028[2][15] = {
+const char* saveFileNames_800BE028[2][15] = {
     {
         aBASLUS00854GAME_800B725C, aBASLUS00854GAME_800B7244, aBASLUS00854GAME_800B722C, aBASLUS00854GAME_800B7214,
         aBASLUS00854GAME_800B71FC, aBASLUS00854GAME_800B71E4, aBASLUS00854GAME_800B71CC, aBASLUS00854GAME_800B71B4,
@@ -388,7 +388,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         }
         break;
     case 7:
-        DrawMessageBox_800BACBC(msgCardFull_800BDEBC);
+        DrawMessageBox_800BACBC((char**)msgCardFull_800BDEBC);
         if (!ReadSaveSummaries_800B9724(work) || padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
             work->nextScreen_24 = 1;
@@ -414,7 +414,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         }
         break;
     case 8:
-        DrawMessageBox_800BACBC(msgNoSaveData_800BDEFC);
+        DrawMessageBox_800BACBC((char**)msgNoSaveData_800BDEFC);
         switch (PollCardAccept_800BAE68(loadMenuRows_800BDF4C[1].cursor_C))
         {
         case -1:
@@ -506,7 +506,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         {
             shared.pos.x_0 = 0xD;
             shared.pos.y_2 = 0xC4;
-            DrawText_8003E91C(2, aLoadGame_800B68E0, &shared.pos, 5);
+            DrawText_8003E91C(2, aLoadGame_800B68E0, (short*)&shared.pos, 5);
         }
         else if (loadMenuRows_800BDF4C[0].cursor_C == 0)
         {
@@ -514,13 +514,13 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
             {
                 shared.pos.x_0 = 0xD;
                 shared.pos.y_2 = 0xC4;
-                DrawText_8003E91C(2, aOverwriteGame_800B68F8, &shared.pos, 5);
+                DrawText_8003E91C(2, aOverwriteGame_800B68F8, (short*)&shared.pos, 5);
             }
             else
             {
                 shared.pos.x_0 = 0xD;
                 shared.pos.y_2 = 0xC4;
-                DrawText_8003E91C(2, aSaveGame_800B6918, &shared.pos, 5);
+                DrawText_8003E91C(2, aSaveGame_800B6918, (short*)&shared.pos, 5);
             }
         }
         {
@@ -529,7 +529,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
             shared.tail.semiTrans_3 = 1;
             shared.tail.colorSet_2 = 0;
             shared.tail.color_0 = saveData_8008B570.uiColor_20.h;
-            DrawWindow_80042460(&rect, &shared.tail, pOT_8008D454 + 14, 0);
+            DrawWindow_80042460((RECT*)&rect, &shared.tail, pOT_8008D454 + 14, 0);
         }
         ConfirmPromptInput_800B9654(work);
         break;
@@ -538,7 +538,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         titleWin_800BDE8C.cursor_C = loadMenuRows_800BDF4C[work->screen_30].cursor_C;
         shared.pos.x_0 = 0x66;
         shared.pos.y_2 = 0x69;
-        DrawText_8003E91C(2, aReturnToTitle_800B6938, &shared.pos, 5);
+        DrawText_8003E91C(2, aReturnToTitle_800B6938, (short*)&shared.pos, 5);
         {
         LoadWinRect rect;
         WindowStyle color;
@@ -546,7 +546,7 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
         color.color_0 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+        DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
         }
         DrawMenuWindows_8002A5A4(&titleWin_800BDE8C);
         if (IsConfirmPressed_8003D288(0, (work->flags_54 >> 6) & 1))
@@ -568,21 +568,21 @@ void LoadMenuScreen_800B79F8(LoadMenuWork* work)
         }
         break;
     case 13:
-        DrawMessageBox_800BACBC(msgFormatFailed_800BDF1C);
+        DrawMessageBox_800BACBC((char**)msgFormatFailed_800BDF1C);
         if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
             work->nextScreen_24 = 1;
         }
         break;
     case 14:
-        DrawMessageBox_800BACBC(msgSaveFailed_800BDF2C);
+        DrawMessageBox_800BACBC((char**)msgSaveFailed_800BDF2C);
         if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
             work->nextScreen_24 = 1;
         }
         break;
     case 15:
-        DrawMessageBox_800BACBC(msgLoadFailed_800BDF3C);
+        DrawMessageBox_800BACBC((char**)msgLoadFailed_800BDF3C);
         if (padPressed_8009194C[(work->flags_54 >> 6) & 1])
         {
             work->nextScreen_24 = 1;
@@ -687,13 +687,13 @@ void DrawCardSlotSelect_800B82FC(LoadMenuWork* work)
     DrawMenuWindows_8002A5A4(&cardSlot2Win_800BDBBC);
     for (spr = cardSlotSprites_800BD9A8; spr->sprite_4 >= 0; spr++)
     {
-        DrawUiTiySprt_8002C06C(spr, spr->sprite_4, spr->ot_6);
+        DrawUiTiySprt_8002C06C((unsigned short*)spr, spr->sprite_4, spr->ot_6);
     }
     rect = cardSlotWin_800B69F4;
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawCardSlotChosen_800B847C(LoadMenuWork* work)
@@ -717,13 +717,13 @@ void DrawCardSlotChosen_800B847C(LoadMenuWork* work)
     DrawMenuWindows_8002A5A4(&cardSlot2Win_800BDBBC);
     for (spr = cardSlotSprites_800BD9A8; spr->sprite_4 >= 0; spr++)
     {
-        DrawUiTiySprt_8002C06C(spr, spr->sprite_4, spr->ot_6);
+        DrawUiTiySprt_8002C06C((unsigned short*)spr, spr->sprite_4, spr->ot_6);
     }
     rect = cardSlotWin_800B69F4;
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawFormatPrompt_800B85AC(LoadMenuWork* work)
@@ -734,15 +734,15 @@ void DrawFormatPrompt_800B85AC(LoadMenuWork* work)
     WindowStyle color;
     p0.x_0 = 0x13;
     p0.y_2 = 0x49;
-    DrawText_8003E91C(2, aMEMORYCARDNotFo_800B682C, &p0, 5);
+    DrawText_8003E91C(2, aMEMORYCARDNotFo_800B682C, (short*)&p0, 5);
     p1.x_0 = 0x13;
     p1.y_2 = 0x57;
-    DrawText_8003E91C(2, aFormatMemoryCard_800B69FC, &p1, 5);
+    DrawText_8003E91C(2, aFormatMemoryCard_800B69FC, (short*)&p1, 5);
     rect = formatPromptWin_800B6A24;
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
     DrawMenuWindows_8002A5A4(&formatWin_800BDD64);
 }
 
@@ -776,7 +776,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, aSelectMemoryCard_800B6A2C, &pos, 5);
+        DrawText_8003E91C(2, aSelectMemoryCard_800B6A2C, (short*)&pos, 5);
         break;
     }
     case 2:
@@ -784,7 +784,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, emptyText_800B6A54, &pos, 5);
+        DrawText_8003E91C(2, emptyText_800B6A54, (short*)&pos, 5);
         break;
     }
     case 3:
@@ -792,7 +792,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, saveListPrompts_800BDA08[loadMenuRows_800BDF4C[0].cursor_C], &pos, 5);
+        DrawText_8003E91C(2, saveListPrompts_800BDA08[loadMenuRows_800BDF4C[0].cursor_C], (short*)&pos, 5);
         break;
     }
     case 9:
@@ -800,7 +800,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, aNoEmptyBlocks_800B6A58, &pos, 5);
+        DrawText_8003E91C(2, aNoEmptyBlocks_800B6A58, (short*)&pos, 5);
         break;
     }
     case 10:
@@ -808,7 +808,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, aDamagedData_800B6AA4, &pos, 5);
+        DrawText_8003E91C(2, aDamagedData_800B6AA4, (short*)&pos, 5);
         break;
     }
     case 6:
@@ -816,7 +816,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, aNoMemoryCardInSlot_800B6ADC, &pos, 5);
+        DrawText_8003E91C(2, aNoMemoryCardInSlot_800B6ADC, (short*)&pos, 5);
         break;
     }
     case 18:
@@ -824,7 +824,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, aCheckingMemoryCard_800B6B0C, &pos, 5);
+        DrawText_8003E91C(2, aCheckingMemoryCard_800B6B0C, (short*)&pos, 5);
         break;
     }
     case 11:
@@ -832,7 +832,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         LoadTextPos pos;
         pos.x_0 = 0xE;
         pos.y_2 = 0xC7;
-        DrawText_8003E91C(2, aMEMORYCARDNotFo_800B682C, &pos, 5);
+        DrawText_8003E91C(2, aMEMORYCARDNotFo_800B682C, (short*)&pos, 5);
         break;
     }
     }
@@ -843,7 +843,7 @@ void DrawLoadMenuHelpText_800B877C(LoadMenuWork* work)
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
         color.color_0 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+        DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
     }
 }
 const LoadWinRect modeTitleWin_800B6B8C = { { 63, 0, 18, 0, 108, 0, 18 } };
@@ -952,12 +952,12 @@ void DrawLoadMenuModeTitle_800B8984(LoadMenuWork* work)
 {
     LoadWinRect rect;
     WindowStyle color;
-    DrawUiTiySprt_8002C06C(&modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C], modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].sprite_4, modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].ot_6);
+    DrawUiTiySprt_8002C06C((unsigned short*)(&modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C]), modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].sprite_4, modeTitleSprites_800BD998[loadMenuRows_800BDF4C[0].cursor_C].ot_6);
     rect = modeTitleWin_800B6B8C;
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
@@ -966,15 +966,15 @@ void DrawCardSlotLabel_800B8A20(LoadMenuWork* work)
     LoadTextPos p1;
     LoadWinRect rect;
     WindowStyle color;
-    DrawUiTiySprt_8002C06C(&p0, 0x27, 1);
+    DrawUiTiySprt_8002C06C((unsigned short*)&p0, 0x27, 1);
     p1.x_0 = 0x124;
     p1.y_2 = 0x15;
-    DrawUiTiySprt_8002C06C(&p1, (loadMenuRows_800BDF4C[1].cursor_C == 1) << 1, 1);
+    DrawUiTiySprt_8002C06C((unsigned short*)&p1, (loadMenuRows_800BDF4C[1].cursor_C == 1) << 1, 1);
     rect = cardSlotLabelWin_800B6B94;
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
@@ -986,18 +986,18 @@ void DrawSaveListPosition_800B8AE4(LoadMenuWork* work)
     WindowStyle color;
     p0.x_0 = 0x1C;
     p0.y_2 = 0x24;
-    DrawNumberRightAlignedFont1_8003F264(&p0, loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C + 1, 5);
+    DrawNumberRightAlignedFont1_8003F264((short*)&p0, loadMenuRows_800BDF4C[3].scroll_D + loadMenuRows_800BDF4C[3].cursor_C + 1, 5);
     p1.x_0 = 0x1C;
     p1.y_2 = 0x24;
-    DrawText_8003E91C(1, aSlash_800B6B9C, &p1, 5);
+    DrawText_8003E91C(1, aSlash_800B6B9C, (short*)&p1, 5);
     p2.x_0 = 0x32;
     p2.y_2 = 0x24;
-    DrawNumberRightAlignedFont1_8003F264(&p2, 0xF, 5);
+    DrawNumberRightAlignedFont1_8003F264((short*)&p2, 0xF, 5);
     rect = listPositionWin_800B6BA0;
     color.semiTrans_3 = 1;
     color.colorSet_2 = 0;
     color.color_0 = saveData_8008B570.uiColor_20.h;
-    DrawWindow_80042460(&rect, &color, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)&rect, &color, pOT_8008D454 + 14, 0);
 }
 
 void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
@@ -1027,7 +1027,7 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
             p0.x_0 = 0x7D;
             p0.y_2 = i * 33 + 0x39;
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-            DrawUiTiySprt_8002C06C(&p0, 0x9C, 1);
+            DrawUiTiySprt_8002C06C((unsigned short*)&p0, 0x9C, 1);
             AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
         }
         else if (!GetCardSaveName_800BAE4C(save))
@@ -1035,7 +1035,7 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
             p1.x_0 = 0x8B;
             p1.y_2 = i * 33 + 0x39;
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-            DrawUiTiySprt_8002C06C(&p1, 0x74, 1);
+            DrawUiTiySprt_8002C06C((unsigned short*)&p1, 0x74, 1);
             AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
         }
         else
@@ -1056,20 +1056,20 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                         p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0 + digits * 7;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                         AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-                        DrawSmallNumber9_8002C414(&p2, work->summaries_0[save].vals_28[j], 1);
+                        DrawSmallNumber9_8002C414((unsigned short*)&p2, work->summaries_0[save].vals_28[j], 1);
                     }
                     else
                     {
                         p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                         AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-                        DrawSmallNumber3_8002C290(&p2, work->summaries_0[save].vals_28[j], 1);
+                        DrawSmallNumber3_8002C290((unsigned short*)&p2, work->summaries_0[save].vals_28[j], 1);
                     }
                     if ((j == 3 || j == 4) && work->summaries_0[save].vals_28[j] < 10)
                     {
                         p2.x_0 = saveSlotFieldPos_800BD93C[j].x_0 - 8;
                         p2.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
-                        DrawSmallNumber3_8002C290(&p2, 0, 1);
+                        DrawSmallNumber3_8002C290((unsigned short*)&p2, 0, 1);
                     }
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
                 }
@@ -1086,14 +1086,14 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                     p3.x_0 = saveSlotFieldPos_800BD93C[j].x_0;
                     p3.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-                    DrawText_8003E91C(1, work->summaries_0[save].text_C, &p3, 1);
+                    DrawText_8003E91C(1, work->summaries_0[save].text_C, (short*)&p3, 1);
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
                     if (work->summaries_0[save].corridor_26 >= 0)
                     {
                         p3.x_0 = saveSlotFieldPos_800BD93C[j].x_0 + 0x38;
                         p3.y_2 = saveSlotFieldPos_800BD93C[j].y_2 + i * 33;
                         AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-                        DrawNumberRightAlignedFont1_8003F264(&p3, work->summaries_0[save].corridor_26, 1);
+                        DrawNumberRightAlignedFont1_8003F264((short*)&p3, work->summaries_0[save].corridor_26, 1);
                         AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
                     }
                 }
@@ -1103,7 +1103,7 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                     p3.x_0 = icon->x_0;
                     p3.y_2 = icon->y_2 + i * 33;
                     AddClipDrawAreaPrim_80033308(pOT_8008D454 + icon->ot_6);
-                    DrawUiTiySprt_8002C06C(&p3, icon->sprite_4, icon->ot_6);
+                    DrawUiTiySprt_8002C06C((unsigned short*)&p3, icon->sprite_4, icon->ot_6);
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + icon->ot_6);
                 }
                 for (spr = saveSlotSprites_800BD960; spr->sprite_4 > 0; spr++)
@@ -1111,24 +1111,24 @@ void DrawSaveSlots_800B8BD4(LoadMenuWork* work)
                     p3.x_0 = spr->x_0;
                     p3.y_2 = spr->y_2 + i * 33;
                     AddClipDrawAreaPrim_80033308(pOT_8008D454 + spr->ot_6);
-                    DrawUiTiySprt_8002C06C(&p3, spr->sprite_4, spr->ot_6);
+                    DrawUiTiySprt_8002C06C((unsigned short*)&p3, spr->sprite_4, spr->ot_6);
                     AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + spr->ot_6);
                 }
             }
             p2.x_0 = saveSlotFieldPos_800BD93C[1].x_0;
             p2.y_2 = saveSlotFieldPos_800BD93C[1].y_2 + i * 33;
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-            DrawUiTiySprt_8002C06C(&p2, 0xDA, 1);
+            DrawUiTiySprt_8002C06C((unsigned short*)&p2, 0xDA, 1);
             AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
             p4.x_0 = saveSlotFieldPos_800BD93C[3].x_0 + 2;
             p4.y_2 = (saveSlotFieldPos_800BD93C[3].y_2 - 4) + i * 33;
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-            DrawText_8003E91C(2, aMiddleDot_800B6BA8, &p4, 1);
+            DrawText_8003E91C(2, aMiddleDot_800B6BA8, (short*)&p4, 1);
             AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
             p5.x_0 = saveSlotFieldPos_800BD93C[3].x_0 + 2;
             p5.y_2 = saveSlotFieldPos_800BD93C[3].y_2 + i * 33;
             AddClipDrawAreaPrim_80033308(pOT_8008D454 + 1);
-            DrawText_8003E91C(2, aMiddleDot_800B6BA8, &p5, 1);
+            DrawText_8003E91C(2, aMiddleDot_800B6BA8, (short*)&p5, 1);
             AddDrawAreaPrim_8003326C(&saveListClip_800BDA10, pOT_8008D454 + 1);
         }
     }
@@ -1351,7 +1351,7 @@ int ReadSaveSummaries_800B9724(LoadMenuWork* work)
             name = GetCardSaveName_800BAE4C(work->nRead_20);
             if (name)
             {
-                MemCardReadFile(chan, name, &work->summaries_0[work->nRead_20], 0x280, 0x80);
+                MemCardReadFile(chan, name, (unsigned long*)&work->summaries_0[work->nRead_20], 0x280, 0x80);
             }
             else if (work->nRead_20 == 14)
             {
@@ -1415,10 +1415,10 @@ void WriteSaveTask_800B98C4(void* t, void* buf)
         name = GetCardSaveName_800BAE4C(save);
         if (!name)
         {
-            MemCardCreateFile(chan, saveFileNames_800BE028[0][save], 1);
-            name = saveFileNames_800BE028[0][save];
+            MemCardCreateFile(chan, (char*)saveFileNames_800BE028[0][save], 1);
+            name = (char*)saveFileNames_800BE028[0][save];
         }
-        MemCardWriteFile(chan, name, work->fileBuf_4, 0, sizeof(SaveFile));
+        MemCardWriteFile(chan, name, (unsigned long*)work->fileBuf_4, 0, sizeof(SaveFile));
         break;
     case 1:
         if (cmd == 4)
@@ -1446,7 +1446,7 @@ void WriteSaveTask_800B98C4(void* t, void* buf)
         break;
     }
     DrawLoadingIcon_8003CD5C();
-    DrawMessageBox_800BACBC(msgSaving_800BDEEC);
+    DrawMessageBox_800BACBC((char**)msgSaving_800BDEEC);
     DrawMenuBackground_8002BE10();
 }
 
@@ -1493,11 +1493,11 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
     }
     if (sm->icon_24 == 2)
     {
-        MemCopy_800403E8(sm->text_C, aCORRIDOR_800B6BF0, 0x18);
+        MemCopy_800403E8(sm->text_C, (void*)aCORRIDOR_800B6BF0, 0x18);
     }
     else if (sm->icon_24 == 1)
     {
-        MemCopy_800403E8(sm->text_C, aEND_800B6C04, 0x18);
+        MemCopy_800403E8(sm->text_C, (void*)aEND_800B6C04, 0x18);
     }
     else
     {
@@ -1631,7 +1631,7 @@ void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf)
         name = GetCardSaveName_800BAE4C(save);
         if (name)
         {
-            MemCardReadFile(chan, name, work->fileBuf_4, 0, sizeof(SaveFile));
+            MemCardReadFile(chan, name, (unsigned long*)work->fileBuf_4, 0, sizeof(SaveFile));
         }
         else
         {
@@ -1674,7 +1674,7 @@ void LoadSaveTask_800BA234(LoadMenuTaskEntry* task, void* buf)
         break;
     }
     DrawLoadingIcon_8003CD5C();
-    DrawMessageBox_800BACBC(msgLoading_800BDEDC);
+    DrawMessageBox_800BACBC((char**)msgLoading_800BDEDC);
     DrawMenuBackground_8002BE10();
 }
 
@@ -1819,7 +1819,7 @@ int UnpackSaveFile_800BA3EC(LoadMenuWork* work)
 void FormatCardWait1_800BA968(LoadMenuTaskEntry* task)
 {
     DrawLoadingIcon_8003CD5C();
-    DrawMessageBox_800BACBC(msgFormatting_800BDECC);
+    DrawMessageBox_800BACBC((char**)msgFormatting_800BDECC);
     DrawMenuBackground_8002BE10();
     task->next_8 = FormatCardWait2_800BA9AC;
 }
@@ -1827,7 +1827,7 @@ void FormatCardWait1_800BA968(LoadMenuTaskEntry* task)
 void FormatCardWait2_800BA9AC(LoadMenuTaskEntry* task)
 {
     DrawLoadingIcon_8003CD5C();
-    DrawMessageBox_800BACBC(msgFormatting_800BDECC);
+    DrawMessageBox_800BACBC((char**)msgFormatting_800BDECC);
     DrawMenuBackground_8002BE10();
     task->next_8 = FormatCardTask_800BA9F0;
 }
@@ -1859,7 +1859,7 @@ void FormatCardTask_800BA9F0(LoadMenuTaskEntry* task, LoadMenuWork* work)
     }
     WaitCardSync_800BADF4();
     DrawLoadingIcon_8003CD5C();
-    DrawMessageBox_800BACBC(msgFormatting_800BDECC);
+    DrawMessageBox_800BACBC((char**)msgFormatting_800BDECC);
     DrawMenuBackground_8002BE10();
 }
 
@@ -1920,7 +1920,7 @@ void DrawMessageBox_800BACBC(char** lines)
     TextSize sz;
     MsgBoxRect box;
     int i;
-    sz = MeasureTextLines_8003E3B4((int*)lines);
+    sz = MeasureTextLines_8003E3B4((void**)((int*)lines));
     box.x_0 = (0x13A - sz.w) / 2;
     box.y_2 = (0xEA - sz.h) / 2;
     box.w_4 = sz.w + 6;
@@ -1936,7 +1936,7 @@ void DrawMessageBox_800BACBC(char** lines)
             LoadTextPos pos;
             pos.x_0 = box.x_0 + 3;
             pos.y_2 = box.y_2 + 5 + i * 13;
-            DrawText_8003E91C(2, lines[i], &pos, 5);
+            DrawText_8003E91C(2, lines[i], (short*)&pos, 5);
         }
     }
     {
@@ -1944,7 +1944,7 @@ void DrawMessageBox_800BACBC(char** lines)
         color.semiTrans_3 = 1;
         color.colorSet_2 = 0;
         color.color_0 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(&box, &color, pOT_8008D454 + 14, 0);
+        DrawWindow_80042460((RECT*)&box, &color, pOT_8008D454 + 14, 0);
     }
 }
 
@@ -2043,7 +2043,7 @@ void ScanCardSaves_800BAFB0(int slot)
     int i;
     i = found = blocks = 0;
     files = 0;
-    MemCardGetDirentry(slot << 4, aDirWildcard_800B72FC, dir, &files, 0, 15);
+    MemCardGetDirentry(slot << 4, (char*)aDirWildcard_800B72FC, (struct DIRENTRY*)dir, &files, 0, 15);
     for (i = found; i < files; i++)
     {
         int fullBlocks = dir[i].size_18 / 0x2000;
@@ -2058,10 +2058,10 @@ void ScanCardSaves_800BAFB0(int slot)
     }
     for (i = 0; i < 15; i++)
     {
-        if (FindDirEntry_800BB23C(files, saveFileNames_800BE028[0][i], dir))
+        if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[0][i], (unsigned char*)dir))
         {
             found++;
-            cardSaveNames_800BE188[i] = saveFileNames_800BE028[0][i];
+            cardSaveNames_800BE188[i] = (char*)saveFileNames_800BE028[0][i];
         }
         else
         {
@@ -2081,7 +2081,7 @@ void ScanCardSavesComb_800BB0E4(int slot)
     int i;
     i = found = blocks = 0;
     files = 0;
-    MemCardGetDirentry(slot << 4, aDirWildcard_800B72FC, dir, &files, 0, 15);
+    MemCardGetDirentry(slot << 4, (char*)aDirWildcard_800B72FC, (struct DIRENTRY*)dir, &files, 0, 15);
     for (i = found; i < files; i++)
     {
         int fullBlocks = dir[i].size_18 / 0x2000;
@@ -2096,15 +2096,15 @@ void ScanCardSavesComb_800BB0E4(int slot)
     }
     for (i = 0; i < 15; i++)
     {
-        if (FindDirEntry_800BB23C(files, saveFileNames_800BE028[0][i], dir))
+        if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[0][i], (unsigned char*)dir))
         {
             found++;
-            cardSaveNames_800BE188[i] = saveFileNames_800BE028[0][i];
+            cardSaveNames_800BE188[i] = (char*)saveFileNames_800BE028[0][i];
         }
-        else if (FindDirEntry_800BB23C(files, saveFileNames_800BE028[1][i], dir))
+        else if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[1][i], (unsigned char*)dir))
         {
             found++;
-            cardSaveNames_800BE188[i] = saveFileNames_800BE028[1][i];
+            cardSaveNames_800BE188[i] = (char*)saveFileNames_800BE028[1][i];
         }
         else
         {

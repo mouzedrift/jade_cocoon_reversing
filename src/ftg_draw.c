@@ -127,7 +127,7 @@ void DrawFtgPolyF3_8004B320(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
     for (i = 0; i < obj->f3_0.count; i++, poly++)
     {
         FtgVert* normal = &poly->n;
-        gte_ldv3c(poly->v);
+        gte_ldv3c((SVECTOR*)poly->v);
         gte_rtpt();
         gte_stsxy3_f3(prim);
         gte_nclip();
@@ -140,7 +140,7 @@ void DrawFtgPolyF3_8004B320(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
             {
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(normal);
+                    gte_ldv0((SVECTOR*)normal);
                     gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
@@ -177,12 +177,12 @@ void DrawFtgPolyF4_8004B590(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
     for (i = 0; i < obj->f4_20.count; i++, poly++)
     {
         FtgVert* normal = &poly->n;
-        gte_ldv3c(poly->v);
+        gte_ldv3c((SVECTOR*)poly->v);
         gte_rtpt();
         gte_nclip();
         gte_stopz(&ctx->opz_10);
         gte_stsxy3_f4(prim);
-        gte_ldv0(&poly->v[3]);
+        gte_ldv0((SVECTOR*)&poly->v[3]);
         gte_rtps();
         gte_nclip();
         gte_stopz(&ctx->opz2_14);
@@ -195,7 +195,7 @@ void DrawFtgPolyF4_8004B590(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
                 gte_stsxy(&prim->x3);
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(normal);
+                    gte_ldv0((SVECTOR*)normal);
                     gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
@@ -232,7 +232,7 @@ void DrawFtgPolyG3_8004B844(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
     for (i = 0; i < obj->g3_8.count; i++, poly++)
     {
         FtgVert* normal = poly->n;
-        gte_ldv3c(poly->v);
+        gte_ldv3c((SVECTOR*)poly->v);
         gte_rtpt();
         gte_stsxy3_g3(prim);
         gte_nclip();
@@ -245,17 +245,17 @@ void DrawFtgPolyG3_8004B844(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
             {
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(normal);
+                    gte_ldv0((SVECTOR*)normal);
                     gte_ldrgb(&poly->c[0]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
                     gte_strgb(&prim->r0);
-                    gte_ldv0(&poly->n[1]);
+                    gte_ldv0((SVECTOR*)&poly->n[1]);
                     gte_ldrgb(&poly->c[1]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
                     gte_strgb(&prim->r1);
-                    gte_ldv0(&poly->n[2]);
+                    gte_ldv0((SVECTOR*)&poly->n[2]);
                     gte_ldrgb(&poly->c[2]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
@@ -300,12 +300,12 @@ void DrawFtgPolyG4_8004BB9C(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
     for (i = 0; i < obj->g4_28.count; i++, poly++)
     {
         FtgVert* normal = poly->n;
-        gte_ldv3c(poly->v);
+        gte_ldv3c((SVECTOR*)poly->v);
         gte_rtpt();
         gte_nclip();
         gte_stopz(&ctx->opz_10);
         gte_stsxy3_g4(prim);
-        gte_ldv0(&poly->v[3]);
+        gte_ldv0((SVECTOR*)&poly->v[3]);
         gte_rtps();
         gte_nclip();
         gte_stopz(&ctx->opz2_14);
@@ -318,22 +318,22 @@ void DrawFtgPolyG4_8004BB9C(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
                 gte_stsxy(&prim->x3);
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(normal);
+                    gte_ldv0((SVECTOR*)normal);
                     gte_ldrgb(&poly->c[0]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
                     gte_strgb(&prim->r0);
-                    gte_ldv0(&poly->n[1]);
+                    gte_ldv0((SVECTOR*)&poly->n[1]);
                     gte_ldrgb(&poly->c[1]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
                     gte_strgb(&prim->r1);
-                    gte_ldv0(&poly->n[2]);
+                    gte_ldv0((SVECTOR*)&poly->n[2]);
                     gte_ldrgb(&poly->c[2]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
                     gte_strgb(&prim->r2);
-                    gte_ldv0(&poly->n[3]);
+                    gte_ldv0((SVECTOR*)&poly->n[3]);
                     gte_ldrgb(&poly->c[3]);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
@@ -388,7 +388,7 @@ void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
     for (i = 0; i < obj->ft3_10.count; i++, poly++)
     {
         FtgVert* normal = &poly->n;
-        gte_ldv3c(poly->v);
+        gte_ldv3c((SVECTOR*)poly->v);
         gte_rtpt();
         *(unsigned int*)&prim->u0 = *(unsigned int*)&poly->u0 + ctx->clutAdd_1C;
         gte_stsxy3_ft3(prim);
@@ -404,7 +404,7 @@ void DrawFtgPolyFT3_8004BFA8(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
             {
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(normal);
+                    gte_ldv0((SVECTOR*)normal);
                     gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
@@ -445,13 +445,13 @@ void DrawFtgPolyFT4_8004C21C(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
     for (i = 0; i < obj->ft4_30.count; i++, poly++)
     {
         FtgVert* normal = &poly->n;
-        gte_ldv3c(poly->v);
+        gte_ldv3c((SVECTOR*)poly->v);
         gte_rtpt();
         *(unsigned int*)&prim->u0 = *(unsigned int*)&poly->u0 + ctx->clutAdd_1C;
         gte_nclip();
         gte_stopz(&ctx->opz_10);
         gte_stsxy3_ft4(prim);
-        gte_ldv0(&poly->v[3]);
+        gte_ldv0((SVECTOR*)&poly->v[3]);
         gte_rtps();
         *(unsigned int*)&prim->u1 = *(unsigned int*)&poly->u1;
         gte_nclip();
@@ -465,7 +465,7 @@ void DrawFtgPolyFT4_8004C21C(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
                 gte_stsxy(&prim->x3);
                 if (ctx->flags_20 & 1)
                 {
-                    gte_ldv0(normal);
+                    gte_ldv0((SVECTOR*)normal);
                     gte_ldrgb(&poly->c);
                     gte_lddp(ctx->dq_C);
                     gte_ncds();
@@ -511,14 +511,14 @@ void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctxA
     sprite = obj->texSprites_50;
     for (i = 0; i < (obj->texSpriteCount_48 + 2) / 3; i++, sprite += 3)
     {
-        gte_ldv3(&sprite[0].p1, &sprite[1].p1, &sprite[2].p1);
+        gte_ldv3((SVECTOR*)&sprite[0].p1, (SVECTOR*)&sprite[1].p1, (SVECTOR*)&sprite[2].p1);
         gte_rtpt();
         ftgSpriteTPageClut_8009AAD8.word = *(unsigned int*)&obj->tpage_4C + ctx->clutAdd_1C;
         gte_stsxy3(&vtx[0].sxy_0, &vtx[1].sxy_0, &vtx[2].sxy_0);
         gte_stsz3(&vtx[0].sz_4, &vtx[1].sz_4, &vtx[2].sz_4);
         if (ctx->flags_20 & 1)
         {
-            gte_ldv3(&sprite[0].p0, &sprite[1].p0, &sprite[2].p0);
+            gte_ldv3((SVECTOR*)&sprite[0].p0, (SVECTOR*)&sprite[1].p0, (SVECTOR*)&sprite[2].p0);
             gte_lddp(ctx->dq_C);
             gte_ncdt();
             vtx[0].uv_8 = sprite[0].p1.uv;
@@ -528,7 +528,7 @@ void ProjectFtgTexSprites_8004C4F0(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctxA
         }
         else
         {
-            gte_ldv3(&sprite[0].p0, &sprite[1].p0, &sprite[2].p0);
+            gte_ldv3((SVECTOR*)&sprite[0].p0, (SVECTOR*)&sprite[1].p0, (SVECTOR*)&sprite[2].p0);
             gte_ldrgb3(&sprite[0].c, &sprite[1].c, &sprite[2].c);
             gte_dpct();
             vtx[0].uv_8 = sprite[0].p1.uv;
@@ -551,13 +551,13 @@ static inline void FtgDrawSprites(FtgObject* obj, FtgDrawCtx* ctxArg, int slot)
     int i;
     for (i = 0; i < obj->spriteCount_40; i++, sp++)
     {
-        gte_ldv0(&sp->p1);
+        gte_ldv0((SVECTOR*)&sp->p1);
         gte_rtps();
         gte_stsxy(&vtx->sxy_0);
         gte_stszotz(&vtx->sz_4);
         if (ctx->flags_20 & 1)
         {
-            gte_ldv0(&sp->p0);
+            gte_ldv0((SVECTOR*)&sp->p0);
             gte_ldrgb(&sp->c);
             gte_lddp(ctx->dq_C);
             gte_ncds();
@@ -639,7 +639,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, OT_TYPE* ot, int flags, int slot)
         for (i = 0; i < obj->gt3_18.count; i++, e++)
         {
             FtgVert* n = e->n;
-            gte_ldv3c(e->v);
+            gte_ldv3c((SVECTOR*)e->v);
             gte_rtpt();
             *(unsigned int*)&t->u0 = *(unsigned int*)&e->u0 + ctx->clutAdd_1C;
             gte_stsxy3_gt3(t);
@@ -654,7 +654,7 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, OT_TYPE* ot, int flags, int slot)
                     gte_lddp(ctx->dq_C);
                     if (ctx->flags_20 & 1)
                     {
-                        gte_ldv3(n, &e->n[1], &e->n[2]);
+                        gte_ldv3((SVECTOR*)n, (SVECTOR*)&e->n[1], (SVECTOR*)&e->n[2]);
                         gte_ncdt();
                         *(unsigned int*)&t->u1 = *(unsigned int*)&e->u1;
                         *(unsigned short*)&t->u2 = e->v[2].uv;
@@ -701,13 +701,13 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, OT_TYPE* ot, int flags, int slot)
         for (i = 0; i < obj->gt4_38.count; i++, e++)
         {
             FtgVert* n = e->n;
-            gte_ldv3c(e->v);
+            gte_ldv3c((SVECTOR*)e->v);
             gte_rtpt();
             *(unsigned int*)&t->u0 = *(unsigned int*)&e->u0 + ctx->clutAdd_1C;
             gte_nclip();
             gte_stopz(&ctx->opz_10);
             gte_stsxy3_gt4(t);
-            gte_ldv0(&e->v[3]);
+            gte_ldv0((SVECTOR*)&e->v[3]);
             gte_rtps();
             *(unsigned int*)&t->u1 = *(unsigned int*)&e->u1;
             gte_nclip();
@@ -722,12 +722,12 @@ void DrawFtgObject_8004C7BC(FtgObject* obj, OT_TYPE* ot, int flags, int slot)
                     gte_lddp(ctx->dq_C);
                     if (ctx->flags_20 & 1)
                     {
-                        gte_ldv3(n, &e->n[1], &e->n[2]);
+                        gte_ldv3((SVECTOR*)n, (SVECTOR*)&e->n[1], (SVECTOR*)&e->n[2]);
                         gte_ncdt();
                         *(unsigned short*)&t->u2 = e->v[2].uv;
                         *(unsigned short*)&t->u3 = e->v[3].uv;
                         gte_strgb3(&t->r0, &t->r1, &t->r2);
-                        gte_ldv0(&e->n[3]);
+                        gte_ldv0((SVECTOR*)&e->n[3]);
                         gte_ncds();
                         gte_strgb(&t->r3);
                     }

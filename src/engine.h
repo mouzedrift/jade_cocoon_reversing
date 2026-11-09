@@ -10,7 +10,7 @@ extern UnitSkills speciesSkills_8007A9F8[];
 extern UnitSkills* sub_800B3274(int idx);
 extern UnitSkills* GetSpeciesSkills_80019C28(unsigned int idx);
 // each species' name (plain text, EncodeName_8003F7C8 converts it); species from 0xC9 on come from sub_800B32D4
-extern char* minionSpeciesNames_8007A170[];
+extern const char* minionSpeciesNames_8007A170[];
 extern char* sub_800B32D4(int idx);
 
 extern ActionData* GetMagicAction_8001AD64(unsigned int idx); // magic
@@ -308,7 +308,7 @@ int GetMagicIcon_8001AF3C(int idx);
 int WaitVSync_8001B6E8();
 void InitEnvironments_8001B7B4(void);
 int GetItemIcon_8001D2AC(int idx);
-char* GetKeyItemName_8001D318(unsigned int idx);
+const char* GetKeyItemName_8001D318(unsigned int idx);
 void FreeActorBones_8001EA00(Actor* actor);
 void StartActorScript_8001DC34(void* actor, void* script);
 void SetActorScript_8001DB98(Actor* actor, unsigned char* script);
@@ -337,7 +337,7 @@ void CancelFade_8001C244(void);
 void SetActorSpeedScale_8001DB58(Actor* actor, int scale, int on);
 void UpdateActorCb_8001D41C(EventEntry* entry, void* actor);
 void ProcessPad_8001C8E8(int port);
-void MinionLevelUpHook_8001AEB8(int species, UnitStatus* status, int magicBits);
+void MinionLevelUpHook_8001AEB8(int species, UnitStatus* status, unsigned int* magicBits);
 void SetButtonConfigEntry_8001C810(short* entry, unsigned short button);
 int ReturnOne_8001CEEC(void);
 void ProcessPads_8001BF50(void);

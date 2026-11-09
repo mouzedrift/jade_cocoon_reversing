@@ -242,7 +242,7 @@ int GetActorHitFrame_80018E5C(Actor* actor, unsigned int idx)
         frame = hitTimes[idx].start_0;
         break;
     case 10:
-        frame = GetActorScriptTime_8001F03C((int)actor, (int)actor->script_D0, -1, 0x10);
+        frame = GetActorScriptTime_8001F03C(actor, actor->script_D0, -1, 0x10);
         break;
     }
     return frame;
@@ -283,7 +283,7 @@ void SetActorStatusTint_80018EBC(Actor* actor, UnitStatus* status)
     {
         tint = statusTintPoison_8007A0F8;
     }
-    SetActorTint_8001DAAC(actor, tint);
+    SetActorTint_8001DAAC(actor, (short*)tint);
 }
 
 extern MinionBaseStats* sub_800B32A4(int a0);
@@ -291,7 +291,7 @@ extern unsigned char* sub_800B32F0(int a0);
 int InitMinionData_8001900C(UnitStats* unit, int* params)
 {
     MinionBaseStats base;
-    char** name;
+    const char** name;
     int seed;
     unsigned int id;
     unsigned int id2;

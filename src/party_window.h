@@ -22,7 +22,14 @@ typedef struct
 void DrawSmallText_8002FAA0(int align, unsigned short* pos, unsigned char* text, int ot);
 short GetLevantLevel_8002FA70(void);
 void DrawLargeText_8002FBD8(int align, unsigned short* pos, unsigned char* text, int ot);
-void DrawPulsingWindow_8002F6F8(RECT* rect, int* st, int unused);
+/* DrawPulsingWindow_8002F6F8's state */
+typedef struct PulseState
+{
+    short* time_0; /* counts 0 - 39 (the pulse) */
+    int on_4;      /* 0: dim */
+    int pulse_8;   /* 0: no pulse */
+} PulseState;
+void DrawPulsingWindow_8002F6F8(RECT* rect, PulseState* st, int unused);
 void DrawLevantStats_8002F7D0(unsigned short* pos, short ot);
 void DrawPartySlotWindow_8002F8E4(UnitStatus* unit, PartySlotWindow* win);
 short GetPartyWindowX_8002FA0C(short partySize, short slot);

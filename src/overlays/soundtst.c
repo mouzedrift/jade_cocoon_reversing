@@ -1631,7 +1631,7 @@ enum GameStates SoundTestMain_800A51AC(void)
 }
 
 
-void SoundTestInit_800A51D8(int* task, SndTest* st)
+void SoundTestInit_800A51D8(EventEntry* task, SndTest* st)
 {
     st->f.se_6 = 0x7F;
     st->f.reverb_8 = 0x32;
@@ -1639,12 +1639,12 @@ void SoundTestInit_800A51D8(int* task, SndTest* st)
     st->f.seq_2 = 0;
     st->f.seFile_4 = 0;
     st->f.xa_A = 0;
-    task[2] = (int)SoundTestUpdate_800A5238;
+    task->cb_8 = (EventEntryFn)SoundTestUpdate_800A5238;
     FreeSound_80030D00(&systemSound_80091D40);
     LoadSound_80030A84(0x1B, &bgmSound_80091CE0);
 }
 
-void SoundTestUpdate_800A5238(int* task, SndTest* st)
+void SoundTestUpdate_800A5238(EventEntry* task, SndTest* st)
 {
     SVECTOR pos[12];
     SoundStruct* bgm;
@@ -1779,40 +1779,40 @@ void SoundTestUpdate_800A5238(int* task, SndTest* st)
     DrawBobbingCursorHand_8003D090(0x12, st->f.row_0 * 16 + 0x46, 0, 0, 0);
     pos[0].vx = 0x14;
     pos[0].vy = 0x3c;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[0], &pos[0], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[0], (short*)&pos[0], 0);
     pos[1].vx = 0x78;
     pos[1].vy = 0x3c;
     DrawNumber_8003EF74(&pos[1].vx, st->f.seq_2, 0);
     pos[2].vx = 0x14;
     pos[2].vy = 0x4c;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[1], &pos[2], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[1], (short*)&pos[2], 0);
     pos[3].vx = 0x14;
     pos[3].vy = 0x5c;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[2], &pos[3], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[2], (short*)&pos[3], 0);
     pos[4].vx = 0x78;
     pos[4].vy = 0x5c;
     DrawNumber_8003EF74(&pos[4].vx, st->f.se_6, 0);
     pos[5].vx = 0x14;
     pos[5].vy = 0x6c;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[3], &pos[5], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[3], (short*)&pos[5], 0);
     pos[6].vx = 0x78;
     pos[6].vy = 0x6c;
     DrawNumber_8003EF74(&pos[6].vx, st->f.reverb_8, 0);
     pos[7].vx = 0x14;
     pos[7].vy = 0x7c;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[4], &pos[7], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[4], (short*)&pos[7], 0);
     pos[8].vx = 0x78;
     pos[8].vy = 0x7c;
     DrawNumber_8003EF74(&pos[8].vx, st->f.xa_A, 0);
     pos[9].vx = 0x14;
     pos[9].vy = 0xac;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[5], &pos[9], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[5], (short*)&pos[9], 0);
     pos[10].vx = 0x14;
     pos[10].vy = 0xbc;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[6], &pos[10], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[6], (short*)&pos[10], 0);
     pos[11].vx = 0x14;
     pos[11].vy = 0xcc;
-    DrawText_8003E91C(2, soundTestLabels_800AA350[7], &pos[11], 0);
+    DrawText_8003E91C(2, soundTestLabels_800AA350[7], (short*)&pos[11], 0);
 }
 
 const char *xaNames_800A57D4[1607] = {
@@ -3832,4 +3832,4 @@ EventDesc soundTestTaskDesc_800AA328 = { 1, 1, 28, NULL, (EventEntryFn)SoundTest
 EventDesc* soundTestTaskList_800AA340[4] = {
     &eventDescs_80078EB8[0], &eventDescs_80078EB8[5], &soundTestTaskDesc_800AA328, 0,
 };
-char *soundTestLabels_800AA350[8] = { strSoundNumber_800A519C, strSeFile_800A518C, strSeNumber_800A5180, strReverbDepth_800A5170, strXaNumber_800A5164, strLeftRightCircle_800A5138, strTriangleToStop_800A511C, strCrossToQuit_800A5108 };
+const char* soundTestLabels_800AA350[8] = { strSoundNumber_800A519C, strSeFile_800A518C, strSeNumber_800A5180, strReverbDepth_800A5170, strXaNumber_800A5164, strLeftRightCircle_800A5138, strTriangleToStop_800A511C, strCrossToQuit_800A5108 };

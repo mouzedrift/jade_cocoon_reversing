@@ -28,7 +28,7 @@ typedef struct TargetQuery
 int CheckUsableStub_80034124(TargetQuery* q);
 
 int CheckMagicUsable_80034068(TargetQuery* q);
-short** FindTextResumePage_80034900(short** list);
+void** FindTextResumePage_80034900(void** list);
 int NthMaskedIndex_80034B88(int n, unsigned int mask);
 int IsCurrentMapListed_80034140(void);
 int GetUnitElementMask_8003412C(UnitStatus* unit);

@@ -117,7 +117,7 @@ int PlayMovie_80040EB4(int idx)
     InitMovieCtx_80041240(&movieCtx_800960C0, movie);
     AllocMdecVLCBuffer_80041848();
     ringBufferStart_800960B0 = PSX_RAM(0x801DB250);
-    InitMovieStream_80041358((int)&file, (int)MovieDctOutCallback_80041424, (int*)movie);
+    InitMovieStream_80041358(&file, MovieDctOutCallback_80041424, (int*)movie);
     bMovieFinished_800960FC = 0;
     do
     {
@@ -130,7 +130,7 @@ int PlayMovie_80040EB4(int idx)
         DecDCTout(movieCtx_800960C0.imgbuf[movieCtx_800960C0.imgIdx_14], ((movieCtx_800960C0.slice.w << 4) * ((movieCtx_800960C0.slice.h - 1) / 16 + 1)) >> 1);
         while (!MovieDecodeNextFrame_800415D8(&movieCtx_800960C0, movie))
         {
-            backFrame = StGetBackloc(&loc);
+            backFrame = StGetBackloc((void*)&loc);
             if (movie->frameCount_A < backFrame || backFrame <= 0)
             {
                 loc = file.position_0;
@@ -205,10 +205,10 @@ void InitMovieCtx_80041240(MovieCtx* ctx, MovieInfo* movie)
     ctx->slice.w = movie->is24bpp ? 0x18 : 0x10;
     ctx->slice.h = movie->height_16;
 }
-void InitMovieStream_80041358(int file, int ring, int* stream)
+void InitMovieStream_80041358(void* file, void (*ring)(), int* stream)
 {
     DecDCTReset(0);
-    DecDCToutCallback((void (*)())ring);
+    DecDCToutCallback(ring);
     StSetRing(ringBufferStart_800960B0, 0x2A);
     StSetStream(stream[1], ((short*)stream)[4], -1, 0, 0);
 }

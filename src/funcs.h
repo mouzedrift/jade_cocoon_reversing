@@ -92,7 +92,7 @@ extern UnitStats* GetEnemyStats_800A2B20(int idx);
 
 extern void ClearScriptActorBusy_800A5BCC(int a0);
 
-extern void SetPointLight_800C4090(int pos, int rgb, int range, int intensity);
+extern void SetPointLight_800C4090(void* pos, void* rgb, int range, int intensity);
 extern void ClearPointLight_800C410C(void);
 
 extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);

@@ -73,14 +73,14 @@ MapRow mapAreas_800B9220[6] = {
     { 94, 95, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests2_800B90D0 },
     { 96, 97, aParelForest_800B66C4, 0x32, 0x14, 29, forestDests3_800B9178 },
 };
-char *villageDestNames_800B92B0[13] = {
+const char* villageDestNames_800B92B0[13] = {
     aMyHome_800B6818, aGaraiSHome_800B67FC, aBlacksmith_800B67E4, aTownShop_800B67D0,
     aChiefSEstate_800B67B0, aSilkMill_800B679C, aWatchtower_800B6784, aNamSHome_800B676C,
     aMusaSHome_800B6754, aWenSHome_800B673C, aCemetery_800B6728, aVillageSquare_800B6708,
     aForestGates_800B66EC,
 };
-char *forestDestNames_800B92E4[6] = { aSyrus_800B66E0, aBarrierGate_800B689C, aBeetleForest_800B6880, aDragonflyForest_800B685C, aSpiderForest_800B6840, aMothForest_800B6828 };
-char **destNames_800B92FC[6] = { villageDestNames_800B92B0, villageDestNames_800B92B0, forestDestNames_800B92E4, forestDestNames_800B92E4, forestDestNames_800B92E4, forestDestNames_800B92E4 };
+const char* forestDestNames_800B92E4[6] = { aSyrus_800B66E0, aBarrierGate_800B689C, aBeetleForest_800B6880, aDragonflyForest_800B685C, aSpiderForest_800B6840, aMothForest_800B6828 };
+char **destNames_800B92FC[6] = { (char**)villageDestNames_800B92B0, (char**)villageDestNames_800B92B0, (char**)forestDestNames_800B92E4, (char**)forestDestNames_800B92E4, (char**)forestDestNames_800B92E4, (char**)forestDestNames_800B92E4 };
 SPRT *areaBgSprts_800B9314 = 0;
 DR_TPAGE *areaBgTPages_800B9318 = 0;
 SPRT *areaSprts_800B931C = 0;
@@ -91,15 +91,15 @@ unsigned char forestDestMaps_800B9340[8] = { 254, 0, 240, 241, 242, 243 };
 unsigned char *destMaps_800B9348[6] = { villageDestMaps_800B9330, villageDestMaps_800B9330, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340, forestDestMaps_800B9340 };
 unsigned char areaMapGroups_800B9360[8] = { 1, 2, 4, 4, 4, 4 };
 unsigned char destMapCounts_800B9368[8] = { 13, 13, 6, 6, 6, 6 };
-char *debugGroupNames_800B9370[6] = { aOthers_800B6A5C, aSyrus1_800B6A4C, aSyrus2_800B6A3C, aSyrus3_800B6A2C, aField1_800B6A1C, aField2_800B6A0C };
-char *debugSceneNames0_800B9388[5] = { aOpening_800B6AA0, aDummy_800B6A94, aDream_800B6A88, aHunting_800B6A78, aClear_800B6A6C };
-char *debugSceneNames1_800B939C[12] = {
+const char* debugGroupNames_800B9370[6] = { aOthers_800B6A5C, aSyrus1_800B6A4C, aSyrus2_800B6A3C, aSyrus3_800B6A2C, aField1_800B6A1C, aField2_800B6A0C };
+const char* debugSceneNames0_800B9388[5] = { aOpening_800B6AA0, aDummy_800B6A94, aDream_800B6A88, aHunting_800B6A78, aClear_800B6A6C };
+const char* debugSceneNames1_800B939C[12] = {
     aLebant_800B6B44, aGarai_800B6B38, aKaji_800B6B2C, aDougu_800B6B20,
     aMayu_800B6B14, aMihari_800B6B04, aZokuchou_800B6AF0, aHakaba_800B6AE0,
     aHiroba_800B6AD0, aNam_800B6AC8, aMussa_800B6ABC, aGuen_800B6AB0,
 };
-char *debugSceneNames2_800B93CC[5] = { aKekkai_800B6B88, aTamamusi_800B6B74, aTombo_800B6B68, aKumo_800B6B5C, aGa_800B6B54 };
-char **debugSceneNames_800B93E0[6] = { debugSceneNames0_800B9388, debugSceneNames1_800B939C, debugSceneNames1_800B939C, debugSceneNames1_800B939C, debugSceneNames2_800B93CC, debugSceneNames2_800B93CC };
+const char* debugSceneNames2_800B93CC[5] = { aKekkai_800B6B88, aTamamusi_800B6B74, aTombo_800B6B68, aKumo_800B6B5C, aGa_800B6B54 };
+char **debugSceneNames_800B93E0[6] = { (char**)debugSceneNames0_800B9388, (char**)debugSceneNames1_800B939C, (char**)debugSceneNames1_800B939C, (char**)debugSceneNames1_800B939C, (char**)debugSceneNames2_800B93CC, (char**)debugSceneNames2_800B93CC };
 unsigned char debugGroupVariants_800B93F8[8] = { 0, 0, 1, 2, 0, 2 };
 FileRequestDesc mapFileRequest_800B9400[1] = { { 0 } };
 MapSelState sceneSelect_800B9420 = { 0 };
@@ -909,14 +909,14 @@ void SceneSelect_800B860C()
         }
         r1.x = 0x1E;
         r1.y = 0x14;
-        DrawText_8003E91C(2, aSelKind_800B6B98, &r1, 0);
+        DrawText_8003E91C(2, aSelKind_800B6B98, (short*)&r1, 0);
         for (i = 0; i < 6; i++)
         {
-            str = debugGroupNames_800B9370[i];
+            str = (char*)debugGroupNames_800B9370[i];
             shift = i == st->area_4 ? (frameCount_8008D3FC & 0xF) : 0;
             r2.x = 0x1E + shift;
             r2.y = 0x32 + i * 14;
-            DrawText_8003E91C(2, str, &r2, 0);
+            DrawText_8003E91C(2, str, (short*)&r2, 0);
         }
         if (frameCount_8008D3FC & 3)
         {
@@ -946,14 +946,14 @@ void SceneSelect_800B860C()
         }
         r2.x = 0x1E;
         r2.y = 0x14;
-        DrawText_8003E91C(2, aSelSceneGroup_800B6BAC, &r2, 0);
+        DrawText_8003E91C(2, aSelSceneGroup_800B6BAC, (short*)&r2, 0);
         for (i = 0; i < areaMapCounts_800B0624[st->area_4]; i++)
         {
             str = debugSceneNames_800B93E0[st->area_4][i];
             shift = i == st->map_8 ? (frameCount_8008D3FC & 0xF) : 0;
             r3.x = 0x1E + shift;
             r3.y = 0x32 + i * 14;
-            DrawText_8003E91C(2, str, &r3, 0);
+            DrawText_8003E91C(2, str, (short*)&r3, 0);
         }
         if (frameCount_8008D3FC & 3)
         {
@@ -1001,7 +1001,7 @@ void SceneSelect_800B860C()
         }
         r3.x = 0x1E;
         r3.y = 0x14;
-        DrawText_8003E91C(2, aSelScene_800B6BCC, &r3, 0);
+        DrawText_8003E91C(2, aSelScene_800B6BCC, (short*)&r3, 0);
         break;
     }
 }
@@ -1045,7 +1045,7 @@ void ChapterSelect_800B8B5C()
     base.y = 0x78;
     textPos.x = base.x + 10;
     textPos.y = base.y + 10;
-    DrawText_8003E91C(2, aSelChapter_800B6BE0, &textPos, 0);
+    DrawText_8003E91C(2, aSelChapter_800B6BE0, (short*)&textPos, 0);
     numPos.x = base.x + 0x50;
     numPos.y = base.y + 0xA;
     DrawNumber_8003EF74(&numPos.x, *sel + 1, 0);

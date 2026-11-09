@@ -146,7 +146,7 @@ int statusTintPoisonLevel4_8007A128[3] = { 0x1F0016, 0x9240016, 0x924 };
 int statusTintPoisonLevel5_8007A134[3] = { 0x1F0019, 0xB6D0019, 0xB6D };
 int statusTintPoisonLevel6_8007A140[3] = { 0x1F001C, 0xDB6001C, 0xDB6 };
 int statusTintPoisonLevel7_8007A14C[9] = { 0x1F001F, 0x1000001F, 0x1000, 16, 0x800001F, 0x800 };
-char *minionSpeciesNames_8007A170[209] = {
+const char* minionSpeciesNames_8007A170[209] = {
     aMarrdreg_80073028, aRaddreg_80073018, aPatdreg_80073008, aRugdogle_80072FF4,
     aDogle_80072FE8, aBerbansa_80072FD4, aMukhambu_80072FC0, aDoghambu_80072FAC,
     aTerhambu_80072F98, aHiralco_80072F88, aMaskhira_80072F74, aHirasag_80072F64,
@@ -1928,7 +1928,7 @@ unsigned short itemPrices_8007CED8[44] = {
     0x12C, 200, 0x12C, 0x1F4, 0x320, 0x5DC, 0xFA0, 0x2710,
     0x1F4, 100, 100,
 };
-char *keyItemNames_8007CF30[0x26] = {
+const char* keyItemNames_8007CF30[0x26] = {
     aHunterSEarring_80073B44, aFluteOfCapture_80073B20, aTearsOfReese_80073B00, aBeetleKey_80073AE8,
     aDragonflyKey_80073ACC, aCalabasPowder_80073AAC, aSpiderKey_80073A94, aOcarina_80073A84,
     aCalabasHerb_80073A68, aChampionSBelt_80073A48, aCaptureAmulet_80073A28, aMothKey_80073A14,
@@ -2954,8 +2954,8 @@ unsigned char elementChartColors_80082EA8[4][4] = {
 };
 unsigned char elementChartOrder_80082EB8[4] = { 3, 0, 1, 2 };
 unsigned char statIcons_80082EBC[8] = { 98, 21, 109, 107, 184 };
-char *rankNames_80082EC4[8] = { aApprentice_800743B4, aNovice_800743A4, aAdept_80074398, aImmaculate_80074380, aHero_80074374, aChampion_80074360, aVindicator_80074348, aConqueror_80074334 };
-char *developerRankName_80082EE4 = aDeveloper_80074320;
+const char* rankNames_80082EC4[8] = { aApprentice_800743B4, aNovice_800743A4, aAdept_80074398, aImmaculate_80074380, aHero_80074374, aChampion_80074360, aVindicator_80074348, aConqueror_80074334 };
+const char* developerRankName_80082EE4 = aDeveloper_80074320;
 unsigned char statRowY_80082EE8[] = "#1FTf";
 unsigned char elementChartSizes_80082EF0[20] = { 0, 6, 8, 10, 12, 13, 15, 16, 17, 18, 19, 20, 21, 22, 22, 23, 24 };
 /* the status window's row heights and the sound table: one object, as GetSoundFileId_80030D4C reads files[-1] (a
@@ -3215,8 +3215,8 @@ unsigned char *mapLists4_800837D8 = (void *)mapListData_80083788;
 void *unused_800837DC[4] = { (void *)&mapListData_80083788[2], (void *)&mapListData_80083788[6], (void *)&mapListData_80083788[7], (void *)&mapListData_80083788[8] };
 void *mapLists5_800837EC[5] = { 0, (void *)&mapListData_80083788[12], (void *)&mapListData_80083788[13], (void *)&mapListData_80083788[14] };
 unsigned char **mapListTable_80083800[6] = { (void *)mapLists0_800837C4, 0, 0, 0, &mapLists4_800837D8, (void *)mapLists5_800837EC };
-char *itemMessageSuffixes_80083818[2] = { aPickedUp_80074800, aReceived_800747E8 };
-char *itemMessageDefaultSuffix_80083820 = aPickedUp_80074800;
+const char* itemMessageSuffixes_80083818[2] = { aPickedUp_80074800, aReceived_800747E8 };
+const char* itemMessageDefaultSuffix_80083820 = aPickedUp_80074800;
 const char *unused_80083824[8] = { aReturned_800747D0, aUsed_800747C0, aReturned_800747D0, aHandedOver_800747A4, aGiven_80074794, aNeeded_80074780, aItSLocked_80074764, aItSEmpty_8007474C };
 unsigned char padActAlign_80083844[8] = { 0, 1, 255, 255, 255, 255 };
 int vibrationPatternData_8008384C[185] = {
@@ -4057,17 +4057,17 @@ void LensFlareTask_80014CCC(int* flags, void* buf)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-extern void SpawnSpriteAnim_800C1A5C(void* pos, void* rot, int sprite, int speed);
-extern void SpawnBounceSparks_800C1C5C(void* pos, void* rot, int sprite, int a3);
-extern void SpawnHomingSparks_800C1654(void* pos, void* rot, int sprite, int speed, int* target, int* offset);
-extern void SpawnRisingSparks_800C1FFC(void* pos, void* rot, int sprite, int speed, int n);
-extern void SpawnSpriteTrails_800C2E28(int* pos, void* rot, int sprite, int model, int speed, int n);
+extern void SpawnSpriteAnim_800C1A5C(void* pos, void* rot, void* sprite, int speed);
+extern void SpawnBounceSparks_800C1C5C(void* pos, void* rot, void* sprite, int speed);
+extern void SpawnHomingSparks_800C1654(void* pos, void* rot, void* sprite, int speed, int* target, int* offset);
+extern void SpawnRisingSparks_800C1FFC(void* pos, void* rot, void* sprite, int speed, int n);
+extern void SpawnSpriteTrails_800C2E28(int* pos, void* rot, void* sprite, void* model, int speed, int n);
 extern void SpawnShatterEffect_800C2914(void* src, int id);
 extern void PlayTimedSfx_800C1190(int frames, int sfx);
 extern void PlayTimedSeq_800C10B8(int frames, int slot);
 extern void GlowTask_800C371C(EventEntry* entry, void* buf);
 extern void DropTrailTask_800C1450(EventEntry* entry, void* buf);
-#define EFF(i) ((int)&effectFile_80091BD0.sprites_20[i])
+#define EFF(i) (&effectFile_80091BD0.sprites_20[i])
 void EffectObjectTask_80015478(EventEntry* entry, void* buf)
 {
     EffectObj* obj = (EffectObj*)buf;
@@ -4229,7 +4229,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             return;
         case 25:
             PlaySfx_80031494(0x50);
-            SpawnMdecEffect_80017A6C((int)obj, 600);
+            SpawnMdecEffect_80017A6C(obj, 600);
             entry->cb_8 = (EventEntryFn)LensFlareTask_80014CCC;
             return;
         case 24:
@@ -4355,7 +4355,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x1E);
             e2->flags = (e2->flags | 1) & 0xFFFF7FFF;
             res = &effectFile_80091BD0.models_28[idx];
-            child->res_88 = (int)res;
+            child->res_88 = res;
             CopyFtgObject_800218A8(res->ftg_4, child->work_94 = malloc3_8003FC4C(sizeof(FtgObject)), HEAP_MALLOC3);
             DiffFtgObjects_80039FE4(res->ftg_4, res->ftg_4 + 1, child->work_94);
             PlaySeqSlot_80031160(9, 1);
@@ -4364,7 +4364,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
         }
         case 48:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1B)].count_0);
+            SpawnMdecEffect_80017A6C(obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1B)].count_0);
             SpawnSpriteAnim_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1B)), 0x1000);
             if (obj->hitFlags_AC & 4)
             {
@@ -4374,7 +4374,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             break;
         case 50:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1E)].count_0);
+            SpawnMdecEffect_80017A6C(obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1E)].count_0);
             SpawnSpriteAnim_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1E)), 0x1000);
             SpawnRisingSparks_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x1D)), 0, 0xC);
             if (obj->hitFlags_AC & 4)
@@ -4385,7 +4385,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             break;
         case 49:
             PlaySeqSlot_80031160(0x13, 1);
-            SpawnMdecEffect_80017A6C((int)obj, SpawnModelAnim_800C32DC(obj->pos_44, 0x16, 0, 0));
+            SpawnMdecEffect_80017A6C(obj, SpawnModelAnim_800C32DC(obj->pos_44, 0x16, 0, 0));
             if (obj->hitFlags_AC & 4)
             {
                 break;
@@ -4394,7 +4394,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             break;
         case 30:
             SpawnPulseModel_800174F8(obj, 5);
-            SpawnMdecEffect_80017A6C((int)obj, 100);
+            SpawnMdecEffect_80017A6C(obj, 100);
             PlaySeqSlot_80031160(0x13, 1);
             SpawnRisingSparks_800C1FFC(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xD)), 0, 0xC);
             if (obj->hitFlags_AC & 4)
@@ -4406,7 +4406,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
         case 6:
             PlaySeqSlot_80031160(0xE, 1);
             SpawnShatterEffect_800C2914(obj, 0x18);
-            SpawnMdecEffect_80017A6C((int)obj, 100);
+            SpawnMdecEffect_80017A6C(obj, 100);
             break;
         case 9:
         {
@@ -4421,22 +4421,22 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
                 SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x12)), 0x1000);
                 SpawnModelAnim_800C32DC(obj->targetPos_1C, 0xB, 0, rot[1]);
             }
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x12)].count_0);
+            SpawnMdecEffect_80017A6C(obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x12)].count_0);
             break;
         }
         case 8:
             PlaySeqSlot_80031160(0x10, 1);
             SpawnSpriteAnim_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xA)), 0x1000);
             SpawnSpriteAnim_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 9)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xA)].count_0);
+            SpawnMdecEffect_80017A6C(obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xA)].count_0);
             break;
         case 20:
         {
-            int res;
+            EffectSprite* res;
             PlaySeqSlot_80031160(0x14, 1);
             res = EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x18));
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x13);
-            SpawnSpriteTrails_800C2E28(obj->targetPos_1C, &zeroSvector_800795D4, res, (int)&effectFile_80091BD0.models_28[idx], 0x1000, 6);
+            SpawnSpriteTrails_800C2E28(obj->targetPos_1C, &zeroSvector_800795D4, res, &effectFile_80091BD0.models_28[idx], 0x1000, 6);
             SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x12, 0, 0);
             break;
         }
@@ -4449,7 +4449,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             rot[0] = zeroSvector_800795D4.vx;
             rot[1] = zeroSvector_800795D4.vy;
             rot[2] = zeroSvector_800795D4.vz;
-            SpawnMdecEffect_80017A6C((int)obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0xB1, 0, 0));
+            SpawnMdecEffect_80017A6C(obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0xB1, 0, 0));
             break;
         }
         case 11:
@@ -4457,20 +4457,20 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
         case 16:
         case 17:
             PlaySfx_80031494(0x48);
-            SpawnMdecEffect_80017A6C((int)obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x1C, 0, 0));
+            SpawnMdecEffect_80017A6C(obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x1C, 0, 0));
             break;
         case 27:
         {
             EffectModel* res;
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, 0x15);
             res = &effectFile_80091BD0.models_28[idx];
-            obj->res_88 = (int)res;
+            obj->res_88 = res;
             CopyFtgObject_800218A8(res->ftg_4, obj->work_94 = malloc3_8003FC4C(sizeof(FtgObject)), HEAP_MALLOC3);
             DiffFtgObjects_80039FE4(res->ftg_4, res->ftg_4 + 1, obj->work_94);
             obj->field_30 = 0x1000;
             entry->cb_8 = MorphInModelTask_80017E30;
             PlaySfx_80031494(0x4A);
-            SpawnMdecEffect_80017A6C((int)obj, 0x40);
+            SpawnMdecEffect_80017A6C(obj, 0x40);
             return;
         }
         case 28:
@@ -4478,20 +4478,20 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
         case 35:
         case 36:
             PlaySeqSlot_80031160(0x15, 1);
-            SpawnMdecEffect_80017A6C((int)obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x17, 0, 0));
+            SpawnMdecEffect_80017A6C(obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x17, 0, 0));
             break;
         case 29:
             PlaySeqSlot_80031160(0x12, 1);
             SpawnSpriteAnim_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xC)), 0x1000);
             SpawnSpriteAnim_800C1A5C(obj->pos_44, &zeroSvector_800795D4, EFF(FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xB)), 0x1000);
-            SpawnMdecEffect_80017A6C((int)obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xC)].count_0);
+            SpawnMdecEffect_80017A6C(obj, effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0xC)].count_0);
             SpawnModelAnim_800C32DC(obj->targetPos_1C, 4, 0, 0);
             break;
         case 7:
         {
             int frames;
             frames = SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x10, 0, 0);
-            SpawnMdecEffect_80017A6C((int)obj, frames);
+            SpawnMdecEffect_80017A6C(obj, frames);
             PlayTimedSeq_800C10B8(frames, 0xD);
             break;
         }
@@ -4508,7 +4508,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             break;
         case 31:
             PlaySeqSlot_80031160(0xF, 1);
-            SpawnMdecEffect_80017A6C((int)obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x1A, 0, 0));
+            SpawnMdecEffect_80017A6C(obj, SpawnModelAnim_800C32DC(obj->targetPos_1C, 0x1A, 0, 0));
             break;
         case 38:
             PlaySfx_80031494(0x20);
@@ -4560,7 +4560,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             entry->cb_8 = (EventEntryFn)RadialBurstTask_80016E20;
             return;
         case 47:
-            SpawnMdecEffect_80017A6C((int)obj, 100);
+            SpawnMdecEffect_80017A6C(obj, 100);
             obj->field_4 = 0;
             entry->cb_8 = (EventEntryFn)QuadBurstTask_80016FC8;
             return;

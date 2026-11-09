@@ -51,7 +51,7 @@ typedef struct TextWindow
     short x_0; // text origin, also the DrawMsgWindowNextPrompt_8003E268 position
     short y_2;
     RECT clip_4;
-    int* lines_C;           // the page's lines
+    void** lines_C;         // the page's lines
     int ot_10;
     unsigned int field_14;  // 0: everything shown at once
     unsigned int field_18;  // 1: a button press shows the rest
@@ -75,7 +75,7 @@ void DrawMsgWindowNextPrompt_8003E268(unsigned short* pos);
 int IsTextMarkerLine_8003E484(const char* text);
 void InitFonts_8003DA70(void);
 int MeasureTextWidthFont1_8003E6B0(const char* str);
-TextSize MeasureTextLines_8003E3B4(const char** list);
+TextSize MeasureTextLines_8003E3B4(void** list);
 TextSize MeasureTextLinesMasked_8003E2A8(const char** list, unsigned int mask);
 int MoveGridCursorP1_8003D630(GridCursor* grid);
 int UpdateTextWindow_8003DB74(TextWindow* w, int draw);

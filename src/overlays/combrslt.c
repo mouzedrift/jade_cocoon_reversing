@@ -184,17 +184,17 @@ void DrawResultMinion_800A4554(int player, int slot, WindowStyle* box)
         {
             r1.x = minionSlotPos_800A48C4[player][slot].x + 0x2F;
             r1.y = minionSlotPos_800A48C4[player][slot].y;
-            DrawHpGauge_8002F078(&minion->status_84, &r1, 0, 0xF);
+            DrawHpGauge_8002F078(&minion->status_84, (unsigned short*)&r1, 0, 0xF);
             hp.type_2 = 0;
         }
         DrawMenuItemWithWindow_8002ADB4(&hp, box, 0xF, GetTime30Hz_8002C64C());
         r2.x = minionSlotPos_800A48C4[player][slot].x;
         r2.y = minionSlotPos_800A48C4[player][slot].y + 0x14;
-        DrawMinionNameLevel_800A1844(minion, &r2, label.flags_0);
+        DrawMinionNameLevel_800A1844(minion, (unsigned short*)&r2, label.flags_0);
         r3[0].x = minionSlotPos_800A48C4[player][slot].x;
         r3[0].y = minionSlotPos_800A48C4[player][slot].y + 0x14;
         r3[1].x = 0x90;
         r3[1].y = 0x13;
-        DrawWindow_80042460(r3, box, pOT_8008D454 + 15, GetTime30Hz_8002C64C());
+        DrawWindow_80042460((RECT*)r3, box, pOT_8008D454 + 15, GetTime30Hz_8002C64C());
     }
 }

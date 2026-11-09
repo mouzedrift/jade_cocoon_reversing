@@ -1699,9 +1699,9 @@ int AddFileRequest_80025D00(Model* model, FileRequestDesc* req)
     }
     return 0;
 }
-void OnModelFileLoaded_80025D7C(int* arg, int data)
+void OnModelFileLoaded_80025D7C(void* arg, char* data)
 {
-    ModelLoadParams* params = (ModelLoadParams*)arg;
+    ModelLoadParams* params = arg;
     if (params->flags_0 & 1)
     {
         params->header_1C = (ModelHeaderSection*)data;
@@ -1901,7 +1901,7 @@ void LoadModelAnims_800261C8(ModelLoadParams* params)
         {
             if (model->animLoaded_44[i] != 0)
             {
-                LoadModelAnimData_80026A8C(&model->anims_54[i], (int)params->anims_28 + (&params->anims_28->offsets_4[0])[j], h);
+                LoadModelAnimData_80026A8C(&model->anims_54[i], (char*)params->anims_28 + (&params->anims_28->offsets_4[0])[j], h);
             }
             j++;
         }
@@ -1912,7 +1912,7 @@ void LoadSingleModelAnim_800263CC(ModelLoadParams* params)
     ModelList* l;
     Model* model = params->model_14;
     l = model->list_0;
-    LoadModelAnimData_80026A8C(&model->anims_54[params->animIdx_10], (int)params->anim_2C, l->heap_4);
+    LoadModelAnimData_80026A8C(&model->anims_54[params->animIdx_10], params->anim_2C, l->heap_4);
 }
 void LoadModelAnimSetSection_80026410(ModelLoadParams* params)
 {
@@ -1923,13 +1923,13 @@ void LoadModelAnimSetSection_80026410(ModelLoadParams* params)
     int* list = HeapAlloc_8003FC8C((count + 1) * 4, h);
     int i;
     int id;
-    int src;
+    char* src;
     model->animSet_58 = list;
     list[0] = count;
     for (i = 0; i < count; i++)
     {
         id = section->items_4[i].id;
-        src = (int)section + section->items_4[i].offset;
+        src = (char*)section + section->items_4[i].offset;
         if (model->animLoaded_44[id] == 0)
         {
             model->animSet_58[i + 1] = id;
@@ -2066,13 +2066,13 @@ void FreeModelAnims_8002679C(ModelAnim** anims, int count, void* heap)
         *anims = 0;
     }
 }
-void LoadModelAnimSection_80026870(ModelAnim** out, int section, void* heap)
+void LoadModelAnimSection_80026870(ModelAnim** out, char* section, void* heap)
 {
     int count = GetModelAnimCount_80026724((int*)section);
     AllocModelAnims_80026730(out, count, heap);
     LoadModelAnimsMasked_800268E8(out[0], section, count, heap, -1);
 }
-void LoadModelAnimsMasked_800268E8(ModelAnim* anims, int section, int count, void* h, int mask)
+void LoadModelAnimsMasked_800268E8(ModelAnim* anims, char* section, int count, void* h, int mask)
 {
     int* offsets = (int*)section;
     int i;
@@ -2105,7 +2105,7 @@ void FreeModelAnimData_800269C4(ModelAnim* anims, int count, int sel, void* h)
         }
     }
 }
-void LoadModelAnimData_80026A8C(ModelAnim* anim, int src, void* heap)
+void LoadModelAnimData_80026A8C(ModelAnim* anim, void* src, void* heap)
 {
     int hasDivisor = 0;
     int hasCues = hasDivisor;
@@ -3022,17 +3022,17 @@ void OnMapFileLoaded_80028808(void* params, int* data)
     mapState_8008B500.nMeshes_4 = *cur++;
     mapState_8008B500.f8_8 = *cur++;
     MemCopy_800403E8(&hdr, cur, sizeof(hdr));
-    cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes_C, &mapState_8008B500.nMeshes_4, &mapHeap_80091C68, (char*)cur + 0x104);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes_C, &mapState_8008B500.nMeshes_4, &mapHeap_80091C68, (MapMeshFile*)((char*)cur + 0x104));
     MarkSharedEdges_800B73C0(mapState_8008B500.meshes_C, mapState_8008B500.nMeshes_4);
-    cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, cur);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_14, &mapState_8008B500.nEnts_10, &mapHeap_80091C68, (MapMeshFile*)cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.ents_14, mapState_8008B500.nEnts_10);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_18, mapState_8008B500.nEnts_10, &mapHeap_80091C68);
-    cur = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, cur);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.mesh_28, &mapState_8008B500.nMesh_24, &mapHeap_80091C68, (MapMeshFile*)cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.mesh_28, mapState_8008B500.nMesh_24);
-    cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, cur);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.ents_30, &mapState_8008B500.nEnts_2C, &mapHeap_80091C68, (MapMeshFile*)cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.ents_30, mapState_8008B500.nEnts_2C);
     AllocMapWallFlags_800275E8(&mapState_8008B500.entFlags_34, mapState_8008B500.nEnts_2C, &mapHeap_80091C68);
-    cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, cur);
+    cur = LoadMapMeshes_80027A88(&mapState_8008B500.meshes20_20, &mapState_8008B500.nMeshes20_1C, &mapHeap_80091C68, (MapMeshFile*)cur);
     MarkSharedEdges_800B73C0(mapState_8008B500.meshes20_20, mapState_8008B500.nMeshes20_1C);
     cnt = cur[0];
     LoadMapFtg_80027708(cur, &mapHeap_80091C68);

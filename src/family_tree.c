@@ -92,11 +92,11 @@ void DrawFamilyTree_8002D7D0(Minion* m, int ot, Pos16* base)
         if (i == 0)
         {
             GetElementLevels_80033864(m, levels);
-            DrawElementIconsRow_8002B1B0(ElementLevelsToMask_8002F424(levels), pPos, ot);
+            DrawElementIconsRow_8002B1B0(ElementLevelsToMask_8002F424(levels), (short*)pPos, ot);
         }
         else
         {
-            DrawElementIconsRow_8002B1B0(GetAncestorElementMask_80033848(m, i - 1), pPos, ot);
+            DrawElementIconsRow_8002B1B0(GetAncestorElementMask_80033848(m, i - 1), (short*)pPos, ot);
         }
         win.colorSet_8 = 0;
         win.rect_0 = &rect;

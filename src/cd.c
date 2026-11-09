@@ -431,7 +431,7 @@ void CheckMemCards_8003BB1C(void)
 long cdRomEventErrorHandler_8003BBAC(void)
 {
     unknownFlags_8008D678 |= 0x100u;
-    printf(aAssertionFaile_1, aCdC, 79);
+    printf((char*)aAssertionFaile_1, aCdC, 79);
     exit(1);
 }
 void InitFileRequestQueue_8003BBE4(void)
@@ -865,7 +865,7 @@ void AssertFileRequestQueueEmpty_8003C684(void)
 {
     if (fileRequestQueue_80086540)
     {
-        printf(aAssertionFaile_1, aCdC, 878);
+        printf((char*)aAssertionFaile_1, aCdC, 878);
         exit(1);
     }
 }

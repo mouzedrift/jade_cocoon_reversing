@@ -410,7 +410,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
     Font* font;
     unsigned short* text;
     unsigned short* sub;
-    int* lines;
+    void** lines;
     int nl;
     int x;
     int ci;
@@ -420,7 +420,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
     int cell;
     int col;
 
-    sub = emptyText_80074994;
+    sub = (unsigned short*)emptyText_80074994;
     count = 0;
     name = emptyNameBuf_80074998;
     x = w->x_0;
@@ -431,7 +431,7 @@ void DrawTextWindow_8003DCA4(int draw, TextWindow* w)
     nl = 0;
     while (*lines != 0)
     {
-        text = EncodeText_8003F684(2, (unsigned short*)*lines++);
+        text = EncodeText_8003F684(2, *lines++);
         while (*text != 0 || *sub != 0)
         {
             if (count >= limit)
@@ -592,7 +592,7 @@ typedef struct
     short h;
 } Size2;
 
-TextSize MeasureTextLines_8003E3B4(const char** list)
+TextSize MeasureTextLines_8003E3B4(void** list)
 {
     TextSize size;
     short width;
@@ -636,7 +636,7 @@ int MeasureTextWidth_8003E4C8(const char* str)
     int k;
     unsigned short ch;
 
-    sub = emptyText_80074994;
+    sub = (unsigned short*)emptyText_80074994;
     width = 0;
     name = emptyNameBuf_80074998;
     k = -1;
@@ -657,7 +657,7 @@ int MeasureTextWidth_8003E4C8(const char* str)
         }
         else
         {
-            switch (ch)
+            switch ((int)ch) /* (case -1 is the original's: it never runs, but sets the jump table's range) */
             {
             case 0x86:
             case 0x87:
@@ -693,7 +693,7 @@ int MeasureTextWidthFont1_8003E6B0(const char* str)
     int k;
     unsigned short ch;
 
-    sub = emptyText_80074994;
+    sub = (unsigned short*)emptyText_80074994;
     width = 0;
     name = emptyNameBuf_80074998;
     k = -1;
@@ -714,7 +714,7 @@ int MeasureTextWidthFont1_8003E6B0(const char* str)
         }
         else
         {
-            switch (ch)
+            switch ((int)ch) /* (case -1 is the original's: it never runs, but sets the jump table's range) */
             {
             case 0x86:
             case 0x87:

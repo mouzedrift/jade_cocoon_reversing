@@ -251,7 +251,7 @@ void DrawNameEntrySprites_800A0D18(SPRT* sprts, DR_TPAGE* tpages, int mode, Name
         color = nameCursorPulseColor_800A05A4;
         sprts[i].x0 = 0x6F;
         sprts[i].y0 = y;
-        PulseColor_80033394(&sprts[i].r0, zero, &color, c->pulseTime_5C, pulseMax_800A280C, pulseMin_800A2810);
+        PulseColor_80033394(&sprts[i].r0, zero, (unsigned char*)&color, c->pulseTime_5C, pulseMax_800A280C, pulseMin_800A2810);
         SetSemiTrans(&sprts[i], 1);
         AddPrimCopy_80040298(pOT_8008D3EC, &sprts[i], sizeof(sprts[i]) / 4);
         AddPrimCopy_80040298(pOT_8008D3EC, &tpages[i], sizeof(tpages[i]) / 4);
@@ -383,7 +383,7 @@ void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
 void TitleMenu_800A1310(TitleTask* t, TitleMenuWork* c)
 {
     DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
-    UpdateMenuCursor_8003D794(c->cursor_1C, 0);
+    UpdateMenuCursor_8003D794((MenuCursor*)c->cursor_1C, 0);
     if (padRepeat_800918CC[0] & 0x5000)
     {
         c->frames_0 = 0;
@@ -465,16 +465,16 @@ void NoMemCardWarning_800A158C(TitleTask* t)
     MemCardStop();
     r0.x = 0x10;
     r0.y = 0x5A;
-    DrawText_8003E91C(2, aCaution_800A05A8, &r0, 0);
+    DrawText_8003E91C(2, aCaution_800A05A8, (short*)&r0, 0);
     r1.x = 0x10;
     r1.y = 0x6A;
-    DrawText_8003E91C(2, str_800A05BC, &r1, 0);
+    DrawText_8003E91C(2, str_800A05BC, (short*)&r1, 0);
     r2.x = 0x10;
     r2.y = 0x7A;
-    DrawText_8003E91C(2, str_800A0604, &r2, 0);
+    DrawText_8003E91C(2, str_800A0604, (short*)&r2, 0);
     r3.x = 0x10;
     r3.y = 0x8A;
-    DrawText_8003E91C(2, str_800A0640, &r3, 0);
+    DrawText_8003E91C(2, str_800A0640, (short*)&r3, 0);
     if (IsConfirmPressedP1_8003D380(1))
     {
         t->next_8 = TitleMenu_800A1310;
@@ -488,13 +488,13 @@ void NoFreeBlocksWarning_800A166C(TitleTask* t)
     MemCardStop();
     r1.x = 0x10;
     r1.y = 0x5A;
-    DrawText_8003E91C(2, aCaution_800A05A8, &r1, 0);
+    DrawText_8003E91C(2, aCaution_800A05A8, (short*)&r1, 0);
     r2.x = 0x10;
     r2.y = 0x6A;
-    DrawText_8003E91C(2, aThereAreNoFreeB_800A0658, &r2, 0);
+    DrawText_8003E91C(2, aThereAreNoFreeB_800A0658, (short*)&r2, 0);
     r3.x = 0x10;
     r3.y = 0x7A;
-    DrawText_8003E91C(2, aTheMEMORYCARDIn_800A069C, &r3, 0);
+    DrawText_8003E91C(2, aTheMEMORYCARDIn_800A069C, (short*)&r3, 0);
     if (IsConfirmPressedP1_8003D380(1))
     {
         t->next_8 = TitleMenu_800A1310;
@@ -719,7 +719,7 @@ void DrawTitleBackground_800A1F98(SPRT* sprts, DR_TPAGE* tpages, TitleMenuWork* 
     color = logoPulseColor_800A08B0;
     logo->y0 = y;
     logo->x0 = 0x55;
-    PulseColor_80033394(&sprts[5].r0, zero, &color, frameCount_8008D3FC, 0xB4, 0x5A);
+    PulseColor_80033394(&sprts[5].r0, zero, (unsigned char*)&color, frameCount_8008D3FC, 0xB4, 0x5A);
     SetSemiTrans(logo, 1);
     AddPrimCopy_80040298((void*)pOT_8008D3EC, logo, sizeof(*logo) / 4);
     AddPrimCopy_80040298((void*)pOT_8008D3EC, &tpages[5], sizeof(tpages[5]) / 4);

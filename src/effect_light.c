@@ -57,7 +57,7 @@ void BoneModelFadeTask_80016C3C(int* flags, void* buf)
         *flags = (*flags & ~1) | 0x8000;
     }
 }
-extern void SpawnSpriteAnim_800C1A5C(void* pos, short* rot, int sprite, int speed);
+extern void SpawnSpriteAnim_800C1A5C(void* pos, short* rot, void* sprite, int speed);
 void RadialBurstTask_80016E20(int* flags, void* buf)
 {
     EffectObj* obj = buf;
@@ -79,7 +79,7 @@ void RadialBurstTask_80016E20(int* flags, void* buf)
         {
             rot[1] = angle + (i << 12) / 5;
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x176);
-            SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
+            SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, &effectFile_80091BD0.sprites_20[idx], 0x1000);
             SpawnModelAnim_800C32DC(obj->pos_44, 0xB2, 0, rot[1]);
         }
     }
@@ -88,7 +88,7 @@ void RadialBurstTask_80016E20(int* flags, void* buf)
         angle2 = ratan2Difference_8003B9E0(obj->targetPos_1C, obj->srcPos_14);
         StopSoundSeqById_800306FC(6);
         PlaySfx_80031494(0x1A);
-        SpawnMdecEffect_80017A6C((int)obj, SpawnModelAnim_800C32DC(obj->pos_44, 0xB3, 0, angle2));
+        SpawnMdecEffect_80017A6C(obj, SpawnModelAnim_800C32DC(obj->pos_44, 0xB3, 0, angle2));
         *flags = (*flags & ~1) | 0x8000;
     }
     obj->field_4++;
@@ -110,7 +110,7 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
         for (i = 0; i < 4; i++)
         {
             idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x16);
-            SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
+            SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, &effectFile_80091BD0.sprites_20[idx], 0x1000);
             rot[1] += 0x400;
             SpawnModelAnim_800C32DC(obj->targetPos_1C, 0xF, 0, rot[1]);
         }
@@ -118,7 +118,7 @@ void QuadBurstTask_80016FC8(int* flags, EffectObj* obj)
     if (obj->field_4 == 0x30)
     {
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x15);
-        SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, (int)&effectFile_80091BD0.sprites_20[idx], 0x1000);
+        SpawnSpriteAnim_800C1A5C(obj->pos_44, rot, &effectFile_80091BD0.sprites_20[idx], 0x1000);
     }
     if (obj->field_4 == 0x33)
     {
@@ -150,7 +150,7 @@ void LightFlashTask_80017208(int* flags, EffectObj* obj)
 {
     if (obj->frame_0 < 0x20)
     {
-        SetPointLight_800C4090((int)obj->pos_44, (int)obj->rgb_A8, 0x5DC, (0x20 - obj->frame_0) << 7);
+        SetPointLight_800C4090(obj->pos_44, obj->rgb_A8, 0x5DC, (0x20 - obj->frame_0) << 7);
         obj->frame_0 = obj->frame_0 + 1;
     }
     else
@@ -162,7 +162,7 @@ void LightFlashTask_80017208(int* flags, EffectObj* obj)
 void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
 {
     EventEntry* entry;
-    SpawnMdecEffect_80017A6C((int)parent, 0);
+    SpawnMdecEffect_80017A6C(parent, 0);
     entry = AllocEventEntry_80043AF8(effectObjects_8008B4A8);
     if (entry)
     {
@@ -181,14 +181,14 @@ void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
         obj->rot_80.pad = 0;
         idx = FindEffectIndex_80020F00(&effectFile_80091BD0, 1, modelId);
         entry->flags = (entry->flags | 1) & ~0x8000;
-        obj->res_88 = (int)&effectFile_80091BD0.models_28[idx];
+        obj->res_88 = &effectFile_80091BD0.models_28[idx];
         entry->cb_8 = (EventEntryFn)GlowModelTask_800173A8;
     }
 }
 void GlowModelTask_800173A8(int* flags, void* buf)
 {
     EffectObj* obj = buf;
-    EffectModel* model = (EffectModel*)obj->res_88;
+    EffectModel* model = obj->res_88;
     ColorRGBA color;
     int scale[3];
     if (obj->frame_0 < obj->field_4)
@@ -199,7 +199,7 @@ void GlowModelTask_800173A8(int* flags, void* buf)
         scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
         obj->rot_80.vy += obj->rot_80.pad;
         DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, cameraState_8008D4F0.ent_44, 0x30, scale);
-        SetPointLight_800C4090((int)obj->pos_44, (int)&color, 0x5DC, ((obj->field_4 - obj->frame_0) << 12) / obj->field_4);
+        SetPointLight_800C4090(obj->pos_44, &color, 0x5DC, ((obj->field_4 - obj->frame_0) << 12) / obj->field_4);
         obj->frame_0++;
     }
     else

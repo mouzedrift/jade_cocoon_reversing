@@ -1278,7 +1278,7 @@ int ModelTaskApplyTextures_80010CDC(ModelTaskState* task)
 }
 typedef struct
 {
-    int ftg_0;     // the ActorDrawArgs layout
+    FtgObject* ftg_0; // the ActorDrawArgs layout
     void* pos_4;
     void* rot_8;
     unsigned char* bones;
@@ -1398,7 +1398,7 @@ int ModelTaskDraw_80010DB0(ModelTaskState* task)
     fused->anims_54->basePose_14 = HeapAlloc_8003FC8C(fused->ftgCount_3C * 6, HEAP_MALLOC3);
     fused->anims_54->frames_18 = HeapAlloc_8003FC8C((fused->ftgCount_3C + 2) * 6, HEAP_MALLOC3);
     fused->anims_54->cues_10 = 0;
-    sk.ftg_0 = (int)ftg0;
+    sk.ftg_0 = ftg0;
     sk.pos_4 = &levantPos_8008BD18.pos;
     sk.rot_8 = &levantPos_8008BD18.rot;
     sk.bones = defaultBones_80079140;
@@ -1601,9 +1601,9 @@ int GetGrowthKind_80011D28(int base)
     }
     return 9;
 }
-void ApplyLevelUpsBonus_80011D78(UnitStatus* status)
+int ApplyLevelUpsBonus_80011D78(UnitStatus* status)
 {
-    ApplyLevelUps_80011D98(status, 1);
+    return ApplyLevelUps_80011D98(status, 1);
 }
 int ApplyLevelUps_80011D98(UnitStatus* status, int mode)
 {

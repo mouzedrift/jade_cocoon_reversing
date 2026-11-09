@@ -15,8 +15,14 @@
 
 const char aDWorkPsusEvent[] = "D:/WORK/PSUS/EVENT.C";
 extern const char aDWorkPsusEvent[];
+/* EVENT.C's allocations pass the file and line (a debug build's arguments that the allocator ignores) */
+#ifdef __psyz
+#define malloc3_dbg(size, file, line) malloc3_8003FC4C(size)
+#define free3_dbg(p, file, line) free3_8003FC6C(p)
+#else
 #define malloc3_dbg ((void* (*)(int, const char*, int))malloc3_8003FC4C)
 #define free3_dbg ((void (*)(void*, const char*, int))free3_8003FC6C)
+#endif
 
 
 extern unsigned char** windowColorSets_80087064[];
@@ -363,7 +369,7 @@ int XaStartRead_800434C4(int pos)
     int id;
     int mode = 0xC9;
     int com = 0x1B;
-    DsIntToPos(pos, loc);
+    DsIntToPos(pos, (DslLOC*)loc);
     do
     {
         id = DsPacket(mode, (DslLOC*)loc, com, 0, -1);

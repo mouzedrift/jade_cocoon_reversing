@@ -100,7 +100,7 @@ void StartNameEntry_800B6E4C(unsigned char* nameDest, int flags)
         entry->nameDest_40 = nameDest;
         buf = nameBufInit_800B6E30;
         CopyPlayerName_8003F860(nameDest, (unsigned short*)&buf);
-        DecodeText_8003F748(1, &buf);
+        DecodeText_8003F748(1, (unsigned short*)&buf);
         NameEntryNop_800B8018(&buf);
         MemCopy_800403E8(entry->savedName_28, &buf, 0x14);
         MemCopy_800403E8(entry->name_10, &buf, 0x14);
@@ -136,7 +136,7 @@ void NameEntryTask_800B6FD8(EventEntry* e, NameEntry* entry)
         NameEntryNop_800B8018(entry->name_10);
         EncodeName_8003F7C8(entry->name_10, entry->nameDest_40);
         nameEntryActive_800B83F8 = 0;
-        DecodeText_8003F748(2, entry->name_10);
+        DecodeText_8003F748(2, (unsigned short*)entry->name_10);
         e->flags = (e->flags & ~1) | 0x8000;
         if (entry->flags_0 & 0x10)
         {
@@ -200,7 +200,7 @@ void UpdateNameEntry_800B70F4(NameEntry* entry)
     DrawMenuWindows_8002A5A4(&cmdMenu_800B82F4);
     t.pos[0] = 0xA;
     t.pos[1] = 0xD6;
-    DrawButtonHelpBar_8002B004(helpBar_800B83A0, t.pos, 1);
+    DrawButtonHelpBar_8002B004(helpBar_800B83A0, (Pos16*)t.pos, 1);
     rect.x = 0xA;
     rect.y = 0x61;
     rect.w = 0xC2;

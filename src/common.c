@@ -370,7 +370,7 @@ void ResolveBattleAction_80012BB0(UnitStatus* actor, UnitStatus* target, BattleC
             j++;
             if (j >= 4)
             {
-                printf(aAssertionFaile_2, aCommonC, 0x41C);
+                printf((char*)aAssertionFaile_2, aCommonC, 0x41C);
                 exit(1);
             }
         }

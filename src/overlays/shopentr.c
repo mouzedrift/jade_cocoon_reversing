@@ -65,7 +65,7 @@ void ShelfMenuTask_800B7000(EventEntry* task, ShelfMenu* menu)
     rejected = 0;
     if (!(menu->flags_C & 1))
     {
-        UpdateMenuCursor_8003D794(menu, rejected);
+        UpdateMenuCursor_8003D794((MenuCursor*)menu, rejected);
     }
     if (IsConfirmPressedP1_8003D380(0))
     {

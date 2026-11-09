@@ -31,14 +31,14 @@ void OnRoomDataLoaded_80028C60(int req, char* data)
     data += 4;
     if (areaReload_80082670 == 0)
     {
-        LoadTileSets_80027778(data, &areaHeap_80091C20);
+        LoadTileSets_80027778((int*)data, &areaHeap_80091C20);
     }
     data += n;
     n = *(int*)data;
     data += 4;
     if (areaReload_80082670 == 0)
     {
-        LoadTileAnimLayers_800278BC(data, &areaHeap_80091C20);
+        LoadTileAnimLayers_800278BC((int*)data, &areaHeap_80091C20);
     }
     data += n;
     if (areaReload_80082670 == 1)

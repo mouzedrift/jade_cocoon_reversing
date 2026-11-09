@@ -289,7 +289,7 @@ void ConfigMenuTask_800C2F70(EventEntry* t, CfgCtxConfig* ctx)
     DrawConfigHelpText_800C450C(ctx);
     DrawButtonHelpBar_8002B004(helpBar_800C592C, 0, 0xE);
     prevPos = ctx->cursorPos_44;
-    UpdateMenuCursor_8003D794(&ctx->cursor_3C, 0);
+    UpdateMenuCursor_8003D794((MenuCursor*)&ctx->cursor_3C, 0);
     if (prevPos != ctx->cursorPos_44)
     {
         LoadConfigSettings_800C3060(ctx);
@@ -632,8 +632,8 @@ void DrawConfigTopMenu_800C38CC(CfgCtxConfig* c)
     box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.y_2 = 0x15;
-    DrawUiTiySprt_8002C06C(&box, 0x4F, 0xE);
-    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0x4F, 0xE);
+    DrawWindow_80042460((RECT*)rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, 0);
 }
 
 void DrawAudioPage_800C39C4(CfgCtxConfig* c)
@@ -707,8 +707,8 @@ void DrawAudioPage_800C39C4(CfgCtxConfig* c)
     box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.x_0 = 0x8B;
-    DrawUiTiySprt_8002C06C(&box, 0xDD, 0xE);
-    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0xDD, 0xE);
+    DrawWindow_80042460((RECT*)rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, 0);
 }
 
 void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
@@ -840,8 +840,8 @@ void DrawSubtitlePage_800C3CA4(CfgCtxConfig* c)
     box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.y_2 = 0x15;
-    DrawUiTiySprt_8002C06C(&box, 0xE8, 0xE);
-    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0xE8, 0xE);
+    DrawWindow_80042460((RECT*)rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, 0);
 }
 
 void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
@@ -862,10 +862,10 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
     box1.x_0 = 0x8C;
     box1.col_8 = saveData_8008B570.uiColor_20.h;
     box1.y_2 = 0x14;
-    DrawUiTiySprt_8002C06C(&box1, 0x2A, 0xE);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box1, 0x2A, 0xE);
     box1.x_0 = 0x8C;
     box1.y_2 = 0x15;
-    DrawWindow_80042460(rect, &box1.col_8, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)rect, (WindowStyle*)&box1.col_8, pOT_8008D454 + 14, 0);
     for (i = 0; i < 4; i++)
     {
         unsigned int blink;
@@ -884,7 +884,7 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         }
         tail.color_0 = i;
         tail.semiTrans_3 = 1;
-        DrawWindow_80042460(rect2, &tail, pOT_8008D454 + 14, blink);
+        DrawWindow_80042460((RECT*)rect2, &tail, pOT_8008D454 + 14, blink);
         rect3[0] = 0x66;
         rect3[1] = i * 38 + 0x2A;
         rect3[2] = 0x76;
@@ -894,10 +894,10 @@ void DrawScreenColorPage_800C4180(CfgCtxConfig* c)
         box3.frame_B = 1;
         box3.x_0 = 0x74;
         box3.y_2 = i * 38 + 0x2C;
-        DrawUiTiySprt_8002C06C(&box3, 0xCA, 0xE);
+        DrawUiTiySprt_8002C06C((unsigned short*)&box3, 0xCA, 0xE);
         box3.x_0 = rect3[0] + 0xE;
         box3.y_2 = rect3[1] + 6;
-        DrawWindow_80042460(rect3, &box3.col_8, pOT_8008D454 + 14, 0);
+        DrawWindow_80042460((RECT*)rect3, (WindowStyle*)&box3.col_8, pOT_8008D454 + 14, 0);
     }
 }
 
@@ -942,10 +942,10 @@ void DrawVibrationPage_800C4390(CfgCtxConfig* c)
     box.col_8 = saveData_8008B570.uiColor_20.h;
     box.colors_A = 0;
     box.y_2 = 0x15;
-    DrawUiTiySprt_8002C06C(&box, 0xAB, 0xE);
+    DrawUiTiySprt_8002C06C((unsigned short*)&box, 0xAB, 0xE);
     box.x_0 = 0x8C;
     box.y_2 = 0x15;
-    DrawWindow_80042460(rect, &box.col_8, pOT_8008D454 + 14, 0);
+    DrawWindow_80042460((RECT*)rect, (WindowStyle*)&box.col_8, pOT_8008D454 + 14, 0);
 }
 
 void DrawConfigHelpText_800C450C(CfgCtxConfig* c)
@@ -979,7 +979,7 @@ void DrawConfigHelpText_800C450C(CfgCtxConfig* c)
     rect[3] = 0x12;
     pos[0] = 0xE;
     pos[1] = 0xC5;
-    DrawTextLinesWindow_8002AE38(&text, pos, 0xE, rect, 1);
+    DrawTextLinesWindow_8002AE38(&text, (Pos16*)pos, 0xE, (RECT*)rect, 1);
 }
 
 int IsConfigMenuActive_800C45D8(void)
@@ -1231,5 +1231,5 @@ void DrawOptionUnavailable_800C4BDC(int notice)
     rect[3] = 0x22;
     pos[0] = 0xD;
     pos[1] = 0xC4;
-    DrawTextLinesWindow_8002AE38(lines, pos, 0xE, rect, 2);
+    DrawTextLinesWindow_8002AE38(lines, (Pos16*)pos, 0xE, (RECT*)rect, 2);
 }

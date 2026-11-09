@@ -404,7 +404,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
                     u.s.color_0 = saveData_8008B570.uiColor_20.s;
                     u.s.colorSet_2 = 0;
                     u.s.semiTrans_3 = semiTrans;
-                    DrawWindow_80042460(statsWindowRect_800C59A8, &u.s, pOT_8008D454 + 14, 0);
+                    DrawWindow_80042460((RECT*)statsWindowRect_800C59A8, &u.s, pOT_8008D454 + 14, 0);
                 }
                 else
                 {
@@ -428,7 +428,7 @@ void DrawEquipMenu_800C4A94(EquipCtx* c)
 void HandleEquipCursorInput_800C4D50(EquipCtx* c)
 {
     int nextMode;
-    UpdateMenuCursor_8003D794(&c->cols_34, 0);
+    UpdateMenuCursor_8003D794((MenuCursor*)&c->cols_34, 0);
     if (c->openTimer_42 >= 8)
     {
         if (IsConfirmPressedP1_8003D380(0))
@@ -615,7 +615,7 @@ void DrawEquipStats_800C5314(EquipCtx* c)
         u.s.color_0 = saveData_8008B570.uiColor_20.s;
         u.s.colorSet_2 = 0;
         u.s.semiTrans_3 = mode;
-        DrawWindow_80042460(statCompareWindowRect_800C59A0, &u.s, pOT_8008D454 + 14, 0);
+        DrawWindow_80042460((RECT*)statCompareWindowRect_800C59A0, &u.s, pOT_8008D454 + 14, 0);
     }
 }
 

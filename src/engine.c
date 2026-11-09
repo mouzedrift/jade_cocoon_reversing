@@ -20,11 +20,10 @@
 #include "effect_model.h"
 #include "effect_cmd.h"
 #include "model_ftg.h"
-/* defined further on / elsewhere without a prototype the callers see */
-#ifdef __psyz /* with these two the PlayStation code would change (a short result, short arguments) */
+/* defined further on / elsewhere without a prototype the callers see (calls before the definition through
+   IMPLICIT_INT: the original's had no prototype, a short result and short arguments would change the code) */
 short GetActorHitTimes_8001F268(Actor* o, HitTimes* out, ActorScriptCmd* script, int anim);
 void UpdatePadRepeat_8001CAF0(int port, unsigned short delay, unsigned short rate);
-#endif
 void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc);
 void InitSprt_8001B9A0(int buffer);
 void ReleaseModelAnimRef_80020278(int ref, int user);
@@ -611,7 +610,7 @@ int CountMagicBits_8001AE54(unsigned int* bits)
     return count;
 }
 // called by MENU's OnMinionLevelUp_800BCF74 with the minion's dominant species, status and magic bits
-void MinionLevelUpHook_8001AEB8(int species, UnitStatus* status, int magicBits)
+void MinionLevelUpHook_8001AEB8(int species, UnitStatus* status, unsigned int* magicBits)
 {
 }
 int FindNthMagicBit_8001AEC0(unsigned int* bits, int n)
@@ -1454,7 +1453,7 @@ void ProcessPad_8001C8E8(int port)
                 rate = 8;
             }
         case 4:
-            UpdatePadRepeat_8001CAF0(port, delay, rate);
+            IMPLICIT_INT(UpdatePadRepeat_8001CAF0)(port, delay, rate);
             break;
         }
     }
@@ -1975,7 +1974,7 @@ int GetEquipmentIcon_8001D2D4(int idx, int kind)
     }
     return 0x24;
 }
-char* GetKeyItemName_8001D318(unsigned int idx)
+const char* GetKeyItemName_8001D318(unsigned int idx)
 {
     if (idx >= 0x26)
     {
@@ -2566,7 +2565,7 @@ int SetActorAction_8001E34C(Actor* actor, ActorActionDesc* desc)
     }
     if (desc->hitAnim_E >= 0)
     {
-        hitStart = GetActorHitTimes_8001F268(actor, actor->hitTimes_108, actor->script_D0, desc->hitAnim_E);
+        hitStart = IMPLICIT_INT(GetActorHitTimes_8001F268)(actor, actor->hitTimes_108, actor->script_D0, desc->hitAnim_E);
     }
     effect = desc->effect_10;
     if (effect >= 0)
@@ -2779,8 +2778,8 @@ void AllocActorBones_8001E7F0(Actor* actor, ActorDesc* desc)
 }
 void FreeActorBones_8001EA00(Actor* actor)
 {
-    int mem = (int)actor->bones_134;
-    ListFree_8003FE38(&actorHeap_80091990, (void*)mem);
+    void* mem = actor->bones_134;
+    ListFree_8003FE38(&actorHeap_80091990, mem);
 }
 void UpdateActorScript_8001EA28(void* actor)
 {

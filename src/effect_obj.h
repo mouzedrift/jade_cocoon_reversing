@@ -45,9 +45,9 @@ typedef struct EffectObj
     int pos_50[3];
     int pad_5C[9];
     SVECTOR rot_80;
-    int res_88; // the effect file resource it draws (an EffectModel* or a sprite)
-    int field_8C;
-    int field_90;
+    void* res_88; // the effect file resource it draws (an EffectModel* or a sprite)
+    void* field_8C; // a second resource (a sprite; SpawnMdecEffect_80017A6C: the MdecImageSet it plays)
+    void* field_90; // a third (a sprite)
     FtgObject* work_94; // malloc'd copy of the model's first FtgObject
     int bone_98;
     SVECTOR* boneScales_9C;

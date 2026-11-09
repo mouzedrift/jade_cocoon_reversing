@@ -232,7 +232,7 @@ void TstCompoMenu_800A0AB8(TstCompoWork* c)
         c->listScroll_208 = c->scroll_1E2;
         break;
     }
-    switch (UpdateMenuCursor_8003D794(&c->cursor_1D8, 0))
+    switch (UpdateMenuCursor_8003D794((MenuCursor*)&c->cursor_1D8, 0))
     {
     case 4:
         c->page_1E8++;
@@ -579,7 +579,7 @@ void TstCompoInitBones_800A1AFC(TstCompoWork* work)
     }
     work->bones_C[i] = defaultBones_80079140[i];
     levels = GetModelBoneGroupLevels_80024F00(work->model_4, compoModelParams_800A2768.modelId_1C);
-    SetBoneGroupFlags_80019B14(work->bones_C, levels, GetModelBoneGroupFlags_80024F38(work->model_4, compoModelParams_800A2768.modelId_1C));
+    SetBoneGroupFlags_80019B14((short*)work->bones_C, (unsigned short*)levels, GetModelBoneGroupFlags_80024F38(work->model_4, compoModelParams_800A2768.modelId_1C));
 }
 
 void TstCompoResetCamera_800A1BE0(TstCompoWork* work)
@@ -705,7 +705,7 @@ void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot)
         scratch.style.colorSet_2 = 1;
         scratch.style.semiTrans_3 = 1;
         scratch.style.color_0 = saveData_8008B570.uiColor_20.h;
-        DrawWindow_80042460(rect, &scratch.style, pOT_8008D454 + ot, 0);
+        DrawWindow_80042460((RECT*)rect, &scratch.style, pOT_8008D454 + ot, 0);
     }
 }
 

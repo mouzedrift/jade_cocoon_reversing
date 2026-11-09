@@ -9,7 +9,7 @@ extern char heapStart_800CD858[2*1024]; /* config/fixed_symbols.txt */
 #endif
 extern unsigned char pads_800918E8[2][9];
 extern char SEQDataAttributeTable_80091D60[SS_SEQ_TABSIZ * 5 * 16];
-extern char* data001Path_80086570;
+extern const char* data001Path_80086570;
 extern Data001File Data001Files_80075AA0[1108];
 typedef struct
 {

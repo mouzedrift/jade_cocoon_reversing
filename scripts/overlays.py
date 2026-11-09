@@ -28,9 +28,12 @@ PSYQ = os.path.join(REPO, "libs", "psyq4.4")
 BIN = os.path.join(PSYQ, "bin")
 
 
-def run(cmd):
+def run(cmd, cwd=None):
     r = subprocess.run((["wine"] + cmd) if sys.platform.startswith("linux") else cmd,
-                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+                       stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=cwd)
+    for line in r.stdout.decode(errors="replace").split("\n"):
+        if ": warning: " in line:
+            sys.stderr.write(line.strip() + "\n")  # the compiler's warnings (build.py shows them)
     if r.returncode != 0:
         sys.stdout.write(r.stdout.decode(errors="replace"))
         sys.exit("command failed: %s" % " ".join(cmd))
@@ -274,15 +277,11 @@ def build_image(name, base, srcs, own, libs, tag, shift):
             for n, a in sorted(equ.items(), key=lambda x: (x[1], x[0])):
                 f.write("%s\tequ\t$%08x\n" % (n, a))
         cpe = os.path.join(b, tag + ".cpe")
-        # the SN tools crash on long paths: run them from the build folder with relative names
-        cwd = os.getcwd()
-        os.chdir(b)
-        try:
-            run([os.path.relpath(os.path.join(BIN, "psylink.exe")), "/l", os.path.relpath(os.path.join(PSYQ, "LIB")),
-                    "/c", "/n", "4000", "/q", "/m", "@%s,%s,%s,%s" % (tag + "_link.txt", tag + ".cpe", tag + ".sym", tag + ".map")])
-            run([os.path.relpath(os.path.join(BIN, "cpe2exe.exe")), "-CA", tag + ".cpe"])
-        finally:
-            os.chdir(cwd)
+        # the SN tools crash on long paths: run them from the build folder with relative names (not with
+        # os.chdir: maps build in threads)
+        run([os.path.relpath(os.path.join(BIN, "psylink.exe"), b), "/l", os.path.relpath(os.path.join(PSYQ, "LIB"), b),
+             "/c", "/n", "4000", "/q", "/m", "@%s,%s,%s,%s" % (tag + "_link.txt", tag + ".cpe", tag + ".sym", tag + ".map")], cwd=b)
+        run([os.path.relpath(os.path.join(BIN, "cpe2exe.exe"), b), "-CA", tag + ".cpe"], cwd=b)
 
     # names inside C objects (config/aliases.txt): BASE + OFFSET from where this link put BASE, so link again
     # when it moved (nothing else depends on the values)

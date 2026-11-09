@@ -213,8 +213,7 @@ int useSavedLevantPos_80091C98 BSS = 0;
 int forceMapReload_80091C9C BSS = 0;
 int freeActorModels_80091CA0 BSS = 0;
 int unused_80091CA4 BSS = 0;
-short savedLevantRot_80091CA8[2] BSS = { 0 };
-short unused_80091CAC[2] BSS = { 0 };
+short savedLevantRot_80091CA8[4] BSS = { 0 }; // x, y, z (the rotation Levant gets on the next map, useSavedLevantPos_80091C98)
 int mapAreaCount_80091CB0 BSS = 0;
 int mapCallback_80091CB4 BSS = 0;
 short areaLoadIds_80091CB8[8] BSS = { 0 };
@@ -259,9 +258,9 @@ int main(void)
     heapSize = (char*)PSX_RAM(HEAP_END) - heapStart_800CD858;
     heapSize = (heapSize / 8) * 8;
 
-    InitHeap3(heapStart_800CD858, heapSize);
+    InitHeap3((unsigned long*)heapStart_800CD858, heapSize);
 
-    pHeapIter = heapStart_800CD858;
+    pHeapIter = (int*)heapStart_800CD858;
     for (i = 2; i < (heapSize / 4) - 2; i++)
     {
         pHeapIter[i] = 0x55555555;
@@ -279,7 +278,7 @@ int main(void)
     ShutdownSystems_80010228();
     _96_remove();
     _96_init();
-    LoadExec(name, 0x801FFFF0, 0);
+    LoadExec((char*)name, 0x801FFFF0, 0);
 #ifdef __psyz
     exit(0);
 #else
@@ -293,7 +292,7 @@ void InitGame_80010110(void)
 
     if (!DsInit())
     {
-        printf(aAssertionFaile, aMainC, 200);
+        printf((char*)aAssertionFaile, aMainC, 200);
         exit(1);
     }
 

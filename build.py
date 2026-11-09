@@ -464,7 +464,9 @@ def build_maps(iso):
         sys.exit("map code build failed:\n" + (r.stdout + r.stderr).strip())
     expected = read_hashes()
     for line in r.stderr.strip().split("\n"):
-        if line and not any(k[4:] + ":" in line and k in expected for k in got):
+        if ": warning: " in line:
+            print(line)
+        elif line and not any(k[4:] + ":" in line and k in expected for k in got):
             print("map code (not checked yet): " + line)
     return {k: h for k, h in got.items() if k in expected}
 
@@ -483,6 +485,9 @@ def build_overlays(iso):
         src = iso if iso else "orig"
         r = subprocess.run([sys.executable, os.path.join(CURRENT_DIR, "scripts", "overlays.py"), name, src,
                             os.path.join(BUILD_DIR, f"{EXE_NAME}.exe")], cwd=CURRENT_DIR, capture_output=True, text=True)
+        for line in r.stderr.split("\n"):
+            if ": warning: " in line:
+                print(line)
         if not os.path.exists(out_bin):
             tail = (r.stdout + r.stderr).strip().split("\n")[-1:]
             return name, "BUILD FAILED: " + " ".join(tail)
@@ -510,7 +515,8 @@ def verify_hashes(results):
     if bad or missing:
         print(f"Hash check FAILED ({bad} mismatching, {len(missing)} not checked of {len(expected)})")
         return False
-    print(f"Hash check OK: exe + {len(results) - 1} overlays identical to the originals")
+    maps = sum(1 for k in results if k.startswith("map-"))
+    print(f"Hash check OK: exe + {len(results) - 1 - maps} overlays + {maps} map files identical to the originals")
     return True
 
 

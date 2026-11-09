@@ -2,8 +2,8 @@
 mapCodeAddr_80073210 (0x800B22C0, behind GAME) and calls into it there.
 
 A map file is: code size, code, then the map's data (events, meshes, models, ...). A map with a source file
-src/maps/NAME.c (NAME: the file's enum name without SCENE_ and _SBH, lower case, e.g. psyrus2_lookout_sce01)
-is compiled and linked at 0x800B22C0 against the executable's and GAME's symbols; the map file is then
+src/maps/NAME.c (NAME: the file's enum name without SCENE_ and _SBH, lower case, e.g. psyrus2_lookout_sce01;
+its data can be a file of its own, src/maps/data/NAME.c, see source_files) is compiled and linked at 0x800B22C0 against the executable's and GAME's symbols; the map file is then
 written again with that code (build_psyq/maps/NAME.SBH, the code reinjected), and its SHA-1 is checked
 against config/hashes.txt (map-NAME) like the other images.
 
@@ -40,6 +40,14 @@ def sources():
     return sorted(os.path.basename(p)[:-2] for p in glob.glob(os.path.join(REPO, "src", "maps", "*.c")))
 
 
+def source_files(name):
+    """a map's source files in link order: its data (src/maps/data/NAME.c, when the map's data is a file of
+    its own, as the original's was: each file's .rdata starts where the one before ends, aligned to 4 only),
+    then its code (src/maps/NAME.c)"""
+    data = os.path.join(REPO, "src", "maps", "data", name + ".c")
+    return ([data] if os.path.exists(data) else []) + [os.path.join(REPO, "src", "maps", name + ".c")]
+
+
 def original(name, iso, exe):
     path = os.path.join(OUT, name + ".orig")
     if iso != "orig":
@@ -67,7 +75,7 @@ def build(name, iso, exe):
     data = original(name, iso, exe)
     size = struct.unpack("<I", data[:4])[0]
     code = data[4:4 + size]
-    srcs = [os.path.join(REPO, "src", "maps", name + ".c")]
+    srcs = source_files(name)
     built = ov.build_image("MAPCODE", MAP_CODE, srcs, own_symbols(srcs, size), [], "map_" + name, shift=False)
     built = built[:max(size, len(built))]
     diff = sum(1 for i in range(0, max(len(code), len(built)), 4) if code[i:i + 4] != built[i:i + 4])
@@ -77,15 +85,29 @@ def build(name, iso, exe):
 
 
 def main(argv):
+    import concurrent.futures
     iso, exe_path = argv[0], argv[1]
     exe = open(exe_path, "rb").read()[0x800:]
     bad = 0
-    for name in argv[2:] or sources():
-        out, diff = build(name, iso, exe)
-        if diff:
-            print("%s: %d code words differ" % (name, diff), file=sys.stderr)
-            bad = 1
-        print("map-%s %s" % (name, hashlib.sha1(out).hexdigest()))
+    names = argv[2:] or sources()
+    # a few at a time (each compile is a wine process; keep the memory use low)
+
+    def one(name):
+        try:
+            return build(name, iso, exe)
+        except SystemExit as e:  # a compile error: that map only
+            return None, str(e)
+
+    with concurrent.futures.ThreadPoolExecutor(4) as pool:
+        for name, (out, diff) in zip(names, pool.map(one, names)):
+            if out is None:
+                print("%s: BUILD FAILED: %s" % (name, diff), file=sys.stderr)
+                bad = 1
+                continue
+            if diff:
+                print("%s: %d code words differ" % (name, diff), file=sys.stderr)
+                bad = 1
+            print("map-%s %s" % (name, hashlib.sha1(out).hexdigest()))
     return bad
 
 

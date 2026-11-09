@@ -157,17 +157,17 @@ void EnemyWindowTask_800C0074(EventEntry* task, void* arg)
     status = GetUnitStatus_80014390((slot + 4) & 0xFF);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
     SetFontClutOffset_8003F900(1, 0);
-    InterpolateWindowRect_8004196C(win->rect_10, win->from_8, win->frame_4, 4, 9);
+    InterpolateWindowRect_8004196C((RECT*)win->rect_10, (RECT*)win->from_8, win->frame_4, 4, 9);
     if (IsUncapturableSpecies_800BF980(GetEnemySpecies_800A2BE4(slot)))
     {
-        DrawUnitStatusWindow_8002F1C8(status, enemyGaugePreview_800C9164[slot], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[slot], win->rect_10, 10, 1);
+        DrawUnitStatusWindow_8002F1C8(status, enemyGaugePreview_800C9164[slot], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[slot], (RECT*)win->rect_10, 10, 1);
     }
     else
     {
-        DrawUnitStatusWindow_8002F1C8(status, enemyGaugePreview_800C9164[slot], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[slot], win->rect_10, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(status, enemyGaugePreview_800C9164[slot], enemyWindowsHighlight_800C9DFC, enemyHighlightTimes_800C9174[slot], (RECT*)win->rect_10, 10, 0);
     }
     win->frame_4++;
-    AddDrawAreaPrim_8003326C(win->rect_10, pOT_8008D454 + 10);
+    AddDrawAreaPrim_8003326C((RECT*)win->rect_10, pOT_8008D454 + 10);
 }
 
 void StartActorWindow_800C01D8()
@@ -205,14 +205,14 @@ void ActorWindowTask_800C0254(EventEntry* task, void* arg)
     win = arg;
     status = GetUnitStatus_80014390(shownUnit_800C9C99);
     AddClipDrawAreaPrim_80033308(pOT_8008D454 + 10);
-    InterpolateWindowRect_8004196C(win->rect_C, win->from_4, win->frame_0, 4, 9);
+    InterpolateWindowRect_8004196C((RECT*)win->rect_C, (RECT*)win->from_4, win->frame_0, 4, 9);
     if (shownUnit_800C9C99 == 0)
     {
-        DrawUnitStatusWindow_8002F1C8(status, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, win->rect_C, 10, 2);
+        DrawUnitStatusWindow_8002F1C8(status, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, (RECT*)win->rect_C, 10, 2);
     }
     else
     {
-        DrawUnitStatusWindow_8002F1C8(status, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, win->rect_C, 10, 0);
+        DrawUnitStatusWindow_8002F1C8(status, previewHpChange_800C9180, actorWindowHighlight_800C9DFD, actorHighlightTime_800C9170, (RECT*)win->rect_C, 10, 0);
     }
     if (shownUnit_800C9C99 != 0)
     {
@@ -226,7 +226,7 @@ void ActorWindowTask_800C0254(EventEntry* task, void* arg)
         box.colorSet_2 = 0;
         rect[0] = 0xD2;
         rect[1] = 0xC0;
-        DrawWindow_80042460(rect, &box, pOT_8008D454 + 15, 0);
+        DrawWindow_80042460((RECT*)rect, &box, pOT_8008D454 + 15, 0);
     }
     win->frame_0++;
     if (win->frame_0 >= 5)
@@ -234,7 +234,7 @@ void ActorWindowTask_800C0254(EventEntry* task, void* arg)
         win->frame_0 = 4;
     }
     DrawMenuWindowItems_8002F480(status, 0, 0xF, 0);
-    AddDrawAreaPrim_8003326C(win->rect_C, pOT_8008D454 + 10);
+    AddDrawAreaPrim_8003326C((RECT*)win->rect_C, pOT_8008D454 + 10);
 }
 
 void StartHelpWindow_800C0440()
@@ -286,13 +286,13 @@ void HelpWindowTask_800C04A4(EventEntry* task, void* buf)
         pos[1] += 3;
         DrawNumberRightAlignedFont1_8003F264(pos, GetEmptyCocoons_800AD8E4(), 0);
     }
-    InterpolateWindowRect_8004196C(win->rect_C, win->from_4, win->frame_0, 4, 7);
-    DrawUiColorWindow_800424C0(win->rect_C, 0, pOT_8008D454, 0);
+    InterpolateWindowRect_8004196C((RECT*)win->rect_C, (RECT*)win->from_4, win->frame_0, 4, 7);
+    DrawUiColorWindow_800424C0((RECT*)win->rect_C, 0, pOT_8008D454, 0);
     if (++win->frame_0 >= 5)
     {
         win->frame_0 = 4;
     }
-    AddDrawAreaPrim_8003326C(win->rect_C, pOT_8008D454);
+    AddDrawAreaPrim_8003326C((RECT*)win->rect_C, pOT_8008D454);
 }
 
 void BuildMinionModelReq_800C064C(Minion* minion, BatModelReq* req, struct ModelVramSlot* vram)
@@ -829,7 +829,7 @@ void DropTrailTask_800C1450(EventEntry* task, BatDropTrail* trail)
     }
 }
 
-void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int* target, int* offset)
+void SpawnHomingSparks_800C1654(int* pos, short* rot, void* sprite, int speed, int* target, int* offset)
 {
     int i;
     for (i = 0; i < 30; i++)
@@ -848,7 +848,7 @@ void SpawnHomingSparks_800C1654(int* pos, short* rot, int sprite, int speed, int
             spark->rot_34[0] = rot[0];
             spark->rot_34[1] = rot[1];
             spark->rot_34[2] = rot[2];
-            spark->anim_3C = (EffectSprite*)sprite;
+            spark->anim_3C = sprite;
             spark->vel_28[0] = ((rand() & 0x7F) - 0x3F) << 10;
             spark->vel_28[1] = -(rand() & 0x3F) << 10;
             spark->vel_28[2] = ((rand() & 0x7F) - 0x3F) << 10;
@@ -897,7 +897,7 @@ void HomingSparkTask_800C17EC(EventEntry* task, BatSpark* spark)
     }
 }
 
-void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
+void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, void* sprite, int speed)
 {
     EventEntry* entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
     if (entry)
@@ -911,7 +911,7 @@ void SpawnSpriteAnim_800C1A5C(int* pos, short* rot, int sprite, int speed)
         spark->rot_34[0] = rot[0];
         spark->rot_34[1] = rot[1];
         spark->rot_34[2] = rot[2];
-        spark->anim_3C = (EffectSprite*)sprite;
+        spark->anim_3C = sprite;
         spark->frame_0 = 0;
         spark->speed_8 = speed;
         entry->cb_8 = (EventEntryFn)SpriteAnimTask_800C1B2C;
@@ -941,7 +941,7 @@ void SpriteAnimTask_800C1B2C(EventEntry* task, void* buf)
     }
 }
 
-void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
+void SpawnBounceSparks_800C1C5C(int* pos, short* rot, void* sprite, int speed)
 {
     int i;
     for (i = 0; i < 16; i++)
@@ -957,7 +957,7 @@ void SpawnBounceSparks_800C1C5C(int* pos, short* rot, int sprite)
             spark->rot_34[0] = rot[0];
             spark->rot_34[1] = rot[1];
             spark->rot_34[2] = rot[2];
-            spark->anim_3C = (EffectSprite*)sprite;
+            spark->anim_3C = sprite;
             spark->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
             spark->vel_28[1] = ((rand() & 0x3F) - 0x1F) << 10;
             spark->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
@@ -1006,7 +1006,7 @@ void BounceSparkTask_800C1DA4(EventEntry* task, BatSpark* spark)
     }
 }
 
-void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int count)
+void SpawnRisingSparks_800C1FFC(int* pos, short* rot, void* sprite, int speed, int count)
 {
     int i;
     for (i = 0; i < count; i++)
@@ -1022,7 +1022,7 @@ void SpawnRisingSparks_800C1FFC(int* pos, short* rot, int sprite, int speed, int
             spark->rot_34[0] = rot[0];
             spark->rot_34[1] = rot[1];
             spark->rot_34[2] = rot[2];
-            spark->anim_3C = (EffectSprite*)sprite;
+            spark->anim_3C = sprite;
             spark->vel_28[0] = ((rand() & 0x3F) - 0x1F) << 10;
             spark->vel_28[1] = -(rand() & 0x1F) << 10;
             spark->vel_28[2] = ((rand() & 0x3F) - 0x1F) << 10;
@@ -1088,7 +1088,7 @@ void ShatterTask_800C23D0(EventEntry* task, void* buf)
     if (++src->frame_0 >= 30)
     {
         PlaySfx_80031494(0x4F);
-        SpawnSpriteAnim_800C1A5C(src->pos_10, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
+        SpawnSpriteAnim_800C1A5C(src->pos_10, (short*)&zeroSvector_800795D4, &effectFile_80091BD0.sprites_20[FindEffectIndex_80020F00(&effectFile_80091BD0, 0, 0x21)], 0x1000);
         for (i = 0; i < 24; i++)
         {
             entry = AllocEventEntry_80043AF8(miscTasks_8008D60C);
@@ -1245,7 +1245,7 @@ void ImplodeShardTask_800C2CD8(EventEntry* task, BatShard* shard)
     shard->frame_0++;
 }
 
-void SpawnSpriteTrails_800C2E28(int* pos, short* rot, int sprite, int model, int speed, int count)
+void SpawnSpriteTrails_800C2E28(int* pos, short* rot, void* sprite, void* model, int speed, int count)
 {
     int i;
     for (i = 0; i < count; i++)
@@ -1271,8 +1271,8 @@ void SpawnSpriteTrails_800C2E28(int* pos, short* rot, int sprite, int model, int
             trail->rot_80[0] = rot[0];
             trail->rot_80[1] = rot[1];
             trail->rot_80[2] = rot[2];
-            trail->anim_88 = (EffectSprite*)sprite;
-            trail->clip_8C = (EffectModel*)model;
+            trail->anim_88 = sprite;
+            trail->clip_8C = model;
             trail->rot_80[0] = 0;
             trail->rot_80[2] = 0;
             trail->frame_0 = 0;
@@ -1314,10 +1314,10 @@ void SpriteTrailTask_800C2FC8(EventEntry* task, BatSpriteTrail* trail)
             trail->trail_50[1].z = trail->trail_50[0].z;
         }
         trail->frame_0 += trail->speed_8;
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4, pOT_8008D690, &trail->trail_50[0], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 0);
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 1, pOT_8008D690, &trail->trail_50[1], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 1);
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 2, pOT_8008D690, &trail->trail_50[2], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 2);
-        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 3, pOT_8008D690, &trail->trail_50[3], trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 3);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4, pOT_8008D690, (VECTOR*)&trail->trail_50[0], (SVECTOR*)trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 0);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 1, pOT_8008D690, (VECTOR*)&trail->trail_50[1], (SVECTOR*)trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 1);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 2, pOT_8008D690, (VECTOR*)&trail->trail_50[2], (SVECTOR*)trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 2);
+        DrawFtgObjectAt_80044D0C(trail->clip_8C->ftg_4 + 3, pOT_8008D690, (VECTOR*)&trail->trail_50[3], (SVECTOR*)trail->rot_80, cameraState_8008D4F0.ent_44, 0x30, 0, 3);
         DrawSpriteVtxQuadsGT4_800459E4(defaultBoneSlots_800C91A4, &trail->clip_8C->mats_8, pOT_8008D690, 0x30);
     }
     else
@@ -1388,7 +1388,7 @@ void ModelAnimTask_800C33E4(EventEntry* task, void* buf)
                 pos[0] = anim->pos_44[0] + key->x_4 * sinTable_80084540[(anim->rot_82 + 0x400) & 0xFFF] / 4096 + key->z_C * sinTable_80084540[anim->rot_82 & 0xFFF] / 4096;
                 pos[1] = anim->pos_44[1] + key->y_8;
                 pos[2] = anim->pos_44[2] - key->x_4 * sinTable_80084540[anim->rot_82 & 0xFFF] / 4096 + key->z_C * sinTable_80084540[(anim->rot_82 + 0x400) & 0xFFF] / 4096;
-                DrawFtgObjectAt_80044D0C(&clip->ftg_4[key->model_0], pOT_8008D690, pos, rot, cameraState_8008D4F0.ent_44, (0x1000 - key->alpha_2) << 16 | 0x80 | key->mode_24, key->f18, i);
+                DrawFtgObjectAt_80044D0C(&clip->ftg_4[key->model_0], pOT_8008D690, (VECTOR*)pos, (SVECTOR*)rot, cameraState_8008D4F0.ent_44, (0x1000 - key->alpha_2) << 16 | 0x80 | key->mode_24, (VECTOR*)key->f18, i);
                 if (clip->ftg_4[key->model_0].texSpriteCount_48)
                 {
                     any = 1;
@@ -1438,7 +1438,7 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
         pos[2] = glow->path_20[glow->idx_98 * 3 + 2] + glow->base_1C[2];
         LerpFtgObject_8003A6C4(alpha, model->ftg_4, model->ftg_4 + 1, glow->work_94);
         DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, ((0x1000 - alpha) << 16) | 0xB0, scale);
-        SetPointLight_800C4090((int)glow->pos_44, (int)col, 0x5DC, glow->alpha_30);
+        SetPointLight_800C4090(glow->pos_44, col, 0x5DC, glow->alpha_30);
         glow->frame_0++;
     }
     else
@@ -1459,7 +1459,7 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
         {
             SpawnOrb_800C3B50(pos, 0x25);
         }
-        SetPointLight_800C4090((int)glow->pos_44, (int)col, 0x5DC, glow->alpha_30);
+        SetPointLight_800C4090(glow->pos_44, col, 0x5DC, glow->alpha_30);
         if (glow->alpha_30 <= 0)
         {
             ClearPointLight_800C410C();
@@ -1550,7 +1550,7 @@ void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb* orb)
     BatHero* hero;
     BatOrb* orbCopy;
     orbCopy = orb;
-    SpawnSpriteAnim_800C1A5C(orb->pos_44, (short*)&zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[orb->fx_E], 0x1000);
+    SpawnSpriteAnim_800C1A5C(orb->pos_44, (short*)&zeroSvector_800795D4, &effectFile_80091BD0.sprites_20[orb->fx_E], 0x1000);
     hero = gameTask_8008B4A4->entry.buffer;
     target[0] = hero->pos_5E4[0];
     target[1] = hero->pos_5E4[1];
@@ -1572,15 +1572,15 @@ void OrbHomingTask_800C3DF8(EventEntry* task, BatOrb* orb)
     }
     else
     {
-        ((void (*)())SpawnBounceSparks_800C1C5C)(target, &zeroSvector_800795D4, (int)&effectFile_80091BD0.sprites_20[orbCopy->fx_E], 0x1000);
+        SpawnBounceSparks_800C1C5C(target, (short*)&zeroSvector_800795D4, &effectFile_80091BD0.sprites_20[orbCopy->fx_E], 0x1000);
         task->flags = (task->flags & ~1) | 0x8000;
     }
 }
 
-void SetPointLight_800C4090(int posArg, int rgbArg, int range, int intensity)
+void SetPointLight_800C4090(void* posArg, void* rgbArg, int range, int intensity)
 {
-    int* pos = (int*)posArg;
-    unsigned char* rgb = (unsigned char*)rgbArg;
+    int* pos = posArg;
+    unsigned char* rgb = rgbArg;
     unsigned int scale = intensity;
     pointLightPos_8008D680[0] = pos[0];
     pointLightPos_8008D680[1] = pos[1];

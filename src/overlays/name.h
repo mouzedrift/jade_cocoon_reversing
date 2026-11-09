@@ -34,7 +34,7 @@ typedef struct
 typedef struct
 {
     DVECTOR pos;
-    char* chars_4;
+    const char* chars_4;
 } NameCharRow;
 
 

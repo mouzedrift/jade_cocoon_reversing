@@ -98,6 +98,6 @@ int MovieDecodeNextFrame_800415D8(MovieCtx* ctx, MovieInfo* movie);
 void MovieWaitFrameDone_80041724(MovieCtx* ctx, int unused);
 void MovieStartCdStream_800417BC(DslLOC* loc, MovieParams* params);
 void InitMovieCtx_80041240(MovieCtx* ctx, MovieInfo* movie);
-void InitMovieStream_80041358(int file, int ring, int* stream);
+void InitMovieStream_80041358(void* file, void (*ring)(), int* stream);
 int SkipMovieButtonPressed_800413BC(MovieParams* params);
 #endif

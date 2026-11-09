@@ -168,7 +168,7 @@ void DrawMenuItemWithWindow_8002ADB4(MenuWindowItem* item, void* window, int ot,
     DrawMenuWindowContents_8002A710(item, ot);
     SetFontClutOffset_8003F900(2, 0);
     SetFontClutOffset_8003F900(1, 0);
-    DrawWindow_80042460(&item->x_10, window, &pOT_8008D454[ot], time);
+    DrawWindow_80042460((RECT*)&item->x_10, window, &pOT_8008D454[ot], time);
 }
 void DrawTextLinesWindow_8002AE38(const char** lines, Pos16* pos, int ot, RECT* rect, int count)
 {
@@ -181,7 +181,7 @@ void DrawTextLinesWindow_8002AE38(const char** lines, Pos16* pos, int ot, RECT* 
     {
         if (lines[i])
         {
-            DrawText_8003E91C(2, lines[i], &cur, ot);
+            DrawText_8003E91C(2, lines[i], (short*)&cur, ot);
         }
         cur.y += 12;
     }
@@ -245,10 +245,10 @@ void DrawButtonHelpBar_8002B004(ButtonHelpEntry* entries, Pos16* origin, int ot)
     for (; entries[i].icon_0 >= 0; i++)
     {
         cur.y = base.y + (14 - uiTiySprts_8008D620[entries[i].icon_0].h) / 2;
-        DrawUiTiySprt_8002C06C(&cur, entries[i].icon_0, ot);
+        DrawUiTiySprt_8002C06C((unsigned short*)&cur, entries[i].icon_0, ot);
         cur.x = (unsigned short)(cur.x + 1) + uiTiySprts_8008D620[entries[i].icon_0].w;
         cur.y = base.y + 2;
-        DrawText_8003E91C(2, entries[i].text_4, &cur, ot);
+        DrawText_8003E91C(2, entries[i].text_4, (short*)&cur, ot);
         cur.x = MeasureTextWidth_8003E4C8(entries[i].text_4) + (unsigned short)(cur.x + 4);
     }
     rect.x = base.x;

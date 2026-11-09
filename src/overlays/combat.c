@@ -83,7 +83,7 @@ int unused_800A4074 = 0;
 int sideSlot_800A4078[2] = { 0 }; // per side: the teams_800A3AA0 slot of the minion in the arena, -1 none
 int stageOvlRequest_800A4080 = 0;
 
-void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, int vram)
+void BuildMinionModelParams_800A05E0(Minion* minion, CombatModelParams* params, struct ModelVramSlot* vram)
 {
     CombatTopSpecies top;
     unsigned int mainModel = GetSpeciesModelDesc_80019C70(minion->species_2)->modelId_0;
@@ -263,7 +263,7 @@ void FreeCombatSlots_800A0A6C(void)
 void StartSlotModel_800A0ACC(int i, Minion* minion)
 {
     CombatSlot* slot = &combatSlots_800A3A08[i];
-    BuildMinionModelParams_800A05E0(minion, &slot->params_8, (int)(combatSlotModelParams_8007DC78 + (i << 6)));
+    BuildMinionModelParams_800A05E0(minion, &slot->params_8, (struct ModelVramSlot*)(combatSlotModelParams_8007DC78 + (i << 6)));
     slot->minion_4 = minion;
     slot->task_0 = StartModelTask_80010850(&slot->params_8);
     slot->actor_3C = 0;
@@ -428,10 +428,10 @@ void SetSlotStatusTint_800A1068(int i)
     SetActorStatusTint_80018EBC(s->actor_3C, GetSlotStatus_800A10C0(i));
 }
 
-int GetSlotAncestors_800A10A4(int i)
+unsigned char (*GetSlotAncestors_800A10A4(int i))[0xC]
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    return (int)s->minion_4->ancestors_4;
+    return s->minion_4->ancestors_4;
 }
 
 UnitStatus* GetSlotStatus_800A10C0(int i)

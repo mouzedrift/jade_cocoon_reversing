@@ -86,7 +86,7 @@ void DrawBattleStage_800BC90C(CameraCtrl* ctrl)
             sv.vx = rel.vx;
             sv.vy = rel.vy;
             sv.vz = rel.vz;
-            RotTransPers(&sv, (void*)&sxy, &depth, &flag);
+            RotTransPers(&sv, (void*)&sxy, (void*)&depth, (void*)&flag);
             poly = battleEffectFile_80095468.sprites_20[battleStages_800C8EAC[battleStageId_80083BD0].floor_8 + i % 4].poly_C;
             yaw = (cameraRot_8008D4C8.vy & 0xFFF) / 4;
             column = i * 96 - 0x400;
@@ -529,7 +529,7 @@ BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BattleCmd* cmd, 
             StartLevantAction_800A8A30(&timing, cmd, isReaction);
             break;
         case 1:
-            StartMinionAction_800C0DDC(&timing, cmd, isReaction);
+            StartMinionAction_800C0DDC((BatRawTiming*)&timing, cmd, isReaction);
             break;
         case 2:
             StartEnemyCommandAction_800A2684(&timing, cmd, isReaction);

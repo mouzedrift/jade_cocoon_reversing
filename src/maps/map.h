@@ -46,17 +46,17 @@ struct MapEnt
     int work_14[0x19]; /* what the entity's functions keep */
     int armed_78;
     int state_7C; /* -1: running; -2: done (its entry stops); -3 */
-    int f80;
+    int prev_80; /* the state it left (state_7C) */
     int trigger_84;
     int script_88;
-    int f8C;
+    void* arg_8C; /* what its event script gets (StartEventScriptForEntity_800A5AA0: the entity; messages) */
     MapEntFn update_90;
 };
 
 /* a character standing in the map (MAP_EV_MINION) */
 typedef struct MapActorModel
 {
-    char* name_0;
+    const char* name_0;
     int modelId_4;
     short* bones_8;
     int* baseScale_C;
@@ -96,6 +96,45 @@ typedef struct MapMinionWork
     int (*f_C)(void);
     int (*f_10)(void);
 } MapMinionWork;
+
+/* a way out of the map (Warp): where Levant goes when he reaches the event point */
+typedef struct MapWarp
+{
+    int pos_0[3];   /* where he starts on the next map */
+    short rotY_C;   /* added to his rotation (0x4000: his rotation as it is) */
+    short idle_E;   /* stop his animation (ResetLevantActorToIdle_800A8DEC) */
+    short point_10; /* the event point (IsEventPointValid_800A6504) */
+    short map_12[3]; /* area, map, entrance (saveData_8008B570.mapId_2E4) */
+} MapWarp;
+
+/* a chest (ChestInit): its event script opens it and gives its item once */
+#define MAP_CHEST_ONCE 2   /* flags_C: shut until its flag is set */
+#define MAP_CHEST_EMPTY 4  /* flags_C: starts empty */
+#define MAP_CHEST_WAIT 8   /* flags_C: the script waits for the lid */
+typedef struct MapChest
+{
+    int flag_0;  /* event flag: opened */
+    int item_4;  /* the item in it (< 0: none) */
+    int kind_8;  /* what draws it (3: ChestDraw) */
+    unsigned int flags_C; /* 1: drawn open; MAP_CHEST_ */
+    int point_10; /* the event point it is opened from (IsEventPointInView_800A66A4: this and pos_14) */
+    int pos_14[3];
+    int rotY_20;
+    void* text_24; /* the script's messages (MapEnt.arg_8C) when it holds nothing */
+    void* text_28;
+    int f2C[6];    /* the script's (MapEnt.arg_8C) when shut */
+    short ftg_44[2]; /* its box and lid (mapState_8008B500.ftg_3C; < 0: none) */
+} MapChest;
+
+typedef struct MapChestWork
+{
+    int full_0;    /* there is something in it */
+    int opened_4;
+    int draw_8;
+    int opening_C;
+    int lid_10;    /* the lid's angle (0 - 10) */
+    int script_14; /* its event script's id (-1: none) */
+} MapChestWork;
 
 /* an effect placed in the map (a list ends with type_0 MAP_FX_END) */
 #define MAP_FX_MODEL 1
@@ -147,6 +186,60 @@ typedef struct MapVoice
     short xa_2[3];
 } MapVoice;
 
+/* the update of each MapFx.type_0 */
+typedef struct MapFxInits
+{
+    MapEntFn init[5];
+} MapFxInits;
+
+typedef struct MapFadeWork
+{
+    EffectModel* model_0;
+    int index_4;
+    short time_8[2];
+} MapFadeWork;
+
+/* runs the entity's update unless it is done (-2) or waits (-3) */
+static inline void StepEntity(EventEntry* entry, void* buffer)
+{
+    MapEnt* ent = buffer;
+
+    ent->armed_78 = 0;
+    ent->trigger_84 = -1;
+    if ((unsigned)(ent->state_7C + 3) >= 2)
+    {
+        ent->update_90(ent);
+    }
+    if (ent->state_7C == -2)
+    {
+        entry->flags = (entry->flags & ~1) | 0x8000;
+    }
+}
+
+
+typedef struct MapDoorWork
+{
+    int state_0;
+    int t_4;
+} MapDoorWork;
+
+/* is area one of the areas (a MapEvent.areas_0 mask) */
+static inline int InAreas(int areas, int area)
+{
+    return areas & (1 << area);
+}
+
+extern EventEntry* StartEventScriptForEntity_800A5AA0(void* script, void* ent);
+extern int GetEventScriptId_800A5AD0(EventEntry* entry);
+extern EventEntry* FindEventScript_800A5AE4(int id);
+extern int IsEventPointValid_800A6504(int point, int* pos);
+extern int IsEventPointInView_800A66A4(int* point, int* eye, unsigned short* rot);
+extern int TestEventFlag_800AD0D4(unsigned flag);
+extern int GetInventoryCount_800AD254(int id, int table);
+extern void ResetLevantActorToIdle_800A8DEC();
+extern int savedLevantPos_80091C78[4]; /* main.h: where Levant starts on the next map (useSavedLevantPos_80091C98) */
+extern int useSavedLevantPos_80091C98;
+extern short savedLevantRot_80091CA8[4];
 extern int AddFieldMinion_800A77A0(MapEnt* ent);
 extern void ClearFieldMinions_800A7784(void);
 extern void LoadLevantAnimSet_800AC708(int set, int arg1);
