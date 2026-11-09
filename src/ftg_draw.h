@@ -53,8 +53,7 @@ extern void LerpSVector_8004D7A8(SVECTOR* a, SVECTOR* b, SVECTOR* out, int t);
 #define FTG_DRAW_CTX ((FtgDrawCtx*)getScratchAddr(0x85))
 
 extern int unused_8009868C;
-extern SVECTOR boneOffsets_80098690[];
-extern int unused_800986A0[78];
+extern SVECTOR boneOffsets_80098690[41];
 
 extern int unused_80098184;
 extern int unused_8009AADC;

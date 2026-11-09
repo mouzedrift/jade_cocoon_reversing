@@ -130,7 +130,6 @@ dword_8009611C unused_8009611C
 dword_80096620 unused_80096620
 dword_80098184 unused_80098184
 dword_8009868C unused_8009868C
-dword_800986A0 unused_800986A0
 dword_8009AADC unused_8009AADC
 off_80072278 unused_80072278
 word_8007DC90 unused_8007DC90

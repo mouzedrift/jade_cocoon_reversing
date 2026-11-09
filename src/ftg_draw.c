@@ -161,6 +161,9 @@ void DrawFtgPolyF3_8004B320(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_F3);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+#ifdef __psyz /* the length is a word of its own there, not part of the tag */
+                ((DR_TPAGE*)ctx->next_18)->len = ctx->tpage_0.len;
+#endif
                 ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(DR_TPAGE);
@@ -216,6 +219,9 @@ void DrawFtgPolyF4_8004B590(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_F4);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+#ifdef __psyz /* the length is a word of its own there, not part of the tag */
+                ((DR_TPAGE*)ctx->next_18)->len = ctx->tpage_0.len;
+#endif
                 ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(DR_TPAGE);
@@ -284,6 +290,9 @@ void DrawFtgPolyG3_8004B844(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_G3);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+#ifdef __psyz /* the length is a word of its own there, not part of the tag */
+                ((DR_TPAGE*)ctx->next_18)->len = ctx->tpage_0.len;
+#endif
                 ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(DR_TPAGE);
@@ -366,6 +375,9 @@ void DrawFtgPolyG4_8004BB9C(FtgObject* obj, OT_TYPE* ot, FtgDrawCtx* ctx)
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(POLY_G4);
                 ((DR_TPAGE*)ctx->next_18)->tag = ctx->tpage_0.tag;
+#ifdef __psyz /* the length is a word of its own there, not part of the tag */
+                ((DR_TPAGE*)ctx->next_18)->len = ctx->tpage_0.len;
+#endif
                 ((DR_TPAGE*)ctx->next_18)->code[0] = ctx->tpage_0.code[0];
                 addPrim(ot + ((ctx->otz_8 >> 2) & 0x3FF), ctx->next_18);
                 ctx->next_18 += sizeof(DR_TPAGE);
@@ -983,8 +995,7 @@ int unused_80098184 BSS = 0;
 MATRIX boneMatrices_80098188[40] BSS = { 0 };
 int unusedWord_80098688 BSS = 0;
 int unused_8009868C BSS = 0;
-SVECTOR boneOffsets_80098690[2] BSS = { 0 };
-int unused_800986A0[78] BSS = { 0 };
+SVECTOR boneOffsets_80098690[41] BSS = { 0 }; // per bone (GetBoneOffsets_80046248), up to 40 bones
 FtgSpriteVtx *ftgSpriteVtxSlots_800987D8[40][56] BSS = { 0 };
 FtgTPageClut ftgSpriteTPageClut_8009AAD8 BSS = { 0 };
 int unused_8009AADC BSS = 0;

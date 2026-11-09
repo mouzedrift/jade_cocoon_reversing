@@ -246,7 +246,7 @@ void SavePoint_800B275C(MapEnt* ent)
     {
         saveRequest_800B06BC.active_0 = 1;
         saveRequest_800B06BC.kind_4 = 0;
-        saveRequest_800B06BC.arg_8 = (int)save->name_C;
+        saveRequest_800B06BC.arg_8.savePlace = save->name_C;
         saveRequest_800B06BC.endOfGame_C = 0;
         ent->state_7C = -1;
     }

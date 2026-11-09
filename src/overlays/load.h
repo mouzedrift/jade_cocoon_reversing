@@ -391,7 +391,7 @@ typedef struct
     char pad_44[0x10];
     unsigned flags_54; // 1 loaded, 4, 8 keep settings / from the title, 0x10 back to the title,
                        // 0x20 end of game save, bit 6 the pad
-    char* place_58;   // the save place text of the summary (SetLoadMenuSavePlace_800B78B8)
+    const char* place_58; // the save place text of the summary (SetLoadMenuSavePlace_800B78B8)
     int field_5C;
     int pad_60;
     LoadMenuRow* rows_64[6];

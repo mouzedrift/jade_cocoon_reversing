@@ -1,4 +1,11 @@
 #include "common.h"
+#ifdef __psyz
+/* PC: AddressSanitizer sees inside the pools (free space and freed blocks poisoned); no-ops without it */
+#include <sanitizer/asan_interface.h>
+#else
+#define ASAN_POISON_MEMORY_REGION(addr, size)
+#define ASAN_UNPOISON_MEMORY_REGION(addr, size)
+#endif
 #include "funcs.h"
 #include "sdk.h"
 #include "globals.h"
@@ -490,6 +497,7 @@ void ListFreeAll_8003FEC8(List* l)
 void PoolInit_8003FF1C(Pool* pool, unsigned int size)
 {
     void* buf = malloc3_8003FC4C(size);
+    ASAN_POISON_MEMORY_REGION(buf, size);
     pool->magic = 0x8FFFFFFF;
     pool->inited = 1;
     pool->buffer = buf;
@@ -501,6 +509,7 @@ void PoolInit_8003FF1C(Pool* pool, unsigned int size)
 }
 void PoolDestroy_8003FF7C(Pool* pool)
 {
+    ASAN_UNPOISON_MEMORY_REGION(pool->buffer, pool->size);
     free3_8003FC6C(pool->buffer);
     pool->magic = 0x8FFFFFFF;
     pool->inited = 0;
@@ -520,6 +529,7 @@ void* PoolAlloc_8003FFD0(Pool* pool, unsigned int size)
     {
         block = PoolFindFreeSpace_80040150(pool, size + sizeof(PoolBlock));
     }
+    ASAN_UNPOISON_MEMORY_REGION(block, size + sizeof(PoolBlock));
     block->magic = 0x8FFFFFFF;
     block->size = size + sizeof(PoolBlock);
     block->next = 0;
@@ -563,6 +573,7 @@ void PoolFree_800400B4(Pool* pool, void* ptr)
         block->magic = 0x08070F01;
         pool->used -= block->size;
         pool->count--;
+        ASAN_POISON_MEMORY_REGION(block, block->size);
     }
 }
 void PoolSetInited_80040148(Pool* pool, int inited)

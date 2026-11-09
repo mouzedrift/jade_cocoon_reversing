@@ -264,7 +264,11 @@ typedef struct GameMenuRequest
 {
     int active_0;
     int kind_4;      // shop: 0 / 1 store, 2 shop control
-    int arg_8;       // shop: the shop id (short), save menu: the save place
+    union
+    {
+        short shopId;    // shop
+        const char* savePlace; // save menu (SetLoadMenuSavePlace_800B78B8)
+    } arg_8;
     int endOfGame_C; // save menu: LoadMenuSetEndOfGame_800B78D0
 } GameMenuRequest;
 
@@ -272,7 +276,7 @@ extern int FindInLists_800A52EC(short** tab, int count, int key);
 
 extern void WaitChapterOverlay_800A76D8();
 
-extern void SetLoadMenuSavePlace_800B78B8(int a);
+extern void SetLoadMenuSavePlace_800B78B8(const char* place);
 
 extern void LoadMenuSetEndOfGame_800B78D0();
 
@@ -321,6 +325,7 @@ typedef struct GameWallPair
     short levantWall_0; // mapState_8008B500.ents_14 index (-1: none)
     short actorWall_2;  // mapState_8008B500.ents_30 index (-1: none)
 } GameWallPair;
+void SetWallsEnabled_800A6564(GameWallPair* walls, int on);
 
 // the work area of the encounter tasks (EncounterWatchTask_800A1314 .. EncounterFadeInWait_800A167C)
 typedef struct GameBattleWork
@@ -1249,7 +1254,7 @@ extern int nextScriptId_800AEBDC;
 extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
 extern int currentMessageId_800AEBE8;
-extern int currentVoice_800AEBEC;
+extern struct EvXaClip* currentVoice_800AEBEC; // the voice clip playing (eventfnc.h)
 extern void* voiceTable_800AEBF0;
 extern int eventResult_800AEBF4;
 // a menu cursor of the MAP overlay's destination select (UpdateMenuCursor_8003D794 / GetMenuCursorIndex_8003DA54)

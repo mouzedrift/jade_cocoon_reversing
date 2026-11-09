@@ -397,7 +397,7 @@ int nextScriptId_800AEBDC = 0;
 int eventBattlePending_800AEBE0 = 0;
 int eventBattleLoseWarp_800AEBE4 = 1;
 int currentMessageId_800AEBE8 = 0x8000;
-int currentVoice_800AEBEC = 0;
+struct EvXaClip* currentVoice_800AEBEC = 0;
 void* voiceTable_800AEBF0 = 0;
 int eventResult_800AEBF4 = 0;
 GameMapSelect mapSelect_800AEBF8 = {
@@ -2064,19 +2064,19 @@ void StartShopRequest_800A7204(GameMenuRequest* req)
 {
     if (req->kind_4 == 0)
     {
-        StartStore_800BAE2C(0, *(short*)&req->arg_8);
+        StartStore_800BAE2C(0, req->arg_8.shopId);
         req->active_0 = 0;
     }
     else if (req->kind_4 == 1)
     {
-        StartStore_800BAE2C(1, *(short*)&req->arg_8);
+        StartStore_800BAE2C(1, req->arg_8.shopId);
         req->active_0 = 0;
     }
     else
     {
         if (req->kind_4 == 2)
         {
-            StartShopCtrl_800B66C4(*(short*)&req->arg_8);
+            StartShopCtrl_800B66C4(req->arg_8.shopId);
         }
         req->active_0 = 0;
     }
@@ -2084,7 +2084,7 @@ void StartShopRequest_800A7204(GameMenuRequest* req)
 
 void StartSaveMenuRequest_800A7280(GameMenuRequest* req)
 {
-    SetLoadMenuSavePlace_800B78B8(req->arg_8);
+    SetLoadMenuSavePlace_800B78B8(req->arg_8.savePlace);
     if (req->endOfGame_C)
     {
         LoadMenuSetEndOfGame_800B78D0();

@@ -164,6 +164,45 @@ typedef struct MapGateMusic
     int track[4];
 } MapGateMusic;
 
+/* a part of a sliding door: slides along x and turns while it opens */
+typedef struct MapSlidingDoorPart
+{
+    int ftg_0;     /* mapState_8008B500.ftg_3C index (< 0: none) */
+    int pos_4[3];  /* where it is shut */
+    short rotY_10;
+    short turn_12; /* rotY added when open */
+    int openX_14;  /* pos_4[0] when open */
+} MapSlidingDoorPart;
+
+/* a door that opens with a valuable (SlidingDoor): its event script runs when Levant faces it */
+typedef struct MapSlidingDoor
+{
+    int point_0;  /* the event point it is opened from (IsEventPointInView_800A66A4: this and pos_4) */
+    int pos_4[3];
+    GameWallPair walls_10; /* turned off once it is open */
+    int flag_14;     /* event flag: opened (< 0: none) */
+    int valuable_18; /* what opens it (TestValuableFlag_800AD73C; < 0: nothing) */
+    MapSlidingDoorPart parts_1C[2];
+    short frames_4C; /* frames to open */
+    short sfx_4E;
+} MapSlidingDoor;
+
+/* an event point that starts the map's script when Levant stands on it (ScriptSpot) */
+typedef struct MapScriptSpot
+{
+    short point_0;         /* the event point (IsEventPointValid_800A6504) */
+    unsigned char idle_2;  /* the script stops his animation (ResetLevantActorToIdle_800A8DEC) */
+    unsigned char f3;
+    int pad_4;
+} MapScriptSpot;
+
+typedef struct MapSlidingDoorWork
+{
+    int script_0; /* its event script's id */
+    int open_4;
+    int t_8;      /* 0 - frames_4C */
+} MapSlidingDoorWork;
+
 /* a save point (type 0xC, SavePointInit) */
 typedef struct MapSavePoint
 {

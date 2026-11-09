@@ -1,6 +1,7 @@
 /* PC only: the PSY-Q functions the game uses that PSY-Z does not have (yet). libds on top of PSY-Z's libcd, the
    heap on the C library, memory cards absent, the rest as on the PlayStation. */
 #include <psyz.h>
+#include <sanitizer/asan_interface.h>
 #define DIRENTRY DIRENTRY /* libapi.h has it (see sdk.h) */
 #include <psyz/log.h>
 #include <libapi.h>
@@ -122,7 +123,12 @@ void InitHeap3(unsigned long* head, unsigned long size) {}
 /* on the PlayStation a block is always followed by more heap (the next block's header), and the game reads a little
    past some of its blocks (sprites projected three at a time); the slack stands in for that */
 #define HEAP3_SLACK 64
-void* malloc3(size_t size) { return calloc(1, size + HEAP3_SLACK); }
+void* malloc3(size_t size)
+{
+    char* p = calloc(1, size + HEAP3_SLACK);
+    ASAN_POISON_MEMORY_REGION(p + size, HEAP3_SLACK); /* AddressSanitizer still reports reads past the block */
+    return p;
+}
 void free3(void* p) { free(p); }
 
 void SetMem(unsigned long n) {}
@@ -192,6 +198,9 @@ MATRIX* MulMatrix0(MATRIX* m0, MATRIX* m1, MATRIX* m2)
 {
     MATRIX r;
     int i, j;
+    /* as libgte's (and gte_MulMatrix0): m0 is left in the GTE rotation matrix, which callers go on to use
+       (DrawAnimSkel_80046A58 rotates the bone offset by the parent's matrix with rtv0) */
+    SetRotMatrix(m0);
     for (i = 0; i < 3; i++)
         for (j = 0; j < 3; j++)
             r.m[i][j] = (m0->m[i][0] * m1->m[0][j] + m0->m[i][1] * m1->m[1][j] + m0->m[i][2] * m1->m[2][j]) >> 12;

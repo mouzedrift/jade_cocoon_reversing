@@ -290,7 +290,7 @@ void LoadMenuWaitUiTiy_800B7894(LoadMenuTaskEntry* task)
     }
 }
 
-void SetLoadMenuSavePlace_800B78B8(char* place)
+void SetLoadMenuSavePlace_800B78B8(const char* place)
 {
     ((LoadMenuWork*)loadMenuTask_8008D480->entry.buffer)->place_58 = place;
 }
