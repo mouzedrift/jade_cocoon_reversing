@@ -27,7 +27,7 @@ extern int dword_8008D3E4[2];
 extern int pointLightRange_8008D3F0;
 extern EventNode* eventEntities_8008D400;
 extern int unused_8008D408;
-extern int eventScripts_8008D410[2];
+extern EventNode* eventScripts_8008D410;
 extern SVECTOR pointLightColor_8008D418; // colour of the global point light
 extern EventNode* shopCtrlTask_8008D438;
 extern EventNode* taskSlot_8008D444;

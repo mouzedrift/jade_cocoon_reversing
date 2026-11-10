@@ -15,6 +15,7 @@ extern unsigned char psxRam[0x200000];
 /* an address the game's data files hold (event scripts, map data): the place it means */
 #ifdef __psyz
 void* Pc_PsxPtr(unsigned int addr);
+unsigned int Pc_MapAddr(const void* p); /* the reverse for the current map's objects (src/pc/mapcode.c) */
 #define PSX_PTR(addr) Pc_PsxPtr(addr)
 #else
 #define PSX_PTR(addr) ((void*)(addr))

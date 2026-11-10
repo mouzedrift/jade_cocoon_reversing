@@ -1,0 +1,432 @@
+#include "maps/map.h"
+
+void MinionInit_800B233C(MapEnt* ent);
+int AddEffects_800B2674(MapFx* fx);
+void FxSprite_800B2800(MapEnt* ent);
+void FxModel_800B2974(MapEnt* ent);
+void MapInit_800B2B9C(int phase);
+void MinionIdle_800B2CC0(MapEnt* ent);
+void FxInit_800B2CC8(MapEnt* ent);
+int SetEvents_800B2D80(MapExitArgs* args);
+int WarpLostBattle_800B2DD4(void);
+int FreeEventData_800B2DF4(void);
+void StartMapTask_800B2E14(void);
+void MapTaskLoad_800B2E44(EventEntry* entry, int* st);
+void MapTask_800B2EDC(EventEntry* entry, int* st);
+int LeaveArea_800B2F90(MapEvent* ev, int area);
+int EnterArea_800B30AC(MapEvent* ev, int area, int prev);
+void RequestModels_800B31B4(MapEvent* ev);
+void EntityTask_800B3284(EventEntry* entry, MapEnt* ent);
+int AddEntity_800B3304(void* ev);
+void MapInitOld_800B3430(int phase);
+int MinionF_800B34A0(void);
+int MinionF_800B34A8(void);
+int FxFrame_800B34B0(MapFx* fx, MapFxWork* w, int count);
+void FxTime_800B3534(MapEnt* ent, MapFx* fx, MapFxWork* w);
+void FxPlace_800B3600(MapFx* fx, MapFxWork* w);
+
+extern const int unknown_800B22C0[1];
+extern const char data_800B22C4[12];
+extern const char data_800B22D0[20];
+extern const char data_800B22E4[24];
+extern const char data_800B22FC[12];
+extern const MapFxInits fxInits_800B2308;
+extern int unknown_800B3748[14];
+extern int data_800B3780[16];
+extern int data_800B37C0[6];
+extern int data_800B37D8[1];
+extern int data_800B37DC[11];
+extern int data_800B3808[32];
+extern int data_800B3888[12];
+extern int data_800B38B8[16];
+extern int data_800B38F8[1];
+extern int data_800B38FC[11];
+extern int data_800B3928[48];
+extern int data_800B39E8[12];
+extern int data_800B3A18[19];
+extern int data_800B3A64[19];
+extern int data_800B3AB0[12];
+extern int data_800B3AE0[33];
+extern int data_800B3B64[11];
+extern int data_800B3B90[76];
+extern int data_800B3CC0[32];
+extern int data_800B3D40[11];
+extern int data_800B3D6C[50];
+extern int data_800B3E34[66];
+extern int data_800B3F3C[22];
+extern int data_800B3F94[33];
+extern int data_800B4018[4];
+extern int data_800B4028[18];
+extern int data_800B4070[208];
+extern int data_800B43B0[408];
+extern int data_800B4A10[132];
+extern int data_800B4C20[248];
+extern int data_800B5000[80];
+extern int data_800B5140[9];
+extern int data_800B5164[9];
+extern int data_800B5188[9];
+extern int data_800B51AC[9];
+extern MapEvent data_800B51D0[5];
+extern MapEvent data_800B5234[5];
+extern MapEvent data_800B5298[4];
+extern MapEvent data_800B52E8[5];
+extern short bones_800B534C[92];
+extern int scale_800B5404[3];
+extern int data_800B5410[1];
+extern MapEvent* curEvents_800B5414;
+
+int unknown_800B3748[14] = {
+    -0x1FEF1, -0xFDFF, 0x510000, -0xFDF5, 0x10000, -0xFDFA, 0x1000000, -0x1FDE9,
+    0x5A0000, -0x1FDEC, 0x40000000, -0xFEF8, -0x1FEF0, -0x1FF00,
+};
+int data_800B3780[16] = {
+    -0x1FEF1, -0xFDFF, 0x500000, -0x1FDE9, 0x2D0000, -0xFDF9, 0x1000000, -0x1FDE9,
+    0xFA0000, -0x1FDEC, 0x40000000, -0xFEF8, -0xFDF5, 0, -0x1FEF0, -0x1FF00,
+};
+int data_800B37C0[6] = {
+    -0x1FEF1, -0x1FCE8, 0x1000000, 0x800000, -0x1FEF0, -0x1FF00,
+};
+int data_800B37D8[1] = {
+    0,
+};
+int data_800B37DC[11] = {
+    MAP_REF(data_800B22C4), 0x2F, 0, 0, 0, 0, 4, MAP_REF(data_800B37D8),
+    0, 0x800000, 0,
+};
+int data_800B3808[32] = {
+    0, 0x460000, 0x10001, 1, 0x1020002, 0xB0002, 0x2030003, 0xB0003,
+    0x3040004, 0xB0004, 0x4050005, 0xB0005, 0x2060003, 0xB0006, 0x3070004, 0xB0007,
+    0x4080005, 0xB0008, 0x2090003, 0xB0009, 0x30A0004, 0xB000A, 0x40B0005, 0xB000B,
+    0x20C0003, 0xB000C, 0x30D0004, 0xB000D, 0x40E0005, 0xB000E, -1, -1,
+};
+int data_800B3888[12] = {
+    -0x1FEF1, -0xFDF5, 0x10000, -0xFDFA, 0x1000000, -0x1FDE9, 0x3C0000, -0x1FDEC,
+    0x40000000, -0xFEF8, -0x1FEF0, -0x1FF00,
+};
+int data_800B38B8[16] = {
+    -0x1FEF1, -0xFDFF, 0x250000, -0x1FDE9, 0x2D0000, -0xFDF9, 0x1000000, -0x1FDE9,
+    0xB40000, -0x1FDEC, 0x40000000, -0xFEF8, -0xFDF5, 0, -0x1FEF0, -0x1FF00,
+};
+int data_800B38F8[1] = {
+    0,
+};
+int data_800B38FC[11] = {
+    MAP_REF(data_800B22D0), 0x61, MAP_REF(data_800B3808), 0, 0, 0, 4, MAP_REF(data_800B38F8),
+    0, 0x800000, 0,
+};
+int data_800B3928[48] = {
+    0, 0x4E0000, 0x10001, 0xB0001, 0x1020002, 0xB0002, 0x2030003, 0xB0003,
+    0x3040004, 0xB0004, 0x4050005, 0xB0005, 0x1060002, 0xB0006, 0x2070003, 0xB0007,
+    0x3080004, 0xB0008, 0x4090005, 0xB0009, 0x10A0002, 0xB000A, 0x20B0003, 0xB000B,
+    0x30C0004, 0xB000C, 0x40D0005, 0xB000D, 0x10E0002, 0xB000E, 0x20F0003, 0xB000F,
+    0x3100004, 0xB0010, 0x4110005, 0xB0011, 0x2120003, 0xB0012, 0x3130004, 0xB0013,
+    0x4140005, 0xB0014, 0x1150002, 0xB0015, 0x1160002, 0xB0016, -1, -1,
+};
+int data_800B39E8[12] = {
+    -0x1FDF4, 0x150000, -0x1FEF3, -0x1FEF1, -0xFEFD, -0xFDFF, 0x150000, -0x1FEEB,
+    -0x1FDE9, 0x3C0000, -0x1FEF0, -0x1FF00,
+};
+int data_800B3A18[19] = {
+    -0x1FDF4, 0x1A0000, -0x1FEF3, -0x1FEF1, -0xFDF9, 0x1000000, -0xFEFD, -0xFDFF,
+    0x1A0000, -0x1FDEC, 0x40000000, -0xFEF8, -0xFDF5, 0, -0x1FEF0, -0x1FEEF,
+    -0xFDF2, 0x1A0000, -0x1FF00,
+};
+int data_800B3A64[19] = {
+    -0x1FDF4, 0x1B0000, -0x1FEF3, -0x1FEF1, -0xFDF5, 0x10000, -0xFDFA, 0x1000000,
+    -0xFDFF, 0x1B0000, -0x1FDEC, 0x40000000, -0xFEF8, -0x1FEF0, -0xFDFF, 0x40000,
+    -0xFDF2, 0x1B0000, -0x1FF00,
+};
+int data_800B3AB0[12] = {
+    -0x1FEF1, -0xFDF9, 0x1000000, -0x1FDE9, 0x5A0000, -0x1FDEC, 0x40000000, -0xFEF8,
+    -0xFDF5, 0, -0x1FEF0, -0x1FF00,
+};
+int data_800B3AE0[33] = {
+    -0x7FF868AC, -0x7FF868A0, -0x7FF86890, -0x7FF86858, -0x7FF86820, -0x7FF867E8, -0x7FF867B0, -0x7FF86778,
+    -0x7FF86740, -0x7FF86708, -0x7FF866AC, -0x7FF86674, -0x7FF8663C, -0x7FF86604, -0x7FF865D0, -0x7FF865B8,
+    MAP_REF(data_800B39E8), MAP_REF(data_800B3A18), MAP_REF(data_800B3A64), -0x7FF864B4, -0x7FF864A0, -0x7FF8648C, -0x7FF86474, -0x7FF86450,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    MAP_REF(data_800B3AB0),
+};
+int data_800B3B64[11] = {
+    MAP_REF(data_800B22E4), 4, MAP_REF(data_800B3928), 0, 0, 0, 4, MAP_REF(data_800B3AE0),
+    0, 0x800000, 0,
+};
+int data_800B3B90[76] = {
+    0, 0x4F0000, 0x10001, 0xB0001, 0x1020002, 0xB0002, 0x2030003, 0xB0003,
+    0x3040004, 0xB0004, 0x4050005, 0xB0005, 0x4060005, 0xB0006, 0x4070005, 0xB0007,
+    0x1080002, 0xB0008, 0x2090003, 0xB0009, 0x30A0004, 0xB000A, 0x40B0005, 0xB000B,
+    0x40C0005, 0xB000C, 0x40D0005, 0xB000D, 0x10E0002, 0xB000E, 0x20F0003, 0xB000F,
+    0x3100004, 0xB0010, 0x1110002, 0xB0011, 0x2120003, 0xB0012, 0x3130004, 0xB0013,
+    0x4140005, 0xB0014, 0x5150006, 0xB0015, 0x5160006, 0xB0016, 0x5170006, 0xB0017,
+    0x5180006, 0xB0018, 0x2190003, 0xB0019, 0x31A0004, 0xB001A, 0x41B0005, 0xB001B,
+    0x51C0006, 0xB001C, 0x51D0006, 0xB001D, 0x51E0006, 0xB001E, 0x51F0006, 0xB001F,
+    0x2200003, 0xB0020, 0x3210004, 0xB0021, 0x4220005, 0xB0022, 0x5230006, 0xB0023,
+    0x6240007, 0xB0024, -1, -1,
+};
+int data_800B3CC0[32] = {
+    -0x7FF868AC, -0x7FF868A0, -0x7FF86890, -0x7FF86858, -0x7FF86820, -0x7FF867E8, -0x7FF867B0, -0x7FF86778,
+    -0x7FF86740, -0x7FF86708, -0x7FF866AC, -0x7FF86674, -0x7FF8663C, -0x7FF86604, -0x7FF865D0, -0x7FF865B8,
+    -0x7FF86594, -0x7FF8652C, -0x7FF864F0, -0x7FF864B4, -0x7FF864A0, -0x7FF8648C, -0x7FF86474, -0x7FF86450,
+    0, 0, 0, 0, 0, 0, 0, 0,
+};
+int data_800B3D40[11] = {
+    MAP_REF(data_800B22FC), 5, MAP_REF(data_800B3B90), 0, 0, 0, 4, MAP_REF(data_800B3CC0),
+    0, 0x800000, 0,
+};
+int data_800B3D6C[50] = {
+    0xC0000, 0x2204C8, 0x160001, 0xC0319, 0x101, 0x29031D, 0x50201, 0x1B031D,
+    0x40002, 0xD031E, 0xF0102, 0x14031F, 0x110202, 0x1F031F, 0x1F0003, 0x190320,
+    0x90103, 0x180321, 0x120004, 0x120321, 0x130005, 0x220162, 0x170006, 0x170163,
+    0xA0007, 0x270164, 0x1C0008, 0x1D0166, 0x1E0108, 0x1E0167, 0x1D0208, 0x2C0168,
+    0x1F0308, 0x1A016A, 0x150009, 0x160321, 0xB000A, 0x230322, 0x7000B, 0x1D0323,
+    0x1010B, 0x1F0325, 0xD020B, 0x1E0325, 0xF000C, 0x170160, 0x1010C, 0x10016B,
+    -0x10000, 0,
+};
+int data_800B3E34[66] = {
+    0x980001, 0x947, 0, -0x2134, 0, 0, 0xF0, 0,
+    -0x10000, 0, 0, 0x990001, 0x947, 0, -0x2134, 0,
+    0, 0x4F00A1, 0, -0x10000, 0, 0, 0x9A0001, 0x947,
+    0, -0x2134, 0, 0, 0x95001F, 0, -0x10000, 0,
+    0, 0x9B0001, 0x947, 0, -0x2134, 0, 0, 0xB3001F,
+    0, -0x10000, 0, 0, 0x9C0001, 0x947, 0, -0x2134,
+    0, 0, 0xD1001F, 0, -0x10000, 0, 0, 5,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0,
+};
+int data_800B3F3C[22] = {
+    0xA20001, 0, 0, 0, 0, 0, 0x5A, 0,
+    -0x10000, 0, 0, 5, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0,
+};
+int data_800B3F94[33] = {
+    0xA30001, 0, 0, 0, 0, 0, 0xF0, 0,
+    -0xFF11, 0, 0, 0x1630000, 0, 0, 0, 0,
+    0, 0xF0, 0, -0xFF11, 0x38, 0, 5, 0,
+    0, 0, 0, 0, 0, 0, 0, 0,
+    0,
+};
+int data_800B4018[4] = {
+    0x8FC, 0, -0x24D1, 0,
+};
+int data_800B4028[18] = {
+    0, 1, 0, 1, 0, 0, 1, 2,
+    5, 0x2C, 0x50000000, 0xD, 0x2B, 0x50000000, 0xD, 0xD3,
+    0, 0,
+};
+int data_800B4070[208] = {
+    0x56, 0, 4, 0, 0x4D, 0, 0, MAP_REF(FreeEventData_800B2DF4),
+    0x45, 0, 1, 0, 0x65, 0, 0, MAP_REF(data_800B4028),
+    0x67, 0xC, 0x6C, 0, 0x66, 0, 0, 0,
+    0xA, 0, 0x10, 0, 0xA, 0, 0x20, 0,
+    9, 0, 0x10, 0, 0x67, 1, 0, 0,
+    0x1A, 2, 1, 0, 5, 0, 0, 0,
+    7, 0, 7, 0, 0x48, 1, 0x3B, 5,
+    0x67, 2, 0x1E, 0, 0x67, 6, 0, 0,
+    0x46, 1, 0, MAP_REF(data_800B3AB0), 0xD, 0, 2, 0,
+    0x67, 3, 0x1E, 0, 0x67, 6, 0, 0,
+    8, 0, 7, 0, 4, 0, 0, 0,
+    0x4C, 2, 1, 0, 0x4D, 0, 0, MAP_REF(SetEvents_800B2D80),
+    0xA, 0, 0xFF, 0, 9, 0, 0x20, 0,
+    0x1A, 2, 1, 0, 5, 0, 0, 0,
+    7, 0, 7, 0, 0x48, 0, 0x13F, 5,
+    0x67, 2, 0x1E, 0, 0x67, 6, 0, 0,
+    0x38, 1, 0, 8, 0x42, 0, 0, 0,
+    0x49, 1, 0x37003A, 1, 0x42, 0, 1, 0,
+    0x49, 1, 0x35003A, 1, 0x42, 0, 2, 0,
+    0x49, 1, 0x38003A, 1, 0x42, 0, 3, 0,
+    0x49, 1, 0x39003A, 1, 0x3F, 0, 0, 0,
+    0x67, 5, 0x1E, 0, 0x67, 6, 0, 0,
+    0x4C, 3, 0, 0, 0x4D, 0, 0, MAP_REF(SetEvents_800B2D80),
+    8, 0, 7, 0, 4, 0, 0, 0,
+    0x4D, 0, 0, MAP_REF(WarpLostBattle_800B2DD4), 0xA, 0, 0xFF, 0,
+    9, 0, 0xFF, 0, 3, 0, 0, 0,
+};
+int data_800B43B0[408] = {
+    5, 0, 0, 0, 7, 0, 7, 0,
+    0x5E, 0, 1, 0, 0x67, 1, 0, 0,
+    0x13, 0, 0, MAP_REF(data_800B4018), 0x48, 0, 0x13B, 5,
+    0x55, 0, 1, 0, 0x67, 2, 0x1E, 0,
+    0x67, 6, 0, 0, 0xC, 0, 0x5A, 0,
+    0x56, 0, 1, 0, 0x55, 0, 2, 0,
+    0x46, 2, 0, MAP_REF(data_800B3888), 0xC, 0, 0x5A, 0,
+    0x56, 0, 2, 0, 0x55, 0, 3, 0,
+    0x38, 2, 0, 0, 0x42, 0, 0, 0,
+    0x49, 2, 0x240026, 1, 0x3F, 0, 0, 0,
+    0x56, 0, 3, 0, 0x55, 0, 1, 0,
+    0x46, 2, 0, MAP_REF(data_800B38B8), 0xC, 0, 0x2D, 0,
+    0x68, 1, 0x21, 0, 0x67, 0xC, 6, 0,
+    0x4B, 0, 0, MAP_REF(data_800B3E34), 0x4D, 0, 0, MAP_REF(AddEffects_800B2674),
+    0xC, 0, 0x96, 0, 0x46, 1, 0, MAP_REF(unknown_800B3748),
+    0xC, 0, 0x3B, 0, 0x67, 0xD, 0x4E, 0,
+    0x67, 5, 0x1F, 0, 0x67, 6, 0, 0,
+    0x67, 0xC, 0xFF03, 6, 0x68, 0, 0, 0,
+    0x56, 0, 1, 0, 0x55, 0, 5, 0,
+    0x67, 4, 0x1E, 0, 0x49, 1, 0x470052, 5,
+    0xC, 0, 0x5A, 0, 0x56, 0, 5, 0,
+    0x55, 0, 1, 0, 0x38, 1, 0, 1,
+    0x42, 0, 0, 0, 0x49, 1, 0x480052, 1,
+    0x42, 0, 1, 0, 0x49, 1, 0x490052, 1,
+    0x42, 0, 2, 0, 0x49, 1, 0x4A0052, 1,
+    0x3F, 0, 0, 0, 0x56, 0, 1, 0,
+    0x55, 0, 2, 0, 0x38, 1, 0, 2,
+    0x42, 0, 0, 0, 0x49, 1, 0x480052, 1,
+    0x42, 0, 1, 0, 0x49, 1, 0x4B0052, 1,
+    0x42, 0, 2, 0, 0x49, 1, 0x4C0052, 1,
+    0x3F, 0, 0, 0, 0x56, 0, 2, 0,
+    0x55, 0, 5, 0, 0x38, 1, 0, 3,
+    0x42, 0, 0, 0, 0x49, 1, 0x4D0053, 1,
+    0x42, 0, 1, 0, 0x49, 1, 0x4E0053, 1,
+    0x3F, 0, 0, 0, 0x56, 0, 5, 0,
+    0x55, 0, 4, 0, 0x38, 1, 0, 4,
+    0x42, 0, 0, 0, 0x49, 1, 0x4F0054, 1,
+    0x3F, 0, 0, 0, 0x56, 0, 4, 0,
+    0x55, 0, 5, 0, 0x49, 0, 0x138013C, 1,
+    0xD, 0, 1, 0, 0x56, 0, 5, 0,
+    0x55, 0, 4, 0, 0x46, 1, 0, MAP_REF(data_800B3780),
+    0xC, 0, 0x37, 0, 0x68, 1, 0x22, 0,
+    0x67, 0xC, 6, 0, 0x4B, 0, 0, MAP_REF(data_800B3E34),
+    0x4D, 0, 0, MAP_REF(AddEffects_800B2674), 0xC, 0, 0x14, 0,
+    0x56, 0, 4, 0, 0xC, 0, 0x87, 0,
+    0x49, 0, 0x139013D, 1, 0xC, 0, 0x36, 0,
+    0x67, 0xD, 0x4E, 0, 0x67, 5, 0x1F, 0,
+    0x67, 6, 0, 0, 0x67, 0xC, 0xFF03, 6,
+    0x68, 0, 0, 0, 8, 0, 7, 0,
+    4, 0, 0, 0, 0x4C, 1, 1, 0,
+    0x4D, 0, 0, MAP_REF(SetEvents_800B2D80), 3, 0, 0, 0,
+};
+int data_800B4A10[132] = {
+    5, 0, 0, 0, 7, 0, 7, 0,
+    0x5E, 0, 1, 0, 0x67, 5, 1, 0,
+    0x13, 0, 0, MAP_REF(data_800B4018), 0x49, 0, 0x13A013E, 5,
+    0x55, 0, 6, 0, 0x67, 4, 0x1E, 0,
+    0x67, 6, 0, 0, 0xC, 0, 0x5A, 0,
+    0x38, 1, 0, 5, 0x42, 0, 0, 0,
+    0x49, 1, 0x34003A, 1, 0x3F, 0, 0, 0,
+    0x56, 0, 6, 0, 0x55, 0, 7, 0,
+    0x38, 1, 0, 6, 0x42, 0, 0, 0,
+    0x49, 1, 0x35003A, 1, 0x3F, 0, 0, 0,
+    0x56, 0, 7, 0, 0x55, 0, 4, 0,
+    0x38, 1, 0, 7, 0x42, 0, 0, 0,
+    0x49, 1, 0x36003A, 1, 0x3F, 0, 0, 0,
+    0x4B, 0, 0, MAP_REF(data_800B3F3C), 0x4D, 0, 0, MAP_REF(AddEffects_800B2674),
+    0xC, 0, 0x46, 0, 0x67, 3, 0x14, 0,
+    0x67, 6, 0, 0, 0xB, 0, 0, MAP_REF(data_800B4070),
+    3, 0, 0, 0,
+};
+int data_800B4C20[248] = {
+    5, 0, 0, 0, 7, 0, 3, 0,
+    0x5E, 0, 1, 0, 0x67, 1, 0, 0,
+    0x13, 0, 0, MAP_REF(data_800B4018), 0x1C, 1, 1, 0,
+    0x48, 1, 0x5A, 5, 0x1A, 2, 1, 0,
+    0x48, 1, 0x5A, 5, 0x55, 0, 8, 0,
+    0x67, 2, 0x1E, 0, 0x67, 6, 0, 0,
+    0x49, 0, 0x1400146, 5, 0xD, 0, 1, 0,
+    0x56, 0, 8, 0, 0x55, 0, 9, 0,
+    0x38, 1, 0, 9, 0x42, 0, 0, 0,
+    0x49, 1, 0x55005B, 1, 0x49, 0, 0x1410147, 1,
+    0x3F, 0, 0, 0, 0x56, 0, 9, 0,
+    0x55, 0, 0xA, 0, 0x38, 1, 0, 0xA,
+    0x42, 0, 0, 0, 0x49, 1, 0x56005B, 1,
+    0x3F, 0, 0, 0, 0x56, 0, 0xA, 0,
+    0x38, 1, 0, 0xB, 0x42, 0, 0, 0,
+    0x49, 1, 0x57005C, 1, 0x49, 0, 0x1420148, 1,
+    0x42, 0, 1, 0, 0x49, 1, 0x58005C, 1,
+    0x42, 0, 2, 0, 0x49, 1, 0x59005C, 1,
+    0x49, 0, 0x1430149, 1, 0x3F, 0, 0, 0,
+    0x67, 0xE, 0x18, MAP_REF(data_800B5410), 0x46, 1, 0, MAP_REF(data_800B37C0),
+    0xC, 0, 0x66, 0, 0x67, 0xD, 0x1D, 0,
+    0x4B, 0, 0, MAP_REF(data_800B3F94), 0x4D, 0, 0, MAP_REF(AddEffects_800B2674),
+    0xC, 0, 0xA, 0, 0x67, 0xF, 0x18, MAP_REF(data_800B5410),
+    0x67, 0xD, 0x1E, 0, 0x1A, 2, 0, 0,
+    0xC, 0, 0x14, 0, 0x49, 0, 0x144014A, 1,
+    0xC, 0, 0x87, 0, 0x49, 0, 0x145014B, 1,
+    0xC, 0, 0x27, 0, 0x67, 0xD, 0x4E, 0,
+    0x67, 5, 0x1E, 0, 0x67, 6, 0, 0,
+    0xC, 0, 0x5A, 0, 0x67, 0x11, 1, 0,
+    0xE, 1, 0xB0000, 0, 0x51, 5, 0x30014, 0x106,
+    0x53, 0, 0x106, 0, 3, 0, 0, 0,
+};
+int data_800B5000[80] = {
+    5, 0, 0, 0, 7, 0, 7, 0,
+    0x5E, 0, 1, 0, 0x67, 1, 1, 0,
+    0x13, 0, 0, MAP_REF(data_800B4018), 0x48, 0, 0x13E, 5,
+    0x48, 1, 0x3A, 5, 0x55, 0, 4, 0,
+    0x67, 2, 0x1E, 0, 0x67, 6, 0, 0,
+    0x38, 1, 0, 0xC, 0x42, 0, 0, 0,
+    0x49, 1, 0x39003A, 1, 0x42, 0, 1, 0,
+    0x49, 1, 0x35003A, 1, 0x3F, 0, 0, 0,
+    0x67, 3, 0x1E, 0, 0x67, 6, 0, 0,
+    0xB, 0, 0, MAP_REF(data_800B4070), 3, 0, 0, 0,
+};
+int data_800B5140[9] = {
+    MAP_REF(data_800B37DC), 0, 0x947, 0, -0x2134, -0x800, 0x46, 8,
+    3,
+};
+int data_800B5164[9] = {
+    MAP_REF(data_800B38FC), 0, 0x947, 0, -0x2134, -0x800, 0x26, 4,
+    3,
+};
+int data_800B5188[9] = {
+    MAP_REF(data_800B3B64), 0, 0x947, 0, -0x2134, -0x800, 0x3A, 3,
+    2,
+};
+int data_800B51AC[9] = {
+    MAP_REF(data_800B3D40), 0, 0x947, 0, -0x2134, -0x800, 1, -1,
+    3,
+};
+MapEvent data_800B51D0[5] = {
+    { -1, 0xF, data_800B5140, 0x14, { (void*)MinionInit_800B233C } },
+    { -1, 0xF, data_800B5164, 0x14, { (void*)MinionInit_800B233C } },
+    { -1, 8, data_800B43B0, 0, { 0 } },
+    { -1, 0xB, data_800B3D6C, 0, { 0 } },
+    { 0, 0x12, 0, 0, { 0 } },
+};
+MapEvent data_800B5234[5] = {
+    { -1, 0xF, data_800B5188, 0x14, { (void*)MinionInit_800B233C } },
+    { -1, 0xF, data_800B51AC, 0x14, { (void*)MinionInit_800B233C } },
+    { -1, 8, data_800B4A10, 0, { 0 } },
+    { -1, 0xB, data_800B3D6C, 0, { 0 } },
+    { 0, 0x12, 0, 0, { 0 } },
+};
+MapEvent data_800B5298[4] = {
+    { -1, 0xF, data_800B5140, 0x14, { (void*)MinionInit_800B233C } },
+    { -1, 8, data_800B4C20, 0, { 0 } },
+    { -1, 0xB, data_800B3D6C, 0, { 0 } },
+    { 0, 0x12, 0, 0, { 0 } },
+};
+MapEvent data_800B52E8[5] = {
+    { -1, 0xF, data_800B5188, 0x14, { (void*)MinionInit_800B233C } },
+    { -1, 0xF, data_800B51AC, 0x14, { (void*)MinionInit_800B233C } },
+    { -1, 8, data_800B5000, 0, { 0 } },
+    { -1, 0xB, data_800B3D6C, 0, { 0 } },
+    { 0, 0x12, 0, 0, { 0 } },
+};
+short bones_800B534C[92] = {
+    0, 0, 0, 0x46, 1, 1, 1, 0,
+    2, 0x102, 2, 0xB, 3, 0x203, 3, 0xB,
+    4, 0x304, 4, 0xB, 5, 0x405, 5, 0xB,
+    5, 0x506, 6, 0xB, 6, 0x607, 7, 0xB,
+    3, 0x208, 8, 0xB, 4, 0x809, 9, 0xB,
+    5, 0x90A, 0xA, 0xB, 5, 0xA0B, 0xB, 0xB,
+    6, 0xB0C, 0xC, 0xB, 3, 0x20D, 0xD, 0,
+    4, 0xD0E, 0xE, 0xB, 2, 0x10F, 0xF, 0xB,
+    3, 0xF10, 0x10, 0xB, 4, 0x1011, 0x11, 0xB,
+    5, 0x1112, 0x12, 0xB, 3, 0xF13, 0x13, 0xB,
+    4, 0x1314, 0x14, 0xB, 5, 0x1415, 0x15, 0xB,
+    -1, -1, -1, -1,
+};
+int scale_800B5404[3] = {
+    0x1000, 0x1000, 0x1000,
+};
+int data_800B5410[1] = {
+    0,
+};
+MapEvent* curEvents_800B5414 = 0;
+const int unknown_800B22C0[1] = {
+    0x12D,
+};
+const char data_800B22C4[12] = "\x82l\x82\x81\x82\x88\x82\x82\x82\x95";
+const char data_800B22D0[20] = "\x82s\x82\x8f\x82\x94\x82\x8f\x82\x99\x82\x81\x82\x8d\x82\x95";
+const char data_800B22E4[24] = "\x82""d\x82\x81\x82\x92\x82\x94\x82\x88\x81@\x82""a\x82\x8f\x82\x93\x82\x93";
+const char data_800B22FC[12] = "\x82""a\x82r\x82""f\x82r";
+const MapFxInits fxInits_800B2308 = { { FxSprite_800B2800, FxModel_800B2974, 0, 0, 0 } };

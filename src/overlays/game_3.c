@@ -1569,7 +1569,7 @@ void EndEventScript_800A6168(GameTask* task, GameEvCtx* ctx)
 void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
 {
     TimInfo tim;
-    GameActorDesc* desc;
+    Model* desc;
     if (who == 0)
     {
         tim.mode_valid = 1;
@@ -1588,12 +1588,12 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
         desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
         tim.mode_valid = 1;
         tim.mode = 1;
-        tim.prect.x = combatPortraitImagePos_8007DCAC[desc->clut_30].x;
-        tim.prect.y = combatPortraitImagePos_8007DCAC[desc->clut_30].y;
+        tim.prect.x = combatPortraitImagePos_8007DCAC[desc->slot_30].x;
+        tim.prect.y = combatPortraitImagePos_8007DCAC[desc->slot_30].y;
         tim.prect.w = 0x20;
         tim.prect.h = 0x40;
-        tim.crect.x = combatPortraitClutPos_8007DCBC[desc->clut_30].x;
-        tim.crect.y = combatPortraitClutPos_8007DCBC[desc->clut_30].y;
+        tim.crect.x = combatPortraitClutPos_8007DCBC[desc->slot_30].x;
+        tim.crect.y = combatPortraitClutPos_8007DCBC[desc->slot_30].y;
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
@@ -1603,7 +1603,7 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
 void GetPortraitPoly_800A6308(int who, void* poly)
 {
     TimInfo tim;
-    GameActorDesc* desc;
+    Model* desc;
     if (who == 0)
     {
         tim.mode_valid = 1;
@@ -1622,12 +1622,12 @@ void GetPortraitPoly_800A6308(int who, void* poly)
         desc = GetFieldMinionModelDesc_800A7A1C(who - 1);
         tim.mode_valid = 1;
         tim.mode = 1;
-        tim.prect.x = combatPortraitImagePos_8007DCAC[desc->clut_30].x;
-        tim.prect.y = combatPortraitImagePos_8007DCAC[desc->clut_30].y;
+        tim.prect.x = combatPortraitImagePos_8007DCAC[desc->slot_30].x;
+        tim.prect.y = combatPortraitImagePos_8007DCAC[desc->slot_30].y;
         tim.prect.w = 0x20;
         tim.prect.h = 0x40;
-        tim.crect.x = combatPortraitClutPos_8007DCBC[desc->clut_30].x;
-        tim.crect.y = combatPortraitClutPos_8007DCBC[desc->clut_30].y;
+        tim.crect.x = combatPortraitClutPos_8007DCBC[desc->slot_30].x;
+        tim.crect.y = combatPortraitClutPos_8007DCBC[desc->slot_30].y;
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
@@ -2336,11 +2336,11 @@ int IsFieldMinionVisible_800A79C8(int idx)
     return 0;
 }
 
-GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx)
+Model* GetFieldMinionModelDesc_800A7A1C(int idx)
 {
     if (idx < GetFieldMinionCount_800A7790())
     {
-        return (GameActorDesc*)GetFieldMinion_800A77F4(idx)->cb_14.actor_4->model_15C;
+        return GetFieldMinion_800A77F4(idx)->cb_14.actor_4->model_15C;
     }
     return 0;
 }

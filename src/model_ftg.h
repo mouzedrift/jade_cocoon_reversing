@@ -105,4 +105,14 @@ void FreeModel_80024C48(Model* model);
 void ApplyModelFtgSwaps_80025C38(Model* model, int flag);
 int AddFileRequest_80025D00(Model* model, FileRequestDesc* req);
 void OnModelFileLoaded_80025D7C(void* arg, char* data);
+/* where Levant is put back when a map is entered again (useSavedLevantPos_80091C98) */
+typedef struct
+{
+    int pos[3];
+    int mapIdx;
+} SavedLevantPos;
+extern SavedLevantPos savedLevantPos_80091C78;
+
+void CancelAreaPreload_8002741C(void);
+
 #endif

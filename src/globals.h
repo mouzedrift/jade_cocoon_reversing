@@ -141,7 +141,7 @@ typedef struct
     // Levant's 0x48-byte status block (same layout as a minion's status_84)
     UnitStatus levantStatus_7C8; // saveData_8008B570.levantStatus_7C8: name_10 == saveData_8008B570.levantStatus_7C8.name_10, field_1C[0..2] the
                                  // equipped weapon / armor / accessory, level_44 the rank (saveData_8008B570.levantStatus_7C8.level_44)
-    int field_810; // == dword_8008BD80
+    int corridorFloor_810; // == dword_8008BD80: the deepest Eternal Corridor floor (LOAD: -1 end of game)
     unsigned int allMinionsBitfields_814[7]; // bits counted by GetCapturedMinionsCount_800125B8
     int hasArmor_830; // SetLevantHasArmor_800AC380 (GAME), picks the model
     short weaponKind_834; // GAME: SetLevantWeaponKind_800AC3A4

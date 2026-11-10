@@ -366,4 +366,6 @@ void StartSceneFadeIn_8001AA04(int duration);
 void StartSceneDarken_8001AAA8(int duration);
 void StartSceneFadeOut_8001AA50(int duration);
 void StartSceneBrighten_8001AB1C(int duration);
+void SetActorTint_8001DAAC(Actor* actor, short* tint);
+
 #endif

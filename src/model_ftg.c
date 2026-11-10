@@ -16,7 +16,6 @@
 #include "tim.h"
 /* defined further on / elsewhere without a prototype the callers see */
 int AllocFtgSpriteGroups_800228F8(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, FtgSrcObjectHeader* hdr, void* heap);
-void CancelAreaPreload_8002741C(void);
 void FreeFtgSpriteGroups_800229E0(FtgSpriteGroups8* groups8, FtgSpriteGroups9* groups9, void* h);
 int IsOverlayLoaderIdle_80020D84(void);
 unsigned char* LoadFtgObject_80022458(FtgObject* out, unsigned char* src, void* h, short* reloc);
@@ -2267,12 +2266,6 @@ void LoadRecordTable_80026EF8(RecordTable* table, unsigned short* src, void* hea
         src += 4;
     }
 }
-typedef struct
-{
-    int pos[3];
-    int mapIdx;
-} SavedLevantPos;
-extern SavedLevantPos savedLevantPos_80091C78;
 extern int gameStartMode_800B1DC8;
 void InitMapState_80026FAC(void)
 {

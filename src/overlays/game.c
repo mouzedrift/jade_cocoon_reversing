@@ -107,22 +107,22 @@ void DrawTileAnimLayers_800A0A5C(short* work)
             {
                 st->timer_0++;
             }
-            if ((unsigned short)st->timer_0 >= (list->items[(unsigned short)st->frame_2].time_2 & 0x7F))
+            if (st->timer_0 >= (list->items[st->frame_2].time_2 & 0x7F))
             {
                 st->frame_2++;
-                if ((unsigned short)st->frame_2 >= list->count)
+                if (st->frame_2 >= list->count)
                 {
                     st->frame_2 = 0;
                 }
                 st->timer_0 = 0;
             }
         }
-        s->set_70 = list->items[(unsigned short)st->frame_2].set_0;
-        s->clut_74 = list->items[(unsigned short)st->frame_2].clut_1;
-        s->time_78 = list->items[(unsigned short)st->frame_2].time_2 & 0x7F;
+        s->set_70 = list->items[st->frame_2].set_0;
+        s->clut_74 = list->items[st->frame_2].clut_1;
+        s->time_78 = list->items[st->frame_2].time_2 & 0x7F;
         s->tiles_60 = tileAnim_8008D648.items_C[s->set_70];
         cells = s->tiles_60.items;
-        if (list->items[(unsigned short)st->frame_2].time_2 & 0x80)
+        if (list->items[st->frame_2].time_2 & 0x80)
         {
             setSemiTrans(&s->ft4_4, 1);
             setSemiTrans(&s->sprt_2C, 1);
@@ -309,23 +309,23 @@ void EncounterFadeInWait_800A167C(GameTask* task, GameBattleWork* work)
     }
 }
 
-void SetEncounterRecord_800A16DC(GameV3_1* rec)
+void SetEncounterRecord_800A16DC(GameBattleChain* rec)
 {
-    encounterRecord_800ADE78.active_0 = rec->a;
-    encounterRecord_800ADE78.f4 = rec->b;
-    encounterRecord_800ADE78.f8 = rec->c;
+    encounterRecord_800ADE78.active_0 = rec->active_0;
+    encounterRecord_800ADE78.f4 = rec->f4;
+    encounterRecord_800ADE78.f8 = rec->f8;
     encounterRecord_800ADE78.index_C = -1;
     encounterRecord_800ADE78.next_10 = -1;
 }
 
 void ResetEncounter_800A170C(void)
 {
-    GameV6_1 rec;
+    GameBattleChain rec;
     int i;
-    rec.a = 0;
-    rec.b = 0;
-    rec.c = 0;
-    SetEncounterRecord_800A16DC((GameV3_1*)&rec);
+    rec.active_0 = 0;
+    rec.f4 = 0;
+    rec.f8 = 0;
+    SetEncounterRecord_800A16DC(&rec);
     gCtx_800B1260.active_0 = 0;
     gCtx_800B1260.otherCount_8 = 0;
     gCtx_800B1260.count_40 = 0;

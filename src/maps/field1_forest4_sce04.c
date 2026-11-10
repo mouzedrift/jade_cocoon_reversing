@@ -52,9 +52,9 @@ void Warp_800B23C8(MapEnt* ent)
         levant = &saveData_8008B570.levant_7A8;
         if (IsEventPointValid_800A6504(warp->point_10, (int*)levant))
         {
-            savedLevantPos_80091C78[0] = warp->pos_0[0];
-            savedLevantPos_80091C78[1] = warp->pos_0[1];
-            savedLevantPos_80091C78[2] = warp->pos_0[2];
+            savedLevantPos_80091C78.pos[0] = warp->pos_0[0];
+            savedLevantPos_80091C78.pos[1] = warp->pos_0[1];
+            savedLevantPos_80091C78.pos[2] = warp->pos_0[2];
             if (warp->rotY_C != 0x4000)
             {
                 savedLevantRot_80091CA8[0] = 0;

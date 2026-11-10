@@ -596,7 +596,7 @@ void MenuLoadGame_800A1C18(TitleTask* t)
     titleStartMode_8008B55A = 1;
     LoadOverlay_80020BF8(2, 0x10);
     SetDisplayMode_80040658(1);
-    saveData_8008B570.field_810 = -2;
+    saveData_8008B570.corridorFloor_810 = -2;
     LoadMenuInit_800B7674(1, 0);
     t->next_8 = LoadGameWait_800A1CC0;
 }
@@ -758,7 +758,7 @@ void InitSaveData_800A211C(void)
     s->levant_7A8.pos = levantStartPos_800B069C;
     s->levant_7A8.rot = levantStartRot_800B06A8;
     s->levantStatus_7C8 = levantInitStatus_800A2730;
-    saveData_8008B570.field_810 = -2;
+    saveData_8008B570.corridorFloor_810 = -2;
     ClearInventory_800A2358();
     InitLevantEquipment_800A20F4();
     ClearMapVars_800A2110();
@@ -923,7 +923,7 @@ void SetNewGameStartMap_800A2650(void)
     useMapStartPos_80091C94 = 1;
     s->playTime_4 = 0;
     s->chapter_2DC = 0;
-    s->field_810 = 0;
+    s->corridorFloor_810 = 0;
     s->mapId_2E4[0].cur_0 = 0;
     s->mapId_2E4[2].cur_0 = 0;
     s->mapId_2E4[3].cur_0 = 0;

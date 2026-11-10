@@ -627,8 +627,8 @@ typedef struct
 // per-layer animation state
 typedef struct
 {
-    short timer_0;
-    short frame_2;
+    unsigned short timer_0;
+    unsigned short frame_2;
 } TileAnimTimer;
 typedef struct
 {

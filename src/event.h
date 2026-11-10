@@ -70,6 +70,7 @@ void DrawWindow_80042460(RECT* rect, WindowStyle* style, OT_TYPE* ot, int time);
 int IsWindowFrameFit_800429A8(RECT* rect);
 void DrawUiColorWindow_800424C0(RECT* rect, short colorSet, OT_TYPE* ot, int time);
 int XaRequestStop_80043524(void);
+void DrawGouraudRect_8004251C(RECT* rect, unsigned char (*rgb)[4], unsigned char abr, OT_TYPE* ot);
 void DrawRectOutline_80042750(RECT* rect, unsigned char* rgb, void* ot);
 /* the start of an event entity (the buffer of an eventEntities_8008D400 entry), the same in each view of it
    (GAME's GameEvEnt, EVENTFNC's EvEntity, the maps' MapEnt); each type's own work follows (int work_14[0x19]) */

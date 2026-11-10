@@ -258,7 +258,7 @@ void LoadMenuInit_800B7674(int mode, int b)
         task->next_8 = LoadMenuWaitUiTiy_800B7894;
         break;
     }
-    if (saveData_8008B570.field_810 == -1 && !(work->flags_54 & 8))
+    if (saveData_8008B570.corridorFloor_810 == -1 && !(work->flags_54 & 8))
     {
         work->screen_30 = 1;
         loadMenuRows_800BDF4C[0].cursor_C = 0;
@@ -298,7 +298,7 @@ void SetLoadMenuSavePlace_800B78B8(const char* place)
 void LoadMenuSetEndOfGame_800B78D0(void)
 {
     LoadMenuWork* work;
-    saveData_8008B570.field_810 = -1;
+    saveData_8008B570.corridorFloor_810 = -1;
     saveData_8008B570.flags_0 |= 0x180;
     work = loadMenuTask_8008D480->entry.buffer;
     work->screen_30 = 1;
@@ -1478,12 +1478,12 @@ void PackSaveFile_800B9A8C(LoadMenuWork* work)
     sm->vals_28[4] = PlayTimeMinutes_800BAC68(saveData_8008B570.playTime_4);
     sm->vals_28[5] = saveData_8008B570.inv_24.yan_0;
     MemCopy_800403E8(sm->name_0, saveData_8008B570.levantStatus_7C8.name_10, 0xC);
-    sm->corridor_26 = saveData_8008B570.field_810;
-    if (saveData_8008B570.field_810 == -2)
+    sm->corridor_26 = saveData_8008B570.corridorFloor_810;
+    if (saveData_8008B570.corridorFloor_810 == -2)
     {
         sm->icon_24 = 0;
     }
-    else if (saveData_8008B570.field_810 == -1)
+    else if (saveData_8008B570.corridorFloor_810 == -1)
     {
         sm->icon_24 = 1;
     }

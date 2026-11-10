@@ -117,6 +117,36 @@ def shape(ws, base, lo_addr, hi_addr):
     return tuple(out)
 
 
+_LOOSE = {}
+
+
+def is_li(w):
+    """addiu rt, $zero, imm (a small constant)"""
+    return (w >> 26) == 9 and ((w >> 21) & 31) == 0
+
+
+def loose(key):
+    """a shape with its small constants (li) taken out: a template for the same code with other numbers"""
+    return tuple(w & 0xFFFF0000 if is_li(w) else w for w in key)
+
+
+def li_value(w):
+    return ((w & 0xFFFF) ^ 0x8000) - 0x8000
+
+
+def constants_text(body, consts):
+    """a template's C with its constants changed ({old: (new, how many times the code has it)}); None if one
+    is not written exactly that many times (then which one to change is not clear)"""
+    def number(v, like):
+        return ("-" if v < 0 else "") + ("0x%X" % abs(v) if like.startswith("0x") else "%d" % abs(v))
+    for old, (new, count) in consts.items():
+        pat = r"(?<![\w.])%s(%d|0x%X)(?![\w.])" % ("-" if old < 0 else "(?<!-)", abs(old), abs(old))
+        if len(re.findall(pat, body)) != count:
+            return None
+        body = re.sub(pat, lambda m: number(new, m.group(1)), body)
+    return body
+
+
 # ---------------------------------------------------------------------------------------------------------
 # what the hand written (or written) maps have: templates
 
@@ -278,6 +308,26 @@ TYPES = {
                 ("entrance_26", "i16", 1)],
     "MapGateMusic": [("track", "i32", 4)],
     "MapSavePoint": [("pos_0", "i32", 3), ("name_C", "ptr:str", 1)],
+    "MapExitSpot": [("entrance_0", "i32", 1), ("vars_4", "i32", 1), ("flag_8", "i32", 1), ("point_C", "i32", 1),
+                    ("pos_10", "i32", 3), ("rotY_1C", "i32", 1)],
+    "MapMovie": [("movie_0", "i32", 1), ("music_4", "i32", 1)],
+    "MapTileDoor": [("flag_0", "i32", 1), ("layer_4", "i16", 1), ("sfx_6", "i16", 1), ("seq_8", "u8", 8)],
+    "MapLockPoint": [("point_0", "i32", 1), ("pos_4", "i32", 3), ("arg_10", "ptr:text", 1), ("open_14", "i32", 1)],
+    "MapLock": [("points_0", "ptr:MapLockPoint", 1), ("flag_4", "i32", 1), ("valuable_8", "i32", 1),
+                ("script_C", "ptr:MapInstr", 1), ("script_10", "ptr:MapInstr", 1), ("f14", "ptr:", 1), ("f18", "i32", 1)],
+    "MapFadeBars": [("top_0", "i16", 4), ("bottom_8", "i16", 4), ("frames_10", "i32", 1)],
+    "MapSpritePoint": [("pos_0", "i32", 3), ("start_C", "i32", 1)],
+    "MapSpritePoint*": [("", "ptr:MapSpritePoint", 1)],
+    "MapGateSpot": [("valuable_0", "i32", 1), ("point_4", "i32", 1), ("pos_8", "i32", 3), ("dest_14", "i32", 3),
+                    ("rotY_20", "i32", 1), ("music_24", "i32", 1), ("fx_28", "ptr:MapFx", 2), ("mapVar_30", "i16", 1),
+                    ("value_32", "i16", 1)],
+    "MapGateReturn": [("var_0", "i32", 1), ("fx_4", "ptr:MapFx", 1)],
+    "MapFxModels": [("id_0", "i32", 1), ("pos_4", "i32", 3), ("rot_10", "i16", 3), ("pad_16", "i16", 1),
+                    ("id_18", "i32", 1), ("f1C", "i32", 3)],
+    "MapSwitch": [("flag_0", "i32", 1), ("mode_4", "i32", 1), ("point_8", "i32", 1), ("pos_C", "i32", 3)],
+    "MapWallFlag": [("flag_0", "i32", 1), ("kind_4", "i16", 1), ("wall_6", "i16", 1)],
+    "MapEffectSpot": [("flag_0", "i32", 1), ("point_4", "i32", 1), ("pos_8", "i32", 3), ("dest_14", "i32", 3),
+                      ("rotY_20", "i32", 1), ("fx_24", "ptr:MapFx", 2)],
     "MapFtgAnim": [("first_0", "i16", 1), ("last_2", "i16", 1), ("speed_4", "i16", 1), ("pad_6", "i16", 1),
                    ("rots_8", "ptr:SVECTOR", 1)],
     "MapRgb": [("r", "u8", 1), ("g", "u8", 1), ("b", "u8", 1), ("pad", "u8", 1)],
@@ -291,12 +341,18 @@ TYPES = {
 }
 # the C type a "ptr:" field points to (where it is not void*)
 POINTEE = {"str": "const char", "short": "short", "int": "int", "SVECTOR": "SVECTOR", "ActorScriptCmd*": "ActorScriptCmd*",
-           "ActorScriptCmd": "ActorScriptCmd", "MapActorModel": "MapActorModel", "MapMinionSpecies": "MapMinionSpecies"}
+           "ActorScriptCmd": "ActorScriptCmd", "MapActorModel": "MapActorModel", "MapMinionSpecies": "MapMinionSpecies",
+           "MapLockPoint": "MapLockPoint", "MapInstr": "MapInstr", "MapSpritePoint": "MapSpritePoint"}
 KIND_SIZE = {"i8": 1, "u8": 1, "i16": 2, "u16": 2, "i32": 4, "u32": 4, "ref": 4}
 # the data of an event by its init function (MapEvent.run_10) or its type (MapEvent.type_4)
 EVENT_DATA = {"MinionInit": "MapMinion", "FxInit": "MapFx", "Warp": "MapWarp", "ChestInit": "MapChest", 8: "MapInstr",
               "GateInit": "MapGate", "SavePointInit": "MapSavePoint", "FtgAnimInit": "MapFtgAnim",
-              0xB: "MapVoice"}
+              0xB: "MapVoice", "ExitSpotInit": "MapExitSpot", "MoviePlayerInit": "MapMovie",
+              "TileDoorInit": "MapTileDoor", "EffectSpotInit": "MapEffectSpot",
+              "SwitchInit": "MapSwitch", "WallFlagsInit": "MapWallFlag", "LockInit": "MapLock",
+              "FadeBarsInit": "MapFadeBars", "SpriteTrailInit": "MapSpritePoint*",
+              "GateSpotInit": "MapGateSpot", "GateReturnInit": "MapGateReturn",
+              "FxModelsInit": "MapFxModels"}
 # what an event script instruction's address operand (MapInstr.c_C) is, by its op
 INSTR_DATA = {0x11: "MapEvent", 0x2E: "MapEvent", 0x4B: "MapFx", 0x13: "int", 0x5A: "int", 0x60: "int"}
 TYPE_NAME = {"MapEvent": "event", "MapInstr": "script", "MapVoice": "voices", "MapMinion": "minion",
@@ -344,6 +400,13 @@ class MapSource:
         self.anon_owner = {}  # anon -> the function that makes it
         self.stub_refs = []  # what the functions without a template use
         self.inexact = []  # functions whose template does not compile to the original's code yet
+        self.const_bodies = {}  # address -> its template's C with the constants of this map's code
+        if id(templates) not in _LOOSE:
+            _LOOSE.clear()
+            _LOOSE[id(templates)] = lt = {}
+            for k, cands in templates.items():
+                lt.setdefault(loose(k), []).extend(cands)
+        self.loose_templates = _LOOSE[id(templates)]
         self.scalars = set()  # objects that are not arrays (pointers to them take &)
         self.ctypes = {}  # address -> the C type it is written as (an array's: its element's)
 
@@ -359,6 +422,10 @@ class MapSource:
         for a, ws in bounds:
             key = shape(ws, a, B, self.end)
             cands = self.templates.get(key)
+            if not cands:
+                cands, body = self.loose_template(key)
+                if cands:
+                    self.const_bodies[a] = body
             if not cands:
                 self.missing.append((a, key))
                 self.funcs[a] = (None, None, ws)
@@ -394,6 +461,28 @@ class MapSource:
             if ex is None:
                 self.syms.setdefault(a, "fn_%08X" % a)
         return not self.missing
+
+    def loose_template(self, key):
+        """templates of the same code with other small constants whose C says which numbers to change"""
+        out = []
+        for ex, t in self.loose_templates.get(loose(key), []):
+            tn, ta, tws, exact = t
+            tkey = shape(tws, ta, B, ex.end)
+            consts = {}
+            ok = True
+            for mine, theirs in zip(key, tkey):
+                if mine != theirs:
+                    old, new = li_value(theirs), li_value(mine)
+                    if consts.get(old, (new, 0))[0] != new:
+                        ok = False
+                    consts[old] = (new, consts.get(old, (new, 0))[1] + 1)
+            same = collections.Counter(li_value(w) for w, m in zip(tkey, key) if is_li(w) and w == m)
+            if not ok or any(old in same for old in consts):
+                continue
+            body = constants_text(ex.funcs[tn][1], consts)
+            if body is not None:
+                return [(ex, (tn, ta, tws, exact))], body
+        return None, None
 
     def name_sym(self, a, base, decl):
         if a not in self.syms or self.syms[a].startswith(("fn_", "data_", "unknown_")):
@@ -595,12 +684,13 @@ class MapSource:
         if t == "str" or (t is None and looks_string(raw)):
             s = raw.split(b"\0")[0]
             if raw[len(s):].strip(b"\0") == b"":
-                return ("extern const char %s[%d];" % (n, size), 'const char %s[%d] = "%s";' % (n, size, c_string(s)))
+                c = "const " if a < self.rdata_end else ""  # .data after the code is not read-only
+                return ("extern %schar %s[%d];" % (c, n, size), '%schar %s[%d] = "%s";' % (c, n, size, c_string(s)))
         if t in TYPES and size >= type_size(t):
             es = self.elements(a, t)
             used = len(es) * type_size(t)
             rest = raw[used:]
-            if not rest.strip(b"\0") and (len(rest) < 4 or used % 4 == 0):
+            if not rest.strip(b"\0") and (len(rest) < 4 or (used % 4 == 0 and len(rest) % type_size(t) == 0)):
                 ctype = t
                 items = [self.struct_text(t, f) for _, f in es]
                 if not dims and len(es) == 1 and not rest:
@@ -657,6 +747,7 @@ class MapSource:
             ren = self.rename_map(ex)
             ren[tn] = self.syms[a]
             proto, body = ex.funcs[tn]
+            body = self.const_bodies.get(a, body)
             protos.append(rename(proto, ren))
             body = rename(body, ren)
             for h, htext in ex.helpers.items():
@@ -690,6 +781,9 @@ LIST_END = {
     "MapEvent": lambda m, e: m.value(e + 4, "i32") == 0x12,
     "MapFx": lambda m, e: m.value(e, "i16") == 5,
     "MapVoice": lambda m, e: m.value(e + 2, "i16") == -1,
+    "MapWallFlag": lambda m, e: m.value(e + 4, "i16") == 2,
+    "MapLockPoint": lambda m, e: m.value(e + 16, "i32") == 0,
+    "MapSpritePoint": lambda m, e: m.value(e + 12, "i32") < 0,
 }
 
 

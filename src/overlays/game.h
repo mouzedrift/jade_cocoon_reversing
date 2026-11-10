@@ -61,10 +61,6 @@ typedef struct GameBattleChain
     int next_10;  // the next entry (-1: none)
 } GameBattleChain;
 
-typedef struct GameV3_1
-{
-    int a, b, c;
-} GameV3_1;
 
 // an enemy group of the map (EVENTFNC's EvEnemyGroup, copied into GameEnemySlot.data_8 by AddEnemySlot_800A17F4)
 typedef struct GameEnemyMember
@@ -203,12 +199,6 @@ typedef struct GameMemberCb
     void (*release_10)(); // ReleaseFieldMinion_800A785C
 } GameMemberCb;
 
-// what Actor.desc_15C of a party member points to
-typedef struct GameActorDesc
-{
-    char pad_0[0x30];
-    int clut_30; // index into combatPortraitImagePos_8007DCAC / combatPortraitClutPos_8007DCBC
-} GameActorDesc;
 
 // a party member (fieldMinions_800B0EC4.a)
 typedef struct GameMember
@@ -231,7 +221,7 @@ typedef struct GameFieldMinions
 } GameFieldMinions;
 
 extern GameMember* GetFieldMinion_800A77F4(int idx);
-extern GameActorDesc* GetFieldMinionModelDesc_800A7A1C(int idx);
+extern Model* GetFieldMinionModelDesc_800A7A1C(int idx); // its slot_30 indexes combatPortraitImagePos_8007DCAC
 
 extern EventNode* gameMainTask_8008D46C;
 
@@ -409,10 +399,6 @@ extern void EncounterFadeInWait_800A167C(GameTask* task, GameBattleWork* work);
 
 extern void SkipFieldMinionAnim_800A7AD8(int idx);
 
-typedef struct GameV6_1
-{
-    int a, b, c, d, e, f;
-} GameV6_1;
 
 extern void EnterLevantBattleMode_800A895C();
 
@@ -514,6 +500,7 @@ extern EventEntry* StartBattleResult_800BBB94(void); /* MENU: the battle result 
 
 
 extern void EnableCameraPoints_800A094C(void);
+extern void DisableCameraPoints_800A096C(void);
 
 extern void InitLevantControl_800A8140(void);
 
@@ -928,6 +915,7 @@ extern int FireEventTrigger_800A5C40(int trigger);
 extern void StopLevantAnimLoop_800AB910();
 
 extern void SetLevantVisible_800ABBD8(int visible);
+void GetLevantEffectTarget_800A93A4(EffectTarget* out);
 ActionFrames StartLevantAction_800A8A30(BattleCmd* cmd, int isReaction);
 ActionFrames StartEnemyCommandAction_800A2684(BattleCmd* cmd, int arg);
 
@@ -1410,6 +1398,16 @@ int EnemyAiCheckBlocked_800A4804(GameAi* ai);
 void EnemyAiFleeStep_800A459C(GameAi* ai);
 int EnemyAiTurnStep_800A4470(GameAi* ai);
 int FreeMdecBuffer_800A5854(void);
+void AllocMdecBuffer_800A5804(int mode);
+void FreeEventData_800A56BC(int kind);
+int GetMapVar_800ADC1C(short* key);
+void ClearEncounterSpecies_800A5474(void);
+void SetEncounterRecord_800A16DC(GameBattleChain* rec);
+void* GetEventString_800A6738(unsigned int id);
+GameEvEnt* FindEventEntity_800A5DDC(int key, int byId, GameEvEnt* skip); /* key: a PlayStation address (PSX_PTR) */
+void SetMapVar_800ADC5C(unsigned short* key, int value);
+void WarpAfterLostBattle_800A5FAC(void);
+int SetEquipment_800AD9EC(int id, int slot);
 int GetCameraTargetQuadrant_800A8930();
 int GetLevantAnimFlags_800AC900(int anim, int set);
 HitTimes* GetLevantAnimHitFrames_800AC9CC(int anim);

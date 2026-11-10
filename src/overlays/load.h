@@ -303,7 +303,7 @@ typedef struct
     unsigned char name_0[0xC];
     char text_C[0x18];
     short icon_24;
-    short corridor_26; // SaveData.field_810: the corridor floor (-1 end of game, -2 an ordinary save)
+    short corridor_26; // SaveData.corridorFloor_810: the corridor floor (-1 end of game, -2 an ordinary save)
     int vals_28[6];
     int sum_40; // byte sum of the save body (SaveFile.body_300)
     char pad44[0x3C];

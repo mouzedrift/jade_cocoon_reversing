@@ -5,6 +5,8 @@
    pieces (the functions here), with the map's own tables. */
 #include "overlays/game.h"
 #include "ftg_draw.h"
+#include "cdread.h"
+#include "memmap.h"
 
 /* a map name in an event script (an int): its address; on PC the PlayStation's (scripts/pc_maps.py's REF_
    defines), which PSX_PTR turns into the name's object */
@@ -12,6 +14,13 @@
 #define MAP_REF(name) REF_##name
 #else
 #define MAP_REF(name) ((int)&name)
+#endif
+
+/* a map object as the key GAME takes as an address (FindEventEntity_800A5DDC): on PC the PlayStation's address */
+#ifdef __psyz
+#define MAP_ADDR(p) ((int)Pc_MapAddr(p))
+#else
+#define MAP_ADDR(p) ((int)(p))
 #endif
 
 #define CLAMP(x, lo, hi) ((x) < (lo) ? (lo) : ((hi) < (x) ? (hi) : (x)))
@@ -227,6 +236,269 @@ typedef struct MapExitArgs
     int reload_4;
 } MapExitArgs;
 
+/* the argument of a map's play-a-movie script call */
+typedef struct MapMovieArgs
+{
+    int movie_0; /* PlayMovie_80040EB4 index */
+    int played_4;
+} MapMovieArgs;
+
+/* a movie to play (type 0xA MoviePlayerInit's list, indexed by the state the script sets) */
+typedef struct MapMovie
+{
+    int movie_0; /* PlayMovie_80040EB4 index */
+    int music_4; /* played while it fades (< 0: none) */
+} MapMovie;
+
+typedef struct MapMovieWork
+{
+    int active_0;
+    int index_4; /* the MapMovie */
+    int music_8; /* the music before (GetBattleMusic_800315E4), played again after */
+    int step_C;
+} MapMovieWork;
+
+/* an exit that plays a script, then takes Levant to another map (type 0xD ExitSpotInit) */
+typedef struct MapExitSpot
+{
+    int entrance_0; /* FindMapEntrance_800ADCEC key */
+    int vars_4;     /* event vars 0 (/ 256) and 1 (% 256) */
+    int flag_8;     /* event flag set on leaving */
+    int point_C;    /* the event point that starts the script (IsEventPointValid_800A6504) */
+    int pos_10[3];  /* where Levant starts when he comes back (event var 4 set) */
+    int rotY_1C;
+} MapExitSpot;
+
+/* an animated tile layer used as a door (TileDoorInit): its frames run forward while its event flag (or the
+   script, state_7C 0) has it open, backward while shut */
+typedef struct MapTileSeq
+{
+    unsigned char first_0; /* the frame it starts at */
+    unsigned char last_1;  /* the frame it stops at */
+    unsigned char loop_2;  /* starts again at first_0 */
+    unsigned char sfx_3;   /* played when it loops (0xFF: none) */
+} MapTileSeq;
+
+typedef struct MapTileDoor
+{
+    int flag_0;      /* event flag: open */
+    short layer_4;   /* the tile set (TileSet.depth_0) whose animated layer it is */
+    short sfx_6;     /* played when it starts to move (0xFF: none) */
+    MapTileSeq seq_8[2]; /* shut, open */
+} MapTileDoor;
+
+typedef struct MapTileDoorWork
+{
+    int open_0;
+    int layer_4; /* tileAnim_8008D648.lists_14 index */
+    int frame_8;
+    int sfx_C;   /* the loop sound is still to play */
+} MapTileDoorWork;
+
+/* an event point that starts a script (with its event flag set), plays effects (state 1) and moves Levant
+   (state 2) (EffectSpotInit) */
+typedef struct MapEffectSpot
+{
+    int flag_0;
+    int point_4;   /* the event point (IsEventPointInView_800A66A4: this and pos_8) */
+    int pos_8[3];
+    int dest_14[3]; /* where Levant goes in state 2 */
+    int rotY_20;
+    struct MapFx* fx_24[2]; /* played in turn */
+} MapEffectSpot;
+
+typedef struct MapEffectSpotWork
+{
+    int script_0; /* its event script's id (-1: none) */
+    int turn_4;   /* fx_24 index */
+    int busy_8;
+} MapEffectSpotWork;
+
+/* a switch Levant uses from an event point: sets its event flag (mode_4 1: clears it again) (SwitchInit) */
+typedef struct MapSwitch
+{
+    int flag_0;
+    int mode_4;
+    int point_8;  /* the event point (IsEventPointInView_800A66A4: this and pos_C) */
+    int pos_C[3];
+} MapSwitch;
+
+/* walls on while an event flag is clear (type 9 WallFlagsInit; the list ends with kind_4 2) */
+typedef struct MapWallFlag
+{
+    int flag_0;
+    short kind_4; /* 0: Levant's wall, 1: the actors' */
+    short wall_6;
+} MapWallFlag;
+
+/* an event point of a MapLock */
+typedef struct MapLockPoint
+{
+    int point_0;  /* the event point (IsEventPointInView_800A66A4: this and pos_4); the list ends with arg_10 0 */
+    int pos_4[3];
+    void* arg_10; /* what the script gets (MapEnt.arg_8C) */
+    int open_14;  /* the valuable opens it here */
+} MapLockPoint;
+
+/* event points where a valuable is used (LockInit): script_C runs when it opens, script_10 otherwise */
+typedef struct MapLock
+{
+    MapLockPoint* points_0;
+    int flag_4;     /* event flag: opened */
+    int valuable_8; /* TestValuableFlag_800AD73C; MapEnt.trigger_84 */
+    void* script_C;
+    void* script_10;
+    void* f14;
+    int f18;
+} MapLock;
+
+typedef struct MapLockWork
+{
+    int script_0; /* its event script's id (-1: none) */
+    int open_4;
+    int point_8;  /* the MapLockPoint Levant is at */
+} MapLockWork;
+
+/* the argument of a map's load-and-wait script call: step 0 starts the load, then it waits */
+typedef struct MapLoadArgs
+{
+    int step_0;
+    int arg_4; /* what to load; then the request */
+} MapLoadArgs;
+
+/* black bars that close over the screen (top: the bottom of top_0 down to bottom_8.y; bottom: bottom_8 up from
+   its end) as the script asks (FadeBarsInit; state_7C 0 shut, 1 open, 2 closing, 3 opening) */
+typedef struct MapFadeBars
+{
+    RECT top_0;
+    RECT bottom_8;
+    int frames_10;
+} MapFadeBars;
+
+/* where an effect's sprite animation is drawn, from frame start_C of the run on (SpriteTrailInit: the script picks
+   a list, state_7C 0 / 1; 2 stops); a list ends with start_C < 0 */
+typedef struct MapSpritePoint
+{
+    int pos_0[3];
+    int start_C;
+} MapSpritePoint;
+
+/* a forest gate (GateSpotInit): Levant uses the valuable at the event point, the effects play, and he goes
+   through to dest_14 with the forest's music */
+typedef struct MapGateSpot
+{
+    int valuable_0; /* TestValuableFlag_800AD73C; MapEnt.trigger_84 */
+    int point_4;    /* the event point (IsEventPointInView_800A66A4: this and pos_8) */
+    int pos_8[3];
+    int dest_14[3]; /* where Levant comes out (also where he starts when he comes back: GameMapInit) */
+    int rotY_20;
+    int music_24;
+    struct MapFx* fx_28[2]; /* played in turn */
+    short mapVar_30; /* map var (area 4) set to value_32 the first time (< 0: none) */
+    short value_32;
+} MapGateSpot;
+
+typedef struct MapGateSpotWork
+{
+    int script_0;     /* its event script's id (-1: none) */
+    int turn_4;       /* fx_28 index */
+    struct MapFx* fx_8; /* the effects playing (their MDEC buffer is freed when they end) */
+    int open_C;
+} MapGateSpotWork;
+
+/* the gate Levant came back through (event var 4 == var_0) plays its effects (GateReturnInit) */
+typedef struct MapGateReturn
+{
+    int var_0;
+    struct MapFx* fx_4;
+} MapGateReturn;
+
+/* one battle of a battle chain (GameBattleChain; BATTLE's map code hooks at fixed addresses) */
+typedef struct MapChainEntry
+{
+    int last_0;     /* < 0: the chain ends with it */
+    int kind_4;     /* the command (BattleCmd.kind_0) */
+    int arg_8;
+    int mask_C;     /* -1: the acting unit */
+    int targets_10;
+    int next_14;    /* the entry shown next (-1: none) */
+    int match_18;   /* 1: the entry follows when the command is kind_4, 0: when it is not */
+    int rate_1C;    /* the damage, % of the target's hp */
+} MapChainEntry;
+
+/* the glow that rises off Levant when he comes back through a gate (GlowTrailInit, a type 0xD event of 0x48 bytes) */
+typedef struct MapGlowTrailWork
+{
+    int delay_0;  /* frames before it starts (effect 325's) */
+    int time_4;   /* effect 324's frame: where the sparks are */
+    int count_8;  /* sparks alive */
+    unsigned char ages_C[60]; /* each spark's effect 323 frame (60: none) */
+} MapGlowTrailWork;
+
+/* two effect models drawn together at a place, the second on the first's keys (FxModelsInit; state_7C steps
+   through its stages) */
+typedef struct MapFxModels
+{
+    int id_0;      /* the effect model (FindEffectIndex_80020F00 kind 1) */
+    int pos_4[3];
+    short rot_10[3];
+    short pad_16;
+    int id_18;     /* the one drawn on its keys */
+    int f1C[3];
+} MapFxModels;
+
+typedef struct MapFxModelsWork
+{
+    int stage_0;
+    int frame_4;     /* id_0's frame */
+    int loopStart_8;
+    int loopEnd_C;
+    int frame2_10;   /* id_18's frame (every other frame) */
+    int loopStart2_14;
+    int loopEnd2_18;
+    int rumble_1C;   /* the rumble sound plays */
+    int voice_20;    /* its voice (SfxKeyOn_800314F4) */
+} MapFxModelsWork;
+
+/* the Eternal Corridor (other_hunting_sce00): each floor is a tree of rooms grown at random from the start room
+   (the floor's MapCorridorWork); one dead end leads on to the next floor */
+typedef struct MapCorridorRoom
+{
+    int kind_0; /* theme * 15 + variant * 5 + type (corridorRooms_800B53A4); type 3: a dead end, 4: the way on */
+    struct
+    {
+        struct MapCorridorRoom* room_0; /* [0]: the room it came from; 0: none */
+        int door_4;                     /* the door of that room it leads to (-1: none) */
+    } exits_4[3];
+    unsigned short flags_1C; /* encounter flags (GAME's ClearEncounterGroupFlags_800A4940) */
+    short f1E;
+} MapCorridorRoom;
+
+typedef struct MapCorridorWork
+{
+    MapCorridorRoom start_0;
+    MapCorridorRoom* cur_20;
+    int door_24;   /* the door Levant came in by */
+    int f28;
+    int budget_2C; /* branches still to grow */
+    int f30;
+    int floor_34;
+    int theme_38;
+} MapCorridorWork;
+
+/* a door of a corridor room type: where Levant comes in */
+typedef struct MapCorridorDoor
+{
+    int pos_0[3];
+    int rotY_C;
+} MapCorridorDoor;
+
+typedef struct MapCorridorRoomType
+{
+    int exits_0; /* the doors that lead on (1 .. exits_0) */
+    MapCorridorDoor doors_4[3];
+} MapCorridorRoomType;
+
 /* a save point (type 0xC, SavePointInit) */
 typedef struct MapSavePoint
 {
@@ -349,7 +621,6 @@ extern void ClearEventFlag_800AD124(unsigned flag);
 extern int IsPointInViewCone_800A65F0(int* point, int* eye, unsigned short* rot, int range);
 extern int GetInventoryCount_800AD254(int id, int table);
 extern void ResetLevantActorToIdle_800A8DEC();
-extern int savedLevantPos_80091C78[4]; /* main.h: where Levant starts on the next map (useSavedLevantPos_80091C98) */
 extern int useSavedLevantPos_80091C98;
 extern short savedLevantRot_80091CA8[4];
 extern int AddFieldMinion_800A77A0(MapEnt* ent);
@@ -360,6 +631,15 @@ extern void SetVoiceTable_800A6830(void* table);
 extern int AreLevantFilesLoaded_800AC768();
 extern int levantAnimSet_80091C74; /* main.h (which GAME does not include) */
 extern int pointLightRange_8008D3F0;
+extern int pointLightPos_8008D680[3];    /* main.h */
+extern SVECTOR pointLightColor_8008D418; /* main.h */
+extern List mapHeap_80091C68;            /* main.h */
+extern List heap_80091C48;               /* main.h */
+extern unsigned char actingUnit_800C9C7C;  /* BATTLE */
 extern EventNode* mapEventTasks_800B1DA8[1];
+
+/* EVENTFNC (loaded with the field maps; overlays/eventfnc.h) */
+extern void SetTempFlags_800BBDA0(int mask, int on);
+extern int TestTempFlags_800BBDD8(int mask);
 
 #endif

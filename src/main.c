@@ -9,6 +9,7 @@
 #include "sound.h"
 #include "data_decls.h"
 #include "model.h"
+#include "model_ftg.h"
 #include "unit.h"
 #include "tiy.h"
 #include "camera.h"
@@ -72,7 +73,8 @@ EventNode *eventEntities_8008D400 BSS = 0;
 volatile int unpausedFrames_8008D404 BSS = 0;
 int unused_8008D408 BSS = 0;
 int sceneBrightness_8008D40C BSS = 0;
-int eventScripts_8008D410[2] BSS = { 0 };
+EventNode* eventScripts_8008D410 BSS = 0;
+int unused_8008D414 BSS = 0;
 SVECTOR pointLightColor_8008D418 BSS = { 0 };
 int viewport_8008D420[2] BSS = { 0 };
 unsigned long bDoubleBuffer_8008D428 BSS = 0;
@@ -204,7 +206,7 @@ int dword_80091C5C BSS = 0;
 MapList16 mapSpawns_80091C60 BSS = { 0 };
 List mapHeap_80091C68 BSS = { 0 };
 int levantAnimSet_80091C74 BSS = 0;
-int savedLevantPos_80091C78[4] BSS = { 0 };
+SavedLevantPos savedLevantPos_80091C78 BSS = { { 0 } };
 int currentAreaMap_80091C88 BSS = 0;
 int dword_80091C8C BSS = 0;
 int dword_80091C90 BSS = 0;

@@ -13,7 +13,6 @@
 #include "model.h"
 #include "unit_stats.h"
 /* defined further on / elsewhere without a prototype the callers see */
-void SetActorTint_8001DAAC(Actor* actor, short* tint);
 
 
 const char aKlarrgas_80072310[20] = "\202j\202\214\202\201\202\222\202\222\202\207\202\201\202\223"; // Klarrgas
