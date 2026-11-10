@@ -71,8 +71,12 @@ typedef struct CombatVramPos
 } CombatVramPos;
 
 extern int combatHeader_800A05A0;
-extern short combatCursor_800A1BBC[4];
-extern short combatMenuChoice_800A1BC4;
+extern MenuCursor combatCursor_800A1BBC; // the main menu cursor
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define combatMenuChoice_800A1BC4 (combatCursor_800A1BBC.cursor_8)
+#else
+extern short combatMenuChoice_800A1BC4; // == combatCursor_800A1BBC.cursor_8
+#endif
 extern unsigned char player2Pad_800A38D8;
 extern unsigned char curPlayer_800A38D9;
 extern unsigned char rosterFill_800A38DA;

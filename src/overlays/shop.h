@@ -185,7 +185,7 @@ int UnitStatsToMinion_800B9E94(UnitStats* src, Minion* dst, short state);
 int MergeMinions_800B9FC8(Minion* base, Minion* partner, Minion* out, int person);
 void ClearMinion_800BA340(unsigned int* minion);
 void InheritMergeStats_800BA368(Minion* out, Minion* src);
-void MergeBaseStats_800BA3C8(unsigned char* out, unsigned char* base, unsigned char* partner);
+void MergeBaseStats_800BA3C8(UnitStatBlock* out, UnitStatBlock* base, UnitStatBlock* partner);
 unsigned char MergeBaseStat_800BA46C(unsigned char base, unsigned char partner);
 void MergeResistances_800BA4CC(Minion* out, Minion* base, Minion* partner);
 void ApplyMergeStatBonus_800BA650(Minion* out);

@@ -7,19 +7,13 @@
 
 int unused_800C9E88 SDATA = 34; // first word of the overlay
 
-short cmdCursor_800CD28C[4] = { 2, 2, 4 };
-short cmdCursorSel_800CD294 = 0;
-short skillCursor_800CD298[6] = { 1, 5, 5 };
-short magicCursor_800CD2A4[2] = { 1, 4 };
-short magicCursorCount_800CD2A8 = 4;
-short magicCursorFlags_800CD2AA = 64;
-short magicCursorSel_800CD2AC = 0;
-short magicCursorScroll_800CD2AE = 0;
-short targetCursor_800CD2B0[6] = { 1, 1, 1 };
-short changeCursor_800CD2BC[6] = { 1, 3, 1 };
-char pauseCursor_800CD2C8[8] = { 1, 0, 3, 0, 3 };
-short pauseCursorSel_800CD2D0 = 0;
-short *stateCursors_800CD2D4[6] = { cmdCursor_800CD28C, skillCursor_800CD298, magicCursor_800CD2A4, targetCursor_800CD2B0, cmdCursor_800CD28C, (void *)pauseCursor_800CD2C8 };
+MenuCursor cmdCursor_800CD28C = { 2, 2, 4 };
+MenuCursor skillCursor_800CD298 = { 1, 5, 5 };
+MenuCursor magicCursor_800CD2A4 = { 1, 4, 4, 0x40 };
+MenuCursor targetCursor_800CD2B0 = { 1, 1, 1 };
+MenuCursor changeCursor_800CD2BC = { 1, 3, 1 };
+MenuCursor pauseCursor_800CD2C8 = { 1, 3, 3 };
+MenuCursor* stateCursors_800CD2D4[6] = { &cmdCursor_800CD28C, &skillCursor_800CD298, &magicCursor_800CD2A4, &targetCursor_800CD2B0, &cmdCursor_800CD28C, &pauseCursor_800CD2C8 };
 CombComItem cmdItemAttack_800CD2EC[1] = { {
     { 8, 1, { .num = 13 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 32, 157, 32, 18, 2, 2 },
     { 1, 0, 0, NULL, NULL, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, -1, -1 },
@@ -136,7 +130,7 @@ unsigned char byte_800CD845 = 0;
 int padIndex_800CD848 = 0;
 const char* errorMsg_800CD84C = 0;
 unsigned char prevState_800CD850 = 0;
-short *activeCursor_800CD854 = 0;
+MenuCursor* activeCursor_800CD854 = 0;
 
 const CombComItem pauseTitleItem_800CB4F0 = {
     { 8, 1, { .num = 37 }, &uiTiySprts_8008D620, &uiTiyTPages_8008D3F4, 121, 79, 78, 24, 2, 5 },
@@ -217,12 +211,12 @@ void SetupCmdMenu_800CB88C()
 {
     if (CountMagicBits_8001AE54(GetSlotMagicBits_800A11BC(side_800CD839)) >= 5)
     {
-        magicCursorCount_800CD2A8 = CountMagicBits_8001AE54(GetSlotMagicBits_800A11BC(side_800CD839));
+        magicCursor_800CD2A4.count_4 = CountMagicBits_8001AE54(GetSlotMagicBits_800A11BC(side_800CD839));
     }
     if (combatFlags_800A3A88 & 2)
     {
-        cmdCursor_800CD28C[1] = 3;
-        cmdCursor_800CD28C[2] = 5;
+        cmdCursor_800CD28C.rows_2 = 3;
+        cmdCursor_800CD28C.count_4 = 5;
         cmdItems_800CD404[4] = &cmdItemChange_800CD3CC;
     }
 }
@@ -239,7 +233,7 @@ void DisableChangeIfAlone_800CB924()
 
 
 // The menu cursor of a menu state (state 3: target or, for Change, the minion to send in)
-short* GetStateCursor_800CB974(int state)
+MenuCursor* GetStateCursor_800CB974(int state)
 {
     state &= 0xFF;
     if (state == 3)
@@ -248,14 +242,14 @@ short* GetStateCursor_800CB974(int state)
         {
             if ((targetFlags_800CD844 & 4) == 0)
             {
-                if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 4)
+                if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 4)
                 {
-                    changeCursor_800CD2BC[2] = CountTeamMinions_800A1AAC(side_800CD839) - 1;
-                    return changeCursor_800CD2BC;
+                    changeCursor_800CD2BC.count_4 = CountTeamMinions_800A1AAC(side_800CD839) - 1;
+                    return &changeCursor_800CD2BC;
                 }
             }
         }
-        return targetCursor_800CD2B0;
+        return &targetCursor_800CD2B0;
     }
     return stateCursors_800CD2D4[state];
 }
@@ -280,7 +274,7 @@ void UpdateCmdMenuWin_800CBA20(int state)
         cmdMenuWin_800CD41C.anim_8++;
     }
     off = side_800CD839;
-    cmdMenuWin_800CD41C.sel_C = cmdCursorSel_800CD294;
+    cmdMenuWin_800CD41C.sel_C = cmdCursor_800CD28C.cursor_8;
     for (i = 0; i < 5; i++)
     {
         cmdItems_800CD404[i]->item.x_10 = cmdItemX_800CD434[i] + off * 192;
@@ -342,13 +336,13 @@ void DrawLargeMessage_800CBBE0(const char* text)
 
 int GetSelectedSkill_800CBC28()
 {
-    return MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54((MenuCursor*)skillCursor_800CD298));
+    return MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(&skillCursor_800CD298));
 }
 
 int GetSelectedMagic_800CBC58()
 {
     unsigned int* bits = GetSlotMagicBits_800A11BC(side_800CD839);
-    return FindNthMagicBit_8001AEC0(bits, (short)GetMenuCursorIndex_8003DA54((MenuCursor*)magicCursor_800CD2A4));
+    return FindNthMagicBit_8001AEC0(bits, (short)GetMenuCursorIndex_8003DA54(&magicCursor_800CD2A4));
 }
 
 void DrawPauseMenu_800CBCA0()
@@ -375,7 +369,7 @@ void DrawPauseMenu_800CBCA0()
     DrawMenuItemWithWindow_8002ADB4((MenuWindowItem*)&title, &col, 0, GetTime30Hz_8002C64C());
     menu.time_4 = GetTime30Hz_8002C64C();
     menu.items_10 = list;
-    menu.sel_C = pauseCursorSel_800CD2D0;
+    menu.sel_C = pauseCursor_800CD2C8.cursor_8;
     DrawMenuWindows_8002A5A4((MenuWindowList*)&menu);
 }
 
@@ -393,7 +387,7 @@ void DrawCmdMenu_800CBEA4()
     {
         if (menuState_800CD83A == 0)
         {
-            DrawCmdMessage_800CBB4C(*cmdInfo_800CD46C[(short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C)].desc_0);
+            DrawCmdMessage_800CBB4C(*cmdInfo_800CD46C[(short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C)].desc_0);
             shown = 1;
         }
         else if (menuState_800CD83A == 1)
@@ -404,7 +398,7 @@ void DrawCmdMenu_800CBEA4()
             minion = GetSlotMinion_800A11D8(side_800CD839);
             pos[0] = 10;
             pos[1] = 0x14;
-            DrawAbilityDescription_8002C670((char*)minion, (Pos16*)pos, (const char* (*)[4])skillDescs_800CD718, (short)GetMenuCursorIndex_8003DA54((MenuCursor*)skillCursor_800CD298), 0xF);
+            DrawAbilityDescription_8002C670((char*)minion, (Pos16*)pos, (const char* (*)[4])skillDescs_800CD718, (short)GetMenuCursorIndex_8003DA54(&skillCursor_800CD298), 0xF);
         }
         else if (menuState_800CD83A == 2)
         {
@@ -421,7 +415,7 @@ void DrawCmdMenu_800CBEA4()
         {
             CombComMsgs3 descs;
             descs = pauseOptionDescs_800CB674;
-            DrawCmdMessage_800CBB4C(descs.m[(short)GetMenuCursorIndex_8003DA54((MenuCursor*)pauseCursor_800CD2C8)]);
+            DrawCmdMessage_800CBB4C(descs.m[(short)GetMenuCursorIndex_8003DA54(&pauseCursor_800CD2C8)]);
             shown = 1;
         }
     }
@@ -443,9 +437,9 @@ void DrawCmdMenu_800CBEA4()
         }
         else
         {
-            listSel = (short)GetMenuCursorIndex_8003DA54((MenuCursor*)activeCursor_800CD854);
+            listSel = (short)GetMenuCursorIndex_8003DA54(activeCursor_800CD854);
         }
-        if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 3)
+        if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 3)
         {
             if (targetFlags_800CD844 & 2)
             {
@@ -453,11 +447,11 @@ void DrawCmdMenu_800CBEA4()
             }
             PreviewCmdEffect_800CC40C();
         }
-        else if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 6)
+        else if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 6)
         {
             PreviewCmdEffect_800CC40C();
         }
-        else if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 4)
+        else if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 4)
         {
             targetSlot_800CD83C = DrawTargetList_800CC674(target, 3, listSel, 0xF);
         }
@@ -482,12 +476,12 @@ void DrawCmdMenu_800CBEA4()
         ref.windowFlags_4 = 2;
         ref.ot_6 = 0xF;
         ref.field_8 = -1;
-        ref.cursor_0 = skillCursor_800CD298[4];
-        ref.scroll_2 = skillCursor_800CD298[5];
+        ref.cursor_0 = skillCursor_800CD298.cursor_8;
+        ref.scroll_2 = skillCursor_800CD298.scroll_A;
         ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         ref.fieldMenu_A = 0;
         DrawAbilityList_8002CE28(&ref, pos.xy[side_800CD839]);
-        previewMp_800A82D2 = -GetSkillMpCost_80031A04(ref.minion_C->skills_DE.slot, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54((MenuCursor*)skillCursor_800CD298)));
+        previewMp_800A82D2 = -GetSkillMpCost_80031A04(ref.minion_C->skills_DE.slot, MenuIndexToSkillSlot_80031BDC((short)GetMenuCursorIndex_8003DA54(&skillCursor_800CD298)));
     }
     if (!(stateDrawFlags_800CD820[menuState_800CD83A][k] & 0x80))
     {
@@ -497,12 +491,12 @@ void DrawCmdMenu_800CBEA4()
         ref.windowFlags_4 = 2;
         ref.ot_6 = 0xF;
         ref.field_8 = -1;
-        ref.cursor_0 = magicCursor_800CD2A4[4];
-        ref.scroll_2 = magicCursor_800CD2A4[5];
+        ref.cursor_0 = magicCursor_800CD2A4.cursor_8;
+        ref.scroll_2 = magicCursor_800CD2A4.scroll_A;
         ref.minion_C = GetSlotMinion_800A11D8(side_800CD839);
         ref.fieldMenu_A = 0;
         DrawMagicList_8002CAC8(&ref, pos.xy[side_800CD839]);
-        previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&ref.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54((MenuCursor*)magicCursor_800CD2A4)));
+        previewMp_800A82D2 = -GetMagicMpCost_8001AC58(FindNthMagicBit_8001AEC0(&ref.minion_C->magicBits_F4, (short)GetMenuCursorIndex_8003DA54(&magicCursor_800CD2A4)));
     }
     if (menuState_800CD83A == 5)
     {
@@ -561,14 +555,14 @@ void PreviewCmdEffect_800CC40C()
         check.id_0 = cmd_800CD840->arg_4;
         check.actor_2 = side_800CD839 + 8;
         check.target_4 = targetSlot_800CD83C;
-        if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 6)
+        if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 6)
         {
             if (CheckUsableStub_80034124(&check))
             {
                 previewHp_800A82D0 = 0;
             }
         }
-        else if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(&check))
+        else if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 7 && CheckMagicUsable_80034068(&check))
         {
             previewHp_800A82D0 = 0;
         }
@@ -688,11 +682,11 @@ int CheckCmdSelectable_800CCA94()
 {
     ListMenuState ref;
     TargetQuery check;
-    int idx = GetMenuCursorIndex_8003DA54((MenuCursor*)activeCursor_800CD854);
+    int idx = GetMenuCursorIndex_8003DA54(activeCursor_800CD854);
     const char** error;
-    ref.cursor_0 = activeCursor_800CD854[4];
+    ref.cursor_0 = activeCursor_800CD854->cursor_8;
     errorMsg_800CD84C = 0;
-    ref.scroll_2 = activeCursor_800CD854[5];
+    ref.scroll_2 = activeCursor_800CD854->scroll_A;
     ref.fieldMenu_A = 0;
     check.f6 = 0;
     check.id_0 = cmd_800CD840->arg_4;
@@ -745,7 +739,7 @@ int CheckCmdSelectable_800CCA94()
         }
         break;
     case 3:
-        if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 2)
+        if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 2)
         {
             switch ((unsigned int)CheckUsableStub_80034124(&check))
             {
@@ -760,7 +754,7 @@ int CheckCmdSelectable_800CCA94()
             }
             return 0;
         }
-        else if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 3)
+        else if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 3)
         {
             switch ((unsigned int)CheckMagicUsable_80034068(&check))
             {
@@ -775,7 +769,7 @@ int CheckCmdSelectable_800CCA94()
             }
             return 0;
         }
-        else if ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C) == 4)
+        else if ((short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C) == 4)
         {
             if (IsMinionFainted_800A1958(&teams_800A3AA0[side_800CD839][targetSlot_800CD83C]))
             {
@@ -809,9 +803,9 @@ void AdvanceCmdMenu_800CCDD0()
     switch (menuState_800CD83A)
     {
     case 0:
-        targetFlags_800CD844 = cmdTargetFlags_800CD494[(short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C)];
-        menuState_800CD83A = cmdNextState_800CD49C[(short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C)];
-        cmd_800CD840->kind_0 = cmdKinds_800CD524[(short)GetMenuCursorIndex_8003DA54((MenuCursor*)cmdCursor_800CD28C)];
+        targetFlags_800CD844 = cmdTargetFlags_800CD494[(short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C)];
+        menuState_800CD83A = cmdNextState_800CD49C[(short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C)];
+        cmd_800CD840->kind_0 = cmdKinds_800CD524[(short)GetMenuCursorIndex_8003DA54(&cmdCursor_800CD28C)];
         break;
     case 1:
         skills = GetSlotSkills_800A11A0(side_800CD839);
@@ -835,7 +829,7 @@ void AdvanceCmdMenu_800CCDD0()
         menuState_800CD83A = 4;
         break;
     case 5:
-        switch ((short)GetMenuCursorIndex_8003DA54((MenuCursor*)pauseCursor_800CD2C8))
+        switch ((short)GetMenuCursorIndex_8003DA54(&pauseCursor_800CD2C8))
         {
         case 0:
             prevState_800CD850 = 0;
@@ -918,9 +912,9 @@ void CmdMenuMessage_800CD0C8()
 // The menu event: state 4 = command complete, Start opens the pause menu (state 5)
 void CmdMenuTask_800CD16C(EventEntry* e, void* buf)
 {
-    short* cursor = GetStateCursor_800CB974(menuState_800CD83A);
+    MenuCursor* cursor = GetStateCursor_800CB974(menuState_800CD83A);
     activeCursor_800CD854 = cursor;
-    UpdateMenuCursor_8003D794((MenuCursor*)cursor, padIndex_800CD848);
+    UpdateMenuCursor_8003D794(cursor, padIndex_800CD848);
     if (padPressed_8009194C[padIndex_800CD848] & 0x800)
     {
         menuState_800CD83A = 5;

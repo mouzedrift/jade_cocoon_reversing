@@ -37,7 +37,11 @@ typedef struct CombSelTask
 
 // COMBAT (the overlay below this one)
 extern MenuCursor combatCursor_800A1BBC; // the main menu cursor
-extern short combatMenuChoice_800A1BC4;          // == combatCursor_800A1BBC.cursor_8
+#ifdef __psyz /* an alias (config/aliases.txt), on PC the place itself */
+#define combatMenuChoice_800A1BC4 (combatCursor_800A1BBC.cursor_8)
+#else
+extern short combatMenuChoice_800A1BC4; // == combatCursor_800A1BBC.cursor_8
+#endif
 extern Minion rosters_800A1BC8[2][15];
 extern unsigned char player2Pad_800A38D8;
 extern unsigned char curPlayer_800A38D9;

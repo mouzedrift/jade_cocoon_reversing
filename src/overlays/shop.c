@@ -376,7 +376,7 @@ restart:
         *(unsigned short*)&out->status_84.elementMask_42 |= 2;
     }
     InheritMergeStats_800BA368(out, base);
-    MergeBaseStats_800BA3C8(out->status_84.stats_2C.cur_0, base->status_84.stats_2C.cur_0, partner->status_84.stats_2C.cur_0);
+    MergeBaseStats_800BA3C8(&out->status_84.stats_2C, &base->status_84.stats_2C, &partner->status_84.stats_2C);
     MergeResistances_800BA4CC(out, base, partner);
     ApplyMergeStatBonus_800BA650(out);
     MergeExp_800BA6D0(out, base, partner);
@@ -411,7 +411,7 @@ void InheritMergeStats_800BA368(Minion* out, Minion* src)
     out->status_84.mp_C.max_2 = src->status_84.mp_C.max_2;
 }
 
-void MergeBaseStats_800BA3C8(unsigned char* out, unsigned char* base, unsigned char* partner)
+void MergeBaseStats_800BA3C8(UnitStatBlock* out, UnitStatBlock* base, UnitStatBlock* partner)
 {
     int i;
     for (i = 5; i >= 0; i--)
@@ -422,7 +422,7 @@ void MergeBaseStats_800BA3C8(unsigned char* out, unsigned char* base, unsigned c
     }
     for (i = 0; i < 6; i++)
     {
-        (out + i)[6] = MergeBaseStat_800BA46C((base + i)[6], (partner + i)[6]);
+        out->base_6[i] = MergeBaseStat_800BA46C(base->base_6[i], partner->base_6[i]);
     }
     for (i = 5; i >= 0; i--)
     {

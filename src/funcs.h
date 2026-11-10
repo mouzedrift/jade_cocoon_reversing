@@ -64,7 +64,7 @@ extern long vsyncEventHandler_800103AC(void);
 
 struct Pool;
 extern UnitStatus* GetUnitStatus_80014390(int arg0);
-extern EventEntry* FindModelTask_8001091C();
+extern EventEntry* FindModelTask_8001091C(int key);
 struct Pool;
 extern void AddStatus_80012794(UnitStatus* status, int bits);
 extern void SeVibOn(void);

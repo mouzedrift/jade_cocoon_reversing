@@ -119,7 +119,7 @@ typedef struct GameEvCtx
     struct EvInstr* ret_C;
     int id_10;
     int heldActors_14;
-    int busyActors_18;
+    unsigned int busyActors_18; // a mask of actors (bit 0 Levant, 1..4 party)
     int animActors_1C;
     int f20;
     int idleAnims_24[6];
@@ -541,6 +541,7 @@ extern void ResetEventCtx_800A5B54(GameEvCtx* ctx);
 extern void RunEventScript_800A6060(); /* an EventEntry callback: (GameTask*, GameEvCtx*) */
 
 extern void EndEventScript_800A6168(); /* an EventEntry callback: (GameTask*, GameEvCtx*) */
+int SkipActorAnims_800A67B4(GameEvCtx* ctx); /* EVENTFNC: skips the animations of the actors still busy */
 
 extern void TileAnimTask_800A0A04(GameTask* task, short* work);
 

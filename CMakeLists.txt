@@ -19,8 +19,11 @@ add_subdirectory(external/psyz/psyz psyz EXCLUDE_FROM_ALL)
 target_compile_definitions(psyz PRIVATE __psyz)
 
 set(GAME_DEFINES __psyz)
-set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common -fno-toplevel-reorder
+set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common
     -Werror=implicit-function-declaration -Werror=int-conversion -Werror=return-type)
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    list(APPEND GAME_OPTIONS -fno-toplevel-reorder) # data laid out in source order, as the PlayStation's
+endif()
 
 # the executable's translation units, config/tus.txt (lines "name address")
 file(STRINGS config/tus.txt TU_LINES REGEX "^[a-z0-9_]+ [0-9a-fA-F]+")

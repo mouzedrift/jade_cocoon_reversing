@@ -7,6 +7,7 @@ EXE      playerYan_8008B594     saveData_8008B570    0x24     # saveData_8008B57
 EXE      soundFiles_80082F0C    soundTable_80082F04  0x8      # soundTable_80082F04.files
 EXE      levantPos_8008BD18     saveData_8008B570    0x7A8    # saveData_8008B570.levant_7A8
 GAME     enemySlots_800B19F0    gCtx_800B1260        0x790    # gCtx_800B1260.enemySlots_790
+COMBAT   combatMenuChoice_800A1BC4  combatCursor_800A1BBC  0x8   # combatCursor_800A1BBC.cursor_8
 GAME     Ratan2DifferenceInt_8003B9E0  ratan2Difference_8003B9E0  0  # GAME declared it returning int (its callers do not sign-extend)
 # places inside other images' objects that the code names on their own
 EXE      encounterSwapped_800B129C                 gCtx_800B1260                0x3C     # gCtx_800B1260 + 0x3C

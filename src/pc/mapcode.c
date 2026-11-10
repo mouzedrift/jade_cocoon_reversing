@@ -16,7 +16,7 @@
     }
 
 static const PcMap* curMap;
-static void* saved[64][64]; /* each map's data as it was before it first ran (a map file brings it fresh) */
+static void*** saved; /* per map, its data as it was before it first ran (a map file brings it fresh) */
 
 /* the map loader copied the code of the map file (OnMapFileLoaded_80028808) */
 void Pc_MapCodeLoaded(int fileId)
@@ -34,7 +34,16 @@ void Pc_MapCodeLoaded(int fileId)
         return;
     }
     curMap = pcMaps[m];
-    for (i = 0; i < curMap->count && i < 64 && m < 64; i++)
+    if (!saved)
+    {
+        int n = m;
+        while (pcMaps[n])
+            n++;
+        saved = calloc(n, sizeof(*saved));
+    }
+    if (!saved[m])
+        saved[m] = calloc(curMap->count, sizeof(**saved));
+    for (i = 0; i < curMap->count; i++)
     {
         const PcMapSym* s = &curMap->syms[i];
         if (!s->size)

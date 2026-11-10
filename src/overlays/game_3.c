@@ -1744,12 +1744,12 @@ void* GetEventString_800A6738(unsigned int id)
     return PSX_PTR(id); // the text's address itself
 }
 
-int SkipActorAnims_800A67B4(unsigned int* args)
+int SkipActorAnims_800A67B4(GameEvCtx* ctx)
 {
     int i;
     for (i = 0; i < 5; i++)
     {
-        if (args[6] & (1 << i))
+        if (ctx->busyActors_18 & (1 << i))
         {
             if (i == 0)
             {

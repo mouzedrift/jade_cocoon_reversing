@@ -203,8 +203,7 @@ int StartModelTask_80010850(void* params)
     }
     return -1;
 }
-EventEntry* FindModelTask_8001091C(key)
-int key;
+EventEntry* FindModelTask_8001091C(int key)
 {
     EventNode* n = modelTasks_8008D618;
     int count = n->count;
@@ -226,7 +225,7 @@ int key;
 }
 int FreeModelTask_8001098C(int key)
 {
-    EventEntry* e = FindModelTask_8001091C();
+    EventEntry* e = FindModelTask_8001091C(key);
     ModelTaskBuf* buf = e->buffer;
     ModelTaskState* state = buf->state_4;
     if (state->state_38 == 5)
@@ -241,12 +240,12 @@ int FreeModelTask_8001098C(int key)
 }
 int RunModelTask_80010A10(int key)
 {
-    EventEntry* entry = FindModelTask_8001091C();
+    EventEntry* entry = FindModelTask_8001091C(key);
     return StepModelTask_80010AD8(((ModelTaskBuf*)entry->buffer)->state_4);
 }
 Model* GetModelTaskModel_80010A44(int key)
 {
-    ModelTaskBuf* buf = FindModelTask_8001091C()->buffer;
+    ModelTaskBuf* buf = FindModelTask_8001091C(key)->buffer;
     ModelTaskState* state = buf->state_4;
     if (state->state_38 == 5)
     {

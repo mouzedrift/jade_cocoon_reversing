@@ -392,7 +392,7 @@ typedef struct EvVoiceCue
 } EvVoiceCue;
 
 
-extern void SkipActorAnims_800A67B4(EvScriptCtx* ctx);
+extern int SkipActorAnims_800A67B4(EvScriptCtx* ctx);
 
 
 

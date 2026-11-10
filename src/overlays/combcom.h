@@ -69,19 +69,13 @@ typedef struct CombComPos2
 extern int unused_800C9E88;
 
 /* .data */
-extern short cmdCursor_800CD28C[4];
-extern short cmdCursorSel_800CD294;
-extern short skillCursor_800CD298[6];
-extern short magicCursor_800CD2A4[2];
-extern short magicCursorCount_800CD2A8;
-extern short magicCursorFlags_800CD2AA;
-extern short magicCursorSel_800CD2AC;
-extern short magicCursorScroll_800CD2AE;
-extern short targetCursor_800CD2B0[6];
-extern short changeCursor_800CD2BC[6];
-extern char pauseCursor_800CD2C8[8];
-extern short pauseCursorSel_800CD2D0;
-extern short* stateCursors_800CD2D4[6];
+extern MenuCursor cmdCursor_800CD28C;
+extern MenuCursor skillCursor_800CD298;
+extern MenuCursor magicCursor_800CD2A4;
+extern MenuCursor targetCursor_800CD2B0;
+extern MenuCursor changeCursor_800CD2BC;
+extern MenuCursor pauseCursor_800CD2C8;
+extern MenuCursor* stateCursors_800CD2D4[6];
 extern CombComItem cmdItemAttack_800CD2EC[1];
 extern CombComItem cmdItemDefend_800CD324[1];
 extern CombComItem cmdItemSpecial_800CD35C[1];
@@ -124,7 +118,7 @@ extern unsigned char byte_800CD845;
 extern int padIndex_800CD848;
 extern const char* errorMsg_800CD84C;
 extern unsigned char prevState_800CD850;
-extern short* activeCursor_800CD854;
+extern MenuCursor* activeCursor_800CD854;
 
 /* .rdata */
 extern const CombComItem pauseTitleItem_800CB4F0;
@@ -145,7 +139,7 @@ extern const CombComItem targetItem2_800CB700;
 EventEntry* CombComStart_800CB7AC(BattleCmd* cmd, int side);
 void SetupCmdMenu_800CB88C(void);
 void DisableChangeIfAlone_800CB924(void);
-short* GetStateCursor_800CB974(int state);
+MenuCursor* GetStateCursor_800CB974(int state);
 void UpdateCmdMenuWin_800CBA20(int state);
 void SetFocusedMinion_800CBAD4(int state);
 void DrawCmdMessage_800CBB4C(const char* text);

@@ -11,8 +11,7 @@
 #include "tim.h"
 
 int combatHeader_800A05A0 SDATA = 14;
-short combatCursor_800A1BBC[4] = { 1, 5, 5 };
-short combatMenuChoice_800A1BC4 = 0;
+MenuCursor combatCursor_800A1BBC = { 1, 5, 5 };
 Minion rosters_800A1BC8[2][15] = {
     {
         { 4 },
@@ -545,12 +544,12 @@ void CombatInit_800A13A0(CombatTask* t)
 {
     int i;
     int j;
-    combatCursor_800A1BBC[0] = 1;
-    combatCursor_800A1BBC[1] = 5;
-    combatCursor_800A1BBC[2] = 5;
-    combatCursor_800A1BBC[3] = 2;
-    combatCursor_800A1BBC[4] = 0;
-    combatCursor_800A1BBC[5] = 0;
+    combatCursor_800A1BBC.columns_0 = 1;
+    combatCursor_800A1BBC.rows_2 = 5;
+    combatCursor_800A1BBC.count_4 = 5;
+    combatCursor_800A1BBC.flags_6 = 2;
+    combatCursor_800A1BBC.cursor_8 = 0;
+    combatCursor_800A1BBC.scroll_A = 0;
     for (i = 0; i < 2; i++)
     {
         for (j = 0; j < 3; j++)
