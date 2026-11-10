@@ -23,10 +23,12 @@ void FxTime_800B3908(MapEnt* ent, MapFx* fx, MapFxWork* w);
 void FxPlace_800B39D4(MapFx* fx, MapFxWork* w);
 
 const char unknown_800B22C0[] = "w";
+const char str_800B22C4[12] = "\x82\x6c\x82\x81\x82\x88\x82\x82\x82\x95";
+const char str_800B22D0[8] = "\x82\x6b\x82\x95\x82\x89";
 ActorScriptCmd* script_800B3B1C[] = { 0 };
-MapActorModel model_800B3B20 = { "\x82\x6c\x82\x81\x82\x88\x82\x82\x82\x95", 0x2E, 0, 0, 0, 0, 4, script_800B3B1C, 0, 0x800000, 0, 1 };
+MapActorModel model_800B3B20 = { str_800B22C4, 0x2E, 0, 0, 0, 0, 4, script_800B3B1C, 0, 0x800000, 0, 1 };
 ActorScriptCmd* script_800B3B4C[] = { 0 };
-MapActorModel model_800B3B50 = { "\x82\x6b\x82\x95\x82\x89", 0x2C, 0, 0, 0, 0, 4, script_800B3B4C, 0, 0x800000, 0, 1 };
+MapActorModel model_800B3B50 = { str_800B22D0, 0x2C, 0, 0, 0, 0, 4, script_800B3B4C, 0, 0x800000, 0, 1 };
 MapVoice voices_800B3B7C[] = {
     { 0, 0, 0x1B, 0x2AA, 0x17 },
     { 0, 1, 0x15, 0x2AC, 0xF },

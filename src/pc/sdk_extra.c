@@ -123,13 +123,20 @@ void InitHeap3(unsigned long* head, unsigned long size) {}
 /* on the PlayStation a block is always followed by more heap (the next block's header), and the game reads a little
    past some of its blocks (sprites projected three at a time); the slack stands in for that */
 #define HEAP3_SLACK 64
+/* and is preceded by a header: HeapFree_8003FD18 reads the PoolBlock before a block to tell pool blocks from malloc3
+   ones (IsPoolBlock_80040274); a zeroed one never has the pool magic (32 bytes keep the 16-byte alignment) */
+#define HEAP3_HEADER 32
 void* malloc3(size_t size)
 {
-    char* p = calloc(1, size + HEAP3_SLACK);
-    ASAN_POISON_MEMORY_REGION(p + size, HEAP3_SLACK); /* AddressSanitizer still reports reads past the block */
-    return p;
+    char* p = calloc(1, HEAP3_HEADER + size + HEAP3_SLACK);
+    ASAN_POISON_MEMORY_REGION(p + HEAP3_HEADER + size, HEAP3_SLACK); /* AddressSanitizer still reports reads past the block */
+    return p + HEAP3_HEADER;
 }
-void free3(void* p) { free(p); }
+void free3(void* p)
+{
+    if (p)
+        free((char*)p - HEAP3_HEADER);
+}
 
 void SetMem(unsigned long n) {}
 void _96_init(void) {}

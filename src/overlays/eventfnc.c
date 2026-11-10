@@ -2723,27 +2723,27 @@ int GetChoiceMask_800BC58C(const char** list)
 
 int IsActorLeftOf_800BC5C8(int actorA, int actorB)
 {
-    unsigned short rel[3];
+    SVECTOR rel;
     short scr1[4];
     short scr2[4];
     short scratch[4];
     unsigned short* posA = (unsigned short*)GetActorPos_800BBBA0(actorA);
     unsigned short* posB;
-    rel[0] = posA[0];
-    rel[1] = posA[2];
-    rel[2] = posA[4];
-    rel[0] -= (unsigned short)cameraEye_8008D600.vx;
-    rel[1] -= (unsigned short)cameraEye_8008D600.vy;
-    rel[2] -= (unsigned short)cameraEye_8008D600.vz;
-    RotTransPers((SVECTOR*)rel, (void*)scr1, (void*)scratch, (void*)scratch);
+    rel.vx = posA[0];
+    rel.vy = posA[2];
+    rel.vz = posA[4];
+    rel.vx -= (unsigned short)cameraEye_8008D600.vx;
+    rel.vy -= (unsigned short)cameraEye_8008D600.vy;
+    rel.vz -= (unsigned short)cameraEye_8008D600.vz;
+    RotTransPers(&rel, (void*)scr1, (void*)scratch, (void*)scratch);
     posB = (unsigned short*)GetActorPos_800BBBA0(actorB);
-    rel[0] = posB[0];
-    rel[1] = posB[2];
-    rel[2] = posB[4];
-    rel[0] -= (unsigned short)cameraEye_8008D600.vx;
-    rel[1] -= (unsigned short)cameraEye_8008D600.vy;
-    rel[2] -= (unsigned short)cameraEye_8008D600.vz;
-    RotTransPers((SVECTOR*)rel, (void*)scr2, (void*)scratch, (void*)scratch);
+    rel.vx = posB[0];
+    rel.vy = posB[2];
+    rel.vz = posB[4];
+    rel.vx -= (unsigned short)cameraEye_8008D600.vx;
+    rel.vy -= (unsigned short)cameraEye_8008D600.vy;
+    rel.vz -= (unsigned short)cameraEye_8008D600.vz;
+    RotTransPers(&rel, (void*)scr2, (void*)scratch, (void*)scratch);
     return scr1[0] < scr2[0];
 }
 
