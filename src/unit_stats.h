@@ -76,7 +76,7 @@ typedef struct
     int w[3];
 } VtxBlend;
 
-void LoadMenuStart_800B7650();
+void LoadMenuStart_800B7650(); /* an EventEntry callback */
 
 int BaseMaxMpForLevel_80012178(int level, void* unused);
 int BaseMaxHpForLevel_80012140(int level, void* unused);

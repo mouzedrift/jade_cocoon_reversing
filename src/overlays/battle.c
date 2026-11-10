@@ -283,7 +283,7 @@ void RecoverPartyAfterBattle_800BA97C()
 EventEntry* StartBattle_800BA9E4()
 {
     EventEntry* entry = AllocEventEntry_80043AF8(battleTask_8008D624);
-    char center[0x10];
+    Vec3i center;
     int element;
     if (entry)
     {
@@ -302,8 +302,8 @@ EventEntry* StartBattle_800BA9E4()
         summonedUnit_800C9C82 = 0;
         battleHitEnemies_800B122C = 0;
         SpawnEncounterEnemies_800A1F80();
-        GetUnitsCenter_800BC378(GetEnemyAliveMask_800A248C(), center);
-        StartLevantBattle_800A8D0C(center);
+        GetUnitsCenter_800BC378(GetEnemyAliveMask_800A248C(), &center);
+        StartLevantBattle_800A8D0C(&center.x);
         InitEnemyRecords_800BABC4();
         battleLoadState_800C9C58 = 0;
         DisableCameraPoints_800A096C();
@@ -925,7 +925,6 @@ void CmdSummon_800BBBA8(BatTaskEntry* task, BatTurnWork* work)
     task->next_8 = WaitActionTask_800BC144;
 }
 
-// CmdRecall_800BBDB4 gets no arguments (task/work are still in a0/a1)
 void CmdSwapMinion_800BBBF4(BatTaskEntry* task, BatTurnWork* work)
 {
     BatTurnWork* w = work;
@@ -933,7 +932,7 @@ void CmdSwapMinion_800BBBF4(BatTaskEntry* task, BatTurnWork* work)
     curCommand_800C9C88.targets_C = 0;
     if (!commandUnit_800C9C98)
     {
-        CmdRecall_800BBDB4();
+        CmdRecall_800BBDB4(task, work);
     }
     else
     {
@@ -1058,16 +1057,17 @@ void CmdEnemySwapJoin_800BC05C(BatTaskEntry* task, BatTurnWork* work)
     ResetTurnGauge_800BF770(turnGauges_800C9C68, actingUnit_800C9C7C);
 }
 
-void CmdSimple_800BC0FC(BatTaskEntry* task, BatTaskEntry* work)
+void CmdSimple_800BC0FC(BatTaskEntry* task, BatTurnWork* work)
 {
-    work->handle_C = (int*)StartActionTask_800BC28C();
+    work->handle_C = StartActionTask_800BC28C();
     work->next_8 = work->resume_4;
     task->next_8 = WaitActionTask_800BC144;
 }
 
-void WaitActionTask_800BC144(BatTaskEntry* task, BatTaskEntry* work)
+void WaitActionTask_800BC144(BatTaskEntry* task, BatTurnWork* work)
 {
-    if ((*work->handle_C & 0x8001) != 1)
+    EventEntry* action = work->handle_C;
+    if ((action->flags & 0x8001) != 1)
     {
         task->next_8 = work->next_8;
     }
@@ -1170,23 +1170,23 @@ int GetUnitsCenter_800BC378(unsigned int mask, Vec3i* out)
 
 void TurnUnitsToward_800BC468(int targetMask, int unitMask)
 {
-    char center[0x10];
+    Vec3i center;
     unsigned int i;
     int bit;
-    if (GetUnitsCenter_800BC378(targetMask, (Vec3i*)center))
+    if (GetUnitsCenter_800BC378(targetMask, &center))
     {
         for (i = 0; i < 7; i++)
         {
             bit = 1 << i;
             if (unitMask & bit)
             {
-                TurnUnitToward_800BC4D4(i, center);
+                TurnUnitToward_800BC4D4(i, &center.x);
             }
         }
     }
 }
 
-void TurnUnitToward_800BC4D4(int unit, int pos)
+void TurnUnitToward_800BC4D4(int unit, int* pos)
 {
     int onField = IsUnitOnField_800BC570(unit);
     if (onField == 1)

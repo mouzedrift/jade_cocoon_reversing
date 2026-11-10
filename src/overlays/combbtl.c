@@ -126,7 +126,7 @@ int statusCured_800A8480[2] = { 0 };
 short exchangeStep_800A8488 = 0;
 EventEntry *commandMenuTask_800A848C = 0;
 int koSide_800A8490 = 0;
-ShortPair hitWindow_800A8494 = { 0 };
+ActionFrames hitWindow_800A8494 = { 0 };
 int stageElement_800A8498 = 0;
 int fixedStageElement_800A849C = 0;
 int newStageElement_800A84A0 = 0;
@@ -139,7 +139,7 @@ int setupStep_800A84B8 = 0;
 short actorHpLoss_800A84BC = 0;
 int stageId_800A84C0 = 0;
 short actorMpLoss_800A84C4 = 0;
-ShortPair sideHitWindows_800A84C8[2] = { { 0 } };
+ActionFrames sideHitWindows_800A84C8[2] = { { 0 } };
 short sideGauges_800A84D0[2] = { 0 };
 int waitTimer_800A84D4 = 0;
 CombBtlHist commandHistory_800A84D8[10] = { { 0 } };
@@ -980,8 +980,8 @@ void RunExchange_800A68E0(CombBtlTask* t)
             }
             break;
         case 1:
-            sideHitWindows_800A84C8[actorSide_800A85B8] = StartSlotAction_800A0F50(actorSide_800A85B8, (int*)&actorCmd_800A85A8, 0);
-            sideHitWindows_800A84C8[targetSide_800A8620] = StartSlotAction_800A0F50(targetSide_800A8620, (int*)&targetCmd_800A8610, 1);
+            sideHitWindows_800A84C8[actorSide_800A85B8] = StartSlotAction_800A0F50(actorSide_800A85B8, &actorCmd_800A85A8, 0);
+            sideHitWindows_800A84C8[targetSide_800A8620] = StartSlotAction_800A0F50(targetSide_800A8620, &targetCmd_800A8610, 1);
             hitWindow_800A8494 = MergeHitWindows_800A71E4(2, sideHitWindows_800A84C8);
             exchangeStep_800A8488 = 2;
             break;
@@ -993,9 +993,9 @@ void RunExchange_800A68E0(CombBtlTask* t)
             }
             break;
         case 3:
-            if (sideHitWindows_800A84C8[actorSide_800A85B8].a == hitWindow_800A8494.a)
+            if (sideHitWindows_800A84C8[actorSide_800A85B8].hit_0 == hitWindow_800A8494.hit_0)
             {
-                TriggerSlotEffect_800A0FF0(actorSide_800A85B8, (int*)&actorCmd_800A85A8, 0);
+                TriggerSlotEffect_800A0FF0(actorSide_800A85B8, &actorCmd_800A85A8, 0);
                 StartHitNumber_800A7E34(actorSide_800A85B8, 1, actorHpLoss_800A84BC);
                 if (actorHpLoss_800A84BC > 0)
                 {
@@ -1008,9 +1008,9 @@ void RunExchange_800A68E0(CombBtlTask* t)
                     StartPadVibration_80036528(actorSide_800A85B8 ? player2Pad_800A38D8 : 0, 9);
                 }
             }
-            if (sideHitWindows_800A84C8[targetSide_800A8620].a == hitWindow_800A8494.a)
+            if (sideHitWindows_800A84C8[targetSide_800A8620].hit_0 == hitWindow_800A8494.hit_0)
             {
-                TriggerSlotEffect_800A0FF0(targetSide_800A8620, (int*)&targetCmd_800A8610, 1);
+                TriggerSlotEffect_800A0FF0(targetSide_800A8620, &targetCmd_800A8610, 1);
                 if (targetSfx_800A84A4 >= 0)
                 {
                     PlaySfx_80031494(targetSfx_800A84A4);
@@ -1025,12 +1025,12 @@ void RunExchange_800A68E0(CombBtlTask* t)
                     stageElement_800A8498 = newStageElement_800A84A0;
                 }
             }
-            hitWindow_800A8494.a++;
-            if (hitWindow_800A8494.b < hitWindow_800A8494.a)
+            hitWindow_800A8494.hit_0++;
+            if (hitWindow_800A8494.end_2 < hitWindow_800A8494.hit_0)
             {
                 exchangeStep_800A8488 = 4;
             }
-            else if (hitWindow_800A8494.a == 0)
+            else if (hitWindow_800A8494.hit_0 == 0)
             {
                 AdjustUnitStatById_800127D0(actorSide_800A85B8 + 8, 0x11, 0, statusCured_800A8480[actorSide_800A85B8]);
                 AdjustUnitStatById_800127D0(targetSide_800A8620 + 8, 0x11, 0, statusCured_800A8480[targetSide_800A8620]);
@@ -1189,28 +1189,28 @@ unsigned int CountLivingMinions_800A7164(int side)
     return cnt;
 }
 
-ShortPair MergeHitWindows_800A71E4(int count, ShortPair* windows)
+ActionFrames MergeHitWindows_800A71E4(int count, ActionFrames* windows)
 {
-    ShortPair merged;
+    ActionFrames merged;
     short hi = 0;
     short lo = hi;
     int i;
     for (i = 0; i < count; i++)
     {
-        windows->b = windows->b - windows->a;
-        windows->a = -windows->a;
-        if (windows->a < lo)
+        windows->end_2 = windows->end_2 - windows->hit_0;
+        windows->hit_0 = -windows->hit_0;
+        if (windows->hit_0 < lo)
         {
-            lo = windows->a;
+            lo = windows->hit_0;
         }
-        if (hi < windows->b)
+        if (hi < windows->end_2)
         {
-            hi = windows->b;
+            hi = windows->end_2;
         }
         windows++;
     }
-    merged.a = lo;
-    merged.b = hi;
+    merged.hit_0 = lo;
+    merged.end_2 = hi;
     return merged;
 }
 

@@ -15,6 +15,23 @@ typedef struct G2V12
 
 struct G2Path;
 
+// an actor command for Levant or a field minion (GAME's LevantCommand_800A8EC4 / FieldMinionCommand_800A7D40; EVENTFNC's
+// event scripts send them): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held animation, 5 play animation
+// data, 6 visible, 7 ground move, 8 root motion, 9..11 play a motion
+typedef struct GameActorCmd
+{
+    int actor_0;
+    int kind_4;
+    int wait_8; // the sender waits: the actor's busy bit is cleared when it is done
+    int arg_C;
+    int arg2_10;
+    unsigned int opts_14; // kind 0..2: the animation (-1: default); 9..11: 1 no turn, 4 / 0x10 / 0x20 action flags, 8
+    int x_18;
+    int y_1C;
+    int z_20;
+    void* data_24; // kind 3: the script, kind 9..11: the path
+} GameActorCmd;
+
 // Levant's controller object (gameTask_8008B4A4->buffer_24); the field reads disagree on signedness at 0x10/0x14
 // (DrawLevantModel_800A9708 uses them as unsigned: same code for its %) and 0x22 (some setters store a signed short)
 typedef struct GameLevantActor

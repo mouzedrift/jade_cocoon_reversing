@@ -14,7 +14,7 @@
    JC_DUMP_VRAM=FRAME[,FRAME...]:FILE writes the 1024x512 VRAM (16 bit pixels) to FILE.FRAME at those vertical blanks
    JC_INPUT=FRAME+COUNT:MASK[,...] holds the pad 1 buttons MASK (hex, 0x0800 start, 0x0040 cross, as libetc's
    PadRead bits swapped: high byte select/start/directions, low byte shoulders/shapes) for COUNT vertical blanks */
-#define MAX_EVENTS 64
+#define MAX_EVENTS 256
 static int dumpFrames[MAX_EVENTS], numDumps;
 static const char* dumpFile;
 static struct { int frame, count, mask; } inputs[MAX_EVENTS];

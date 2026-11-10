@@ -44,7 +44,7 @@ extern unsigned char curPlayer_800A38D9;
 extern unsigned char selMode_800A38DB;
 extern int curPad_800A3A94;
 extern Minion teams_800A3AA0[2][3];
-extern void CombatNextStage_800A16FC();
+extern void CombatNextStage_800A16FC(); /* another overlay's function */
 extern void DrawMinionNameLevel_800A1844(Minion* m, unsigned short* pt, unsigned int flags);
 extern int IsMinionSlotEmpty_800A1934(Minion* m);
 extern void ClearMinionSlot_800A197C(Minion* m);
@@ -104,5 +104,6 @@ extern const char *nextTextP1_800A59DC[1];
 extern const char *nextTextP2_800A59E0[1];
 extern ButtonHelpEntry buttonHelpP1_800A59E4[4];
 extern ButtonHelpEntry buttonHelpP2_800A5A04[4];
+
 
 #endif

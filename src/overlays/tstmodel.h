@@ -228,19 +228,19 @@ typedef struct TstGridCursor
 
 /* TSTMODEL's own functions/data used before their definition or from another of its files */
 void TstModelResetCamera_800A0BC0(TstModelWork* work);
-extern int UpdateGridCursor_800A1D70();
-extern void TstModelTask_800A0A8C();
-extern void TstModelSelectModel_800A0C00();
-extern void TstModelLoadModel_800A0EC8();
-extern void TstModelWaitModel_800A0F20();
-extern void TstModelCameraInput_800A104C();
-extern void TstModelDrawModel_800A1428();
-extern void TstModelAnimSelect_800A17B8();
-extern void TstModelBoneEdit_800A1614();
-extern void TstModelFrameInput_800A18F4();
-extern void TstModelFreeModel_800A19E4();
-extern void SetCameraLookAt_800A1A24();
-extern int MoveGridCursor_800A1B48();
+extern int UpdateGridCursor_800A1D70(TstGridCursor* cursor);
+extern void TstModelTask_800A0A8C(EventEntry* task, TstModelWork* c);
+extern void TstModelSelectModel_800A0C00(TstModelWork* c);
+extern void TstModelLoadModel_800A0EC8(TstModelWork* work);
+extern void TstModelWaitModel_800A0F20(TstModelWork* work);
+extern void TstModelCameraInput_800A104C(TstModelWork* c);
+extern void TstModelDrawModel_800A1428(TstModelWork* c);
+extern void TstModelAnimSelect_800A17B8(TstModelWork* c);
+extern void TstModelBoneEdit_800A1614(TstModelWork* c);
+extern void TstModelFrameInput_800A18F4(TstModelWork* c);
+extern void TstModelFreeModel_800A19E4(TstModelWork* work);
+extern void SetCameraLookAt_800A1A24(TstModelWork* c);
+extern int MoveGridCursor_800A1B48(TstGridCursor* cursor);
 /* exe-side: declared in main.h (which conflicts with this overlay's types; main.h has scalars for the pad words) */
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
 extern LVec3 cameraEye_8008D600;

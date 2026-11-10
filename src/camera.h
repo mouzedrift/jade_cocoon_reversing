@@ -104,6 +104,8 @@ typedef struct
 } PadVibTask;
 
 void StartCameraShake_80037BFC(int strength);
+void StartCameraOrbit_80037C24(void);
+void StopCameraOrbit_80037C4C(void);
 
 void UpdateCameraFollow_80037918(CameraCtrl* cam);
 void SaveCameraState_80039620(CameraCtrl* cam);

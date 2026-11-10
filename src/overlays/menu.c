@@ -1766,7 +1766,7 @@ void HandleMenuConfirmCancel_800BDE10(MenuCtx* menu)
     int r = 0;
     if (menu->confirmed_18)
     {
-        r = CheckMenuAction_800BF540();
+        r = CheckMenuAction_800BF540(menu);
         if ((short)r == 0)
         {
             menu->prevState_4 = menu->state_2;
@@ -2483,7 +2483,7 @@ void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short b)
     DrawAnimatedWindow_8002BEC8((RECT*)t50, (RECT*)moneyWindowRect_800C18E4, (short)openStep, b, 0, 0);
 }
 
-void UseSpore_800BF3AC(int item)
+void UseSpore_800BF3AC(int item, int slot) // slot: the inventory slot, unused
 {
     UseSporeItem_80011B24(item);
     RemoveInventory_800AD1E0(item, 1, 0);

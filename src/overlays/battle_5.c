@@ -574,22 +574,20 @@ void TurnSummonedMinionToward_800C0DB0(int* pos)
     SetActorTurnTarget_8001DB00(summonedActor_800C9190.actor_0, pos, 0x55);
 }
 
-BatRawTiming* StartMinionAction_800C0DDC(BatRawTiming* out, BattleCmd* cmd, int isReaction)
+ActionFrames StartMinionAction_800C0DDC(BattleCmd* cmd, int isReaction)
 {
-    BatRawTiming timing;
+    ActionFrames timing;
     int mask;
     memset(&timing, 0, 4);
     if (cmd->kind_0 == 0x14)
     {
-        *out = timing;
-        return out;
+        return timing;
     }
     if (cmd->mask_8 & (mask = 1 << (summonedMinionSlot_800C918C + 1)))
     {
-        StartCommandAction_80018A4C(&timing, summonedActor_800C9190.actor_0, cmd, 0, isReaction);
+        timing = StartCommandAction_80018A4C(summonedActor_800C9190.actor_0, cmd, 0, isReaction);
     }
-    *out = timing;
-    return out;
+    return timing;
 }
 
 int TriggerMinionAction_800C0E84(BattleCmd* cmd, int isReaction)

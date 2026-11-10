@@ -229,21 +229,21 @@ typedef struct TstCompoWork
 /* TSTCOMPO's own functions/data used before their definition or from another of its files */
 void SetDefaultCompoParams_800A0918();
 void TstCompoResetCamera_800A1BE0(TstCompoWork* work);
-extern void TstCompoTask_800A097C();
-extern void TstCompoMenu_800A0AB8();
-extern void TstCompoStartModel_800A1320();
-extern void TstCompoWaitModel_800A1354();
-extern void TstCompoWaitFiles_800A13B8();
-extern void TstCompoDrawModel_800A1468();
-extern void TstCompoDrawBlend_800A15F4();
-extern void TstCompoFrameInput_800A1804();
-extern void TstCompoViewInput_800A194C();
-extern void TstCompoAnimSelect_800A19A4();
-extern void TstCompoFreeModel_800A1AD0();
-extern void TstCompoCameraInput_800A1C14();
+extern void TstCompoTask_800A097C(EventEntry* task, TstCompoWork* c);
+extern void TstCompoMenu_800A0AB8(TstCompoWork* c);
+extern void TstCompoStartModel_800A1320(TstCompoWork* work);
+extern void TstCompoWaitModel_800A1354(TstCompoWork* work);
+extern void TstCompoWaitFiles_800A13B8(TstCompoWork* work);
+extern void TstCompoDrawModel_800A1468(TstCompoWork* c);
+extern void TstCompoDrawBlend_800A15F4(TstCompoWork* c);
+extern void TstCompoFrameInput_800A1804(TstCompoWork* c);
+extern void TstCompoViewInput_800A194C(TstCompoWork* c);
+extern void TstCompoAnimSelect_800A19A4(TstCompoWork* c);
+extern void TstCompoFreeModel_800A1AD0(TstCompoWork* work);
+extern void TstCompoCameraInput_800A1C14(TstCompoWork* work);
 extern void DrawTextListWindow_800A2030(short* rect, TstCompoEnt* texts, int ot);
-extern void TstCompoInitBones_800A1AFC();
-extern void SetCameraLookAt_800A1E68();
+extern void TstCompoInitBones_800A1AFC(TstCompoWork* work);
+extern void SetCameraLookAt_800A1E68(TstCompoWork* c);
 /* exe-side: declared in main.h (which conflicts with this overlay's types) */
 /* exe-side: camera.h declares it as VECTOR cameraEye_8008D600 */
 extern LVec3 cameraEye_8008D600;

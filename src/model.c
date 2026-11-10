@@ -1296,7 +1296,10 @@ void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr)
 }
 void LoadEffectSprite_80021298(int* src, EffectSprite* out, short* reloc, int sel, List* heap)
 {
-    POLY_FT4 buf;
+    TimInfo buf;
+#ifdef __psyz
+    TimInfoFile file;
+#endif
     int i;
     int j;
     int count;
@@ -1325,7 +1328,14 @@ void LoadEffectSprite_80021298(int* src, EffectSprite* out, short* reloc, int se
         }
         src = (int*)cur;
     }
-    MemCopy_800403E8(&buf, src, 0x28);
+#ifdef __psyz /* TimInfo's addresses are 64-bit here: copy the fields InitPolyFT4_80029A10 reads */
+    MemCopy_800403E8(&file, src, sizeof(file));
+    buf.mode = file.mode;
+    buf.crect = file.crect;
+    buf.prect = file.prect;
+#else
+    MemCopy_800403E8(&buf, src, sizeof(TimInfoFile));
+#endif
     InitPolyFT4_80029A10(&out->poly_C, &buf);
 }
 void LoadEffectModel_80021464(int* hdr, EffectModel* out, short* reloc, int sel, List* heap)

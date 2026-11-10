@@ -237,7 +237,7 @@ extern int TopMenuCursorUp_800BFBE0(MenuCtx* menu);
 extern void ApplyItemUseDelta_800C00F8(ItemUseWork* use, MenuStatDelta* delta);
 extern void InitItemUse_800C00D4(ItemUseWork* use, int item, int target);
 // HandleMenuConfirmCancel_800BDE10 calls it without arguments (a0 still holds its menu)
-extern int CheckMenuAction_800BF540();
+extern int CheckMenuAction_800BF540(MenuCtx* menu);
 extern void EnterNextMenuState_800BE048(MenuCtx* menu);
 extern void ResumeFieldMenu_800BFF84(MenuCtx* menu);
 extern int GetWindowOpenStep_800C0990(MenuCtx* menu, int mask);
@@ -288,7 +288,7 @@ extern void DrawLevantStatusScreen_800BF0F4(MenuCtx* menu, short ot);
 extern int RollDrop_800BD358(BattleDrop* out, int idx);
 extern int IsMinionListed_800BDD94(int species);
 // EnterNextMenuState_800BE048 passes the inventory slot as a 2nd argument that it ignores
-extern void UseSpore_800BF3AC();
+extern void UseSpore_800BF3AC(int item, int slot);
 extern void ExecuteMenuAction_800BF3E0(MenuCtx* menu);
 extern int IsKeyItemUsable_800C0C3C(int item);
 extern int IsRecoveryItem_800C0DD4(int item);

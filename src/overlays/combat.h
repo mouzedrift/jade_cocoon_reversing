@@ -10,6 +10,7 @@
 #include "minion_init.h"
 #include "unit_stats.h"
 #include "camera.h"
+#include "effect_cmd.h" // ActionFrames, StartCommandAction_80018A4C
 #include <libsnd.h>
 #include "sound.h"
 #include "data_decls.h"
@@ -115,8 +116,8 @@ void LoadModelTexToVram_800A0D64(int vramSlot, int modelId);
 void MoveSlotActorTo_800A0E1C(int i, int* pos);
 int IsSlotActorIdle_800A0EE8(int i);
 int IsSlotActorReady_800A0F1C(int i);
-ShortPair StartSlotAction_800A0F50(int i, int* cmd, int x);
-void TriggerSlotEffect_800A0FF0(int i, int* cmd, int x);
+ActionFrames StartSlotAction_800A0F50(int i, BattleCmd* cmd, int x);
+void TriggerSlotEffect_800A0FF0(int i, BattleCmd* cmd, int x);
 int GetSlotHitFrame_800A1034(int i, unsigned int idx);
 void SetSlotStatusTint_800A1068(int i);
 unsigned char (*GetSlotAncestors_800A10A4(int i))[0xC];
@@ -149,11 +150,11 @@ int CountRosterMinions_800A1AEC(int side);
 void GetCombatPortraitPoly_800A1B2C(int i, void* poly);
 
 /* the stage overlays' entry tasks (combatTaskList_800A398C / CombatEnterStage_800A15B4) */
-void VersusResultTask_800A40E0(); // COMBRSLT.BIN
-void CombLoadStart_800A40FC();    // COMBLOAD.BIN
-void VersusSetupTask_800A4170();  // COMBSTRT.BIN
+void VersusResultTask_800A40E0(CombatTask* task); // COMBRSLT.BIN
+void CombLoadStart_800A40FC(CombatTask* task);    // COMBLOAD.BIN
+void VersusSetupTask_800A4170(CombatTask* t, int a);  // COMBSTRT.BIN
 void CombSelMain_800A4360();      // COMBSEL.BIN
-void VersusIntroTask_800A4394();  // COMBCHUI.BIN
+void VersusIntroTask_800A4394(CombatTask* task, int arg);  // COMBCHUI.BIN
 void CombBtlStart_800A4B8C();     // COMBBTL.BIN
 
 /* exe-side, to move to <exe header> */
@@ -163,6 +164,6 @@ extern CombatVramPos combatPortraitClutPos_8007DCBC[];         // -> globals.h: 
 #define saveMinions_8008BEF8 (saveData_8008B570.minions)
 extern short defaultBones_80079140[];          // -> globals.h: default bone table
 
-extern ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c); // -> effect_cmd.h
+
 
 #endif

@@ -39,7 +39,7 @@ int (*eventFuncs_800BCDBC[157])() = {
 // Returns from a warp: plays the warp animation, fades out, picks the return area var and reloads the map
 void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     unsigned short v[4]; // area, map, entrance, encounter index (FindMapEntrance_800ADCEC)
     SaveData* save;
     switch (st[0])
@@ -68,11 +68,11 @@ void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st)
         {
             cmd.actor_0 = 0;
             cmd.kind_4 = 9;
-            cmd.field_8 = 0;
+            cmd.wait_8 = 0;
             cmd.arg_C = st[1];
             cmd.arg2_10 = 0;
-            cmd.field_14 = 1;
-            LevantCommand_800A8EC4((int*)&cmd);
+            cmd.opts_14 = 1;
+            LevantCommand_800A8EC4(&cmd);
             StartSceneDarken_8001AAA8(0x3C);
             st[0] = 4;
         }

@@ -29,8 +29,8 @@ extern int effectColorBlue_800795E4;
 extern int effectColorGreen_800795E8;
 extern int effectColorYellow_800795EC;
 
-void FreeEffectTask_800148A0();
-void InitEffectTask_80014618();
+void FreeEffectTask_800148A0(void);
+void InitEffectTask_80014618(); /* an EventEntry callback: (EventEntry*, EffectTaskState*) */
 
 int Rand100_80013E30(void);
 void CalcBattleStats_80013EE8(int* out, UnitStatus* status, ActionData* action, int mode);
@@ -51,4 +51,5 @@ void RequestEffect_800148F4(int id);
 void BaseStatRatios_8001419C(unsigned char* stats, short* out);
 int BaseMagicRatio_800142B8(unsigned char* stats);
 int BaseAttackRatio_80014308(unsigned char* stats);
+
 #endif

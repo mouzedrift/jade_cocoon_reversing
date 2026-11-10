@@ -54,21 +54,6 @@ typedef struct
 } RotSpriteScratch;
 #define ROT_SPRITE_SCRATCH ((RotSpriteScratch*)getScratchAddr(0x85))
 
-// polygons strung between projected sprite vertices (ftgSpriteVtxSlots_800987D8[slot][idx], DrawSpriteVtxQuadsGT4_800459E4 / DrawSpriteVtxQuadsG4_80045E48)
-typedef struct
-{
-    unsigned short slot;
-    unsigned short idx;
-} FtgVtxRef;
-typedef struct
-{
-    FtgVtxRef v[4];
-} FtgQuadRef;
-typedef struct
-{
-    unsigned int count;
-    FtgQuadRef* items;
-} FtgQuadRefList;
 // POLY_GT4 as the sprite-vertex quads build it (colours and uv as words / halves)
 typedef struct
 {

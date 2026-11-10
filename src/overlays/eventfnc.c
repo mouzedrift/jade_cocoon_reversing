@@ -686,7 +686,7 @@ int EvCmdEnd_800B89F4(EvScriptCtx* ctx)
 
 int EvCmdEndScene_800B8A34(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     int i;
     switch (ctx->step_B8)
     {
@@ -1008,20 +1008,20 @@ int EvCmdWarpActor_800B9260(EvScriptCtx* ctx)
 
 int EvCmdMoveToPoint_800B93A8(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     EvVec* dest = (EvVec*)PSX_PTR(ctx->pc_8->c_C);
     cmd.actor_0 = ctx->pc_8->a_4;
     cmd.kind_4 = ctx->pc_8->op_0 != 0x14;
     cmd.x_18 = dest->x_0;
     cmd.y_1C = dest->y_4;
     cmd.z_20 = dest->z_8;
-    cmd.field_14 = ctx->pc_8->b_8;
+    cmd.opts_14 = ctx->pc_8->b_8;
     return SendActorCmd_800BB840(ctx, &cmd, 1, 1);
 }
 
 int EvCmdMoveToActor_800B942C(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     EvVec delta;
     EvVec* from = GetActorPos_800BBBA0(ctx->pc_8->a_4);
     EvVec* target;
@@ -1042,13 +1042,13 @@ int EvCmdMoveToActor_800B942C(EvScriptCtx* ctx)
     cmd.x_18 = target->x_0 + sinTable_80084540[ang & 0xFFF] * 200 / 4096;
     cmd.y_1C = target->y_4;
     cmd.z_20 = target->z_8 + sinTable_80084540[(ang + 0x400) & 0xFFF] * 200 / 4096;
-    cmd.field_14 = ctx->pc_8->c_C;
+    cmd.opts_14 = ctx->pc_8->c_C;
     return SendActorCmd_800BB840(ctx, &cmd, 1, 1);
 }
 
 int EvCmdTurnToPoint_800B95BC(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     EvInstr* ins = ctx->pc_8;
     EvVec* dest = (EvVec*)PSX_PTR(ins->c_C);
     int actor = ins->a_4;
@@ -1057,13 +1057,13 @@ int EvCmdTurnToPoint_800B95BC(EvScriptCtx* ctx)
     cmd.x_18 = dest->x_0;
     cmd.y_1C = dest->y_4;
     cmd.z_20 = dest->z_8;
-    cmd.field_14 = ctx->pc_8->b_8;
+    cmd.opts_14 = ctx->pc_8->b_8;
     return SendActorCmd_800BB840(ctx, &cmd, 1, 1);
 }
 
 int EvCmdTurnToActor_800B962C(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     EvVec* dest;
     int actor = ctx->pc_8->a_4;
     int target = ctx->pc_8->b_8;
@@ -1073,13 +1073,13 @@ int EvCmdTurnToActor_800B962C(EvScriptCtx* ctx)
     cmd.x_18 = dest->x_0;
     cmd.y_1C = dest->y_4;
     cmd.z_20 = dest->z_8;
-    cmd.field_14 = ctx->pc_8->c_C;
+    cmd.opts_14 = ctx->pc_8->c_C;
     return SendActorCmd_800BB840(ctx, &cmd, 1, 1);
 }
 
 int EvCmdSetActorVisible_800B96D8(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     cmd.actor_0 = ctx->pc_8->a_4;
     cmd.kind_4 = 6;
     cmd.arg_C = ctx->pc_8->b_8;
@@ -1088,7 +1088,7 @@ int EvCmdSetActorVisible_800B96D8(EvScriptCtx* ctx)
 
 int EvCmdSetActorGroundMove_800B9720(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     cmd.actor_0 = ctx->pc_8->a_4;
     cmd.kind_4 = 7;
     cmd.arg_C = ctx->pc_8->b_8;
@@ -1097,7 +1097,7 @@ int EvCmdSetActorGroundMove_800B9720(EvScriptCtx* ctx)
 
 int EvCmdSetActorRootMotion_800B9768(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     cmd.actor_0 = ctx->pc_8->a_4;
     cmd.kind_4 = 8;
     cmd.arg_C = ctx->pc_8->b_8;
@@ -1476,7 +1476,7 @@ int EvCmdSetChoiceMask_800BA28C(EvScriptCtx* ctx)
 
 int EvCmdPlayAnim_800BA2E8(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     cmd.actor_0 = 1 << ctx->pc_8->a_4;
     cmd.kind_4 = 3;
     cmd.arg_C = ctx->pc_8->b_8;
@@ -1486,7 +1486,7 @@ int EvCmdPlayAnim_800BA2E8(EvScriptCtx* ctx)
 int EvCmdStopAnim_800BA338(EvScriptCtx* ctx)
 {
     EvInstr* ins = ctx->pc_8;
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     switch (ctx->step_B8)
     {
     case 0:
@@ -1514,10 +1514,10 @@ int EvCmdStopAnim_800BA338(EvScriptCtx* ctx)
 
 int EvCmdPlayAnimData_800BA40C(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     cmd.actor_0 = 1 << ctx->pc_8->a_4;
     cmd.kind_4 = 5;
-    cmd.data_24 = ctx->pc_8->c_C;
+    cmd.data_24 = PSX_PTR(ctx->pc_8->c_C);
     return SendActorCmdMask_800BB990(ctx, &cmd, 1, 1);
 }
 
@@ -1544,37 +1544,37 @@ int EvCmdPauseActorAnim_800BA45C(EvScriptCtx* ctx)
 
 int EvCmdPlayMotion_800BA4F0(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     cmd.actor_0 = 1 << ctx->pc_8->a_4;
     cmd.kind_4 = 9;
     cmd.arg_C = ctx->pc_8->b_8;
-    cmd.field_14 = ctx->pc_8->c_C;
+    cmd.opts_14 = ctx->pc_8->c_C;
     return SendActorCmdMask_800BB990(ctx, &cmd, 1, 1);
 }
 
 int EvCmdPlayMotionRange_800BA554(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     cmd.actor_0 = 1 << ctx->pc_8->a_4;
     cmd.kind_4 = 0xA;
     cmd.arg_C = ((unsigned short*)&ctx->pc_8->b_8)[1];
     cmd.arg2_10 = ((unsigned short*)&ctx->pc_8->b_8)[0];
-    cmd.field_14 = ctx->pc_8->c_C;
+    cmd.opts_14 = ctx->pc_8->c_C;
     return SendActorCmdMask_800BB990(ctx, &cmd, 1, 1);
 }
 
 int EvCmdPlayMotionData_800BA5CC(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     int motion = ctx->pc_8->c_C;
-    int* slot = GetEventDataSlot_800A55B0(4);
+    EventRecords* records = GetEventDataSlot_800A55B0(4);
     unsigned int a = ctx->pc_8->a_4;
     cmd.actor_0 = 1 << (a >> 16);
     cmd.kind_4 = 0xB;
     cmd.arg_C = ((unsigned short*)&ctx->pc_8->b_8)[1];
     cmd.arg2_10 = ((unsigned short*)&ctx->pc_8->b_8)[0];
-    cmd.data_24 = slot[1] + motion * 12;
-    cmd.field_14 = a & 0xFFFF;
+    cmd.data_24 = &records->tables_4[motion];
+    cmd.opts_14 = a & 0xFFFF;
     return SendActorCmdMask_800BB990(ctx, &cmd, 1, 1);
 }
 
@@ -1924,7 +1924,7 @@ int EvCmdWaitTalk_800BAFAC(EvScriptCtx* ctx)
 
 int EvCmdSetIdleAnim_800BB180(EvScriptCtx* ctx)
 {
-    EvActorCmd cmd;
+    GameActorCmd cmd;
     int ret;
     int v = ctx->pc_8->b_8 & 0x80000000;
     ctx->idleAnims_24[ctx->pc_8->a_4] = v;
@@ -2162,7 +2162,7 @@ int EvCmdPadVibration_800BB7D8(EvScriptCtx* ctx)
     return 1;
 }
 
-int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
+int SendActorCmd_800BB840(EvScriptCtx* ctx, GameActorCmd* cmd, int a, int b)
 {
     int step;
     int actor;
@@ -2175,7 +2175,7 @@ int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
         case 0:
             actor = cmd->actor_0;
             mask = 1 << actor;
-            cmd->field_8 = a;
+            cmd->wait_8 = a;
             if (ctx->busyActors_18 & mask)
             {
                 return 0;
@@ -2184,7 +2184,7 @@ int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
             {
                 return 0;
             }
-            StartActorCmd_800BBB18((int*)cmd);
+            StartActorCmd_800BBB18(cmd);
             if (a)
             {
                 ctx->busyActors_18 |= 1 << cmd->actor_0;
@@ -2196,7 +2196,7 @@ int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
             {
                 return 0;
             }
-            FinishActorCmd_800BBB5C((int*)cmd);
+            FinishActorCmd_800BBB5C(cmd);
             if (b)
             {
                 ctx->pc_8++;
@@ -2215,7 +2215,7 @@ int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
     }
 }
 
-int SendActorCmdMask_800BB990(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b)
+int SendActorCmdMask_800BB990(EvScriptCtx* ctx, GameActorCmd* cmd, int a, int b)
 {
     int i;
     int bit;
@@ -2281,10 +2281,10 @@ int IsActorCmdDone_800BBAE4(int actor)
     return ret;
 }
 
-int StartActorCmd_800BBB18(int* cmd)
+int StartActorCmd_800BBB18(GameActorCmd* cmd)
 {
     int ret;
-    int actor = *cmd;
+    int actor = cmd->actor_0;
     if (actor == 0)
     {
         ret = LevantCommand_800A8EC4(cmd);
@@ -2296,10 +2296,10 @@ int StartActorCmd_800BBB18(int* cmd)
     return ret;
 }
 
-int FinishActorCmd_800BBB5C(int* cmd)
+int FinishActorCmd_800BBB5C(GameActorCmd* cmd)
 {
     int ret;
-    int actor = *cmd;
+    int actor = cmd->actor_0;
     if (actor == 0)
     {
         ret = FinishLevantCommand_800A9008(cmd);

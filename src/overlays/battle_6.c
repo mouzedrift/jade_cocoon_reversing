@@ -168,7 +168,7 @@ int unused_800C9184 = 0x24639300;
 Minion *summonedMinion_800C9188 = 0;
 int summonedMinionSlot_800C918C = -1;
 BatSummonedActor summonedActor_800C9190 = { 0 };
-char defaultBoneSlots_800C91A4[56] = { 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 2 };
+SVECTOR defaultBoneSlots_800C91A4[7] = { { 0, 0, 0, 2 }, { 0, 0, 0, 2 }, { 0, 0, 0, 2 }, { 0, 0, 0, 2 }, { 0, 0, 0, 2 }, { 0, 0, 0, 2 }, { 0, 0, 0, 2 } };
 EnemyAiFn enemyAiHigh_800C91DC[10] = {
     EnemyAiC9_800C4328, EnemyAiCA_800C43D8, EnemyAiCB_800C4424, (EnemyAiFn)EnemyAiCC_800C4470,
     EnemyAiCD_800C4494, EnemyAiCE_800C44FC, EnemyAiCF_800C4548, EnemyAiD0_800C45A8,
@@ -412,8 +412,9 @@ int unused_800C9D88 = 0;
 short stageAnimUv_800C9D8C[2] = { 0 };
 int removedEnemyCount_800C9D90 = 0;
 short actionFrame_800C9D94 = 0;
-short actorTiming_800C9D98[4] = { 0 };
-BatActionTiming reactionTimings_800C9DA0[7] = { { 0 } };
+ActionFrames actorTiming_800C9D98 = { 0 };
+short unused_800C9D9C[2] = { 0 }; // unreferenced
+ActionFrames reactionTimings_800C9DA0[7] = { { 0 } };
 short actorHitShift_800C9DBC = 0;
 short reactionHitFrames_800C9DC0[8] = { 0 };
 int removedEnemies_800C9DD0[10] = { 0 };
@@ -644,14 +645,14 @@ void EnemyAiD0_800C45A8(EnemyAi* ai)
     }
 }
 
-void EnemyAiD1_800C46FC()
+void EnemyAiD1_800C46FC(EnemyAi* ai)
 {
-    EnemyAiDefault_800C473C();
+    EnemyAiDefault_800C473C(ai);
 }
 
-void EnemyAiD2_800C471C()
+void EnemyAiD2_800C471C(EnemyAi* ai)
 {
-    EnemyAiDefault_800C473C();
+    EnemyAiDefault_800C473C(ai);
 }
 
 int EnemyAiDefault_800C473C(EnemyAi* ai)

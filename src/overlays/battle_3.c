@@ -113,7 +113,7 @@ zero:
 
 int IsActorActionDone_800BEB50()
 {
-    return actionFrame_800C9D94 > actorTiming_800C9D98[1];
+    return actionFrame_800C9D94 > actorTiming_800C9D98.end_2;
 }
 
 int AreReactionsDone_800BEB68()

@@ -46,7 +46,7 @@ typedef struct
     EventEntryFn cb_C;
 } EventDesc;
 
-void XaInitTask_80043054();
+void XaInitTask_80043054(EventEntry* entry, XaTask* task);
 
 EventNode* CreateEventList_800435B4(EventDesc** list);
 void RunEventList_80043898(EventNode* node);

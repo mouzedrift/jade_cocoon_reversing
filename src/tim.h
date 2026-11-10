@@ -16,6 +16,19 @@ typedef struct TimInfo
     u_long* paddr;
 } TimInfo;
 
+/* a TimInfo as an effect file stores it (LoadEffectSprite_80021298): the PSX layout, its addresses 32-bit words */
+typedef struct TimInfoFile
+{
+    int mode_valid;
+    int mode;
+    int clut_len;
+    RECT crect;
+    int caddr;
+    int pix_len;
+    RECT prect;
+    int paddr;
+} TimInfoFile;
+
 void LoadTim_80029674(void* tim);
 int ParseTim_80029708(void* outTim, void* inTim);
 void LoadTimToVram_800296A0(void* tim);

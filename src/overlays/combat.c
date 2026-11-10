@@ -393,13 +393,13 @@ int IsSlotActorReady_800A0F1C(int i)
     return IsActorActionReady_8001E1DC(s->actor_3C);
 }
 
-ShortPair StartSlotAction_800A0F50(int i, int* cmd, int x)
+ActionFrames StartSlotAction_800A0F50(int i, BattleCmd* cmd, int x)
 {
-    ShortPair hit;
+    ActionFrames hit;
     CombatSlot* slot;
     memset(&hit, 0, 4);
     slot = &combatSlots_800A3A08[i];
-    if (*cmd == 0x14)
+    if (cmd->kind_0 == 0x14)
     {
         return hit;
     }
@@ -407,10 +407,10 @@ ShortPair StartSlotAction_800A0F50(int i, int* cmd, int x)
     return hit;
 }
 
-void TriggerSlotEffect_800A0FF0(int i, int* p, int x)
+void TriggerSlotEffect_800A0FF0(int i, BattleCmd* cmd, int x)
 {
     CombatSlot* s = &combatSlots_800A3A08[i];
-    if (*p != 0x14)
+    if (cmd->kind_0 != 0x14)
     {
         TriggerActorEffect_8001E28C(s->actor_3C);
     }

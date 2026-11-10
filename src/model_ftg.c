@@ -179,15 +179,15 @@ void LoadFtgMatList_80021E4C(int* file, FtgMatList* out, unsigned int count)
     unsigned int i;
     for (i = 0; i < count; i++)
     {
-        unsigned short* dst = out->items_4[i];
-        dst[0] = src[0];
-        dst[1] = src[1];
-        dst[2] = src[2];
-        dst[3] = src[3];
-        dst[4] = src[4];
-        dst[5] = src[5];
-        dst[6] = src[6];
-        dst[7] = src[7];
+        FtgVtxRef* dst = out->items_4[i].v;
+        dst[0].slot = src[0];
+        dst[0].idx = src[1];
+        dst[1].slot = src[2];
+        dst[1].idx = src[3];
+        dst[2].slot = src[4];
+        dst[2].idx = src[5];
+        dst[3].slot = src[6];
+        dst[3].idx = src[7];
         src += 8;
     }
 }

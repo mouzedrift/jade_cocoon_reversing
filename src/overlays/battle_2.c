@@ -491,13 +491,13 @@ void FaceActorAndTargets_800BDEBC()
 
 void StartActorAction_800BDF74()
 {
-    StartUnitAction_800BE058(actorTiming_800C9D98, &curCommand_800C9C88, 0, actingUnit_800C9C7C);
+    StartUnitAction_800BE058(&actorTiming_800C9D98, &curCommand_800C9C88, 0, actingUnit_800C9C7C);
 }
 
 void StartReactions_800BDFAC()
 {
     unsigned char i;
-    BatActionTiming timing;
+    ActionFrames timing;
     for (i = 0; i < 7; i++)
     {
         if (actingUnit_800C9C7C == i)
@@ -513,9 +513,9 @@ void StartReactions_800BDFAC()
     }
 }
 
-BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BattleCmd* cmd, int isReaction, int unit)
+ActionFrames* StartUnitAction_800BE058(ActionFrames* out, BattleCmd* cmd, int isReaction, int unit)
 {
-    BatActionTiming timing;
+    ActionFrames timing;
     if ((saveData_8008B570.flags_0 & 0x20) || IsUnitOnField_800BC570(unit) == 0)
     {
         timing.hit_0 = 0;
@@ -526,13 +526,13 @@ BatActionTiming* StartUnitAction_800BE058(BatActionTiming* out, BattleCmd* cmd, 
         switch ((unsigned int)GetUnitSide_800BC7DC(unit))
         {
         case 0:
-            StartLevantAction_800A8A30(&timing, cmd, isReaction);
+            timing = StartLevantAction_800A8A30(cmd, isReaction);
             break;
         case 1:
-            StartMinionAction_800C0DDC((BatRawTiming*)&timing, cmd, isReaction);
+            timing = StartMinionAction_800C0DDC(cmd, isReaction);
             break;
         case 2:
-            StartEnemyCommandAction_800A2684(&timing, cmd, isReaction);
+            timing = StartEnemyCommandAction_800A2684(cmd, isReaction);
             break;
         }
     }
@@ -579,8 +579,8 @@ void AlignActionTimings_800BE2C8()
 {
     int latest = GetLatestHitFrame_800BE364();
     unsigned char i;
-    actorHitShift_800C9DBC = latest - actorTiming_800C9D98[0];
-    actorTiming_800C9D98[1] += actorHitShift_800C9DBC;
+    actorHitShift_800C9DBC = latest - actorTiming_800C9D98.hit_0;
+    actorTiming_800C9D98.end_2 += actorHitShift_800C9DBC;
     for (i = 0; i < 7; i++)
     {
         reactionHitFrames_800C9DC0[i] = latest - reactionTimings_800C9DA0[i].hit_0;
@@ -591,7 +591,7 @@ void AlignActionTimings_800BE2C8()
 int GetLatestHitFrame_800BE364()
 {
     unsigned char i;
-    short latest = actorTiming_800C9D98[0];
+    short latest = actorTiming_800C9D98.hit_0;
     for (i = 0; i < 7; i++)
     {
         if (latest < reactionTimings_800C9DA0[i].hit_0)
@@ -653,7 +653,7 @@ void UpdateAction_800BE3C0()
             }
         }
     }
-    if (actorTiming_800C9D98[0] + actorHitShift_800C9DBC == actionFrame_800C9D94)
+    if (actorTiming_800C9D98.hit_0 + actorHitShift_800C9DBC == actionFrame_800C9D94)
     {
         if (hitSfx_800C9D78 >= 0)
         {

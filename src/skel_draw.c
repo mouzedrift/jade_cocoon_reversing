@@ -413,17 +413,17 @@ void DrawWireTris_80045534(WireTriList* list, OT_TYPE* ot, VECTOR* pos, SVECTOR*
     }
     PopMatrix();
 }
-void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, OT_TYPE* ot, int flags)
+void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgMatList* list, OT_TYPE* ot, int flags)
 {
     FtgQuadCtx* ctx = FTG_QUAD_CTX;
     FtgPrimGT4* prim;
     unsigned int i;
     ctx->next_14 = (unsigned char*)primAllocPtr_800960A8[bDoubleBuffer_8008D428];
     prim = (FtgPrimGT4*)FTG_PRIM_SCRATCH;
-    ctx->ref_28 = list->items;
+    ctx->ref_28 = list->items_4;
     prim->tpage = ftgSpriteTPageClut_8009AAD8.tc.tpage;
     prim->clut = ftgSpriteTPageClut_8009AAD8.tc.clut;
-    for (i = 0; i < list->count; i++)
+    for (i = 0; i < list->count_0; i++)
     {
         ctx->slot_10 = ctx->ref_28->v[0].slot;
         ctx->attr_0 = slots[ctx->slot_10].pad;
@@ -488,13 +488,13 @@ void DrawSpriteVtxQuadsGT4_800459E4(SVECTOR* slots, FtgQuadRefList* list, OT_TYP
     primAllocPtr_800960A8[bDoubleBuffer_8008D428] = (char*)ctx->next_14;
     ResetFtgSpriteVtx_8004D924();
 }
-void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, OT_TYPE* ot, int flags)
+void DrawSpriteVtxQuadsG4_80045E48(FtgMatList* list, OT_TYPE* ot, int flags)
 {
     FtgQuadG4Ctx* ctx = FTG_QUAD_G4_CTX;
     unsigned int i;
     int otz;
     ctx->next_30 = (unsigned char*)primAllocPtr_800960A8[bDoubleBuffer_8008D428];
-    ctx->ref_44 = list->items;
+    ctx->ref_44 = list->items_4;
     setlen(&ctx->tpage_8, 1);
     ctx->tpage_8.code[0] = 0xE1000200;
     if (flags & 0x10)
@@ -505,7 +505,7 @@ void DrawSpriteVtxQuadsG4_80045E48(FtgQuadRefList* list, OT_TYPE* ot, int flags)
     {
         ctx->tpage_8.code[0] |= 0x20;
     }
-    for (i = 0; i < list->count; i++)
+    for (i = 0; i < list->count_0; i++)
     {
         ctx->v_34[0] = ftgSpriteVtxSlots_800987D8[ctx->ref_44->v[0].slot][ctx->ref_44->v[0].idx];
         ctx->v_34[1] = ftgSpriteVtxSlots_800987D8[ctx->ref_44->v[1].slot][ctx->ref_44->v[1].idx];

@@ -52,8 +52,8 @@ extern SoundStruct sfxSound_80091D20;
 extern SoundStruct seqSlotSound_80091D00;
 extern SoundStruct systemSound_80091D40;
 
-void FreeSoundTask_8003006C();
-void InitSoundTask_8002FF10();
+void FreeSoundTask_8003006C(EventEntry* entry, SoundTask* buffer);
+void InitSoundTask_8002FF10(EventEntry* entry, SoundTask* task);
 
 int PlayMusic_800300E0(int idx, int unused);
 void InitSounds_8002FE7C(void);

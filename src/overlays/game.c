@@ -786,7 +786,7 @@ int IsEnemyReady_800A2594(int idx)
     return IsActorActionReady_8001E1DC(gCtx_800B1260.actors_7c[idx]);
 }
 
-int TurnEnemyToward_800A25D8(int idx)
+int TurnEnemyToward_800A25D8(int idx, int* pos)
 {
     AssertEnemyIndex_800A2CA8(idx, 0);
     return 0;
@@ -805,17 +805,17 @@ int EnemyChooseCommand_800A2618(void* cmd, int idx)
     return 1;
 }
 
-GameActionFrames StartEnemyCommandAction_800A2684(int* cmd, int arg)
+ActionFrames StartEnemyCommandAction_800A2684(BattleCmd* cmd, int arg)
 {
-    GameActionFrames frames;
+    ActionFrames frames;
     int i;
     Actor* actor;
     memset(&frames, 0, 4);
-    if (cmd[0] == 0x14)
+    if (cmd->kind_0 == 0x14)
         return frames;
     for (i = 4; i < 7; i++)
     {
-        if (((unsigned)cmd[2] & (1 << i)) != 0)
+        if (((unsigned)cmd->mask_8 & (1 << i)) != 0)
         {
             actor = gCtx_800B1260.actors_7c[i - 4];
             frames = StartCommandAction_80018A4C(actor, cmd, gCtx_800B1260.anims_70C[i - 4], arg);

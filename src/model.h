@@ -399,11 +399,22 @@ extern void* GetModelFtgWeights_80024F70(Model* p, int n);
 // ---------------------------------------------------------------------------------------------
 // effect files (LoadEffectFile_80020DDC / OnEffectFileLoaded_80020F5C)
 
-// FTG material list (AllocFtgMatList_80021DF0 / LoadFtgMatList_80021E4C; also Model.mats_5C)
+// polygons strung between projected sprite vertices (ftgSpriteVtxSlots_800987D8[slot][idx], DrawSpriteVtxQuadsGT4_800459E4 / DrawSpriteVtxQuadsG4_80045E48)
+typedef struct
+{
+    unsigned short slot;
+    unsigned short idx;
+} FtgVtxRef;
+typedef struct
+{
+    FtgVtxRef v[4];
+} FtgQuadRef;
+
+// FTG material list: the sprite-vertex quads (AllocFtgMatList_80021DF0 / LoadFtgMatList_80021E4C; also Model.mats_5C)
 typedef struct FtgMatList
 {
     int count_0;
-    unsigned short (*items_4)[8];
+    FtgQuadRef* items_4;
 } FtgMatList;
 
 // ---------------------------------------------------------------------------------------------
@@ -733,7 +744,7 @@ int LoadFtgPolyG4_8002407C(FtgPrimHeader *hdr, FtgSrcPolyG4 *src, FtgObject *obj
 int LoadFtgPolyFT4_80024394(FtgPrimHeader *hdr, FtgSrcPolyFT4 *src, FtgObject *obj, int idx);
 int LoadFtgPolyGT4_800246A0(FtgPrimHeader *hdr, FtgSrcPolyGT4 *src, FtgObject *obj, int idx);
 
-void InitOverlayLoaderTask_80020CB8();
+void InitOverlayLoaderTask_80020CB8(EventEntry* entry, OverlayLoader* loader);
 
 
 void OnEffectFileLoaded_80020F5C(EffectLoadArg* arg_in, int* hdr);

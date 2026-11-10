@@ -278,6 +278,8 @@ TYPES = {
                 ("entrance_26", "i16", 1)],
     "MapGateMusic": [("track", "i32", 4)],
     "MapSavePoint": [("pos_0", "i32", 3), ("name_C", "ptr:str", 1)],
+    "MapFtgAnim": [("first_0", "i16", 1), ("last_2", "i16", 1), ("speed_4", "i16", 1), ("pad_6", "i16", 1),
+                   ("rots_8", "ptr:SVECTOR", 1)],
     "MapRgb": [("r", "u8", 1), ("g", "u8", 1), ("b", "u8", 1), ("pad", "u8", 1)],
     "SVECTOR": [("vx", "i16", 1), ("vy", "i16", 1), ("vz", "i16", 1), ("pad", "i16", 1)],
     "ActorScriptCmd*": [("", "ptr:ActorScriptCmd", 1)],
@@ -293,14 +295,14 @@ POINTEE = {"str": "const char", "short": "short", "int": "int", "SVECTOR": "SVEC
 KIND_SIZE = {"i8": 1, "u8": 1, "i16": 2, "u16": 2, "i32": 4, "u32": 4, "ref": 4}
 # the data of an event by its init function (MapEvent.run_10) or its type (MapEvent.type_4)
 EVENT_DATA = {"MinionInit": "MapMinion", "FxInit": "MapFx", "Warp": "MapWarp", "ChestInit": "MapChest", 8: "MapInstr",
-              "GateInit": "MapGate", "SavePointInit": "MapSavePoint",
+              "GateInit": "MapGate", "SavePointInit": "MapSavePoint", "FtgAnimInit": "MapFtgAnim",
               0xB: "MapVoice"}
 # what an event script instruction's address operand (MapInstr.c_C) is, by its op
 INSTR_DATA = {0x11: "MapEvent", 0x2E: "MapEvent", 0x4B: "MapFx", 0x13: "int", 0x5A: "int", 0x60: "int"}
 TYPE_NAME = {"MapEvent": "event", "MapInstr": "script", "MapVoice": "voices", "MapMinion": "minion",
              "MapMinionSpecies": "species", "MapActorModel": "model", "MapFx": "effects", "SVECTOR": "boneScale",
              "ActorScriptCmd*": "script", "ActorScriptCmd": "anim", "int": "data", "short": "bones",
-             "unsigned char": "bytes", "str": "str", "MapFxInits": "fxInits", "MapWarp": "warp", "MapChest": "chest", "MapGate": "gate", "MapSavePoint": "savePoint",
+             "unsigned char": "bytes", "str": "str", "MapFxInits": "fxInits", "MapWarp": "warp", "MapChest": "chest", "MapGate": "gate", "MapSavePoint": "savePoint", "MapFtgAnim": "ftgAnim",
              "text": "text"}
 
 

@@ -2913,7 +2913,7 @@ void LevantControlTask_800A818C(EventEntry* entry, GameLevantCtl* ctl)
 }
 
 
-void PlaceWindowAwayFromTarget_800A88A0(int win, int flip)
+void PlaceWindowAwayFromTarget_800A88A0(GameWinRect* win, int flip)
 {
     PlaceWindowAwayFromQuadrant_800A88E0(win, flip, GetCameraTargetQuadrant_800A8930());
 }
@@ -2950,7 +2950,7 @@ void ExitLevantBattleMode_800A8984(int victoryPose)
     GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
     ctl->flags_0 &= ~1;
     ctl->flags_0 &= ~0x10;
-    ExitLevantActorBattle_800AB444(victoryPose, ctl);
+    ExitLevantActorBattle_800AB444(victoryPose);
 }
 
 void UnlockLevantMovement_800A89C8()
@@ -2968,28 +2968,28 @@ int IsLevantDefending_800A8A10()
     return IsLevantDefending_800AB354();
 }
 
-GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
+ActionFrames StartLevantAction_800A8A30(BattleCmd* cmd, int isReaction)
 {
-    GameActionFrames frames;
+    ActionFrames frames;
     unsigned int flags;
     GameLevantCtl* ctl = levantControlTask_8008B4CC->buffer_24;
-    if (levantBattleActions_800B1084[cmd[0]].state_0 == 0x10)
+    if (levantBattleActions_800B1084[cmd->kind_0].state_0 == 0x10)
     {
         ctl->state_C6 = 5;
-        frames.hit = 0;
-        frames.end = 0;
+        frames.hit_0 = 0;
+        frames.end_2 = 0;
         return frames;
     }
-    ctl->state_C6 = levantBattleActions_800B1084[cmd[0]].state_0;
-    ctl->anim_CC = levantBattleActions_800B1084[cmd[0]].anim_4;
+    ctl->state_C6 = levantBattleActions_800B1084[cmd->kind_0].state_0;
+    ctl->anim_CC = levantBattleActions_800B1084[cmd->kind_0].anim_4;
     if (ctl->anim_CC == 8 && (int)((saveData_8008B570.settings_1C.word >> 21) & 1) == 1)
     {
         ctl->anim_CC = 7;
     }
-    SetLevantLastCapture_800AC340(cmd[0] == 0x1a);
+    SetLevantLastCapture_800AC340(cmd->kind_0 == 0x1a);
     flags = (ctl->flags_0 | 2) & ~4;
-    ctl->arg_38 = cmd[1];
-    ctl->targets_34 = cmd[3];
+    ctl->arg_38 = cmd->arg_4;
+    ctl->targets_34 = cmd->targets_C;
     ctl->flags_0 = flags;
     switch (isReaction)
     {
@@ -3000,7 +3000,7 @@ GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
         ctl->flags_0 = flags & ~8;
         break;
     }
-    if (cmd[0] == 0x12)
+    if (cmd->kind_0 == 0x12)
     {
         SetLevantDefending_800AB264();
     }
@@ -3008,7 +3008,7 @@ GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
     {
         ClearLevantDefending_800AB28C();
     }
-    if (cmd[0] == 0x10)
+    if (cmd->kind_0 == 0x10)
     {
         SetLevantFlag10000_800AB2B4();
     }
@@ -3016,8 +3016,8 @@ GameActionFrames StartLevantAction_800A8A30(int* cmd, int isReaction)
     {
         ClearLevantFlag10000_800AB2DC();
     }
-    frames.hit = IMPLICIT_INT(GetLevantActionHitFrame_800AB750)(ctl->anim_CC);
-    frames.end = IMPLICIT_INT(GetLevantActionEndFrame_800AB4D8)(ctl->anim_CC);
+    frames.hit_0 = IMPLICIT_INT(GetLevantActionHitFrame_800AB750)(ctl->anim_CC);
+    frames.end_2 = IMPLICIT_INT(GetLevantActionEndFrame_800AB4D8)(ctl->anim_CC);
     return frames;
 }
 
@@ -3302,9 +3302,9 @@ void StopLevantAnimLoop_800A9364()
     StopLevantAnimLoop_800AB910();
 }
 
-void SetLevantVisible_800A9384()
+void SetLevantVisible_800A9384(int visible)
 {
-    SetLevantVisible_800ABBD8();
+    SetLevantVisible_800ABBD8(visible);
 }
 
 void GetLevantEffectTarget_800A93A4(EffectTarget* out)
@@ -3597,7 +3597,7 @@ void UpdateLevantMove_800A9A9C(GameLevantActor* lev)
 void SetLevantRootMotion_800AA140(GameLevantActor* lev)
 {
     ModelAnim* anim = &lev->model_40->anims_54[GetLevantAnimFile_800AC4A8(lev->anim_1C)];
-    GetAnimRootMotion_8004D288((char*)lev + 0x6c, anim, (unsigned)lev->frame_10 % ((IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) & 0xffff) + 1));
+    GetAnimRootMotion_8004D288(&lev->rootMotion_6C, anim, (unsigned)lev->frame_10 % ((IMPLICIT_INT(GetLevantAnimLastFrame_800AC8BC)(lev->anim_1C, GetLevantAnimSet_800AC474(lev->anim_1C)) & 0xffff) + 1));
 }
 
 int GetLevantMoveDir_800AA1C0(GameLevantActor* lev)
@@ -5495,7 +5495,7 @@ void SetMapVar_800ADC5C(unsigned short* key, int value)
     }
 }
 
-void FindMapEntrance_800ADCEC(short* out, int key)
+void FindMapEntrance_800ADCEC(GameMapLoc* out, int key)
 {
     int i, j, k;
     GameMapEntrance** row;
@@ -5510,10 +5510,10 @@ void FindMapEntrance_800ADCEC(short* out, int key)
             {
                 if (key == e[k].entrance_6)
                 {
-                    out[0] = i;
-                    out[1] = j;
-                    out[2] = k;
-                    out[3] = e[k].encIndex_4;
+                    out->area = i;
+                    out->map = j;
+                    out->entrance = k;
+                    out->encIndex = e[k].encIndex_4;
                     return;
                 }
             }

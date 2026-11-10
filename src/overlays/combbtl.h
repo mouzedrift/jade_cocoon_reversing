@@ -115,7 +115,7 @@ extern int statusCured_800A8480[2];
 extern short exchangeStep_800A8488;
 extern EventEntry *commandMenuTask_800A848C;
 extern int koSide_800A8490;
-extern ShortPair hitWindow_800A8494; // a: the current hit frame, b: the last one
+extern ActionFrames hitWindow_800A8494; // hit_0: the current hit frame, end_2: the last one
 extern int stageElement_800A8498;
 extern int fixedStageElement_800A849C;
 extern int newStageElement_800A84A0;
@@ -128,7 +128,7 @@ extern int setupStep_800A84B8;
 extern short actorHpLoss_800A84BC;
 extern int stageId_800A84C0;
 extern short actorMpLoss_800A84C4;
-extern ShortPair sideHitWindows_800A84C8[2]; // per side: the first and last hit frame of its action (StartSlotAction_800A0F50)
+extern ActionFrames sideHitWindows_800A84C8[2]; // per side: the first and last hit frame of its action (StartSlotAction_800A0F50)
 extern short sideGauges_800A84D0[2];
 extern int waitTimer_800A84D4;
 extern CombBtlHist commandHistory_800A84D8[10];
@@ -204,7 +204,7 @@ void ClearHitResults_800A60F0(void);
 void ResolveCommand_800A616C(void);
 void RunExchange_800A68E0(CombBtlTask* t);
 unsigned int CountLivingMinions_800A7164(int side);
-ShortPair MergeHitWindows_800A71E4(int count, ShortPair* windows);
+ActionFrames MergeHitWindows_800A71E4(int count, ActionFrames* windows);
 void StartArenaCamera_800A7290(void);
 void StopArenaCamera_800A73E4(void);
 void StartFadeTask_800A7420(void);

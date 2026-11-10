@@ -203,6 +203,30 @@ typedef struct MapSlidingDoorWork
     int t_8;      /* 0 - frames_4C */
 } MapSlidingDoorWork;
 
+/* an animated FTG object drawn around the camera (the dream's sky): frames first_0..last_2, speed_4 frames / 4096 a
+   tick, turned by rots_8[the mesh Levant came from] */
+typedef struct MapFtgAnim
+{
+    short first_0;
+    short last_2;
+    short speed_4;
+    short pad_6;
+    SVECTOR* rots_8;
+} MapFtgAnim;
+
+typedef struct MapFtgAnimWork
+{
+    short frame_0;
+    short frac_2;
+} MapFtgAnimWork;
+
+/* the arguments of a map's change-map hook (event script ops 0x4C / 0x4D): event var 0, forceMapReload_80091C9C */
+typedef struct MapExitArgs
+{
+    int var_0;
+    int reload_4;
+} MapExitArgs;
+
 /* a save point (type 0xC, SavePointInit) */
 typedef struct MapSavePoint
 {

@@ -203,13 +203,13 @@ int GetWeaponEffect_800189F8(void)
     SetHitVariantForCommand_800BFAF8(*((unsigned char*)sd + 0x7E4));
     return weaponEffectIds_80079708[weapon->kind_2];
 }
-ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scripts, int c)
+ActionFrames StartCommandAction_80018A4C(Actor* obj, BattleCmd* cmd, ActorScriptCmd** scripts, int c)
 {
-    ShortPair result;
+    ActionFrames result;
     ActorActionDesc desc;
     short (*hitFrames)[2];
     memset(&result, 0, 4);
-    if (cmd[0] == 0x16)
+    if (cmd->kind_0 == 0x16)
     {
         /* animation 27: its last hit window is at least 30 frames from its start */
         hitFrames = obj->anims_148[27].hitFrames_8;
@@ -241,16 +241,16 @@ ShortPair StartCommandAction_80018A4C(Actor* obj, int* cmd, ActorScriptCmd** scr
     desc.stopScriptAtEnd_2C = 0;
     desc.path_30 = 0;
     desc.field_1C = (c == 0);
-    desc.effectMask_14 = cmd[2];
+    desc.effectMask_14 = cmd->mask_8;
     if (SetupCommandAction_80018C00(&desc, cmd, scripts))
     {
         desc.field_1C = 1;
     }
-    result.a = StartActorAction_8001E254(obj, &desc);
-    result.b = GetActorScriptTime_8001F03C(obj, obj->script_D0, -1, 0x10);
-    if (cmd[0] != 0x12 && c)
+    result.hit_0 = StartActorAction_8001E254(obj, &desc);
+    result.end_2 = GetActorScriptTime_8001F03C(obj, obj->script_D0, -1, 0x10);
+    if (cmd->kind_0 != 0x12 && c)
     {
-        result.a = 0;
+        result.hit_0 = 0;
     }
     return result;
 }
@@ -260,47 +260,47 @@ extern int* const encounterSwapped; /* GAME (game.c): &gCtx_800B1260.swapped_3C 
 #else
 extern int encounterSwapped_800B129C[];
 #endif
-int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd** scripts)
+int SetupCommandAction_80018C00(ActorActionDesc* desc, BattleCmd* cmd, ActorScriptCmd** scripts)
 {
     int animIdx;
     if (scripts == 0)
     {
         scripts = commandScripts_8007A024;
     }
-    switch (cmd[0])
+    switch (cmd->kind_0)
     {
     case 0:
         desc->script_4 = scripts[2];
         desc->hitAnim_E = 5;
         desc->effect_10 = 0x13;
-        desc->effectKinds_18 = cmd[3];
+        desc->effectKinds_18 = cmd->targets_C;
         break;
     case 1:
         desc->script_4 = scripts[9];
-        desc->turnStep_C = cmd[1];
+        desc->turnStep_C = cmd->arg_4;
         desc->hitAnim_E = 0xC;
-        desc->effect_10 = GetMagicEffect_8001AC8C(cmd[1]);
-        desc->effectKinds_18 = cmd[3];
+        desc->effect_10 = GetMagicEffect_8001AC8C(cmd->arg_4);
+        desc->effectKinds_18 = cmd->targets_C;
         break;
     case 2:
         desc->hitAnim_E = 4;
         desc->effect_10 = 0x3A;
         desc->script_4 = scripts[17];
-        desc->effectKinds_18 = cmd[2];
+        desc->effectKinds_18 = cmd->mask_8;
         break;
     case 3:
         desc->hitAnim_E = 4;
         desc->effect_10 = 0x39;
         desc->script_4 = scripts[18];
-        desc->effectKinds_18 = cmd[2];
+        desc->effectKinds_18 = cmd->mask_8;
         break;
     case 6:
-        animIdx = SkillSlotToAnimIndex_80031870(cmd[1]);
+        animIdx = SkillSlotToAnimIndex_80031870(cmd->arg_4);
         desc->script_4 = scripts[3 + animIdx];
         desc->turnStep_C = animIdx;
         desc->hitAnim_E = animIdx + 6;
-        desc->effect_10 = GetSkillEffect_800316EC(cmd[1], cmd[2]);
-        desc->effectKinds_18 = cmd[3];
+        desc->effect_10 = GetSkillEffect_800316EC(cmd->arg_4, cmd->mask_8);
+        desc->effectKinds_18 = cmd->targets_C;
         break;
     case 7:
         desc->script_4 = scripts[13];
@@ -352,17 +352,17 @@ int SetupCommandAction_80018C00(ActorActionDesc* desc, int* cmd, ActorScriptCmd*
         desc->hitAnim_E = 0x1A;
         desc->effect_10 = encounterSwapped_800B129C[0] ? 0x3A : 0x39;
         desc->script_4 = scripts[17];
-        desc->effectKinds_18 = cmd[2];
+        desc->effectKinds_18 = cmd->mask_8;
         break;
     case 22:
         desc->hitAnim_E = 0x1B;
         desc->effect_10 = encounterSwapped_800B129C[0] ? 0x39 : 0x3A;
         desc->script_4 = scripts[18];
-        desc->effectKinds_18 = cmd[2];
+        desc->effectKinds_18 = cmd->mask_8;
         break;
     case 5:
     case 26:
-        desc->script_4 = scripts[0x70 / 4 + cmd[1]];
+        desc->script_4 = scripts[0x70 / 4 + cmd->arg_4];
         break;
     case 27:
         break;

@@ -79,8 +79,9 @@ extern void SetEventVar_800AD16C(int, int);
 extern void SetMapVar_800ADC5C(ChapterMapKey*, int);
 extern void FindMapEntrance_800ADCEC(ChapterMapKey*, int);
 extern void RequestGameMode_800A6D30(int);
-extern void StartChapterOverlay_800A7690();
+extern void StartChapterOverlay_800A7690(); /* another overlay's function */
 
 /* exe-side, to move to an exe header */
+
 
 #endif

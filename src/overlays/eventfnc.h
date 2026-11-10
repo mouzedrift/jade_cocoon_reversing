@@ -97,20 +97,6 @@ typedef struct EvScriptCtx
 
 // an actor command (GAME's GameActorCmd): kind 0 walk / 1 run / 2 turn to x/y/z, 3 / 4 play / stop a held animation,
 // 5 play animation data, 6 visible, 7 ground move, 8 root motion, 9..11 play a motion
-typedef struct EvActorCmd
-{
-    int actor_0;
-    int kind_4;
-    int field_8;
-    int arg_C;
-    int arg2_10;
-    int field_14;
-    int x_18;
-    int y_1C;
-    int z_20;
-    int data_24;
-} EvActorCmd;
-
 typedef struct EvSVec
 {
     short x_0;
@@ -125,9 +111,9 @@ extern EvVec* GetSavedActorFront_800BBC80(EvScriptCtx* ctx, int idx, int mode);
 
 extern EvVec* GetActorPos_800BBBA0(int actor);
 
-extern int SendActorCmd_800BB840(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b);
+extern int SendActorCmd_800BB840(EvScriptCtx* ctx, GameActorCmd* cmd, int a, int b);
 
-extern int SendActorCmdMask_800BB990(EvScriptCtx* ctx, EvActorCmd* cmd, int a, int b);
+extern int SendActorCmdMask_800BB990(EvScriptCtx* ctx, GameActorCmd* cmd, int a, int b);
 
 extern void SetTempFlags_800BBDA0(int mask, int on);
 
@@ -233,15 +219,14 @@ extern EvMapEntry** mapTable_800B0608[];
 
 extern int RollEncounterGroups_800A49CC(int a, int b, MapList16* c, EvSpawnTable* d);
 
-extern void SpawnEncounterEnemy_800B8568();
+extern void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* place, int aiArg, int index);
 
 extern EventNode* encounterTask_8008D674;
 
-extern void ResetEncounter_800A170C();
+extern void ResetEncounter_800A170C(void);
 
-extern void ClearEnemySlots_800A1794();
+extern void ClearEnemySlots_800A1794(void);
 
-extern void EncounterSpawnTask_800B844C();
 
 
 extern int EvCmdEndScene_800B8A34(EvScriptCtx* ctx);
@@ -372,9 +357,9 @@ extern int IsActorCmdReady_800BBAB0(int i);
 
 extern int IsActorCmdDone_800BBAE4(int i);
 
-extern int StartActorCmd_800BBB18(int* p);
+extern int StartActorCmd_800BBB18(GameActorCmd* cmd);
 
-extern int FinishActorCmd_800BBB5C(int* p);
+extern int FinishActorCmd_800BBB5C(GameActorCmd* cmd);
 
 extern int IsLevantControlHeld_800A8E7C();
 
@@ -454,6 +439,7 @@ typedef struct EventRecords
     int count_0;
     RecordTable* tables_4;
 } EventRecords;
+
 #endif
 extern EventRecords eventRecords_800AEBCC;
 
@@ -466,8 +452,9 @@ typedef struct EvTaskEntry
     int f4_4;
     void (*next_8)();
 } EvTaskEntry;
+extern void EncounterSpawnTask_800B844C(EvTaskEntry* task);
 
-extern void ReturnWarpTask_800BCB3C();
+extern void ReturnWarpTask_800BCB3C(EvTaskEntry* task, int* st);
 
 extern void LoadLevantAnimById_800AC604(int a, int b);
 
@@ -477,104 +464,104 @@ extern void FreeLevantAnimById_800AC6A8(int a);
 
 
 
-extern int LevantCommand_800A8EC4(int* p);
+extern int LevantCommand_800A8EC4(GameActorCmd* cmd);
 
-extern void FieldModeTask_800A7720();
+extern void FieldModeTask_800A7720(); /* another overlay's function */
 
 
 
 extern int dword_80091C8C;
 
-extern int EvCmdBeginScene_800B8BE8();
-extern int EvCmdWaitTrigger_800B9B98();
-extern int EvCmdSetChapter_800BA82C();
-extern int EvCmdOpenMapSelect_800BAB5C();
-extern int EvCmdBattle_800BB27C();
-extern int EvCmdNop_800B89A8();
-extern int EvCmdWaitButton_800B89C0();
-extern int EvCmdEnd_800B89F4();
-extern int EvCmdSetLoopPoint_800B8CB0();
-extern int EvCmdTakeActors_800B8D08();
-extern int EvCmdReleaseActors_800B8DDC();
-extern int EvCmdGotoLabel_800B8E9C();
-extern int EvCmdJumpScript_800B8F14();
-extern int EvCmdWait_800B8F44();
-extern int EvCmdWaitActors_800B8F88();
-extern int EvCmdSetVar_800B8FB8();
-extern int EvCmdPickBranch_800B9020();
-extern int EvCmdCountYanVar_800B9110();
-extern int EvCmdCallHook_800B91CC();
-extern int EvCmdStartScript_800B9218();
-extern int EvCmdWarpActor_800B9260();
-extern int EvCmdMoveToPoint_800B93A8();
-extern int EvCmdMoveToActor_800B942C();
-extern int EvCmdTurnToPoint_800B95BC();
-extern int EvCmdTurnToActor_800B962C();
-extern int EvCmdSetActorVisible_800B96D8();
-extern int EvCmdSetActorGroundMove_800B9720();
-extern int EvCmdSetActorRootMotion_800B9768();
-extern int EvCmdSaveActorPos_800B97B0();
-extern int EvCmdSaveActorFront_800B97F8();
-extern int EvCmdTestFlag_800B9840();
-extern int EvCmdSetFlag_800B98C4();
-extern int EvCmdClearFlag_800B990C();
-extern int EvCmdTestTempFlags_800B9954();
-extern int EvCmdSetTempFlags_800B99D8();
-extern int EvCmdClearTempFlags_800B9A20();
-extern int EvCmdAddItem_800B9A68();
-extern int EvCmdRemoveItem_800B9AB4();
-extern int EvCmdAddItemCat1_800B9B00();
-extern int EvCmdRemoveItemCat1_800B9B4C();
-extern int EvCmdSetValuable_800B9C5C();
-extern int EvCmdAddMoney_800B9CC0();
-extern int EvCmdAddEmptyCocoons_800B9D08();
-extern int EvCmdHealParty_800B9D50();
-extern int EvCmdSetEntityState_800B9DE0();
-extern int EvCmdWaitEntityState_800B9E48();
-extern int EvCmdSetOwnEntityState_800B9EB0();
-extern int EvCmdWaitOwnEntityState_800B9EDC();
-extern int EvCmdWaitEntityGone_800B9F0C();
-extern int EvCmdSetMsgOptions_800B9F5C();
-extern int EvCmdSetMsgPos_800B9F84();
-extern int EvCmdSetMsgPosMode_800B9FB4();
-extern int EvCmdSetVoiceTable_800B9FD8();
-extern int EvCmdMessage_800BA020();
-extern int EvCmdSwapMsgAfterCount_800BA1DC();
-extern int EvCmdWaitMsgMark_800BA238();
-extern int EvCmdSetChoiceMask_800BA28C();
-extern int EvCmdPlayAnim_800BA2E8();
-extern int EvCmdStopAnim_800BA338();
-extern int EvCmdPlayAnimData_800BA40C();
-extern int EvCmdPauseActorAnim_800BA45C();
-extern int EvCmdPlayMotion_800BA4F0();
-extern int EvCmdPlayMotionRange_800BA554();
-extern int EvCmdPlayMotionData_800BA5CC();
-extern int EvCmdSetCallArg_800BA678();
-extern int EvCmdSetCallArgs_800BA6D0();
-extern int EvCmdCallUntilDone_800BA714();
-extern int EvCmdCallSelect_800BA7A4();
-extern int EvCmdSetMapVariant_800BA880();
-extern int EvCmdSetMapVar_800BA8AC();
-extern int EvCmdChangeMap_800BA930();
-extern int EvCmdChangeMapToPoint_800BA9E4();
-extern int EvCmdPreloadArea_800BAA6C();
-extern int EvCmdUsePreloadedArea_800BAAC0();
-extern int EvCmdSetReturnPoint_800BAB14();
-extern int EvCmdOpenShop_800BABB0();
-extern int EvCmdCameraLookAtPoint_800BAC60();
-extern int EvCmdCameraLookAtActor_800BACE0();
-extern int EvCmdCameraClearLookAt_800BAD3C();
-extern int EvCmdWaitCameraBlend_800BAD88();
-extern int EvCmdSetViewRect_800BADF8();
-extern int EvCmdSetCameraZoom_800BAEBC();
-extern int EvCmdSetCameraTarget_800BAF08();
-extern int EvCmdSetMapMesh_800BAF68();
-extern int EvCmdWaitTalk_800BAFAC();
-extern int EvCmdSetIdleAnim_800BB180();
-extern int EvCmdWaitActorInRegion_800BB214();
-extern int EvCmdIfBattleResult_800BB45C();
-extern int EvCmdFadeSound_800BB4A4();
-extern int EvCmdPadVibration_800BB7D8();
+extern int EvCmdBeginScene_800B8BE8(EvScriptCtx* ctx);
+extern int EvCmdWaitTrigger_800B9B98(EvScriptCtx* ctx);
+extern int EvCmdSetChapter_800BA82C(EvScriptCtx* ctx);
+extern int EvCmdOpenMapSelect_800BAB5C(EvScriptCtx* ctx);
+extern int EvCmdBattle_800BB27C(EvScriptCtx* ctx);
+extern int EvCmdNop_800B89A8(EvScriptCtx* ctx);
+extern int EvCmdWaitButton_800B89C0(EvScriptCtx* ctx);
+extern int EvCmdEnd_800B89F4(EvScriptCtx* ctx);
+extern int EvCmdSetLoopPoint_800B8CB0(EvScriptCtx* ctx);
+extern int EvCmdTakeActors_800B8D08(EvScriptCtx* ctx);
+extern int EvCmdReleaseActors_800B8DDC(EvScriptCtx* ctx);
+extern int EvCmdGotoLabel_800B8E9C(EvScriptCtx* ctx);
+extern int EvCmdJumpScript_800B8F14(EvScriptCtx* ctx);
+extern int EvCmdWait_800B8F44(EvScriptCtx* ctx);
+extern int EvCmdWaitActors_800B8F88(EvScriptCtx* ctx);
+extern int EvCmdSetVar_800B8FB8(EvScriptCtx* ctx);
+extern int EvCmdPickBranch_800B9020(EvScriptCtx* ctx);
+extern int EvCmdCountYanVar_800B9110(EvScriptCtx* ctx);
+extern int EvCmdCallHook_800B91CC(EvScriptCtx* ctx);
+extern int EvCmdStartScript_800B9218(EvScriptCtx* ctx);
+extern int EvCmdWarpActor_800B9260(EvScriptCtx* ctx);
+extern int EvCmdMoveToPoint_800B93A8(EvScriptCtx* ctx);
+extern int EvCmdMoveToActor_800B942C(EvScriptCtx* ctx);
+extern int EvCmdTurnToPoint_800B95BC(EvScriptCtx* ctx);
+extern int EvCmdTurnToActor_800B962C(EvScriptCtx* ctx);
+extern int EvCmdSetActorVisible_800B96D8(EvScriptCtx* ctx);
+extern int EvCmdSetActorGroundMove_800B9720(EvScriptCtx* ctx);
+extern int EvCmdSetActorRootMotion_800B9768(EvScriptCtx* ctx);
+extern int EvCmdSaveActorPos_800B97B0(EvScriptCtx* ctx);
+extern int EvCmdSaveActorFront_800B97F8(EvScriptCtx* ctx);
+extern int EvCmdTestFlag_800B9840(EvScriptCtx* ctx);
+extern int EvCmdSetFlag_800B98C4(EvScriptCtx* ctx);
+extern int EvCmdClearFlag_800B990C(EvScriptCtx* ctx);
+extern int EvCmdTestTempFlags_800B9954(EvScriptCtx* ctx);
+extern int EvCmdSetTempFlags_800B99D8(EvScriptCtx* ctx);
+extern int EvCmdClearTempFlags_800B9A20(EvScriptCtx* ctx);
+extern int EvCmdAddItem_800B9A68(EvScriptCtx* ctx);
+extern int EvCmdRemoveItem_800B9AB4(EvScriptCtx* ctx);
+extern int EvCmdAddItemCat1_800B9B00(EvScriptCtx* ctx);
+extern int EvCmdRemoveItemCat1_800B9B4C(EvScriptCtx* ctx);
+extern int EvCmdSetValuable_800B9C5C(EvScriptCtx* ctx);
+extern int EvCmdAddMoney_800B9CC0(EvScriptCtx* ctx);
+extern int EvCmdAddEmptyCocoons_800B9D08(EvScriptCtx* ctx);
+extern int EvCmdHealParty_800B9D50(EvScriptCtx* ctx);
+extern int EvCmdSetEntityState_800B9DE0(EvScriptCtx* ctx);
+extern int EvCmdWaitEntityState_800B9E48(EvScriptCtx* ctx);
+extern int EvCmdSetOwnEntityState_800B9EB0(EvScriptCtx* ctx);
+extern int EvCmdWaitOwnEntityState_800B9EDC(EvScriptCtx* ctx);
+extern int EvCmdWaitEntityGone_800B9F0C(EvScriptCtx* ctx);
+extern int EvCmdSetMsgOptions_800B9F5C(EvScriptCtx* ctx);
+extern int EvCmdSetMsgPos_800B9F84(EvScriptCtx* ctx);
+extern int EvCmdSetMsgPosMode_800B9FB4(EvScriptCtx* ctx);
+extern int EvCmdSetVoiceTable_800B9FD8(EvScriptCtx* ctx);
+extern int EvCmdMessage_800BA020(EvScriptCtx* ctx);
+extern int EvCmdSwapMsgAfterCount_800BA1DC(EvScriptCtx* ctx);
+extern int EvCmdWaitMsgMark_800BA238(EvScriptCtx* ctx);
+extern int EvCmdSetChoiceMask_800BA28C(EvScriptCtx* ctx);
+extern int EvCmdPlayAnim_800BA2E8(EvScriptCtx* ctx);
+extern int EvCmdStopAnim_800BA338(EvScriptCtx* ctx);
+extern int EvCmdPlayAnimData_800BA40C(EvScriptCtx* ctx);
+extern int EvCmdPauseActorAnim_800BA45C(EvScriptCtx* ctx);
+extern int EvCmdPlayMotion_800BA4F0(EvScriptCtx* ctx);
+extern int EvCmdPlayMotionRange_800BA554(EvScriptCtx* ctx);
+extern int EvCmdPlayMotionData_800BA5CC(EvScriptCtx* ctx);
+extern int EvCmdSetCallArg_800BA678(EvScriptCtx* ctx);
+extern int EvCmdSetCallArgs_800BA6D0(EvScriptCtx* ctx);
+extern int EvCmdCallUntilDone_800BA714(EvScriptCtx* ctx);
+extern int EvCmdCallSelect_800BA7A4(EvScriptCtx* ctx);
+extern int EvCmdSetMapVariant_800BA880(EvScriptCtx* ctx);
+extern int EvCmdSetMapVar_800BA8AC(EvScriptCtx* ctx);
+extern int EvCmdChangeMap_800BA930(EvScriptCtx* ctx);
+extern int EvCmdChangeMapToPoint_800BA9E4(EvScriptCtx* ctx);
+extern int EvCmdPreloadArea_800BAA6C(EvScriptCtx* ctx);
+extern int EvCmdUsePreloadedArea_800BAAC0(EvScriptCtx* ctx);
+extern int EvCmdSetReturnPoint_800BAB14(EvScriptCtx* ctx);
+extern int EvCmdOpenShop_800BABB0(EvScriptCtx* ctx);
+extern int EvCmdCameraLookAtPoint_800BAC60(EvScriptCtx* ctx);
+extern int EvCmdCameraLookAtActor_800BACE0(EvScriptCtx* ctx);
+extern int EvCmdCameraClearLookAt_800BAD3C(EvScriptCtx* ctx);
+extern int EvCmdWaitCameraBlend_800BAD88(EvScriptCtx* ctx);
+extern int EvCmdSetViewRect_800BADF8(EvScriptCtx* ctx);
+extern int EvCmdSetCameraZoom_800BAEBC(EvScriptCtx* ctx);
+extern int EvCmdSetCameraTarget_800BAF08(EvScriptCtx* ctx);
+extern int EvCmdSetMapMesh_800BAF68(EvScriptCtx* ctx);
+extern int EvCmdWaitTalk_800BAFAC(EvScriptCtx* ctx);
+extern int EvCmdSetIdleAnim_800BB180(EvScriptCtx* ctx);
+extern int EvCmdWaitActorInRegion_800BB214(EvScriptCtx* ctx);
+extern int EvCmdIfBattleResult_800BB45C(EvScriptCtx* ctx);
+extern int EvCmdFadeSound_800BB4A4(EvScriptCtx* ctx);
+extern int EvCmdPadVibration_800BB7D8(EvScriptCtx* ctx);
 
 extern int eventfncHeader_800B6D00;
 extern const char aAssertionFaile_800B6D04[];
@@ -704,11 +691,11 @@ extern EvBattleEnemy eventEnemy_800B1CB8;
 extern int eventBattlePending_800AEBE0;
 extern int eventBattleLoseWarp_800AEBE4;
 extern ActorScriptCmd** GetFieldMinionAnims_800A7A9C(int i);
-extern void EnableCameraPoints_800A094C();
-extern void DisableCameraPoints_800A096C();
-extern int FieldMinionCommand_800A7D40(int a, int* p);
-extern int FinishLevantCommand_800A9008(int* p);
-extern int TriggerFieldMinionEffect_800A80C4(int a, int* p);
+extern void EnableCameraPoints_800A094C(void);
+extern void DisableCameraPoints_800A096C(void);
+extern int FieldMinionCommand_800A7D40(int idx, GameActorCmd* cmd);
+extern int FinishLevantCommand_800A9008(GameActorCmd* cmd);
+extern int TriggerFieldMinionEffect_800A80C4(int idx, GameActorCmd* cmd);
 extern void* GetEventString_800A6738(unsigned int id);
 extern char* GetFieldMinionName_800A78A8(int a);
 extern int GetFieldMinionHeaderF2A_800A78F4(int a);
