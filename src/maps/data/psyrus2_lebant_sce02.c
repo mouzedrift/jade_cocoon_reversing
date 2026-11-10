@@ -15,7 +15,7 @@ void EntityTask_800B2C70(EventEntry* entry, MapEnt* ent);
 
 extern const char unknown_800B22C0[4];
 extern const char data_800B22C4[24];
-extern MapEvent event_800B2CF0[4];
+extern int unknown_800B2CF0[20];
 extern int data_800B2D40[4];
 extern char data_800B2D50[12];
 extern int data_800B2D5C[3];
@@ -26,11 +26,10 @@ extern int data_800B2ED0[28];
 extern int data_800B2F40[32];
 extern int data_800B2FC0[24];
 
-MapEvent event_800B2CF0[4] = {
-    { 0, 0, (void*)0xFFFFFF06, -0x268, { (void*)0xFFFFFFFF } },
-    { -1, -1, 0, -0x67, { 0 } },
-    { -0x26B, -0x3E90000, (void*)0xFFFFFF99, -1, { 0 } },
-    { 0, 0, 0, 0, { (void*)0x1A0010 } },
+int unknown_800B2CF0[20] = {
+    0, 0, -0xFA, -0x268, -1, -1, -1, 0,
+    -0x67, 0, -0x26B, -0x3E90000, -0x67, -1, 0, 0,
+    0, 0, 0, 0x1A0010,
 };
 int data_800B2D40[4] = {
     0x125, 0xE, -0x60C, 0xDE1,
@@ -48,8 +47,8 @@ MapInstr script_800B2D68[18] = {
     { 0xD, 0, 1, 0 },
     { 0x18, 0, -1, MAP_REF(data_800B2D5C) },
     { 0xD, 0, 1, 0 },
-    { 0x2E, 1, 1, MAP_REF(event_800B2CF0) },
-    { 0x2F, 1, 2, MAP_REF(event_800B2CF0) },
+    { 0x2E, 1, 1, MAP_REF(unknown_800B2CF0) },
+    { 0x2F, 1, 2, MAP_REF(unknown_800B2CF0) },
     { 0x14, 0, -1, MAP_REF(data_800B2D5C) },
     { 0x67, 3, 0x1E, 0 },
     { 0x67, 6, 0, 0 },
@@ -60,7 +59,7 @@ MapInstr script_800B2D68[18] = {
     { 3, 0, 0, 0 },
 };
 MapEvent events_800B2E88[3] = {
-    { -1, 2, event_800B2CF0, 0xC, { SlidingDoorInit_800B263C } },
+    { -1, 2, unknown_800B2CF0, 0xC, { SlidingDoorInit_800B263C } },
     { -1, 8, script_800B2D68, 0, { 0 } },
     { 0, 0x12, 0, 0, { 0 } },
 };

@@ -29,7 +29,7 @@ extern MapActorModel model_800B30A8;
 extern int data_800B30D4[2];
 extern MapMovie data_800B30DC[4];
 extern MapVoice voices_800B30FC[11];
-extern int event_800B3154[1];
+extern int data_800B3154[1];
 extern MapInstr script_800B3158[100];
 extern MapMinion minion_800B3798;
 extern MapEvent events_800B37BC[7];
@@ -75,7 +75,7 @@ MapVoice voices_800B30FC[11] = {
     { 6, 0, { 0xC, 0x3F0, 0x41 } },
     { 0, 0, { -1, 0, 0 } },
 };
-int event_800B3154[1] = {
+int data_800B3154[1] = {
     0,
 };
 MapInstr script_800B3158[100] = {
@@ -144,25 +144,25 @@ MapInstr script_800B3158[100] = {
     { 0x2E, 1, 0, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 0, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 1, MAP_REF(data_800B30DC) },
-    { 0x2E, 1, 0, MAP_REF(event_800B3154) },
+    { 0x2E, 1, 0, MAP_REF(data_800B3154) },
     { 0xA, 0, 0xB0, 0 },
     { 9, 0, 0x80, 0 },
     { 0x2E, 1, 1, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 0, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 1, MAP_REF(data_800B30DC) },
-    { 0x2E, 1, 0, MAP_REF(event_800B3154) },
+    { 0x2E, 1, 0, MAP_REF(data_800B3154) },
     { 0xA, 0, 0xB0, 0 },
     { 9, 0, 0x90, 0 },
     { 0x2E, 1, 2, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 0, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 1, MAP_REF(data_800B30DC) },
-    { 0x2E, 1, 0, MAP_REF(event_800B3154) },
+    { 0x2E, 1, 0, MAP_REF(data_800B3154) },
     { 0xA, 0, 0xB0, 0 },
     { 9, 0, 0xA0, 0 },
     { 0x2E, 1, 3, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 0, MAP_REF(data_800B30DC) },
     { 0x2F, 1, 1, MAP_REF(data_800B30DC) },
-    { 0x2E, 1, 0, MAP_REF(event_800B3154) },
+    { 0x2E, 1, 0, MAP_REF(data_800B3154) },
     { 0xA, 0, 0xB0, 0 },
     { 9, 0, 0xB0, 0 },
     { 0x38, 1, 0, 2 },
@@ -187,7 +187,7 @@ MapEvent events_800B37BC[7] = {
     { -1, 8, script_800B3158, 0, { 0 } },
     { -1, 0xA, data_800B30DC, 0x10, { MoviePlayerInit_800B289C } },
     { -1, 0xB, voices_800B30FC, 0, { 0 } },
-    { -1, 0xD, event_800B3154, 8, { CameraOrbitInit_800B28DC } },
+    { -1, 0xD, data_800B3154, 8, { CameraOrbitInit_800B28DC } },
     { 0, 0x12, 0, 0, { 0 } },
 };
 int data_800B3848[16] = {

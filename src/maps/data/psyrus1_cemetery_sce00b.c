@@ -32,7 +32,7 @@ extern MapActorModel model_800B30E0;
 extern int data_800B310C[2];
 extern MapMovie data_800B3114[3];
 extern MapVoice voices_800B312C[11];
-extern int event_800B3184[1];
+extern int data_800B3184[1];
 extern MapInstr script_800B3188[82];
 extern MapInstr script_800B36A8[69];
 extern MapMinion minion_800B3AF8;
@@ -81,7 +81,7 @@ MapVoice voices_800B312C[11] = {
     { 8, 1, { 0x1F, 0x3E7, 0xE } },
     { 0, 0, { -1, 0, 0 } },
 };
-int event_800B3184[1] = {
+int data_800B3184[1] = {
     0,
 };
 MapInstr script_800B3188[82] = {
@@ -139,19 +139,19 @@ MapInstr script_800B3188[82] = {
     { 0x2E, 1, 0, MAP_REF(data_800B3114) },
     { 0x2F, 1, 0, MAP_REF(data_800B3114) },
     { 0x2F, 1, 1, MAP_REF(data_800B3114) },
-    { 0x2E, 1, 0, MAP_REF(event_800B3184) },
+    { 0x2E, 1, 0, MAP_REF(data_800B3184) },
     { 0xA, 0, 0x80, 0 },
     { 9, 0, 0x60, 0 },
     { 0x2E, 1, 1, MAP_REF(data_800B3114) },
     { 0x2F, 1, 0, MAP_REF(data_800B3114) },
     { 0x2F, 1, 1, MAP_REF(data_800B3114) },
-    { 0x2E, 1, 0, MAP_REF(event_800B3184) },
+    { 0x2E, 1, 0, MAP_REF(data_800B3184) },
     { 0xA, 0, 0x80, 0 },
     { 9, 0, 0x70, 0 },
     { 0x2E, 1, 2, MAP_REF(data_800B3114) },
     { 0x2F, 1, 0, MAP_REF(data_800B3114) },
     { 0x2F, 1, 1, MAP_REF(data_800B3114) },
-    { 0x2E, 1, 0, MAP_REF(event_800B3184) },
+    { 0x2E, 1, 0, MAP_REF(data_800B3184) },
     { 0xA, 0, 0x80, 0 },
     { 9, 0, 0x80, 0 },
     { 0x38, 1, 0, 6 },
@@ -249,7 +249,7 @@ MapEvent events_800B3B40[9] = {
     { -1, 8, script_800B36A8, 0, { 0 } },
     { -1, 0xA, data_800B3114, 0x10, { MoviePlayerInit_800B28A4 } },
     { -1, 0xB, voices_800B312C, 0, { 0 } },
-    { -1, 0xD, event_800B3184, 8, { CameraOrbitInit_800B28E4 } },
+    { -1, 0xD, data_800B3184, 8, { CameraOrbitInit_800B28E4 } },
     { 0, 0x12, 0, 0, { 0 } },
 };
 int data_800B3BF4[16] = {

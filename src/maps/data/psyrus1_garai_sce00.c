@@ -32,7 +32,7 @@ extern MapActorModel model_800B3368;
 extern ActorScriptCmd* script_800B3394;
 extern MapActorModel model_800B3398;
 extern MapVoice voices_800B33C4[26];
-extern int event_800B3494[2];
+extern int data_800B3494[2];
 extern MapWarp warp_800B349C;
 extern int data_800B34B4[4];
 extern MapInstr script_800B34C4[85];
@@ -78,7 +78,7 @@ MapVoice voices_800B33C4[26] = {
     { 6, 2, { 0x10, 0x2C3, 0x27 } },
     { 0, 0, { -1, 0, 0 } },
 };
-int event_800B3494[2] = {
+int data_800B3494[2] = {
     0x1010000, 0,
 };
 MapWarp warp_800B349C = { { -0x5A, 0, -0x177 }, 0x4000, 0, 0, { 1, 1, 3 } };
@@ -94,7 +94,7 @@ MapInstr script_800B34C4[85] = {
     { 5, 0, 0, 0 },
     { 7, 0, 5, 0 },
     { 0x67, 1, 0, 0 },
-    { 0x2E, 1, -3, MAP_REF(event_800B3494) },
+    { 0x2E, 1, -3, MAP_REF(data_800B3494) },
     { 0x2E, 1, -3, MAP_REF(warp_800B349C) },
     { 0x13, 0, 0, MAP_REF(data_800B34B4) },
     { 0x1C, 1, 1, 0 },
@@ -165,7 +165,7 @@ MapInstr script_800B34C4[85] = {
     { 0xA, 0, 0x202, 0 },
     { 0xA, 0, 0x201, 0 },
     { 9, 0, 0x201, 0 },
-    { 0x2E, 1, -3, MAP_REF(event_800B3494) },
+    { 0x2E, 1, -3, MAP_REF(data_800B3494) },
     { 0xA, 0, 0xFF, 0 },
     { 9, 0, 0x202, 0 },
     { 0x2E, 1, -3, MAP_REF(warp_800B349C) },
@@ -224,7 +224,7 @@ MapInstr script_800B3AF4[31] = {
 MapMinion minion_800B3CE4 = { &model_800B3398, 0, { -0x89, -0xC, 0xAF }, 0x688, 0, 0xA, 5, 2 };
 MapMinion minion_800B3D08 = { &model_800B3368, 0, { 0x145, 0, -0xAF }, -0x400, -1, 0x1F, 3, 2 };
 MapEvent events_800B3D2C[10] = {
-    { -1, 0, event_800B3494, 0, { ScriptSpot_800B2C38 } },
+    { -1, 0, data_800B3494, 0, { ScriptSpot_800B2C38 } },
     { -1, 1, &warp_800B349C, 0, { Warp_800B2300 } },
     { -1, 0xF, &minion_800B3CE4, 0x14, { MinionInit_800B2424 } },
     { -1, 0xF, &minion_800B3D08, 0x14, { MinionInit_800B2424 } },

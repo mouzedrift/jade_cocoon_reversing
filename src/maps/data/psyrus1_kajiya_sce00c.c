@@ -29,7 +29,7 @@ extern MapActorModel model_800B3110;
 extern ActorScriptCmd* script_800B313C;
 extern MapActorModel model_800B3140;
 extern int data_800B316C[2];
-extern MapEvent event_800B3174[4];
+extern int data_800B3174[20];
 extern MapVoice voices_800B31C4[18];
 extern int data_800B3254[3];
 extern int data_800B3260[3];
@@ -55,11 +55,10 @@ MapActorModel model_800B3140 = { str_800B22D4, 0x24, 0, 0, 0, 0, 4, &script_800B
 int data_800B316C[2] = {
     0x1010000, 0,
 };
-MapEvent event_800B3174[4] = {
-    { -1, -0xED, (void*)0xFFFFFF07, 0x34E, { (void*)0xFFFFFFFF } },
-    { -1, -1, 0, -0x170, { 0 } },
-    { 0x34E, -0x38E0000, (void*)0xFFFFFE90, -1, { 0 } },
-    { 0, 0, 0, 0, { (void*)0x1A0010 } },
+int data_800B3174[20] = {
+    -1, -0xED, -0xF9, 0x34E, -1, -1, -1, 0,
+    -0x170, 0, 0x34E, -0x38E0000, -0x170, -1, 0, 0,
+    0, 0, 0, 0x1A0010,
 };
 MapVoice voices_800B31C4[18] = {
     { 0, 0, { 0xA, 0x51D, 0x15 } },
@@ -204,8 +203,8 @@ MapInstr script_800B38DC[38] = {
     { 5, 0, 0, 0 },
     { 7, 0, 7, 0 },
     { 0x68, 1, 0x15, 0 },
-    { 0x2E, 1, 1, MAP_REF(event_800B3174) },
-    { 0x2F, 1, 2, MAP_REF(event_800B3174) },
+    { 0x2E, 1, 1, MAP_REF(data_800B3174) },
+    { 0x2F, 1, 2, MAP_REF(data_800B3174) },
     { 0x1A, 4, 1, 0 },
     { 0x49, 2, 0x370038, 5 },
     { 0x18, 0, -1, MAP_REF(data_800B3254) },
@@ -244,7 +243,7 @@ MapMinion minion_800B3B7C = { &model_800B3110, 0, { 0x14, 0, 0 }, -0x2E3, -1, 1,
 MapMinion minion_800B3BA0 = { &model_800B3140, 0, { -0x177, 0, 0x113 }, -0x800, -1, 0x3B, 5, 2 };
 MapEvent events_800B3BC4[10] = {
     { -1, 0, data_800B316C, 0, { ScriptSpot_800B292C } },
-    { -1, 2, event_800B3174, 0xC, { SlidingDoorInit_800B29A0 } },
+    { -1, 2, data_800B3174, 0xC, { SlidingDoorInit_800B29A0 } },
     { -1, 0xF, &minion_800B3B7C, 0x14, { MinionInit_800B25F4 } },
     { -1, 0xF, &minion_800B3BA0, 0x14, { MinionInit_800B25F4 } },
     { -1, 8, script_800B326C, 0, { 0 } },

@@ -27,7 +27,7 @@ extern const char data_800B2334[68];
 extern const char data_800B2378[24];
 extern MapWarp warp_800B3454;
 extern MapWarp warp_800B346C;
-extern MapEvent event_800B3484[4];
+extern MapSlidingDoor door_800B3484;
 extern MapTileDoor data_800B34D4;
 extern MapInstr script_800B34E4[12];
 extern MapInstr script_800B35A4[6];
@@ -43,11 +43,10 @@ extern int data_800B37F4[24];
 
 MapWarp warp_800B3454 = { { 0x43, -0x70, 0xEA6 }, 0x4000, 0, 0, { 4, 2, 4 } };
 MapWarp warp_800B346C = { { -0x25, 0, -0x1211 }, 0x4000, 0, 1, { 4, 2, 7 } };
-MapEvent event_800B3484[4] = {
-    { -1, 0, 0, 0, { (void*)0xFFFF0000 } },
-    { 0x6F, -1, 0, -0x1A9, { 0 } },
-    { 0x320, 0, (void*)0xFFFFFD2B, 1, { (void*)0x1A9 } },
-    { 0, 0x320, 0, 0x2D5, { (void*)0x31002D } },
+MapSlidingDoor door_800B3484 = {
+    -1, { 0, 0, 0 }, { 0, -1 }, 0x6F, -1,
+    { { 0, { -0x1A9, 0, 0x320 }, 0, 0, -0x2D5 }, { 1, { 0x1A9, 0, 0x320 }, 0, 0, 0x2D5 } },
+    0x2D, 0x31,
 };
 MapTileDoor data_800B34D4 = { 0x6F, 0x70, 0x34, { 0, 0, 0, 0xFF, 1, 6, 1, 0xFF } };
 MapInstr script_800B34E4[12] = {
@@ -58,7 +57,7 @@ MapInstr script_800B34E4[12] = {
     { 0x2E, 1, 0, MAP_REF(data_800B34D4) },
     { 0xC, 0, 0xF, 0 },
     { 0x68, 1, 0x12, 0 },
-    { 0x2E, 1, 0, MAP_REF(event_800B3484) },
+    { 0x2E, 1, 0, MAP_REF(door_800B3484) },
     { 0x20, 0, 0x6F, 0 },
     { 8, 0, 1, 0 },
     { 4, 0, 0, 0 },
@@ -83,11 +82,11 @@ MapLockPoint data_800B361C[3] = {
     { 2, { 0, 0, 0 }, text_800B3610, 1 },
     { -1, { 0, 0, 0 }, 0, 0 },
 };
-MapLock data_800B3664 = { data_800B361C, 0x6F, 0x13, script_800B34E4, script_800B35A4, event_800B3484, 0 };
+MapLock data_800B3664 = { data_800B361C, 0x6F, 0x13, script_800B34E4, script_800B35A4, &door_800B3484, 0 };
 MapEvent events_800B3680[6] = {
     { -1, 1, &warp_800B3454, 0, { Warp_800B2390 } },
     { -1, 1, &warp_800B346C, 0, { Warp_800B2390 } },
-    { -1, 2, event_800B3484, 0xC, { SlidingDoorInit_800B2B5C } },
+    { -1, 2, &door_800B3484, 0xC, { SlidingDoorInit_800B2B5C } },
     { 1, 0x10, &data_800B34D4, 0x10, { TileDoorInit_800B2BF0 } },
     { -1, 0xD, &data_800B3664, 0xC, { LockInit_800B2C84 } },
     { 0, 0x12, 0, 0, { 0 } },

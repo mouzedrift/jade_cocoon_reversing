@@ -26,7 +26,7 @@ extern ActorScriptCmd* script_800B30E0;
 extern MapActorModel model_800B30E4;
 extern ActorScriptCmd* script_800B3110;
 extern MapActorModel model_800B3114;
-extern MapEvent event_800B3140[4];
+extern int data_800B3140[20];
 extern MapVoice voices_800B3190[17];
 extern int data_800B3218[4];
 extern int data_800B3228[4];

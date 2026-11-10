@@ -29,7 +29,7 @@ extern MapActorModel model_800B30A8;
 extern int data_800B30D4[2];
 extern MapMovie data_800B30DC[4];
 extern MapVoice voices_800B30FC[11];
-extern int event_800B3154[1];
+extern int data_800B3154[1];
 extern MapInstr script_800B3158[100];
 extern MapMinion minion_800B3798;
 extern MapEvent events_800B37BC[7];

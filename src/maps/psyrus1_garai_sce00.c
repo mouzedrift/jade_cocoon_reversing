@@ -32,7 +32,7 @@ extern MapActorModel model_800B3368;
 extern ActorScriptCmd* script_800B3394;
 extern MapActorModel model_800B3398;
 extern MapVoice voices_800B33C4[26];
-extern int event_800B3494[2];
+extern int data_800B3494[2];
 extern MapWarp warp_800B349C;
 extern int data_800B34B4[4];
 extern MapInstr script_800B34C4[85];

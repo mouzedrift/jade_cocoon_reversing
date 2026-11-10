@@ -26,7 +26,7 @@ extern ActorScriptCmd* script_800B30E0;
 extern MapActorModel model_800B30E4;
 extern ActorScriptCmd* script_800B3110;
 extern MapActorModel model_800B3114;
-extern MapEvent event_800B3140[4];
+extern int data_800B3140[20];
 extern MapVoice voices_800B3190[17];
 extern int data_800B3218[4];
 extern int data_800B3228[4];
@@ -59,11 +59,10 @@ ActorScriptCmd* script_800B30E0 = 0;
 MapActorModel model_800B30E4 = { str_800B22C4, 0x38, bones_800B3058, 0, 0, 0, 4, &script_800B30E0, 0, 0x800000, 0, 1 };
 ActorScriptCmd* script_800B3110 = 0;
 MapActorModel model_800B3114 = { str_800B22D0, 0x24, 0, 0, 0, 0, 4, &script_800B3110, 0, 0x800000, 0, 0 };
-MapEvent event_800B3140[4] = {
-    { 1, 0x66, (void*)0xFFFFFF1C, -0x2FD, { (void*)0xFFFF0000 } },
-    { -1, -1, 0, 0x66, { (void*)0xFFFFFFEF } },
-    { -0x296, -0x4000000, (void*)0x66, -1, { 0 } },
-    { 0, 0, 0, 0, { (void*)0x1A0010 } },
+int data_800B3140[20] = {
+    1, 0x66, -0xE4, -0x2FD, -0x10000, -1, -1, 0,
+    0x66, -0x11, -0x296, -0x4000000, 0x66, -1, 0, 0,
+    0, 0, 0, 0x1A0010,
 };
 MapVoice voices_800B3190[17] = {
     { 0, 0, { 0x12, 0x414, 0xF } },
@@ -184,8 +183,8 @@ MapInstr script_800B3724[35] = {
     { 0x67, 0xC, 0x10, 0 },
     { 0xC, 0, 1, 0 },
     { 0x67, 0x11, 0, 0 },
-    { 0x2E, 1, 1, MAP_REF(event_800B3140) },
-    { 0x2F, 1, 2, MAP_REF(event_800B3140) },
+    { 0x2E, 1, 1, MAP_REF(data_800B3140) },
+    { 0x2F, 1, 2, MAP_REF(data_800B3140) },
     { 0x19, 0, 2, -1 },
     { 0x1A, 4, 1, 0 },
     { 0x1B, 4, 0, 0 },
@@ -215,7 +214,7 @@ MapInstr script_800B3724[35] = {
 MapMinion minion_800B3954 = { &model_800B30E4, 0, { -0x7D, 0, 0xC8 }, -0x71C, -1, 9, 1, 2 };
 MapMinion minion_800B3978 = { &model_800B3114, 0, { -0xC, 0, -0x1F4 }, 0, 0, 7, 0, 3 };
 MapEvent events_800B399C[8] = {
-    { -1, 2, event_800B3140, 0xC, { SlidingDoorInit_800B298C } },
+    { -1, 2, data_800B3140, 0xC, { SlidingDoorInit_800B298C } },
     { -1, 0xF, &minion_800B3954, 0x14, { MinionInit_800B25E8 } },
     { -1, 0xF, &minion_800B3978, 0x14, { MinionInit_800B25E8 } },
     { -1, 8, script_800B3244, 0, { 0 } },

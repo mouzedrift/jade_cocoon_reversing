@@ -23,7 +23,7 @@ extern const char data_800B22D0[24];
 extern ActorScriptCmd* script_800B3048;
 extern MapActorModel model_800B304C;
 extern MapVoice voices_800B3078[11];
-extern MapEvent event_800B30D0[4];
+extern int data_800B30D0[20];
 extern int data_800B3120[4];
 extern MapInstr script_800B3130[50];
 extern MapMinion minion_800B3450;

@@ -353,8 +353,9 @@ EVENT_DATA = {"MinionInit": "MapMinion", "FxInit": "MapFx", "Warp": "MapWarp", "
               "FadeBarsInit": "MapFadeBars", "SpriteTrailInit": "MapSpritePoint*",
               "GateSpotInit": "MapGateSpot", "GateReturnInit": "MapGateReturn",
               "FxModelsInit": "MapFxModels"}
-# what an event script instruction's address operand (MapInstr.c_C) is, by its op
-INSTR_DATA = {0x11: "MapEvent", 0x2E: "MapEvent", 0x4B: "MapFx", 0x13: "int", 0x5A: "int", 0x60: "int"}
+# what an event script instruction's address operand (MapInstr.c_C) is, by its op (not 0x2E/0x2F, EvCmdSetEntityState:
+# an entity's data, whatever its type; typing it MapEvent broke the layout on PC)
+INSTR_DATA = {0x11: "MapEvent", 0x4B: "MapFx", 0x13: "int", 0x5A: "int", 0x60: "int"}
 TYPE_NAME = {"MapEvent": "event", "MapInstr": "script", "MapVoice": "voices", "MapMinion": "minion",
              "MapMinionSpecies": "species", "MapActorModel": "model", "MapFx": "effects", "SVECTOR": "boneScale",
              "ActorScriptCmd*": "script", "ActorScriptCmd": "anim", "int": "data", "short": "bones",

@@ -27,7 +27,7 @@ extern const char data_800B2334[68];
 extern const char data_800B2378[24];
 extern MapWarp warp_800B3454;
 extern MapWarp warp_800B346C;
-extern MapEvent event_800B3484[4];
+extern MapSlidingDoor door_800B3484;
 extern MapTileDoor data_800B34D4;
 extern MapInstr script_800B34E4[12];
 extern MapInstr script_800B35A4[6];

@@ -15,7 +15,7 @@ void EntityTask_800B2C70(EventEntry* entry, MapEnt* ent);
 
 extern const char unknown_800B22C0[4];
 extern const char data_800B22C4[24];
-extern MapEvent event_800B2CF0[4];
+extern int unknown_800B2CF0[20];
 extern int data_800B2D40[4];
 extern char data_800B2D50[12];
 extern int data_800B2D5C[3];
