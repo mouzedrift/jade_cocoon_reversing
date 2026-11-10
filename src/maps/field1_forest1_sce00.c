@@ -12,7 +12,7 @@ int ChestCheck_800B2BA4(MapEnt* ent);
 void StartMapTask_800B2BE4(void);
 void MapTaskLoad_800B2C14(EventEntry* entry, int* st);
 void MapTask_800B2CAC(EventEntry* entry, int* st);
-int LeaveArea_800B2D64();
+int LeaveArea_800B2D64(MapEvent* ev, int area);
 int EnterArea_800B2E80(MapEvent* ev, int area, int prev);
 void RequestModels_800B2F88(MapEvent* ev);
 int AddEntity_800B3058(void* ev);

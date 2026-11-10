@@ -2207,7 +2207,7 @@ int GetRecordTableCount_80026D6C(int* file)
 }
 void AllocRecordTables_80026D78(RecordTable** out, int count, void* heap)
 {
-    RecordTable* tables = HeapAlloc_8003FC8C(count * 12, heap);
+    RecordTable* tables = HeapAlloc_8003FC8C(count * sizeof(RecordTable), heap);
     int i;
     for (i = 0; i < count; i++)
     {

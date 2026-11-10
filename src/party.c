@@ -194,7 +194,7 @@ int StartModelTask_80010850(void* params)
         buf->key_0 = e->index_4;
         m = malloc3_8003FC4C(sizeof(*m));
         buf->state_4 = m;
-        MemCopy_800403E8(&m->count_4, params, 0x34);
+        MemCopy_800403E8(&m->count_4, params, sizeof(ModelTaskParams)); /* count_4..vram_34 */
         m->models_0 = 0;
         m->state_38 = 1;
         m->next_3C = 1;

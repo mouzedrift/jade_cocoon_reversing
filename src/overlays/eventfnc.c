@@ -528,7 +528,7 @@ void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* plac
     EvEnemyGroup group;
     int scale[3];
     unsigned short* id;
-    EvLoaderModel* ent;
+    ModelLoadSlot* ent;
     int found;
     int i;
     Model* model;
@@ -541,7 +541,7 @@ void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* plac
     EvEnemySlot* slot;
     id = &GetSpeciesModelDesc_80019C70(members->member_0.species_0)->modelId_0;
     found = 0;
-    ent = ((EvModelLoader*)modelLoaderTask_8008B54C->entry.buffer)->ents_C;
+    ent = ((ModelLoader*)modelLoaderTask_8008B54C->entry.buffer)->slots_C;
     for (i = 3; i >= 0; i--)
     {
         if (*id == ent->id_4)
@@ -599,15 +599,15 @@ void SpawnEncounterEnemy_800B8568(EvEncounterMember* members, EvSpawnPlace* plac
         group.idx_14 = index;
         group.useMinion_18 = 1;
         group.minion_1C = minion;
-        group.actor_A4 = actor;
-        group.fA8 = 0;
-        group.fAC = 0;
+        group.actors_A4[0] = actor;
+        group.actors_A4[1] = 0;
+        group.actors_A4[2] = 0;
         group.members_B0[0] = members[0].member_0;
         group.members_B0[1] = members[1].member_0;
         group.members_B0[2] = members[2].member_0;
-        group.fC8 = 0;
-        group.fCC = 0;
-        group.fD0 = 0;
+        group.anims_C8[0] = 0;
+        group.anims_C8[1] = 0;
+        group.anims_C8[2] = 0;
         group.z_D4[0] = members[0].z;
         group.z_D4[1] = members[1].z;
         group.z_D4[2] = members[2].z;

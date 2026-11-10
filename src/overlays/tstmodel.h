@@ -254,7 +254,7 @@ extern MATRIX lightMatrix_80087114;
 extern void GetAnimRootMotion_8004D288(VECTOR* out, ModelAnim* anim, int frame);
 /* exe-side, to move to engine.h */
 /* exe-side, to move to skel_draw.h */
-extern void DrawAnimSkel_80046A58(void* a, void* b, int c);
+extern void DrawAnimSkel_80046A58(void* a, void* b, void* c);
 extern void DrawSpriteVtxQuadsGT4_800459E4(void* a, void* b, void* c, int d);
 /* exe-side, to move to pad_text.h */
 /* exe-side, to move to sound_seq.h */

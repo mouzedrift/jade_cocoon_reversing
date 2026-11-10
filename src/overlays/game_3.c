@@ -1568,7 +1568,7 @@ void EndEventScript_800A6168(GameTask* task, GameEvCtx* ctx)
 
 void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
 {
-    GameTimImage tim;
+    TimInfo tim;
     GameActorDesc* desc;
     if (who == 0)
     {
@@ -1597,12 +1597,12 @@ void GetPortraitSprt_800A61CC(int who, void* sprt, void* sprtArg)
         tim.crect.w = 0x100;
         tim.crect.h = 1;
     }
-    InitSprtFromTim_800298AC(sprt, sprtArg, (TimInfo*)&tim);
+    InitSprtFromTim_800298AC(sprt, sprtArg, &tim);
 }
 
 void GetPortraitPoly_800A6308(int who, void* poly)
 {
-    GameTimImage tim;
+    TimInfo tim;
     GameActorDesc* desc;
     if (who == 0)
     {

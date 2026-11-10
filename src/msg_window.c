@@ -968,7 +968,7 @@ MsgWindowEntry* OpenItemMessageWindow_80035AC8(ItemMsgInit* init)
         win->choiceCount_B0 = 0;
         win->choice_B2 = 0;
         win->lines_1B4 = 0;
-        MemCopy_800403E8(&win->item_214, init, 0x50);
+        MemCopy_800403E8(&win->item_214, init, sizeof(ItemMsgInit));
         win->res_18.result_20 = 0;
         win->res_18.field_24 = 1;
         if ((unsigned int)win->item_214.mode_48 < 4)
@@ -981,18 +981,6 @@ MsgWindowEntry* OpenItemMessageWindow_80035AC8(ItemMsgInit* init)
     }
     return 0;
 }
-typedef struct
-{
-    int field_0;
-    unsigned int flags_4;
-    int pad_8;
-    int field_C;
-    char pad_10[0x20C];
-    int field_21C;
-    ItemMsgEntry entries[3];
-    int mode;
-    unsigned short** text; /* lines after the items (the first: a title when it starts with 0x91) */
-} ItemMsgWindow;
 typedef struct
 {
     short x;
@@ -1008,7 +996,7 @@ extern void SetValuableFlag_800AD68C(int a);
 extern void AddInventory_800AD184(int a, int b, int c);
 void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
 {
-    ItemMsgWindow* o;
+    MsgWindow* o; /* its item_214 holds the OpenItemMessageWindow_80035AC8 argument */
     SPRT spr[3];
     DR_TPAGE tp[3];
     RECT r;
@@ -1032,36 +1020,36 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     o = buf;
     for (i = 0; i < 3; i++)
     {
-        if (o->entries[i].type != -1)
+        if (o->item_214.entries_C[i].type != -1)
         {
             n++;
         }
     }
-    if (n >= 2 || (o->mode < 0 && n != 0))
+    if (n >= 2 || (o->item_214.mode_48 < 0 && n != 0))
     {
         flag = 1;
     }
-    if (o->text)
+    if (o->item_214.text_4C)
     {
-        unsigned short** q = o->text;
+        unsigned short** q = o->item_214.text_4C;
         while (*q++)
         {
             n++;
         }
-        EncodeText_8003F684(2, o->text[0]);
-        if (*(short*)o->text[0] == 0x91)
+        EncodeText_8003F684(2, o->item_214.text_4C[0]);
+        if (*(short*)o->item_214.text_4C[0] == 0x91)
         {
             n--;
-            o->text++;
+            o->item_214.text_4C++;
         }
     }
     r.h = n * 16 | 8;
     r.w = 0xE3;
     r.x = 0x2F;
     r.y = (3 - n) * 9 + 0x5A;
-    if (o->text)
+    if (o->item_214.text_4C)
     {
-        p70 = MeasureTextLines_8003E3B4((void**)o->text);
+        p70 = MeasureTextLines_8003E3B4((void**)o->item_214.text_4C);
         p70.w += 8;
         if (r.w < p70.w)
         {
@@ -1072,7 +1060,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     y = 7;
     for (i = 0; i < 3; i++)
     {
-        if (o->entries[i].type == 7)
+        if (o->item_214.entries_C[i].type == 7)
         {
             p70.w = r.x + 6;
             p70.h = r.y + (line * 16 + y) + 2;
@@ -1082,11 +1070,11 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p78.x = r.x + r.w - 4;
             p78.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawNumberRightAlignedFont1_8003F264(&p78.x, o->entries[i].count, 0);
+            DrawNumberRightAlignedFont1_8003F264(&p78.x, o->item_214.entries_C[i].count, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             line++;
         }
-        else if (o->entries[i].type == 6)
+        else if (o->item_214.entries_C[i].type == 6)
         {
             p80.x = r.x + 6;
             p80.y = r.y + (line * 16 + y) + 2;
@@ -1103,34 +1091,34 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 p90.x = r.x + 0x8D;
                 p90.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawNumber_8003EF74(&p90.x, o->entries[i].count, 0);
+                DrawNumber_8003EF74(&p90.x, o->item_214.entries_C[i].count, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             }
             line++;
         }
-        else if ((unsigned int)o->entries[i].type < 6)
+        else if ((unsigned int)o->item_214.entries_C[i].type < 6)
         {
             spr[i].x0 = 0;
             spr[i].y0 = 0;
             spr[i].w = 0;
             spr[i].h = 0;
-            if (o->entries[i].type != -1)
+            if (o->item_214.entries_C[i].type != -1)
             {
-                switch (o->entries[i].type)
+                switch (o->item_214.entries_C[i].type)
                 {
                 case 0:
-                    GetPublicTiySprt_80032470(GetItemIcon_8001D2AC(o->entries[i].id), &spr[i], &tp[i]);
+                    GetPublicTiySprt_80032470(GetItemIcon_8001D2AC(o->item_214.entries_C[i].id), &spr[i], &tp[i]);
                     break;
                 case 5:
-                    GetPublicTiySprt_80032470(GetKeyItemIcon_8001D344(o->entries[i].id), &spr[i], &tp[i]);
+                    GetPublicTiySprt_80032470(GetKeyItemIcon_8001D344(o->item_214.entries_C[i].id), &spr[i], &tp[i]);
                     break;
                 case 1:
                 case 2:
                 case 3:
-                    GetPublicTiySprt_80032470(GetEquipmentIcon_8001D2D4(o->entries[i].id, o->entries[i].type - 1), &spr[i], &tp[i]);
+                    GetPublicTiySprt_80032470(GetEquipmentIcon_8001D2D4(o->item_214.entries_C[i].id, o->item_214.entries_C[i].type - 1), &spr[i], &tp[i]);
                     break;
                 case 4:
-                    GetPublicTiySprt_80032470(GetPersonIcon_8001CD6C(o->entries[i].id), &spr[i], &tp[i]);
+                    GetPublicTiySprt_80032470(GetPersonIcon_8001CD6C(o->item_214.entries_C[i].id), &spr[i], &tp[i]);
                     break;
                 }
                 spr[i].r0 = 0x80;
@@ -1144,7 +1132,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             p88.x = spr[i].w + r.x + 9;
             p88.y = r.y + (line * 16 + y) + 2;
             AddClipDrawAreaPrim_80033308(pOT_8008D454);
-            DrawText_8003E91C(2, nameGetters_8007CB08[o->entries[i].type](o->entries[i].id), (short*)&p88, 0);
+            DrawText_8003E91C(2, nameGetters_8007CB08[o->item_214.entries_C[i].type](o->item_214.entries_C[i].id), (short*)&p88, 0);
             AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             if (flag)
             {
@@ -1156,25 +1144,25 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                 pA0.x = r.x + 0x8D;
                 pA0.y = r.y + (line * 16 + y) + 2;
                 AddClipDrawAreaPrim_80033308(pOT_8008D454);
-                DrawNumber_8003EF74(&pA0.x, o->entries[i].count, 0);
+                DrawNumber_8003EF74(&pA0.x, o->item_214.entries_C[i].count, 0);
                 AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
             }
             line++;
         }
     }
-    if ((unsigned int)o->mode < 11 && !flag)
+    if ((unsigned int)o->item_214.mode_48 < 11 && !flag)
     {
-        int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->entries[0].type](o->entries[0].id)) + 0x19;
+        int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->item_214.entries_C[0].type](o->item_214.entries_C[0].id)) + 0x19;
         int h = r.y + 9;
         p70.w = r.x + w;
         p70.h = h;
         AddClipDrawAreaPrim_80033308(pOT_8008D454);
-        DrawText_8003E91C(2, itemMessageSuffixes_80083818[o->mode], (short*)&p70, 0);
+        DrawText_8003E91C(2, itemMessageSuffixes_80083818[o->item_214.mode_48], (short*)&p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
     }
-    if (o->entries[0].type != -1 && line == 1 && o->mode < 0 && !flag)
+    if (o->item_214.entries_C[0].type != -1 && line == 1 && o->item_214.mode_48 < 0 && !flag)
     {
-        int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->entries[0].type](o->entries[0].id)) + 0x19;
+        int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->item_214.entries_C[0].type](o->item_214.entries_C[0].id)) + 0x19;
         int h = r.y + 9;
         p70.w = r.x + w;
         p70.h = h;
@@ -1182,9 +1170,9 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         DrawText_8003E91C(2, itemMessageDefaultSuffix_80083820, (short*)&p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
     }
-    if (o->text)
+    if (o->item_214.text_4C)
     {
-        text = o->text;
+        text = o->item_214.text_4C;
         while (*text)
         {
             p70.w = r.x + 6;
@@ -1201,28 +1189,28 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
     o->field_C = 3;
     if (IsConfirmPressedP1_8003D380(0))
     {
-        if ((o->flags_4 & 0x800) || o->field_21C == 1)
+        if ((o->flags_4 & 0x800) || o->item_214.field_8 == 1)
         {
             o->flags_4 = (o->flags_4 | 0x200) & ~0x800;
         }
     }
     if (o->flags_4 & 0x4000)
     {
-        if (o->mode >= 4 && o->mode < 8)
+        if (o->item_214.mode_48 >= 4 && o->item_214.mode_48 < 8)
         {
             for (i = 0; i < 3; i++)
             {
-                if (o->entries[i].type == 0)
+                if (o->item_214.entries_C[i].type == 0)
                 {
                     sfx = 0x1E;
-                    if (o->entries[i].id == 0x28)
+                    if (o->item_214.entries_C[i].id == 0x28)
                     {
                         sfx = 0x33;
                     }
                 }
-                else if (o->entries[i].type == 5)
+                else if (o->item_214.entries_C[i].type == 5)
                 {
-                    if (o->entries[i].id == 2 || o->entries[i].id == 9 || o->entries[i].id == 0x18 || o->entries[i].id == 0x11 || o->entries[i].id == 0x10 || o->entries[i].id == 0x12)
+                    if (o->item_214.entries_C[i].id == 2 || o->item_214.entries_C[i].id == 9 || o->item_214.entries_C[i].id == 0x18 || o->item_214.entries_C[i].id == 0x11 || o->item_214.entries_C[i].id == 0x10 || o->item_214.entries_C[i].id == 0x12)
                     {
                         sfx = 0x1E;
                     }
@@ -1236,30 +1224,30 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
                     continue;
                 }
                 PlaySfx_80031494(sfx);
-                RemoveInventory_800AD1E0(o->entries[i].id, 1, o->entries[i].type);
+                RemoveInventory_800AD1E0(o->item_214.entries_C[i].id, 1, o->item_214.entries_C[i].type);
             }
         }
-        if (o->mode >= -1 && o->mode < 4)
+        if (o->item_214.mode_48 >= -1 && o->item_214.mode_48 < 4)
         {
             for (i = 0; i < 3; i++)
             {
-                if (o->entries[i].type == 7)
+                if (o->item_214.entries_C[i].type == 7)
                 {
-                    AddMoney_800AD058(o->entries[i].count);
+                    AddMoney_800AD058(o->item_214.entries_C[i].count);
                 }
-                else if (o->entries[i].type == 6)
+                else if (o->item_214.entries_C[i].type == 6)
                 {
-                    AddEmptyCocoons_800AD8F4(o->entries[i].count);
+                    AddEmptyCocoons_800AD8F4(o->item_214.entries_C[i].count);
                 }
-                else if ((unsigned int)o->entries[i].type < 6)
+                else if ((unsigned int)o->item_214.entries_C[i].type < 6)
                 {
-                    if (o->entries[i].type == 5)
+                    if (o->item_214.entries_C[i].type == 5)
                     {
-                        SetValuableFlag_800AD68C(o->entries[i].id);
+                        SetValuableFlag_800AD68C(o->item_214.entries_C[i].id);
                     }
                     else
                     {
-                        AddInventory_800AD184(o->entries[i].id, o->entries[i].count, o->entries[i].type);
+                        AddInventory_800AD184(o->item_214.entries_C[i].id, o->item_214.entries_C[i].count, o->item_214.entries_C[i].type);
                     }
                 }
             }

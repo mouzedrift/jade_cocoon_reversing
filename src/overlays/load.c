@@ -2036,18 +2036,18 @@ int PollCardExist_800BAF0C(int slot)
 
 void ScanCardSaves_800BAFB0(int slot)
 {
-    CardDirEntry dir[15];
+    struct DIRENTRY dir[15];
     long files;
     int blocks;
     int found;
     int i;
     i = found = blocks = 0;
     files = 0;
-    MemCardGetDirentry(slot << 4, (char*)aDirWildcard_800B72FC, (struct DIRENTRY*)dir, &files, 0, 15);
+    MemCardGetDirentry(slot << 4, (char*)aDirWildcard_800B72FC, dir, &files, 0, 15);
     for (i = found; i < files; i++)
     {
-        int fullBlocks = dir[i].size_18 / 0x2000;
-        if (dir[i].size_18 & 0x1FFF)
+        int fullBlocks = dir[i].size / 0x2000;
+        if (dir[i].size & 0x1FFF)
         {
             blocks += fullBlocks + 1;
         }
@@ -2058,7 +2058,7 @@ void ScanCardSaves_800BAFB0(int slot)
     }
     for (i = 0; i < 15; i++)
     {
-        if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[0][i], (unsigned char*)dir))
+        if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[0][i], dir))
         {
             found++;
             cardSaveNames_800BE188[i] = (char*)saveFileNames_800BE028[0][i];
@@ -2074,18 +2074,18 @@ void ScanCardSaves_800BAFB0(int slot)
 
 void ScanCardSavesComb_800BB0E4(int slot)
 {
-    CardDirEntry dir[15];
+    struct DIRENTRY dir[15];
     long files;
     int blocks;
     int found;
     int i;
     i = found = blocks = 0;
     files = 0;
-    MemCardGetDirentry(slot << 4, (char*)aDirWildcard_800B72FC, (struct DIRENTRY*)dir, &files, 0, 15);
+    MemCardGetDirentry(slot << 4, (char*)aDirWildcard_800B72FC, dir, &files, 0, 15);
     for (i = found; i < files; i++)
     {
-        int fullBlocks = dir[i].size_18 / 0x2000;
-        if (dir[i].size_18 & 0x1FFF)
+        int fullBlocks = dir[i].size / 0x2000;
+        if (dir[i].size & 0x1FFF)
         {
             blocks += fullBlocks + 1;
         }
@@ -2096,12 +2096,12 @@ void ScanCardSavesComb_800BB0E4(int slot)
     }
     for (i = 0; i < 15; i++)
     {
-        if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[0][i], (unsigned char*)dir))
+        if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[0][i], dir))
         {
             found++;
             cardSaveNames_800BE188[i] = (char*)saveFileNames_800BE028[0][i];
         }
-        else if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[1][i], (unsigned char*)dir))
+        else if (FindDirEntry_800BB23C(files, (unsigned char*)saveFileNames_800BE028[1][i], dir))
         {
             found++;
             cardSaveNames_800BE188[i] = (char*)saveFileNames_800BE028[1][i];
@@ -2115,14 +2115,14 @@ void ScanCardSavesComb_800BB0E4(int slot)
     cardSaveCount_800BE150 = found;
 }
 
-// 1 when name is one of the nFiles directory entries (CardDirEntry, 0x28 bytes each)
-int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir)
+// 1 when name is one of the nFiles directory entries
+int FindDirEntry_800BB23C(int nFiles, unsigned char* name, struct DIRENTRY* dir)
 {
     int i;
     int j;
     int diff;
     int res = 0;
-    for (i = 0; i < nFiles; i++, dir += 0x28)
+    for (i = 0; i < nFiles; i++, dir++)
     {
         diff = 0;
         for (j = 0; j < 0x15; j++)
@@ -2131,7 +2131,7 @@ int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir)
             {
                 break;
             }
-            if (name[j] != dir[j])
+            if (name[j] != (unsigned char)dir->name[j])
             {
                 diff++;
                 break;

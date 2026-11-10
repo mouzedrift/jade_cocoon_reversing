@@ -366,12 +366,12 @@ GameEnemySlot* FindFreeEnemySlot_800A17BC(void)
     return 0;
 }
 
-GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* ai)
+GameEnemySlot* AddEnemySlot_800A17F4(GameEnemy* src, GameAi* ai)
 {
     GameEnemySlot* slot = FindFreeEnemySlot_800A17BC();
     slot->used_0 = 1;
     slot->ai_4 = ai;
-    MemCopy_800403E8(&slot->data_8, src, 0xe0);
+    MemCopy_800403E8(&slot->data_8, src, sizeof(GameEnemy));
     return slot;
 }
 
@@ -520,7 +520,7 @@ void SetupEncounter_800A1BD0(void)
     {
         actor = enemy->actors_A4[0];
         enemy->actors_A4[0] = CloneActor_8001D4DC(actor, 0, 0, 0);
-        slot = AddEnemySlot_800A17F4((unsigned int*)enemy, 0);
+        slot = AddEnemySlot_800A17F4(enemy, 0);
         slot->ai_4 = CreateEnemyAiEvent_800A2D90(enemy->actors_A4[0], &slot->data_8.minion_1C, 0);
         SetActorVisible_8001D730(actor, 0);
         SetActorGroundMove_8001D68C(actor, 0);

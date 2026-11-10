@@ -2783,8 +2783,6 @@ const MenuWindowList minionListWindow_800B971C = { 0, 0, 8, 0, 0, 14 };
 void ShopWaitAreaReload_800BDD74(EventEntry* task, void* arg)
 {
     ShopMenu* menu = (ShopMenu*)arg;
-    extern void ShopResumeAfterNameEntry_800BE128();
-    extern void ShopResumeAfterSpin_800BE07C();
     if (IsMapLoading_800272D0() == 0)
     {
         ResumeFieldMinions_800A7BF0(-1);

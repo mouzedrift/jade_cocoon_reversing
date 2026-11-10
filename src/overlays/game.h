@@ -104,7 +104,7 @@ extern GameEnemySlot enemySlots_800B19F0[3]; // == gCtx_800B1260.enemySlots_790 
 
 extern short defaultBones_80079140[]; // default bone table
 extern GameEnemy* GetEventEnemy_800A5F6C(void);
-extern GameEnemySlot* AddEnemySlot_800A17F4(unsigned int* src, GameAi* ai);
+extern GameEnemySlot* AddEnemySlot_800A17F4(GameEnemy* src, GameAi* ai);
 
 extern void FreeEnemyAi_800A2D28(GameAi* ai);
 
@@ -133,7 +133,7 @@ typedef struct GameEvCtx
     int trigger_C8;
     int vars_CC[8];
     int branch_EC;
-    int callArg_F0;
+    long callArg_F0; // a value or an address (a pointer on PC), as EvScriptCtx
     int callArg0_F4;
     int callArg1_F8;
     int callArg2_FC;
@@ -142,7 +142,7 @@ typedef struct GameEvCtx
     int msgPosMode_104;
     int msgOptions_108;
     int pad_10C;
-    int lastMsg_110;
+    int* lastMsg_110;
     int choiceMask_114;
     int msgOpen_118;
     struct MsgWindowEntry* msgWindow_11C;
@@ -606,19 +606,6 @@ extern int encounterVariantToggle_8008B554;
 extern int (*eventFuncs_800BCDBC[])(GameEvCtx*);
 
 extern void UpdateEventMessage_800BC2B4(GameEvCtx* q);
-
-// TIM image info handed to InitSprtFromTim_800298AC / InitPolyFT4_80029A10 (the TIM_IMAGE layout)
-typedef struct GameTimImage
-{
-    int mode_valid;
-    int mode;
-    int clut_len;
-    RECT crect;
-    u_long* caddr;
-    int pix_len;
-    RECT prect;
-    u_long* paddr;
-} GameTimImage;
 
 // a VRAM position (the portrait images: fieldModelImagePos_8007DCA4..combatPortraitClutPos_8007DCBC)
 typedef struct GameVramXY

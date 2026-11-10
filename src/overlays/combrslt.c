@@ -62,7 +62,6 @@ void VersusResultFadeOut_800A41E4(CombatTask* task, int arg)
     }
 }
 
-extern void DrawResultMinion_800A4554();
 
 void DrawPlayerResult_800A4240(int player)
 {

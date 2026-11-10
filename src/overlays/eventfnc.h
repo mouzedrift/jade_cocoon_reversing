@@ -581,31 +581,11 @@ typedef struct EvEnemyGroup
     int idx_14;
     int useMinion_18; // 1: the first member is minion_1C
     UnitStats minion_1C;
-    Actor* actor_A4;
-    int fA8;
-    int fAC;
+    Actor* actors_A4[3];
     EvEnemyMember members_B0[3];
-    int fC8;
-    int fCC;
-    int fD0;
+    ActorScriptCmd** anims_C8[3]; // GameEnemy.anims_C8
     int z_D4[3];
 } EvEnemyGroup;
-
-typedef struct EvLoaderModel
-{
-    int f0;
-    int id_4;
-    int pad_8[3];
-} EvLoaderModel;
-
-// work area of the model loader task (modelLoaderTask_8008B54C)
-typedef struct EvModelLoader
-{
-    int f0;
-    int f4;
-    int f8;
-    EvLoaderModel ents_C[4];
-} EvModelLoader;
 
 // an enemy slot of the GAME overlay (GameEnemySlot): AddEnemySlot_800A17F4 copies the EvEnemyGroup into data_8
 typedef struct EvEnemySlot

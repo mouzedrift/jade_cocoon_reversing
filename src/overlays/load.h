@@ -92,7 +92,8 @@ typedef union
 } SaveTitle;
 
 extern int unused_800B66C0;
-int FindDirEntry_800BB23C(int nFiles, unsigned char* name, unsigned char* dir);
+struct DIRENTRY; /* <kernel.h> */
+int FindDirEntry_800BB23C(int nFiles, unsigned char* name, struct DIRENTRY* dir);
 extern const char aSelectGameToLoa_800B66C4[44];
 extern const char aSelectSaveLocat_800B66F0[44];
 extern const char aYES_800B671C[];
@@ -296,16 +297,6 @@ typedef struct
     char icon_80[3][128];
     char field_200[0x80];
 } CardHeader;
-// a memory card directory entry (the PSY-Q struct DIRENTRY layout)
-typedef struct CardDirEntry
-{
-    char name_0[20];
-    long attr_14;
-    long size_18;
-    struct CardDirEntry* next_1C;
-    long head_20;
-    char system_24[4];
-} CardDirEntry;
 // the summary block (file offset 0x280) of a save file
 typedef struct
 {
