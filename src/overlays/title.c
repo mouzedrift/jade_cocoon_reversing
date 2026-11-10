@@ -351,6 +351,27 @@ void TitleFree_800A10D0(TitleTask* t, TitleMenuWork* c)
         SetFadeMode_8001C19C(1, 0x20); \
         (t)->next_8 = TitleIdleFadeOut_800A1AC0; \
     }
+#ifdef JC_DEBUG
+/* the test overlays the retail game no longer reaches (they return to the title): Start with L1 held for SOUNDTST,
+   L2 for TSTMODEL, R2 for TSTCOMPO */
+static int DebugTestOverlay(TitleTask* t)
+{
+    int held = padHeld_800918D0[0];
+    int state;
+    if (held & 4)
+        state = eSoundTst_9;
+    else if (held & 1)
+        state = eTstModel_10;
+    else if (held & 2)
+        state = eTstCompo_11;
+    else
+        return 0;
+    PlaySfx_80031494(0x7E);
+    TitleExit_800A1AFC(t, state);
+    return 1;
+}
+#endif
+
 void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
 {
     WindowStyle style;
@@ -371,6 +392,12 @@ void TitlePressStart_800A1174(TitleTask* t, TitleMenuWork* c)
     DrawTitleBackground_800A1F98(c->sprts_C, c->tpages_14, c);
     if (padPressed_8009194C[0] & 0x800)
     {
+#ifdef JC_DEBUG
+        if (DebugTestOverlay(t))
+        {
+            return;
+        }
+#endif
         PlaySfx_80031494(0x7E);
         srand(gnFrame_8008D610);
         c->frames_0 = 0;

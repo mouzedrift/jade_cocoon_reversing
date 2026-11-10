@@ -19,6 +19,10 @@ add_subdirectory(external/psyz/psyz psyz EXCLUDE_FROM_ALL)
 target_compile_definitions(psyz PRIVATE __psyz)
 
 set(GAME_DEFINES __psyz)
+option(JC_DEBUG "restore the debug features the retail game cut off (see docs/debug_features.md)" OFF)
+if(JC_DEBUG)
+    list(APPEND GAME_DEFINES JC_DEBUG)
+endif()
 set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common
     -Werror=implicit-function-declaration -Werror=int-conversion -Werror=return-type)
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")

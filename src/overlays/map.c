@@ -188,6 +188,23 @@ const char aSelChapter_800B6BE0[28] = "\202r\202\205\202\214\201@\202\203\202\21
 void MapSelectStart_800B6BFC(MapTask* task, int work)
 {
     void (*next)();
+#ifdef JC_DEBUG
+    /* held as the map opens, the developers' selects (unreferenced in the retail game): Select the scene select,
+       L1 the chapter select */
+    if (padHeld_800918D0[0] & 0x104)
+    {
+        if (padHeld_800918D0[0] & 0x100)
+        {
+            SceneSelectStart_800B85CC(task);
+        }
+        else
+        {
+            ChapterSelectStart_800B8B2C(task);
+        }
+        task->flags_0 = (task->flags_0 | 4) & 0xFFFF7FFF;
+        return;
+    }
+#endif
     lastDest_800B8C94.area = mapSelect_800AEBF8.area;
     lastDest_800B8C94.dest = mapSelect_800AEBF8.dest;
     GetCurrentDest_800B8448(&mapSelect_800AEBF8);
