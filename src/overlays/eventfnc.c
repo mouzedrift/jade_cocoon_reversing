@@ -393,8 +393,8 @@ void SlideAlongEdge_800B7E40(int* pos, MapMesh* mesh, int tri, int edge, int* ou
     rel[2] = pos[2] - v1->z_4;
     dir[1] = 0;
     len = ISqrt_8003B918(dir[0] * dir[0] + dir[2] * dir[2]);
-    dir[0] = (dir[0] << 12) / len;
-    dir[2] = (dir[2] << 12) / len;
+    dir[0] = DIV0(dir[0] << 12, len);
+    dir[2] = DIV0(dir[2] << 12, len);
     proj = (dir[0] * rel[0] + dir[2] * rel[2]) / 4096;
     pos[0] = v1->x_0 + proj * dir[0] / 4096;
     pos[2] = v1->z_4 + proj * dir[2] / 4096;
@@ -496,7 +496,7 @@ int CollideWithMapEnts_800B82C8(int* pos, int* prevPos, MapMesh* ents, unsigned 
 void GetTriHeight_800B83E4(int* pos, MapMesh* mesh, int triIdx)
 {
     MapTri* tri = &mesh->tris_4[triIdx];
-    pos[1] = (tri->ny_1A * tri->v_0[0].y_2 - tri->nx_18 * (pos[0] - tri->v_0[0].x_0) - tri->nz_1C * (pos[2] - tri->v_0[0].z_4)) / tri->ny_1A;
+    pos[1] = DIV0(tri->ny_1A * tri->v_0[0].y_2 - tri->nx_18 * (pos[0] - tri->v_0[0].x_0) - tri->nz_1C * (pos[2] - tri->v_0[0].z_4), tri->ny_1A);
 }
 
 void EncounterSpawnTask_800B844C(EvTaskEntry* task)

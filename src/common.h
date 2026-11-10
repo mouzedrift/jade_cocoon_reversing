@@ -36,6 +36,22 @@ typedef struct
 #define IMPLICIT_INT(fn) ((int (*)())(fn))
 #endif
 
+/* a signed division that may divide by zero: the game is built without the compiler's break on a zero divisor, and
+   the R3000 then gives -1 (dividend >= 0) or 1 (dividend < 0). On PC a zero divisor would raise SIGFPE */
+#ifdef __psyz
+static inline int PsxDiv(int a, int b)
+{
+    if (b == 0)
+        return a >= 0 ? -1 : 1;
+    if (b == -1)
+        return (int)(0u - (unsigned int)a); /* INT_MIN / -1 wraps as on the R3000 */
+    return a / b;
+}
+#define DIV0(a, b) PsxDiv((a), (b))
+#else
+#define DIV0(a, b) ((a) / (b))
+#endif
+
 #define COUNTOF_S(x) (int)(sizeof(x) / sizeof(*(x)))
 
 #define MAX_PLAYER_NAME_LENGTH 10

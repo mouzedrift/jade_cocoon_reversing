@@ -175,9 +175,9 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
             dist = ISqrt_8003B918(sq[0] + sq[1] + sq[2]);
             if (dist <= pointLightRange_8008D3F0)
             {
-                sm->m[2][0] = (delta[0] << 12) / dist;
-                sm->m[2][1] = (delta[1] << 12) / dist;
-                sm->m[2][2] = (delta[2] << 12) / dist;
+                sm->m[2][0] = DIV0(delta[0] << 12, dist);
+                sm->m[2][1] = DIV0(delta[1] << 12, dist);
+                sm->m[2][2] = DIV0(delta[2] << 12, dist);
                 if (unknownFlags_8008D678 & 0x400)
                 {
                     intensity = (((pointLightRange_8008D3F0 - dist) << 12) / pointLightRange_8008D3F0) * sceneBrightness_8008D40C >> 12;
@@ -208,19 +208,19 @@ void SetModelLighting_80019D84(VECTOR* pos, VECTOR* ofs, PointLight* light, MATR
     }
     else
     {
-        dirX = (delta[0] << 12) / dist;
-        dirY = (delta[1] << 12) / dist;
-        dirZ = (delta[2] << 12) / dist;
+        dirX = DIV0(delta[0] << 12, dist);
+        dirY = DIV0(delta[1] << 12, dist);
+        dirZ = DIV0(delta[2] << 12, dist);
         ((MATRIX*)getScratchAddr(0))->m[1][0] = dirX;
         ((MATRIX*)getScratchAddr(0))->m[1][1] = dirY;
         ((MATRIX*)getScratchAddr(0))->m[1][2] = dirZ;
         if (unknownFlags_8008D678 & 0x400)
         {
-            intensity = (((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14) * sceneBrightness_8008D40C >> 12;
+            intensity = DIV0(DIV0((light->range_14 - dist) << 12, light->range_14) * (light->range_14 - dist), light->range_14) * sceneBrightness_8008D40C >> 12;
         }
         else
         {
-            intensity = ((light->range_14 - dist) << 12) / light->range_14 * (light->range_14 - dist) / light->range_14;
+            intensity = DIV0(DIV0((light->range_14 - dist) << 12, light->range_14) * (light->range_14 - dist), light->range_14);
         }
         gte_lddp(intensity);
         gte_ldsv(&light->color_C);

@@ -212,10 +212,10 @@ MsgWindowEntry* OpenMessageWindow_8003422C(MsgWindowCfg* cfg)
             w->lines_1B4 = (unsigned short**)p;
         }
         sz = MeasureTextLinesMasked_8003E2A8((const char**)w->lines_1B4, w->mask_14);
-        w->res_18.count_18 = CountUntilZero_80034B14((int*)w->lines_1B4);
+        w->res_18.count_18 = CountUntilZero_80034B14(w->lines_1B4);
         w->w_50 = sz.w;
         w->h_52 = sz.h;
-        w->choiceCount_B0 = CountMaskedUntilZero_80034B40((int*)w->lines_1B4, w->mask_14);
+        w->choiceCount_B0 = CountMaskedUntilZero_80034B40(w->lines_1B4, w->mask_14);
     }
     c = -1;
     w->text_1B8.clip_4.x = 0;
@@ -413,7 +413,7 @@ int ConsumeMsgWindowMark_80034ADC(MsgWindowEntry* entry, int idx)
     }
     return 0;
 }
-int CountUntilZero_80034B14(int* list)
+int CountUntilZero_80034B14(unsigned short** list)
 {
     int count = 0;
     while (*list)
@@ -423,7 +423,7 @@ int CountUntilZero_80034B14(int* list)
     }
     return count;
 }
-int CountMaskedUntilZero_80034B40(int* list, unsigned int mask)
+int CountMaskedUntilZero_80034B40(unsigned short** list, unsigned int mask)
 {
     int count = 0;
     int i = 0;

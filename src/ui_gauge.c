@@ -182,7 +182,12 @@ void DrawGauge_8002BA54(Gauge* gauge, int time, short* origin, int ot)
         }
         if (gauge->max_C < gauge->cur_8 + gauge->delta_4)
         {
+#ifdef __psyz /* the original's rest of the bar is in points, not pixels: a heal past the maximum blinks a bar many
+                 times too long (up to the 512 pixel clamp); on PC it is scaled like the bar */
+            deltaWidth = ScaleGaugeLength_8002BC60(gauge->max_C - gauge->cur_8, gauge->max_C, length);
+#else
             deltaWidth = gauge->max_C - gauge->cur_8;
+#endif
         }
         else
         {
