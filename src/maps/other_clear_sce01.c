@@ -565,7 +565,7 @@ int FxFrame_800B3784(MapFx* fx, MapFxWork* w, int count)
         {
             length = fx->length_18;
         }
-        return (fx->first_1E + (end - fx->first_1E) * w->time_18 / length) % count;
+        return MOD0(fx->first_1E + DIV0((end - fx->first_1E) * w->time_18, length), count);
     }
     return -1;
 }

@@ -304,7 +304,7 @@ void CorridorNewFloor_800B2C6C(MapCorridorWork* w)
     roomCount_800B54C4 = 0;
     w->start_0.kind_0 = rand() % 3 * 5 + w->theme_38 * 15;
     n = CorridorGrow_800B2D98(w, 1, &w->start_0, 0, 0);
-    CorridorPlaceExit_800B3584(w, &w->start_0, rand() % n);
+    CorridorPlaceExit_800B3584(w, &w->start_0, MOD0(rand(), n));
     saveData_8008B570.mapId_2E4[2].cur_0 = w->start_0.kind_0;
 }
 

@@ -47,9 +47,26 @@ static inline int PsxDiv(int a, int b)
         return (int)(0u - (unsigned int)a); /* INT_MIN / -1 wraps as on the R3000 */
     return a / b;
 }
+/* the remainder of a zero divisor is the dividend */
+static inline int PsxMod(int a, int b)
+{
+    if (b == 0)
+        return a;
+    if (b == -1)
+        return 0;
+    return a % b;
+}
+static inline unsigned int PsxDivU(unsigned int a, unsigned int b)
+{
+    return b ? a / b : 0xFFFFFFFFu;
+}
 #define DIV0(a, b) PsxDiv((a), (b))
+#define MOD0(a, b) PsxMod((a), (b))
+#define DIVU0(a, b) PsxDivU((a), (b))
 #else
 #define DIV0(a, b) ((a) / (b))
+#define MOD0(a, b) ((a) % (b))
+#define DIVU0(a, b) ((a) / (b))
 #endif
 
 #define COUNTOF_S(x) (int)(sizeof(x) / sizeof(*(x)))

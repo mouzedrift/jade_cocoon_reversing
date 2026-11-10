@@ -168,7 +168,7 @@ void CameraZoomInit_800B2788(MapEnt* ent)
 
     d = ISqrt_8003B918(DistanceSquared3D_8003B80C((int*)&cameraState_8008D4F0.lookAt_20, (int*)&cameraState_8008D4F0.eye_14));
     ent->work_14[0] = d;
-    ent->work_14[0] = (cameraState_8008D4F0.geomScreen_2E << 12) / d;
+    ent->work_14[0] = DIVU0(cameraState_8008D4F0.geomScreen_2E << 12, d);
     CameraZoom_800B27FC(ent);
     ent->update_90 = CameraZoom_800B27FC;
 }
@@ -406,7 +406,7 @@ int FxFrame_800B2FA0(MapFx* fx, MapFxWork* w, int count)
         {
             length = fx->length_18;
         }
-        return (fx->first_1E + (end - fx->first_1E) * w->time_18 / length) % count;
+        return MOD0(fx->first_1E + DIV0((end - fx->first_1E) * w->time_18, length), count);
     }
     return -1;
 }
