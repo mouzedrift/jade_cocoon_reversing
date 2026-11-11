@@ -54,7 +54,7 @@ extern MapActorModel model_800B4480;
 extern MapActorModel model_800B44AC;
 extern MapActorModel model_800B44D8;
 extern MapVoice voices_800B4504[81];
-extern int data_800B478C[9];
+extern int data_800B478C[];
 extern int species_800B47B0[9];
 extern MapMinion minion_800B47D4;
 extern MapMinion minion_800B47F8;

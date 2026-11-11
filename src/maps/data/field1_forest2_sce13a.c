@@ -47,7 +47,7 @@ extern ActorScriptCmd* script_800B38D4[32];
 extern MapActorModel model_800B3954;
 extern MapVoice voices_800B3980[5];
 extern MapWarp warp_800B39A8;
-extern int data_800B39C0[12];
+extern int data_800B39C0[];
 extern MapMinionSpecies species_800B39F0[3];
 extern int data_800B3A08[4];
 extern int data_800B3A18[4];
@@ -135,9 +135,12 @@ MapVoice voices_800B3980[5] = {
     { 0, 0, { -1, 0, 0 } },
 };
 MapWarp warp_800B39A8 = { { 0x251, -0x156, 0x93D }, 0x4000, 0, 0, { 4, 2, 0xC } };
-int data_800B39C0[12] = {
+int data_800B39C0[] = {
     0, 1, 0, 1, 0, 1, 1, 2,
     5, 0x33, 0x10000000, 0xF,
+#ifdef __psyz /* the battle reads 72 bytes: the rest is the next object's, here behind it */
+    0x34, 0x10000000, 0xF, 0xD3, 0, 0,
+#endif
 };
 MapMinionSpecies species_800B39F0[3] = {
     { 0x34, 0x10000000 },

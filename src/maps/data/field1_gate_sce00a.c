@@ -54,7 +54,7 @@ extern MapActorModel model_800B4480;
 extern MapActorModel model_800B44AC;
 extern MapActorModel model_800B44D8;
 extern MapVoice voices_800B4504[81];
-extern int data_800B478C[9];
+extern int data_800B478C[];
 extern int species_800B47B0[9];
 extern MapMinion minion_800B47D4;
 extern MapMinion minion_800B47F8;
@@ -190,9 +190,12 @@ MapVoice voices_800B4504[81] = {
     { 0x17, 3, { 0x18, 0xDB, 0x27 } },
     { 0, 0, { -1, 0, 0 } },
 };
-int data_800B478C[9] = {
+int data_800B478C[] = {
     1, 1, 0, 0, 1, 0, 2, 5,
     5,
+#ifdef __psyz /* the battle reads 72 bytes: the rest is the next object's, here behind it */
+    0x24, 0, 0, 0xD3, 0, 0, 0xD3, 0, 0,
+#endif
 };
 int species_800B47B0[9] = {
     0x24, 0, 0, 0xD3, 0, 0, 0xD3, 0,

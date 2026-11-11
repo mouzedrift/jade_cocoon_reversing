@@ -1091,7 +1091,11 @@ int NeedsStatusReaction_800BC1A8(unsigned int mask)
         {
             status = GetUnitStatus_80014390(i & 0xFF);
             hitKind = (unsigned char)unitHitKinds_800C9CBC[i];
+#ifdef __psyz /* an enemy that is gone has no status: the original read address 8 of the PlayStation's RAM */
+            if (hitKind != 0 && hitKind != 5 && hitKind != 6 && status && status->hp_8.cur_0 > 0)
+#else
             if (hitKind != 0 && hitKind != 5 && hitKind != 6 && status->hp_8.cur_0 > 0)
+#endif
             {
                 if (unitStatusInflicted_800C9CA0[i] & 0x18202)
                 {

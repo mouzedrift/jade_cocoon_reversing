@@ -29,7 +29,7 @@ extern ActorScriptCmd anim_800B2F0C[7];
 extern int anim_800B2F60[22];
 extern ActorScriptCmd* script_800B2FB8[32];
 extern MapActorModel model_800B3038;
-extern int data_800B3064[12];
+extern int data_800B3064[];
 extern MapMinionSpecies species_800B3094[3];
 extern MapInstr script_800B30AC[12];
 extern MapMinion minion_800B316C;
@@ -100,9 +100,12 @@ ActorScriptCmd* script_800B2FB8[32] = {
     (void*)((char*)&commandScriptData_80079C04 + 0x14), (void*)((char*)&commandScriptData_80079C04 + 0x64), (void*)((char*)&commandScriptData_80079C04 + 0x84), (void*)((char*)&commandScriptData_80079CE0 + 0x1C), (void*)((char*)&commandScriptData_80079CE0 + 0x6C), (void*)((char*)&commandScriptData_80079DE4 + 0x14), (void*)((char*)&commandScriptData_80079DE4 + 0xB0), (void*)((char*)&commandScriptData_80079F50 + 0x14),
 };
 MapActorModel model_800B3038 = { str_800B22D4, 0x65, (void*)&defaultBones_80079140, 0, 0, 0, 4, script_800B2FB8, 0x20002, 0x800002, 0, 0 };
-int data_800B3064[12] = {
+int data_800B3064[] = {
     0, 1, 0, 0, 0, 0, 1, 2,
     5, 0x33, 0x10000000, 0xF,
+#ifdef __psyz /* the battle reads 72 bytes: the rest is the next object's, here behind it */
+    0x34, 0x10000000, 0xF, 0xD3, 0, 0,
+#endif
 };
 MapMinionSpecies species_800B3094[3] = {
     { 0x34, 0x10000000 },

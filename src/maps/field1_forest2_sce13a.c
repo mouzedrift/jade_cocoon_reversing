@@ -47,7 +47,7 @@ extern ActorScriptCmd* script_800B38D4[32];
 extern MapActorModel model_800B3954;
 extern MapVoice voices_800B3980[5];
 extern MapWarp warp_800B39A8;
-extern int data_800B39C0[12];
+extern int data_800B39C0[];
 extern MapMinionSpecies species_800B39F0[3];
 extern int data_800B3A08[4];
 extern int data_800B3A18[4];

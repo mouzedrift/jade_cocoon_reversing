@@ -48,7 +48,7 @@ extern MapVoice voices_800B3958[5];
 extern MapWarp warp_800B3980;
 extern MapWarp warp_800B3998;
 extern MapWarp warp_800B39B0;
-extern int data_800B39C8[12];
+extern int data_800B39C8[];
 extern MapMinionSpecies species_800B39F8[3];
 extern int data_800B3A10[4];
 extern int data_800B3A20[4];

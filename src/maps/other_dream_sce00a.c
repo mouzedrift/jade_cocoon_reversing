@@ -47,7 +47,7 @@ extern MapVoice voices_800B353C[8];
 extern int data_800B357C[2];
 extern int data_800B3584[4];
 extern int data_800B3594[18];
-extern int data_800B35DC[9];
+extern int data_800B35DC[];
 extern int species_800B3600[9];
 extern SVECTOR boneScale_800B3624[6];
 extern MapFtgAnim ftgAnim_800B3654;

@@ -48,7 +48,7 @@ extern MapVoice voices_800B3958[5];
 extern MapWarp warp_800B3980;
 extern MapWarp warp_800B3998;
 extern MapWarp warp_800B39B0;
-extern int data_800B39C8[12];
+extern int data_800B39C8[];
 extern MapMinionSpecies species_800B39F8[3];
 extern int data_800B3A10[4];
 extern int data_800B3A20[4];
@@ -138,9 +138,12 @@ MapVoice voices_800B3958[5] = {
 MapWarp warp_800B3980 = { { -0x741, 0, -0x5FC }, -0x155, 0, 0, { 4, 3, 2 } };
 MapWarp warp_800B3998 = { { 0x200, 0, 0xB2E }, 0x20B, 0, 1, { 4, 3, 4 } };
 MapWarp warp_800B39B0 = { { 0x2B9, 0, -0x3C }, 0, 0, 2, { 4, 3, 7 } };
-int data_800B39C8[12] = {
+int data_800B39C8[] = {
     0, 1, 0, 1, 0, 1, 1, 2,
     5, 0x33, 0x20000000, 0x10,
+#ifdef __psyz /* the battle reads 72 bytes: the rest is the next object's, here behind it */
+    0x35, 0x20000000, 0x10, 0xD3, 0, 0,
+#endif
 };
 MapMinionSpecies species_800B39F8[3] = {
     { 0x35, 0x20000000 },

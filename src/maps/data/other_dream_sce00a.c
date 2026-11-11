@@ -47,7 +47,7 @@ extern MapVoice voices_800B353C[8];
 extern int data_800B357C[2];
 extern int data_800B3584[4];
 extern int data_800B3594[18];
-extern int data_800B35DC[9];
+extern int data_800B35DC[];
 extern int species_800B3600[9];
 extern SVECTOR boneScale_800B3624[6];
 extern MapFtgAnim ftgAnim_800B3654;
@@ -225,9 +225,12 @@ int data_800B3594[18] = {
     5, 0x29, 0x50000000, 3, 0x2A, 0x24000000, 3, 0xD3,
     0, 0,
 };
-int data_800B35DC[9] = {
+int data_800B35DC[] = {
     1, 1, 0, 0, 0, 0, 3, 5,
     5,
+#ifdef __psyz /* the battle reads 72 bytes: the rest is the next object's, here behind it */
+    0xC, 0, 0, 0xD3, 0, 0, 0xD3, 0, 0,
+#endif
 };
 int species_800B3600[9] = {
     0xC, 0, 0, 0xD3, 0, 0, 0xD3, 0,

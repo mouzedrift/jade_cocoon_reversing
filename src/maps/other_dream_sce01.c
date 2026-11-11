@@ -29,7 +29,7 @@ extern ActorScriptCmd anim_800B2F0C[7];
 extern int anim_800B2F60[22];
 extern ActorScriptCmd* script_800B2FB8[32];
 extern MapActorModel model_800B3038;
-extern int data_800B3064[12];
+extern int data_800B3064[];
 extern MapMinionSpecies species_800B3094[3];
 extern MapInstr script_800B30AC[12];
 extern MapMinion minion_800B316C;

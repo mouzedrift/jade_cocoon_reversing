@@ -356,6 +356,10 @@ EVENT_DATA = {"MinionInit": "MapMinion", "FxInit": "MapFx", "Warp": "MapWarp", "
 # what an event script instruction's address operand (MapInstr.c_C) is, by its op (not 0x2E/0x2F, EvCmdSetEntityState:
 # an entity's data, whatever its type; typing it MapEvent broke the layout on PC)
 INSTR_DATA = {0x11: "MapEvent", 0x4B: "MapFx", 0x13: "int", 0x5A: "int", 0x60: "int"}
+# op 0x65 (EvCmdBattle_800BB27C) reads an EvBattleArgs; some maps' run on into the next object (the species of a
+# minion), which on PC is not behind it: there the words are repeated (PC only, the PlayStation's data is as it was)
+BATTLE_OP = 0x65
+BATTLE_ARGS_SIZE = 0x48
 TYPE_NAME = {"MapEvent": "event", "MapInstr": "script", "MapVoice": "voices", "MapMinion": "minion",
              "MapMinionSpecies": "species", "MapActorModel": "model", "MapFx": "effects", "SVECTOR": "boneScale",
              "ActorScriptCmd*": "script", "ActorScriptCmd": "anim", "int": "data", "short": "bones",
@@ -410,6 +414,7 @@ class MapSource:
         self.loose_templates = _LOOSE[id(templates)]
         self.scalars = set()  # objects that are not arrays (pointers to them take &)
         self.ctypes = {}  # address -> the C type it is written as (an array's: its element's)
+        self.battle_args = set()  # what op 0x65 (EvCmdBattle_800BB27C) reads BATTLE_ARGS_SIZE bytes of
 
     def match(self):
         """the template of each function, the names of what they use"""
@@ -541,6 +546,8 @@ class MapSource:
                             sub = EVENT_DATA.get(self.ev_kind(elem))
                         elif t == "MapInstr":
                             sub = INSTR_DATA.get(self.word(elem))
+                            if self.word(elem) == BATTLE_OP:
+                                self.battle_args.add(v)
                         if sub in (None, "fn") or v in self.types:
                             continue
                         self.syms[v] = "%s_%08X" % (TYPE_NAME.get(sub, "data"), v)
@@ -717,6 +724,15 @@ class MapSource:
         lines = []
         for i in range(0, len(items), 8):
             lines.append("    " + ", ".join(items[i:i + 8]) + ",")
+        if a in self.battle_args and ctype == "int" and size < BATTLE_ARGS_SIZE:
+            more = [self.word(a + i) for i in range(size, BATTLE_ARGS_SIZE, 4)]
+            more = [self.ref(v, True) or self.num(struct.unpack("<i", struct.pack("<I", v))[0]) for v in more]
+            lines.append("#ifdef __psyz /* the battle reads %d bytes: the rest is the next object's, here behind it */"
+                         % BATTLE_ARGS_SIZE)
+            for i in range(0, len(more), 8):
+                lines.append("    " + ", ".join(more[i:i + 8]) + ",")
+            lines.append("#endif")
+            return ("extern %s%s %s[];" % (const, ctype, n), "%s%s %s[] = {\n%s\n};" % (const, ctype, n, "\n".join(lines)))
         return ("extern %s%s %s[%d];" % (const, ctype, n, len(items)),
                 "%s%s %s[%d] = {\n%s\n};" % (const, ctype, n, len(items), "\n".join(lines)))
 
