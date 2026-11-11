@@ -23,12 +23,19 @@
 
 /* libds: the same commands as libcd, with a command queue the game only uses one entry of at a time */
 
+static u_char locPResult[8]; /* DsControlF's CdlGetlocP */
+static int locPValid;
+
 int DsInit(void) { return CdInit(); }
 int DsSetDebug(int level) { return CdSetDebug(level); }
 int DsPosToInt(DslLOC* p) { return CdPosToInt((CdlLOC*)p); }
 DslLOC* DsIntToPos(int i, DslLOC* p) { return (DslLOC*)CdIntToPos(i, (CdlLOC*)p); }
 int DsControl(u_char com, u_char* param, u_char* result) { return CdControl(com, param, result); }
-int DsControlB(u_char com, u_char* param, u_char* result) { return CdControlB(com, param, result); }
+int DsControlB(u_char com, u_char* param, u_char* result)
+{
+    locPValid = 0;
+    return CdControlB(com, param, result);
+}
 /* PSY-Q's values (DslReady 1, DslBusy 2): PSY-Z's libds.h has 0 and 1 */
 int DsSystemStatus(void) { return CdSync(1, NULL) == CdlComplete || CdSync(1, NULL) == CdlNoIntr ? 1 : 2; }
 int DsRead(DslLOC* pos, int sectors, u_long* buf, int mode)
@@ -65,14 +72,32 @@ static void DeliverSectors(void)
 }
 
 static int dsLastId;
+/* PSY-Z has no CdlGetlocP, which the XA player polls for the playing sector (the absolute position in result[5..7])
+   to stop at the end of a voice: it is made from CdlGetlocL's position, and DsSync hands it back */
 int DsControlF(u_char com, u_char* param)
 {
+    u_char loc[8] = { 0 };
+    if (com == CdlGetlocP)
+    {
+        CdControlB(CdlGetlocL, NULL, loc);
+        memset(locPResult, 0, sizeof(locPResult));
+        locPResult[0] = CdStatus();
+        locPResult[1] = 1; /* track */
+        locPResult[2] = 1; /* index */
+        locPResult[5] = loc[0];
+        locPResult[6] = loc[1];
+        locPResult[7] = loc[2];
+        locPValid = 1;
+        return ++dsLastId;
+    }
+    locPValid = 0;
     CdControlF(com, param);
     return ++dsLastId;
 }
 int DsCommand(u_char com, u_char* param, DslCB cbsync, int count)
 {
     u_char result[8];
+    locPValid = 0;
     CdControlB(com, param, result);
     if (cbsync)
         cbsync(CdlComplete, result);
@@ -82,6 +107,7 @@ int DsCommand(u_char com, u_char* param, DslCB cbsync, int count)
 int DsPacket(u_char mode, DslLOC* pos, u_char com, DslCB cbsync, int count)
 {
     u_char result[8] = { 0 };
+    locPValid = 0;
     if (com == CdlReadN && pos && !(mode & CdlModeRT))
     {
         packetSector = CdPosToInt((CdlLOC*)pos);
@@ -91,6 +117,9 @@ int DsPacket(u_char mode, DslLOC* pos, u_char com, DslCB cbsync, int count)
         DeliverSectors();
         return ++dsLastId;
     }
+    /* the XA player sets CdlModeDA too, which only matters to CdlPlay; PSY-Z would mix CD-DA instead of the XA */
+    if ((com == CdlReadN || com == CdlReadS) && (mode & CdlModeRT))
+        mode &= ~CdlModeDA;
     CdControlB(CdlSetmode, &mode, NULL);
     if (pos)
         CdControlB(CdlSetloc, (u_char*)pos, NULL);
@@ -101,7 +130,14 @@ int DsPacket(u_char mode, DslLOC* pos, u_char com, DslCB cbsync, int count)
 }
 int DsSync(int id, u_char* result)
 {
-    int r = CdSync(1, result);
+    int r;
+    if (locPValid)
+    {
+        if (result)
+            memcpy(result, locPResult, sizeof(locPResult));
+        return DslComplete;
+    }
+    r = CdSync(1, result);
     return r == CdlNoIntr ? DslComplete : r;
 }
 int DsStartReadySystem(DslRCB func, int count)

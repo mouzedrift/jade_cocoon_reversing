@@ -1,0 +1,45 @@
+diff --git a/psyz/src/psyz/libcd.c b/psyz/src/psyz/libcd.c
+index c783fb2..401c1b4 100644
+--- a/psyz/src/psyz/libcd.c
++++ b/psyz/src/psyz/libcd.c
+@@ -465,7 +465,8 @@ end:
+ }
+ 
+ #define XA_DECODED_MAX_FRAMES 4032            // 18 blocks * 4 sub * 28 samples
+-#define XA_STEP_Q16 ((37800u << 16) / 44100u) // 56173
++#define XA_STEP_Q16 ((37800u << 16) / 44100u)       // 56173
++#define XA_STEP_Q16_18900 ((18900u << 16) / 44100u) // 28086
+ // Real hardware keeps reading sectors and discards the ones rejected by the
+ // filter, so once the selected file/channel ends playback goes silent. Give up
+ // after this many consecutive rejected sectors instead of scanning the disc
+@@ -484,6 +485,7 @@ static struct {
+     // Hermite ring: index [0]=oldest .. [3]=newest per channel
+     short rh_l[4], rh_r[4];
+     unsigned int phase; // 16.16 fractional position into the input stream
++    unsigned int step;  // phase step per output frame (the sector's rate)
+     int cur_abs_sector; // absolute last sector used, for CdlGetlocL
+     int stream_ended;   // filtered file/channel ran out, emit silence
+ } xa;
+@@ -594,10 +596,10 @@ static int xa_read_and_decode_sector(void) {
+         int stereo = (ci & 0x03) == 1;
+         int rate18900 = (ci & 0x04) != 0;
+         int bits8 = (ci & 0x30) != 0;
+-        if (rate18900 || bits8) {
+-            LOG_ONCE(
+-                "XA: 18900Hz or 8-bit not supported, decoding as 4bit/37800");
++        if (bits8) {
++            LOG_ONCE("XA: 8-bit not supported, decoding as 4bit");
+         }
++        xa.step = rate18900 ? XA_STEP_Q16_18900 : XA_STEP_Q16;
+         if (stereo) {
+             xa.decoded_count = xa_decode_user_stereo_4bit(user);
+         } else {
+@@ -687,7 +689,7 @@ static size_t xa_pull_samples(short* buf, size_t max_frames) {
+             buf[written * 2 + 1] = hermite4(
+                 xa.rh_r[0], xa.rh_r[1], xa.rh_r[2], xa.rh_r[3], xa.phase);
+         }
+-        xa.phase += XA_STEP_Q16;
++        xa.phase += xa.step ? xa.step : XA_STEP_Q16;
+         written++;
+     }
+ end:
