@@ -3,7 +3,31 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-  build-windows-2022:
+  build-windows-2022-psx:
+    runs-on: windows-2022
+    name: PSX
+
+    steps:
+    - name: Checkout repository recursively
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+
+    - name: Install Requirements
+      run: pip install -r requirements.txt
+
+      # TODO: add ci verification at some point
+    - name: Build PSX
+      run: python build.py --no-verify
+
+    #- name: Upload PSX Artifacts
+    #  uses: actions/upload-artifact@v4
+    #  with:
+    #    name: jade-cocoon-psx
+    #    path: build_psyq/jade_cocoon.exe
+    #    retention-days: 7
+
+  build-windows-2022-pc:
     runs-on: windows-2022
     name: Windows PC Port
 
@@ -27,7 +51,7 @@ jobs:
         path: build/jade_cocoon.exe
         retention-days: 7
 
-  build-linux-latest:
+  build-linux-latest-pc:
     runs-on: ubuntu-latest
     name: Linux PC Port
 
