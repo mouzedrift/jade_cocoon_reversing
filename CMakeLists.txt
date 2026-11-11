@@ -23,10 +23,14 @@ option(JC_DEBUG "restore the debug features the retail game cut off (see docs/de
 if(JC_DEBUG)
     list(APPEND GAME_DEFINES JC_DEBUG)
 endif()
-set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common
-    -Werror=implicit-function-declaration -Werror=int-conversion -Werror=return-type)
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-    list(APPEND GAME_OPTIONS -fno-toplevel-reorder) # data laid out in source order, as the PlayStation's
+
+if(MSVC)
+    set(GAME_OPTIONS /J /we4013 /we4047 /we4024 /we4716)
+else()
+    set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common
+        -Werror=implicit-function-declaration -Werror=int-conversion -Werror=return-type)
+    if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+        list(APPEND GAME_OPTIONS -fno-toplevel-reorder) # data laid out in source order, as the PlayStation's
 endif()
 
 # the executable's translation units, config/tus.txt (lines "name address")
@@ -107,4 +111,11 @@ target_include_directories(jade_cocoon PRIVATE src)
 target_compile_definitions(jade_cocoon PRIVATE ${GAME_DEFINES})
 target_compile_options(jade_cocoon PRIVATE ${GAME_OPTIONS})
 target_link_libraries(jade_cocoon PRIVATE psyz)
-target_link_options(jade_cocoon PRIVATE -no-pie)
+
+if(MSVC)
+    target_link_options(jade_cocoon PRIVATE /DYNAMICBASE:NO /FIXED)
+elseif(WIN32)
+    target_link_options(jade_cocoon PRIVATE -Wl,--disable-dynamicbase)
+else()
+    target_link_options(jade_cocoon PRIVATE -no-pie)
+endif()

@@ -167,7 +167,7 @@ def external_symbols(src_dir):
     ovl = overlay_symbols()
     names = set()
     for path in glob.glob(os.path.join(src_dir, "*.[ch]")):
-        names |= set(re.findall(r"\b[A-Za-z_]\w*\b", open(path).read()))
+        names |= set(re.findall(r"\b[A-Za-z_]\w*\b", open(path, encoding="utf-8").read()))
     out = {}
     fixed = read_fixed_symbols()
     for n in names - {a for a, _, _ in read_aliases()}:
