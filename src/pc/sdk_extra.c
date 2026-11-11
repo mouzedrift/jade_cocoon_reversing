@@ -273,6 +273,7 @@ u_long SpuWrite0(u_long size) { return size; }
 void SsSepSetDecrescendo(short sep_acc_num, short seq_num, short vol, long v_time) {}
 long SsVoKeyOn(long vab_pro, long pitch, u_short volL, u_short volR) { return 0; }
 
-/* movies (MDEC): not decoded yet */
+/* MDEC: DecDCTvlc2 is DecDCTvlc with a table made by DecDCTvlcBuild; PSY-Z's DecDCTvlc decodes the same bitstream
+   (the whole of it) and needs no table */
 void DecDCTvlcBuild(u_short* table) {}
-int DecDCTvlc2(unsigned long* bs, unsigned long* buf, DECDCTTAB table) { return 0; }
+int DecDCTvlc2(unsigned long* bs, unsigned long* buf, DECDCTTAB table) { return DecDCTvlc((u_long*)bs, (u_long*)buf); }
