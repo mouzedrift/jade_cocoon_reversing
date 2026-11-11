@@ -27,29 +27,29 @@ jobs:
     #    path: build_psyq/jade_cocoon.exe
     #    retention-days: 7
 
-  build-windows-2022-pc:
-    runs-on: windows-2022
-    name: Windows PC Port
+  #build-windows-2022-pc:
+  #  runs-on: windows-2022
+  #  name: Windows PC Port
 
-    steps:
-    - name: Checkout repository recursively
-      uses: actions/checkout@v4
-      with:
-        submodules: recursive
+  #  steps:
+  #  - name: Checkout repository recursively
+  #    uses: actions/checkout@v4
+  #    with:
+  #      submodules: recursive
 
-    - name: Build Windows PC Port
-      run: |
-        mkdir build
-        cd build
-        cmake -S .. -B . -G"Visual Studio 17 2022" -A x64
-        cmake --build . --config Release
+  #  - name: Build Windows PC Port
+  #    run: |
+  #      mkdir build
+  #      cd build
+  #      cmake -S .. -B . -G"Visual Studio 17 2022" -A x64
+  #      cmake --build . --config Release
 
-    - name: Upload Windows PC Port Artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: jade-cocoon-windows
-        path: build/jade_cocoon.exe
-        retention-days: 7
+  #  - name: Upload Windows PC Port Artifacts
+  #    uses: actions/upload-artifact@v4
+  #    with:
+  #      name: jade-cocoon-windows
+  #      path: build/jade_cocoon.exe
+  #      retention-days: 7
 
   build-linux-latest-pc:
     runs-on: ubuntu-latest
