@@ -1,1 +1,0 @@
-source ../venv/bin/activate && python3 -m splat split ../slus_008.54.yaml

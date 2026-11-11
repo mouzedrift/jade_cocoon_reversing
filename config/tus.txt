@@ -1,0 +1,50 @@
+# translation units of the game code, in link order: name, first address
+# anchors (named from their __FILE__ assert strings): main, common, effect, sound, cd, event (see docs/translation_units.md);
+# the others are inferred from .rdata references and named after their contents (they were tu_<first address> before)
+main 80010000
+system 80010228
+obj 2MBYTE.OBJ 80010474   # SN start-up: __main, __SN_ENTRY_POINT, _ramsize / _stacksize words
+party 80010538
+unit_stats 80010B90
+common 80012794
+battle_damage 80013358
+effect 80013DB0
+effect_data 80014954
+effect_light 80016BF4
+effect_model 800174F8
+effect_cmd 80018430
+minion_init 80018E5C
+engine 80019BF0
+model 8001EA48
+model_ftg 80021738
+tim 80028C60
+menu_draw 8002A1BC
+menu_window 8002AAF0
+element_grid 8002B228
+ui_gauge 8002B2A4
+ui_sprites 8002BE10
+ability_menu 8002CE28
+family_tree 8002D738
+status_panel 8002DA3C
+unit_gauges 8002ECE0
+party_window 8002F6F8
+sound 8002FD0C
+sound_seq 80030D00
+skill_anim 80031870
+skills 800318C8
+unit_query 80031A94
+msg_window 80034068
+camera 80036528
+cd 80039FA4
+cdread 8003C6C8
+cursor 8003CF88
+pad_text 8003D198
+font 8003E884
+util 8003EF74
+display_mode 80040658
+boot 80040718
+movie 80040C8C
+winframe 80041E68
+event 8004226C
+skel_draw 80043AF8
+ftg_draw 8004B0A8

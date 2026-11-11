@@ -1,5 +1,5 @@
 ## Contributing
-Anyone who likes to contribute to this project is welcome to do so, but keep in mind that, as of the time of writing this, it is a semi-matching project with no way to check if functions still match locally.
+Anyone who likes to contribute to this project is welcome to do so. The executable and all overlays are built from C and match the original: every build checks their hashes (see [docs/build.md](docs/build.md)).
 Currently I use [decomp.me](https://decomp.me/) for matching game functions. I do have an IDA Pro database I'm working on, so if you're interested, I'd recommend joining. [The Jade Cocoon Project](https://discord.gg/QUMyJmHYnc) Discord server and contacting me there.
 
 ## Building
@@ -30,7 +30,39 @@ pip install -r requirements.txt
 python3 build.py
 ```
 
-Objects and binaries will be output to the `build_psyq` directory.
+Objects and binaries will be output to the `build_psyq` directory. How the build fits together: [docs/build.md](docs/build.md).
+
+Every build ends with a hash check of the executable and all overlays against `config/hashes.txt` and fails if
+anything differs. The overlays are built from `build_psyq/<NAME>.orig`, which `scripts/overlays.py` saves the first
+time it extracts an overlay from the disc; on a fresh checkout pass the disc image once: `python3 build.py --iso
+"Jade Cocoon (USA).bin"`. `--no-verify` skips the check (quick experiments only).
+
+### Building overlays
+
+```bash
+python3 scripts/overlays.py BATTLE "Jade Cocoon (USA).bin" SLUS_008.54   # builds build_psyq/BATTLE.BIN, prints words identical
+python3 scripts/ovl_diff.py BATTLE                                       # functions that differ from the disc
+```
+
+## Testing in the emulator
+
+`scripts/patch_disc.py` writes rebuilt overlays (and optionally the rebuilt executable) into a copy of the disc
+image, fixing up the sector EDC/ECC and writing a matching `.cue`:
+
+```bash
+python3 scripts/patch_disc.py "Jade Cocoon (USA).bin" BATTLE MENU       # build_psyq/NAME.BIN -> build_psyq/jade_cocoon_patched.bin/.cue
+python3 scripts/patch_disc.py "Jade Cocoon (USA).bin" --all --exe       # every built overlay + build_psyq/jade_cocoon.exe as SLUS_008.54
+python3 scripts/patch_disc.py "Jade Cocoon (USA).bin" MENU=file.bin -o out.bin
+```
+
+The input image is never modified. Overlays that outgrow their slot are appended to the end of the image and the
+executable's file table is updated.
+
+Rebuilds may change the size of anything (e.g. adding a `DEBUG_PRINTF` from `src/debug_tty.h`): every reference
+into an image is a symbol, so code and data behind a change move consistently (`scripts/shift_check.py` checks
+this; see [docs/build.md](docs/build.md)). Each image must still fit where the game loads it.
+
+Details: [docs/testing_in_emulator.md](docs/testing_in_emulator.md).
 
 ## Main Executable
 

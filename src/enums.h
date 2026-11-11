@@ -1,6 +1,15 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+enum Element
+{
+    eElementNone = -1,
+    eElementFire = 0,
+    eElementAir = 1,
+    eElementEarth = 2,
+    eElementWater = 3,
+};
+
 enum GameStates
 {
     eMainMenu_6 = 6u,

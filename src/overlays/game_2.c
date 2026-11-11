@@ -1,0 +1,101 @@
+// GAME.BIN, source file 2 of 3 from 0x800A55B0 (.rdata from 0x800A061C)
+#include "game.h"
+#include "memmap.h"
+
+void* GetEventDataSlot_800A55B0(int kind)
+{
+    void* slot = 0;
+    switch (kind)
+    {
+    case 0:
+        slot = &eventEffects_800AEB80;
+        break;
+    case 1:
+#ifdef __psyz
+        slot = pcEventMsgTable;
+#else
+        slot = eventReloc_800AEBBC;
+#endif
+        break;
+    case 2:
+        slot = eventTiy_800AEBC0;
+        break;
+    case 3:
+        slot = eventDataBuf_800AEBC8;
+        break;
+    case 4:
+        slot = &eventRecords_800AEBCC;
+        break;
+    }
+    return slot;
+}
+
+
+
+void LoadEventData_800A5628(int kind, int* data, int arg)
+{
+    switch (kind)
+    {
+    case 0:
+        LoadEventEffectFile_800BC7A8(data);
+        break;
+    case 1:
+        LoadRelocBlob_800BC854(data);
+        break;
+    case 2:
+        LoadEventTiy_800BC98C(data);
+        break;
+    case 3:
+        CopyEventData_800BCA18((unsigned int*)data, arg);
+        break;
+    case 4:
+        LoadEventRecordTables_800BCA68(data);
+        break;
+    }
+}
+
+void FreeEventData_800A56BC(int kind)
+{
+    switch (kind)
+    {
+    case 0:
+        if (mdecBufferMode_800AEB7C != 2)
+            FreeMdecBuffer_800A5854();
+        if (eventEffects_800AEB80.list_4.count)
+            ListFreeAll_8003FEC8(&eventEffects_800AEB80.list_4);
+        break;
+    case 1:
+        if (eventReloc_800AEBBC)
+        {
+            ListFree_8003FE38(&eventHeap_80091C10, eventReloc_800AEBBC);
+            eventReloc_800AEBBC = 0;
+        }
+        break;
+    case 2:
+        if (eventTiy_800AEBC0[0])
+        {
+            ListFree_8003FE38(&eventHeap_80091C10, eventTiy_800AEBC0[0]);
+            eventTiy_800AEBC0[0] = 0;
+        }
+        if (eventTiy_800AEBC0[1])
+        {
+            ListFree_8003FE38(&eventHeap_80091C10, eventTiy_800AEBC0[1]);
+            eventTiy_800AEBC0[1] = 0;
+        }
+        break;
+    case 3:
+        if (eventDataBuf_800AEBC8)
+        {
+            ListFree_8003FE38(&eventHeap_80091C10, eventDataBuf_800AEBC8);
+            eventDataBuf_800AEBC8 = 0;
+        }
+        break;
+    case 4:
+        if (eventRecords_800AEBCC.tables_4)
+        {
+            FreeRecordTables_80026DE8(&eventRecords_800AEBCC.tables_4, eventRecords_800AEBCC.count_0, &eventHeap_80091C10);
+            eventRecords_800AEBCC.count_0 = 0;
+        }
+        break;
+    }
+}

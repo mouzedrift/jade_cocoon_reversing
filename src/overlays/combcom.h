@@ -1,0 +1,171 @@
+// COMBCOM.BIN: declarations shared by its source files
+#ifndef _COMBCOM_H_
+#define _COMBCOM_H_
+
+#include "common.h"
+#include "funcs.h"
+#include "globals.h"
+#include "minion_menu.h"
+#include "effect_data.h"
+#include "common_tu.h"
+#include "msg_window.h"
+#include "combat.h"
+#include "main.h"
+#include "menu_window.h"
+#include "engine.h"
+#include "unit_query.h"
+#include "event.h"
+#include "pad_text.h"
+#include "sound_seq.h"
+#include "ui_sprites.h"
+#include "ability_menu.h"
+#include "skills.h"
+
+// up to four text lines of a large text box (DrawLargeTextBox_8002AF10)
+typedef struct CombComDlg
+{
+    const char* line0_0;
+    const char* line1_4;
+    const char* line2_8;
+    const char* line3_C;
+} CombComDlg;
+
+// a menu window row: the item and the row's end marker
+typedef struct CombComItem
+{
+    MenuWindowItem item;
+    MenuWindowItem end;
+} CombComItem;
+
+// a window list drawn by DrawMenuWindows_8002A5A4 (CombSelMenu)
+typedef struct CombComMenu
+{
+    int flags_0;
+    unsigned int time_4;
+    unsigned int anim_8; // open animation step, 8: open
+    int sel_C;
+    CombComItem** items_10;
+    int ot_14;
+} CombComMenu;
+
+// a top command's description and the message shown when it cannot be chosen (0: it can)
+typedef struct CombComMsg
+{
+    const char** desc_0;
+    const char** error_4;
+} CombComMsg;
+
+typedef struct CombComMsgs3
+{
+    const char* m[3];
+} CombComMsgs3;
+
+typedef struct CombComPos2
+{
+    short xy[2][2];
+} CombComPos2;
+
+
+extern int unused_800C9E88;
+
+/* .data */
+extern MenuCursor cmdCursor_800CD28C;
+extern MenuCursor skillCursor_800CD298;
+extern MenuCursor magicCursor_800CD2A4;
+extern MenuCursor targetCursor_800CD2B0;
+extern MenuCursor changeCursor_800CD2BC;
+extern MenuCursor pauseCursor_800CD2C8;
+extern MenuCursor* stateCursors_800CD2D4[6];
+extern CombComItem cmdItemAttack_800CD2EC[1];
+extern CombComItem cmdItemDefend_800CD324[1];
+extern CombComItem cmdItemSpecial_800CD35C[1];
+extern CombComItem cmdItemMagic_800CD394[1];
+extern CombComItem cmdItemChange_800CD3CC;
+extern CombComItem* cmdItems_800CD404[6];
+extern CombComMenu cmdMenuWin_800CD41C;
+extern short cmdItemX_800CD434[6];
+extern const char* descAttack_800CD440[1];
+extern const char* descDefend_800CD444[1];
+extern const char* descSpecial_800CD448[1];
+extern const char* descMagic_800CD44C[1];
+extern const char* descChange_800CD450[1];
+extern const char* errCannotSummon_800CD454[1];
+extern const char* errNotEnoughMana_800CD458[1];
+extern const char* errBlank_800CD45C[1];
+extern const char* errNoNeedToUse_800CD460[1];
+extern const char* errCannotSelect_800CD464[1];
+extern const char* errNoDivineMinions_800CD468[1];
+extern CombComMsg cmdInfo_800CD46C[5];
+extern unsigned char cmdTargetFlags_800CD494[8];
+extern unsigned char cmdNextState_800CD49C[8];
+extern ButtonHelpEntry helpBarCmd_800CD4A4[4];
+extern ButtonHelpEntry helpBarList_800CD4C4[5];
+extern ButtonHelpEntry helpBarTarget_800CD4EC[4];
+extern ButtonHelpEntry* stateHelpBars_800CD50C[6];
+extern int cmdKinds_800CD524[5];
+extern CombComDlg magicDescs_800CD538[30];
+extern CombComDlg skillDescs_800CD718[16];
+extern void (*inputHandlers_800CD818[2])(EventEntry*, void*);
+extern unsigned short stateDrawFlags_800CD820[6][2];
+extern unsigned char msgShown_800CD838;
+extern unsigned char side_800CD839;
+extern unsigned char menuState_800CD83A;
+extern unsigned char msgTimer_800CD83B;
+extern int targetSlot_800CD83C;
+extern BattleCmd* cmd_800CD840;
+extern unsigned char targetFlags_800CD844;
+extern unsigned char byte_800CD845;
+extern int padIndex_800CD848;
+extern const char* errorMsg_800CD84C;
+extern unsigned char prevState_800CD850;
+extern MenuCursor* activeCursor_800CD854;
+
+/* .rdata */
+extern const CombComItem pauseTitleItem_800CB4F0;
+extern const CombComItem pauseItemStart_800CB528;
+extern const CombComItem pauseItemGiveUp_800CB560;
+extern const CombComItem pauseItemReturn_800CB598;
+extern const CombComMenu menuWinTmpl_800CB5D0;
+extern const char aStartFight_800CB5E8[];
+extern const char aGiveUpResultsIn_800CB600[];
+extern const char aReturnToStartOf_800CB638[];
+extern const CombComMsgs3 pauseOptionDescs_800CB674;
+extern const CombComPos2 skillListPos_800CB680;
+extern const CombComPos2 magicListPos_800CB688;
+extern const CombComItem targetItem0_800CB690;
+extern const CombComItem targetItem1_800CB6C8;
+extern const CombComItem targetItem2_800CB700;
+
+EventEntry* CombComStart_800CB7AC(BattleCmd* cmd, int side);
+void SetupCmdMenu_800CB88C(void);
+void DisableChangeIfAlone_800CB924(void);
+MenuCursor* GetStateCursor_800CB974(int state);
+void UpdateCmdMenuWin_800CBA20(int state);
+void SetFocusedMinion_800CBAD4(int state);
+void DrawCmdMessage_800CBB4C(const char* text);
+void DrawLargeMessage_800CBBE0(const char* text);
+int GetSelectedSkill_800CBC28(void);
+int GetSelectedMagic_800CBC58(void);
+void DrawPauseMenu_800CBCA0(void);
+void DrawCmdMenu_800CBEA4(void);
+void PreviewCmdEffect_800CC40C(void);
+int DrawTargetList_800CC674(short* target, int mode, int sel, int ot);
+void FinishCmd_800CC9FC(void);
+int CheckCmdSelectable_800CCA94(void);
+int GetDefaultTargets_800CCD84(void);
+void AdvanceCmdMenu_800CCDD0(void);
+void CmdMenuInput_800CCFCC(EventEntry* e);
+void CmdMenuMessage_800CD0C8(void);
+void CmdMenuTask_800CD16C(EventEntry* e, void* buf);
+
+/* COMBBTL-side (COMBBTL.BIN is loaded together with COMBCOM.BIN; combbtl.h's prototypes clash with these types) */
+extern short previewHp_800A82D0;
+extern short previewMp_800A82D2;
+extern unsigned char exchangeFlags_800A84A8;
+extern unsigned char swapSlot_800A85BC;
+extern unsigned char actorSlot_800A85BD;
+
+/* exe-side, to move to <exe header> */
+extern int MeasureTextWidth_8003E4C8(const char* str);       // -> pad_text.h
+
+#endif

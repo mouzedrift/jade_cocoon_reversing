@@ -1,6 +1,110 @@
-cmake_minimum_required(VERSION 3.10 FATAL_ERROR)
+# PC build with PSY-Z (external/psyz). The PlayStation build is build.py; this one does not change it.
+#
+#   cmake -B build_pc -G Ninja && cmake --build build_pc
+#
+# One binary: the executable's code and every overlay. The executable calls into the overlays and reads their
+# data by name (on the PlayStation, at the addresses they load to), so they are linked together. What loading
+# an overlay does to its data (fresh .data from the file) is done by src/pc/overlays.c: each overlay's data is in
+# sections of its own (jc_NAME_data / jc_NAME_bss, renamed below), saved at start and put back when the game
+# loads that overlay.
+cmake_minimum_required(VERSION 3.21..3.31)
 
-project(jade_cocoon VERSION 1.0 LANGUAGES C)
+project(jade_cocoon LANGUAGES C)
 
-add_subdirectory(src)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_EXTENSIONS ON)
+set(CMAKE_POSITION_INDEPENDENT_CODE OFF)
 
+add_subdirectory(external/psyz/psyz psyz EXCLUDE_FROM_ALL)
+target_compile_definitions(psyz PRIVATE __psyz)
+
+set(GAME_DEFINES __psyz)
+option(JC_DEBUG "restore the debug features the retail game cut off (see docs/debug_features.md)" OFF)
+if(JC_DEBUG)
+    list(APPEND GAME_DEFINES JC_DEBUG)
+endif()
+set(GAME_OPTIONS -fno-strict-aliasing -fwrapv -funsigned-char -fno-pie -fno-common
+    -Werror=implicit-function-declaration -Werror=int-conversion -Werror=return-type)
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    list(APPEND GAME_OPTIONS -fno-toplevel-reorder) # data laid out in source order, as the PlayStation's
+endif()
+
+# the executable's translation units, config/tus.txt (lines "name address")
+file(STRINGS config/tus.txt TU_LINES REGEX "^[a-z0-9_]+ [0-9a-fA-F]+")
+set(EXE_SOURCES)
+foreach(line ${TU_LINES})
+    string(REGEX REPLACE " .*" "" tu "${line}")
+    if(EXISTS ${CMAKE_SOURCE_DIR}/src/${tu}.c)  # not the SN start-up object
+        list(APPEND EXE_SOURCES src/${tu}.c)
+    endif()
+endforeach()
+file(GLOB PC_SOURCES src/pc/*.c)
+
+# overlays: src/overlays/NAME.c and NAME_2.c, ... (the objects one overlay was linked from), linked into one
+# object each, with its data sections renamed
+set(OVERLAYS
+    TITLE SOUNDTST TSTMODEL TSTCOMPO GAME COMBAT COMBCOM COMBCHUI COMBSEL COMBLOAD COMBSTRT COMBBTL COMBRSLT
+    BATTLE MAP MENU SHOPCTRL SHOP SHOPENTR WPNSHOP CONFIG LOAD NAME EQUIP CHAPTER EVENTFNC) # not PIERCE (unused, linked against an older build)
+set(OVERLAY_OBJECTS)
+foreach(ovl ${OVERLAYS})
+    string(TOLOWER ${ovl} name)
+    file(GLOB sources src/overlays/${name}.c src/overlays/${name}_[0-9].c)
+    add_library(ovl_${name} OBJECT ${sources})
+    target_include_directories(ovl_${name} PRIVATE src src/overlays)
+    target_compile_definitions(ovl_${name} PRIVATE ${GAME_DEFINES})
+    target_compile_options(ovl_${name} PRIVATE ${GAME_OPTIONS})
+    target_link_libraries(ovl_${name} PRIVATE psyz)
+    set(out ${CMAKE_CURRENT_BINARY_DIR}/overlay_${name}.o)
+    add_custom_command(
+        OUTPUT ${out}
+        COMMAND ${CMAKE_LINKER} -r -T ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/overlay.ld -o ${out}.tmp $<TARGET_OBJECTS:ovl_${name}>
+        COMMAND ${CMAKE_OBJCOPY} --rename-section .data=jc_${ovl}_data --rename-section .bss=jc_${ovl}_bss
+                ${out}.tmp ${out}
+        DEPENDS $<TARGET_OBJECTS:ovl_${name}> ${CMAKE_CURRENT_SOURCE_DIR}/src/pc/overlay.ld
+        COMMAND_EXPAND_LISTS
+        VERBATIM)
+    list(APPEND OVERLAY_OBJECTS ${out})
+endforeach()
+
+# map code: src/maps/NAME.c with the table of its PlayStation addresses (scripts/pc_maps.py), one object each
+# with only its table global (the maps use the same names)
+file(GLOB MAP_SOURCES ${CMAKE_SOURCE_DIR}/src/maps/*.c)
+file(GLOB MAP_DATA_SOURCES ${CMAKE_SOURCE_DIR}/src/maps/data/*.c)
+set(MAP_GEN ${CMAKE_CURRENT_BINARY_DIR}/maps)
+file(MAKE_DIRECTORY ${MAP_GEN})
+set(MAP_GENERATED ${MAP_GEN}/maps_pc.c)
+foreach(src ${MAP_SOURCES})
+    get_filename_component(name ${src} NAME_WE)
+    list(APPEND MAP_GENERATED ${MAP_GEN}/map_${name}_pc.c)
+endforeach()
+find_package(Python3 REQUIRED COMPONENTS Interpreter)
+add_custom_command(
+    OUTPUT ${MAP_GENERATED}
+    COMMAND Python3::Interpreter ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${MAP_GEN} ${MAP_SOURCES}
+    DEPENDS ${MAP_SOURCES} ${MAP_DATA_SOURCES} ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${CMAKE_SOURCE_DIR}/src/enums.h
+    VERBATIM)
+set(MAP_OBJECTS)
+foreach(src ${MAP_SOURCES})
+    get_filename_component(name ${src} NAME_WE)
+    add_library(map_${name} OBJECT ${MAP_GEN}/map_${name}_pc.c)
+    target_include_directories(map_${name} PRIVATE src src/overlays)
+    target_compile_definitions(map_${name} PRIVATE ${GAME_DEFINES})
+    target_compile_options(map_${name} PRIVATE ${GAME_OPTIONS})
+    target_link_libraries(map_${name} PRIVATE psyz)
+    set(out ${CMAKE_CURRENT_BINARY_DIR}/map_${name}.o)
+    add_custom_command(
+        OUTPUT ${out}
+        COMMAND ${CMAKE_LINKER} -r -o ${out}.tmp $<TARGET_OBJECTS:map_${name}>
+        COMMAND ${CMAKE_OBJCOPY} --keep-global-symbol=pcMap_${name} ${out}.tmp ${out}
+        DEPENDS $<TARGET_OBJECTS:map_${name}>
+        COMMAND_EXPAND_LISTS
+        VERBATIM)
+    list(APPEND MAP_OBJECTS ${out})
+endforeach()
+
+add_executable(jade_cocoon ${EXE_SOURCES} ${PC_SOURCES} ${OVERLAY_OBJECTS} ${MAP_GEN}/maps_pc.c ${MAP_OBJECTS})
+target_include_directories(jade_cocoon PRIVATE src)
+target_compile_definitions(jade_cocoon PRIVATE ${GAME_DEFINES})
+target_compile_options(jade_cocoon PRIVATE ${GAME_OPTIONS})
+target_link_libraries(jade_cocoon PRIVATE psyz)
+target_link_options(jade_cocoon PRIVATE -no-pie)

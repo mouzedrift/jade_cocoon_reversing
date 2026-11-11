@@ -1,0 +1,3 @@
+# PSY-Q library modules linked into an overlay from the 4.4 .LIB files (scripts/overlays.py), behind its C objects.
+# OVERLAY LIB MODULE,MODULE,...
+LOAD LIBMCRD.LIB LIBMCRD,USERFUNC,BIOS

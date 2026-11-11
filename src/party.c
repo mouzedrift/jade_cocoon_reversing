@@ -1,0 +1,293 @@
+#include "common.h"
+#include "funcs.h"
+#include "sdk.h"
+#include "globals.h"
+#include "sound.h"
+#include "data_decls.h"
+#include "model.h"
+#include "party.h"
+#include "util.h"
+#include "unit_stats.h"
+#include "model_ftg.h"
+
+
+// hand-written assembly (no PSY-Q module has it, and the compiler always fills the jr delay slot)
+#ifdef __psyz
+char* GetHeapStart_80010538(void)
+{
+    return heapStart_800CD858;
+}
+#else
+__asm__(
+    "\t.text\n"
+    "\t.globl\tGetHeapStart_80010538\n"
+    "GetHeapStart_80010538:\n"
+    "\t.set\tnoreorder\n"
+    "\tlui\t$2, %hi(heapStart_800CD858)\n"
+    "\taddiu\t$2, $2, %lo(heapStart_800CD858)\n"
+    "\tjr\t$31\n"
+    "\tnop\n"
+    "\t.set\treorder\n");
+#endif
+int CountMinions_80010548(int id)
+{
+    int count;
+    int i;
+
+    count = 0;
+    for (i = 0; i < 15; i++)
+    {
+        if (saveData_8008B570.minions[i].id == 4)
+        {
+            continue;
+        }
+        if (saveData_8008B570.minions[i].id == id || id == 0)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+Minion* GetMinion_80010598(int id, int nth)
+{
+    Minion* result;
+    int matches;
+    int i;
+
+    result = 0;
+    matches = 0;
+    for (i = 0; i < 15; i++)
+    {
+        if (id == saveData_8008B570.minions[i].id || id == 0)
+        {
+            matches++;
+            if (nth < matches)
+            {
+                result = &saveData_8008B570.minions[i];
+                break;
+            }
+        }
+    }
+    return result;
+}
+void ClearMinionsAndItems_80010600(void)
+{
+    int i;
+    int marker = 4;
+
+    for (i = 14; i >= 0; i--)
+    {
+        saveData_8008B570.minions[i].id = marker;
+    }
+    marker = 0xD3;
+    for (i = 11; i >= 0; i--)
+    {
+        saveData_8008B570.items[i].species_5C = marker;
+    }
+}
+int AddItem_80010650(UnitStats* pItem)
+{
+    int i;
+
+    for (i = 0; i < 12; i++)
+    {
+        if (saveData_8008B570.items[i].species_5C == 0xD3)
+        {
+            MemCopy_800403E8(&saveData_8008B570.items[i], pItem, sizeof(UnitStats));
+            return 1;
+        }
+    }
+    return 0;
+}
+int CountItems_800106B8(void)
+{
+    int count;
+    int i;
+
+    count = 0;
+    for (i = 0; i < 12; i++)
+    {
+        if (saveData_8008B570.items[i].species_5C != 0xD3)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+unsigned char* GetMinionName_800106F8(int id, int nth)
+{
+    Minion* m = GetMinion_80010598(id, nth);
+    if (m)
+    {
+        return m->status_84.name_10;
+    }
+    return 0;
+}
+unsigned char* GetMinionAncestorName_80010724(int id, int nth, int idx)
+{
+    Minion* m = GetMinion_80010598(id, nth);
+    if (m)
+    {
+        return m->ancestors_4[idx];
+    }
+    return 0;
+}
+unsigned char GetMinionAncestorElement_80010768(int id, int nth, int idx)
+{
+    Minion* m = GetMinion_80010598(id, nth);
+    if (m)
+    {
+        return m->ancestorElements_7C[idx];
+    }
+    return 0;
+}
+UnitStatus* GetMinionStatus_800107A0(int id, int nth)
+{
+    Minion* m = GetMinion_80010598(id, nth);
+    if (m)
+    {
+        return &m->status_84;
+    }
+    return 0;
+}
+unsigned char* GetMinionStatBlock_800107CC(int id, int nth)
+{
+    Minion* m = GetMinion_80010598(id, nth);
+    if (m)
+    {
+        return m->field_CC.cur_0;
+    }
+    return 0;
+}
+UnitSkills* GetMinionSkills_800107F8(int id, int nth)
+{
+    Minion* m = GetMinion_80010598(id, nth);
+    if (m)
+    {
+        return &m->skills_DE;
+    }
+    return 0;
+}
+unsigned int* GetMinionMagicBits_80010824(int id, int nth)
+{
+    Minion* m = GetMinion_80010598(id, nth);
+    if (m)
+    {
+        return &m->magicBits_F4;
+
+    }
+    return 0;
+}
+extern EventNode* modelTasks_8008D618;
+int StartModelTask_80010850(void* params)
+{
+    EventEntry* e = AllocEventEntry_80043AF8(modelTasks_8008D618);
+    ModelTaskBuf* buf;
+    ModelTaskState* m;
+    if (e != 0)
+    {
+        e->cb_8 = (EventEntryFn)ModelTaskUpdateCb_80010A90;
+        buf = e->buffer;
+        e->cb_C = (EventEntryFn)ModelTaskFreeCb_80010AB4;
+        e->flags = (e->flags | 1) & 0xFFFF7FFF;
+        e->flags = (e->flags | 4) & 0xFFFF7FFF;
+        buf->key_0 = e->index_4;
+        m = malloc3_8003FC4C(sizeof(*m));
+        buf->state_4 = m;
+        MemCopy_800403E8(&m->count_4, params, sizeof(ModelTaskParams)); /* count_4..vram_34 */
+        m->models_0 = 0;
+        m->state_38 = 1;
+        m->next_3C = 1;
+        StepModelTask_80010AD8(m);
+        return buf->key_0;
+    }
+    return -1;
+}
+EventEntry* FindModelTask_8001091C(int key)
+{
+    EventNode* n = modelTasks_8008D618;
+    int count = n->count;
+    EventEntry* e;
+    int i;
+    for (i = 0; i < count; i++)
+    {
+        e = &n->entry;
+        if ((e->flags & 0x8001) == 1)
+        {
+            if (((ModelTaskBuf*)e->buffer)->key_0 == key)
+            {
+                return e;
+            }
+        }
+        n = n->next;
+    }
+    return 0;
+}
+int FreeModelTask_8001098C(int key)
+{
+    EventEntry* e = FindModelTask_8001091C(key);
+    ModelTaskBuf* buf = e->buffer;
+    ModelTaskState* state = buf->state_4;
+    if (state->state_38 == 5)
+    {
+        FreeModelList_80024BB0(&buf->state_4->models_0);
+        free3_8003FC6C(buf->state_4);
+        e->flags = (e->flags & ~1) | 0x8000;
+        e->flags = (e->flags & ~4) | 0x8000;
+        return 1;
+    }
+    return 0;
+}
+int RunModelTask_80010A10(int key)
+{
+    EventEntry* entry = FindModelTask_8001091C(key);
+    return StepModelTask_80010AD8(((ModelTaskBuf*)entry->buffer)->state_4);
+}
+Model* GetModelTaskModel_80010A44(int key)
+{
+    ModelTaskBuf* buf = FindModelTask_8001091C(key)->buffer;
+    ModelTaskState* state = buf->state_4;
+    if (state->state_38 == 5)
+    {
+        return state->models_0->items_8;
+    }
+    return 0;
+}
+void ModelTaskUpdateCb_80010A90(int entry, int* buf)
+{
+    RunModelTask_80010A10(*buf);
+}
+void ModelTaskFreeCb_80010AB4(int entry, int* buf)
+{
+    FreeModelTask_8001098C(*buf);
+}
+int StepModelTask_80010AD8(ModelTaskState* state)
+{
+    int cont = 1;
+    int done = 0;
+    do
+    {
+        switch (state->state_38)
+        {
+        case 0:
+            break;
+        case 1:
+            cont = ModelTaskLoad_80010B90(state);
+            break;
+        case 2:
+            cont = ModelTaskDraw_80010DB0(state);
+            break;
+        case 3:
+            cont = ModelTaskApplyTextures_80010CDC(state);
+            break;
+        case 4:
+            cont = ModelTaskWaitLoad_80010C30(state);
+            break;
+        case 5:
+            cont = 0;
+            done = 1;
+            break;
+        }
+    } while (cont);
+    return done;
+}

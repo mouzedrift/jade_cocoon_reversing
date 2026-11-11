@@ -1,63 +1,108 @@
 #ifndef _FUNCS_H_
 #define _FUNCS_H_
 
-#include "SYS/TYPES.H"
-#include "LIBDS.H"
+struct Actor;
+struct FtgPolyF3List;
+struct FtgPolyG3List;
+struct FtgPolyFT3List;
+struct FtgPolyGT3List;
+struct FtgPolyF4List;
+struct FtgPolyG4List;
+struct FtgPolyFT4List;
+struct FtgPolyGT4List;
+struct FtgPolyF3;
+struct FtgSrcPolyG3;
+struct FtgSrcPolyFT3;
+struct FtgSrcPolyGT3;
+struct FtgPolyF4;
+struct FtgSrcPolyG4;
+struct FtgSrcPolyFT4;
+struct FtgSrcPolyGT4;
+struct FtgSrcSprites9;
+struct FtgObject;
+struct ModelLoader;
+struct ModelLoadParams;
+struct ModelAnim;
+struct ModelAnimRef;
+struct ModelVramSlot;
+struct FtgMatList;
+struct ModelTaskState;
+struct OverlayLoader;
+struct SceneFade;
+struct XaTask;
+struct ActorDesc;
+struct SoundStruct;
+struct EffectObj;
+struct ActorEffectReq;
+struct CameraCtrl;
+struct MsgWindow;
+struct ModelDesc;
+struct EffectFile;
+struct TimInfo;
+
+#include "sdk.h"
 #include "enums.h"
+#include "globals.h"
 
 typedef struct
 {
-    DslLOC field_0_position;
-    int field_4_sectors;
+    DslLOC position_0;
+    int sectors_4;
     int field_8_size;
 } Data001File;
 
 // Stubs
-extern void sub_8004D924(void);
-extern void sub_8003FDB0(int*);
-extern void sub_80010228(void);
-extern void sub_8004DE00(void); // probably a lib function
+extern void ShutdownSystems_80010228(void);
 extern void CloseEvents_80010328(void);
-extern int LoadOverlay_80020BF8(int mode, enum OverlayIds overlayIdx);
 extern enum GameStates ExecOverlay_80040DDC(enum OverlayIds overlayId);
-extern void sub_80040718(void);
-extern void LoadPublicTiyAndFtg_800407D0(void);
-extern void sub_80040A84(void);
-extern void sub_80040AEC(void);
-extern void sub_80040B54(void);
-extern void sub_80040C8C(void);
-extern void sub_80040CCC(void);
-extern int sub_80040D5C(void);
 
 // Matches
-extern void* malloc3_8003FC4C(unsigned int s);
-extern void free3_8003FC6C(void* block);
-extern int sub_80012178(int arg0);
-extern int sub_80012140(int arg0);
-extern int GetCapturedMinionsFromBitfield_8003BA58(int arg0);
-extern int sub_8001C2FC();
-extern void GameLoop_8004047C(void);
-extern int LoadData001File_8003CD1C(void);
 extern void InitImage_80010428(void);
-extern void SetGameBootState_80040470(void);
-extern void DATA_GetFile_8003C7CC(Data001File* pOutFile, enum FileIds idx);
-extern int ReadFileIntoBuffer_8003CC54(DslLOC* fileLoc, int sectors, unsigned long* pFileBuffer);
-extern void LoadFileIntoBuffer_8003CB7C(DslLOC* fileLoc, unsigned long* pFileBuffer, int sectors);
-extern void* DATA_GetFileBuffer_8003CAA0(int idx);
-extern void sub_8001C290(void);
-extern void sub_8001B230(void);
-extern void sub_80040658(int arg1);
+extern void SetDisplayMode_80040658(int mode);
 extern void InitEvents_8001028C(void);
-extern long cdRomEventErrorHandler_8003BBAC(void);
 extern long vsyncEventHandler_800103AC(void);
-extern unsigned int GetCapturedMinionsCount_800125B8(void);
-extern int CopyPlayerName_8003F860(unsigned char* pPlayerIn, unsigned short* pPlayerOut);
-extern void sub_8002FE7C(void);
-extern void ClearOTagRAll_8001B260(void);
-extern void AddPrimsAll_8001B3C8(void);
-extern void ReadBytesInto_80040388(int* pOut, int* pSource, int count);
-extern void sub_80040360(int *pOut, int *pDataToWrite, int fileSize);
-extern void sub_800403E8(unsigned int *overlayAddr, unsigned int *fileBuffer, unsigned int fileSize);
-extern void sub_800403C8(char *a1, unsigned char *fileBuffer, int fileSize);
+
+struct Pool;
+extern UnitStatus* GetUnitStatus_80014390(int arg0);
+extern EventEntry* FindModelTask_8001091C(int key);
+struct Pool;
+extern void AddStatus_80012794(UnitStatus* status, int bits);
+extern void SeVibOn(void);
+extern void SetVib(void);
+extern void SsUtVibrateOn(void);
+extern void SsUtVibrateOff(void);
+
+extern unsigned int GetEquippedId_800AD990(int a0);
+extern void StopAllEventEntries_80043B40(EventNode* p);
+
+extern void SetHitVariantForCommand_800BFAF8(int a0);
+
+
+extern Minion* GetSlotMinion_800A11D8(int a0);
+extern int GetInventorySlotId_800AD288(int a0, int a1);
+extern int GetInventorySlotCount_800AD2C8(int a0, int a1);
+extern void GetPortraitSprt_800A61CC(int a0, void* a1, void* a2);
+
+extern int* sub_800B3260(int a0);
+
+
+extern int GetEnemyAliveMask_800A248C(void);
+extern UnitStats* GetEnemyStats_800A2B20(int idx);
+
+
+extern void ClearScriptActorBusy_800A5BCC(int a0);
+
+extern void SetPointLight_800C4090(void* pos, void* rgb, int range, int intensity);
+extern void ClearPointLight_800C410C(void);
+
+extern EventEntry* AllocEventEntry_80043AF8(EventNode* n);
+
+extern void KillUnit_800127B8(UnitStatus* status);
+extern UnitStatus* GetEnemyStatus_800A2B60(int idx);
+extern UnitStatus* GetSlotStatus_800A10C0(int a0);
+extern UnitStats* GetUnitStats_8001449C(int unit);
+extern int SpawnModelAnim_800C32DC(int* pos, int modelId, int clip, int rotY);
+
 
 #endif
+

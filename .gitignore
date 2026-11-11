@@ -18,10 +18,8 @@ CMakeSettings.json
 venv
 .ninja_log
 
-# splat related
+# the original executable (not part of the repository)
 slus_008.54*
-!slus_008.54.yaml
-asm
-undefined_funcs_auto.txt
-undefined_syms_auto.txt
-venv
+SLUS_008.54*
+__pycache__/
+.claude/
