@@ -387,7 +387,12 @@ int AddEntity_800B2B6C(void* ev)
 
 int StopLevantIfSet_800B2C98(MapScriptSpot* spot)
 {
+#ifdef __psyz /* the spot's script is started without its entity: the call gets no spot, and the original read
+                 address 2 of the PlayStation's RAM */
+    if (spot && spot->idle_2)
+#else
     if (spot->idle_2)
+#endif
     {
         ResetLevantActorToIdle_800A8DEC();
     }
