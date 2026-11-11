@@ -31,6 +31,7 @@ else()
         -Werror=implicit-function-declaration -Werror=int-conversion -Werror=return-type)
     if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
         list(APPEND GAME_OPTIONS -fno-toplevel-reorder) # data laid out in source order, as the PlayStation's
+    endif()
 endif()
 
 # the executable's translation units, config/tus.txt (lines "name address")
