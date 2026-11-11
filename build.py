@@ -291,7 +291,7 @@ def generate_ninja():
 
         on_linux = platform.system() == "Linux"
         for name, (cmd, desc) in rules.items():
-            ninja.rule(name, f"wine {cmd}" if on_linux else cmd, desc)
+            ninja.rule(name, f"WINEDEBUG=-all wine {cmd}" if on_linux else cmd, desc)
 
         linker_deps = list()
         bss_tail = None

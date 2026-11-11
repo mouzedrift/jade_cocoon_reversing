@@ -17,6 +17,7 @@ compile_commands.json
 CMakeSettings.json
 venv
 .ninja_log
+.ninja_lock
 
 # the original executable (not part of the repository)
 slus_008.54*
