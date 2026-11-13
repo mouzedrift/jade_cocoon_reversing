@@ -126,4 +126,7 @@ void Pc_Init(void)
     }
     if (numDumps || numInputs)
         Psyz_SetVSyncCb(FrameHook);
+
+    Psyz_VideoSetDitheringMode(PSYZ_DITHER_OFF);
+    Psyz_VideoSetInternalResolution(4);
 }
