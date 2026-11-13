@@ -173,7 +173,7 @@ void SpawnGlowModel_80017290(EffectObj* parent, int modelId)
         obj->pos_44[2] = parent->targetPos_1C[2];
         obj->frame_0 = 0;
         obj->field_4 = GetMdecEffectLength_800181E8();
-        obj->field_30 = 0;
+        obj->field_30_alpha = 0;
         obj->field_34 = 0x23F000;
         obj->rot_80.vz = 0;
         obj->rot_80.vy = 0;
@@ -195,8 +195,8 @@ void GlowModelTask_800173A8(int* flags, void* buf)
     {
         color = orangeGlowColor_80072270;
         obj->field_34 = obj->field_34 * 7 / 8;
-        obj->field_30 += obj->field_34;
-        scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
+        obj->field_30_alpha += obj->field_34;
+        scale[0] = scale[1] = scale[2] = obj->field_30_alpha / 4096;
         obj->rot_80.vy += obj->rot_80.pad;
         DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, obj->pos_44, &obj->rot_80, cameraState_8008D4F0.ent_44, 0x30, scale);
         SetPointLight_800C4090(obj->pos_44, &color, 0x5DC, ((obj->field_4 - obj->frame_0) << 12) / obj->field_4);

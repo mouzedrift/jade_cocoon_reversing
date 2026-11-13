@@ -4344,7 +4344,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             child->field_8 = 0;
             child->frame_0 = 0;
             child->field_4 = 600;
-            child->field_30 = 0;
+            child->field_30_alpha = 0;
             child->targetPos_1C = obj->targetPos_1C;
             child->targetBonePos_20 = obj->targetBonePos_20;
             child->scale_A0 = obj->scale_A0;
@@ -4465,7 +4465,7 @@ void EffectObjectTask_80015478(EventEntry* entry, void* buf)
             obj->res_88 = res;
             CopyFtgObject_800218A8(res->ftg_4, obj->work_94 = malloc3_8003FC4C(sizeof(FtgObject)), HEAP_MALLOC3);
             DiffFtgObjects_80039FE4(res->ftg_4, res->ftg_4 + 1, obj->work_94);
-            obj->field_30 = 0x1000;
+            obj->field_30_alpha = 0x1000;
             entry->cb_8 = MorphInModelTask_80017E30;
             PlaySfx_80031494(0x4A);
             SpawnMdecEffect_80017A6C(obj, 0x40);

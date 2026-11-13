@@ -1,5 +1,6 @@
 // BATTLE.BIN, source file 5 of 6 from 0x800BFBB8
 #include "battle.h"
+#include "effect_obj.h"
 
 void StopBattleWindows_800BFBB8()
 {
@@ -1415,28 +1416,28 @@ void ModelAnimTask_800C33E4(EventEntry* task, void* buf)
 void GlowTask_800C371C(EventEntry* task, void* arg)
 {
     unsigned char col[4] = { 0xE8, 0xE8, 0x80, 0 };
-    BatGlow* glow = arg;
-    EffectModel* model = glow->model_88;
-    if (glow->frame_0 < glow->end_4 && effectOutcomeFlag_8008D780[0] == 0)
+    EffectObj* glow = arg;
+    EffectModel* model = glow->res_88;
+    if (glow->frame_0 < glow->field_4 && effectOutcomeFlag_8008D780[0] == 0)
     {
         int scale[4];
         int pos[4];
         int alpha;
-        glow->alpha_30 += 0x100;
-        if (glow->alpha_30 > 0x1000)
+        glow->field_30_alpha += 0x100;
+        if (glow->field_30_alpha > 0x1000)
         {
-            glow->alpha_30 = 0x1000;
+            glow->field_30_alpha = 0x1000;
         }
         scale[0] = glow->scale_A0[0] * 3 / 2;
         scale[1] = glow->scale_A0[1] * 3 / 2;
         scale[2] = glow->scale_A0[2] * 3 / 2;
-        alpha = glow->alpha_30;
-        pos[0] = glow->path_20[glow->idx_98 * 3 + 0] + glow->base_1C[0];
-        pos[1] = glow->path_20[glow->idx_98 * 3 + 1] + glow->base_1C[1];
-        pos[2] = glow->path_20[glow->idx_98 * 3 + 2] + glow->base_1C[2];
+        alpha = glow->field_30_alpha;
+        pos[0] = glow->targetBonePos_20[glow->bone_98 * 3 + 0] + glow->targetPos_1C[0];
+        pos[1] = glow->targetBonePos_20[glow->bone_98 * 3 + 1] + glow->targetPos_1C[1];
+        pos[2] = glow->targetBonePos_20[glow->bone_98 * 3 + 2] + glow->targetPos_1C[2];
         LerpFtgObject_8003A6C4(alpha, model->ftg_4, model->ftg_4 + 1, glow->work_94);
         DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, ((0x1000 - alpha) << 16) | 0xB0, scale);
-        SetPointLight_800C4090(glow->pos_44, col, 0x5DC, glow->alpha_30);
+        SetPointLight_800C4090(glow->pos_44, col, 0x5DC, glow->field_30_alpha);
         glow->frame_0++;
     }
     else
@@ -1447,28 +1448,27 @@ void GlowTask_800C371C(EventEntry* task, void* arg)
         scale[0] = glow->scale_A0[0] * 3 / 2;
         scale[1] = glow->scale_A0[1] * 3 / 2;
         scale[2] = glow->scale_A0[2] * 3 / 2;
-        alpha = glow->alpha_30;
-        pos[0] = glow->path_20[glow->idx_98 * 3 + 0] + glow->base_1C[0];
-        pos[1] = glow->path_20[glow->idx_98 * 3 + 1] + glow->base_1C[1];
-        pos[2] = glow->path_20[glow->idx_98 * 3 + 2] + glow->base_1C[2];
+        alpha = glow->field_30_alpha;
+        pos[0] = glow->targetBonePos_20[glow->bone_98 * 3 + 0] + glow->targetPos_1C[0];
+        pos[1] = glow->targetBonePos_20[glow->bone_98 * 3 + 1] + glow->targetPos_1C[1];
+        pos[2] = glow->targetBonePos_20[glow->bone_98 * 3 + 2] + glow->targetPos_1C[2];
         LerpFtgObject_8003A6C4(alpha, model->ftg_4, model->ftg_4 + 1, glow->work_94);
         DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, ((0x1000 - alpha) << 16) | 0xB0, scale);
-        if (glow->alpha_30 == 0x1000)
+        if (glow->field_30_alpha == 0x1000)
         {
             SpawnOrb_800C3B50(pos, 0x25);
         }
-        SetPointLight_800C4090(glow->pos_44, col, 0x5DC, glow->alpha_30);
-        if (glow->alpha_30 <= 0)
+        SetPointLight_800C4090(glow->pos_44, col, 0x5DC, glow->field_30_alpha);
+        if (glow->field_30_alpha <= 0)
         {
             ClearPointLight_800C410C();
             FreeFtgObjectData_80021804(glow->work_94, HEAP_MALLOC3);
             free3_8003FC6C(glow->work_94);
             task->flags = (task->flags & ~1) | 0x8000;
         }
-        glow->alpha_30 -= 0x100;
+        glow->field_30_alpha -= 0x100;
     }
 }
-
 
 void SpawnOrb_800C3B50(int* pos, int id)
 {

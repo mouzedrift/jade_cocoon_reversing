@@ -38,7 +38,7 @@ typedef struct EffectObj
     int* targetBonePos_20;         // int[][3] target bone offsets, indexed by bone_98
     SVECTOR offset_24;             // offset from the bone (through targetBoneMatrices_2C)
     MATRIX* targetBoneMatrices_2C; // indexed by bone_98
-    int field_30;
+    int field_30_alpha;
     int field_34;
     int pad_38[3];
     int pos_44[3];

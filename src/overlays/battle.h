@@ -760,26 +760,6 @@ typedef struct BatModelAnim
 
 extern void DrawSpriteVtxQuadsG4_80045E48(FtgMatList* list, OT_TYPE* ot, int flags);
 
-typedef struct BatGlow
-{
-    int frame_0;
-    int end_4;
-    char pad8[0x14];
-    int* base_1C;
-    int* path_20;
-    char pad24[0xC];
-    int alpha_30; // steps by 0x100 a frame: the model blend and the point light's intensity
-    char pad34[0x10];
-    char pos_44[0x44]; // the point light's position
-    EffectModel* model_88;
-    char pad8C[8];
-    FtgObject* work_94; // malloc'd copy of the model's first FtgObject
-    int idx_98;
-    char pad9C[4];
-    int* scale_A0;
-} BatGlow;
-
-
 extern void SpawnOrb_800C3B50(int* pos, int id);
 
 

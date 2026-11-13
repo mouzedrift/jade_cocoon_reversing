@@ -28,7 +28,7 @@ void SpawnPulseModel_800174F8(EffectObj* parent, int modelId)
         obj->pos_44[1] = parent->targetPos_1C[1];
         obj->pos_44[2] = parent->targetPos_1C[2];
         obj->frame_0 = 0;
-        obj->field_30 = 0;
+        obj->field_30_alpha = 0;
         obj->field_34 = 0x23F000;
         obj->rot_80.vz = 0;
         obj->rot_80.vy = 0;
@@ -50,8 +50,8 @@ void PulseModelTask_8001761C(int* flags, EffectObj* obj)
     int scale[3];
     int fade;
     obj->field_34 = obj->field_34 * 7 / 8;
-    obj->field_30 += obj->field_34;
-    scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
+    obj->field_30_alpha += obj->field_34;
+    scale[0] = scale[1] = scale[2] = obj->field_30_alpha / 4096;
     obj->rot_80.vy += 0x80;
     fade = (obj->frame_0 < 45) ? 0 : (((obj->frame_0 - 44) << 24) | 0x80);
     LerpFtgObject_8003A6C4(sinTable_80084540[(obj->frame_0 * 512) & 0xE00] / 2 + 0x800, model->ftg_4, model->ftg_4 + 1, obj->work_94);
@@ -76,7 +76,7 @@ void SpawnMorphModel_80017784(EffectObj* parent, int modelId, short* rot)
         obj->pos_44[2] = parent->targetPos_1C[2];
         obj->frame_0 = 0;
         obj->field_8 = 0;
-        obj->field_30 = 0;
+        obj->field_30_alpha = 0;
         obj->field_34 = 0x23F000;
         obj->rot_80.vx = rot[0];
         obj->rot_80.vy = rot[1];
@@ -96,8 +96,8 @@ void MorphModelTask_800178C0(int* flags, EffectObj* obj)
     EffectModel* model = obj->res_88;
     int scale[3];
     obj->field_34 = obj->field_34 * 7 / 8;
-    obj->field_30 += obj->field_34;
-    scale[0] = scale[1] = scale[2] = obj->field_30 / 4096;
+    obj->field_30_alpha += obj->field_34;
+    scale[0] = scale[1] = scale[2] = obj->field_30_alpha / 4096;
     if (obj->field_8 < 3)
     {
         LerpFtgObject_8003A6C4(0x1000 - (obj->frame_0 << 10), model->ftg_4, &model->ftg_4[obj->field_8 + 1], obj->work_94);
@@ -177,7 +177,7 @@ void SpawnWaveModel_80017BF0(EventEntry* parent, int modelId)
         obj->pos_44[1] = ((int*)parent->buffer)[1];
         obj->pos_44[2] = ((int*)parent->buffer)[2];
         obj->frame_0 = 0;
-        obj->field_30 = 0;
+        obj->field_30_alpha = 0;
         obj->field_34 = 0x23F000;
         obj->rot_80.vz = 0;
         obj->rot_80.vy = 0;
@@ -219,13 +219,13 @@ void MorphInModelTask_80017E30(EventEntry* entry, void* buf)
     int pos[3];
     int scale[3];
     int* scalePtr;
-    if ((obj->field_30 -= 0x80) <= 0)
+    if ((obj->field_30_alpha -= 0x80) <= 0)
     {
         obj->frame_0 = 0x1000;
-        obj->field_30 = 0;
+        obj->field_30_alpha = 0;
         entry->cb_8 = FadeOutModelTask_80017FF8;
     }
-    LerpFtgObject_8003A6C4(0x1000 - obj->field_30, model->ftg_4, model->ftg_4 + 1, obj->work_94);
+    LerpFtgObject_8003A6C4(0x1000 - obj->field_30_alpha, model->ftg_4, model->ftg_4 + 1, obj->work_94);
     if (obj->scale_A0)
     {
         scalePtr = scale;
@@ -240,7 +240,7 @@ void MorphInModelTask_80017E30(EventEntry* entry, void* buf)
     pos[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->targetPos_1C[0];
     pos[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->targetPos_1C[1];
     pos[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->targetPos_1C[2];
-    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, (obj->field_30 << 16) | 0xB0, scalePtr);
+    DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, (obj->field_30_alpha << 16) | 0xB0, scalePtr);
 }
 void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
 {
@@ -251,7 +251,7 @@ void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
     int* scalePtr;
     if ((obj->frame_0 -= 0x80) > 0)
     {
-        LerpFtgObject_8003A6C4(0x1000 - obj->field_30, model->ftg_4, model->ftg_4 + 1, obj->work_94);
+        LerpFtgObject_8003A6C4(0x1000 - obj->field_30_alpha, model->ftg_4, model->ftg_4 + 1, obj->work_94);
         if (obj->scale_A0)
         {
             scalePtr = scale;
@@ -266,7 +266,7 @@ void FadeOutModelTask_80017FF8(EventEntry* entry, void* buf)
         pos[0] = obj->targetBonePos_20[obj->bone_98 * 3 + 0] + obj->targetPos_1C[0];
         pos[1] = obj->targetBonePos_20[obj->bone_98 * 3 + 1] + obj->targetPos_1C[1];
         pos[2] = obj->targetBonePos_20[obj->bone_98 * 3 + 2] + obj->targetPos_1C[2];
-        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, (obj->field_30 << 16) | 0xB0, scalePtr);
+        DrawFtgObjectAtSlot0_8004D1EC(model->ftg_4, pOT_8008D690, pos, &zeroSvector_800795D4, cameraState_8008D4F0.ent_44, (obj->field_30_alpha << 16) | 0xB0, scalePtr);
     }
     else
     {
