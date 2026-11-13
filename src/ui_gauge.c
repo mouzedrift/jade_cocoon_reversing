@@ -243,7 +243,12 @@ void DrawGaugeBar_8002BCAC(int idx, int scale, short* pos, unsigned int time, in
         poly.u3 = publicTiyPolyFT4s_8008D430[idx].u3;
         poly.v3 = publicTiyPolyFT4s_8008D430[idx].v3;
         setShadeTex(&poly, 0);
+#ifdef __psyz
+        // temp hack fix to prevent hp bars from being too wide on the pc version (root cause unknown)
+        scale *= 256;
+#else
         scale *= 512;
+#endif
         PulseColor_80033394(&poly.r0, (unsigned char*)&c0, (unsigned char*)&c1, time, 40, 10);
         AddScaledPolyFT4_80031BE4(&poly, pOT_8008D454 + ot, pos[0], pos[1], scale, 0x100, 0, 0x11);
     }
