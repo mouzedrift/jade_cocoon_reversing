@@ -86,6 +86,7 @@ find_package(Python3 REQUIRED COMPONENTS Interpreter)
 add_custom_command(
     OUTPUT ${MAP_GENERATED}
     COMMAND Python3::Interpreter ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${MAP_GEN} ${MAP_SOURCES}
+    COMMAND ${CMAKE_COMMAND} -E touch ${MAP_GENERATED}
     DEPENDS ${MAP_SOURCES} ${MAP_DATA_SOURCES} ${CMAKE_SOURCE_DIR}/scripts/pc_maps.py ${CMAKE_SOURCE_DIR}/src/enums.h
     VERBATIM)
 set(MAP_OBJECTS)
