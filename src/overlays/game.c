@@ -1500,14 +1500,14 @@ void SetEnemyAiState_800A433C(GameAi* ai, int state, int anim, int timer, int an
     SetActorAnim_8001D760(ai->actor_8, anim, animMode, animFlag);
     if (state == 0xe)
     {
-        ai->turnLeft_2C = 0x1000 / (rand() % 16) / div;
+        ai->turnLeft_2C = DIV0(0x1000, (rand() % 16)) / div;
         ai->turnDir_28 = (rand() & 1) ? 1 : 2;
     }
 }
 
 void RandomizeEnemyTurn_800A43FC(GameAi* ai)
 {
-    ai->turnLeft_2C = 0x1000 / (rand() % 16) / 2;
+    ai->turnLeft_2C = DIV0(0x1000, (rand() % 16)) / 2;
     ai->turnDir_28 = (rand() & 1) ? 1 : 2;
 }
 
