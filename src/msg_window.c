@@ -1167,7 +1167,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
         p70.w = r.x + w;
         p70.h = h;
         AddClipDrawAreaPrim_80033308(pOT_8008D454);
-        DrawText_8003E91C(2, itemMessageDefaultSuffix_80083820, (short*)&p70, 0);
+        DrawText_8003E91C(2, itemMessageSuffixes_80083818[2], (short*)&p70, 0);
         AddDrawAreaPrim_8003326C(&r, pOT_8008D454);
     }
     if (o->item_214.text_4C)
