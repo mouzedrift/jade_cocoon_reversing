@@ -3215,7 +3215,7 @@ unsigned char *mapLists4_800837D8 = (void *)mapListData_80083788;
 void *unused_800837DC[4] = { (void *)&mapListData_80083788[2], (void *)&mapListData_80083788[6], (void *)&mapListData_80083788[7], (void *)&mapListData_80083788[8] };
 void *mapLists5_800837EC[5] = { 0, (void *)&mapListData_80083788[12], (void *)&mapListData_80083788[13], (void *)&mapListData_80083788[14] };
 unsigned char **mapListTable_80083800[6] = { (void *)mapLists0_800837C4, 0, 0, 0, &mapLists4_800837D8, (void *)mapLists5_800837EC };
-const char* itemMessageSuffixes_80083818[11] = { aPickedUp_80074800, aReceived_800747E8, aPickedUp_80074800, aReturned_800747D0, aUsed_800747C0, aReturned_800747D0, aHandedOver_800747A4, aGiven_80074794, aNeeded_80074780, aItSLocked_80074764, aItSEmpty_8007474C };
+const char* itemMessageSuffixes_80083818[ITEM_MSG_COUNT] = { aPickedUp_80074800, aReceived_800747E8, aPickedUp_80074800, aReturned_800747D0, aUsed_800747C0, aReturned_800747D0, aHandedOver_800747A4, aGiven_80074794, aNeeded_80074780, aItSLocked_80074764, aItSEmpty_8007474C };
 unsigned char padActAlign_80083844[8] = { 0, 1, 255, 255, 255, 255 };
 int vibrationPatternData_8008384C[185] = {
     0x1E010002, 0x6400000A, 0x5A000009, 0x50000006, 0xFFFF, 0x8C010003, 0xC800000F, 0xB400000C,

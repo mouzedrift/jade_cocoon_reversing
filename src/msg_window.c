@@ -1150,7 +1150,7 @@ void UpdateItemMessageWindow_80035BD8(EventEntry* e, void* buf)
             line++;
         }
     }
-    if ((unsigned int)o->item_214.mode_48 < 11 && !flag)
+    if ((unsigned int)o->item_214.mode_48 < ITEM_MSG_COUNT && !flag)
     {
         int w = MeasureTextWidth_8003E4C8(nameGetters_8007CB08[o->item_214.entries_C[0].type](o->item_214.entries_C[0].id)) + 0x19;
         int h = r.y + 9;

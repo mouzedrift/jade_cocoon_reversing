@@ -1,6 +1,23 @@
 #ifndef ENUM_H
 #define ENUM_H
 
+typedef enum
+{
+    ITEM_MSG_PICKED_UP,
+    ITEM_MSG_RECEIVED,
+    ITEM_MSG_PICKED_UP2,
+    ITEM_MSG_RETURNED,
+    ITEM_MSG_USED,
+    ITEM_MSG_RETURNED2,
+    ITEM_MSG_HANDED_OVER,
+    ITEM_MSG_GIVEN,
+    ITEM_MSG_NEEDED,
+    ITEM_MSG_LOCKED,
+    ITEM_MSG_EMPTY,
+    ITEM_MSG_COUNT
+
+} ItemMsgName;
+
 enum Element
 {
     eElementNone = -1,
