@@ -1,5 +1,5 @@
 /* PC only: the PSY-Q functions the game uses that PSY-Z does not have (yet). libds on top of PSY-Z's libcd, the
-   heap on the C library, memory cards absent, the rest as on the PlayStation. */
+   heap on the C library, memory cards on PSY-Z's host filesystem, the rest as on the PlayStation. */
 #include <psyz.h>
 #include <sanitizer/asan_interface.h>
 #define DIRENTRY DIRENTRY /* libapi.h has it (see sdk.h) */
@@ -186,42 +186,413 @@ void LoadExec(char* name, unsigned long sp, unsigned long sp_size)
 void PadInitDirect(unsigned char* pad1, unsigned char* pad2) { InitPAD((char*)pad1, 34, (char*)pad2, 34); }
 void PadStopCom(void) {}
 
-/* memory cards: none inserted */
-void MemCardInit(long val) {}
+static long memCardCmd;
+static long memCardResult;
+static int memCardPending;
+
+static int MapMemCardFilename(const char* file, char* mapped, size_t mappedSize)
+{
+    /* PSY-Z limits host filenames to 19 characters; keep Jade Cocoon's 20-character slots distinct. */
+    static const char savePrefix[] = "BASLUS-00854";
+    size_t len = strlen(file);
+    if (len <= 19)
+    {
+        if (len + 1 > mappedSize)
+        {
+            return 0;
+        }
+        memcpy(mapped, file, len + 1);
+        return 1;
+    }
+    if (len == 20 && mappedSize >= 16 && memcmp(file, savePrefix, sizeof(savePrefix) - 1) == 0 &&
+        (memcmp(file + 12, "GAME04", 6) == 0 || memcmp(file + 12, "COMB04", 6) == 0) &&
+        file[18] >= '0' && file[18] <= '1' && file[19] >= '0' && file[19] <= '9')
+    {
+        memcpy(mapped, savePrefix, sizeof(savePrefix) - 1);
+        mapped[12] = file[15] == 'E' ? 'G' : 'C';
+        mapped[13] = file[18];
+        mapped[14] = file[19];
+        mapped[15] = '\0';
+        return 1;
+    }
+    return 0;
+}
+
+static void RestoreMemCardFilename(const char* file, char* restored, size_t restoredSize)
+{
+    static const char savePrefix[] = "BASLUS-00854";
+    size_t len = strlen(file);
+    if (len == 15 && memcmp(file, savePrefix, sizeof(savePrefix) - 1) == 0 &&
+        (file[12] == 'G' || file[12] == 'C') && file[13] >= '0' && file[13] <= '1' && file[14] >= '0' &&
+        file[14] <= '9' && restoredSize >= 21)
+    {
+        memcpy(restored, savePrefix, sizeof(savePrefix) - 1);
+        memcpy(restored + 12, file[12] == 'G' ? "GAME04" : "COMB04", 6);
+        restored[18] = file[13];
+        restored[19] = file[14];
+        restored[20] = '\0';
+        return;
+    }
+    if (len >= restoredSize)
+    {
+        len = restoredSize - 1;
+    }
+    memcpy(restored, file, len);
+    restored[len] = '\0';
+}
+
+static int GetMemCardPath(long chan, const char* file, char* path, size_t pathSize)
+{
+    char mapped[20];
+    int port;
+    if ((chan & 0x0F) != 0 || (chan != 0 && chan != 0x10))
+    {
+        return 0;
+    }
+    port = chan >> 4;
+    if (file)
+    {
+        if (!MapMemCardFilename(file, mapped, sizeof(mapped)))
+        {
+            return 0;
+        }
+        snprintf(path, pathSize, "bu%d0:%s", port, mapped);
+    }
+    else
+    {
+        snprintf(path, pathSize, "bu%d0:*", port);
+    }
+    return 1;
+}
+
+static int IsValidMemCard(long chan)
+{
+    char source[16];
+    char path[16];
+    if (!GetMemCardPath(chan, NULL, source, sizeof(source)))
+    {
+        return 0;
+    }
+    Psyz_AdjustPath(path, source, sizeof(path));
+    return 1;
+}
+
+static int MemCardNameMatches(const char* pattern, const char* name)
+{
+    if (*pattern == '\0')
+    {
+        return *name == '\0';
+    }
+    if (*pattern == '*')
+    {
+        do
+        {
+            if (MemCardNameMatches(pattern + 1, name))
+            {
+                return 1;
+            }
+        } while (*name++ != '\0');
+        return 0;
+    }
+    if (*name == '\0' || (*pattern != '?' && *pattern != *name))
+    {
+        return 0;
+    }
+    return MemCardNameMatches(pattern + 1, name + 1);
+}
+
+static int CountMemCardBlocks(long chan)
+{
+    struct DIRENTRY entry;
+    char path[16];
+    int blocks = 0;
+    if (!GetMemCardPath(chan, NULL, path, sizeof(path)))
+    {
+        return 15;
+    }
+    path[4] = '\0';
+    for (struct DIRENTRY* file = firstfile(path, &entry); file; file = nextfile(file))
+    {
+        if (file->size > 0)
+        {
+            blocks += (file->size + 0x1FFF) / 0x2000;
+        }
+    }
+    return blocks;
+}
+
+static int MemCardFileExists(long chan, const char* filename)
+{
+    char dir[16];
+    char mapped[20];
+    struct DIRENTRY entry;
+    int found = 0;
+    if (!GetMemCardPath(chan, NULL, dir, sizeof(dir)) ||
+        !MapMemCardFilename(filename, mapped, sizeof(mapped)))
+    {
+        return 0;
+    }
+    dir[4] = '\0';
+    for (struct DIRENTRY* current = firstfile(dir, &entry); current; current = nextfile(current))
+    {
+        if (strcmp(current->name, mapped) == 0)
+        {
+            found = 1;
+        }
+    }
+    return found;
+}
+
+static void SetMemCardCompletion(long cmd, long result)
+{
+    memCardCmd = cmd;
+    memCardResult = result;
+    memCardPending = 1;
+}
+
+static long MemCardFileIo(long chan, char* file, unsigned long* buffer, long offset, long bytes, int writing)
+{
+    char path[128];
+    int fd;
+    long transferred;
+    if (!GetMemCardPath(chan, file, path, sizeof(path)) || offset < 0 || bytes <= 0 || bytes % 128 != 0)
+    {
+        return McErrCardInvalid;
+    }
+    fd = open(path, writing ? FWRITE : FREAD);
+    if (fd < 0)
+    {
+        return McErrFileNotExist;
+    }
+    if (lseek(fd, (unsigned int)offset, SEEK_SET) == (unsigned long)-1)
+    {
+        close(fd);
+        return McErrCardInvalid;
+    }
+    if (writing)
+    {
+        transferred = write(fd, (char*)buffer, (int)bytes);
+    }
+    else
+    {
+        transferred = read(fd, buffer, bytes);
+    }
+    close(fd);
+    return transferred == bytes ? McErrNone : McErrCardInvalid;
+}
+
+/* PSY-Z stores each card as a host directory (bu00, bu10) and translates the
+   PlayStation-style paths through its filesystem wrappers. */
+void MemCardInit(long val)
+{
+    (void)val;
+    IsValidMemCard(0);
+    IsValidMemCard(0x10);
+}
 void MemCardEnd(void) {}
 void MemCardStart(void) {}
 void MemCardStop(void) {}
-long MemCardExist(long chan) { return 0; }
-long MemCardAccept(long chan) { return 0; }
-long MemCardSync(long mode, long* cmd, long* result)
+long MemCardExist(long chan)
 {
-    if (cmd)
-        *cmd = 0;
-    if (result)
-        *result = McErrCardNotExist;
+    if (memCardPending)
+    {
+        return 0;
+    }
+    SetMemCardCompletion(McFuncExist, IsValidMemCard(chan) ? McErrNone : McErrCardNotExist);
     return 1;
 }
-long MemCardReadFile(long chan, char* file, unsigned long* adrs, long ofs, long bytes) { return McErrCardNotExist; }
-long MemCardWriteFile(long chan, char* file, unsigned long* adrs, long ofs, long bytes) { return McErrCardNotExist; }
-long MemCardCreateFile(long chan, char* file, long blocks) { return McErrCardNotExist; }
-long MemCardFormat(long chan) { return McErrCardNotExist; }
+long MemCardAccept(long chan)
+{
+    if (memCardPending)
+    {
+        return 0;
+    }
+    SetMemCardCompletion(McFuncAccept, IsValidMemCard(chan) ? McErrNone : McErrCardNotExist);
+    return 1;
+}
+long MemCardSync(long mode, long* cmd, long* result)
+{
+    (void)mode;
+    if (!memCardPending)
+    {
+        return -1;
+    }
+    if (cmd)
+    {
+        *cmd = memCardCmd;
+    }
+    if (result)
+    {
+        *result = memCardResult;
+    }
+    memCardPending = 0;
+    return 1;
+}
+long MemCardReadFile(long chan, char* file, unsigned long* adrs, long ofs, long bytes)
+{
+    if (memCardPending)
+    {
+        return 0;
+    }
+    SetMemCardCompletion(McFuncReadFile, MemCardFileIo(chan, file, adrs, ofs, bytes, 0));
+    return 1;
+}
+long MemCardWriteFile(long chan, char* file, unsigned long* adrs, long ofs, long bytes)
+{
+    if (memCardPending)
+    {
+        return 0;
+    }
+    SetMemCardCompletion(McFuncWriteFile, MemCardFileIo(chan, file, adrs, ofs, bytes, 1));
+    return 1;
+}
+long MemCardCreateFile(long chan, char* file, long blocks)
+{
+    char path[128];
+    unsigned char block[0x2000];
+    int fd;
+    long i;
+    if (!GetMemCardPath(chan, file, path, sizeof(path)) || blocks <= 0)
+    {
+        return McErrCardInvalid;
+    }
+    if (blocks + CountMemCardBlocks(chan) > 15)
+    {
+        return McErrBlockFull;
+    }
+    if (MemCardFileExists(chan, file))
+    {
+        return McErrAlreadyExist;
+    }
+    fd = open(path, FCREAT);
+    if (fd < 0)
+    {
+        return McErrCardInvalid;
+    }
+    memset(block, 0xFF, sizeof(block));
+    for (i = 0; i < blocks; i++)
+    {
+        if (write(fd, (char*)block, sizeof(block)) != sizeof(block))
+        {
+            close(fd);
+            erase(path);
+            return McErrCardInvalid;
+        }
+    }
+    close(fd);
+    return McErrNone;
+}
+long MemCardDeleteFile(long chan, char* file)
+{
+    char path[128];
+    if (!GetMemCardPath(chan, file, path, sizeof(path)))
+    {
+        return McErrCardInvalid;
+    }
+    if (!MemCardFileExists(chan, file))
+    {
+        return McErrFileNotExist;
+    }
+    return erase(path) ? McErrNone : McErrCardInvalid;
+}
+long MemCardFormat(long chan)
+{
+    char dir[16];
+    char path[128];
+    struct DIRENTRY entry;
+    if (!GetMemCardPath(chan, NULL, dir, sizeof(dir)))
+    {
+        return McErrCardNotExist;
+    }
+    dir[4] = '\0';
+    for (struct DIRENTRY* current = firstfile(dir, &entry); current; current = nextfile(current))
+    {
+        if (!GetMemCardPath(chan, current->name, path, sizeof(path)))
+        {
+            return McErrCardInvalid;
+        }
+        if (!erase(path))
+        {
+            return McErrCardInvalid;
+        }
+    }
+    return McErrNone;
+}
 long MemCardGetDirentry(long chan, char* name, struct DIRENTRY* dir, long* files, long ofs, long max)
 {
+    struct DIRENTRY entry;
+    char path[16];
+    long count = 0;
+    long stored = 0;
     if (files)
+    {
         *files = 0;
-    return McErrCardNotExist;
+    }
+    if (!GetMemCardPath(chan, NULL, path, sizeof(path)))
+    {
+        return McErrCardNotExist;
+    }
+    path[4] = '\0';
+    if (ofs < 0 || max < 0)
+    {
+        return McErrCardInvalid;
+    }
+    for (struct DIRENTRY* current = firstfile(path, &entry); current; current = nextfile(current))
+    {
+        char restored[21];
+        RestoreMemCardFilename(current->name, restored, sizeof(restored));
+        if (!MemCardNameMatches(name, restored))
+        {
+            continue;
+        }
+        if (count >= ofs && stored < max && dir)
+        {
+            dir[stored] = *current;
+            memset(dir[stored].name, 0, sizeof(dir[stored].name));
+            memcpy(dir[stored].name, restored, strlen(restored));
+            dir[stored].attr = 0;
+            dir[stored].next = NULL;
+            stored++;
+        }
+        count++;
+    }
+    if (files)
+    {
+        *files = count;
+    }
+    return McErrNone;
 }
+static long mcxCmd;
+static long mcxResult;
+static int mcxPending;
+
 void McxStartCom(void) {}
 void McxStopCom(void) {}
 int McxSync(int mode, long* cmd, long* result)
 {
+    (void)mode;
+    if (!mcxPending)
+    {
+        return -1;
+    }
     if (cmd)
-        *cmd = 0;
+        *cmd = mcxCmd;
     if (result)
-        *result = McErrCardNotExist;
+        *result = mcxResult;
+    mcxPending = 0;
     return 1;
 }
-int McxAllInfo(int port, unsigned char* state) { return 0; }
+int McxAllInfo(int port, unsigned char* state)
+{
+    if (state)
+    {
+        memset(state, 0, 18);
+    }
+    mcxCmd = McxFuncAllInfo;
+    mcxResult = IsValidMemCard(port) ? McxErrSuccess : McxErrNoCard;
+    mcxPending = 1;
+    return 1;
+}
 
 /* libgte */
 long Lzc(long data)
